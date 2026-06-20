@@ -8,6 +8,7 @@ import { Store } from "../StoreManager/Store.js";
         this.unlockedRewards = [];
         this.unlockedUpgrades = [];
         this.unlockedStores = [];
+        this.balance = 0;
     }
 
     // Calls unlockCity(), which initiates the method city.unlock();
@@ -39,6 +40,20 @@ import { Store } from "../StoreManager/Store.js";
         if (reward instanceof Store) {
             this.unlockedStores.push(reward)
         }
+    }
+
+    addMoney(amount) {
+
+        this.balance += amount;
+
+    }
+
+    spendMoney(amount) {
+        if (this.balance >= amount) {
+            this.balance -= amount;
+            return true;
+        }
+        return false;
     }
 
 }

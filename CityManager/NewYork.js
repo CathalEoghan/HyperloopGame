@@ -5,8 +5,9 @@ import { hotDogRestaurant } from "../StoreManager/HotDogRestaurant.js";
 
 export const NewYork = new City(
     "New York",
-    8480000,
+    20100000,
     [hotDogRestaurant],
     "United States of America",
-    1
+    1,
+    "Spanning 843 acres in the heart of Manhattan, New York City's Central Park is actually larger than the entire country of Monaco."
 );

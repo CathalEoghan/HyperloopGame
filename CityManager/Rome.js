@@ -5,8 +5,9 @@ import { pizzeria } from "../StoreManager/Pizzeria.js";
 
 export const Rome = new City(
     "Rome",
-    2740000,
+    4360000,
     [pizzeria],
     "Italy",
-    2
+    2,
+    "Rome boasts thirteen ancient obelisks—eight ancient Egyptian and five Roman replicas - making it the city with the largest collection of these towering monuments on Earth."
 );

@@ -5,8 +5,9 @@ import { waffleHouse } from "../StoreManager/WaffleHouse.js";
 
 export const Brussels = new City(
     "Brussels",
-    1255834,
+    2700000,
     [waffleHouse],
     "Belgium",
-    3
+    3,
+    "Brussels literally translates from Old Dutch as a 'settlement in the marsh.'"
 );
