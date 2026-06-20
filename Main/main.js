@@ -16,10 +16,9 @@ startGame() {
     const constructionManager = new ConstructionManager(progressionManager, timeManager);
     const economyManager = new EconomyManager(progressionManager);
     const gameManager = new GameManager(economyManager, progressionManager, constructionManager);
-    const interval = setInterval(() => gameManager.tick(), 1000);
+    const interval = setInterval(() => gameManager.tick(), 1000); // Initiates the tick() every 1 second
 
     gameManager.setStartingCity(London);
-    gameManager.tick();
 
 }
 

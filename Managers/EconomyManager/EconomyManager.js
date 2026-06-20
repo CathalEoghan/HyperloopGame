@@ -1,66 +1,65 @@
 
+const SECONDS_IN_A_DAY = 86400;
 export class EconomyManager {
     constructor(progressionManager) {
-    this.progressionManager = progressionManager;
+        this.progressionManager = progressionManager;
     }
 
-// Population earnings
-calculatePopulationIncome() {
+    // Population earnings
+    calculatePopulationIncome() {
 
-let populationIncome = 0;
-const POPULATION_INCOME_MODIFIER = 0.0005
+        let populationIncome = 0;
+        const POPULATION_INCOME_MODIFIER = 0.0005;
 
-    this.progressionManager.unlockedCities.forEach(city => {
+        this.progressionManager.unlockedCities.forEach(city => {
 
-        let incomeFromCity = city.population * POPULATION_INCOME_MODIFIER;
-        populationIncome += incomeFromCity;
-    });
-
-
-    let upgradeMultiplier = 1;
-
-    // Adds the upgrade multipliers to the population income
-    this.progressionManager.unlockedUpgrades.forEach(upgrade => {
-
-        if (upgrade.effectType === "populationIncome") {
-
-            upgradeMultiplier += upgrade.effectValue;
-
-        }
-    });
-
-    return populationIncome * upgradeMultiplier;
-
-}
+            let incomeFromCity = city.population * POPULATION_INCOME_MODIFIER;
+            populationIncome += incomeFromCity;
+        });
 
 
-// Store earnings
-calculateStoreIncome() {
+        let upgradeMultiplier = 1;
 
-let storeIncome = 0;
+        // Adds the upgrade multipliers to the population income
+        this.progressionManager.unlockedUpgrades.forEach(upgrade => {
 
-   this.progressionManager.unlockedStores.forEach(store => {
-    storeIncome += store.revenue;
-   });
+            if (upgrade.effectType === "populationIncome") {
 
-   return storeIncome;
+                upgradeMultiplier += upgrade.effectValue;
 
-}
+            }
+        });
 
+        return populationIncome * upgradeMultiplier;
 
-// Upgrade boosts
+    }
 
-// Calculates daily income
-calculateDailyIncome() {
+    // Store earnings
+    calculateStoreIncome() {
 
-    let totalIncome = 0;
+        let storeIncome = 0;
 
-    totalIncome = 
-    this.calculateStoreIncome() +
-    this.calculatePopulationIncome();
+        this.progressionManager.unlockedStores.forEach(store => {
+            storeIncome += store.revenue;
+        });
 
-    return totalIncome;
+        return storeIncome;
 
-}
+    }
+
+    // Upgrade boosts
+
+    // Calculates daily income
+    calculateDailyIncome() {
+
+        let totalIncome = 0;
+
+        totalIncome =
+            this.calculateStoreIncome() +
+            this.calculatePopulationIncome();
+
+        return totalIncome / SECONDS_IN_A_DAY;
+
+    }
 
 }

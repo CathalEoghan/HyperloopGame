@@ -17,6 +17,7 @@ export class GameManager {
         this.progressionManager.addCash(cashIncome);
 
         this.constructionManager.update();
+        console.log(`Balance: $${this.progressionManager.balance.toFixed(2)}`);
     }
 
 }
