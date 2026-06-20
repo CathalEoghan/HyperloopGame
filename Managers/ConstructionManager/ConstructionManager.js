@@ -23,21 +23,21 @@ export class ConstructionManager {
             return ONE_DAY;
         }
 
-        return EIGHT_HOURS;
-
+        // If the tier is not 1, 2 or 3
+        throw new Error(`Unknown city tier: ${city.tier}`)
     }
 
     update() {
-    this.progressionManager.unlockedCities.forEach(city => {
+        this.progressionManager.unlockedCities.forEach(city => {
 
-        if (!city.underConstruction) return;
+            if (!city.underConstruction) return;
 
-        if (this.isConstructionComplete(city)) {
-            this.completeStationConstruction(city);
-        }
+            if (this.isConstructionComplete(city)) {
+                this.completeStationConstruction(city);
+            }
 
-    });
-}
+        });
+    }
 
     // Starts construction of the station
     startStationConstruction(city) {
@@ -52,12 +52,11 @@ export class ConstructionManager {
     }
 
     completeStationConstruction(city) {
-        if (this.isConstructionComplete(city)) {
-            city.underConstruction = false;
-            city.finishTime = null;
-            this.progressionManager.unlockCity(city);
-        }
+        city.underConstruction = false;
+        city.finishTime = null;
+        this.progressionManager.unlockCity(city);
     }
 }
+
 
 

@@ -2,7 +2,7 @@
 import { Upgrade } from "../../UpgradeManager/Upgrade.js";
 import { Store } from "../../StoreManager/Store.js";
 
- export class ProgressionManager {
+export class ProgressionManager {
     constructor() {
         this.unlockedCities = [];
         this.unlockedRewards = [];
@@ -15,8 +15,8 @@ import { Store } from "../../StoreManager/Store.js";
     unlockCity(city) {
         city.unlock();
 
-        // If the unlocked cities list doesn't already include the cigty, add it
-           if (!this.unlockedCities.includes(city)) {
+        // If the unlocked cities list doesn't already include the city, add it
+        if (!this.unlockedCities.includes(city)) {
             this.unlockedCities.push(city);
         }
 
@@ -29,32 +29,34 @@ import { Store } from "../../StoreManager/Store.js";
 
     // Unlocks the reward, includes it in a broad list of unlocked upgrades + stores
     unlockReward(reward) {
-        if (!this.unlockedRewards.includes(reward)) {
+        if (!this.unlockedRewards.includes(reward)) { // If it's not already included
             this.unlockedRewards.push(reward);
         }
 
-        if (reward instanceof Upgrade) {
+        if (reward instanceof Upgrade && !this.unlockedUpgrades.includes(reward)) { // If it's not already included
             this.unlockedUpgrades.push(reward)
         }
 
-        if (reward instanceof Store) {
+        if (reward instanceof Store && !this.unlockedStores.includes(reward)) { // If it's not already included
             this.unlockedStores.push(reward)
         }
     }
 
-    addMoney(amount) {
+    // Adds cash to the balance
+    addCash(amount) {
 
         this.balance += amount;
 
     }
 
-    spendMoney(amount) {
-        if (this.balance >= amount) {
+    // Spends cash, deducts from balance
+    spendCash (amount) {
+        if (this.balance >= amount) { // If balance is bigger than the amount, OK to spend
             this.balance -= amount;
             return true;
         }
-        return false;
+        return false; // Otherwise reject
     }
 
 }
- 
+

@@ -1,4 +1,3 @@
-
 export class GameManager {
     constructor(economyManager, progressionManager, constructionManager) {
         this.economyManager = economyManager;
@@ -6,10 +5,16 @@ export class GameManager {
         this.constructionManager = constructionManager;
     }
 
+    setStartingCity(city) {
+
+        this.progressionManager.unlockCity(city);
+
+    }
+
     tick() {
 
         const cashIncome = this.economyManager.calculateDailyIncome();
-            this.progressionManager.addMoney(cashIncome);
+            this.progressionManager.addCash(cashIncome);
 
             this.constructionManager.update();
         }
