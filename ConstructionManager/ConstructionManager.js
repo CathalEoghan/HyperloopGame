@@ -1,8 +1,10 @@
 
-class Construction {
-    constructor(playerProgression, timeManager) {
+import { FOUR_HOURS, EIGHT_HOURS, ONE_DAY } from '../TimeManager/TimeManager.js'
 
-        this.playerProgression = playerProgression;
+export class ConstructionManager {
+    constructor(progressionManager, timeManager) {
+
+        this.progressionManager = progressionManager;
         this.timeManager = timeManager;
 
     }
@@ -26,7 +28,7 @@ class Construction {
     }
 
     update() {
-    this.playerProgression.unlockedCities.forEach(city => {
+    this.progressionManager.unlockedCities.forEach(city => {
 
         if (!city.underConstruction) return;
 
@@ -53,7 +55,7 @@ class Construction {
         if (this.isConstructionComplete(city)) {
             city.underConstruction = false;
             city.finishTime = null;
-            this.playerProgression.unlockCity(city);
+            this.progressionManager.unlockCity(city);
         }
     }
 }

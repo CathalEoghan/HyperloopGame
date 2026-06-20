@@ -5,6 +5,7 @@ export const sodaMachines = new Upgrade(
     "Soda Machines",
     14000,
     "food",
-    "populationIncome"
+    "populationIncome",
+    0.05
 )
     

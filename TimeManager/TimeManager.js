@@ -4,7 +4,7 @@
     export const EIGHT_HOURS = 8 * 60 * 60 * 1000;
     export const ONE_DAY = 24 * 60 * 60 * 1000;
 
-class TimeManager {
+export class TimeManager {
 
     // Returns current time
     getNow() {

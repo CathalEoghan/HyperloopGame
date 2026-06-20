@@ -1,8 +1,9 @@
 
-class GameEngine {
-    constructor(economyManager, playerProgression) {
+export class GameEngine {
+    constructor(economyManager, playerProgression, constructionManager) {
         this.economyManager = economyManager;
         this.playerProgression = playerProgression;
+        this.constructionManager = constructionManager;
     }
 
     tick() {

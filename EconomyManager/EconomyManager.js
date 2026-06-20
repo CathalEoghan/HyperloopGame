@@ -1,7 +1,7 @@
 
 export class EconomyManager {
-    constructor(playerProgression) {
-    this.playerProgression = playerProgression;
+    constructor(progressionManager) {
+    this.progressionManager = progressionManager;
     }
 
 // Population earnings
@@ -10,7 +10,7 @@ calculatePopulationIncome() {
 let populationIncome = 0;
 const POPULATION_INCOME_MODIFIER = 0.0005
 
-    this.playerProgression.unlockedCities.forEach(city => {
+    this.progressionManager.unlockedCities.forEach(city => {
 
         let incomeFromCity = city.population * POPULATION_INCOME_MODIFIER;
         populationIncome += incomeFromCity;
@@ -20,7 +20,7 @@ const POPULATION_INCOME_MODIFIER = 0.0005
     let upgradeMultiplier = 1;
 
     // Adds the upgrade multipliers to the population income
-    this.playerProgression.unlockedUpgrades.forEach(upgrade => {
+    this.progressionManager.unlockedUpgrades.forEach(upgrade => {
 
         if (upgrade.effectType === "populationIncome") {
 
@@ -39,7 +39,7 @@ calculateStoreIncome() {
 
 let storeIncome = 0;
 
-   this.playerProgression.unlockedStores.forEach(store => {
+   this.progressionManager.unlockedStores.forEach(store => {
     storeIncome += store.revenue;
    });
 

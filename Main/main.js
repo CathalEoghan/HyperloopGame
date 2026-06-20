@@ -1,17 +1,20 @@
 
-import { PlayerProgression } from "../ProgressionManager/PlayerProgression.js";
-import { TimeManager } from "../TimeManager/Time.js";
-import { GameEngine } from '../GameEngine/Game.js'
-import { Construction } from '../ConstructionManager/Construction.js'
-import { Economy } from '../EconomyManager/Economy.js'
+import { ProgressionManager } from "../ProgressionManager/ProgressionManager.js";
+import { TimeManager } from "../TimeManager/TimeManager.js";
+import { GameManager } from '../GameManager/Game.js'
+import { ConstructionManager } from '../ConstructionManager/ConstructionManager.js'
+import { EconomyManager } from '../EconomyManager/EconomyManager.js'
 
 class Main {
 
 startGame() {
 
-    timeManager = new TimeManager();
-    playerProgression = new PlayerProgression();
-    GameEngine.tick()
+    const timeManager = new TimeManager();
+    const playerProgressionManager = new PlayerProgressionManager();
+    const constructionManager = new ConstructionManager();
+    const economyManager = new EconomyManager();
+
+    GameManager.tick()
 
 }
 

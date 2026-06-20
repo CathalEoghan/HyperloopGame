@@ -2,7 +2,7 @@
 import { Upgrade } from "../UpgradeManager/Upgrade.js";
 import { Store } from "../StoreManager/Store.js";
 
- export class PlayerProgression {
+ export class ProgressionManager {
     constructor() {
         this.unlockedCities = [];
         this.unlockedRewards = [];
