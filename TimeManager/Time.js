@@ -12,7 +12,7 @@ class TimeManager {
     }
 
     // Determines when a timer is complete
-    isReady(finishTime) {
+    whenIsTimerReady(finishTime) {
     return this.getNow() >= finishTime;
     }
 

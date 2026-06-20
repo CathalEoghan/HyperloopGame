@@ -9,6 +9,7 @@ export class City {
         this.tier = tier;
         this.fact = fact;
         this.connected = false;
+        this.underConstruction = false;
     }
 
     unlock() {

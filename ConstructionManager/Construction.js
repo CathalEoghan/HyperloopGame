@@ -25,17 +25,34 @@ class Construction {
 
     }
 
+    update() {
+    this.playerProgression.unlockedCities.forEach(city => {
+
+        if (!city.underConstruction) return;
+
+        if (this.isConstructionComplete(city)) {
+            this.completeStationConstruction(city);
+        }
+
+    });
+}
+
+    // Starts construction of the station
     startStationConstruction(city) {
         const duration = this.calculateTierTime(city)
         city.finishTime = this.timeManager.getFinishTime(duration)
+        city.underConstruction = true;
     }
 
+    // Checks if construction is complete
     isConstructionComplete(city) {
-        return this.timeManager.isReady(city.finishTime)
+        return this.timeManager.whenIsTimerReady(city.finishTime)
     }
 
     completeStationConstruction(city) {
-        if (this.checkConstruction(city)) {
+        if (this.isConstructionComplete(city)) {
+            city.underConstruction = false;
+            city.finishTime = null;
             this.playerProgression.unlockCity(city);
         }
     }
