@@ -1,6 +1,6 @@
 
-import { Upgrade } from "../UpgradeManager/Upgrade.js";
-import { Store } from "../StoreManager/Store.js";
+import { Upgrade } from "../../UpgradeManager/Upgrade.js";
+import { Store } from "../../StoreManager/Store.js";
 
  export class ProgressionManager {
     constructor() {

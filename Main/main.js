@@ -1,9 +1,9 @@
 
-import { ProgressionManager } from "../ProgressionManager/ProgressionManager.js";
-import { TimeManager } from "../TimeManager/TimeManager.js";
-import { GameManager } from '../GameManager/GameManager.js'
-import { ConstructionManager } from '../ConstructionManager/ConstructionManager.js'
-import { EconomyManager } from '../EconomyManager/EconomyManager.js'
+import { ProgressionManager } from "../Managers/ProgressionManager/ProgressionManager.js";
+import { TimeManager } from "../Managers/TimeManager/TimeManager.js";
+import { GameManager } from '../Managers/GameManager/GameManager.js'
+import { ConstructionManager } from '../Managers/ConstructionManager/ConstructionManager.js'
+import { EconomyManager } from '../Managers/EconomyManager/EconomyManager.js'
 
 class Main {
 
@@ -19,3 +19,6 @@ startGame() {
 }
 
 }
+
+    const main = new Main();
+    main.startGame();
