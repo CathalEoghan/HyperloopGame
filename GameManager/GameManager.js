@@ -1,15 +1,15 @@
 
-export class GameEngine {
-    constructor(economyManager, playerProgression, constructionManager) {
+export class GameManager {
+    constructor(economyManager, progressionManager, constructionManager) {
         this.economyManager = economyManager;
-        this.playerProgression = playerProgression;
+        this.progressionManager = progressionManager;
         this.constructionManager = constructionManager;
     }
 
     tick() {
 
         const cashIncome = this.economyManager.calculateDailyIncome();
-            this.playerProgression.addMoney(cashIncome);
+            this.progressionManager.addMoney(cashIncome);
 
             this.constructionManager.update();
         }
