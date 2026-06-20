@@ -1,6 +1,6 @@
 
 
-import { Store } from "../StoreManager/Store.js";
+import { Store } from "./Store.js";
 
 export const waffleHouse = new Store(
     "WaffleHouse",

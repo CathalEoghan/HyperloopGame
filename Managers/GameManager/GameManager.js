@@ -14,10 +14,10 @@ export class GameManager {
     tick() {
 
         const cashIncome = this.economyManager.calculateDailyIncome();
-            this.progressionManager.addCash(cashIncome);
+        this.progressionManager.addCash(cashIncome);
 
-            this.constructionManager.update();
-        }
-
+        this.constructionManager.update();
     }
+
+}
 

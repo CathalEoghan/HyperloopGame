@@ -10,6 +10,7 @@ export class City {
         this.fact = fact;
         this.connected = false;
         this.underConstruction = false;
+        this.finishTime = null;
     }
 
     unlock() {
