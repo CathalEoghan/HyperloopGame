@@ -11,9 +11,10 @@ startGame() {
 
     const timeManager = new TimeManager();
     const progressionManager = new ProgressionManager();
-    const constructionManager = new ConstructionManager();
-    const economyManager = new EconomyManager();
-    GameManager.tick()
+    const constructionManager = new ConstructionManager(progressionManager, timeManager);
+    const economyManager = new EconomyManager(progressionManager);
+    const gameManager = new GameManager(economyManager, progressionManager, constructionManager);
+    gameManager.tick()
 
 }
 
