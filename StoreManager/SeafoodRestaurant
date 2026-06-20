@@ -1,0 +1,10 @@
+
+
+import { Store } from "../StoreManager/Store.js";
+
+export const seafoodRestaurant = new Store(
+    "Seafood Restaurant",
+    25000,
+    "food",
+    710
+);
