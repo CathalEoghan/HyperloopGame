@@ -1,6 +1,6 @@
 
 
-import { Store } from "../StoreManager/Store.js";
+import { Store } from "./Store.js";
 
 export const seafoodRestaurant = new Store(
     "Seafood Restaurant",
