@@ -1,10 +1,14 @@
 
 import { useState, useEffect } from "react"
+import TopBanner from './components/TopBanner'
+import ExperienceBar from './components/ExperienceBar'
+import BottomNav from "./components/BottomNav"
 import './App.css'
 
 function App() {
 
 const [balance, setBalance] = useState(0);
+const [activeTab, setActiveTab] = useState("Cities");
 
 useEffect(() => {
   setInterval(() => {
@@ -14,14 +18,14 @@ useEffect(() => {
 
 return (
 
-<div className= "TerminalName">
-<h1>Hyperloop Central</h1>
+<div className= "App">
+<TopBanner terminalName="Hyperloop Central" balance={balance} />
 
-<h2>Your balance:</h2>
-
-<p>£{balance.toFixed(2)}</p>
+<ExperienceBar current={3} max={10} />
+<p>Current section: {activeTab}</p>
+<BottomNav activeTab={activeTab} onSelect={setActiveTab}>
+</BottomNav>
 </div>
-
 )
 
 }

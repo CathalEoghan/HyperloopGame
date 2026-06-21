@@ -1,0 +1,18 @@
+
+.TopBanner {
+    display: flex;
+    align-items: center;
+    background-color: dimgrey;
+    padding-left: 20px;
+}
+.TerminalName {
+    flex: 2;
+}
+.balance {
+    margin-right: 8px;
+}
+.MysterySpot {
+    flex: 1;
+    min-height: 100px;
+    background-color:gainsboro;
+}

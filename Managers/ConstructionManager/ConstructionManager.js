@@ -11,7 +11,7 @@ export class ConstructionManager {
 
     calculateTierTime(city) {
 
-        if (city.tier === 1) {
+        if (city.tier === 3) {
             return FOUR_HOURS;
         }
 
@@ -19,7 +19,7 @@ export class ConstructionManager {
             return EIGHT_HOURS;
         }
 
-        if (city.tier === 3) {
+        if (city.tier === 1) {
             return ONE_DAY;
         }
 
