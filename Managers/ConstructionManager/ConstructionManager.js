@@ -28,7 +28,7 @@ export class ConstructionManager {
     }
 
     update() {
-        this.progressionManager.unlockedCities.forEach(city => {
+        this.progressionManager.citiesUnderConstruction.forEach(city => {
 
             if (!city.underConstruction) return;
 
@@ -41,9 +41,16 @@ export class ConstructionManager {
 
     // Starts construction of the station
     startStationConstruction(city) {
-        const duration = this.calculateTierTime(city)
+
+        let connectionCost = this.calculateTierConnectionCost(city);
+
+        const canAfford = this.progressionManager.spendCash(connectionCost);
+        if (!canAfford) return;
+
+        const duration = this.calculateTierTime(city);
         city.finishTime = this.timeManager.getFinishTime(duration)
         city.underConstruction = true;
+        this.progressionManager.citiesUnderConstruction.push(city);
     }
 
     // Checks if construction is complete
@@ -54,7 +61,29 @@ export class ConstructionManager {
     completeStationConstruction(city) {
         city.underConstruction = false;
         city.finishTime = null;
-        this.progressionManager.unlockCity(city);
+        this.progressionManager.purchaseCity(city);
+        this.progressionManager.citiesUnderConstruction =
+            this.progressionManager.citiesUnderConstruction.filter(c => c !== city);
+    }
+
+    calculateTierConnectionCost(city) {
+
+        let connectionCost = 0;
+
+        switch (city.tier) {
+            case 1:
+                connectionCost = 50000;
+                break;
+            case 2:
+                connectionCost = 25000;
+                break;
+            case 3:
+                connectionCost = 10000;
+                break;
+            default:
+                throw new Error("Error: tier not recognised.")
+        }
+        return connectionCost;
     }
 }
 

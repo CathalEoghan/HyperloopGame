@@ -4,33 +4,17 @@ import { Store } from "../../StoreManager/Store.js";
 
 export class ProgressionManager {
     constructor(rankManager) {
-        this.unlockedCities = [];
+        this.purchasedCities = [];
         this.unlockedRewards = [];
         this.unlockedUpgrades = [];
+        this.purchasedUpgrades = [];
         this.unlockedStores = [];
+        this.purchasedStores = [];
+        this.citiesUnderConstruction = [];
         this.balance = 0;
         this.totalCashEarned = 0;
         this.rankManager = rankManager;
     }
-
-  unlockCity(city) {
-    // Check capacity first
-    if (this.unlockedCities.length >= this.getCityCapacity()) {
-        return; // full, don't unlock
-    }
-
-    city.unlock();
-
-    // If not already in the list, add it
-    if (!this.unlockedCities.includes(city)) {
-        this.unlockedCities.push(city);
-    }
-
-    // Unlock rewards
-    city.rewards.forEach(reward => {
-        this.unlockReward(reward);
-    });
-}
 
     // Unlocks the reward, includes it in a broad list of unlocked upgrades + stores
     unlockReward(reward) {
@@ -56,7 +40,7 @@ export class ProgressionManager {
     }
 
     // Spends cash, deducts from balance
-    spendCash (amount) {
+    spendCash(amount) {
         if (this.balance >= amount) { // If balance is bigger than the amount, OK to spend
             this.balance -= amount;
             return true;
@@ -66,9 +50,25 @@ export class ProgressionManager {
 
 
     getCityCapacity() {
-      // capacity = rank, not rank + 1
-let cityCapacity = this.rankManager.rank;
-return cityCapacity;
-}
+        // Capacity = rank, not rank + 1
+        let cityCapacity = this.rankManager.rank;
+        return cityCapacity;
+    }
+
+    purchaseCity(city) {
+        if (this.purchasedCities.length >= this.getCityCapacity()) {
+            return;
+        }
+        city.connect();
+
+        if (!this.purchasedCities.includes(city)) {
+            this.purchasedCities.push(city);
+        }
+
+        city.rewards.forEach(reward => {
+            this.unlockReward(reward);
+        });
+
+    }
 }
 

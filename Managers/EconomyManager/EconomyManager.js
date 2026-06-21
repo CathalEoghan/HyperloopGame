@@ -11,7 +11,7 @@ export class EconomyManager {
         let populationIncome = 0;
         const POPULATION_INCOME_MODIFIER = 0.0005;
 
-        this.progressionManager.unlockedCities.forEach(city => {
+        this.progressionManager.purchasedCities.forEach(city => {
 
             let incomeFromCity = city.population * POPULATION_INCOME_MODIFIER;
             populationIncome += incomeFromCity;
@@ -21,7 +21,7 @@ export class EconomyManager {
         let upgradeMultiplier = 1;
 
         // Adds the upgrade multipliers to the population income
-        this.progressionManager.unlockedUpgrades.forEach(upgrade => {
+        this.progressionManager.purchasedUpgrades.forEach(upgrade => {
 
             if (upgrade.effectType === "populationIncome") {
 
@@ -39,7 +39,7 @@ export class EconomyManager {
 
         let storeIncome = 0;
 
-        this.progressionManager.unlockedStores.forEach(store => {
+        this.progressionManager.purchasedStores.forEach(store => {
             storeIncome += store.revenue;
         });
 

@@ -8,7 +8,7 @@ export class GameManager {
 
     setStartingCity(city) {
 
-        this.progressionManager.unlockCity(city);
+        this.progressionManager.purchaseCity(city);
 
     }
 

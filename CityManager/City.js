@@ -13,7 +13,7 @@ export class City {
         this.finishTime = null;
     }
 
-    unlock() {
+    connnect() {
         this.connected = true;
     }
 
