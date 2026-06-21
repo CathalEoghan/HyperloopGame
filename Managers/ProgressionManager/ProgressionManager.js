@@ -3,29 +3,34 @@ import { Upgrade } from "../../UpgradeManager/Upgrade.js";
 import { Store } from "../../StoreManager/Store.js";
 
 export class ProgressionManager {
-    constructor() {
+    constructor(rankManager) {
         this.unlockedCities = [];
         this.unlockedRewards = [];
         this.unlockedUpgrades = [];
         this.unlockedStores = [];
         this.balance = 0;
+        this.totalCashEarned = 0;
+        this.rankManager = rankManager;
     }
 
-    // Calls unlockCity(), which initiates the method city.unlock();
-    unlockCity(city) {
-        city.unlock();
-
-        // If the unlocked cities list doesn't already include the city, add it
-        if (!this.unlockedCities.includes(city)) {
-            this.unlockedCities.push(city);
-        }
-
-        // And then push its reward to the list of rewards by calling the unlockReward() method
-        city.rewards.forEach(reward => {
-            this.unlockReward(reward);
-        });
-
+  unlockCity(city) {
+    // Check capacity first
+    if (this.unlockedCities.length >= this.getCityCapacity()) {
+        return; // full, don't unlock
     }
+
+    city.unlock();
+
+    // If not already in the list, add it
+    if (!this.unlockedCities.includes(city)) {
+        this.unlockedCities.push(city);
+    }
+
+    // Unlock rewards
+    city.rewards.forEach(reward => {
+        this.unlockReward(reward);
+    });
+}
 
     // Unlocks the reward, includes it in a broad list of unlocked upgrades + stores
     unlockReward(reward) {
@@ -46,6 +51,7 @@ export class ProgressionManager {
     addCash(amount) {
 
         this.balance += amount;
+        this.totalCashEarned += amount; // Never decreases
 
     }
 
@@ -58,5 +64,11 @@ export class ProgressionManager {
         return false; // Otherwise reject
     }
 
+
+    getCityCapacity() {
+      // capacity = rank, not rank + 1
+let cityCapacity = this.rankManager.rank;
+return cityCapacity;
+}
 }
 
