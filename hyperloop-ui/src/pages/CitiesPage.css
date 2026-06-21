@@ -1,0 +1,38 @@
+
+.background {
+  padding: 8px;
+  font-family: "Inter", sans-serif;
+  padding-bottom: 80px;
+}
+
+.background button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: "Inter", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.background .tierAndPopulation {
+    display: flex;
+    flex-direction: column;
+    font-size: smaller;
+    font-family: "Inter", sans-serif;
+    color: grey
+}
+
+.city-image-placeholder {
+    width: 48px;
+    height: 48px;
+    background-color: #ccc;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.city-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}

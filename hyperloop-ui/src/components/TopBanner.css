@@ -2,17 +2,23 @@
 .TopBanner {
     display: flex;
     align-items: center;
-    background-color: dimgrey;
+    background-color: linen;
+    border: 2px solid black;
     padding-left: 20px;
+    font-family: 'Inter', sans-serif;
 }
 .TerminalName {
     flex: 2;
+    font-family: 'Inter', sans-serif;
 }
 .balance {
     margin-right: 8px;
+    font-family: 'Inter', sans-serif;
 }
 .MysterySpot {
     flex: 1;
     min-height: 100px;
-    background-color:gainsboro;
+    background-color:lightgrey;
+    font-family: 'Inter', sans-serif;
+    
 }

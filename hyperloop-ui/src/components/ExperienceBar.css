@@ -2,12 +2,16 @@
 .ExperienceBar {
 
     height: 16px;
-    background-color: darkgrey;
+    margin-top: 0.3px;
+    background-color: linen;
+    border: 2px solid black;
+    font-family: 'Inter', sans-serif;
 
 }
 
 .fill {
     height: 100%;
     background-color: limegreen;
+    font-family: 'Inter', sans-serif;
 
 }

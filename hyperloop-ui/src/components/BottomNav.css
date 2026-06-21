@@ -6,11 +6,19 @@ left: 0;
 width: 100%;
 height: 40px;
 display: flex;
-background-color: dimgrey;
+background-color:linen
+font-family: 'Inter', sans-serif;
 }
 
 .bottomNav button {
     flex: 1;
     height: 100%;
-    background-color: gainsboro;
+    background-color: linen;
+    font-family: 'Inter', sans-serif;
+    transition-duration: 0.4s;
+}
+
+.bottomNav button:hover {
+  background-color: limegreen;
+  color: white;
 }

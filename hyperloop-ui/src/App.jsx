@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 import TopBanner from './components/TopBanner'
 import ExperienceBar from './components/ExperienceBar'
 import BottomNav from "./components/BottomNav"
+import CitiesPage from "./pages/CitiesPage"
 import './App.css'
 
 function App() {
@@ -22,7 +23,7 @@ return (
 <TopBanner terminalName="Hyperloop Central" balance={balance} />
 
 <ExperienceBar current={3} max={10} />
-<p>Current section: {activeTab}</p>
+{activeTab === "Cities" && <CitiesPage purchasedCities={[]} />}
 <BottomNav activeTab={activeTab} onSelect={setActiveTab}>
 </BottomNav>
 </div>
