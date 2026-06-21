@@ -11,6 +11,7 @@ export class ProgressionManager {
         this.unlockedStores = [];
         this.purchasedStores = [];
         this.citiesUnderConstruction = [];
+        this.constructionQueue = [];
         this.balance = 0;
         this.totalCashEarned = 0;
         this.rankManager = rankManager;
@@ -54,6 +55,16 @@ export class ProgressionManager {
         let cityCapacity = this.rankManager.rank;
         return cityCapacity;
     }
+
+    getConstructionQueueCapacity() {
+    let size = 1; // default
+    this.purchasedUpgrades.forEach(upgrade => {
+        if (upgrade.effectType === "queueCapacity") {
+            size++;
+        }
+    });
+    return size;
+}
 
     purchaseCity(city) {
         if (this.purchasedCities.length >= this.getCityCapacity()) {

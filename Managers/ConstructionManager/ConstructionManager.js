@@ -39,8 +39,19 @@ export class ConstructionManager {
         });
     }
 
+    isConstructionQueueFull() {
+
+        if (this.progressionManager.constructionQueue.length >= this.progressionManager.getConstructionQueueCapacity()) {
+            console.log("Your terminal's construction queue is full!")
+            return true;
+        }
+        return false;
+    }
+
     // Starts construction of the station
     startStationConstruction(city) {
+
+        if (this.isConstructionQueueFull()) return;
 
         let connectionCost = this.calculateTierConnectionCost(city);
 
@@ -51,6 +62,7 @@ export class ConstructionManager {
         city.finishTime = this.timeManager.getFinishTime(duration)
         city.underConstruction = true;
         this.progressionManager.citiesUnderConstruction.push(city);
+        this.progressionManager.constructionQueue.push(city);
     }
 
     // Checks if construction is complete
@@ -64,6 +76,8 @@ export class ConstructionManager {
         this.progressionManager.purchaseCity(city);
         this.progressionManager.citiesUnderConstruction =
             this.progressionManager.citiesUnderConstruction.filter(c => c !== city);
+        this.progressionManager.constructionQueue =
+            this.progressionManager.constructionQueue.filter(c => c !== city);
     }
 
     calculateTierConnectionCost(city) {
