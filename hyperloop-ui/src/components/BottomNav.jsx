@@ -1,13 +1,23 @@
 
+import { playClickSound2 } from '../utils/sound.js'
+import { playClickSound3 } from '../utils/sound.js'
 import './BottomNav.css'
 
 function BottomNav({activeTab, onSelect}) {
+
+    const target = activeTab === "Cities" ? "Home" : "Cities"
 
     return (
 
     <div className="bottomNav">
 
-    <button className="Cities" onClick={() => onSelect("Cities")}>
+    <button className="Cities" onClick={() => {
+        if (target == "Cities") {
+            playClickSound2();
+        } else {
+        playClickSound3();
+        }
+        onSelect(target)}}>
         Cities
     </button>
 

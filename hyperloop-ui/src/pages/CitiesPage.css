@@ -23,12 +23,13 @@
     color: grey
 }
 
-.city-image-placeholder {
+.city-image {
     width: 48px;
     height: 48px;
     background-color: #ccc;
     border-radius: 6px;
     flex-shrink: 0;
+    border: 2px solid black;
 }
 
 .city-row {

@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import './CitiesPage.css'
 import { allCities } from '../../../CityManager/CityRegistry'
+import cityImages from '../data/cityImages.js'
 
 function CitiesPage({ purchasedCities }) {
 
@@ -31,7 +32,7 @@ function CitiesPage({ purchasedCities }) {
         <div className="city-row">
         {grouped[country].map(city => (
             <button key={city.name} onClick={() => setSelectedCity(city)}>
-                <div className="city-image-placeholder"></div>
+                <img className="city-image" src={cityImages[city.name]}/>
                 <div>
                 {city.name}
                 </div>
