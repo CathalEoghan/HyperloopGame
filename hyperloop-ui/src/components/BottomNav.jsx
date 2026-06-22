@@ -12,7 +12,7 @@ function BottomNav({activeTab, onSelect}) {
     <div className="bottomNav">
 
     <button className="Cities" onClick={() => {
-        if (target == "Cities") {
+        if (activeTab == "Cities") {
             playClickSound2();
         } else {
         playClickSound3();
