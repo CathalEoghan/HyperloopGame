@@ -5,7 +5,11 @@ import './BottomNav.css'
 
 function BottomNav({activeTab, onSelect}) {
 
-    const target = activeTab === "Cities" ? "Home" : "Cities"
+    const targetCities = activeTab === "Cities" ? "Home" : "Cities"
+    const targetStores = activeTab === "Stores" ? "Home" : "Stores"
+    const targetUpgrades = activeTab === "Upgrades" ? "Home" : "Upgrades"
+    const targetProgress = activeTab === "Progress" ? "Home" : "Progress"
+    const targetSettings = activeTab === "Settings" ? "Home" : "Settings"
 
     return (
 
@@ -13,27 +17,51 @@ function BottomNav({activeTab, onSelect}) {
 
     <button className="Cities" onClick={() => {
         if (activeTab == "Cities") {
-            playClickSound2();
+            playClickSound3();
         } else {
-        playClickSound3();
+        playClickSound2();
         }
-        onSelect(target)}}>
+        onSelect(targetCities)}}>
         Cities
     </button>
 
-    <button className="Stores" onClick={() => onSelect("Stores")}>
+     <button className="Stores" onClick={() => {
+        if (activeTab == "Stores") {
+            playClickSound3();
+        } else {
+        playClickSound2();
+        }
+        onSelect(targetStores)}}>
         Stores
     </button>
 
-    <button className="Upgrades" onClick={() => onSelect("Upgrades")}>
+    <button className="Upgrades" onClick={() => {
+        if (activeTab == "Upgrades") {
+            playClickSound3();
+        } else {
+        playClickSound2();
+        }
+        onSelect(targetUpgrades)}}>
         Upgrades
     </button>
 
-    <button className="Progress" onClick={() => onSelect("Progress")}>
+    <button className="Progress" onClick={() => {
+        if (activeTab == "Progress") {
+            playClickSound3();
+        } else {
+        playClickSound2();
+        }
+        onSelect(targetProgress)}}>
         Progress
     </button>
 
-    <button className="Settings" onClick={() => onSelect("Settings")}>
+    <button className="Settings" onClick={() => {
+        if (activeTab == "Settings") {
+            playClickSound3();
+        } else {
+        playClickSound2();
+        }
+        onSelect(targetSettings)}}>
         Settings
     </button>
 
