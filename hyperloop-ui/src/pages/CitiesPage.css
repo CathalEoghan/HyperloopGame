@@ -62,3 +62,40 @@
     margin-left: 6px;
     vertical-align: middle;
 }
+
+.cityWrapper {
+    position: relative;
+}
+
+.tooltip {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    width: 200px;
+    z-index: 10;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    text-align: center;
+    top: 0;
+    left: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.tooltip img {
+    border: 1px solid black;
+    width: 40px;
+    height: 27px;
+    object-fit: fill;
+    margin-bottom: 6px;
+}
+
+.tooltip hr {
+  margin: 8px 0;
+}
+
+.cityWrapper:hover .tooltip {
+    display: block;
+}

@@ -39,6 +39,7 @@ function CitiesPage({ purchasedCities }) {
 </h2>
         <div className="city-row">
         {grouped[country].map(city => (
+            <div className="cityWrapper">
             <button className="city" key={city.name} onClick={() => setSelectedCity(city)}>
                 <img className="city-image" src={cityImages[city.name]}/>
                 <div>
@@ -49,6 +50,16 @@ function CitiesPage({ purchasedCities }) {
                 </div>
 
             </button>
+            <div className="tooltip">
+    <img src={`https://flagcdn.com/w40/${countryFlags[city.country]}.png`} />
+    <h3>{city.name}</h3>
+    <hr />
+    <p>Country: {city.country}</p>
+    <p>Population: {city.population.toLocaleString()}</p>
+    <p>Earning x per day</p>
+    <p>{city.fact}</p>
+</div>
+            </div>
         ))}
         </div>
     </div>

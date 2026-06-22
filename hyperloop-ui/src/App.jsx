@@ -9,7 +9,7 @@ import './App.css'
 function App() {
 
 const [balance, setBalance] = useState(0);
-const [activeTab, setActiveTab] = useState("Cities");
+const [activeTab, setActiveTab] = useState("Home");
 
 useEffect(() => {
   setInterval(() => {
