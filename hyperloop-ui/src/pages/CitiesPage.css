@@ -3,6 +3,7 @@
   padding: 8px;
   font-family: "Inter", sans-serif;
   padding-bottom: 80px;
+  background-color:linen
 }
 
 .background button {
@@ -10,9 +11,15 @@
   border: none;
   cursor: pointer;
   font-family: "Inter", sans-serif;
+  font-weight: bold;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.country {
+    border-left: 4px solid limegreen;
+    padding-left: 8px;
 }
 
 .background .tierAndPopulation {
@@ -23,17 +30,35 @@
     color: grey
 }
 
+.background button:hover .city-image {
+  filter: drop-shadow(2px 4px 4px grey);
+}
+
 .city-image {
-    width: 48px;
-    height: 48px;
+    width: 64px;
+    height: 64px;
     background-color: #ccc;
     border-radius: 6px;
     flex-shrink: 0;
     border: 2px solid black;
 }
 
+.city {
+  font-family: "Inter", sans-serif;
+  font-weight: bold;
+}
+
 .city-row {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
+}
+
+.country img {
+    width: 24px;
+    height: 16px;
+    border: 1px solid black;
+    object-fit: cover;
+    margin-left: 6px;
+    vertical-align: middle;
 }
