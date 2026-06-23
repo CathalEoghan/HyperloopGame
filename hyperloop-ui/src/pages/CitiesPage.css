@@ -31,7 +31,11 @@
     color: grey
 }
 
-.background button:hover .city-image {
+.background button:hover .store-image {
+  filter: drop-shadow(2px 4px 4px grey);
+}
+
+.background button:hover .unavailable {
   filter: drop-shadow(2px 4px 4px grey);
 }
 
@@ -155,3 +159,14 @@
 .modal p {
     font-family: "Inter", sans-serif;
 }
+
+.unavailable {
+    filter: grayscale(100%);
+        width: 64px;
+    height: 64px;
+    background-color: #ccc;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 2px solid black;
+}
+

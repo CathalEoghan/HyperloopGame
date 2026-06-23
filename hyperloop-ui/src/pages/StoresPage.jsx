@@ -41,7 +41,7 @@ return (
         <div className="store-row">
             {sortedAvailable.map(store => (
                 <button className="store" key={store.name} onClick={() => setSelectedStore(store)}>
-                    <img className="store-image" src={storeImages[store.name]} style={{width: '100%', height: '160px'}} />
+                    <img className="unavailable" src={storeImages[store.name]} style={{width: '100%', height: '160px'}} />
                     <div>{store.name}</div>
                     <div className="category">{store.category}</div>
                 </button>

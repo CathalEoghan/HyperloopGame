@@ -148,3 +148,18 @@
     color: grey;
     font-weight: normal;
 }
+
+.unavailable {
+    filter: grayscale(100%);
+        width: 64px;
+    height: 64px;
+    background-color: #ccc;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 2px solid black;
+}
+
+.background button:hover .unavailable {
+  filter: drop-shadow(2px 4px 4px grey);
+}
+

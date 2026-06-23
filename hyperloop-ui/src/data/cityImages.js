@@ -9,6 +9,8 @@ import Rome from '../assets/cities/Rome.jpg'
 import Brussels from '../assets/cities/Brussels.jpg'
 import Atlanta from '../assets/cities/Atlanta.jpg'
 import Dublin from '../assets/cities/Dublin.jpg'
+import Milwaukee from '../assets/cities/Milwaukee.jpg'
+import Portland from '../assets/cities/Portland.jpg'
 
 const cityImages = {
     London: London,
@@ -20,7 +22,9 @@ const cityImages = {
     Rome: Rome,
     Brussels: Brussels,
     Atlanta: Atlanta,
-    Dublin: Dublin
+    Dublin: Dublin,
+    Milwaukee: Milwaukee,
+    Portland: Portland
 }
 
 export default cityImages

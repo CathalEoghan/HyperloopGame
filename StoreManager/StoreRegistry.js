@@ -8,6 +8,8 @@ import { pub } from './Pub.js'
 import { seafoodRestaurant } from './SeafoodRestaurant.js'
 import { soapStore } from './SoapStore.js'
 import { waffleHouse } from './WaffleHouse.js'
+import { bowlingAlley } from './BowlingAlley.js'
+import { iceCreamParlour } from './IceCreamParlour.js'
 
 
 export const allStores = [
@@ -20,4 +22,6 @@ export const allStores = [
     seafoodRestaurant,
     soapStore,
     waffleHouse,
+    bowlingAlley,
+    iceCreamParlour,
 ]

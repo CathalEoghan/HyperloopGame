@@ -9,6 +9,8 @@ import { NewYork } from './NewYork.js'
 import { Osaka } from './Osaka.js'
 import { Paris } from './Paris.js'
 import { Rome } from './Rome.js'
+import { Milwaukee } from './Milwaukee.js'
+import { Portland } from './Portland.js'
 
 
 export const allCities = [
@@ -22,4 +24,6 @@ export const allCities = [
     Osaka,
     Paris,
     Rome,
+    Milwaukee,
+    Portland,
 ]

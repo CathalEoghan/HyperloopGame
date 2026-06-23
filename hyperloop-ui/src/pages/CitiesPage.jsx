@@ -92,7 +92,7 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
                     <div className="city-row">
                         {groupedAvailable[country].map(city => (
                             <button className="city" key={city.name} onClick={() => setSelectedCity(city)}>
-                                <img className="city-image" src={cityImages[city.name]} style={{width: '100%', height: '160px'}} />
+                                <img className="unavailable" src={cityImages[city.name]} style={{width: '100%', height: '160px'}} />
                                 <div>{city.name}</div>
                                 <div className="tierAndPopulation">
                                     Tier {city.tier} | {city.population.toLocaleString()}
