@@ -13,6 +13,8 @@ import IceCreamParlour from '../assets/stores/IceCreamParlour.jpg'
 import CoffeeShop from '../assets/stores/CoffeeShop.jpg'
 import BeerTent from '../assets/stores/BeerTent.jpg'
 import HighEndFashion from '../assets/stores/HighEndFashion.jpg'
+import Florist from '../assets/stores/Florist.jpg'
+import Nightclub from '../assets/stores/Nightclub.jpg'
 
 const storeImages = {
     "Cupcake Store": CupcakeStore,
@@ -29,6 +31,9 @@ const storeImages = {
     "Coffee Shop" : CoffeeShop,
     "Beer Tent": BeerTent,
     "High-End Fashion": HighEndFashion,
+    "Florist": Florist,
+    "Nightclub": Nightclub,
+
 }
 
 export default storeImages
