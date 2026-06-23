@@ -44,6 +44,7 @@
   font-family: "Inter", sans-serif;
   font-weight: bold;
   font-size: large;
+  width: 180px;
 }
 
 .store-row {
@@ -151,7 +152,7 @@
 
 .unavailable {
     filter: grayscale(100%);
-        width: 64px;
+    width: 64px;
     height: 64px;
     background-color: #ccc;
     border-radius: 6px;
