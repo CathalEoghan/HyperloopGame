@@ -23,7 +23,7 @@ return (
 <TopBanner terminalName="Hyperloop Central" balance={balance} />
 
 <ExperienceBar current={3} max={10} />
-{activeTab === "Cities" && <CitiesPage purchasedCities={[]} />}
+{activeTab === "Cities" && <CitiesPage purchasedCities={[{name: "London"}]} />}
 <BottomNav activeTab={activeTab} onSelect={setActiveTab}>
 </BottomNav>
 </div>

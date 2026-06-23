@@ -8,16 +8,35 @@ function CitiesPage({ purchasedCities }) {
 
     const [selectedCity, setSelectedCity] = useState(null)
 
-    const grouped = allCities.reduce((result, city) => {
-        const country = city.country;
-        if (!result[country]) {
-            result[country] = []
-        }
-        result[country].push(city)
-        return result
-    }, {})
+    // Keeps all cities that are purchased
+    const purchased = allCities.filter(city => purchasedCities.some(p => p.name === city.name))
 
-    const sortedCountries = Object.keys(grouped).sort()
+    // Keeps all cities that are NOT purchased
+    const available = allCities.filter(city => !purchasedCities.some(p => p.name === city.name))
+
+    // Sort them by country
+    const groupedPurchased = purchased.reduce((result, city) => {
+    const country = city.country;
+    if (!result[country]) {
+        result[country] = []
+    }
+    result[country].push(city)
+    return result
+}, {})
+
+// Sort them by country
+const groupedAvailable = available.reduce((result, city) => {
+    const country = city.country;
+    if (!result[country]) {
+        result[country] = []
+    }
+    result[country].push(city)
+    return result
+}, {})
+
+
+const sortedPurchasedCountries = Object.keys(groupedPurchased).sort()
+const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
 
     return (
         <div className="background">
@@ -38,14 +57,17 @@ function CitiesPage({ purchasedCities }) {
                 </div>
             )}
 
-            {sortedCountries.map(country => (
+        {sortedPurchasedCountries.length > 0 && (
+            <>
+            <h1 className="purchasedCitiesHeader">Connected cities:</h1>
+            {sortedPurchasedCountries.map(country => (
                 <div key={country}>
                     <h2 className="country">
                         {country}
                         <img src={`https://flagcdn.com/w40/${countryFlags[country]}.png`} width="20" alt={country} />
                     </h2>
                     <div className="city-row">
-                        {grouped[country].map(city => (
+                        {groupedPurchased[country].map(city => (
                             <button className="city" key={city.name} onClick={() => setSelectedCity(city)}>
                                 <img className="city-image" src={cityImages[city.name]} style={{width: '100%', height: '160px'}} />
                                 <div>{city.name}</div>
@@ -57,6 +79,30 @@ function CitiesPage({ purchasedCities }) {
                     </div>
                 </div>
             ))}
+            </>
+        )}
+
+            <h1 className="availableCitiesHeader">Cities available to connect:</h1>
+            {sortedAvailableCountries.map(country => (
+                <div key={country}>
+                    <h2 className="country">
+                        {country}
+                        <img src={`https://flagcdn.com/w40/${countryFlags[country]}.png`} width="20" alt={country} />
+                    </h2>
+                    <div className="city-row">
+                        {groupedAvailable[country].map(city => (
+                            <button className="city" key={city.name} onClick={() => setSelectedCity(city)}>
+                                <img className="city-image" src={cityImages[city.name]} style={{width: '100%', height: '160px'}} />
+                                <div>{city.name}</div>
+                                <div className="tierAndPopulation">
+                                    Tier {city.tier} | {city.population.toLocaleString()}
+                                </div>
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            ))}
+
         </div>
     )
 }
