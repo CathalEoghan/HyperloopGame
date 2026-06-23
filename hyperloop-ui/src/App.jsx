@@ -4,6 +4,7 @@ import TopBanner from './components/TopBanner'
 import ExperienceBar from './components/ExperienceBar'
 import BottomNav from "./components/BottomNav"
 import CitiesPage from "./pages/CitiesPage"
+import StoresPage from "./pages/StoresPage"
 import './App.css'
 
 function App() {
@@ -24,6 +25,7 @@ return (
 
 <ExperienceBar current={3} max={10} />
 {activeTab === "Cities" && <CitiesPage purchasedCities={[{name: "London"}]} />}
+{activeTab === "Stores" && <StoresPage purchasedStores={[{name: "Cupcake Store"}]} />}
 <BottomNav activeTab={activeTab} onSelect={setActiveTab}>
 </BottomNav>
 </div>

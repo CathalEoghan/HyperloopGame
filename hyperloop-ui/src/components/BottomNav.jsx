@@ -17,9 +17,9 @@ function BottomNav({activeTab, onSelect}) {
 
     <button className="Cities" onClick={() => {
         if (activeTab == "Cities") {
-            playClickSound2();
+            playClickSound3();
         } else {
-        playClickSound3();
+        playClickSound2();
         }
         onSelect(targetCities)}}>
         Cities
@@ -32,7 +32,7 @@ function BottomNav({activeTab, onSelect}) {
         playClickSound2();
         }
         onSelect(targetStores)}}>
-        Stores
+        Stores and Venues
     </button>
 
     <button className="Upgrades" onClick={() => {

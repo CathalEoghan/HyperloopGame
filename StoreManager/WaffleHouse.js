@@ -3,8 +3,8 @@
 import { Store } from "./Store.js";
 
 export const waffleHouse = new Store(
-    "WaffleHouse",
+    "Waffle House",
     23000,
-    "food",
+    "Food",
     750
 );
