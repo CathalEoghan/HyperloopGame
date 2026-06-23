@@ -10,6 +10,9 @@ import HotDogRestaurant from '../assets/stores/HotDogRestaurant.jpg'
 import SoapStore from '../assets/stores/SoapStore.jpg'
 import BowlingAlley from '../assets/stores/BowlingAlley.jpg'
 import IceCreamParlour from '../assets/stores/IceCreamParlour.jpg'
+import CoffeeShop from '../assets/stores/CoffeeShop.jpg'
+import BeerTent from '../assets/stores/BeerTent.jpg'
+import HighEndFashion from '../assets/stores/HighEndFashion.jpg'
 
 const storeImages = {
     "Cupcake Store": CupcakeStore,
@@ -22,7 +25,10 @@ const storeImages = {
     "Hot Dog Restaurant": HotDogRestaurant,
     "Soap Store": SoapStore,
     "Bowling Alley": BowlingAlley,
-    "Ice Cream Parlour": IceCreamParlour
+    "Ice Cream Parlour": IceCreamParlour,
+    "Coffee Shop" : CoffeeShop,
+    "Beer Tent": BeerTent,
+    "High-End Fashion": HighEndFashion,
 }
 
 export default storeImages

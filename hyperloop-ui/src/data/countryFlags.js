@@ -9,7 +9,8 @@ const countryFlags = {
     "Japan": "jp",
     "South Korea": "kr",
     "United Kingdom": "gb",
-    "United States of America": "us"
+    "United States of America": "us",
+    "Germany": "de"
 }
 
 export default countryFlags

@@ -12,6 +12,9 @@ Busan.jpg — Photo by thuan Nguyen via Pexels
 NewYork.jpg — Photo by Reinaldo Simoes via Pexels
 Milwaukee.jpg - Photo by Korie Jenkins via Pexels
 Portland.jpg - Photo by Brett Sayles via Pexels
+Seattle.jpg - Photo by dumitru B via Pexels
+Munich.jpg - Photo by Fich View Studio via Pexels
+Milan.jpg - Photo by Ana Benet via Pexels
 
 STORE IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -25,5 +28,9 @@ HotDogRestaurant.jpg - Photo by Lucas Andrade via Pexels
 SoapStore.jpg - Photo by Mariya Muschard via Pexels
 BowlingAlley.jpg - Photo by Pavel Danilyuk via Pexels
 IceCreamParlour.jpg - Photo by ROMAN ODINTSOV via Pexels
+CoffeeShop.jpg - Photo by MART PRODUCTION via Pexels
+BeerTent.jpg - Photo by Brett Sayles via Pexels
+High-EndFashion.jpg - Photo by Masood Aslami via Pexels
+
 
 
