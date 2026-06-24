@@ -23,6 +23,12 @@ import LosAngeles from '../assets/cities/LosAngeles.jpg'
 import Tokyo from '../assets/cities/Tokyo.jpg'
 import Seoul from '../assets/cities/Seoul.jpg'
 import Chengdu from '../assets/cities/Chengdu.jpg'
+import SanDiego from '../assets/cities/SanDiego.jpg'
+import Hyderabad from '../assets/cities/Hyderabad.jpg'
+import Edinburgh from '../assets/cities/Edinburgh.jpg'
+import Varanasi from '../assets/cities/Varanasi.jpg'
+import Havana from '../assets/cities/Havana.jpg'
+
 
 const cityImages = {
     London: London,
@@ -49,6 +55,13 @@ const cityImages = {
     Tokyo: Tokyo,
     Seoul: Seoul,
     Chengdu: Chengdu,
+    "San Diego": SanDiego,
+    Hyderabad: Hyderabad,
+    Edinburgh: Edinburgh,
+    Varanasi: Varanasi,
+    Havana: Havana,
+
+
 
 }
 

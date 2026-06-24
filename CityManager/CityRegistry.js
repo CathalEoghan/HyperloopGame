@@ -23,6 +23,11 @@ import { LosAngeles } from './LosAngeles.js'
 import { Tokyo } from './Tokyo.js'
 import { Seoul } from './Seoul.js'
 import { Chengdu } from './Chengdu.js'
+import { SanDiego } from './SanDiego.js'
+import { Hyderabad } from './Hyderabad.js'
+import { Edinburgh } from './Edinburgh.js'
+import { Varanasi } from './Varanasi.js'
+import { Havana } from './Havana.js'
 
 export const allCities = [
     Atlanta,
@@ -49,5 +54,10 @@ export const allCities = [
     Tokyo,
     Seoul,
     Chengdu,
+    SanDiego,
+    Hyderabad,
+    Edinburgh,
+    Varanasi,
+    Havana,
 
 ]

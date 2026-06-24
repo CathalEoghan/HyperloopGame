@@ -23,6 +23,11 @@ import Cinema from '../assets/developments/Cinema.jpg'
 import ConvenienceStore from '../assets/developments/ConvenienceStore.jpg'
 import SkincareStore from '../assets/developments/SkincareStore.jpg'
 import NoodleBar from '../assets/developments/NoodleBar.jpg'
+import Gym from '../assets/developments/Gym.jpg'
+import Pharmacy from '../assets/developments/Pharmacy.jpg'
+import Bookstore from '../assets/developments/Bookstore.jpg'
+import YogaStudio from '../assets/developments/YogaStudio.jpg'
+import RumTasting from '../assets/developments/RumTasting.jpg'
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -49,6 +54,13 @@ const developmentImages = {
     "Convenience Store": ConvenienceStore,
     "Skincare Store": SkincareStore,
     "Noodle Bar": NoodleBar,
+    "Gym": Gym,
+    "Pharmacy": Pharmacy,
+    "Bookstore": Bookstore,
+    "Yoga Studio": YogaStudio,
+    "Rum Tasting": RumTasting,
+
+
 
 }
 
