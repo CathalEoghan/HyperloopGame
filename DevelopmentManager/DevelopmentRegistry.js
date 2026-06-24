@@ -16,6 +16,10 @@ import { highEndFashion } from './HighEndFashion.js'
 import { florist } from './Florist.js'
 import { nightclub } from './Nightclub.js'
 import { tableTennisCourt } from './TableTennisCourt.js'
+import { cinema } from './Cinema.js'
+import { convenienceStore } from './ConvenienceStore.js'
+import { skincareStore } from './SkincareStore.js'
+import { noodleBar } from './NoodleBar.js'
 
 export const allDevelopments = [
     bakery,
@@ -35,4 +39,9 @@ export const allDevelopments = [
     florist,
     nightclub,
     tableTennisCourt,
+    cinema,
+    convenienceStore,
+    skincareStore,
+    noodleBar,
+
 ]

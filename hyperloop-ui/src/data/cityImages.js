@@ -19,6 +19,10 @@ import Berlin from '../assets/cities/Berlin.jpg'
 import Shanghai from '../assets/cities/Shanghai.jpg'
 import Riyadh from '../assets/cities/Riyadh.jpg'
 import Mumbai from '../assets/cities/Mumbai.jpg'
+import LosAngeles from '../assets/cities/LosAngeles.jpg'
+import Tokyo from '../assets/cities/Tokyo.jpg'
+import Seoul from '../assets/cities/Seoul.jpg'
+import Chengdu from '../assets/cities/Chengdu.jpg'
 
 const cityImages = {
     London: London,
@@ -41,6 +45,10 @@ const cityImages = {
     Shanghai: Shanghai,
     Riyadh: Riyadh,
     Mumbai: Mumbai,
+    "Los Angeles": LosAngeles,
+    Tokyo: Tokyo,
+    Seoul: Seoul,
+    Chengdu: Chengdu,
 
 }
 

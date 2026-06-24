@@ -20,6 +20,10 @@ Berlin.jpg - Photo by Naro K via Pexels
 Shanghai.jpg - Photo by Blackcurrant Great via Pexels
 Riyadh.jpg - Photo by Tayssir Kadamany via Pexels
 Mumbai.jpg - Photo by Asif pav via Pexels
+LosAngeles.jpg - Photo by Soly Moses via Pexels
+Tokyo.jpg - Photo by Daisuke Fujita via Pexels
+Seoul.jpg - Photo by Artem Korolev via Pexels
+Chengdu.jpg - Photo by Liuuu_61 via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -41,7 +45,11 @@ Nightclub.jpg - Photo by Yan Krukau via Pexels
 TableTennisCourt.jpg - Photo by Haydar Acer via Pexels
 SodaMachines.jpg - Photo by Nihongraphy
 Bank.jpg - Photo by Oscar Dominguez via Pexels
-Postal Office.jpg - Photo by Polina Tankilevitch via Pexels
+PostalOffice.jpg - Photo by Polina Tankilevitch via Pexels
+Cinema.jpg - Photo by Tima Miroshnichenkovia via Pexels
+ConvenienceStore.jpg - Photo by Kenneth Surillo via Pexels
+SkincareStore.jpg - Photo by Polina Tankilevitch via Pexels
+NoodleBar.jpg - Photo by 
 
 
 

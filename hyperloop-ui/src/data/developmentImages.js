@@ -19,6 +19,10 @@ import TableTennisCourt from '../assets/developments/TableTennisCourt.jpg'
 import SodaMachines from '../assets/developments/SodaMachines.jpg'
 import Bank from '../assets/developments/Bank.jpg'
 import PostalOffice from '../assets/developments/PostalOffice.jpg'
+import Cinema from '../assets/developments/Cinema.jpg'
+import ConvenienceStore from '../assets/developments/ConvenienceStore.jpg'
+import SkincareStore from '../assets/developments/SkincareStore.jpg'
+import NoodleBar from '../assets/developments/NoodleBar.jpg'
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -41,6 +45,10 @@ const developmentImages = {
     "Soda Machines": SodaMachines,
     "Bank": Bank,
     "Postal Office": PostalOffice,
+    "Cinema": Cinema,
+    "Convenience Store": ConvenienceStore,
+    "Skincare Store": SkincareStore,
+    "Noodle Bar": NoodleBar,
 
 }
 
