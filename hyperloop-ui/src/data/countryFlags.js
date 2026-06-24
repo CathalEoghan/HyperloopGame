@@ -13,6 +13,9 @@ const countryFlags = {
     "Germany": "de",
     "Thailand": "th",
     "China": "cn",
+    "Saudi Arabia": "sa",
+    "India": "in",
+    
 
 }
 

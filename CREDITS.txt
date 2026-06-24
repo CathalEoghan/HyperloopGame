@@ -18,8 +18,10 @@ Milan.jpg - Photo by Ana Benet via Pexels
 ChiangMai.jpg - Photo by icon0 com via Pexels
 Berlin.jpg - Photo by Naro K via Pexels
 Shanghai.jpg - Photo by Blackcurrant Great via Pexels
+Riyadh.jpg - Photo by Tayssir Kadamany via Pexels
+Mumbai.jpg - Photo by Asif pav via Pexels
 
-STORES AND VENUES IMAGES
+DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
 SeafoodRestaurant.jpg - Photo by khezez | خزاز  via Pexels
 WaffleHouse.jpg - Photo by Karen Reyes via Pexels
@@ -37,6 +39,9 @@ High-EndFashion.jpg - Photo by Masood Aslami via Pexels
 Florist.jpg - Photo by Mariya Eskina via Pexels
 Nightclub.jpg - Photo by Yan Krukau via Pexels
 TableTennisCourt.jpg - Photo by Haydar Acer via Pexels
+SodaMachines.jpg - Photo by Nihongraphy
+Bank.jpg - Photo by Oscar Dominguez via Pexels
+Postal Office.jpg - Photo by Polina Tankilevitch via Pexels
 
 
 

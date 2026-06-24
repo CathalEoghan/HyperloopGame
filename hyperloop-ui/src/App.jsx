@@ -25,7 +25,7 @@ return (
 
 <ExperienceBar current={3} max={10} />
 {activeTab === "Cities" && <CitiesPage purchasedCities={[{name: "London"}]} />}
-{activeTab === "Stores" && <DevelopmentPage purchasedStores={[{name: "Cupcake Store"}]} />}
+{activeTab === "Development" && <DevelopmentPage purchasedDevelopments={[{name: "Cupcake Store"}]} />}
 <BottomNav activeTab={activeTab} onSelect={setActiveTab}>
 </BottomNav>
 </div>

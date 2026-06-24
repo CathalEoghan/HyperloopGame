@@ -1,6 +1,6 @@
 
 import { Upgrade } from "../../UpgradeManager/Upgrade.js";
-import { Store } from "../../DevelopmentManager/Development.js";
+import { Development } from "../../DevelopmentManager/Development.js";
 
 export class ProgressionManager {
     constructor(rankManager) {
@@ -8,8 +8,8 @@ export class ProgressionManager {
         this.unlockedRewards = [];
         this.unlockedUpgrades = [];
         this.purchasedUpgrades = [];
-        this.unlockedStores = [];
-        this.purchasedStores = [];
+        this.unlockedDevelopments = [];
+        this.purchasedDevelopments = [];
         this.citiesUnderConstruction = [];
         this.constructionQueue = [];
         this.balance = 0;
@@ -28,7 +28,7 @@ export class ProgressionManager {
         }
 
         if (reward instanceof Store && !this.unlockedStores.includes(reward)) { // If it's not already included
-            this.unlockedStores.push(reward)
+            this.unlockedDevelopments.push(reward)
         }
     }
 

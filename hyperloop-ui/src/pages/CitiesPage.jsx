@@ -10,9 +10,11 @@ function CitiesPage({ purchasedCities }) {
 
     // Keeps all cities that are purchased
     const purchased = allCities.filter(city => purchasedCities.some(p => p.name === city.name))
+    .sort((a, b) => a.name.localeCompare(b.name)) // Puts in alphabetical order
 
     // Keeps all cities that are NOT purchased
     const available = allCities.filter(city => !purchasedCities.some(p => p.name === city.name))
+    .sort((a, b) => a.name.localeCompare(b.name)) // Puts in alphabetical order
 
     // Sort them by country
     const groupedPurchased = purchased.reduce((result, city) => {
