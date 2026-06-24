@@ -15,6 +15,7 @@ import { beerTent } from './BeerTent.js'
 import { highEndFashion } from './HighEndFashion.js'
 import { florist } from './Florist.js'
 import { nightclub } from './Nightclub.js'
+import { tableTennisCourt } from './TableTennisCourt.js'
 
 export const allStores = [
     bakery,
@@ -33,4 +34,5 @@ export const allStores = [
     highEndFashion,
     florist,
     nightclub,
+    tableTennisCourt,
 ]

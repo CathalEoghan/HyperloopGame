@@ -16,6 +16,7 @@ import Munich from '../assets/cities/Munich.jpg'
 import Milan from '../assets/cities/Milan.jpg'
 import ChiangMai from '../assets/cities/ChiangMai.jpg'
 import Berlin from '../assets/cities/Berlin.jpg'
+import Shanghai from '../assets/cities/Shanghai.jpg'
 
 const cityImages = {
     London: London,
@@ -34,7 +35,8 @@ const cityImages = {
     Munich: Munich,
     Milan: Milan,
     "Chiang Mai": ChiangMai,
-    Berlin: Berlin
+    Berlin: Berlin,
+    Shanghai: Shanghai
 }
 
 export default cityImages

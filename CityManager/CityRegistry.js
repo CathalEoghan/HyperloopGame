@@ -16,6 +16,7 @@ import { Munich } from './Munich.js'
 import { Milan } from './Milan.js'
 import { ChiangMai } from './ChiangMai.js'
 import { Berlin } from './Berlin.js'
+import { Shanghai } from './Shanghai.js'
 
 export const allCities = [
     Atlanta,
@@ -35,4 +36,5 @@ export const allCities = [
     Milan,
     ChiangMai,
     Berlin,
+    Shanghai,
 ]

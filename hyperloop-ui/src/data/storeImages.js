@@ -15,6 +15,7 @@ import BeerTent from '../assets/stores/BeerTent.jpg'
 import HighEndFashion from '../assets/stores/HighEndFashion.jpg'
 import Florist from '../assets/stores/Florist.jpg'
 import Nightclub from '../assets/stores/Nightclub.jpg'
+import TableTennisCourt from '../assets/stores/TableTennisCourt.jpg'
 
 const storeImages = {
     "Cupcake Store": CupcakeStore,
@@ -33,6 +34,7 @@ const storeImages = {
     "High-End Fashion": HighEndFashion,
     "Florist": Florist,
     "Nightclub": Nightclub,
+    "Table Tennis Court": TableTennisCourt,
 
 }
 

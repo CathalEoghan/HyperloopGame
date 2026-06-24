@@ -11,7 +11,9 @@ const countryFlags = {
     "United Kingdom": "gb",
     "United States of America": "us",
     "Germany": "de",
-    "Thailand": "th"
+    "Thailand": "th",
+    "China": "cn",
+
 }
 
 export default countryFlags
