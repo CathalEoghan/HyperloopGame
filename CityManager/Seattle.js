@@ -1,7 +1,7 @@
 
 // Seattle
 import { City } from "./City.js";
-import { coffeeShop } from "../StoreManager/CoffeeShop.js";
+import { coffeeShop } from "../DevelopmentManager/CoffeeShop.js";
 
 export const Seattle = new City(
     "Seattle",

@@ -1,7 +1,7 @@
 
 // Busan
 import { City } from "./City.js";
-import { seafoodRestaurant } from "../StoreManager/SeafoodRestaurant.js";
+import { seafoodRestaurant } from "../DevelopmentManager/SeafoodRestaurant.js";
 
 export const Busan = new City(
     "Busan",

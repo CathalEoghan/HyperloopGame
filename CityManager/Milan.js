@@ -1,7 +1,7 @@
 
 // Milan
 import { City } from "./City.js";
-import { highEndFashion } from "../StoreManager/HighEndFashion.js";
+import { highEndFashion } from "../DevelopmentManager/HighEndFashion.js";
 
 export const Milan = new City(
     "Milan",

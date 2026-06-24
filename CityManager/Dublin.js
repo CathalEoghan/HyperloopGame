@@ -1,7 +1,7 @@
 
 // Dublin
 import { City } from "./City.js";
-import { pub } from "../StoreManager/Pub.js";
+import { pub } from "../DevelopmentManager/Pub.js";
 
 export const Dublin = new City(
     "Dublin",

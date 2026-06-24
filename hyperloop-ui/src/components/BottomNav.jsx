@@ -6,8 +6,7 @@ import './BottomNav.css'
 function BottomNav({activeTab, onSelect}) {
 
     const targetCities = activeTab === "Cities" ? "Home" : "Cities"
-    const targetStores = activeTab === "Stores" ? "Home" : "Stores"
-    const targetUpgrades = activeTab === "Upgrades" ? "Home" : "Upgrades"
+    const targetDevelopment = activeTab === "Development" ? "Home" : "Development"
     const targetProgress = activeTab === "Progress" ? "Home" : "Progress"
     const targetSettings = activeTab === "Settings" ? "Home" : "Settings"
 
@@ -25,24 +24,14 @@ function BottomNav({activeTab, onSelect}) {
         Cities
     </button>
 
-     <button className="Stores" onClick={() => {
-        if (activeTab == "Stores") {
+     <button className="Development" onClick={() => {
+        if (activeTab == "Development") {
             playClickSound3();
         } else {
         playClickSound2();
         }
-        onSelect(targetStores)}}>
-        Stores and Venues
-    </button>
-
-    <button className="Upgrades" onClick={() => {
-        if (activeTab == "Upgrades") {
-            playClickSound3();
-        } else {
-        playClickSound2();
-        }
-        onSelect(targetUpgrades)}}>
-        Upgrades
+        onSelect(targetDevelopment)}}>
+        Development
     </button>
 
     <button className="Progress" onClick={() => {

@@ -1,7 +1,7 @@
 
 // Rome
 import { City } from "./City.js";
-import { pizzeria } from "../StoreManager/Pizzeria.js";
+import { pizzeria } from "../DevelopmentManager/Pizzeria.js";
 
 export const Rome = new City(
     "Rome",

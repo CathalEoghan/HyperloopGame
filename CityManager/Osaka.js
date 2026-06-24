@@ -1,7 +1,7 @@
 
 // Osaka
 import { City } from "./City.js";
-import { karaokeBar } from "../StoreManager/KaraokeBar.js";
+import { karaokeBar } from "../DevelopmentManager/KaraokeBar.js";
 
 export const Osaka = new City(
     "Osaka",
