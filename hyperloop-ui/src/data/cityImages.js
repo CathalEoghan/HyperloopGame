@@ -28,7 +28,11 @@ import Hyderabad from '../assets/cities/Hyderabad.jpg'
 import Edinburgh from '../assets/cities/Edinburgh.jpg'
 import Varanasi from '../assets/cities/Varanasi.jpg'
 import Havana from '../assets/cities/Havana.jpg'
-
+import Cairo from '../assets/cities/Cairo.jpg'
+import Dubai from '../assets/cities/Dubai.jpg'
+import Montréal from '../assets/cities/Montréal.jpg'
+import RioDeJaneiro from '../assets/cities/RioDeJaneiro.jpg'
+import Athens from '../assets/cities/Athens.jpg'
 
 const cityImages = {
     London: London,
@@ -60,8 +64,11 @@ const cityImages = {
     Edinburgh: Edinburgh,
     Varanasi: Varanasi,
     Havana: Havana,
-
-
+    Cairo: Cairo,
+    Dubai: Dubai,
+    Montréal: Montréal,
+    "Rio de Janeiro": RioDeJaneiro,
+    Athens: Athens,
 
 }
 

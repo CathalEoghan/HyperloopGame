@@ -28,6 +28,11 @@ import { Hyderabad } from './Hyderabad.js'
 import { Edinburgh } from './Edinburgh.js'
 import { Varanasi } from './Varanasi.js'
 import { Havana } from './Havana.js'
+import { Cairo } from './Cairo.js'
+import { Dubai } from './Dubai.js'
+import { Montréal } from './Montréal.js'
+import { RioDeJaneiro } from './RioDeJaneiro.js'
+import { Athens } from './Athens.js'
 
 export const allCities = [
     Atlanta,
@@ -59,5 +64,10 @@ export const allCities = [
     Edinburgh,
     Varanasi,
     Havana,
+    Cairo,
+    Dubai,
+    Montréal,
+    RioDeJaneiro,
+    Athens,
 
 ]

@@ -28,6 +28,11 @@ import Pharmacy from '../assets/developments/Pharmacy.jpg'
 import Bookstore from '../assets/developments/Bookstore.jpg'
 import YogaStudio from '../assets/developments/YogaStudio.jpg'
 import RumTasting from '../assets/developments/RumTasting.jpg'
+import HistoryMuseum from '../assets/developments/HistoryMuseum.jpg'
+import LuxuryHotel from '../assets/developments/LuxuryHotel.jpg'
+import ComedyClub from '../assets/developments/ComedyClub.jpg'
+import SwimwearStore from '../assets/developments/SwimwearStore.jpg'
+import SwimmingPool from '../assets/developments/SwimmingPool.jpg'
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -59,8 +64,11 @@ const developmentImages = {
     "Bookstore": Bookstore,
     "Yoga Studio": YogaStudio,
     "Rum Tasting": RumTasting,
-
-
+    "History Museum": HistoryMuseum,
+    "Luxury Hotel": LuxuryHotel,
+    "Comedy Club": ComedyClub,
+    "Swimwear Store": SwimwearStore,
+    "Swimming Pool": SwimmingPool,
 
 }
 

@@ -15,8 +15,13 @@ const countryFlags = {
     "China": "cn",
     "Saudi Arabia": "sa",
     "India": "in",
-    "Cuba": "cu"
-
+    "Cuba": "cu",
+    "Egypt": "eg",
+    "United Arab Emirates": "ae",   
+    "Canada": "ca",
+    "Brazil": "br",
+    "Greece": "gr",
+    
 
 }
 

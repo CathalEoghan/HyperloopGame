@@ -25,6 +25,10 @@ import { pharmacy } from './Pharmacy.js'
 import { bookstore } from './Bookstore.js'
 import { yogaStudio } from './YogaStudio.js'
 import { rumTasting } from './RumTasting.js'
+import { historyMuseum } from './HistoryMuseum.js'
+import { comedyClub } from './ComedyClub.js'
+import { swimwearStore } from './SwimwearStore.js'
+import { swimmingPool } from './SwimmingPool.js'
 
 export const allDevelopments = [
     bakery,
@@ -53,5 +57,9 @@ export const allDevelopments = [
     bookstore,
     yogaStudio,
     rumTasting,
+    historyMuseum,
+    comedyClub,
+    swimwearStore,
+    swimmingPool,
 
 ]
