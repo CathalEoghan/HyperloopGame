@@ -25,7 +25,7 @@ export class RankManager {
 
     verifyRank() {
 
-        const xpNeeded = this.calculateNextRankXP(this.rank + 1)
+        const xpNeeded = this.calculateNextRankXP(this.rank * 1.5)
 
         if (this.xp >= xpNeeded) {
             this.rank++

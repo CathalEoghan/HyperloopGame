@@ -22,7 +22,7 @@ function calculateNextRankXP(rank) {
     let difference = 3;
     for (let i = 2; i < rank; i++) {
         xpNeeded += difference;
-        difference++;
+        difference *= 1.5;
     }
     return xpNeeded;
 }
