@@ -27,7 +27,7 @@ export class ProgressionManager {
             this.unlockedUpgrades.push(reward)
         }
 
-        if (reward instanceof Store && !this.unlockedStores.includes(reward)) { // If it's not already included
+        if (reward instanceof Development && !this.unlockedDevelopments.includes(reward)) { // If it's not already included
             this.unlockedDevelopments.push(reward)
         }
     }
@@ -70,15 +70,38 @@ export class ProgressionManager {
         if (this.purchasedCities.length >= this.getCityCapacity()) {
             return;
         }
-        city.connect();
 
-        if (!this.purchasedCities.includes(city)) {
-            this.purchasedCities.push(city);
+        if (this.purchasedCities.includes(city)) {
+            return
         }
+
+          if (!this.spendCash(city.cost)) {
+             return; // Can't afford the city
+        }
+            
+        city.connect();
 
         city.rewards.forEach(reward => {
             this.unlockReward(reward);
         });
+
+        this.purchasedCities.push(city); // only reached if everything above succeeded
+
+    }
+
+      purchaseDevelopment(development) {
+         if (!this.unlockedDevelopments.includes(development)) {
+            return; // Can't buy a store that is not unlocked yet - railguard
+        }
+
+         if (this.purchasedDevelopments.includes(development)) { // Checks for duplicates
+            return
+        }
+        if(!this.spendCash(development.cost)) {
+            return; // Can't afford the development
+        }
+
+        this.purchasedDevelopments.push(development); // only reached if everything above succeeded
 
     }
 }

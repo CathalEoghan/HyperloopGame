@@ -1,7 +1,7 @@
 
 // Cairo
 import { City } from "./City.js";
-import { historyMuseum } from "../DevelopmentManager/historyMuseum.js";
+import { historyMuseum } from "../DevelopmentManager/HistoryMuseum.js";
 
 export const Cairo = new City(
     "Cairo",
