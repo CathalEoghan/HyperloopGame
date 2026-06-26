@@ -12,7 +12,7 @@ import BowlingAlley from '../assets/developments/BowlingAlley.jpg'
 import IceCreamParlour from '../assets/developments/IceCreamParlour.jpg'
 import CoffeeShop from '../assets/developments/CoffeeShop.jpg'
 import BeerTent from '../assets/developments/BeerTent.jpg'
-import HighEndFashion from '../assets/developments/HighEndFashion.jpg'
+import HighEndBoutique from '../assets/developments/HighEndBoutique.jpg'
 import Florist from '../assets/developments/Florist.jpg'
 import Nightclub from '../assets/developments/Nightclub.jpg'
 import TableTennisCourt from '../assets/developments/TableTennisCourt.jpg'
@@ -33,6 +33,12 @@ import LuxuryHotel from '../assets/developments/LuxuryHotel.jpg'
 import ComedyClub from '../assets/developments/ComedyClub.jpg'
 import SwimwearStore from '../assets/developments/SwimwearStore.jpg'
 import SwimmingPool from '../assets/developments/SwimmingPool.jpg'
+import SaladBar from '../assets/developments/SaladBar.jpg'
+import FashionChain from '../assets/developments/FashionChain.jpg'
+import CheeseShop from '../assets/developments/CheeseShop.jpg'
+import CakeShop from '../assets/developments/CakeShop.jpg'
+import CustomerServiceCentre from '../assets/developments/CustomerServiceCentre.jpg'
+
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -48,7 +54,7 @@ const developmentImages = {
     "Ice Cream Parlour": IceCreamParlour,
     "Coffee Shop" : CoffeeShop,
     "Beer Tent": BeerTent,
-    "High-End Fashion": HighEndFashion,
+    "High-End Boutique": HighEndBoutique,
     "Florist": Florist,
     "Nightclub": Nightclub,
     "Table Tennis Court": TableTennisCourt,
@@ -69,6 +75,11 @@ const developmentImages = {
     "Comedy Club": ComedyClub,
     "Swimwear Store": SwimwearStore,
     "Swimming Pool": SwimmingPool,
+    "Salad Bar": SaladBar,
+    "Fashion Chain": FashionChain,
+    "Cheese Shop": CheeseShop,
+    "Cake Shop": CakeShop,
+    "Customer Service Centre": CustomerServiceCentre,
 
 }
 

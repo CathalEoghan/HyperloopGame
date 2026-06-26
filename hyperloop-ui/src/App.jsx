@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react"
 import TopBanner from './components/TopBanner'
 import ExperienceBar from './components/ExperienceBar'
@@ -7,63 +6,68 @@ import CitiesPage from "./pages/CitiesPage"
 import DevelopmentPage from "./pages/DevelopmentPage"
 import './App.css'
 
-function App() {
-
-const [balance, setBalance] = useState(0);
-const [totalCashEarned, setTotalCashEarned] = useState(0);
-const [rankSet, setRankSet] = useState(1);
-const [xp, setXp] = useState(0);
-const [xpAtRankUp, setXpAtRankUp] = useState(0);
-const [xpNeeded, setXpNeeded] = useState(5);
-const [activeTab, setActiveTab] = useState("Home");
-
 function calculateNextRankXP(rank) {
     let xpNeeded = 5;
-
-    for (let i = 2; i < rank; i++) {
-        xpNeeded *= 1.5;
+    for (let i = 1; i < rank; i++) {
+        xpNeeded *= 3;
     }
-
     return Math.round(xpNeeded);
 }
 
-useEffect(() => {
-  setInterval(() => {
-    const incomePerSecond = 50000 / 86400;
-
-  setTotalCashEarned(prev => {
-      const newTotal = prev + incomePerSecond;
-      const newXP = Math.floor(newTotal);
-      setXp(newXP);
-      setRankSet(currentRank => {
-    const needed = calculateNextRankXP(currentRank + 1);
-    if (newXP >= needed) {
-        setXpAtRankUp(newXP);
-        setXpNeeded(calculateNextRankXP(currentRank + 2));
-        return currentRank + 1;
+function getCumulativeXP(rank) {
+    let total = 0;
+    for (let i = 1; i <= rank; i++) {
+        total += calculateNextRankXP(i);
     }
-    return currentRank;
-});
-      return newTotal;   
-    });          
+    return total;
+}
 
-    setBalance(prev => prev + incomePerSecond);
-  }, 1000);             
-}, []);                 
+function App() {
 
-return (
+    const [balance, setBalance] = useState(0);
+    const [totalCashEarned, setTotalCashEarned] = useState(0);
+    const [rankSet, setRankSet] = useState(1);
+    const [xpAtRankUp, setXpAtRankUp] = useState(0);                    // start of rank 1 = 0
+    const [xpNeeded, setXpNeeded] = useState(calculateNextRankXP(1));   // rank 1 bar width = 5
+    const [activeTab, setActiveTab] = useState("Home");
 
-<div className= "App">
-<TopBanner terminalName="Hyperloop Central" balance={balance} rank={rankSet} />
+    useEffect(() => {
+        setInterval(() => {
+            const incomePerSecond = 15028 / 86400;
 
-<ExperienceBar current={xp - xpAtRankUp} max={xpNeeded} nextRank={rankSet + 1} />
-{activeTab === "Cities" && <CitiesPage purchasedCities={[{name: "London"}]} />}
-{activeTab === "Development" && <DevelopmentPage purchasedDevelopments={[{name: "Cupcake Store"}]} />}
-<BottomNav activeTab={activeTab} onSelect={setActiveTab}>
-</BottomNav>
-</div>
-)
+            setTotalCashEarned(prev => {
+                const newTotal = prev + incomePerSecond;
+                const currentXP = Math.floor(newTotal);
 
+                setRankSet(currentRank => {
+                    // rank-up triggers at the end of the current rank
+                    if (currentXP >= getCumulativeXP(currentRank)) {
+                        const newRank = currentRank + 1;
+                        setXpAtRankUp(getCumulativeXP(newRank - 1)); // start of new rank
+                        setXpNeeded(calculateNextRankXP(newRank));   // width of new rank bar
+                        return newRank;
+                    }
+                    return currentRank;
+                });
+
+                return newTotal;
+            });
+
+            setBalance(prev => prev + incomePerSecond);
+        }, 1000);
+    }, []);
+
+    const currentXP = Math.floor(totalCashEarned);
+
+    return (
+        <div className="App">
+            <TopBanner terminalName="Hyperloop Central" balance={balance} rank={rankSet} />
+            <ExperienceBar current={currentXP - xpAtRankUp} max={xpNeeded} nextRank={rankSet + 1} />
+            {activeTab === "Cities" && <CitiesPage purchasedCities={[{name: "London"}]} />}
+            {activeTab === "Development" && <DevelopmentPage purchasedDevelopments={[{name: "Cupcake Store"}]} />}
+            <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
+        </div>
+    )
 }
 
 export default App

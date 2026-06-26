@@ -33,6 +33,11 @@ import Dubai from '../assets/cities/Dubai.jpg'
 import Montréal from '../assets/cities/Montréal.jpg'
 import RioDeJaneiro from '../assets/cities/RioDeJaneiro.jpg'
 import Athens from '../assets/cities/Athens.jpg'
+import Tijuana from '../assets/cities/Tijuana.jpg'
+import Barcelona from '../assets/cities/Barcelona.jpg'
+import Amsterdam from '../assets/cities/Amsterdam.jpg'
+import Vienna from '../assets/cities/Vienna.jpg'
+import Manila from '../assets/cities/Manila.jpg'
 
 const cityImages = {
     London: London,
@@ -69,6 +74,13 @@ const cityImages = {
     Montréal: Montréal,
     "Rio de Janeiro": RioDeJaneiro,
     Athens: Athens,
+    Tijuana: Tijuana,
+    Barcelona: Barcelona,
+    Amsterdam: Amsterdam,
+    Vienna: Vienna,
+    Manila: Manila,
+
+
 
 }
 

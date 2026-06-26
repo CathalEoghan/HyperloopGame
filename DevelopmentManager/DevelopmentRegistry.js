@@ -12,7 +12,7 @@ import { bowlingAlley } from './BowlingAlley.js'
 import { iceCreamParlour } from './IceCreamParlour.js'
 import { coffeeShop } from './CoffeeShop.js'
 import { beerTent } from './BeerTent.js'
-import { highEndFashion } from './HighEndFashion.js'
+import { highEndBoutique } from './HighEndBoutique.js'
 import { florist } from './Florist.js'
 import { nightclub } from './Nightclub.js'
 import { tableTennisCourt } from './TableTennisCourt.js'
@@ -29,6 +29,11 @@ import { historyMuseum } from './HistoryMuseum.js'
 import { comedyClub } from './ComedyClub.js'
 import { swimwearStore } from './SwimwearStore.js'
 import { swimmingPool } from './SwimmingPool.js'
+import { saladBar } from './SaladBar.js'
+import { fashionChain } from './FashionChain.js'
+import { cheeseShop } from './CheeseShop.js'
+import { cakeShop } from './CakeShop.js'
+
 
 export const allDevelopments = [
     bakery,
@@ -44,7 +49,7 @@ export const allDevelopments = [
     iceCreamParlour,
     coffeeShop,
     beerTent,
-    highEndFashion,
+    highEndBoutique,
     florist,
     nightclub,
     tableTennisCourt,
@@ -61,5 +66,9 @@ export const allDevelopments = [
     comedyClub,
     swimwearStore,
     swimmingPool,
+    saladBar,
+    fashionChain,
+    cheeseShop,
+    cakeShop,
 
 ]

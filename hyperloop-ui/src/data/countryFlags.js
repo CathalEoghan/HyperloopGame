@@ -21,7 +21,13 @@ const countryFlags = {
     "Canada": "ca",
     "Brazil": "br",
     "Greece": "gr",
-    
+    "Mexico": "mx",
+    "Spain": "es",
+    "The Netherlands": "nl",
+    "Austria": "at",
+    "Philippines": "ph"
+
+
 
 }
 

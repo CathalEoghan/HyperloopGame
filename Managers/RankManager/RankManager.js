@@ -8,8 +8,8 @@ export class RankManager {
   calculateNextRankXP(rank) {
     let xpNeeded = 5;
 
-    for (let i = 2; i < rank; i++) {
-        xpNeeded *= 1.5;
+    for (let i = 1; i < rank; i++) {
+        xpNeeded *= 3;
     }
 
     return Math.round(xpNeeded);
@@ -22,12 +22,8 @@ export class RankManager {
     }
 
     verifyRank() {
-
-        const xpNeeded = this.calculateNextRankXP(this.rank + 1)
-
-        while (this.xp >= xpNeeded) {
-            this.rank++
+    while (this.xp >= this.calculateNextRankXP(this.rank + 1)) {
+        this.rank++;
     }
-
-    }
+}
 }
