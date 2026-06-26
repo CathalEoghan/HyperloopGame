@@ -5,17 +5,15 @@ export class RankManager {
         this.xp = 0;
     }
 
-    calculateNextRankXP(rank) {
+  calculateNextRankXP(rank) {
+    let xpNeeded = 5;
 
-        let xpNeeded = 5;
-        let difference = 3;
-
-        for (let i = 2; i < rank; i++) {
-            xpNeeded += difference
-            difference++
-        }
-        return xpNeeded;
+    for (let i = 2; i < rank; i++) {
+        xpNeeded *= 1.5;
     }
+
+    return Math.round(xpNeeded);
+}
 
     // Decides how much XP you have from your lifetime earnings
     convertCashToXP(totalCashEarned) {
@@ -25,7 +23,7 @@ export class RankManager {
 
     verifyRank() {
 
-        const xpNeeded = this.calculateNextRankXP(this.rank * 1.5)
+        const xpNeeded = this.calculateNextRankXP(this.rank)
 
         if (this.xp >= xpNeeded) {
             this.rank++

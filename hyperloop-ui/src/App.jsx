@@ -19,17 +19,17 @@ const [activeTab, setActiveTab] = useState("Home");
 
 function calculateNextRankXP(rank) {
     let xpNeeded = 5;
-    let difference = 3;
+
     for (let i = 2; i < rank; i++) {
-        xpNeeded += difference;
-        difference *= 1.5;
+        xpNeeded *= 1.5;
     }
-    return xpNeeded;
+
+    return Math.round(xpNeeded);
 }
 
 useEffect(() => {
   setInterval(() => {
-    const incomePerSecond = 8000 / 86400;
+    const incomePerSecond = 50000 / 86400;
 
   setTotalCashEarned(prev => {
       const newTotal = prev + incomePerSecond;
@@ -54,9 +54,9 @@ useEffect(() => {
 return (
 
 <div className= "App">
-<TopBanner terminalName="Hyperloop Central" balance={balance} rank={rankSet} />
+<TopBanner terminalName="Hyperloop Central" balance={balance} rank={rankSet + 1} />
 
-<ExperienceBar current={xp - xpAtRankUp} max={xpNeeded - xpAtRankUp} />
+<ExperienceBar current={xp - xpAtRankUp} max={xpNeeded} nextRank={rankSet + 1} />
 {activeTab === "Cities" && <CitiesPage purchasedCities={[{name: "London"}]} />}
 {activeTab === "Development" && <DevelopmentPage purchasedDevelopments={[{name: "Cupcake Store"}]} />}
 <BottomNav activeTab={activeTab} onSelect={setActiveTab}>
