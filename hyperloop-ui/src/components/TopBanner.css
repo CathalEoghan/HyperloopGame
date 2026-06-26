@@ -15,10 +15,30 @@
     margin-right: 8px;
     font-family: 'Inter', sans-serif;
 }
+.rank {
+    margin-right: 8px;
+    font-family: 'Inter', sans-serif;
+}
 .MysterySpot {
     flex: 1;
     min-height: 100px;
     background-color:lightgrey;
     font-family: 'Inter', sans-serif;
     
+}
+
+.rightSideDetails {
+    flex-direction: column;
+    display: flex;
+}
+
+.rightSideDetails img {
+    height: 20px;
+    width: 20px;
+}
+
+.time, .rank, .balance {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }

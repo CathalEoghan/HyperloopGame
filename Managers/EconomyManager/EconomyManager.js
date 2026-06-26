@@ -34,16 +34,16 @@ export class EconomyManager {
 
     }
 
-    // Store earnings
-    calculateStoreIncome() {
+    // Development earnings
+    calculateDevelopmentIncome() {
 
-        let storeIncome = 0;
+        let developmentIncome = 0;
 
-        this.progressionManager.purchasedStores.forEach(store => {
-            storeIncome += store.revenue;
+        this.progressionManager.purchasedDevelopments.forEach(development => {
+            developmentIncome += development.revenue;
         });
 
-        return storeIncome;
+        return developmentIncome;
 
     }
 
@@ -55,7 +55,7 @@ export class EconomyManager {
         let totalIncome = 0;
 
         totalIncome =
-            this.calculateStoreIncome() +
+            this.calculateDevelopmentIncome() +
             this.calculatePopulationIncome();
 
         return totalIncome / SECONDS_IN_A_DAY;
