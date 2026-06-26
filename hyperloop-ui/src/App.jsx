@@ -54,7 +54,7 @@ useEffect(() => {
 return (
 
 <div className= "App">
-<TopBanner terminalName="Hyperloop Central" balance={balance} rank={rankSet + 1} />
+<TopBanner terminalName="Hyperloop Central" balance={balance} rank={rankSet} />
 
 <ExperienceBar current={xp - xpAtRankUp} max={xpNeeded} nextRank={rankSet + 1} />
 {activeTab === "Cities" && <CitiesPage purchasedCities={[{name: "London"}]} />}
