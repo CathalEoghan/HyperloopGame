@@ -1,72 +1,39 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import TopBanner from "./components/TopBanner";
 import ExperienceBar from "./components/ExperienceBar";
 import BottomNav from "./components/BottomNav";
 import CitiesPage from "./pages/CitiesPage";
 import DevelopmentPage from "./pages/DevelopmentPage";
-import RankManager from "Managers/RankManager/RankManager.js";
-import ProgressionManager from "Managers/ProgressionManager/ProgressionManager.js";
-import EconomyManager from "Managers/EconomyManager/EconomyManager.js";
+import { RankManager } from "Managers/RankManager/RankManager.js";
+import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
+import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js";
 
 import "./App.css";
 
-function calculateNextRankXP(rank) {
-  let xpNeeded = 5;
-  for (let i = 1; i < rank; i++) {
-    xpNeeded *= 3;
-  }
-  return Math.round(xpNeeded);
-}
-
-function getCumulativeXP(rank) {
-  let total = 0;
-  for (let i = 1; i <= rank; i++) {
-    total += calculateNextRankXP(i);
-  }
-  return total;
-}
-
 function App() {
-  const rankManager = useRef(new RankManager()).current;
-  const progressionManager = useRef(
-    new ProgressionManager(rankManager),
-  ).current;
-  const economyManager = useRef(new EconomyManager(progressionManager)).current;
+const [rankManager] = useState(() => new RankManager());
+const [progressionManager] = useState(() => new ProgressionManager(rankManager));
+const [economyManager] = useState(() => new EconomyManager(progressionManager));
+
 
   const [balance, setBalance] = useState(0);
   const [totalCashEarned, setTotalCashEarned] = useState(0);
-  const [rankSet, setRankSet] = useState(1);
-  const [xpAtRankUp, setXpAtRankUp] = useState(0); // start of rank 1 = 0
-  const [xpNeeded, setXpNeeded] = useState(calculateNextRankXP(1)); // rank 1 bar width = 5
+  const [rankSet, setRankSet] = useState(1);  
   const [activeTab, setActiveTab] = useState("Home");
 
   useEffect(() => {
     setInterval(() => {
-      const incomePerSecond = 15028 / 86400;
+      const incomePerSecond = economyManager.calculateDailyIncome();
 
-      setTotalCashEarned((prev) => {
-        const newTotal = prev + incomePerSecond;
-        const currentXP = Math.floor(newTotal);
+        progressionManager.addCash(incomePerSecond)
+        rankManager.convertCashToXP(progressionManager.totalCashEarned);
+    rankManager.verifyRank();
 
-        setRankSet((currentRank) => {
-          // rank-up triggers at the end of the current rank
-          if (currentXP >= getCumulativeXP(currentRank)) {
-            const newRank = currentRank + 1;
-            setXpAtRankUp(getCumulativeXP(newRank - 1)); // start of new rank
-            setXpNeeded(calculateNextRankXP(newRank)); // width of new rank bar
-            return newRank;
-          }
-          return currentRank;
-        });
-
-        return newTotal;
-      });
-
-      setBalance((prev) => prev + incomePerSecond);
-    }, 1000);
-  }, []);
-
-  const currentXP = Math.floor(totalCashEarned);
+      setBalance(progressionManager.balance);
+    setRankSet(rankManager.rank);
+    setTotalCashEarned(progressionManager.totalCashEarned);
+  }, 1000);
+}, [rankManager, progressionManager, economyManager]);
 
   return (
     <div className="App">
@@ -76,8 +43,8 @@ function App() {
         rank={rankSet}
       />
       <ExperienceBar
-        current={currentXP - xpAtRankUp}
-        max={xpNeeded}
+        current={totalCashEarned - rankManager.getCumulativeXP(rankSet - 1)}
+        max={rankManager.calculateNextRankXP(rankSet)}
         nextRank={rankSet + 1}
       />
       {activeTab === "Cities" && (
