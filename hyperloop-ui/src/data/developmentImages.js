@@ -89,7 +89,7 @@ const developmentImages = {
     "Outdoors Store": OutdoorsStore,
     "Crafts Shop": CraftsShop,
     "Enhanced Communications": EnhancedCommunications,
-    "Elite Fishery Contracts": eliteFisheryContracts,
+    "Elite Fishery Contracts": EliteFisheryContracts,
 
 }
 
