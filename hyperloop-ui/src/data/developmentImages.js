@@ -14,7 +14,7 @@ import CoffeeShop from '../assets/developments/CoffeeShop.jpg'
 import BeerTent from '../assets/developments/BeerTent.jpg'
 import HighEndBoutique from '../assets/developments/HighEndBoutique.jpg'
 import Florist from '../assets/developments/Florist.jpg'
-import Nightclub from '../assets/developments/Nightclub.jpg'
+import NightLounge from '../assets/developments/NightLounge.jpg'
 import TableTennisCourt from '../assets/developments/TableTennisCourt.jpg'
 import SodaMachines from '../assets/developments/SodaMachines.jpg'
 import Bank from '../assets/developments/Bank.jpg'
@@ -38,6 +38,8 @@ import FashionChain from '../assets/developments/FashionChain.jpg'
 import CheeseShop from '../assets/developments/CheeseShop.jpg'
 import CakeShop from '../assets/developments/CakeShop.jpg'
 import CustomerServiceCentre from '../assets/developments/CustomerServiceCentre.jpg'
+import QuietRoom from '../assets/developments/QuietRoom.jpg'
+import OutdoorsStore from '../assets/developments/OutdoorsStore.jpg'
 
 
 const developmentImages = {
@@ -56,7 +58,7 @@ const developmentImages = {
     "Beer Tent": BeerTent,
     "High-End Boutique": HighEndBoutique,
     "Florist": Florist,
-    "Nightclub": Nightclub,
+    "Night Lounge": NightLounge,
     "Table Tennis Court": TableTennisCourt,
     "Soda Machines": SodaMachines,
     "Bank": Bank,
@@ -80,6 +82,9 @@ const developmentImages = {
     "Cheese Shop": CheeseShop,
     "Cake Shop": CakeShop,
     "Customer Service Centre": CustomerServiceCentre,
+    "Quiet Room": QuietRoom,
+    "Outdoors Store": OutdoorsStore,
+
 
 }
 

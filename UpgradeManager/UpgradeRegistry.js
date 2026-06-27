@@ -5,6 +5,7 @@ import { bank } from './Bank.js'
 import { postalOffice } from './PostalOffice.js'
 import { luxuryHotel } from './LuxuryHotel.js'
 import { customerServiceCentre } from './CustomerServiceCentre.js'
+import { quietRoom } from './QuietRoom.js'
 
 export const allUpgrades = [
     sodaMachines,
@@ -12,4 +13,5 @@ export const allUpgrades = [
     postalOffice,
     luxuryHotel,
     customerServiceCentre,
+    quietRoom,
 ]

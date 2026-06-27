@@ -1,6 +1,4 @@
 
-
-
 const countryFlags = {
     "Belgium": "be",
     "France": "fr",
@@ -25,7 +23,9 @@ const countryFlags = {
     "Spain": "es",
     "The Netherlands": "nl",
     "Austria": "at",
-    "Philippines": "ph"
+    "Philippines": "ph",
+    "Argentina": "ar",
+    "Namibia": "na",
 
 
 

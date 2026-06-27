@@ -38,6 +38,8 @@ import Barcelona from '../assets/cities/Barcelona.jpg'
 import Amsterdam from '../assets/cities/Amsterdam.jpg'
 import Vienna from '../assets/cities/Vienna.jpg'
 import Manila from '../assets/cities/Manila.jpg'
+import BuenosAires from '../assets/cities/BuenosAires.jpg'
+import Windhoek from '../assets/cities/Windhoek.jpg'
 
 const cityImages = {
     London: London,
@@ -79,7 +81,8 @@ const cityImages = {
     Amsterdam: Amsterdam,
     Vienna: Vienna,
     Manila: Manila,
-
+    "Buenos Aires": BuenosAires,
+    Windhoek: Windhoek,
 
 
 }

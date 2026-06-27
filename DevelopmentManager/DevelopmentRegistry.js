@@ -14,7 +14,7 @@ import { coffeeShop } from './CoffeeShop.js'
 import { beerTent } from './BeerTent.js'
 import { highEndBoutique } from './HighEndBoutique.js'
 import { florist } from './Florist.js'
-import { nightclub } from './Nightclub.js'
+import { nightLounge } from './NightLounge.js'
 import { tableTennisCourt } from './TableTennisCourt.js'
 import { cinema } from './Cinema.js'
 import { convenienceStore } from './ConvenienceStore.js'
@@ -33,6 +33,7 @@ import { saladBar } from './SaladBar.js'
 import { fashionChain } from './FashionChain.js'
 import { cheeseShop } from './CheeseShop.js'
 import { cakeShop } from './CakeShop.js'
+import { outdoorsStore } from './OutdoorsStore.js'
 
 
 export const allDevelopments = [
@@ -51,7 +52,7 @@ export const allDevelopments = [
     beerTent,
     highEndBoutique,
     florist,
-    nightclub,
+    nightLounge,
     tableTennisCourt,
     cinema,
     convenienceStore,
@@ -70,5 +71,6 @@ export const allDevelopments = [
     fashionChain,
     cheeseShop,
     cakeShop,
+    outdoorsStore,
 
 ]

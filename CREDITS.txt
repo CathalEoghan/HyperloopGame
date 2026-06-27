@@ -39,7 +39,8 @@ Barcelona.jpg - Photo by AXP Photography via Pexels
 Amsterdam.jpg - Photo by Hans via Pexels
 Vienna.jpg - Photo by Anton Uniqueton via Pexels
 Manila.jpg - Photo by Alexis Ricardo Alaurin via Pexels
-
+BuenosAires.jpg - Photo by Matheus De Moraes Gugelnim via Pexels
+Windhoek.jpg - Photo by Grant Durr via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -81,6 +82,8 @@ FashionChain.jpg - Photo by Vladimir Srajber via Pexels
 CheeseShop.jpg - Photo by Haberdoedas Photography via Pexels
 CakeShop.jpg - Photo by Jason Shi via Pexels
 CustomerServiceCentre.jpg - Photo by Yan Krukau via Pexels
+OutdoorsStore.jpg - Photo by Alexey K. via Pexels
+TherapistsOffice.jpg - Photo by RDNE Stock project via Pexels
 
 SOUNDS
 
