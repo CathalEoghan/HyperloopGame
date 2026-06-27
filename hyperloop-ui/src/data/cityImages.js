@@ -43,6 +43,11 @@ import Windhoek from '../assets/cities/Windhoek.jpg'
 import Nairobi from '../assets/cities/Nairobi.jpg'
 import Johannesburg from '../assets/cities/Johannesburg.jpg'
 import Gothenburg from '../assets/cities/Gothenburg.jpg'
+import Venice from '../assets/cities/Venice.jpg'
+import Bangkok from '../assets/cities/Bangkok.jpg'
+import Shenzhen from '../assets/cities/Shenzhen.jpg'
+import Bogotá from '../assets/cities/Bogotá.jpg'
+import Beijing from '../assets/cities/Beijing.jpg'
 
 const cityImages = {
     London: London,
@@ -89,6 +94,11 @@ const cityImages = {
     Nairobi: Nairobi,
     Johannesburg: Johannesburg,
     Gothenburg: Gothenburg,
+    Venice: Venice,
+    Bangkok: Bangkok,
+    Shenzhen: Shenzhen,
+    Bogotá: Bogotá,
+    Beijing: Beijing,
 
 }
 

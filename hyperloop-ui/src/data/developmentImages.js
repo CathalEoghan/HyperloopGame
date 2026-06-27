@@ -43,6 +43,11 @@ import OutdoorsStore from '../assets/developments/OutdoorsStore.jpg'
 import CraftsShop from '../assets/developments/CraftsShop.jpg'
 import EnhancedCommunications from '../assets/developments/EnhancedCommunications.jpg'
 import EliteFisheryContracts from '../assets/developments/EliteFisheryContracts.jpg'
+import WaterTaxiTransfers from '../assets/developments/WaterTaxiTransfers.jpg'
+import CocktailBar from '../assets/developments/CocktailBar.jpg'
+import PhoneStore from '../assets/developments/PhoneStore.jpg'
+import BusTransfers from '../assets/developments/BusTransfers.jpg'
+import TrainStation from '../assets/developments/TrainStation.jpg'
 
 
 const developmentImages = {
@@ -90,6 +95,11 @@ const developmentImages = {
     "Crafts Shop": CraftsShop,
     "Enhanced Communications": EnhancedCommunications,
     "Elite Fishery Contracts": EliteFisheryContracts,
+    "Water Taxi Transfers": WaterTaxiTransfers,
+    "Cocktail Bar": CocktailBar,
+    "Phone Store": PhoneStore,
+    "Bus Transfers": BusTransfers,
+    "Train Station": TrainStation,
 
 }
 

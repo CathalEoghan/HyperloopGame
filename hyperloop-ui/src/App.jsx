@@ -6,14 +6,17 @@ import CitiesPage from "./pages/CitiesPage";
 import DevelopmentPage from "./pages/DevelopmentPage";
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
-import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js";
-
+import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
+import { TimeManager } from "Managers/TimeManager/TimeManager.js";
+import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import "./App.css";
 
 function App() {
 const [rankManager] = useState(() => new RankManager());
 const [progressionManager] = useState(() => new ProgressionManager(rankManager));
 const [economyManager] = useState(() => new EconomyManager(progressionManager));
+const [timeManager] = useState(() => new TimeManager());
+const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
 
 
   const [balance, setBalance] = useState(0);
@@ -28,12 +31,13 @@ const [economyManager] = useState(() => new EconomyManager(progressionManager));
         progressionManager.addCash(incomePerSecond)
         rankManager.convertCashToXP(progressionManager.totalCashEarned);
     rankManager.verifyRank();
+    constructionManager.update();
 
       setBalance(progressionManager.balance);
     setRankSet(rankManager.rank);
     setTotalCashEarned(progressionManager.totalCashEarned);
   }, 1000);
-}, [rankManager, progressionManager, economyManager]);
+}, [rankManager, progressionManager, economyManager, constructionManager]);
 
   return (
     <div className="App">

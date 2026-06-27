@@ -45,6 +45,10 @@ Nairobi.jpg - Photo by K via Pexels
 Johannesburg.jpg - Photo by Zak H via Pexels
 Gothenburg.jpg - Photo by Wenchao Geng via Pexels
 Venice.jpg - Photo by Efrem Efre via Pexels
+Bangkok.jpg - Photo by Markus Winkler via Pexels
+Shenzhen.jpg - Photo by Lywin via Pexels
+Bogotá.jpg - Photo by Michael Pointner via Pexels
+Beijing.jpg - Photo by zhang kaiyv via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -92,6 +96,10 @@ CraftsShop.jpg - Photo by Eduardo Amorim via Pexels
 EnhancedCommunications.jpg - Photo by Fran Werner via Pexels
 EliteFisheryContracts.jpg - Photo by Michał Robak via Pexels
 WaterTaxiTransfer.jpg - Photo by Igor Passchier via Pexels
+CocktailBar.jpg - Photo by Matias via Pexels
+PhoneStore.jpg - Photo by Mathias Reding via Pexels
+BusTransfers.jpg - Photo by HONG SON via Pexels
+TrainStation.jpg - Photo by Markus Winkler via Pexels
 
 SOUNDS
 

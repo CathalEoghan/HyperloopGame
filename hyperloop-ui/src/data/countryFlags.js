@@ -29,7 +29,8 @@ const countryFlags = {
     "Kenya": "ke",
     "South Africa": "za",
     "Sweden": "se",
-    
+    "Colombia": "co",
+
 
 
 

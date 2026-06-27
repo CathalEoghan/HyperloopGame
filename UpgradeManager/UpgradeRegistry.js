@@ -8,7 +8,9 @@ import { customerServiceCentre } from './CustomerServiceCentre.js'
 import { quietRoom } from './QuietRoom.js'
 import { enhancedCommunications } from './EnhancedCommunications.js'
 import { eliteFisheryContracts } from './EliteFisheryContracts.js'
-
+import { waterTaxiTransfers } from './WaterTaxiTransfers.js'
+import { busTransfers } from './BusTransfers.js'
+import { trainStation } from './TrainStation.js'
 
 export const allUpgrades = [
     sodaMachines,
@@ -19,5 +21,8 @@ export const allUpgrades = [
     quietRoom,
     enhancedCommunications,
     eliteFisheryContracts,
+    waterTaxiTransfers,
+    busTransfers,
+    trainStation,
 
 ]
