@@ -42,6 +42,8 @@ import QuietRoom from '../assets/developments/QuietRoom.jpg'
 import OutdoorsStore from '../assets/developments/OutdoorsStore.jpg'
 import CraftsShop from '../assets/developments/CraftsShop.jpg'
 import EnhancedCommunications from '../assets/developments/EnhancedCommunications.jpg'
+import EliteFisheryContracts from '../assets/developments/EliteFisheryContracts.jpg'
+
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
