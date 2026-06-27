@@ -26,6 +26,10 @@ const countryFlags = {
     "Philippines": "ph",
     "Argentina": "ar",
     "Namibia": "na",
+    "Kenya": "ke",
+    "South Africa": "za",
+    "Sweden": "se",
+    
 
 
 

@@ -34,7 +34,7 @@ import { fashionChain } from './FashionChain.js'
 import { cheeseShop } from './CheeseShop.js'
 import { cakeShop } from './CakeShop.js'
 import { outdoorsStore } from './OutdoorsStore.js'
-
+import { craftsShop } from './CraftsShop.js'
 
 export const allDevelopments = [
     bakery,
@@ -72,5 +72,6 @@ export const allDevelopments = [
     cheeseShop,
     cakeShop,
     outdoorsStore,
+    craftsShop,
 
 ]

@@ -40,6 +40,9 @@ import Vienna from '../assets/cities/Vienna.jpg'
 import Manila from '../assets/cities/Manila.jpg'
 import BuenosAires from '../assets/cities/BuenosAires.jpg'
 import Windhoek from '../assets/cities/Windhoek.jpg'
+import Nairobi from '../assets/cities/Nairobi.jpg'
+import Johannesburg from '../assets/cities/Johannesburg.jpg'
+import Gothenburg from '../assets/cities/Gothenburg.jpg'
 
 const cityImages = {
     London: London,
@@ -83,7 +86,9 @@ const cityImages = {
     Manila: Manila,
     "Buenos Aires": BuenosAires,
     Windhoek: Windhoek,
-
+    Nairobi: Nairobi,
+    Johannesburg: Johannesburg,
+    Gothenburg: Gothenburg,
 
 }
 

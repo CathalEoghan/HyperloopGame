@@ -6,5 +6,6 @@ export const customerServiceCentre = new Upgrade(
     "Customer Service Centre",
     29000,
     "Service",
-    500
+    "populationIncome",
+    0.05
 );

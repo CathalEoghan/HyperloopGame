@@ -40,6 +40,9 @@ import { Vienna } from './Vienna.js'
 import { Manila } from './Manila.js'
 import { Windhoek } from './Windhoek.js'
 import { BuenosAires } from './BuenosAires.js'
+import { Nairobi } from './Nairobi.js'
+import { Johannesburg } from './Johannesburg.js'
+import { Gothenburg } from './Gothenburg.js'
 
 export const allCities = [
     Atlanta,
@@ -83,5 +86,8 @@ export const allCities = [
     Manila,
     BuenosAires,
     Windhoek,
+    Nairobi,
+    Johannesburg,
+    Gothenburg,
 
 ]

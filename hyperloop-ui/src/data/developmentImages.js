@@ -40,7 +40,8 @@ import CakeShop from '../assets/developments/CakeShop.jpg'
 import CustomerServiceCentre from '../assets/developments/CustomerServiceCentre.jpg'
 import QuietRoom from '../assets/developments/QuietRoom.jpg'
 import OutdoorsStore from '../assets/developments/OutdoorsStore.jpg'
-
+import CraftsShop from '../assets/developments/CraftsShop.jpg'
+import EnhancedCommunications from '../assets/developments/EnhancedCommunications.jpg'
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -84,7 +85,9 @@ const developmentImages = {
     "Customer Service Centre": CustomerServiceCentre,
     "Quiet Room": QuietRoom,
     "Outdoors Store": OutdoorsStore,
-
+    "Crafts Shop": CraftsShop,
+    "Enhanced Communications": EnhancedCommunications,
+    "Elite Fishery Contracts": eliteFisheryContracts,
 
 }
 
