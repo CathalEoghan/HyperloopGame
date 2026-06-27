@@ -74,10 +74,6 @@ export class ProgressionManager {
         if (this.purchasedCities.includes(city)) {
             return
         }
-
-          if (!this.spendCash(city.cost)) {
-             return; // Can't afford the city
-        }
             
         city.connect();
 
@@ -97,12 +93,21 @@ export class ProgressionManager {
          if (this.purchasedDevelopments.includes(development)) { // Checks for duplicates
             return
         }
-        if(!this.spendCash(development.cost)) {
-            return; // Can't afford the development
-        }
 
         this.purchasedDevelopments.push(development); // only reached if everything above succeeded
 
+    }
+
+    getRandomUnlockedCity(allCities) {
+    const eligible = allCities.filter(city => !this.purchasedCities.includes(city));
+    // pick one at random from `eligible`
+    if (eligible.length === 0) {
+    return null; 
+    } else {
+    const randomIndex = Math.floor(Math.random() * eligible.length);
+    return eligible[randomIndex];
+
+}
     }
 }
 

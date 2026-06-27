@@ -11,7 +11,7 @@ export class ConstructionManager {
 
     calculateTierTime(city) {
 
-        if (city.tier === 3) {
+        if (city.tier === 1) {
             return FOUR_HOURS;
         }
 
@@ -19,7 +19,7 @@ export class ConstructionManager {
             return EIGHT_HOURS;
         }
 
-        if (city.tier === 1) {
+        if (city.tier === 3) {
             return ONE_DAY;
         }
 
@@ -46,6 +46,16 @@ export class ConstructionManager {
             return true;
         }
         return false;
+    }
+
+      // Starts construction of the station
+    startTutorialConstruction(city) {
+
+        const duration = FIVE_SECONDS;
+        city.finishTime = this.timeManager.getFinishTime(duration)
+        city.underConstruction = true;
+        this.progressionManager.citiesUnderConstruction.push(city);
+        this.progressionManager.constructionQueue.push(city);
     }
 
     // Starts construction of the station
@@ -85,13 +95,13 @@ export class ConstructionManager {
         let connectionCost = 0;
 
         switch (city.tier) {
-            case 1:
+            case 3:
                 connectionCost = 50000;
                 break;
             case 2:
                 connectionCost = 25000;
                 break;
-            case 3:
+            case 1:
                 connectionCost = 10000;
                 break;
             default:

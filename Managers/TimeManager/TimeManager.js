@@ -3,6 +3,7 @@
     export const FOUR_HOURS = 4 * 60 * 60 * 1000;
     export const EIGHT_HOURS = 8 * 60 * 60 * 1000;
     export const ONE_DAY = 24 * 60 * 60 * 1000;
+    export const FIVE_SECONDS = 5 * 1000;
 
 export class TimeManager {
 
