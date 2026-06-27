@@ -44,6 +44,7 @@ Windhoek.jpg - Photo by Grant Durr via Pexels
 Nairobi.jpg - Photo by K via Pexels
 Johannesburg.jpg - Photo by Zak H via Pexels
 Gothenburg.jpg - Photo by Wenchao Geng via Pexels
+Venice.jpg - Photo by Efrem Efre via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -90,6 +91,7 @@ QuietRoom.jpg - Photo by Muhtelifane via Pexels
 CraftsShop.jpg - Photo by Eduardo Amorim via Pexels
 EnhancedCommunications.jpg - Photo by Fran Werner via Pexels
 EliteFisheryContracts.jpg - Photo by Michał Robak via Pexels
+WaterTaxiTransfer.jpg - Photo by Igor Passchier via Pexels
 
 SOUNDS
 
