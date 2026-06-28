@@ -37,6 +37,9 @@ import { outdoorsStore } from './OutdoorsStore.js'
 import { craftsShop } from './CraftsShop.js'
 import { cocktailBar } from './CocktailBar.js'
 import { phoneStore } from './PhoneStore.js'
+import { photoRoom } from './PhotoRoom.js'
+import { pettingZoo } from './PettingZoo.js'
+import { aquarium } from './Aquarium.js'
 
 export const allDevelopments = [
     bakery,
@@ -77,5 +80,8 @@ export const allDevelopments = [
     craftsShop,
     cocktailBar,
     phoneStore,
+    photoRoom,
+    pettingZoo,
+    aquarium,
 
 ]

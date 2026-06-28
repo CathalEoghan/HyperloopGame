@@ -8,6 +8,7 @@ export const Montréal = new City(
     4500000,
     [comedyClub],
     "Canada",
+    "North America",
     2,
     "Montréal is the birthplace of Cirque du Soleil and is home to a massive circus culture."
 );

@@ -8,6 +8,7 @@ export const Bangkok = new City(
     17400000,
     [cocktailBar],
     "Thailand",
+    "Asia",
     3,
     "Yaowarat in Bangkok is considered the largest Chinatown on earth, and it is home to Wat Traimit, which houses the world's largest solid gold Buddha statue (weighing 5.5 tons)."
 );

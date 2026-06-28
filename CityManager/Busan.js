@@ -8,6 +8,7 @@ export const Busan = new City(
     4000000,
     [seafoodRestaurant],
     "South Korea",
+    "Asia",
     2,
     "Busan is home to the Centum City Shinsegae, which is officially certified by Guinness World Records as the world's largest department store."
 );

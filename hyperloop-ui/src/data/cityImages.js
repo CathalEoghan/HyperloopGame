@@ -48,6 +48,10 @@ import Bangkok from '../assets/cities/Bangkok.jpg'
 import Shenzhen from '../assets/cities/Shenzhen.jpg'
 import Bogotá from '../assets/cities/Bogotá.jpg'
 import Beijing from '../assets/cities/Beijing.jpg'
+import Taipei from '../assets/cities/Taipei.jpg'
+import Melbourne from '../assets/cities/Melbourne.jpg'
+import Apia from '../assets/cities/Apia.jpg'
+
 
 const cityImages = {
     London: London,
@@ -99,6 +103,9 @@ const cityImages = {
     Shenzhen: Shenzhen,
     Bogotá: Bogotá,
     Beijing: Beijing,
+    Taipei: Taipei,
+    Melbourne: Melbourne,
+    Apia: Apia,
 
 }
 

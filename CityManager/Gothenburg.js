@@ -8,6 +8,7 @@ export const Gothenburg = new City(
     1100000,
     [eliteFisheryContracts],
     "Sweden",
+    "Europe",
     1,
     "Gothenburg's gorgeous southern archipelago is completely car-free, reachable only by ferries."
     );

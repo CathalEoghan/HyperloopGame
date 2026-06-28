@@ -8,6 +8,7 @@ export const Nairobi = new City(
      5700000,
     [craftsShop],
     "Kenya",
+    "Africa",
     2,
     "At about 1,795 meters (5,889 feet) above sea level, the city's high altitude means it stays surprisingly temperate year-round, despite being near the equator.",
 );

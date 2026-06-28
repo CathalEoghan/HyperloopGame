@@ -8,6 +8,7 @@ export const SanDiego = new City(
     4360000,
     [gym],
     "United States of America",
+    "North America",
     3,
     "Tucked away on Hillside Drive in La Jolla, you can find a cluster of peculiar, small-scale houses. Local legends claim they were built to house the actors playing the munchkins in the 1939 film classic 'The Wizard of Oz'."
 );

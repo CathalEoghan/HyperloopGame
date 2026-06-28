@@ -30,9 +30,9 @@ const countryFlags = {
     "South Africa": "za",
     "Sweden": "se",
     "Colombia": "co",
-
-
-
+    "Taiwan": "tw",
+    "Australia": "au",
+    "Samoa": "ws",
 
 }
 

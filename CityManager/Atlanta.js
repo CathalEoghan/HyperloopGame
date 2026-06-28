@@ -8,6 +8,7 @@ export const Atlanta = new City(
     6400000,
     [sodaMachines],
     "United States of America",
+    "North America",
     2,
     "There are 71 streets in Atlanta with some version of Peachtree as part of their name."
 );

@@ -8,6 +8,7 @@ export const Rome = new City(
     4360000,
     [pizzeria],
     "Italy",
+    "Europe",
     2,
     "Rome boasts thirteen ancient obelisks—eight ancient Egyptian and five Roman replicas - making it the city with the largest collection of these towering monuments on Earth."
 );

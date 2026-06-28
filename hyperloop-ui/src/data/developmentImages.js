@@ -48,6 +48,9 @@ import CocktailBar from '../assets/developments/CocktailBar.jpg'
 import PhoneStore from '../assets/developments/PhoneStore.jpg'
 import BusTransfers from '../assets/developments/BusTransfers.jpg'
 import TrainStation from '../assets/developments/TrainStation.jpg'
+import PhotoRoom from '../assets/developments/PhotoRoom.jpg'
+import PettingZoo from '../assets/developments/PettingZoo.jpg'
+import Aquarium from '../assets/developments/Aquarium.jpg'
 
 
 const developmentImages = {
@@ -100,7 +103,9 @@ const developmentImages = {
     "Phone Store": PhoneStore,
     "Bus Transfers": BusTransfers,
     "Train Station": TrainStation,
-
+    "Photo Room": PhotoRoom,
+    "Petting Zoo": PettingZoo,
+    "Aquarium": Aquarium,
 }
 
 export default developmentImages

@@ -8,6 +8,7 @@ export const RioDeJaneiro = new City(
     14000000,
     [swimwearStore],
     "Brazil",
+    "South America",
     3,
     "Rio de Janeiro translates to 'River of January'. The city got its iconic name in January 1502 when Portuguese explorers mistook the mouth of the Guanabara Bay for a massive river."
 );

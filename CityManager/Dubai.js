@@ -8,6 +8,7 @@ export const Dubai = new City(
     6000000,
     [luxuryHotel],
     "United Arab Emirates",
+    "Asia",
     3,
     "Because Dubai's police force boasts a fleet of supercars that includes a Lamborghini Aventador, a Ferrari FF, and an Aston Martin One-77, their officers can patrol the streets in some of the fastest vehicles on the planet."
 );

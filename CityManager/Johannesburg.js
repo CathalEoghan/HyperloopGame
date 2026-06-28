@@ -8,6 +8,7 @@ export const Johannesburg = new City(
     15000000,
     [enhancedCommunications],
     "South Africa",
+    "Africa",
     2,
     "Because Johannesburg sits roughly 1,750 meters (5,700 feet) above sea level, air pressure is lower, meaning it takes about an extra minute to boil an egg."
 );
