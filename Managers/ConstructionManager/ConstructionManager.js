@@ -1,5 +1,5 @@
 
-import { FOUR_HOURS, EIGHT_HOURS, ONE_DAY } from '../TimeManager/TimeManager.js'
+import { FIVE_SECONDS, FOUR_HOURS, EIGHT_HOURS, ONE_DAY } from '../TimeManager/TimeManager.js'
 
 export class ConstructionManager {
     constructor(progressionManager, timeManager) {
