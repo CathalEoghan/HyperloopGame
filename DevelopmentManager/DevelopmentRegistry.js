@@ -40,6 +40,11 @@ import { phoneStore } from './PhoneStore.js'
 import { photoRoom } from './PhotoRoom.js'
 import { pettingZoo } from './PettingZoo.js'
 import { aquarium } from './Aquarium.js'
+import { watchStore } from './WatchStore.js'
+import { fragranceStore } from './FragranceStore.js'
+import { artGallery } from './ArtGallery.js'
+import { metalBar } from './MetalBar.js'
+import { tacoRestaurant } from './TacoRestaurant.js'
 
 export const allDevelopments = [
     bakery,
@@ -83,5 +88,10 @@ export const allDevelopments = [
     photoRoom,
     pettingZoo,
     aquarium,
+    watchStore,
+    fragranceStore,
+    artGallery,
+    metalBar,
+    tacoRestaurant,
 
 ]

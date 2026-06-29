@@ -51,6 +51,12 @@ import { Beijing } from './Beijing.js'
 import { Taipei } from './Taipei.js'
 import { Melbourne } from './Melbourne.js'
 import { Apia } from './Apia.js'
+import { Geneva } from './Geneva.js'
+import { Cologne } from './Cologne.js'
+import { Lagos } from './Lagos.js'
+import { Madrid } from './Madrid.js'
+import { Helsinki } from './Helsinki.js'
+import { MexicoCity } from './MexicoCity.js'
 
 export const allCities = [
     Atlanta,
@@ -105,5 +111,12 @@ export const allCities = [
     Taipei,
     Melbourne,
     Apia,
+    Geneva,
+    Cologne,
+    Lagos,
+    Madrid,
+    Helsinki,
+    MexicoCity,
+
 
 ]

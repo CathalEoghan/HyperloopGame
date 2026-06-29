@@ -11,6 +11,7 @@ import { eliteFisheryContracts } from './EliteFisheryContracts.js'
 import { waterTaxiTransfers } from './WaterTaxiTransfers.js'
 import { busTransfers } from './BusTransfers.js'
 import { trainStation } from './TrainStation.js'
+import { billboardDesignOverhauls } from './BillboardDesignOverhauls.js'
 
 export const allUpgrades = [
     sodaMachines,
@@ -24,5 +25,6 @@ export const allUpgrades = [
     waterTaxiTransfers,
     busTransfers,
     trainStation,
+    billboardDesignOverhauls,
 
 ]

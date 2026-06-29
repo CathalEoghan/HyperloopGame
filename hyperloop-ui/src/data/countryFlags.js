@@ -33,6 +33,9 @@ const countryFlags = {
     "Taiwan": "tw",
     "Australia": "au",
     "Samoa": "ws",
+    "Switzerland": "ch",
+    "Nigeria": "ng",
+    "Finland": "fi",
 
 }
 

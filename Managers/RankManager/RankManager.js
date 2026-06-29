@@ -1,4 +1,5 @@
 
+
 export class RankManager {
     constructor() {
         this.rank = 1;
@@ -6,10 +7,46 @@ export class RankManager {
     }
 
     calculateNextRankXP(rank) {
-        let xpNeeded = 5;
+        
+        let xpNeeded = 0;
 
-        for (let i = 1; i < rank; i++) {
-            xpNeeded *= 3;
+        switch (rank) {
+        case 1:
+            xpNeeded  = 500;
+        break;
+        case 2:
+            xpNeeded = 1000;
+        break;
+        case 3:
+            xpNeeded = 2500;
+        break;
+        case 4:
+            xpNeeded = 5000;
+        break;
+        case 5:
+            xpNeeded = 10000;
+        break;
+        case 6:
+            xpNeeded = 25000;
+        break;
+        case 7:
+            xpNeeded = 50000;
+        break;
+        case 8:
+            xpNeeded = 100000;
+        break;
+        case 9:
+            xpNeeded = 250000;
+        break;
+        case 10:
+            xpNeeded = 500000;
+        break;
+        case 11:
+            xpNeeded = 750000;
+        break;
+        case 12:
+            xpNeeded = 1000000;
+        break;
         }
 
         return Math.round(xpNeeded);

@@ -51,7 +51,12 @@ import TrainStation from '../assets/developments/TrainStation.jpg'
 import PhotoRoom from '../assets/developments/PhotoRoom.jpg'
 import PettingZoo from '../assets/developments/PettingZoo.jpg'
 import Aquarium from '../assets/developments/Aquarium.jpg'
-
+import WatchStore from '../assets/developments/WatchStore.jpg'
+import FragranceStore from '../assets/developments/FragranceStore.jpg'
+import BillboardDesignOverhauls from '../assets/developments/BillboardDesignOverhauls.jpg'
+import ArtGallery from '../assets/developments/ArtGallery.jpg'
+import MetalBar from '../assets/developments/MetalBar.jpg'
+import TacoRestaurant from '../assets/developments/TacoRestaurant.jpg'
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -106,6 +111,13 @@ const developmentImages = {
     "Photo Room": PhotoRoom,
     "Petting Zoo": PettingZoo,
     "Aquarium": Aquarium,
+    "Watch Store": WatchStore,
+    "Fragrance Store": FragranceStore,
+    "Billboard Design Overhauls": BillboardDesignOverhauls,
+    "Art Gallery": ArtGallery,
+    "Metal Bar": MetalBar,
+    "Taco Restaurant": TacoRestaurant,
+
 }
 
 export default developmentImages

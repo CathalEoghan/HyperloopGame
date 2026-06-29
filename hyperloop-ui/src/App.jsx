@@ -9,6 +9,7 @@ import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManag
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
+import starterCities from "./data/starterCities.js";
 import "./App.css";
 
 function App() {
@@ -23,6 +24,8 @@ const [constructionManager] = useState(() => new ConstructionManager(progression
   const [totalCashEarned, setTotalCashEarned] = useState(0);
   const [rankSet, setRankSet] = useState(1);  
   const [activeTab, setActiveTab] = useState("Home");
+  const [pickedCity, setPickedCity] = useState(null);
+  const [showRankUpModal, setShowRankUpModal] = useState(false);
 
   useEffect(() => {
     setInterval(() => {
@@ -30,16 +33,47 @@ const [constructionManager] = useState(() => new ConstructionManager(progression
 
         progressionManager.addCash(incomePerSecond)
         rankManager.convertCashToXP(progressionManager.totalCashEarned);
-    rankManager.verifyRank();
-    constructionManager.update();
+const previousRank = rankManager.rank;
+rankManager.verifyRank();
 
+if (rankManager.rank > previousRank) {
+  setShowRankUpModal(true);
+}
+    constructionManager.update();
+    
       setBalance(progressionManager.balance);
     setRankSet(rankManager.rank);
     setTotalCashEarned(progressionManager.totalCashEarned);
   }, 1000);
 }, [rankManager, progressionManager, economyManager, constructionManager]);
 
+if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
+    return (
+    <div className="App">
+      {starterCities.map((city) => (
+        <button
+          key={city.name}
+          onClick={() => {
+            constructionManager.startTutorialConstruction(city);
+            setPickedCity(city);
+          }}
+        >
+          {city.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+
+if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
   return (
+    <div className="App">
+      <p>Constructing {pickedCity.name}...</p>
+    </div>
+  );
+}
+
+      return (
     <div className="App">
       <TopBanner
         terminalName="Hyperloop Central"
@@ -52,14 +86,14 @@ const [constructionManager] = useState(() => new ConstructionManager(progression
         nextRank={rankSet + 1}
       />
       {activeTab === "Cities" && (
-        <CitiesPage purchasedCities={[{ name: "London" }]} />
+        <CitiesPage purchasedCities={progressionManager.purchasedCities} constructionManager={constructionManager}/>
       )}
       {activeTab === "Development" && (
-        <DevelopmentPage purchasedDevelopments={[{ name: "Cupcake Store" }]} />
+        <DevelopmentPage purchasedDevelopments={progressionManager.purchasedDevelopments} />
       )}
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
     </div>
-  );
+      )
 }
 
 export default App;

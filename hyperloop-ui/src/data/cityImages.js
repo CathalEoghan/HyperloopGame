@@ -51,6 +51,12 @@ import Beijing from '../assets/cities/Beijing.jpg'
 import Taipei from '../assets/cities/Taipei.jpg'
 import Melbourne from '../assets/cities/Melbourne.jpg'
 import Apia from '../assets/cities/Apia.jpg'
+import Geneva from '../assets/cities/Geneva.jpg'
+import Cologne from '../assets/cities/Cologne.jpg'
+import Lagos from '../assets/cities/Lagos.jpg'
+import Madrid from '../assets/cities/Madrid.jpg'
+import Helsinki from '../assets/cities/Helsinki.jpg'
+import MexicoCity from '../assets/cities/MexicoCity.jpg'
 
 
 const cityImages = {
@@ -106,6 +112,12 @@ const cityImages = {
     Taipei: Taipei,
     Melbourne: Melbourne,
     Apia: Apia,
+    Geneva: Geneva,
+    Cologne: Cologne,
+    Lagos: Lagos,
+    Madrid: Madrid,
+    Helsinki: Helsinki,
+    "Mexico City": MexicoCity,
 
 }
 

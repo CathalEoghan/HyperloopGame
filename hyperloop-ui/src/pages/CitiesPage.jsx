@@ -4,7 +4,7 @@ import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
 import countryFlags from '../data/countryFlags.js'
 
-function CitiesPage({ purchasedCities }) {
+function CitiesPage({ purchasedCities, constructionManager }) {
 
     const [selectedCity, setSelectedCity] = useState(null)
 
@@ -46,6 +46,19 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
             {selectedCity && (
                 <div className="modal-overlay" onClick={() => setSelectedCity(null)}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        {available.includes(selectedCity) ? (
+                            <> 
+                            <h3> Construct {selectedCity.name}? </h3>
+                            <button onClick={() =>{
+                                constructionManager.startStationConstruction(selectedCity);
+                                setSelectedCity(null);
+                            }}>
+                            Yes ({constructionManager.calculateTierConnectionCost(selectedCity)})
+                            </button>
+                            <button className="closeButton" onClick={() => setSelectedCity(null)}>Close</button>
+                            </>
+            ) : (
+                <>
                         <img src={`https://flagcdn.com/w40/${countryFlags[selectedCity.country]}.png`} />
                         <h3>{selectedCity.name}</h3>
                         <hr />
@@ -55,6 +68,8 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
                         <p><em>{selectedCity.fact}</em></p>
                         <img className="modal-city-image" src={cityImages[selectedCity.name]} alt={selectedCity.name} style={{width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover'}}/>
                         <button className="closeButton" onClick={() => setSelectedCity(null)}>Close</button>
+                    </>
+                )}
                     </div>
                 </div>
             )}
