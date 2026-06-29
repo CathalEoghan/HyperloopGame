@@ -52,6 +52,12 @@ Beijing.jpg - Photo by zhang kaiyv via Pexels
 Taipei.jpg - Photo by Jimmy Liao via Pexels
 Melbourne.jpg - Photo by John Simmons via Pexels
 Apia.js - Photo by Tony Rios via Pexels
+Geneva.js - Photo by ZongJunXie via Pexels
+Cologne.js - Photo by Miguel Andres Parra via Pexels
+Lagos.js - Photo by Caesar. via Pexels
+Madrid.js - Photo by Jo Kassis via Pexels
+Helsinki.js - Photo by Vish Pix via Pexels
+MexicoCity.js - Photo by Fernando Paleta via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -106,6 +112,12 @@ TrainStation.jpg - Photo by Markus Winkler via Pexels
 PhotoRoom.jpg - Photo by Michael Morse via Pexels
 PettingZoo.jpg - Photo by Michał Robak via Pexels
 Aquarium - Photo by Anastasiya Vragova via Pexels
+WatchStore.jpg - Photo by Ushindi Namegabe via Pexels
+FragranceStore.jpg - Photo by Arda Kaykısız via Pexels
+BillboardDesignOverhauls.js - Photo by Roman Biernacki via Pexels
+ArtGallery.js - Photo by Loïc Manegarium via Pexels
+MetalBar.js - Photo by RDNE Stock project via Pexels
+TacoRestaurant.js - Photo by Nadin Sh via Pexels
 
 SOUNDS
 
