@@ -95,7 +95,7 @@
     overflow-y: auto;
 }
 
-.modal img:not(.city-modal-image) {
+.modal img:not(.modal-city-image) {
     border: 1px solid black;
     width: 60px;
     height: 40px;
@@ -103,8 +103,10 @@
     margin-bottom: 6px;
 }
 
-.modal hr {
-  margin: 8px 0;
+  .modal hr {
+    margin: 8px 0;
+    width: 100%;
+    align-self: stretch;
 }
 
 .tooltip-visible {
@@ -141,16 +143,46 @@
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.closeButton {
+.modal .closeButton {
     display: block;
-    margin: 0 auto;
+    margin: 12px 0 auto 0;
     font-family: "Inter", sans-serif;
     font-weight: bold;
     text-align: center;
+    border-radius: 8px;
+    border: 2px solid black;
+    background-color: linen;
     align-self: center;
+    padding: 10px 16px;
+    cursor: pointer;
 }
 
-.modal img.city-modal-image {
+.modal .constructionButton {
+    display: block;
+    margin: 12px 0 auto 0;
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px solid black;
+    background-color: linen;
+    align-self: center;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.modal img.modal-city-image {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid black;
+    margin-top: 12px;
+}
+
+.modal-overlay .modal img.modal-city-image {
+    width: 160px;
+    height: 160px;
     object-fit: cover;
     border-radius: 8px;
     border: 2px solid black;
@@ -163,11 +195,34 @@
 
 .unavailable {
     filter: grayscale(100%);
-        width: 64px;
+    width: 64px;
     height: 64px;
     background-color: #ccc;
     border-radius: 6px;
     flex-shrink: 0;
     border: 2px solid black;
+}
+
+.modal .constructionButton {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
+    margin: 12px auto 0;
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    border-radius: 8px;
+    border: 2px solid black;
+    background-color: linen;
+    padding: 10px 16px;
+    cursor: pointer;
+}
+
+.modal img.cashIcon {
+    width: 18px;
+    height: 18px;
+    border: none;
+    object-fit: contain;
+    margin-bottom: 0;
 }
 

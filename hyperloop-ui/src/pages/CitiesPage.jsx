@@ -3,8 +3,9 @@ import './CitiesPage.css'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
 import countryFlags from '../data/countryFlags.js'
+import cashIcon from '../assets/misc/cash.png'
 
-function CitiesPage({ purchasedCities, constructionManager }) {
+function CitiesPage({ purchasedCities, constructionManager, unlockedCities }) {
 
     const [selectedCity, setSelectedCity] = useState(null)
 
@@ -13,7 +14,7 @@ function CitiesPage({ purchasedCities, constructionManager }) {
     .sort((a, b) => a.name.localeCompare(b.name)) // Puts in alphabetical order
 
     // Keeps all cities that are NOT purchased
-    const available = allCities.filter(city => !purchasedCities.some(p => p.name === city.name))
+    const available = allCities.filter(city => unlockedCities.includes(city) && !purchasedCities.some(p => p.name === city.name))
     .sort((a, b) => a.name.localeCompare(b.name)) // Puts in alphabetical order
 
     // Sort them by country
@@ -48,12 +49,12 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         {available.includes(selectedCity) ? (
                             <> 
-                            <h3> Construct {selectedCity.name}? </h3>
-                            <button onClick={() =>{
+                            <h3> Connect {selectedCity.name}? </h3>
+                            <button className="constructionButton" onClick={() =>{
                                 constructionManager.startStationConstruction(selectedCity);
                                 setSelectedCity(null);
                             }}>
-                            Yes ({constructionManager.calculateTierConnectionCost(selectedCity)})
+                            Connect <img className="cashIcon" src= {cashIcon} alt="balance" /> ({constructionManager.calculateTierConnectionCost(selectedCity)})
                             </button>
                             <button className="closeButton" onClick={() => setSelectedCity(null)}>Close</button>
                             </>

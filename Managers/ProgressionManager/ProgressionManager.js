@@ -5,6 +5,7 @@ import { Development } from "../../DevelopmentManager/Development.js";
 export class ProgressionManager {
     constructor(rankManager) {
         this.purchasedCities = [];
+        this.unlockedCities = [];
         this.unlockedRewards = [];
         this.unlockedUpgrades = [];
         this.purchasedUpgrades = [];
@@ -31,6 +32,12 @@ export class ProgressionManager {
             this.unlockedDevelopments.push(reward)
         }
     }
+
+    unlockCity(city) {
+    if (!this.unlockedCities.includes(city)) {
+        this.unlockedCities.push(city);
+    }
+}
 
     // Adds cash to the balance
     addCash(amount) {
@@ -99,7 +106,7 @@ export class ProgressionManager {
     }
 
     getRandomUnlockedCity(allCities) {
-    const eligible = allCities.filter(city => !this.purchasedCities.includes(city));
+    const eligible = allCities.filter(city => !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city));
     // pick one at random from `eligible`
     if (eligible.length === 0) {
     return null; 

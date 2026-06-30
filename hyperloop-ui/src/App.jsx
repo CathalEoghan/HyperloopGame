@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import TopBanner from "./components/TopBanner";
 import ExperienceBar from "./components/ExperienceBar";
 import BottomNav from "./components/BottomNav";
+import RankUpModal from "./components/RankUpModal";
+import CityRevealModal from "./components/CityRevealModal";
 import CitiesPage from "./pages/CitiesPage";
 import DevelopmentPage from "./pages/DevelopmentPage";
 import { RankManager } from "Managers/RankManager/RankManager.js";
@@ -10,6 +12,8 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import starterCities from "./data/starterCities.js";
+import { allCities } from "../../CityManager/CityRegistry.js";
+import { playRankUpSound } from "./utils/sound.js";
 import "./App.css";
 
 function App() {
@@ -26,6 +30,8 @@ const [constructionManager] = useState(() => new ConstructionManager(progression
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
   const [showRankUpModal, setShowRankUpModal] = useState(false);
+  const [claimedCity, setClaimedCity] = useState(null);
+
 
   useEffect(() => {
     setInterval(() => {
@@ -37,6 +43,7 @@ const previousRank = rankManager.rank;
 rankManager.verifyRank();
 
 if (rankManager.rank > previousRank) {
+  playRankUpSound();
   setShowRankUpModal(true);
 }
     constructionManager.update();
@@ -86,13 +93,27 @@ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
         nextRank={rankSet + 1}
       />
       {activeTab === "Cities" && (
-        <CitiesPage purchasedCities={progressionManager.purchasedCities} constructionManager={constructionManager}/>
+        <CitiesPage purchasedCities={progressionManager.purchasedCities} constructionManager={constructionManager} unlockedCities={progressionManager.unlockedCities}/>
       )}
       {activeTab === "Development" && (
         <DevelopmentPage purchasedDevelopments={progressionManager.purchasedDevelopments} />
       )}
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
+    {showRankUpModal && (
+  <RankUpModal rank={rankSet} onClaim={() => {
+  const newCity = progressionManager.getRandomUnlockedCity(allCities);
+  if (newCity) {
+    progressionManager.unlockCity(newCity);
+    setClaimedCity(newCity);
+  }
+  setShowRankUpModal(false);
+}} />
+    )}
+{claimedCity && (
+  <CityRevealModal city={claimedCity} onClose={() => setClaimedCity(null)} />
+)}
     </div>
+    
       )
 }
 
