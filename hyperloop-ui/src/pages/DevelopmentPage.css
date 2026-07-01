@@ -78,7 +78,7 @@
     overflow-y: auto;
 }
 
-.modal img:not(.city-modal-image) {
+.modal img:not(.modal-city-image) {
     border: 1px solid black;
     width: 60px;
     height: 40px;
@@ -133,7 +133,7 @@
     align-self: center;
 }
 
-.modal img.city-modal-image {
+.modal img.modal-city-image {
     object-fit: cover;
     border-radius: 8px;
     border: 2px solid black;

@@ -218,7 +218,7 @@
     cursor: pointer;
 }
 
-.modal img.cashIcon {
+.modal .constructionButton img.cashIcon {
     width: 18px;
     height: 18px;
     border: none;
