@@ -65,6 +65,7 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
     <>
         <h3>🚧 {selectedCity.name}</h3>
         <p>This city's connection is currently under construction!</p>
+        <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedCity.finishTime))}</strong></p> 
         <button className="closeButton" onClick={() => {
             playClickSound2();
             setSelectedCity(null)}}>Close</button>
@@ -73,6 +74,7 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
     <>
         <h3>Connect {selectedCity.name}?</h3>
         <button className="constructionButton" onClick={() => {
+            playClickSound2();
     const cost = constructionManager.calculateTierConnectionCost(selectedCity);
     if (balance < cost) {
         setShowNoFunds(true);
@@ -119,7 +121,9 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
         <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>💸 Not enough funds!</h3>
             <p>You need more money to connect this city.</p>
-            <button className="closeButton" onClick={() => setShowNoFunds(false)}>Close</button>
+            <button className="closeButton" onClick={() => {
+                playClickSound2();
+                setShowNoFunds(false)}}>Close</button>
         </div>
     </div>
 )}
@@ -129,7 +133,9 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
         <div className="modal" onClick={(e) => e.stopPropagation()}>
             <h3>🚧 Construction queue full!</h3>
             <p>Wait for your current construction to finish before starting another.</p>
-            <button className="closeButton" onClick={() => setShowQueueFull(false)}>Close</button>
+            <button className="closeButton" onClick={() => {
+                playClickSound2();
+                setShowQueueFull(false)}}>Close</button>
         </div>
     </div>
 )}
