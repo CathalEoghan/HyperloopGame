@@ -6,6 +6,7 @@ import RankUpModal from "./components/RankUpModal";
 import CityRevealModal from "./components/CityRevealModal";
 import CitiesPage from "./pages/CitiesPage";
 import DevelopmentPage from "./pages/DevelopmentPage";
+import OpeningPage from './pages/OpeningPage'
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -23,7 +24,7 @@ const [economyManager] = useState(() => new EconomyManager(progressionManager));
 const [timeManager] = useState(() => new TimeManager());
 const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
 
-
+  const [terminalName, setTerminalName] = useState("Hyperloop Central")
   const [balance, setBalance] = useState(0);
   const [totalCashEarned, setTotalCashEarned] = useState(0);
   const [rankSet, setRankSet] = useState(1);  
@@ -55,23 +56,8 @@ if (rankManager.rank > previousRank) {
 }, [rankManager, progressionManager, economyManager, constructionManager]);
 
 if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
-    return (
-    <div className="App">
-      {starterCities.map((city) => (
-        <button
-          key={city.name}
-          onClick={() => {
-            constructionManager.startTutorialConstruction(city);
-            setPickedCity(city);
-          }}
-        >
-          {city.name}
-        </button>
-      ))}
-    </div>
-  );
+return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName}/>
 }
-
 if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
   return (
     <div className="App">
@@ -83,7 +69,7 @@ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
       return (
     <div className="App">
       <TopBanner
-        terminalName="Hyperloop Central"
+        terminalName={terminalName}
         balance={balance}
         rank={rankSet}
       />

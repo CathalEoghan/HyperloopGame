@@ -1,0 +1,135 @@
+
+.starter-city-card img:first-child {
+    width: 40px;
+    height: 27px;
+    object-fit: cover;
+    border: 1px solid black;
+    margin-bottom: 30px;
+}
+
+.starter-city-card .country-flag {
+    width: 24px;
+    height: 16px;
+    border: 1px solid black;
+    object-fit: cover;
+    margin-left: 6px;
+    vertical-align: middle;
+}
+
+.starter-city-card {
+    background: linen;
+    border: 2px solid black;
+    font-family: "Inter", sans-serif;
+    border-radius: 12px;
+    padding: 24px;
+    width: 320px;
+    height: 360px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+
+}
+
+.starter-city-row {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-top: 32px;
+     flex-direction: row;
+}
+
+.opening-background {
+    min-height: 100vh;
+    background-color: linen;
+    font-family: "Inter", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.starter-city-card:hover {
+    background-color: #4ec92e;
+    cursor: pointer;
+}
+
+.starter-city-image {
+    margin-bottom: 20px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid black;
+}
+
+.starter-city-card p {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size:larger
+}
+
+.intro-text {
+    font-weight: bold;
+    font-size: larger;
+}
+
+.give-name {
+    font-size: large;
+}
+
+.terminal-name-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.terminal-name-input input {
+    width: 200px;
+    padding: 10px;
+    font-family: "Inter", sans-serif;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 8px;
+    background: linen;
+}
+
+.terminal-name-input span {
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.opening-background button {
+    padding: 10px 24px;
+    font-family: "Inter", sans-serif;
+    font-weight: bold;
+    font-size: 16px;
+    border: 2px solid black;
+    border-radius: 8px;
+    background: linen;
+    cursor: pointer;
+}
+
+.opening-background button:hover {
+    background-color: #4ec92e;
+}
+
+.opening-background h1 {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.opening-background p {
+    margin-bottom: 32px;
+}
+
+.opening-background h2 {
+    margin-bottom: 24px;
+}
+
+.terminal-name-input {
+    margin-bottom: 24px;
+}
