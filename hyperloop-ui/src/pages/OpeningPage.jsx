@@ -22,6 +22,7 @@ if (step === 1) {
                 <span> Terminal</span>
             </div>
             <button onClick={() => {
+                  playClickSound2();
                 setTerminalName(localName + " Terminal")
                 setStep(2)
             }}>Confirm</button>
