@@ -15,6 +15,7 @@ import { ConstructionManager } from "Managers/ConstructionManager/ConstructionMa
 import starterCities from "./data/starterCities.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { playRankUpSound } from "./utils/sound.js";
+import { formatTime } from './utils/time.js';
 import "./App.css";
 
 function App() {
@@ -55,15 +56,18 @@ if (rankManager.rank > previousRank) {
   }, 1000);
 }, [rankManager, progressionManager, economyManager, constructionManager]);
 
+// 1. No city picked yet - show opening page
 if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
-return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName}/>
+    return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName}/>
 }
+
+// 2. City picked, under construction - show timer
 if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
-  return (
-    <div className="App">
-      <p>Constructing {pickedCity.name}...</p>
-    </div>
-  );
+    return (
+        <div className="App opening-background">
+            <h2>🚧 Setting up your terminal in {pickedCity.name}...</h2>
+        </div>
+    );
 }
 
       return (
@@ -79,7 +83,13 @@ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
         nextRank={rankSet + 1}
       />
       {activeTab === "Cities" && (
-        <CitiesPage purchasedCities={progressionManager.purchasedCities} constructionManager={constructionManager} unlockedCities={progressionManager.unlockedCities}/>
+        <CitiesPage 
+    purchasedCities={progressionManager.purchasedCities} 
+    constructionManager={constructionManager} 
+    unlockedCities={progressionManager.unlockedCities} 
+    balance={balance}
+    totalCashEarned={totalCashEarned}
+/>
       )}
       {activeTab === "Development" && (
         <DevelopmentPage purchasedDevelopments={progressionManager.purchasedDevelopments} />

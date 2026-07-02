@@ -1,6 +1,6 @@
 
 const SECONDS_IN_A_DAY = 86400;
-const POPULATION_INCOME_MODIFIER = 0.021000;
+const POPULATION_INCOME_MODIFIER = 0.25;
 const DEVELOPMENT_INCOME_MODIFIER = 2;
 
 export class EconomyManager {
@@ -10,6 +10,33 @@ export class EconomyManager {
 
     // Population earnings
     calculatePopulationIncome() {
+
+        let populationIncome = 0;
+        this.progressionManager.purchasedCities.forEach(city => {
+
+            let incomeFromCity = city.population * POPULATION_INCOME_MODIFIER;
+            populationIncome += incomeFromCity;
+        });
+
+
+        let upgradeMultiplier = 1;
+
+        // Adds the upgrade multipliers to the population income
+        this.progressionManager.purchasedUpgrades.forEach(upgrade => {
+
+            if (upgrade.effectType === "populationIncome") {
+
+                upgradeMultiplier += upgrade.effectValue;
+
+            }
+        });
+
+        return populationIncome * upgradeMultiplier;
+
+    }
+
+    // Population earnings for specific city
+    calculateSpecificPopulationIncome(city) {
 
         let populationIncome = 0;
         this.progressionManager.purchasedCities.forEach(city => {

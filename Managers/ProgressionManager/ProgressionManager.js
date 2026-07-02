@@ -64,7 +64,7 @@ export class ProgressionManager {
     }
 
     getConstructionQueueCapacity() {
-    let size = 1; // default
+    let size = 2; // default
     this.purchasedUpgrades.forEach(upgrade => {
         if (upgrade.effectType === "queueCapacity") {
             size++;
