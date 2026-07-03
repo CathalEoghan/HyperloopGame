@@ -7,6 +7,8 @@ export class Development {
         this.category = category;
         this.revenue = revenue;
         this.level = 1;
+        this.underConstruction = false;
+        this.finishTime = null;
     }
 
 }

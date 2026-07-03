@@ -1,6 +1,6 @@
 
 const SECONDS_IN_A_DAY = 86400;
-const POPULATION_INCOME_MODIFIER = 0.25;
+const POPULATION_INCOME_MODIFIER = 1;
 const DEVELOPMENT_INCOME_MODIFIER = 2;
 
 export class EconomyManager {

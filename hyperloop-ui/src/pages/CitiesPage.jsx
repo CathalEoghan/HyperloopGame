@@ -7,7 +7,7 @@ import cashIcon from '../assets/misc/cash.png'
 import { playClickSound2 } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 
-function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, totalCashEarned }) {
+function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, totalCashEarned, economyManager }) {
     const [selectedCity, setSelectedCity] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
 const [showQueueFull, setShowQueueFull] = useState(false)
@@ -103,7 +103,7 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
         <hr />
         <p><strong>Country</strong>: {selectedCity.country}</p>
         <p><strong>Population</strong>: {selectedCity.population.toLocaleString()}</p>
-        <p>Earning <strong>£15,028</strong> per day</p>
+        <p>Earning <strong>£{economyManager.calculateCityIncome(selectedCity).toLocaleString('en-GB', {maximumFractionDigits: 0})}</strong> per day</p>
         <p><em>{selectedCity.fact}</em></p>
         <img className="modal-city-image" src={cityImages[selectedCity.name]} alt={selectedCity.name} style={{width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover'}}/>
         <button className="closeButton" onClick={() => {

@@ -89,11 +89,19 @@ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
     unlockedCities={progressionManager.unlockedCities} 
     balance={balance}
     totalCashEarned={totalCashEarned}
+    economyManager={economyManager}
 />
       )}
       {activeTab === "Development" && (
-        <DevelopmentPage purchasedDevelopments={progressionManager.purchasedDevelopments} />
-      )}
+    <DevelopmentPage 
+        purchasedDevelopments={progressionManager.purchasedDevelopments}
+        unlockedDevelopments={progressionManager.unlockedDevelopments}
+        developmentsUnderConstruction={progressionManager.developmentsUnderConstruction}
+        constructionManager={constructionManager}
+        balance={balance}
+        purchasedCities={progressionManager.purchasedCities}
+    />
+)}
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
     {showRankUpModal && (
   <RankUpModal rank={rankSet} onClaim={() => {

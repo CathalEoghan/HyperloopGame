@@ -37,6 +37,13 @@ export class ConstructionManager {
             }
 
         });
+
+          this.progressionManager.developmentsUnderConstruction.forEach(development => {
+        if (!development.underConstruction) return;
+        if (this.isConstructionComplete(development)) {
+            this.completeDevelopmentConstruction(development);
+        }
+    });
     }
 
     isConstructionQueueFull() {
@@ -109,6 +116,28 @@ export class ConstructionManager {
         }
         return connectionCost;
     }
+
+    startDevelopmentConstruction(development) {
+    if (this.isConstructionQueueFull()) return;
+
+    if (!this.progressionManager.spendCash(development.cost)) return;
+
+    const duration = FIVE_SECONDS;
+    development.finishTime = this.timeManager.getFinishTime(duration);
+    development.underConstruction = true;
+    this.progressionManager.developmentsUnderConstruction.push(development);
+    this.progressionManager.constructionQueue.push(development);
+}
+
+completeDevelopmentConstruction(development) {
+    development.underConstruction = false;
+    development.finishTime = null;
+    this.progressionManager.purchaseDevelopment(development);
+    this.progressionManager.developmentsUnderConstruction =
+        this.progressionManager.developmentsUnderConstruction.filter(d => d !== development);
+    this.progressionManager.constructionQueue =
+        this.progressionManager.constructionQueue.filter(d => d !== development);
+}
 }
 
 

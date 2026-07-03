@@ -16,6 +16,8 @@ export class ProgressionManager {
         this.balance = 0;
         this.totalCashEarned = 0;
         this.rankManager = rankManager;
+        this.developmentsUnderConstruction = [];
+this.upgradesUnderConstruction = [];
     }
 
     // Unlocks the reward, includes it in a broad list of unlocked upgrades + stores

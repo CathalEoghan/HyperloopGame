@@ -7,5 +7,7 @@ export class Upgrade {
         this.category = category;
         this.effectType = effectType;
         this.effectValue = effectValue;
+        this.underConstruction = false;
+        this.finishTime = null;
     }
 }
