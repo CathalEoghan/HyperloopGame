@@ -4,7 +4,7 @@ import clockIcon from '../assets/misc/clock.png'
 import cashIcon from '../assets/misc/cash.png'
 import starIcon from '../assets/misc/star.png'
 
-function TopBanner({terminalName, rank, balance}) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect }) {
 
 return (
 
@@ -27,8 +27,11 @@ return (
 
 </div>
 
-<div className="MysterySpot">
-
+<div 
+    className="MysterySpot"
+    onClick={() => onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard")}
+    style={{ cursor: 'pointer' }}
+>
 </div>
 </div>
 

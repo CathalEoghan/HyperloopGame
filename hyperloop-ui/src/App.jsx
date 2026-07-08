@@ -3,8 +3,9 @@ import TopBanner from "./components/TopBanner";
 import ExperienceBar from "./components/ExperienceBar";
 import BottomNav from "./components/BottomNav";
 import RankUpModal from "./components/RankUpModal";
-import CityRevealModal from "./components/CityRevealModal";
-import CitiesPage from "./pages/CitiesPage";
+import CityRevealModal from "./components/CityRevealModal"
+import CitiesPage from "./pages/CitiesPage"
+import DepartureBoard from "./pages/DepartureBoard"
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
 import { RankManager } from "Managers/RankManager/RankManager.js";
@@ -72,11 +73,13 @@ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
 
       return (
     <div className="App">
-      <TopBanner
-        terminalName={terminalName}
-        balance={balance}
-        rank={rankSet}
-      />
+    <TopBanner
+    terminalName={terminalName}
+    balance={balance}
+    rank={rankSet}
+    activeTab={activeTab}
+    onSelect={setActiveTab}
+/>
       <ExperienceBar
         current={totalCashEarned - rankManager.getCumulativeXP(rankSet - 1)}
         max={rankManager.calculateNextRankXP(rankSet)}
@@ -101,6 +104,9 @@ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
         balance={balance}
         purchasedCities={progressionManager.purchasedCities}
     />
+)}
+{activeTab === "DepartureBoard" && (
+    <DepartureBoard purchasedCities={progressionManager.purchasedCities} />
 )}
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
    {pendingRankUps > 0 && (
