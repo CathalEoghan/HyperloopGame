@@ -19,7 +19,7 @@ function generateSchedule(cities) {
         const slotStart = i * slotSize
         const minuteOfDay = slotStart + Math.floor(Math.random() * slotSize)
         const hour = Math.floor(minuteOfDay / 60)
-        const minute = minuteOfDay % 60
+        const minute = Math.floor((minuteOfDay % 60) / 5) * 5
         const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
         
         return {
@@ -61,39 +61,38 @@ useEffect(() => {
 
 const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
 
+const half = Math.ceil(schedule.length / 2)
+const leftColumn = schedule.slice(0, half)
+const rightColumn = schedule.slice(half)
+
 return (
     <div className="departure-board">
         <h2 className="board-title">🛫 Departures — {today}</h2>
         {schedule.length === 0 ? (
-            <p>No departures scheduled — connect more cities to see departures.</p>
+            <p>No departures scheduled.</p>
         ) : (
-            <table className="board-table">
-                <thead>
-                    <tr>
-                        <th>DESTINATION</th>
-                        <th>DEPARTS</th>
-                        <th>PLATFORM</th>
-                        <th>STATUS</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {schedule.map((entry, i) => {
-                        const status = getStatus(entry.hour, entry.minute)
-                        return (
-                            <tr key={i}>
-                                <td>{entry.name}</td>
-                                <td>{entry.time}</td>
-                                <td>{entry.platform}</td>
-                                <td style={{ color: status.color }}>{status.label}</td>
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+            <div className="board-columns">
+                <table className="board-table">
+                    <thead><tr><th>DESTINATION</th><th>DEPARTS</th><th>PLATFORM</th><th>STATUS</th></tr></thead>
+                    <tbody>
+                        {leftColumn.map((entry, i) => {
+                            const status = getStatus(entry.hour, entry.minute)
+                            return <tr key={i}><td>{entry.name.toUpperCase()}</td><td>{entry.time}</td><td>{entry.platform}</td><td style={{ color: status.color }}>{status.label}</td></tr>
+                        })}
+                    </tbody>
+                </table>
+                <table className="board-table">
+                    <thead><tr><th>DESTINATION</th><th>DEPARTS</th><th>PLATFORM</th><th>STATUS</th></tr></thead>
+                    <tbody>
+                        {rightColumn.map((entry, i) => {
+                            const status = getStatus(entry.hour, entry.minute)
+                            return <tr key={i}><td>{entry.name.toUpperCase()}</td><td>{entry.time}</td><td>{entry.platform}</td><td style={{ color: status.color }}>{status.label}</td></tr>
+                        })}
+                    </tbody>
+                </table>
+            </div>
         )}
     </div>
 )
-
 }
-
 export default DepartureBoard

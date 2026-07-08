@@ -41,3 +41,12 @@
 .board-table tr:hover td {
     background-color: #111;
 }
+
+.board-columns {
+    display: flex;
+    gap: 40px;
+}
+
+.board-columns .board-table {
+    flex: 1;
+}
