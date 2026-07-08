@@ -53,7 +53,7 @@ return (
     const sourceCity = purchasedCities.find(city => 
         city.rewards.some(r => r.name === selectedDevelopment.name)
     );
-    return sourceCity ? <p><em>Unlocked with {sourceCity.name}</em></p> : null;
+    return sourceCity ? <p><em>Unlocked with: <strong>{sourceCity.name}</strong></em></p> : null;
 })()}
                             <button className="constructionButton" onClick={() => {
                                 const cost = selectedDevelopment.cost;
@@ -76,17 +76,23 @@ return (
                             }}>Close</button>
                         </>
                     ) : (
-                        <>
-                            <img className="modal-city-image" src={developmentImages[selectedDevelopment.name]} alt={selectedDevelopment.name} />
-                            <h3>{selectedDevelopment.name}</h3>
-                            <hr />
-                            <p><strong>Category</strong>: {selectedDevelopment.category}</p>
-                            <p><strong>Revenue</strong>: £{selectedDevelopment.revenue?.toLocaleString() ?? 'N/A'} per day</p>
-                            <button className="closeButton" onClick={() => {
-                                playClickSound2();
-                                setSelectedDevelopment(null);
-                            }}>Close</button>
-                        </>
+    <>
+        <img className="modal-city-image" src={developmentImages[selectedDevelopment.name]} alt={selectedDevelopment.name} />
+        <h3>{selectedDevelopment.name}</h3>
+        <hr />
+        {(() => {
+            const sourceCity = purchasedCities.find(city => 
+                city.rewards.some(r => r.name === selectedDevelopment.name)
+            );
+            return sourceCity ? <p><em>Unlocked with: <strong>{sourceCity.name}</strong></em></p> : null;
+        })()}
+        <p><strong>Category</strong>: {selectedDevelopment.category}</p>
+        <p><strong>Revenue</strong>: £{selectedDevelopment.revenue?.toLocaleString() ?? 'N/A'} per day</p>
+        <button className="closeButton" onClick={() => {
+            playClickSound2();
+            setSelectedDevelopment(null);
+        }}>Close</button>
+    </>
                     )}
                 </div>
             </div>

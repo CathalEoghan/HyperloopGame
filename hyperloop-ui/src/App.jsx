@@ -31,7 +31,7 @@ const [constructionManager] = useState(() => new ConstructionManager(progression
   const [rankSet, setRankSet] = useState(1);  
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
-  const [showRankUpModal, setShowRankUpModal] = useState(false);
+  const [pendingRankUps, setPendingRankUps] = useState(0);
   const [claimedCity, setClaimedCity] = useState(null);
 
 
@@ -46,7 +46,7 @@ rankManager.verifyRank();
 
 if (rankManager.rank > previousRank) {
   playRankUpSound();
-  setShowRankUpModal(true);
+  setPendingRankUps(prev => prev + 1);
 }
     constructionManager.update();
     
@@ -103,16 +103,16 @@ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
     />
 )}
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
-    {showRankUpModal && (
+   {pendingRankUps > 0 && (
   <RankUpModal rank={rankSet} onClaim={() => {
-  const newCity = progressionManager.getRandomUnlockedCity(allCities);
-  if (newCity) {
-    progressionManager.unlockCity(newCity);
-    setClaimedCity(newCity);
-  }
-  setShowRankUpModal(false);
-}} />
-    )}
+    const newCity = progressionManager.getRandomUnlockedCity(allCities);
+    if (newCity) {
+      progressionManager.unlockCity(newCity);
+      setClaimedCity(newCity);
+    }
+    setPendingRankUps(prev => prev - 1);
+  }} />
+)}
 {claimedCity && (
   <CityRevealModal city={claimedCity} onClose={() => setClaimedCity(null)} />
 )}
