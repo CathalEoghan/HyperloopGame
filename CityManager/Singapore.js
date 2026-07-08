@@ -1,14 +1,14 @@
 
 // Singapore
 import { City } from "./City.js";
-import { indoorGarden } from "../DevelopmentManager/Gym.js";
+import { indoorGarden } from "../UpgradeManager/IndoorGarden.js";
 
 export const Singapore = new City(
-    "San Diego",
-    4360000,
-    [gym],
+    "Singapore",
+    6196000,
+    [indoorGarden],
     "Singapore",
     "Asia",
     2,
-    "Tucked away on Hillside Drive in La Jolla, you can find a cluster of peculiar, small-scale houses. Local legends claim they were built to house the actors playing the munchkins in the 1939 film classic 'The Wizard of Oz'."
+    "Despite being known globally as the 'Lion City' (translated from the Sanskrit word Singapura), wild lions have actually never lived in Singapore. The famous name originated from a 14th-century Sumatran prince who visited the island and mistook a Malayan tiger or sun bear for a lion."
 );

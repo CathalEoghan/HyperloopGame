@@ -58,6 +58,7 @@ import ArtGallery from '../assets/developments/ArtGallery.jpg'
 import MetalBar from '../assets/developments/MetalBar.jpg'
 import TacoRestaurant from '../assets/developments/TacoRestaurant.jpg'
 import ArtMarket from '../assets/developments/ArtMarket.jpg'
+import IndoorGarden from '../assets/developments/IndoorGarden.jpg'
 
 
 const developmentImages = {
@@ -120,6 +121,7 @@ const developmentImages = {
     "Metal Bar": MetalBar,
     "Taco Restaurant": TacoRestaurant,
     "Art Market": ArtMarket,
+    "Indoor Garden": IndoorGarden,
 
 }
 

@@ -58,6 +58,7 @@ import Madrid from '../assets/cities/Madrid.jpg'
 import Helsinki from '../assets/cities/Helsinki.jpg'
 import MexicoCity from '../assets/cities/MexicoCity.jpg'
 import Miami from '../assets/cities/Miami.jpg'
+import Singapore from '../assets/cities/Singapore.jpg'
 
 
 const cityImages = {
@@ -120,6 +121,7 @@ const cityImages = {
     Helsinki: Helsinki,
     "Mexico City": MexicoCity,
     Miami: Miami,
+    Singapore: Singapore,
 
 }
 

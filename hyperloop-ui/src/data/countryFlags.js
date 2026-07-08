@@ -36,6 +36,8 @@ const countryFlags = {
     "Switzerland": "ch",
     "Nigeria": "ng",
     "Finland": "fi",
+    "Singapore": "sg",
+    
 
 }
 

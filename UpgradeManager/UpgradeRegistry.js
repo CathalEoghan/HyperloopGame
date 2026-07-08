@@ -12,6 +12,8 @@ import { waterTaxiTransfers } from './WaterTaxiTransfers.js'
 import { busTransfers } from './BusTransfers.js'
 import { trainStation } from './TrainStation.js'
 import { billboardDesignOverhauls } from './BillboardDesignOverhauls.js'
+import { indoorGarden } from './IndoorGarden.js'
+
 
 export const allUpgrades = [
     sodaMachines,
@@ -26,5 +28,6 @@ export const allUpgrades = [
     busTransfers,
     trainStation,
     billboardDesignOverhauls,
+    indoorGarden,
 
 ]
