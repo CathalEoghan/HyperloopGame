@@ -16,9 +16,20 @@ if (step === 1) {
         <div className="opening-background">
             <h1 className= "welcome">Welcome.</h1>
             <h2 className="intro-text">You're in charge of the world's first Hyperloop terminal. </h2>
-                <h2 className="give-name">Give your terminal a name:</h2>
+                <h2 className="give-name">Give your terminal a name below. Names can be changed at any time in the settings menu.</h2>
             <div className="terminal-name-input">
-                <input value={localName} onChange={(e) => setLocalName(e.target.value)} placeholder="Name" />
+                <input
+    value={localName}
+    onChange={(e) => setLocalName(e.target.value)}
+    onKeyDown={(e) => {
+        if (e.key === "Enter") {
+            playClickSound2();
+            setTerminalName(localName + " Terminal");
+            setStep(2);
+        }
+    }}
+    placeholder="Name"
+/>
                 <span> Terminal</span>
             </div>
             <button onClick={() => {

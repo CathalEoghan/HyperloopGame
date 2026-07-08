@@ -45,6 +45,8 @@ import { fragranceStore } from './FragranceStore.js'
 import { artGallery } from './ArtGallery.js'
 import { metalBar } from './MetalBar.js'
 import { tacoRestaurant } from './TacoRestaurant.js'
+import { artMarket } from './ArtMarket.js'
+
 
 export const allDevelopments = [
     bakery,
@@ -93,5 +95,6 @@ export const allDevelopments = [
     artGallery,
     metalBar,
     tacoRestaurant,
+    artMarket,
 
 ]

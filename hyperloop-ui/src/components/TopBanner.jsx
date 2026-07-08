@@ -3,6 +3,8 @@ import './TopBanner.css'
 import clockIcon from '../assets/misc/clock.png'
 import cashIcon from '../assets/misc/cash.png'
 import starIcon from '../assets/misc/star.png'
+import { playClickSound2 } from '../utils/sound.js'
+import { playClickSound3 } from '../utils/sound.js'
 
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect }) {
 
@@ -27,12 +29,21 @@ return (
 
 </div>
 
-<div 
+<button
     className="MysterySpot"
-    onClick={() => onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard")}
-    style={{ cursor: 'pointer' }}
+    onClick={() => {
+        if (activeTab === "DepartureBoard") {
+            playClickSound3();
+        } else {
+            playClickSound2();
+        }
+
+        onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard");
+    }}
+    style={{ cursor: "pointer" }}
 >
-</div>
+    Mystery Spot
+</button>
 </div>
 
 

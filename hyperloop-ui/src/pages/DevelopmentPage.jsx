@@ -36,7 +36,9 @@ return (
 
         {/* Main development modal */}
         {selectedDevelopment && (
-            <div className="modal-overlay" onClick={() => setSelectedDevelopment(null)}>
+            <div className="modal-overlay" onClick={() => {
+                playClickSound2();
+                setSelectedDevelopment(null)}}>
                 <div className="modal" onClick={(e) => e.stopPropagation()}>
                     {underConstruction.some(d => d.name === selectedDevelopment.name) ? (
                         <>
@@ -58,12 +60,15 @@ return (
                             <button className="constructionButton" onClick={() => {
                                 const cost = selectedDevelopment.cost;
                                 if (balance < cost) {
+                                    playClickSound2();
                                     setShowNoFunds(true);
                                     setSelectedDevelopment(null);
                                 } else if (constructionManager.isConstructionQueueFull()) {
+                                    playClickSound2();
                                     setShowQueueFull(true);
                                     setSelectedDevelopment(null);
                                 } else {
+                                    playClickSound2();
                                     constructionManager.startDevelopmentConstruction(selectedDevelopment);
                                     setSelectedDevelopment(null);
                                 }
@@ -104,7 +109,9 @@ return (
                 <div className="modal" onClick={(e) => e.stopPropagation()}>
                     <h3>💸 Not enough funds!</h3>
                     <p>You need more money to build this development.</p>
-                    <button className="closeButton" onClick={() => setShowNoFunds(false)}>Close</button>
+                    <button className="closeButton" onClick={() => {
+                        playClickSound2();
+                        setShowNoFunds(false)}}>Close</button>
                 </div>
             </div>
         )}
@@ -115,7 +122,10 @@ return (
                 <div className="modal" onClick={(e) => e.stopPropagation()}>
                     <h3>🚧 Construction queue full!</h3>
                     <p>Wait for your current construction to finish before starting another.</p>
-                    <button className="closeButton" onClick={() => setShowQueueFull(false)}>Close</button>
+                    <button className="closeButton" onClick={() => {
+                        playClickSound2();
+                        setShowQueueFull(false)}}>Close</button>
+
                 </div>
             </div>
         )}

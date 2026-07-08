@@ -57,6 +57,8 @@ import { Lagos } from './Lagos.js'
 import { Madrid } from './Madrid.js'
 import { Helsinki } from './Helsinki.js'
 import { MexicoCity } from './MexicoCity.js'
+import { Miami } from './Miami.js'
+
 
 export const allCities = [
     Atlanta,
@@ -117,6 +119,6 @@ export const allCities = [
     Madrid,
     Helsinki,
     MexicoCity,
-
+    Miami,
 
 ]

@@ -67,7 +67,7 @@ const rightColumn = schedule.slice(half)
 
 return (
     <div className="departure-board">
-        <h2 className="board-title">🛫 Departures — {today}</h2>
+        <h2 className="board-title">🛫 Departures for {today}. Departures reset daily at 00:00.</h2>
         {schedule.length === 0 ? (
             <p>No departures scheduled.</p>
         ) : (

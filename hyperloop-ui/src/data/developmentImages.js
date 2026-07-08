@@ -57,6 +57,8 @@ import BillboardDesignOverhauls from '../assets/developments/BillboardDesignOver
 import ArtGallery from '../assets/developments/ArtGallery.jpg'
 import MetalBar from '../assets/developments/MetalBar.jpg'
 import TacoRestaurant from '../assets/developments/TacoRestaurant.jpg'
+import ArtMarket from '../assets/developments/ArtMarket.jpg'
+
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -117,6 +119,7 @@ const developmentImages = {
     "Art Gallery": ArtGallery,
     "Metal Bar": MetalBar,
     "Taco Restaurant": TacoRestaurant,
+    "Art Market": ArtMarket,
 
 }
 

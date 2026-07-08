@@ -58,6 +58,7 @@ Lagos.js - Photo by Caesar. via Pexels
 Madrid.js - Photo by Jo Kassis via Pexels
 Helsinki.js - Photo by Vish Pix via Pexels
 MexicoCity.js - Photo by Fernando Paleta via Pexels
+Miami.js - Photo by Antonio Cuellar via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -118,9 +119,12 @@ BillboardDesignOverhauls.js - Photo by Roman Biernacki via Pexels
 ArtGallery.js - Photo by Loïc Manegarium via Pexels
 MetalBar.js - Photo by RDNE Stock project via Pexels
 TacoRestaurant.js - Photo by Nadin Sh via Pexels
+ArtMarket.js - Photo by Markus Spiske via Pexels
 
 SOUNDS
 
 cityConnectComplete.mp3 - Sound by Robinhood76 via Freesound
 
+MISC IMAGES
 
+DepartureBoard.js - Photo by Oscar Chan via Pexels

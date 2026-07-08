@@ -57,6 +57,7 @@ import Lagos from '../assets/cities/Lagos.jpg'
 import Madrid from '../assets/cities/Madrid.jpg'
 import Helsinki from '../assets/cities/Helsinki.jpg'
 import MexicoCity from '../assets/cities/MexicoCity.jpg'
+import Miami from '../assets/cities/Miami.jpg'
 
 
 const cityImages = {
@@ -118,6 +119,7 @@ const cityImages = {
     Madrid: Madrid,
     Helsinki: Helsinki,
     "Mexico City": MexicoCity,
+    Miami: Miami,
 
 }
 
