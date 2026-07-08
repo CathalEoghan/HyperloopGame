@@ -12,7 +12,7 @@ export class RankManager {
 
         switch (rank) {
         case 1:
-            xpNeeded  = 500;
+            xpNeeded  = 999999999999999999999;
         break;
         case 2:
             xpNeeded = 1000;

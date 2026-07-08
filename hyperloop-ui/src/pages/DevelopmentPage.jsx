@@ -6,8 +6,7 @@ import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js';
 import { playClickSound2 } from '../utils/sound.js'
 
-function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, developmentsUnderConstruction, constructionManager, balance, purchasedCities }) {
-
+function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, purchasedCities, purchasedUpgrades }) {
 const [selectedDevelopment, setSelectedDevelopment] = useState(null)
 const [showNoFunds, setShowNoFunds] = useState(false)
 const [showQueueFull, setShowQueueFull] = useState(false)
@@ -19,12 +18,14 @@ const underConstruction = allItems.filter(item =>
 )
 
 const purchased = allItems.filter(item =>
-    purchasedDevelopments.some(p => p.name === item.name)
+    purchasedDevelopments.some(p => p.name === item.name) ||
+    purchasedUpgrades.some(p => p.name === item.name)
 )
 
 const available = allItems.filter(item =>
-    unlockedDevelopments.includes(item) &&
+    (unlockedDevelopments.includes(item) || unlockedUpgrades.includes(item)) &&
     !purchasedDevelopments.some(p => p.name === item.name) &&
+    !purchasedUpgrades.some(p => p.name === item.name) &&
     !developmentsUnderConstruction.some(d => d.name === item.name)
 ).sort((a, b) => a.name.localeCompare(b.name))
 

@@ -15,16 +15,13 @@ import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import starterCities from "./data/starterCities.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
+import { allDevelopments } from "../../DevelopmentManager/DevelopmentRegistry.js";
+import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js";
 import { playRankUpSound } from "./utils/sound.js";
 import { formatTime } from './utils/time.js';
 import "./App.css";
 
 function App() {
-const [rankManager] = useState(() => new RankManager());
-const [progressionManager] = useState(() => new ProgressionManager(rankManager));
-const [economyManager] = useState(() => new EconomyManager(progressionManager));
-const [timeManager] = useState(() => new TimeManager());
-const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
 
   const [terminalName, setTerminalName] = useState("Hyperloop Central")
   const [balance, setBalance] = useState(0);
@@ -34,6 +31,31 @@ const [constructionManager] = useState(() => new ConstructionManager(progression
   const [pickedCity, setPickedCity] = useState(null);
   const [pendingRankUps, setPendingRankUps] = useState(0);
   const [claimedCity, setClaimedCity] = useState(null);
+
+  // TESTING ONLY — remove before shipping
+const [rankManager] = useState(() => new RankManager());
+const [progressionManager] = useState(() => {
+    const pm = new ProgressionManager(rankManager);
+    rankManager.rank = 60;
+    allCities.forEach(city => {
+        city.connect();
+        pm.purchasedCities.push(city);
+        city.rewards.forEach(r => pm.unlockReward(r));
+    });
+    allDevelopments.forEach(d => {
+        pm.unlockedDevelopments.push(d);
+        pm.purchasedDevelopments.push(d);
+    });
+    allUpgrades.forEach(u => {
+        pm.unlockedUpgrades.push(u);
+        pm.purchasedUpgrades.push(u);
+    });
+    pm.balance = 9999999;
+    return pm;
+});
+const [economyManager] = useState(() => new EconomyManager(progressionManager));
+const [timeManager] = useState(() => new TimeManager());
+const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
 
 
   useEffect(() => {
@@ -95,14 +117,16 @@ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
     economyManager={economyManager}
 />
       )}
-      {activeTab === "Development" && (
-    <DevelopmentPage 
+  {activeTab === "Development" && (
+    <DevelopmentPage
         purchasedDevelopments={progressionManager.purchasedDevelopments}
         unlockedDevelopments={progressionManager.unlockedDevelopments}
+        unlockedUpgrades={progressionManager.unlockedUpgrades}
         developmentsUnderConstruction={progressionManager.developmentsUnderConstruction}
         constructionManager={constructionManager}
         balance={balance}
         purchasedCities={progressionManager.purchasedCities}
+        purchasedUpgrades={progressionManager.purchasedUpgrades}
     />
 )}
 {activeTab === "DepartureBoard" && (

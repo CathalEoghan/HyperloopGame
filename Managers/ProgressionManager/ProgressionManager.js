@@ -94,19 +94,20 @@ export class ProgressionManager {
 
     }
 
-      purchaseDevelopment(development) {
-         if (!this.unlockedDevelopments.includes(development)) {
-            return; // Can't buy a store that is not unlocked yet - railguard
-        }
+purchaseDevelopment(development) {
+    const isUnlocked = this.unlockedDevelopments.includes(development) || 
+                       this.unlockedUpgrades.includes(development);
+    if (!isUnlocked) return;
 
-         if (this.purchasedDevelopments.includes(development)) { // Checks for duplicates
-            return
-        }
+    if (this.purchasedDevelopments.includes(development) || 
+        this.purchasedUpgrades.includes(development)) return;
 
-        this.purchasedDevelopments.push(development); // only reached if everything above succeeded
-
+    if (development instanceof Upgrade) {
+        this.purchasedUpgrades.push(development);
+    } else {
+        this.purchasedDevelopments.push(development);
     }
-
+}
     getRandomUnlockedCity(allCities) {
     const eligible = allCities.filter(city => !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city));
     // pick one at random from `eligible`
