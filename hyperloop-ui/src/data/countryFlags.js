@@ -39,7 +39,8 @@ const countryFlags = {
     "Singapore": "sg",
     "Portugal": "pt",
     "Turkey": "tr",
-    "Iran": "ir"
+    "Iran": "ir",
+    "Morocco": "ma",
     
 
 

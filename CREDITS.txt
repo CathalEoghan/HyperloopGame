@@ -67,6 +67,9 @@ Seville.jpg - Photo by Jose Rodriguez Ortega via Pexels
 Sydney.jpg - Photo by Parth Patel via Pexels
 Istanbul.jpg - Photo by Ömer Aydın via Pexels
 Tehran.jpg - Photo by mehrab zahedbeigi via Pexels
+Florence.jpg - Photo by Simeon Maryska via Pexels
+Canberra.jpg - Photo by Mark Direen via Pexels
+Marrakech.jpg - Photo by Zak H via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -135,7 +138,10 @@ CeramicsStore.jpg - Photo by Richard L via Pexels
 TapasRestaurant.jpg - Photo by The Castlebar via Pexels
 GlobalSouthTradeAgreements.jpg - Photo by Lara Jameson via Pexels
 CatCafé.jpg - Photo by Anh Cam via Pexels
-KebabShop.jpg - Photo by via Valeria Boltneva Pexels
+KebabShop.jpg - Photo by Valeria Boltneva via Pexels
+HandbagShop.jpg - Photo by shattha pilabut via Pexels
+SteakHouse.jpg - Photo by Mohamed Olwy via Pexels
+Bazaar.js - Photo by Diego F. Parra via Pexels
 
 SOUNDS
 

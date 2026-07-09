@@ -66,6 +66,9 @@ import Seville from '../assets/cities/Seville.jpg'
 import Sydney from '../assets/cities/Sydney.jpg'
 import Istanbul from '../assets/cities/Istanbul.jpg'
 import Tehran from '../assets/cities/Tehran.jpg'
+import Canberra from '../assets/cities/Canberra.jpg'
+import Florence from '../assets/cities/Florence.jpg'
+import Marrakech from '../assets/cities/Marrakech.jpg'
 
 
 const cityImages = {
@@ -136,7 +139,9 @@ const cityImages = {
     Sydney: Sydney,
     Istanbul: Istanbul,
     Tehran: Tehran,
-
+    Canberra: Canberra,
+    Florence: Florence,
+    Marrakech: Marrakech,
 
 }
 

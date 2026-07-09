@@ -1,12 +1,12 @@
 
 // Sydney
 import { City } from "./City.js";
-import { southernHemisphereTradeAgreements } from "../UpgradeManager/SouthernHemisphereTradeAgreements.js";
+import { steakHouse } from "../DevelopmentManager/SteakHouse.js";
 
 export const Sydney = new City(
     "Sydney",
     5500000,
-    [southernHemisphereTradeAgreements],
+    [steakHouse],
     "Australia",
     "Oceania",
     2,

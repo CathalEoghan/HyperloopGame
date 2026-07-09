@@ -66,6 +66,9 @@ import { Seville } from './Seville.js'
 import { Sydney } from './Sydney.js'
 import { Istanbul } from './Istanbul.js'
 import { Tehran } from './Tehran.js'
+import { Canberra } from './Canberra.js'
+import { Florence } from './Florence.js'
+import { Marrakech } from './Marrakech.js'
 
 
 export const allCities = [
@@ -136,5 +139,8 @@ export const allCities = [
     Sydney,
     Istanbul,
     Tehran,
+    Canberra,
+    Florence,
+    Marrakech,
 
 ]
