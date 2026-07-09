@@ -69,6 +69,9 @@ import { Tehran } from './Tehran.js'
 import { Canberra } from './Canberra.js'
 import { Florence } from './Florence.js'
 import { Marrakech } from './Marrakech.js'
+import { AddisAbaba } from './AddisAbaba.js'
+import { WashingtonDC } from './WashingtonDC.js'
+import { Toronto } from './Toronto.js'
 
 
 export const allCities = [
@@ -142,5 +145,8 @@ export const allCities = [
     Canberra,
     Florence,
     Marrakech,
+    AddisAbaba,
+    WashingtonDC,
+    Toronto,
 
 ]

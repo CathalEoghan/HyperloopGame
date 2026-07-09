@@ -69,6 +69,9 @@ import KebabShop from '../assets/developments/KebabShop.jpg'
 import HandbagShop from '../assets/developments/HandbagShop.jpg'
 import SteakHouse from '../assets/developments/SteakHouse.jpg'
 import Bazaar from '../assets/developments/Bazaar.jpg'
+import AfricanTravelPackages from '../assets/developments/AfricanTravelPackages.jpg'
+import NorthAmericanTravelPackages from '../assets/developments/NorthAmericanTravelPackages.jpg'
+import DanceStudio from '../assets/developments/DanceStudio.jpg'
 
 
 const developmentImages = {
@@ -142,7 +145,11 @@ const developmentImages = {
     "Steak House": SteakHouse,
     "Handbag Shop": HandbagShop,
     "Bazaar": Bazaar,
+    "African Travel Packages": AfricanTravelPackages,
+    "North American Travel Packages": NorthAmericanTravelPackages,
+    "Dance Studio": DanceStudio,
 
 }
+
 
 export default developmentImages

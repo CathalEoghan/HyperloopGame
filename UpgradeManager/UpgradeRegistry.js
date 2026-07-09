@@ -14,6 +14,8 @@ import { trainStation } from './TrainStation.js'
 import { billboardDesignOverhauls } from './BillboardDesignOverhauls.js'
 import { indoorGarden } from './IndoorGarden.js'
 import { southernHemisphereTradeAgreements } from './SouthernHemisphereTradeAgreements.js'
+import { africanTravelPackages } from './AfricanTravelPackages.js'
+import { northAmericanTravelPackages } from './NorthAmericanTravelPackages.js'
 
 
 export const allUpgrades = [
@@ -31,5 +33,7 @@ export const allUpgrades = [
     billboardDesignOverhauls,
     indoorGarden,
     southernHemisphereTradeAgreements,
+    africanTravelPackages,
+    northAmericanTravelPackages,
 
 ]

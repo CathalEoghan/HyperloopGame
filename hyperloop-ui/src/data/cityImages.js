@@ -69,6 +69,9 @@ import Tehran from '../assets/cities/Tehran.jpg'
 import Canberra from '../assets/cities/Canberra.jpg'
 import Florence from '../assets/cities/Florence.jpg'
 import Marrakech from '../assets/cities/Marrakech.jpg'
+import AddisAbaba from '../assets/cities/AddisAbaba.jpg'
+import WashingtonDC from '../assets/cities/WashingtonDC.jpg'
+import Toronto from '../assets/cities/Toronto.jpg'
 
 
 const cityImages = {
@@ -142,6 +145,9 @@ const cityImages = {
     Canberra: Canberra,
     Florence: Florence,
     Marrakech: Marrakech,
+    "Addis Ababa": AddisAbaba,
+    "Washington, D.C.": WashingtonDC,
+    Toronto: Toronto,
 
 }
 
