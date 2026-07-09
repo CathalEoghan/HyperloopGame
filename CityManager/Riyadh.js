@@ -10,5 +10,6 @@ export const Riyadh = new City(
     "Saudi Arabia",
     "Asia",
     2,
-    "Riyadh means 'The Gardens' in Arabic. It was originally a small, lush oasis town surrounded by date palms but has since exploded into a sprawling metropolis with millions of residents."
+    "Riyadh means 'The Gardens' in Arabic. It was originally a small, lush oasis town surrounded by date palms but has since exploded into a sprawling metropolis with millions of residents.",
+    false
 );

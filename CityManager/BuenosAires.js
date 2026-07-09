@@ -10,5 +10,6 @@ export const BuenosAires = new City(
     "Argentina",
     "South America",
     2,
-    "Buenos Aires is the psychoanalysis capital of the world, with roughly 222 psychologists per 100,000 people. The city's concentration of therapists is so dense that a specific sub-neighborhood—Palermo Chico—is affectionately nicknamed 'Villa Freud' due to its heavy clustering of psychoanalysts."
+    "Buenos Aires is the psychoanalysis capital of the world, with roughly 222 psychologists per 100,000 people. The city's concentration of therapists is so dense that a specific sub-neighborhood - Palermo Chico - is affectionately nicknamed 'Villa Freud' due to its heavy clustering of psychoanalysts.",
+    true
 );

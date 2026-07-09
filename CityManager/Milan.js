@@ -10,5 +10,6 @@ export const Milan = new City(
     "Italy",
     "Europe",
     2,
-    " The stunning, glass-vaulted Galleria Vittorio Emanuele II in Milan is the oldest active shopping gallery in Italy, dating back to 1877."
+    " The stunning, glass-vaulted Galleria Vittorio Emanuele II in Milan is the oldest active shopping gallery in Italy, dating back to 1877.",
+    false
 );

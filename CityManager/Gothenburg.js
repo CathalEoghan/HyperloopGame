@@ -10,5 +10,6 @@ export const Gothenburg = new City(
     "Sweden",
     "Europe",
     1,
-    "Gothenburg's gorgeous southern archipelago is completely car-free, reachable only by ferries."
+    "Gothenburg's gorgeous southern archipelago is completely car-free, reachable only by ferries.",
+    false
     );

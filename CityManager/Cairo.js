@@ -10,5 +10,6 @@ export const Cairo = new City(
     "Egypt",
     "Africa",
     3,
-    "Cairo is home to Al-Azhar University, founded in 975 CE, making it one of the oldest continually operating universities in the world."
+    "Cairo is home to Al-Azhar University, founded in 975 CE, making it one of the oldest continually operating universities in the world.",
+    false
 );

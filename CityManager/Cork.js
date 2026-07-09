@@ -10,5 +10,6 @@ export const Cork = new City(
     "Ireland",
     "Europe",
     1,
-    "Cork city center is built on a marshy island, which explains why its Gaelic name, Corcaigh, translates to 'The Great Marsh of Munster'."
+    "Cork city center is built on a marshy island, which explains why its Gaelic name, Corcaigh, translates to 'The Great Marsh of Munster'.",
+    false
 );

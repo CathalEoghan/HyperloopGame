@@ -10,5 +10,6 @@ export const Brussels = new City(
     "Belgium",
     "Europe",
     1,
-    "Brussels literally translates from Old Dutch as a 'settlement in the marsh.'"
+    "Brussels literally translates from Old Dutch as a 'settlement in the marsh.'",
+    false
 );

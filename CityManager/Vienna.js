@@ -10,5 +10,6 @@ export const Vienna = new City(
     "Austria",
     "Europe",
     2,
-    "The Karl-Marx-Hof is over one kilometer long, making it the longest single contiguous residential building in the world."
+    "The Karl-Marx-Hof is over one kilometer long, making it the longest single contiguous residential building in the world.",
+    false
 );

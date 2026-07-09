@@ -13,6 +13,7 @@ import { busTransfers } from './BusTransfers.js'
 import { trainStation } from './TrainStation.js'
 import { billboardDesignOverhauls } from './BillboardDesignOverhauls.js'
 import { indoorGarden } from './IndoorGarden.js'
+import { southernHemisphereTradeAgreements } from './SouthernHemisphereTradeAgreements.js'
 
 
 export const allUpgrades = [
@@ -29,5 +30,6 @@ export const allUpgrades = [
     trainStation,
     billboardDesignOverhauls,
     indoorGarden,
+    southernHemisphereTradeAgreements,
 
 ]

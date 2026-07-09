@@ -10,5 +10,6 @@ export const Taipei = new City(
     "Taiwan",
     "Asia",
     2,
-    "The famous Taipei 101 skyscraper features a massive, 660-tonne tuned mass damper suspended inside the tower that swings to keep the building stable during typhoons and severe earthquakes."
+    "The famous Taipei 101 skyscraper features a massive, 660-tonne tuned mass damper suspended inside the tower that swings to keep the building stable during typhoons and severe earthquakes.",
+    false
 );

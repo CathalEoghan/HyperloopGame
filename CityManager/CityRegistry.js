@@ -63,6 +63,8 @@ import { Cork } from './Cork.js'
 import { LasVegas } from './LasVegas.js'
 import { Lisbon } from './Lisbon.js'
 import { Seville } from './Seville.js'
+import { Sydney } from './Sydney.js'
+
 
 export const allCities = [
     Atlanta,
@@ -129,5 +131,6 @@ export const allCities = [
     LasVegas,
     Lisbon,
     Seville,
+    Sydney,
 
 ]

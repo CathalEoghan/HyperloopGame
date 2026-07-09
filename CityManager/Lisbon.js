@@ -10,5 +10,6 @@ export const Lisbon = new City(
     "Portugal",
     "Europe",
     2,
-    "Lisbon holds the Guinness World Record for the slowest church construction in history. Work on the Santa Engrácia Church (now the National Pantheon) started in the 17th century, but the dome wasn't officially completed until 1966—a construction period spanning over 300 years."
+    "Lisbon holds the Guinness World Record for the slowest church construction in history. Work on the Santa Engrácia Church (now the National Pantheon) started in the 17th century, but the dome wasn't officially completed until 1966—a construction period spanning over 300 years.",
+    false
 );

@@ -63,6 +63,7 @@ import GiftShop from '../assets/developments/GiftShop.jpg'
 import Casino from '../assets/developments/Casino.jpg'
 import CeramicsStore from '../assets/developments/CeramicsStore.jpg'
 import TapasRestaurant from '../assets/developments/TapasRestaurant.jpg'
+import SouthernHemisphereTradeAgreements from '../assets/developments/SouthernHemisphereTradeAgreements.jpg'
 
 
 const developmentImages = {
@@ -130,6 +131,8 @@ const developmentImages = {
     "Casino": Casino,
     "Ceramics Store": CeramicsStore,
     "Tapas Restaurant": TapasRestaurant,
+    "Southern Hemisphere Trade Agreements": SouthernHemisphereTradeAgreements,
+
 
 }
 

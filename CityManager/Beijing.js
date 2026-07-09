@@ -10,5 +10,6 @@ export const Beijing = new City(
     "China",
     "Asia",
     3,
-    "In 2022, Beijing made global sports history by becoming the very first city to host both the Summer Olympics (2008) and the Winter Olympics."
+    "In 2022, Beijing made global sports history by becoming the very first city to host both the Summer Olympics (2008) and the Winter Olympics.",
+    false
 );

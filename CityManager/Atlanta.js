@@ -10,5 +10,6 @@ export const Atlanta = new City(
     "United States of America",
     "North America",
     2,
-    "There are 71 streets in Atlanta with some version of Peachtree as part of their name."
+    "There are 71 streets in Atlanta with some version of Peachtree as part of their name.",
+    false
 );

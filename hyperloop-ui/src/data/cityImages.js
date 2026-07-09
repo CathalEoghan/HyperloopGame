@@ -63,6 +63,7 @@ import Cork from '../assets/cities/Cork.jpg'
 import LasVegas from '../assets/cities/LasVegas.jpg'
 import Lisbon from '../assets/cities/Lisbon.jpg'
 import Seville from '../assets/cities/Seville.jpg'
+import Sydney from '../assets/cities/Sydney.jpg'
 
 
 
@@ -131,6 +132,8 @@ const cityImages = {
     "Las Vegas": LasVegas,
     Lisbon: Lisbon,
     Seville: Seville,
+    Sydney: Sydney,
+    
 
 }
 

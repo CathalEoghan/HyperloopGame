@@ -10,5 +10,6 @@ export const Edinburgh = new City(
     "United Kingdom",
     "Europe",
     2,
-    "Edinburgh Castle rests on Castle Rock, an extinct volcano that is approximately 350 million years old."
+    "Edinburgh Castle rests on Castle Rock, an extinct volcano that is approximately 350 million years old.",
+    false
     );
