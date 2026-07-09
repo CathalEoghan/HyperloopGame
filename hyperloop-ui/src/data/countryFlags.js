@@ -44,6 +44,8 @@ const countryFlags = {
     "Ethiopia": "et",
     "Paraguay": "py",
     "Malaysia": "my",
+    "Iceland": "is",
+    "New Zealand": "nz",
 
     
 

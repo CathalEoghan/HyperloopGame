@@ -74,6 +74,8 @@ import WashingtonDC from '../assets/cities/WashingtonDC.jpg'
 import Toronto from '../assets/cities/Toronto.jpg'
 import Asunción from '../assets/cities/Asunción.jpg'
 import KualaLumpur from '../assets/cities/KualaLumpur.jpg'
+import Reykjavik from '../assets/cities/Reykjavik.jpg'
+import Wellington from '../assets/cities/Wellington.jpg'
 
 
 const cityImages = {
@@ -152,6 +154,8 @@ const cityImages = {
     Toronto: Toronto,
     Asunción: Asunción,
     "Kuala Lumpur": KualaLumpur,
+    Reykjavik: Reykjavik,
+    Wellington: Wellington,
 
 }
 

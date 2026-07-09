@@ -75,6 +75,8 @@ WashingtonDC.jpg - Photo by Thuan Vo via Pexels
 Toronto.jpg - Photo by Jeffrey Eisen via Pexels
 Asunción.jpg - Photo by Jose Ismael Espinola via Pexels
 KualaLumpur.jpg - Photo by Zukiman Mohamad via Pexels
+Reykjavik.jpg - Photo by Magic K via Pexels
+Wellington.jpg - Photo by Donovan Kelly via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -153,7 +155,8 @@ NorthAmericanTravelPackages.jpg - Photo by Lara Jameson via Pexels
 DanceStudio.jpg - Photo by Kampus Production via Pexels
 SouthAmericanTravelPackages.jpg - Photo by Beate Vogl via Pexels
 AsianTravelPackages.jpg - Photo by cottonbro studio via Pexels
-
+EuropeanTravelPackages.jpg - Photo by Beate Vogl via Pexels
+OceanianTravelPackages.jpg - Photo by Lara Jameson via Pexels
 
 SOUNDS
 
