@@ -46,7 +46,10 @@ import { artGallery } from './ArtGallery.js'
 import { metalBar } from './MetalBar.js'
 import { tacoRestaurant } from './TacoRestaurant.js'
 import { artMarket } from './ArtMarket.js'
-
+import { giftShop } from './GiftShop.js'
+import { casino } from './Casino.js'
+import { ceramicsStore } from './CeramicsStore.js'
+import { tapasRestaurant } from './TapasRestaurant.js'
 
 export const allDevelopments = [
     bakery,
@@ -96,5 +99,9 @@ export const allDevelopments = [
     metalBar,
     tacoRestaurant,
     artMarket,
+    giftShop,
+    casino,
+    ceramicsStore,
+    tapasRestaurant,
 
 ]

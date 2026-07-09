@@ -38,7 +38,6 @@ return (
         {/* Main development modal */}
         {selectedDevelopment && (
             <div className="modal-overlay" onClick={() => {
-                playClickSound2();
                 setSelectedDevelopment(null)}}>
                 <div className="modal" onClick={(e) => e.stopPropagation()}>
                     {underConstruction.some(d => d.name === selectedDevelopment.name) ? (

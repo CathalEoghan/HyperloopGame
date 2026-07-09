@@ -60,6 +60,10 @@ Helsinki.js - Photo by Vish Pix via Pexels
 MexicoCity.js - Photo by Fernando Paleta via Pexels
 Miami.js - Photo by Antonio Cuellar via Pexels
 Singapore.js - Photo by Cyrill via Pexels
+Cork.js - Photo by Etka Kh via Pexels
+LasVegas.js - Photo by Stephen Leonardi via Pexels
+Lisbon.js - Photo by Grégory Coste via Pexels
+Seville.js - Photo by Jose Rodriguez Ortega via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -122,6 +126,10 @@ MetalBar.js - Photo by RDNE Stock project via Pexels
 TacoRestaurant.js - Photo by Nadin Sh via Pexels
 ArtMarket.js - Photo by Markus Spiske via Pexels
 IndoorGarden.js - Photo by Artem Korolev via Pexels
+GiftShop.js - Photo by Demetra Ioannidou via Pexels
+Casino.js - Photo by Vanessa Valkhof via Pexels
+CeramicsStore.js - Photo by Richard L via Pexels
+TapasRestaurant.js - Photo by The Castlebar via Pexels
 
 SOUNDS
 

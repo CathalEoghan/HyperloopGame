@@ -37,6 +37,8 @@ const countryFlags = {
     "Nigeria": "ng",
     "Finland": "fi",
     "Singapore": "sg",
+    "Portugal": "pt",
+    
     
 
 }

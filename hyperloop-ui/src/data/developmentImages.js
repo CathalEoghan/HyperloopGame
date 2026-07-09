@@ -59,6 +59,10 @@ import MetalBar from '../assets/developments/MetalBar.jpg'
 import TacoRestaurant from '../assets/developments/TacoRestaurant.jpg'
 import ArtMarket from '../assets/developments/ArtMarket.jpg'
 import IndoorGarden from '../assets/developments/IndoorGarden.jpg'
+import GiftShop from '../assets/developments/GiftShop.jpg'
+import Casino from '../assets/developments/Casino.jpg'
+import CeramicsStore from '../assets/developments/CeramicsStore.jpg'
+import TapasRestaurant from '../assets/developments/TapasRestaurant.jpg'
 
 
 const developmentImages = {
@@ -122,6 +126,10 @@ const developmentImages = {
     "Taco Restaurant": TacoRestaurant,
     "Art Market": ArtMarket,
     "Indoor Garden": IndoorGarden,
+    "Gift Shop": GiftShop,
+    "Casino": Casino,
+    "Ceramics Store": CeramicsStore,
+    "Tapas Restaurant": TapasRestaurant,
 
 }
 
