@@ -72,6 +72,8 @@ import Bazaar from '../assets/developments/Bazaar.jpg'
 import AfricanTravelPackages from '../assets/developments/AfricanTravelPackages.jpg'
 import NorthAmericanTravelPackages from '../assets/developments/NorthAmericanTravelPackages.jpg'
 import DanceStudio from '../assets/developments/DanceStudio.jpg'
+import SouthAmericanTravelPackages from '../assets/developments/SouthAmericanTravelPackages.jpg'
+import AsianTravelPackages from '../assets/developments/AsianTravelPackages.jpg'
 
 
 const developmentImages = {
@@ -148,6 +150,9 @@ const developmentImages = {
     "African Travel Packages": AfricanTravelPackages,
     "North American Travel Packages": NorthAmericanTravelPackages,
     "Dance Studio": DanceStudio,
+    "South American Travel Packages": SouthAmericanTravelPackages,
+    "Asian Travel Packages": AsianTravelPackages,
+
 
 }
 

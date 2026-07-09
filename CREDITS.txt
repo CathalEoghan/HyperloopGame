@@ -72,7 +72,10 @@ Canberra.jpg - Photo by Mark Direen via Pexels
 Marrakech.jpg - Photo by Zak H via Pexels
 AddisAbaba.jpg - Photo by Abenezer Muluken via Pexels
 WashingtonDC.jpg - Photo by Thuan Vo via Pexels
-Toronto.jpg - Photo by via Pexels
+Toronto.jpg - Photo by Jeffrey Eisen via Pexels
+Asunción.jpg - Photo by Jose Ismael Espinola via Pexels
+KualaLumpur.jpg - Photo by Zukiman Mohamad via Pexels
+
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -148,6 +151,9 @@ Bazaar.jpg - Photo by Diego F. Parra via Pexels
 AfricanTravelPackages.jpg - Photo by Lara Jameson via Pexels
 NorthAmericanTravelPackages.jpg - Photo by Lara Jameson via Pexels
 DanceStudio.jpg - Photo by Kampus Production via Pexels
+SouthAmericanTravelPackages.jpg - Photo by Beate Vogl via Pexels
+AsianTravelPackages.jpg - Photo by cottonbro studio via Pexels
+
 
 SOUNDS
 

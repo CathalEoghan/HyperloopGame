@@ -42,7 +42,9 @@ const countryFlags = {
     "Iran": "ir",
     "Morocco": "ma",
     "Ethiopia": "et",
-    
+    "Paraguay": "py",
+    "Malaysia": "my",
+
     
 
 

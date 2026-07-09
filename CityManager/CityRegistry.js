@@ -72,7 +72,8 @@ import { Marrakech } from './Marrakech.js'
 import { AddisAbaba } from './AddisAbaba.js'
 import { WashingtonDC } from './WashingtonDC.js'
 import { Toronto } from './Toronto.js'
-
+import { Asunción } from './Asunción.js'
+import { KualaLumpur } from './KualaLumpur.js'
 
 export const allCities = [
     Atlanta,
@@ -148,5 +149,7 @@ export const allCities = [
     AddisAbaba,
     WashingtonDC,
     Toronto,
+    Asunción,
+    KualaLumpur,
 
 ]

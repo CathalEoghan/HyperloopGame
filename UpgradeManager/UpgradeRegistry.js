@@ -16,6 +16,8 @@ import { indoorGarden } from './IndoorGarden.js'
 import { southernHemisphereTradeAgreements } from './SouthernHemisphereTradeAgreements.js'
 import { africanTravelPackages } from './AfricanTravelPackages.js'
 import { northAmericanTravelPackages } from './NorthAmericanTravelPackages.js'
+import { southAmericanTravelPackages } from './SouthAmericanTravelPackages.js'
+import { asianTravelPackages } from './AsianTravelPackages.js'
 
 
 export const allUpgrades = [
@@ -35,5 +37,7 @@ export const allUpgrades = [
     southernHemisphereTradeAgreements,
     africanTravelPackages,
     northAmericanTravelPackages,
+    southAmericanTravelPackages,
+    asianTravelPackages,
 
 ]
