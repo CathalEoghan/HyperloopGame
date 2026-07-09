@@ -50,6 +50,9 @@ import { giftShop } from './GiftShop.js'
 import { casino } from './Casino.js'
 import { ceramicsStore } from './CeramicsStore.js'
 import { tapasRestaurant } from './TapasRestaurant.js'
+import { catCafé } from './CatCafé.js'
+import { kebabShop } from './KebabShop.js'
+
 
 export const allDevelopments = [
     bakery,
@@ -103,5 +106,7 @@ export const allDevelopments = [
     casino,
     ceramicsStore,
     tapasRestaurant,
+    catCafé,
+    kebabShop,
 
 ]

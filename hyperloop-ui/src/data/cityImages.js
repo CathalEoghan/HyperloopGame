@@ -64,7 +64,8 @@ import LasVegas from '../assets/cities/LasVegas.jpg'
 import Lisbon from '../assets/cities/Lisbon.jpg'
 import Seville from '../assets/cities/Seville.jpg'
 import Sydney from '../assets/cities/Sydney.jpg'
-
+import Istanbul from '../assets/cities/Istanbul.jpg'
+import Tehran from '../assets/cities/Tehran.jpg'
 
 
 const cityImages = {
@@ -133,7 +134,9 @@ const cityImages = {
     Lisbon: Lisbon,
     Seville: Seville,
     Sydney: Sydney,
-    
+    Istanbul: Istanbul,
+    Tehran: Tehran,
+
 
 }
 

@@ -38,8 +38,10 @@ const countryFlags = {
     "Finland": "fi",
     "Singapore": "sg",
     "Portugal": "pt",
+    "Turkey": "tr",
+    "Iran": "ir"
     
-    
+
 
 }
 

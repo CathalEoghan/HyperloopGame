@@ -51,20 +51,22 @@ Bogotá.jpg - Photo by Michael Pointner via Pexels
 Beijing.jpg - Photo by zhang kaiyv via Pexels
 Taipei.jpg - Photo by Jimmy Liao via Pexels
 Melbourne.jpg - Photo by John Simmons via Pexels
-Apia.js - Photo by Tony Rios via Pexels
-Geneva.js - Photo by ZongJunXie via Pexels
-Cologne.js - Photo by Miguel Andres Parra via Pexels
-Lagos.js - Photo by Caesar. via Pexels
-Madrid.js - Photo by Jo Kassis via Pexels
-Helsinki.js - Photo by Vish Pix via Pexels
+Apia.jpg - Photo by Tony Rios via Pexels
+Geneva.jpg - Photo by ZongJunXie via Pexels
+Cologne.jpg - Photo by Miguel Andres Parra via Pexels
+Lagos.jpg - Photo by Caesar. via Pexels
+Madrid.jpg - Photo by Jo Kassis via Pexels
+Helsinki.jpg - Photo by Vish Pix via Pexels
 MexicoCity.js - Photo by Fernando Paleta via Pexels
-Miami.js - Photo by Antonio Cuellar via Pexels
-Singapore.js - Photo by Cyrill via Pexels
-Cork.js - Photo by Etka Kh via Pexels
-LasVegas.js - Photo by Stephen Leonardi via Pexels
-Lisbon.js - Photo by Grégory Coste via Pexels
-Seville.js - Photo by Jose Rodriguez Ortega via Pexels
-Sydney.js - Photo by Parth Patel via Pexels
+Miami.jpg - Photo by Antonio Cuellar via Pexels
+Singapore.jpg - Photo by Cyrill via Pexels
+Cork.jpg - Photo by Etka Kh via Pexels
+LasVegas.jpg - Photo by Stephen Leonardi via Pexels
+Lisbon.jpg - Photo by Grégory Coste via Pexels
+Seville.jpg - Photo by Jose Rodriguez Ortega via Pexels
+Sydney.jpg - Photo by Parth Patel via Pexels
+Istanbul.jpg - Photo by Ömer Aydın via Pexels
+Tehran.jpg - Photo by mehrab zahedbeigi via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -121,17 +123,19 @@ PettingZoo.jpg - Photo by Michał Robak via Pexels
 Aquarium - Photo by Anastasiya Vragova via Pexels
 WatchStore.jpg - Photo by Ushindi Namegabe via Pexels
 FragranceStore.jpg - Photo by Arda Kaykısız via Pexels
-BillboardDesignOverhauls.js - Photo by Roman Biernacki via Pexels
-ArtGallery.js - Photo by Loïc Manegarium via Pexels
-MetalBar.js - Photo by RDNE Stock project via Pexels
-TacoRestaurant.js - Photo by Nadin Sh via Pexels
-ArtMarket.js - Photo by Markus Spiske via Pexels
-IndoorGarden.js - Photo by Artem Korolev via Pexels
-GiftShop.js - Photo by Demetra Ioannidou via Pexels
-Casino.js - Photo by Vanessa Valkhof via Pexels
-CeramicsStore.js - Photo by Richard L via Pexels
-TapasRestaurant.js - Photo by The Castlebar via Pexels
-GlobalSouthTradeAgreements.js - Photo by Lara Jameson via Pexels
+BillboardDesignOverhauls.jpg - Photo by Roman Biernacki via Pexels
+ArtGallery.jpg - Photo by Loïc Manegarium via Pexels
+MetalBar.jpg - Photo by RDNE Stock project via Pexels
+TacoRestaurant.jpg - Photo by Nadin Sh via Pexels
+ArtMarket.jpg - Photo by Markus Spiske via Pexels
+IndoorGarden.jpg - Photo by Artem Korolev via Pexels
+GiftShop.jpg - Photo by Demetra Ioannidou via Pexels
+Casino.jpg - Photo by Vanessa Valkhof via Pexels
+CeramicsStore.jpg - Photo by Richard L via Pexels
+TapasRestaurant.jpg - Photo by The Castlebar via Pexels
+GlobalSouthTradeAgreements.jpg - Photo by Lara Jameson via Pexels
+CatCafé.jpg - Photo by Anh Cam via Pexels
+KebabShop.jpg - Photo by via Valeria Boltneva Pexels
 
 SOUNDS
 
