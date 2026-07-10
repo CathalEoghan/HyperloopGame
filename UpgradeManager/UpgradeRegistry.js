@@ -21,6 +21,8 @@ import { asianTravelPackages } from './AsianTravelPackages.js'
 import { europeanTravelPackages } from './EuropeanTravelPackages.js'
 import { oceanianTravelPackages } from './OceanianTravelPackages.js'
 import { improvedRestroomFacilities } from './ImprovedRestroomFacilities.js'
+import { enhancedAdvertisingStrategies } from './EnhancedAdvertisingStrategies.js'
+import { crossTerminalTukTukService } from './CrossTerminalTukTukService.js'
 
 
 export const allUpgrades = [
@@ -45,5 +47,7 @@ export const allUpgrades = [
     europeanTravelPackages,
     oceanianTravelPackages,
     improvedRestroomFacilities,
+    enhancedAdvertisingStrategies,
+    crossTerminalTukTukService,
 
 ]

@@ -58,6 +58,9 @@ import { bazaar } from './Bazaar.js'
 import { danceStudio } from './DanceStudio.js'
 import { theatre } from './Theatre.js'
 import { wineMerchant } from './WineMerchant.js'
+import { jewelleryShop } from './JewelleryShop.js'
+import { streetFoodFair } from './StreetFoodFair.js'
+import { surfShop } from './SurfShop.js'
 
 
 export const allDevelopments = [
@@ -120,5 +123,8 @@ export const allDevelopments = [
     danceStudio,
     theatre,
     wineMerchant,
+    jewelleryShop,
+    streetFoodFair,
+    surfShop,
 
 ]

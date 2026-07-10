@@ -9,7 +9,7 @@ export const Florence = new City(
     [handbagShop],
     "Italy",
     "Europe",
-    2,
+    1,
     "In 1339, Florence became the first city in Europe to pave its streets after the fall of Rome. Funded by wealthy merchants and bankers, the project replaced muddy medieval lanes with dense, honey-brown sandstone called pietraforte, establishing a major milestone in urban hygiene and infrastructure.",
     false
 );

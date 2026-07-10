@@ -80,6 +80,11 @@ Wellington.jpg - Photo by Donovan Kelly via Pexels
 SaintPetersburg.jpg - Photo by Виктор Соломоник via Pexels
 Bordeaux.jpg - Photo by Borja Lopez via Pexels
 Copenhagen.jpg - Photo by C1 Superstar via Pexels
+Warsaw.jpg - Photo by Egor Komarov via Pexels
+Gdánsk.jpg - Photo by Piotr Arnoldes via Pexels
+Karachi.jpg - Photo by Tahamie Farooqui via Pexels
+Dhaka.jpg - Photo by Shubhra Dhar via Pexels
+Honolulu.jpg - Photo by Jess Loiterton via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -162,6 +167,12 @@ OceanianTravelPackages.jpg - Photo by Lara Jameson via Pexels
 Theatre.jpg - Photo by Monica Silvestre via Pexels
 WineMerchant.jpg - Photo by Kalilou Tirera via Pexels
 ImprovedRestroomFacilities.jpg - Photo by Maya Ali via Pexels
+EnhancedAdvertisingStrategies.jpg - Photo by Mikael Blomkvist via Pexels
+JewelleryShop.jpg - Photo by Hert Niks via Pexels
+StreetFoodFair.jpg - Photo by yusuf coşkun via Pexels
+CrossTerminalTukTukService.jpg - Photo by Eyefon Michael via Pexels
+SurfShop.jpg - Photo by Wendy Wei via Pexels
+
 
 SOUNDS
 

@@ -79,6 +79,11 @@ import OceanianTravelPackages from '../assets/developments/OceanianTravelPackage
 import Theatre from '../assets/developments/Theatre.jpg'
 import WineMerchant from '../assets/developments/WineMerchant.jpg'
 import ImprovedRestroomFacilities from '../assets/developments/ImprovedRestroomFacilities.jpg'
+import EnhancedAdvertisingStrategies from '../assets/developments/EnhancedAdvertisingStrategies.jpg'
+import JewelleryShop from '../assets/developments/JewelleryShop.jpg'
+import StreetFoodFair from '../assets/developments/StreetFoodFair.jpg'
+import CrossTerminalTukTukService from '../assets/developments/CrossTerminalTukTukService.jpg'
+import SurfShop from '../assets/developments/SurfShop.jpg'
 
 
 const developmentImages = {
@@ -162,7 +167,11 @@ const developmentImages = {
     "Theatre": Theatre,
     "Wine Merchant": WineMerchant,
     "Improved Restroom Facilities": ImprovedRestroomFacilities,
-
+    "Enhanced Advertising Strategies": EnhancedAdvertisingStrategies,
+    "Jewellery Shop": JewelleryShop,
+    "Street Food Fair": StreetFoodFair,
+    "Cross-Terminal Tuk Tuk Service": CrossTerminalTukTukService,
+    "Surf Shop": SurfShop,
 
 }
 

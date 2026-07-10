@@ -9,7 +9,7 @@ export const Edinburgh = new City(
     [bookstore],
     "United Kingdom",
     "Europe",
-    2,
+    1,
     "Edinburgh Castle rests on Castle Rock, an extinct volcano that is approximately 350 million years old.",
     false
     );

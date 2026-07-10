@@ -47,7 +47,10 @@ const countryFlags = {
     "Iceland": "is",
     "New Zealand": "nz",
     "Russia": "ru",
-    "Denmark": "dk"
+    "Denmark": "dk",
+    "Poland": "pl",
+    "Pakistan": "pk",
+    "Bangladesh": "bd",
 
     
 
