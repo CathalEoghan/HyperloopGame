@@ -1,12 +1,12 @@
 
 // Havana
 import { City } from "./City.js";
-import { rumTasting } from "../DevelopmentManager/RumTasting.js";
+import { cigarShop } from "../DevelopmentManager/CigarShop.js";
 
 export const Havana = new City(
     "Havana",
     2700000,
-    [rumTasting],
+    [cigarShop],
     "Cuba",
     "North America",
     2,

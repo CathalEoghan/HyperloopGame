@@ -51,6 +51,7 @@ const countryFlags = {
     "Poland": "pl",
     "Pakistan": "pk",
     "Bangladesh": "bd",
+    "Guatemala": "gt",
 
     
 

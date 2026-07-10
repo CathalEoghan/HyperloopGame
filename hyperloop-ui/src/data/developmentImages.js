@@ -84,6 +84,8 @@ import JewelleryShop from '../assets/developments/JewelleryShop.jpg'
 import StreetFoodFair from '../assets/developments/StreetFoodFair.jpg'
 import CrossTerminalRickshawService from '../assets/developments/CrossTerminalRickshawService.jpg'
 import SurfShop from '../assets/developments/SurfShop.jpg'
+import CigarShop from '../assets/developments/CigarShop.jpg'
+import FishAndChips from '../assets/developments/FishAndChips.jpg'
 
 
 const developmentImages = {
@@ -172,6 +174,8 @@ const developmentImages = {
     "Street Food Fair": StreetFoodFair,
     "Cross-Terminal Rickshaw Service": CrossTerminalRickshawService,
     "Surf Shop": SurfShop,
+    "Fish & Chips": FishAndChips,
+    "Cigar Shop": CigarShop,
 
 }
 

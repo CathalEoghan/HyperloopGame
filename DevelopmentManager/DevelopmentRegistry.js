@@ -61,6 +61,8 @@ import { wineMerchant } from './WineMerchant.js'
 import { jewelleryShop } from './JewelleryShop.js'
 import { streetFoodFair } from './StreetFoodFair.js'
 import { surfShop } from './SurfShop.js'
+import { cigarShop } from './CigarShop.js'
+import { fishAndChips } from './FishAndChips.js'
 
 
 export const allDevelopments = [
@@ -126,5 +128,7 @@ export const allDevelopments = [
     jewelleryShop,
     streetFoodFair,
     surfShop,
+    fishAndChips,
+    cigarShop,
 
 ]
