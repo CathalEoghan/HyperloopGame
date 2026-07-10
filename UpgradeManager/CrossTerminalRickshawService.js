@@ -1,5 +1,5 @@
 
-// Cross-Terminal Tuk Tuk Service
+// Cross-Terminal Rickshaw Service
 import { Upgrade } from "./Upgrade.js";
 
 export const crossTerminalRickshawService = new Upgrade(

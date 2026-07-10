@@ -82,7 +82,7 @@ import ImprovedRestroomFacilities from '../assets/developments/ImprovedRestroomF
 import EnhancedAdvertisingStrategies from '../assets/developments/EnhancedAdvertisingStrategies.jpg'
 import JewelleryShop from '../assets/developments/JewelleryShop.jpg'
 import StreetFoodFair from '../assets/developments/StreetFoodFair.jpg'
-import CrossTerminalTukTukService from '../assets/developments/CrossTerminalTukTukService.jpg'
+import CrossTerminalRickshawService from '../assets/developments/CrossTerminalRickshawService.jpg'
 import SurfShop from '../assets/developments/SurfShop.jpg'
 
 
@@ -170,7 +170,7 @@ const developmentImages = {
     "Enhanced Advertising Strategies": EnhancedAdvertisingStrategies,
     "Jewellery Shop": JewelleryShop,
     "Street Food Fair": StreetFoodFair,
-    "Cross-Terminal Tuk Tuk Service": CrossTerminalTukTukService,
+    "Cross-Terminal Rickshaw Service": CrossTerminalRickshawService,
     "Surf Shop": SurfShop,
 
 }
