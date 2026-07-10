@@ -95,6 +95,9 @@ import { Douala } from './Douala.js'
 import { Lima } from './Lima.js'
 import { Caracas } from './Caracas.js'
 import { Kampala } from './Kampala.js'
+import { NewDelhi } from './NewDelhi.js'
+import { Belgrade } from './Belgrade.js'
+
 
 export const allCities = [
     Atlanta,
@@ -193,5 +196,7 @@ export const allCities = [
     Douala,
     Lima,
     Caracas,
+    NewDelhi,
+    Belgrade,
 
 ]

@@ -60,6 +60,7 @@ const countryFlags = {
     "Uganda": "ug",
     "Peru": "pe",
     "Venezuela": "ve",
+    "Serbia": "rs",
 
     
 

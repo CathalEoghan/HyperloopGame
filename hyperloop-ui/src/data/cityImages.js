@@ -94,6 +94,8 @@ import Lima from '../assets/cities/Lima.jpg'
 import Douala from '../assets/cities/Douala.jpg'
 import Kampala from '../assets/cities/Kampala.jpg'
 import Bamako from '../assets/cities/Bamako.jpg'
+import NewDelhi from '../assets/cities/NewDelhi.jpg'
+import Belgrade from '../assets/cities/Belgrade.jpg'
 
 
 const cityImages = {
@@ -193,7 +195,8 @@ const cityImages = {
     Lima: Lima,
     Caracas: Caracas,
     Douala: Douala,
-
+    "New Delhi": NewDelhi,
+    Belgrade: Belgrade,
 
 
 }

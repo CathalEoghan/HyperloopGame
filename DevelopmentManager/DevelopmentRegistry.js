@@ -69,6 +69,8 @@ import { couscousRestaurant } from './CouscousRestaurant.js'
 import { musicStore } from './MusicStore.js'
 import { cevicheRestaurant } from './CevicheRestaurant.js'
 import { arepaRestaurant } from './ArepaRestaurant.js'
+import { indianRestaurant } from './IndianRestaurant.js'
+import { basketballCourts } from './BasketballCourts.js'
 
 
 export const allDevelopments = [
@@ -141,6 +143,8 @@ export const allDevelopments = [
     couscousRestaurant,
     cevicheRestaurant,
     musicStore,
-    arepaRestaurant
+    arepaRestaurant,
+    indianRestaurant,
+    basketballCourts,
 
 ]
