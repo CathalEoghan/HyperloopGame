@@ -87,7 +87,8 @@ import GuatemalaCity from '../assets/cities/GuatemalaCity.jpg'
 import Vancouver from '../assets/cities/Vancouver.jpg'
 import DarEsSalaam from '../assets/cities/DarEsSalaam.jpg'
 import Harare from '../assets/cities/Harare.jpg'
-
+import SãoPaulo from '../assets/cities/SãoPaulo.jpg'
+import Tunis from '../assets/cities/Tunis.jpg'
 
 
 const cityImages = {
@@ -180,6 +181,8 @@ const cityImages = {
     Vancouver: Vancouver,
     "Dar Es Salaam": DarEsSalaam,
     Harare: Harare,
+    Tunis: Tunis,
+    "São Paulo": SãoPaulo, 
 
 
 

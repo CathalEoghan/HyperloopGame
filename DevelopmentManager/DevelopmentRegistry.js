@@ -65,7 +65,7 @@ import { cigarShop } from './CigarShop.js'
 import { fishAndChips } from './FishAndChips.js'
 import { sculptureExhibition } from './SculptureExhibition.js'
 import { spiceMarket } from './SpiceMarket.js'
-
+import { couscousRestaurant } from './CouscousRestaurant.js'
 
 export const allDevelopments = [
     bakery,
@@ -134,5 +134,6 @@ export const allDevelopments = [
     cigarShop,
     spiceMarket,
     sculptureExhibition,
+    couscousRestaurant,
 
 ]

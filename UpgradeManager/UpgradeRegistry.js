@@ -23,6 +23,7 @@ import { oceanianTravelPackages } from './OceanianTravelPackages.js'
 import { improvedRestroomFacilities } from './ImprovedRestroomFacilities.js'
 import { enhancedAdvertisingStrategies } from './EnhancedAdvertisingStrategies.js'
 import { crossTerminalRickshawService } from './CrossTerminalRickshawService.js'
+import { renovatedCorporateOffices } from './RenovatedCorporateOffices.js'
 
 
 export const allUpgrades = [
@@ -49,5 +50,6 @@ export const allUpgrades = [
     improvedRestroomFacilities,
     enhancedAdvertisingStrategies,
     crossTerminalRickshawService,
+    renovatedCorporateOffices,
 
 ]

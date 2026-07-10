@@ -88,6 +88,9 @@ import CigarShop from '../assets/developments/CigarShop.jpg'
 import FishAndChips from '../assets/developments/FishAndChips.jpg'
 import SculptureExhibition from '../assets/developments/SculptureExhibition.jpg'
 import SpiceMarket from '../assets/developments/SpiceMarket.jpg'
+import CouscousRestaurant from '../assets/developments/CouscousRestaurant.jpg'
+import RenovatedCorporateOffices from '../assets/developments/RenovatedCorporateOffices.jpg'
+
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -179,6 +182,8 @@ const developmentImages = {
     "Cigar Shop": CigarShop,
     "Spice Market": SpiceMarket,
     "Sculpture Exhibition": SculptureExhibition,
+    "Couscous Restaurant": CouscousRestaurant,
+    "Renovated Corporate Offices": RenovatedCorporateOffices,
 
 
 }
