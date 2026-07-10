@@ -90,6 +90,11 @@ import SculptureExhibition from '../assets/developments/SculptureExhibition.jpg'
 import SpiceMarket from '../assets/developments/SpiceMarket.jpg'
 import CouscousRestaurant from '../assets/developments/CouscousRestaurant.jpg'
 import RenovatedCorporateOffices from '../assets/developments/RenovatedCorporateOffices.jpg'
+import MusicStore from '../assets/developments/MusicStore.jpg'
+import CevicheRestaurant from '../assets/developments/CevicheRestaurant.jpg'
+import WarehouseExpansionProjects from '../assets/developments/WarehouseExpansionProjects.jpg'
+import ArepaRestaurant from '../assets/developments/ArepaRestaurant.jpg'
+import DedicatedMotorcycleParking from '../assets/developments/DedicatedMotorcycleParking.jpg'
 
 
 const developmentImages = {
@@ -184,7 +189,11 @@ const developmentImages = {
     "Sculpture Exhibition": SculptureExhibition,
     "Couscous Restaurant": CouscousRestaurant,
     "Renovated Corporate Offices": RenovatedCorporateOffices,
-
+    "Music Store": MusicStore,
+    "Warehouse Expansion Projects": WarehouseExpansionProjects,
+    "Dedicated Motorcycle Parking": DedicatedMotorcycleParking,
+    "Arepa Restaurant": ArepaRestaurant,
+    "Ceviche Restaurant": CevicheRestaurant,
 
 }
 

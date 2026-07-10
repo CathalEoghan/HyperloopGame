@@ -89,6 +89,11 @@ import DarEsSalaam from '../assets/cities/DarEsSalaam.jpg'
 import Harare from '../assets/cities/Harare.jpg'
 import SãoPaulo from '../assets/cities/SãoPaulo.jpg'
 import Tunis from '../assets/cities/Tunis.jpg'
+import Caracas from '../assets/cities/Caracas.jpg'
+import Lima from '../assets/cities/Lima.jpg'
+import Douala from '../assets/cities/Douala.jpg'
+import Kampala from '../assets/cities/Kampala.jpg'
+import Bamako from '../assets/cities/Bamako.jpg'
 
 
 const cityImages = {
@@ -183,6 +188,11 @@ const cityImages = {
     Harare: Harare,
     Tunis: Tunis,
     "São Paulo": SãoPaulo, 
+    Bamako: Bamako,
+    Kampala: Kampala,
+    Lima: Lima,
+    Caracas: Caracas,
+    Douala: Douala,
 
 
 

@@ -24,6 +24,8 @@ import { improvedRestroomFacilities } from './ImprovedRestroomFacilities.js'
 import { enhancedAdvertisingStrategies } from './EnhancedAdvertisingStrategies.js'
 import { crossTerminalRickshawService } from './CrossTerminalRickshawService.js'
 import { renovatedCorporateOffices } from './RenovatedCorporateOffices.js'
+import { warehouseExpansionProjects } from './WarehouseExpansionProjects.js'
+import { dedicatedMotorcycleParking } from './DedicatedMotorcycleParking.js'
 
 
 export const allUpgrades = [
@@ -51,5 +53,7 @@ export const allUpgrades = [
     enhancedAdvertisingStrategies,
     crossTerminalRickshawService,
     renovatedCorporateOffices,
+    warehouseExpansionProjects,
+    dedicatedMotorcycleParking,
 
 ]

@@ -66,6 +66,10 @@ import { fishAndChips } from './FishAndChips.js'
 import { sculptureExhibition } from './SculptureExhibition.js'
 import { spiceMarket } from './SpiceMarket.js'
 import { couscousRestaurant } from './CouscousRestaurant.js'
+import { musicStore } from './MusicStore.js'
+import { cevicheRestaurant } from './CevicheRestaurant.js'
+import { arepaRestaurant } from './ArepaRestaurant.js'
+
 
 export const allDevelopments = [
     bakery,
@@ -135,5 +139,8 @@ export const allDevelopments = [
     spiceMarket,
     sculptureExhibition,
     couscousRestaurant,
+    cevicheRestaurant,
+    musicStore,
+    arepaRestaurant
 
 ]

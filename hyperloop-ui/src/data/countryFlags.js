@@ -55,6 +55,11 @@ const countryFlags = {
     "Zimbabwe": "zw",
     "Tanzania": "tz",
     "Tunisia": "tn",
+    "Cameroon": "cm",
+    "Mali": "ml",
+    "Uganda": "ug",
+    "Peru": "pe",
+    "Venezuela": "ve",
 
     
 

@@ -90,7 +90,11 @@ import { DarEsSalaam } from './DarEsSalaam.js'
 import { Harare } from './Harare.js'
 import { Tunis } from './Tunis.js'
 import { SãoPaulo } from './SãoPaulo.js'
-
+import { Bamako } from './Bamako.js'
+import { Douala } from './Douala.js'
+import { Lima } from './Lima.js'
+import { Caracas } from './Caracas.js'
+import { Kampala } from './Kampala.js'
 
 export const allCities = [
     Atlanta,
@@ -184,5 +188,10 @@ export const allCities = [
     Harare,
     SãoPaulo,
     Tunis,
+    Kampala,
+    Bamako,
+    Douala,
+    Lima,
+    Caracas,
 
 ]
