@@ -3,7 +3,7 @@
 import { City } from "./City.js";
 import { jewelleryShop } from "../DevelopmentManager/JewelleryShop.js";
 
-export const Gdánsk = new City(
+export const Gdansk = new City(
     "Gdánsk",
     1500000,
     [jewelleryShop],

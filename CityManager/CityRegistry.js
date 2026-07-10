@@ -80,7 +80,7 @@ import { SaintPetersburg } from './SaintPetersburg.js'
 import { Bordeaux } from './Bordeaux.js'
 import { Copenhagen } from './Copenhagen.js'
 import { Warsaw } from './Warsaw.js'
-import { Gdánsk } from './Gdánsk.js'
+import { Gdansk } from './Gdansk.js'
 import { Karachi } from './Karachi.js'
 import { Dhaka } from './Dhaka.js'
 import { Honolulu } from './Honolulu.js'
@@ -168,7 +168,7 @@ export const allCities = [
     Bordeaux,
     Copenhagen,
     Warsaw,
-    Gdánsk,
+    Gdansk,
     Karachi,
     Dhaka,
     Honolulu,

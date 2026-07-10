@@ -80,7 +80,7 @@ import SaintPetersburg from '../assets/cities/SaintPetersburg.jpg'
 import Bordeaux from '../assets/cities/Bordeaux.jpg'
 import Copenhagen from '../assets/cities/Copenhagen.jpg'
 import Warsaw from '../assets/cities/Warsaw.jpg'
-import Gdánsk from '../assets/cities/Gdánsk.jpg'
+import Gdansk from '../assets/cities/Gdánsk.jpg'
 import Karachi from '../assets/cities/Karachi.jpg'
 import Dhaka from '../assets/cities/Dhaka.jpg'
 import Honolulu from '../assets/cities/Honolulu.jpg'
@@ -169,7 +169,7 @@ const cityImages = {
     Bordeaux: Bordeaux,
     Copenhagen: Copenhagen,
     Warsaw: Warsaw,
-    Gdánsk: Gdánsk,
+    Gdansk: Gdansk,
     Karachi: Karachi,
     Dhaka: Dhaka,
     Honolulu: Honolulu,
