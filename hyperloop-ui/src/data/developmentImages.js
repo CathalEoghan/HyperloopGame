@@ -86,7 +86,8 @@ import CrossTerminalRickshawService from '../assets/developments/CrossTerminalRi
 import SurfShop from '../assets/developments/SurfShop.jpg'
 import CigarShop from '../assets/developments/CigarShop.jpg'
 import FishAndChips from '../assets/developments/FishAndChips.jpg'
-
+import SculptureExhibition from '../assets/developments/SculptureExhibition.jpg'
+import SpiceMarket from '../assets/developments/SpiceMarket.jpg'
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -176,6 +177,9 @@ const developmentImages = {
     "Surf Shop": SurfShop,
     "Fish & Chips": FishAndChips,
     "Cigar Shop": CigarShop,
+    "Spice Market": SpiceMarket,
+    "Sculpture Exhibition": SculptureExhibition,
+
 
 }
 

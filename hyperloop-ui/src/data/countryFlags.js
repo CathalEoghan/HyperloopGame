@@ -52,6 +52,8 @@ const countryFlags = {
     "Pakistan": "pk",
     "Bangladesh": "bd",
     "Guatemala": "gt",
+    "Zimbabwe": "zw",
+    "Tanzania": "tz",
 
     
 

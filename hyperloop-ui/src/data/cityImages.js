@@ -85,6 +85,8 @@ import Dhaka from '../assets/cities/Dhaka.jpg'
 import Honolulu from '../assets/cities/Honolulu.jpg'
 import GuatemalaCity from '../assets/cities/GuatemalaCity.jpg'
 import Vancouver from '../assets/cities/Vancouver.jpg'
+import DarEsSalaam from '../assets/cities/DarEsSalaam.jpg'
+import Harare from '../assets/cities/Harare.jpg'
 
 
 
@@ -176,6 +178,8 @@ const cityImages = {
     Honolulu: Honolulu,
     "Guatemala City": GuatemalaCity,
     Vancouver: Vancouver,
+    "Dar Es Salaam": DarEsSalaam,
+    Harare: Harare,
 
 
 

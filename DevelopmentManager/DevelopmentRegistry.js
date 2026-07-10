@@ -63,6 +63,8 @@ import { streetFoodFair } from './StreetFoodFair.js'
 import { surfShop } from './SurfShop.js'
 import { cigarShop } from './CigarShop.js'
 import { fishAndChips } from './FishAndChips.js'
+import { sculptureExhibition } from './SculptureExhibition.js'
+import { spiceMarket } from './SpiceMarket.js'
 
 
 export const allDevelopments = [
@@ -130,5 +132,7 @@ export const allDevelopments = [
     surfShop,
     fishAndChips,
     cigarShop,
+    spiceMarket,
+    sculptureExhibition,
 
 ]

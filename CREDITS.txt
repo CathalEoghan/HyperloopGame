@@ -87,7 +87,8 @@ Dhaka.jpg - Photo by Shubhra Dhar via Pexels
 Honolulu.jpg - Photo by Jess Loiterton via Pexels
 GuatemalaCity.jpg - Photo by K via Pexels
 Vancouver.jpg - Photo by Adi K via Pexels
-
+DarEsSalaam.jpg - Photo by Alex Levis via Pexels
+Harare.jpg - Photo by Joel Muzhira via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -177,6 +178,8 @@ CrossTerminalTukTukService.jpg - Photo by Eyefon Michael via Pexels
 SurfShop.jpg - Photo by Wendy Wei via Pexels
 CigarShop.jpg - Photo by Aleksandar Andreev via Pexels 
 FishAndChips.jpg - Photo by casper lin via Pexels
+SpiceMarket.jpg - Photo by Hasan Hüseyin TURAN via Pexels
+SculptureExhibition.jpg - Photo by Tima Miroshnichenko via Pexels
 
 SOUNDS
 
