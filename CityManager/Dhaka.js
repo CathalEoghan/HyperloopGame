@@ -1,12 +1,12 @@
 
 // Dhaka
 import { City } from "./City.js";
-import { crossTerminalTukTukService } from "../UpgradeManager/CrossTerminalTukTukService.js";
+import { crossTerminalRickshawService } from "../UpgradeManager/CrossTerminalRickshawService.js";
 
 export const Dhaka = new City(
     "Dhaka",
     23700000,
-    [crossTerminalTukTukService],
+    [crossTerminalRickshawService],
     "Bangladesh",
     "Asia",
     3,
