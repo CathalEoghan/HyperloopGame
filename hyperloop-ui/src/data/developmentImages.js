@@ -76,6 +76,9 @@ import SouthAmericanTravelPackages from '../assets/developments/SouthAmericanTra
 import AsianTravelPackages from '../assets/developments/AsianTravelPackages.jpg'
 import EuropeanTravelPackages from '../assets/developments/EuropeanTravelPackages.jpg'
 import OceanianTravelPackages from '../assets/developments/OceanianTravelPackages.jpg'
+import Theatre from '../assets/developments/Theatre.jpg'
+import WineMerchant from '../assets/developments/WineMerchant.jpg'
+import ImprovedRestroomFacilities from '../assets/developments/ImprovedRestroomFacilities.jpg'
 
 
 const developmentImages = {
@@ -156,6 +159,9 @@ const developmentImages = {
     "Asian Travel Packages": AsianTravelPackages,
     "European Travel Packages": EuropeanTravelPackages,
     "Oceanian Travel Packages": OceanianTravelPackages,
+    "Theatre": Theatre,
+    "Wine Merchant": WineMerchant,
+    "Improved Restroom Facilities": ImprovedRestroomFacilities,
 
 
 }

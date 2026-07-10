@@ -76,6 +76,10 @@ import Asunción from '../assets/cities/Asunción.jpg'
 import KualaLumpur from '../assets/cities/KualaLumpur.jpg'
 import Reykjavik from '../assets/cities/Reykjavik.jpg'
 import Wellington from '../assets/cities/Wellington.jpg'
+import SaintPetersburg from '../assets/cities/SaintPetersburg.jpg'
+import Bordeaux from '../assets/cities/Bordeaux.jpg'
+import Copenhagen from '../assets/cities/Copenhagen.jpg'
+
 
 
 const cityImages = {
@@ -156,6 +160,9 @@ const cityImages = {
     "Kuala Lumpur": KualaLumpur,
     Reykjavik: Reykjavik,
     Wellington: Wellington,
+    "Saint Petersburg": SaintPetersburg,
+    Bordeaux: Bordeaux,
+    Copenhagen: Copenhagen,
 
 }
 

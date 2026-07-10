@@ -76,6 +76,9 @@ import { Asunción } from './Asunción.js'
 import { KualaLumpur } from './KualaLumpur.js'
 import { Reykjavik } from './Reykjavik.js'
 import { Wellington } from './Wellington.js'
+import { SaintPetersburg } from './SaintPetersburg.js'
+import { Bordeaux } from './Bordeaux.js'
+import { Copenhagen } from './Copenhagen.js'
 
 
 export const allCities = [
@@ -156,5 +159,8 @@ export const allCities = [
     KualaLumpur,
     Reykjavik,
     Wellington,
+    SaintPetersburg,
+    Bordeaux,
+    Copenhagen,
 
 ]

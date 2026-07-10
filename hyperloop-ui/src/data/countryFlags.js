@@ -46,6 +46,8 @@ const countryFlags = {
     "Malaysia": "my",
     "Iceland": "is",
     "New Zealand": "nz",
+    "Russia": "ru",
+    "Denmark": "dk"
 
     
 

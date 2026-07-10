@@ -20,6 +20,7 @@ import { southAmericanTravelPackages } from './SouthAmericanTravelPackages.js'
 import { asianTravelPackages } from './AsianTravelPackages.js'
 import { europeanTravelPackages } from './EuropeanTravelPackages.js'
 import { oceanianTravelPackages } from './OceanianTravelPackages.js'
+import { improvedRestroomFacilities } from './ImprovedRestroomFacilities.js'
 
 
 export const allUpgrades = [
@@ -43,5 +44,6 @@ export const allUpgrades = [
     asianTravelPackages,
     europeanTravelPackages,
     oceanianTravelPackages,
+    improvedRestroomFacilities,
 
 ]
