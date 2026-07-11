@@ -81,6 +81,8 @@ import { bedAndBreakfast } from './BedAndBreakfast.js'
 import { hostel } from './Hostel.js'
 import { resortHotel } from './ResortHotel.js'
 import { boutiqueHotel } from './BoutiqueHotel.js'
+import { iceSkatingRink } from './IceSkatingRink.js'
+import { chaiHouse } from './ChaiHouse.js'
 
 
 export const allDevelopments = [
@@ -166,5 +168,7 @@ export const allDevelopments = [
     hostel,
     resortHotel,
     boutiqueHotel,
+    iceSkatingRink,
+    chaiHouse,
 
 ]

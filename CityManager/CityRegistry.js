@@ -108,6 +108,8 @@ import { Galway } from './Galway.js'
 import { Budapest } from './Budapest.js'
 import { Orlando } from './Orlando.js'
 import { CapeTown } from './CapeTown.js'
+import { Almaty } from './Almaty.js'
+import { Tashkent } from './Tashkent.js'
 
 
 export const allCities = [
@@ -220,5 +222,7 @@ export const allCities = [
     Budapest,
     Orlando,
     CapeTown,
+    Almaty,
+    Tashkent,
 
 ]

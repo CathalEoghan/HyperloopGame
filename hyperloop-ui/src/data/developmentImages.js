@@ -108,6 +108,8 @@ import BedAndBreakfast from '../assets/developments/BedAndBreakfast.jpg'
 import Hostel from '../assets/developments/Hostel.jpg'
 import ResortHotel from '../assets/developments/ResortHotel.jpg'
 import BoutiqueHotel from '../assets/developments/BoutiqueHotel.jpg'
+import IceSkatingRink from '../assets/developments/IceSkatingRink.jpg'
+import ChaiHouse from '../assets/developments/ChaiHouse.jpg'
 
 
 const developmentImages = {
@@ -220,6 +222,9 @@ const developmentImages = {
     "Hostel": Hostel,
     "Resort Hotel": ResortHotel,
     "Boutique Hotel": BoutiqueHotel,
+    "Ice Skating Rink": IceSkatingRink,
+    "Chai House": ChaiHouse,
+
 }
 
 

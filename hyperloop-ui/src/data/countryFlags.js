@@ -70,6 +70,8 @@ const countryFlags = {
     "Fiji": "fj",
     "Monaco": "mc",
     "Hungary": "hu",
+    "Kazakhstan": "kz",
+    "Uzbekistan": "uz",
     
 
 

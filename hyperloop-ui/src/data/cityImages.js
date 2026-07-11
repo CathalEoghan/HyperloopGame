@@ -107,6 +107,8 @@ import Galway from '../assets/cities/Galway.jpg'
 import Budapest from '../assets/cities/Budapest.jpg'
 import Orlando from '../assets/cities/Orlando.jpg'
 import CapeTown from '../assets/cities/CapeTown.jpg'
+import Almaty from '../assets/cities/Almaty.jpg'
+import Tashkent from '../assets/cities/Tashkent.jpg'
 
 
 const cityImages = {
@@ -219,6 +221,8 @@ const cityImages = {
     Budapest: Budapest,
     Orlando: Orlando,
     "Cape Town": CapeTown,
+    Almaty: Almaty,
+    Tashkent: Tashkent,
 
 
 }

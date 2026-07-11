@@ -109,6 +109,8 @@ Galway.jpg - Photo by Jonathan Borba via Pexels
 Budapest.jpg - Photo by K via Pexels
 Orlando.jpg - Photo by Frank Rojas via Pexels
 CapeTown.jpg - Photo by Pixabay via Pexels
+Almaty.jpg - Photo by Александр Шаварёв via Pexels
+Tashkent.jpg - Photo by Zokir via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -220,6 +222,8 @@ BedAndBreakfast.jpg - Photo by Gabriella Ally via Pexels
 Hostel.jpg - Photo by Ketut Subiyanto via Pexels
 ResortHotel.jpg - Photo by Moussa Idrissi via Pexels
 BoutiqueHotel.jpg - Photo by Abhishek Navlakha via Pexels
+IceSkatingRink.jpg - Photo by Pavel Danilyuk via Pexels
+ChaiHouse.jpg - Photo by Jinshu Pulpatta via Pexels
 
 SOUNDS
 
