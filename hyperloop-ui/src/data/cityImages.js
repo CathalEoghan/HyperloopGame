@@ -109,6 +109,9 @@ import Orlando from '../assets/cities/Orlando.jpg'
 import CapeTown from '../assets/cities/CapeTown.jpg'
 import Almaty from '../assets/cities/Almaty.jpg'
 import Tashkent from '../assets/cities/Tashkent.jpg'
+import Kingston from '../assets/cities/Kingston.jpg'
+import Cusco from '../assets/cities/Cusco.jpg'
+import Kinshasa from '../assets/cities/Kinshasa.jpg'
 
 
 const cityImages = {
@@ -223,6 +226,9 @@ const cityImages = {
     "Cape Town": CapeTown,
     Almaty: Almaty,
     Tashkent: Tashkent,
+    Kingston: Kingston,
+    Cusco: Cusco,
+    Kinshasa: Kinshasa,
 
 
 }

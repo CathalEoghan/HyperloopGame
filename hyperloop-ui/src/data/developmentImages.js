@@ -110,6 +110,9 @@ import ResortHotel from '../assets/developments/ResortHotel.jpg'
 import BoutiqueHotel from '../assets/developments/BoutiqueHotel.jpg'
 import IceSkatingRink from '../assets/developments/IceSkatingRink.jpg'
 import ChaiHouse from '../assets/developments/ChaiHouse.jpg'
+import JerkChickenShop from '../assets/developments/JerkChickenShop.jpg'
+import TramDepot from '../assets/developments/TramDepot.jpg'
+import LiveMusicLounge from '../assets/developments/LiveMusicLounge.jpg'
 
 
 const developmentImages = {
@@ -224,6 +227,9 @@ const developmentImages = {
     "Boutique Hotel": BoutiqueHotel,
     "Ice Skating Rink": IceSkatingRink,
     "Chai House": ChaiHouse,
+    "Jerk Chicken Shop": JerkChickenShop,
+    "Tram Depot": TramDepot,
+    "Live Music Lounge": LiveMusicLounge,
 
 }
 

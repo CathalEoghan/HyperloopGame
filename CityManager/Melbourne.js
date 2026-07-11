@@ -1,12 +1,12 @@
 
 // Melbourne
 import { City } from "./City.js";
-import { pettingZoo } from "../DevelopmentManager/PettingZoo.js";
+import { tramDepot } from "../UpgradeManager/TramDepot.js";
 
 export const Melbourne = new City(
     "Melbourne",
     5400000,
-    [pettingZoo],
+    [tramDepot],
     "Australia",
     "Oceania",
     2,
