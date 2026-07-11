@@ -89,6 +89,7 @@ import { iceHockeyRink } from './IceHockeyRink.js'
 import { moroccanRestaurant } from './MoroccanRestaurant.js'
 import { fastFoodJoint } from './FastFoodJoint.js'
 import { sourdoughCafé } from './SourdoughCafé.js'
+import { jazzLounge } from './JazzLounge.js'
 
 
 export const allDevelopments = [
@@ -182,5 +183,6 @@ export const allDevelopments = [
     moroccanRestaurant,
     fastFoodJoint,
     sourdoughCafé,
+    jazzLounge,
 
 ]

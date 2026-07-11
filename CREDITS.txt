@@ -119,6 +119,8 @@ Casablanca.jpg - Photo by Aymane Hanni via Pexels
 Chicago.jpg - Photo by Mik Dominguez via Pexels
 Moscow.jpg - Photo by  Dmitry Alexandrovich via Pexels
 SanFrancisco.jpg - Photo by Alex Romo via Pexels
+NewOrleans.jpg - Photo by Lindsey Flynn via Pexels
+HongKong.jpg - Photo by Jimmy Chan via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -240,6 +242,8 @@ MoroccanRestaurant.jpg - Photo by Ali Dashti via Pexels
 FastFoodJoint.jpg - Photo by Tharnisha Reddy via Pexels
 IntegratedMetroSystem.jpg - Photo by Enric Cruz López via Pexels
 SourdoughBakery.jpg - Photo by Merve via Pexels
+JazzLounge.jpg - Photo by cottonbro studio via Pexels
+HyperloopPodRefurbishments.jpg - Photo by Sameboat via Wikimedia Commons
 
 SOUNDS
 

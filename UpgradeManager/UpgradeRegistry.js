@@ -29,6 +29,7 @@ import { expeditedShippingLogistics } from './ExpeditedShippingLogistics.js'
 import { energyEfficiencyImprovements } from './EnergyEfficiencyImprovements.js'
 import { tramDepot } from './TramDepot.js'
 import { integratedMetroSystem } from './IntegratedMetroSystem.js'
+import { hyperloopPodRefurbishments } from './HyperloopPodRefurbishments.js'
 
 export const allUpgrades = [
     sodaMachines,
@@ -60,5 +61,6 @@ export const allUpgrades = [
     energyEfficiencyImprovements,
     tramDepot,
     integratedMetroSystem,
+    hyperloopPodRefurbishments,
 
 ]

@@ -118,6 +118,7 @@ import MoroccanRestaurant from '../assets/developments/MoroccanRestaurant.jpg'
 import FastFoodJoint from '../assets/developments/FastFoodJoint.jpg'
 import IntegratedMetroSystem from '../assets/developments/IntegratedMetroSystem.jpg'
 import SourdoughCafé from '../assets/developments/SourdoughCafé.jpg'
+import hyperloopPodRefurbishments from '../assets/developments/HyperloopPodRefurbishments.jpg'
 
 
 const developmentImages = {
@@ -240,6 +241,7 @@ const developmentImages = {
     "Fast Food Joint": FastFoodJoint,
     "Integrated Metro System": IntegratedMetroSystem,
     "Sourdough Café": SourdoughCafé,
+    "Hyperloop Pod Refurbishments": hyperloopPodRefurbishments,
 
 }
 
