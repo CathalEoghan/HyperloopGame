@@ -92,6 +92,8 @@ import { sourdoughCafé } from './SourdoughCafé.js'
 import { jazzLounge } from './JazzLounge.js'
 import { toyStore } from './ToyStore.js'
 import { skiStore } from './SkiStore.js'
+import { sushiRestaurant } from './SushiRestaurant.js'
+import { ancientHistoryExhibit } from './AncientHistoryExhibit.js'
 
 
 export const allDevelopments = [
@@ -188,5 +190,7 @@ export const allDevelopments = [
     jazzLounge,
     toyStore,
     skiStore,
+    ancientHistoryExhibit,
+    sushiRestaurant,
 
 ]

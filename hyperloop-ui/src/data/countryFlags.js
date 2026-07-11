@@ -76,6 +76,7 @@ const countryFlags = {
     "Democratic Republic of the Congo": "cd",
     "Belarus": "by",
     "Chile": "cl",
+    "Mongolia": "mn",
     
 
 

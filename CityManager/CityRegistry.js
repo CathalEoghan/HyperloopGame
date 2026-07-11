@@ -122,6 +122,9 @@ import { NewOrleans } from './NewOrleans.js'
 import { HongKong } from './HongKong.js'
 import { Stockholm } from './Stockholm.js'
 import { Santiago } from './Santiago.js'
+import { Ulaanbaatar } from './Ulaanbaatar.js'
+import { Kyoto } from './Kyoto.js'
+
 
 
 export const allCities = [
@@ -248,6 +251,8 @@ export const allCities = [
     HongKong,
     Stockholm,
     Santiago,
+    Kyoto,
+    Ulaanbaatar,
     
 
 ]

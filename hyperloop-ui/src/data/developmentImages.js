@@ -122,6 +122,8 @@ import HyperloopPodRefurbishments from '../assets/developments/HyperloopPodRefur
 import ToyStore from '../assets/developments/ToyStore.jpg'
 import JazzLounge from '../assets/developments/JazzLounge.jpg'
 import SkiStore from '../assets/developments/SkiStore.jpg'
+import AncientHistoryExhibit from '../assets/developments/AncientHistoryExhibit.jpg'
+import SushiRestaurant from '../assets/developments/SushiRestaurant.jpg'
 
 
 const developmentImages = {
@@ -248,6 +250,8 @@ const developmentImages = {
     "Jazz Lounge": JazzLounge,
     "Toy Store": ToyStore,
     "Ski Store": SkiStore,
+    "Ancient History Exhibit": AncientHistoryExhibit,
+    "Sushi Restaurant": SushiRestaurant,
 
 }
 
