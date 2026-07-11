@@ -1,7 +1,7 @@
 
 // Dubai
 import { City } from "./City.js";
-import { luxuryHotel } from "../UpgradeManager/LuxuryHotel.js";
+import { luxuryHotel } from "../DevelopmentManager/LuxuryHotel.js";
 
 export const Dubai = new City(
     "Dubai",

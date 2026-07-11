@@ -61,6 +61,10 @@ const countryFlags = {
     "Peru": "pe",
     "Venezuela": "ve",
     "Serbia": "rs",
+    "Vietnam": "vn",
+    "England": "gb-eng",
+    "Scotland": "gb-sct",
+    "Wales": "gb-wls",
 
     
 

@@ -96,6 +96,8 @@ import Kampala from '../assets/cities/Kampala.jpg'
 import Bamako from '../assets/cities/Bamako.jpg'
 import NewDelhi from '../assets/cities/NewDelhi.jpg'
 import Belgrade from '../assets/cities/Belgrade.jpg'
+import HoChiMinhCity from '../assets/cities/HoChiMinhCity.jpg'
+import Belfast from '../assets/cities/Belfast.jpg'
 
 
 const cityImages = {
@@ -197,6 +199,8 @@ const cityImages = {
     Douala: Douala,
     "New Delhi": NewDelhi,
     Belgrade: Belgrade,
+    "Ho Chi Minh City": HoChiMinhCity,
+    Belfast: Belfast,
 
 
 }

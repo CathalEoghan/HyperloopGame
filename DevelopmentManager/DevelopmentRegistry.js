@@ -71,7 +71,8 @@ import { cevicheRestaurant } from './CevicheRestaurant.js'
 import { arepaRestaurant } from './ArepaRestaurant.js'
 import { indianRestaurant } from './IndianRestaurant.js'
 import { basketballCourts } from './BasketballCourts.js'
-
+import { vietnameseRestaurant } from './VietnameseRestaurant.js'
+import { luxuryHotel } from './LuxuryHotel.js'
 
 export const allDevelopments = [
     bakery,
@@ -146,5 +147,7 @@ export const allDevelopments = [
     arepaRestaurant,
     indianRestaurant,
     basketballCourts,
+    vietnameseRestaurant,
+    luxuryHotel,
 
 ]

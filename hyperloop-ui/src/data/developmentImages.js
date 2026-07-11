@@ -97,7 +97,8 @@ import ArepaRestaurant from '../assets/developments/ArepaRestaurant.jpg'
 import DedicatedMotorcycleParking from '../assets/developments/DedicatedMotorcycleParking.jpg'
 import IndianRestaurant from '../assets/developments/IndianRestaurant.jpg'
 import BasketballCourts from '../assets/developments/BasketballCourts.jpg'
-
+import VietnameseRestaurant from '../assets/developments/VietnameseRestaurant.jpg'
+import ExpeditedShippingLogistics from '../assets/developments/ExpeditedShippingLogistics.jpg'
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -198,7 +199,8 @@ const developmentImages = {
     "Ceviche Restaurant": CevicheRestaurant,
     "Indian Restaurant": IndianRestaurant,
     "Basketball Courts": BasketballCourts,
-
+    "Vietnamese Restaurant": VietnameseRestaurant,
+    "Expedited Shipping Logistics": ExpeditedShippingLogistics,
 }
 
 
