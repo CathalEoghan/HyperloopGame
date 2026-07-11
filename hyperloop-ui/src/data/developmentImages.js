@@ -102,6 +102,12 @@ import ExpeditedShippingLogistics from '../assets/developments/ExpeditedShipping
 import EnergyEfficiencyImprovements from '../assets/developments/EnergyEfficiencyImprovements.jpg'
 import SatayRestaurant from '../assets/developments/SatayRestaurant.jpg'
 import KavaBar from '../assets/developments/KavaBar.jpg'
+import BudgetHotel from '../assets/developments/BudgetHotel.jpg'
+import GrandHotel from '../assets/developments/GrandHotel.jpg'
+import BedAndBreakfast from '../assets/developments/BedAndBreakfast.jpg'
+import Hostel from '../assets/developments/Hostel.jpg'
+import ResortHotel from '../assets/developments/ResortHotel.jpg'
+import BoutiqueHotel from '../assets/developments/BoutiqueHotel.jpg'
 
 
 const developmentImages = {
@@ -208,6 +214,12 @@ const developmentImages = {
     "Energy Efficiency Improvements": EnergyEfficiencyImprovements,
     "Satay Restaurant": SatayRestaurant,
     "Kava Bar": KavaBar,
+    "Budget Hotel": BudgetHotel,
+    "Grand Hotel": GrandHotel,
+    "Bed & Breakfast": BedAndBreakfast,
+    "Hostel": Hostel,
+    "Resort Hotel": ResortHotel,
+    "Boutique Hotel": BoutiqueHotel,
 }
 
 

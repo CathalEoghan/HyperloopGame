@@ -75,6 +75,12 @@ import { vietnameseRestaurant } from './VietnameseRestaurant.js'
 import { luxuryHotel } from './LuxuryHotel.js'
 import { satayRestaurant } from './SatayRestaurant.js'
 import { kavaBar } from './KavaBar.js'
+import { budgetHotel } from './BudgetHotel.js'
+import { grandHotel } from './GrandHotel.js'
+import { bedAndBreakfast } from './BedAndBreakfast.js'
+import { hostel } from './Hostel.js'
+import { resortHotel } from './ResortHotel.js'
+import { boutiqueHotel } from './BoutiqueHotel.js'
 
 
 export const allDevelopments = [
@@ -154,5 +160,11 @@ export const allDevelopments = [
     luxuryHotel,
     satayRestaurant,
     kavaBar,
+    budgetHotel,
+    grandHotel,
+    bedAndBreakfast,
+    hostel,
+    resortHotel,
+    boutiqueHotel,
 
 ]

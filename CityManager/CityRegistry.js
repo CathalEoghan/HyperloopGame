@@ -102,6 +102,12 @@ import { Belfast } from './Belfast.js'
 import { Oslo } from './Oslo.js'
 import { Jakarta } from './Jakarta.js'
 import { Suva } from './Suva.js'
+import { Kraków } from './Kraków.js'
+import { MonteCarlo } from './MonteCarlo.js'
+import { Galway } from './Galway.js'
+import { Budapest } from './Budapest.js'
+import { Orlando } from './Orlando.js'
+import { CapeTown } from './CapeTown.js'
 
 
 export const allCities = [
@@ -208,5 +214,11 @@ export const allCities = [
     Oslo,
     Jakarta,
     Suva,
+    Kraków,
+    MonteCarlo,
+    Galway,
+    Budapest,
+    Orlando,
+    CapeTown,
 
 ]

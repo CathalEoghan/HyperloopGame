@@ -68,7 +68,8 @@ const countryFlags = {
     "Norway": "no",
     "Indonesia": "id",
     "Fiji": "fj",
-
+    "Monaco": "mc",
+    "Hungary": "hu",
     
 
 

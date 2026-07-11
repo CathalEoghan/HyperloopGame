@@ -101,6 +101,12 @@ import Belfast from '../assets/cities/Belfast.jpg'
 import Oslo from '../assets/cities/Oslo.jpg'
 import Jakarta from '../assets/cities/Jakarta.jpg'
 import Suva from '../assets/cities/Suva.jpg'
+import Kraków from '../assets/cities/Kraków.jpg'
+import MonteCarlo from '../assets/cities/MonteCarlo.jpg'
+import Galway from '../assets/cities/Galway.jpg'
+import Budapest from '../assets/cities/Budapest.jpg'
+import Orlando from '../assets/cities/Orlando.jpg'
+import CapeTown from '../assets/cities/CapeTown.jpg'
 
 
 const cityImages = {
@@ -207,6 +213,12 @@ const cityImages = {
     Oslo: Oslo,
     Jakarta: Jakarta,
     Suva: Suva,
+    Kraków: Kraków,
+    "Monte Carlo": MonteCarlo,
+    Galway: Galway,
+    Budapest: Budapest,
+    Orlando: Orlando,
+    "Cape Town": CapeTown,
 
 
 }
