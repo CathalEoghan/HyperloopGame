@@ -118,7 +118,10 @@ import MoroccanRestaurant from '../assets/developments/MoroccanRestaurant.jpg'
 import FastFoodJoint from '../assets/developments/FastFoodJoint.jpg'
 import IntegratedMetroSystem from '../assets/developments/IntegratedMetroSystem.jpg'
 import SourdoughCafé from '../assets/developments/SourdoughCafé.jpg'
-import hyperloopPodRefurbishments from '../assets/developments/HyperloopPodRefurbishments.jpg'
+import HyperloopPodRefurbishments from '../assets/developments/HyperloopPodRefurbishments.jpg'
+import ToyStore from '../assets/developments/ToyStore.jpg'
+import JazzLounge from '../assets/developments/JazzLounge.jpg'
+import SkiStore from '../assets/developments/SkiStore.jpg'
 
 
 const developmentImages = {
@@ -241,7 +244,10 @@ const developmentImages = {
     "Fast Food Joint": FastFoodJoint,
     "Integrated Metro System": IntegratedMetroSystem,
     "Sourdough Café": SourdoughCafé,
-    "Hyperloop Pod Refurbishments": hyperloopPodRefurbishments,
+    "Hyperloop Pod Refurbishments": HyperloopPodRefurbishments,
+    "Jazz Lounge": JazzLounge,
+    "Toy Store": ToyStore,
+    "Ski Store": SkiStore,
 
 }
 

@@ -75,6 +75,7 @@ const countryFlags = {
     "Jamaica": "jm",
     "Democratic Republic of the Congo": "cd",
     "Belarus": "by",
+    "Chile": "cl",
     
 
 

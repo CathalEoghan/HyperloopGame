@@ -121,6 +121,8 @@ Moscow.jpg - Photo by  Dmitry Alexandrovich via Pexels
 SanFrancisco.jpg - Photo by Alex Romo via Pexels
 NewOrleans.jpg - Photo by Lindsey Flynn via Pexels
 HongKong.jpg - Photo by Jimmy Chan via Pexels
+Stockholm.jpg - Photo by Florian Grewe via Pexels
+Santiago.jpg - Photo by Nikolai Kolosov via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -244,6 +246,8 @@ IntegratedMetroSystem.jpg - Photo by Enric Cruz López via Pexels
 SourdoughBakery.jpg - Photo by Merve via Pexels
 JazzLounge.jpg - Photo by cottonbro studio via Pexels
 HyperloopPodRefurbishments.jpg - Photo by Sameboat via Wikimedia Commons
+ToyStore.jpg - Photo by Harini Padmarajan via Pexels
+SkiStore.jpg - Photo by Патимат Магомедова via Pexels
 
 SOUNDS
 

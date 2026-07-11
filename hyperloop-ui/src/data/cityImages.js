@@ -119,6 +119,8 @@ import Moscow from '../assets/cities/Moscow.jpg'
 import SanFrancisco from '../assets/cities/SanFrancisco.jpg'
 import NewOrleans from '../assets/cities/NewOrleans.jpg'
 import HongKong from '../assets/cities/HongKong.jpg'
+import Stockholm from '../assets/cities/Stockholm.jpg'
+import Santiago from '../assets/cities/Santiago.jpg'
 
 
 const cityImages = {
@@ -243,6 +245,8 @@ const cityImages = {
     "San Francisco": SanFrancisco,
     "New Orleans": NewOrleans,
     "Hong Kong": HongKong,
+    Stockholm: Stockholm,
+    Santiago: Santiago,
 
 }
 
