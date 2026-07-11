@@ -99,6 +99,10 @@ import IndianRestaurant from '../assets/developments/IndianRestaurant.jpg'
 import BasketballCourts from '../assets/developments/BasketballCourts.jpg'
 import VietnameseRestaurant from '../assets/developments/VietnameseRestaurant.jpg'
 import ExpeditedShippingLogistics from '../assets/developments/ExpeditedShippingLogistics.jpg'
+import EnergyEfficiencyImprovements from '../assets/developments/EnergyEfficiencyImprovements.jpg'
+import SatayRestaurant from '../assets/developments/SatayRestaurant.jpg'
+import KavaBar from '../assets/developments/KavaBar.jpg'
+
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -201,6 +205,9 @@ const developmentImages = {
     "Basketball Courts": BasketballCourts,
     "Vietnamese Restaurant": VietnameseRestaurant,
     "Expedited Shipping Logistics": ExpeditedShippingLogistics,
+    "Energy Efficiency Improvements": EnergyEfficiencyImprovements,
+    "Satay Restaurant": SatayRestaurant,
+    "Kava Bar": KavaBar,
 }
 
 

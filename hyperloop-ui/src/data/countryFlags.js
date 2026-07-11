@@ -65,6 +65,9 @@ const countryFlags = {
     "England": "gb-eng",
     "Scotland": "gb-sct",
     "Wales": "gb-wls",
+    "Norway": "no",
+    "Indonesia": "id",
+    "Fiji": "fj",
 
     
 

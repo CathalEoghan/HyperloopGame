@@ -26,6 +26,7 @@ import { renovatedCorporateOffices } from './RenovatedCorporateOffices.js'
 import { warehouseExpansionProjects } from './WarehouseExpansionProjects.js'
 import { dedicatedMotorcycleParking } from './DedicatedMotorcycleParking.js'
 import { expeditedShippingLogistics } from './ExpeditedShippingLogistics.js'
+import { energyEfficiencyImprovements } from './EnergyEfficiencyImprovements.js'
 
 
 export const allUpgrades = [
@@ -55,5 +56,6 @@ export const allUpgrades = [
     warehouseExpansionProjects,
     dedicatedMotorcycleParking,
     expeditedShippingLogistics,
+    energyEfficiencyImprovements,
 
 ]
