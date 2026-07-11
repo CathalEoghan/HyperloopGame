@@ -28,7 +28,7 @@ import { dedicatedMotorcycleParking } from './DedicatedMotorcycleParking.js'
 import { expeditedShippingLogistics } from './ExpeditedShippingLogistics.js'
 import { energyEfficiencyImprovements } from './EnergyEfficiencyImprovements.js'
 import { tramDepot } from './TramDepot.js'
-
+import { integratedMetroSystem } from './IntegratedMetroSystem.js'
 
 export const allUpgrades = [
     sodaMachines,
@@ -59,5 +59,6 @@ export const allUpgrades = [
     expeditedShippingLogistics,
     energyEfficiencyImprovements,
     tramDepot,
+    integratedMetroSystem,
 
 ]

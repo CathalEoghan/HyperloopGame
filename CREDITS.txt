@@ -116,6 +116,9 @@ Cusco.jpg - Photo by Marco Luigy via Pexels
 Kinshasa.jpg - Photo by Vika Glitter via Pexels
 Minsk.jpg - Photo by Alexander Fadeev via Pexels
 Casablanca.jpg - Photo by Aymane Hanni via Pexels
+Chicago.jpg - Photo by Mik Dominguez via Pexels
+Moscow.jpg - Photo by  Dmitry Alexandrovich via Pexels
+SanFrancisco.jpg - Photo by Alex Romo via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -234,6 +237,9 @@ TramDepot.jpg - Photo by лексей Васильев via Pexels
 LiveMusicLounge.jpg - Photo by Vika Glitter via Pexels
 IceHockeyRink.jpg - Photo by Ron Lach via Pexels
 MoroccanRestaurant.jpg - Photo by Ali Dashti via Pexels
+FastFoodJoint.jpg - Photo by Tharnisha Reddy via Pexels
+IntegratedMetroSystem.jpg - Photo by Enric Cruz López via Pexels
+SourdoughBakery.jpg - Photo by Merve via Pexels
 
 SOUNDS
 

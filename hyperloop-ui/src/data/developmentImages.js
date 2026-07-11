@@ -115,6 +115,9 @@ import TramDepot from '../assets/developments/TramDepot.jpg'
 import LiveMusicLounge from '../assets/developments/LiveMusicLounge.jpg'
 import IceHockeyRink from '../assets/developments/IceHockeyRink.jpg'
 import MoroccanRestaurant from '../assets/developments/MoroccanRestaurant.jpg'
+import FastFoodJoint from '../assets/developments/FastFoodJoint.jpg'
+import IntegratedMetroSystem from '../assets/developments/IntegratedMetroSystem.jpg'
+import SourdoughCafé from '../assets/developments/SourdoughCafé.jpg'
 
 
 const developmentImages = {
@@ -234,6 +237,9 @@ const developmentImages = {
     "Live Music Lounge": LiveMusicLounge,
     "Ice Hockey Rink": IceHockeyRink,
     "Moroccan Restaurant": MoroccanRestaurant,
+    "Fast Food Joint": FastFoodJoint,
+    "Integrated Metro System": IntegratedMetroSystem,
+    "Sourdough Café": SourdoughCafé,
 
 }
 

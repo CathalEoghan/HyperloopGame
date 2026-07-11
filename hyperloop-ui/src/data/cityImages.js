@@ -114,6 +114,9 @@ import Cusco from '../assets/cities/Cusco.jpg'
 import Kinshasa from '../assets/cities/Kinshasa.jpg'
 import Minsk from '../assets/cities/Minsk.jpg'
 import Casablanca from '../assets/cities/Casablanca.jpg'
+import Chicago from '../assets/cities/Chicago.jpg'
+import Moscow from '../assets/cities/Moscow.jpg'
+import SanFrancisco from '../assets/cities/SanFrancisco.jpg'
 
 
 const cityImages = {
@@ -233,6 +236,9 @@ const cityImages = {
     Kinshasa: Kinshasa,
     Minsk: Minsk,
     Casablanca: Casablanca,
+    Chicago: Chicago,
+    Moscow: Moscow,
+    "San Francisco": SanFrancisco,
 
 }
 

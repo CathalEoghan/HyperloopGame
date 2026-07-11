@@ -10,6 +10,6 @@ export const Montréal = new City(
     "Canada",
     "North America",
     2,
-    "Montréal is the birthplace of Cirque du Soleil and is home to a massive circus culture.",
+    "Montréal city bylaws strictly dictate that no building can be taller than the illuminated cross atop Mount Royal (232 meters above sea level).",
     false
 );
