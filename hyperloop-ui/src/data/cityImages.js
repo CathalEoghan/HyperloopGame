@@ -112,6 +112,8 @@ import Tashkent from '../assets/cities/Tashkent.jpg'
 import Kingston from '../assets/cities/Kingston.jpg'
 import Cusco from '../assets/cities/Cusco.jpg'
 import Kinshasa from '../assets/cities/Kinshasa.jpg'
+import Minsk from '../assets/cities/Minsk.jpg'
+import Casablanca from '../assets/cities/Casablanca.jpg'
 
 
 const cityImages = {
@@ -229,7 +231,8 @@ const cityImages = {
     Kingston: Kingston,
     Cusco: Cusco,
     Kinshasa: Kinshasa,
-
+    Minsk: Minsk,
+    Casablanca: Casablanca,
 
 }
 

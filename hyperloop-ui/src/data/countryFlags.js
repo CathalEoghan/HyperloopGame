@@ -74,6 +74,7 @@ const countryFlags = {
     "Uzbekistan": "uz",
     "Jamaica": "jm",
     "Democratic Republic of the Congo": "cd",
+    "Belarus": "by",
     
 
 

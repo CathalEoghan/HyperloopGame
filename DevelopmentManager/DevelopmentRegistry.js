@@ -85,6 +85,8 @@ import { iceSkatingRink } from './IceSkatingRink.js'
 import { chaiHouse } from './ChaiHouse.js'
 import { jerkChickenShop } from './JerkChickenShop.js'
 import { liveMusicLounge } from './LiveMusicLounge.js'
+import { iceHockeyRink } from './IceHockeyRink.js'
+import { moroccanRestaurant } from './MoroccanRestaurant.js'
 
 
 export const allDevelopments = [
@@ -174,5 +176,7 @@ export const allDevelopments = [
     chaiHouse,
     jerkChickenShop,
     liveMusicLounge,
+    iceHockeyRink,
+    moroccanRestaurant,
 
 ]

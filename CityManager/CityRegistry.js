@@ -113,6 +113,8 @@ import { Tashkent } from './Tashkent.js'
 import { Kingston } from './Kingston.js'
 import { Cusco } from './Cusco.js'
 import { Kinshasa } from './Kinshasa.js'
+import { Minsk } from './Minsk.js'
+import { Casablanca } from './Casablanca.js'
 
 
 export const allCities = [
@@ -230,5 +232,7 @@ export const allCities = [
     Kingston,
     Cusco,
     Kinshasa,
+    Minsk,
+    Casablanca,
 
 ]
