@@ -33,6 +33,7 @@ import { hyperloopPodRefurbishments } from './HyperloopPodRefurbishments.js'
 import { informationCentre } from './InformationCentre.js'
 import { securityOfficeExpansion } from './SecurityOfficeExpansion.js'
 import { travelAgency } from './TravelAgency.js'
+import { localTours } from './LocalTours.js'
 
 
 export const allUpgrades = [
@@ -69,5 +70,6 @@ export const allUpgrades = [
     informationCentre,
     securityOfficeExpansion,
     travelAgency,
+    localTours,
 
 ]

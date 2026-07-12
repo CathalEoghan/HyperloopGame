@@ -134,7 +134,12 @@ import TheHague from '../assets/cities/TheHague.jpg'
 import Denpasar from '../assets/cities/Denpasar.jpg'
 import Turin from '../assets/cities/Turin.jpg'
 import Zurich from '../assets/cities/Zurich.jpg'
-
+import Glasgow from '../assets/cities/Glasgow.jpg'
+import Bath from '../assets/cities/Bath.jpg'
+import Manchester from '../assets/cities/Manchester.jpg'
+import Kolkata from '../assets/cities/Kolkata.jpg'
+import Perth from '../assets/cities/Perth.jpg'
+import Auckland from '../assets/cities/Auckland.jpg'
 
 
 const cityImages = {
@@ -274,6 +279,12 @@ const cityImages = {
     Denpasar: Denpasar,
     Zurich: Zurich,
     Turin: Turin,
+    Manchester: Manchester,
+    Glasgow: Glasgow,
+    Bath: Bath,
+    Kolkata: Kolkata,
+    Perth: Perth,
+    Auckland: Auckland,
 }
 
 export default cityImages

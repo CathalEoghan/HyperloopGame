@@ -136,6 +136,12 @@ TheHague.jpg - Photo by Martijn Stoof via Pexels
 Denpasar.jpg - Photo by Max Statnykh via Pexels
 Zurich.jpg - Photo by Ilia Bronskiy via Pexels
 Turin.jpg - Photo by Ariadne Barroso via Pexels
+Bath.jpg - Photo by Lucas Carlini via Pexels
+Mancester.jpg - Photo by Max W via Pexels
+Glasgow.jpg - Photo by Lewis Ashton via Pexels
+Perth.jpg - Photo by Tibor Janas via Pexels
+Auckland.jpg - Photo by Ollie Craig via Pexels
+Kolkata.jpg - Photo by Trishik Bose via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -274,6 +280,12 @@ SecurityOfficeExpansion.jpg - Photo by Tima Miroshnichenko via Pexels
 TravelAgency.jpg - Photo by Leeloo The First via Pexels
 Chocolatier.jpg - Photo by Linken Van Zyl via Pexels
 HealthClinic.jpg - Photo by Los Muertos Crew via Pexels
+Spa.jpg - Photo by Arina Krasnikova via Pexels
+GayBar.jpg - Photo by PNW Production via Pexels
+WhiskeyBar.jpg - Photo by DUONG QUÁCH via Pexels
+SportsStore.jpg - Photo by BI ravencrow via Pexels
+LocalTours.jpg - Photo by Lorna Pauli via Pexels
+BiryaniRestaurant.jpg - Photo by Prabal Pratap Singh via Pexels
 
 
 SOUNDS

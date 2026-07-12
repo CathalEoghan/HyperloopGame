@@ -135,6 +135,12 @@ import { TheHague } from './TheHague.js'
 import { Denpasar } from './Denpasar.js'
 import { Zurich } from './Zurich.js'
 import { Turin } from './Turin.js'
+import { Glasgow } from './Glasgow.js'
+import { Bath } from './Bath.js'
+import { Manchester } from './Manchester.js'
+import { Kolkata } from './Kolkata.js'
+import { Perth } from './Perth.js'
+import { Auckland } from './Auckland.js'
 
 
 export const allCities = [
@@ -274,5 +280,11 @@ export const allCities = [
     Denpasar,
     Turin,
     Zurich,
+    Glasgow,
+    Bath,
+    Manchester,
+    Kolkata,
+    Perth,
+    Auckland
 
 ]
