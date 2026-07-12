@@ -134,6 +134,8 @@ Vienna.jpg - Photo by Nataly Nagorska via Pexels
 Naples.jpg - Photo by K via Pexels
 TheHague.jpg - Photo by Martijn Stoof via Pexels
 Denpasar.jpg - Photo by Max Statnykh via Pexels
+Zurich.jpg - Photo by Ilia Bronskiy via Pexels
+Turin.jpg - Photo by Ariadne Barroso via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -270,6 +272,8 @@ YoghurtShop.jpg - Photo by Engin Akyurt via Pexels
 InformationCentre.jpg - Photo by Darya Sannikova via Pexels
 SecurityOfficeExpansion.jpg - Photo by Tima Miroshnichenko via Pexels
 TravelAgency.jpg - Photo by Leeloo The First via Pexels
+Chocolatier.jpg - Photo by Linken Van Zyl via Pexels
+HealthClinic.jpg - Photo by Los Muertos Crew via Pexels
 
 
 SOUNDS

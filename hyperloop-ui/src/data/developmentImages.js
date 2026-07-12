@@ -133,6 +133,8 @@ import SandalStore from '../assets/developments/SandalStore.jpg'
 import InformationCentre from '../assets/developments/InformationCentre.jpg'
 import SecurityOfficeExpansion from '../assets/developments/SecurityOfficeExpansion.jpg'
 import TravelAgency from '../assets/developments/TravelAgency.jpg'
+import Chocolatier from '../assets/developments/Chocolatier.jpg'
+import HealthClinic from '../assets/developments/HealthClinic.jpg'
 
 
 const developmentImages = {
@@ -270,6 +272,9 @@ const developmentImages = {
     "Information Centre": InformationCentre,
     "Security Office Expansion": SecurityOfficeExpansion,
     "Travel Agency": TravelAgency,
+    "Chocolatier": Chocolatier,
+    "Health Clinic": HealthClinic,
+
 
 }
 

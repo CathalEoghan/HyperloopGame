@@ -100,6 +100,9 @@ import { jollofRiceRestaurant } from './JollofRiceRestaurant.js'
 import { mateTeaShop } from './MateTeaShop.js'
 import { sandalStore } from './SandalStore.js'
 import { yoghurtShop } from './YoghurtShop.js'
+import { chocolatier } from './Chocolatier.js'
+import { healthClinic } from './HealthClinic.js'
+
 
 export const allDevelopments = [
     bakery,
@@ -203,5 +206,7 @@ export const allDevelopments = [
     mateTeaShop,
     yoghurtShop,
     sandalStore,
+    chocolatier,
+    healthClinic,
 
 ]

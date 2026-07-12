@@ -132,6 +132,8 @@ import Thessaloniki from '../assets/cities/Thessaloniki.jpg'
 import Naples from '../assets/cities/Naples.jpg'
 import TheHague from '../assets/cities/TheHague.jpg'
 import Denpasar from '../assets/cities/Denpasar.jpg'
+import Turin from '../assets/cities/Turin.jpg'
+import Zurich from '../assets/cities/Zurich.jpg'
 
 
 
@@ -270,6 +272,8 @@ const cityImages = {
     Naples: Naples,
     "The Hague": TheHague,
     Denpasar: Denpasar,
+    Zurich: Zurich,
+    Turin: Turin,
 }
 
 export default cityImages

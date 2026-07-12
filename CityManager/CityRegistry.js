@@ -133,6 +133,9 @@ import { Málaga } from './Málaga.js'
 import { Naples } from './Naples.js'
 import { TheHague } from './TheHague.js'
 import { Denpasar } from './Denpasar.js'
+import { Zurich } from './Zurich.js'
+import { Turin } from './Turin.js'
+
 
 export const allCities = [
     Atlanta,
@@ -269,5 +272,7 @@ export const allCities = [
     Naples,
     TheHague,
     Denpasar,
+    Turin,
+    Zurich,
 
 ]
