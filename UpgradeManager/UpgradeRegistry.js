@@ -34,6 +34,7 @@ import { informationCentre } from './InformationCentre.js'
 import { securityOfficeExpansion } from './SecurityOfficeExpansion.js'
 import { travelAgency } from './TravelAgency.js'
 import { localTours } from './LocalTours.js'
+import { loungeRenovations } from './LoungeRenovations.js'
 
 
 export const allUpgrades = [
@@ -71,5 +72,6 @@ export const allUpgrades = [
     securityOfficeExpansion,
     travelAgency,
     localTours,
+    loungeRenovations,
 
 ]

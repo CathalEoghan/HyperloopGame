@@ -1,9 +1,9 @@
 
-// Whiskey Bar
+// Whisky Bar
 import { Development } from "./Development.js";
 
-export const whiskeyBar = new Development(
-    "Whiskey Bar",
+export const whiskyBar = new Development(
+    "Whisky Bar",
     25500,
     "Recreation",
     780

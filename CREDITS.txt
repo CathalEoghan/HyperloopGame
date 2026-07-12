@@ -142,6 +142,9 @@ Glasgow.jpg - Photo by Lewis Ashton via Pexels
 Perth.jpg - Photo by Tibor Janas via Pexels
 Auckland.jpg - Photo by Ollie Craig via Pexels
 Kolkata.jpg - Photo by Trishik Bose via Pexels
+Brisbane.jpg - Photo by Martin Škeřík via Pexels
+AbuDhabi.jpg - Photo by YFS Visuals via Pexels
+Bangalore.jpg - Photo by Umar Andrabi via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -286,6 +289,9 @@ WhiskeyBar.jpg - Photo by DUONG QUÁCH via Pexels
 SportsStore.jpg - Photo by BI ravencrow via Pexels
 LocalTours.jpg - Photo by Lorna Pauli via Pexels
 BiryaniRestaurant.jpg - Photo by Prabal Pratap Singh via Pexels
+ClimbingCentre.jpg - Photo by cottonbro studio via Pexels
+LoungeRenovations.jpg - Photo by Наталья Маркина via Pexels
+CraftBeerBar.jpg - Photo by Jibbe Jaartsveld via Pexels
 
 
 SOUNDS

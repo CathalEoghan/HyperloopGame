@@ -1,12 +1,12 @@
 
 // Glasgow
 import { City } from "./City.js";
-import { whiskeyBar } from "../DevelopmentManager/WhiskeyBar.js";
+import { whiskyBar } from "../DevelopmentManager/WhiskyBar.js";
 
 export const Glasgow = new City(
     "Glasgow",
     1850000,
-    [whiskeyBar],
+    [whiskyBar],
     "Scotland",
     "Europe",
     2,

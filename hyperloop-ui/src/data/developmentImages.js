@@ -137,10 +137,13 @@ import Chocolatier from '../assets/developments/Chocolatier.jpg'
 import HealthClinic from '../assets/developments/HealthClinic.jpg'
 import GayBar from '../assets/developments/GayBar.jpg'
 import Spa from '../assets/developments/Spa.jpg'
-import WhiskeyBar from '../assets/developments/WhiskeyBar.jpg'
+import WhiskyBar from '../assets/developments/WhiskyBar.jpg'
 import BiryaniRestaurant from '../assets/developments/BiryaniRestaurant.jpg'
 import SportsStore from '../assets/developments/SportsStore.jpg'
 import LocalTours from '../assets/developments/LocalTours.jpg'
+import ClimbingCentre from '../assets/developments/ClimbingCentre.jpg'
+import LoungeRenovations from '../assets/developments/LoungeRenovations.jpg'
+import CraftBeerBar from '../assets/developments/CraftBeerBar.jpg'
 
 
 
@@ -281,12 +284,15 @@ const developmentImages = {
     "Travel Agency": TravelAgency,
     "Chocolatier": Chocolatier,
     "Health Clinic": HealthClinic,
-    "Whiskey Bar": WhiskeyBar,
+    "Whisky Bar": WhiskyBar,
     "Spa": Spa,
     "Gay Bar": GayBar,
     "Sports Store": SportsStore,
     "Local Tours": LocalTours,
     "Biryani Restaurant": BiryaniRestaurant,
+    "Climbing Centre": ClimbingCentre,
+    "Lounge Renovations": LoungeRenovations,
+    "Craft Beer Bar": CraftBeerBar,
 
 
 }

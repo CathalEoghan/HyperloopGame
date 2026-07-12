@@ -103,10 +103,12 @@ import { yoghurtShop } from './YoghurtShop.js'
 import { chocolatier } from './Chocolatier.js'
 import { healthClinic } from './HealthClinic.js'
 import { gayBar } from './GayBar.js'
-import { whiskeyBar } from './WhiskeyBar.js'
+import { whiskyBar } from './WhiskyBar.js'
 import { spa } from './Spa.js'
 import { biryaniRestaurant } from './BiryaniRestaurant.js'
 import { sportsStore } from './SportsStore.js'
+import { climbingCentre } from './ClimbingCentre.js'
+import { craftBeerBar } from './CraftBeerBar.js'
 
 
 export const allDevelopments = [
@@ -213,10 +215,12 @@ export const allDevelopments = [
     sandalStore,
     chocolatier,
     healthClinic,
-    whiskeyBar,
+    whiskyBar,
     gayBar,
     spa,
     sportsStore,
     biryaniRestaurant,
+    climbingCentre,
+    craftBeerBar,
 
 ]
