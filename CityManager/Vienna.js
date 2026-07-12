@@ -1,12 +1,12 @@
 
 // Vienna
 import { City } from "./City.js";
-import { cakeShop } from "../DevelopmentManager/CakeShop.js";
+import { watchStore } from "../DevelopmentManager/WatchStore.js";
 
 export const Vienna = new City(
     "Vienna",
     2900000,
-    [cakeShop],
+    [watchStore],
     "Austria",
     "Europe",
     2,

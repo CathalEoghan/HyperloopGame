@@ -77,6 +77,9 @@ const countryFlags = {
     "Belarus": "by",
     "Chile": "cl",
     "Mongolia": "mn",
+    "Czechia": "cz",
+    "Ghana": "gh",
+    "Uruguay": "uy",
     
 
 

@@ -1,12 +1,12 @@
 
 // Geneva
 import { City } from "./City.js";
-import { watchStore } from "../DevelopmentManager/WatchStore.js";
+import { informationCentre } from "../UpgradeManager/InformationCentre.js";
 
 export const Geneva = new City(
     "Geneva",
     1050000,
-    [watchStore],
+    [informationCentre],
     "Switzerland",
     "Europe",
     1,

@@ -94,7 +94,12 @@ import { toyStore } from './ToyStore.js'
 import { skiStore } from './SkiStore.js'
 import { sushiRestaurant } from './SushiRestaurant.js'
 import { ancientHistoryExhibit } from './AncientHistoryExhibit.js'
-
+import { beerStore } from './BeerStore.js'
+import { curryHouse } from './CurryHouse.js'
+import { jollofRiceRestaurant } from './JollofRiceRestaurant.js'
+import { mateTeaShop } from './MateTeaShop.js'
+import { sandalStore } from './SandalStore.js'
+import { yoghurtShop } from './YoghurtShop.js'
 
 export const allDevelopments = [
     bakery,
@@ -192,5 +197,11 @@ export const allDevelopments = [
     skiStore,
     ancientHistoryExhibit,
     sushiRestaurant,
+    beerStore,
+    curryHouse,
+    jollofRiceRestaurant,
+    mateTeaShop,
+    yoghurtShop,
+    sandalStore,
 
 ]

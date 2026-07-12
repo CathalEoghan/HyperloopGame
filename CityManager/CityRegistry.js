@@ -124,8 +124,15 @@ import { Stockholm } from './Stockholm.js'
 import { Santiago } from './Santiago.js'
 import { Ulaanbaatar } from './Ulaanbaatar.js'
 import { Kyoto } from './Kyoto.js'
-
-
+import { Prague } from './Prague.js'
+import { Durban } from './Durban.js'
+import { Accra } from './Accra.js'
+import { Montevideo } from './Montevideo.js'
+import { Thessaloniki } from './Thessaloniki.js'
+import { Málaga } from './Málaga.js'
+import { Naples } from './Naples.js'
+import { TheHague } from './TheHague.js'
+import { Denpasar } from './Denpasar.js'
 
 export const allCities = [
     Atlanta,
@@ -253,6 +260,14 @@ export const allCities = [
     Santiago,
     Kyoto,
     Ulaanbaatar,
-    
+    Prague,
+    Durban,
+    Accra,
+    Montevideo,
+    Thessaloniki,
+    Málaga,
+    Naples,
+    TheHague,
+    Denpasar,
 
 ]

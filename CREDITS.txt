@@ -125,6 +125,15 @@ Stockholm.jpg - Photo by Florian Grewe via Pexels
 Santiago.jpg - Photo by Nikolai Kolosov via Pexels
 Kyoto.jpg - Photo by Rin Gakusho via Pexels
 Ulaanbaatar.jpg - Photo by Phaeng_yo via Pexels
+Prague.jpg - Photo by Jarod Barton via Pexels
+Durban.jpg - Photo by Andrew Harvard via Pexels
+Montevideo.jpg - Photo by Nikolai Kolosov via Pexels
+Thessaloniki.jpg - Photo by BAB2056 via Pexels
+Málaga.jpg - Photo by Ramon Karolan via Pexels
+Vienna.jpg - Photo by Nataly Nagorska via Pexels
+Naples.jpg - Photo by K via Pexels
+TheHague.jpg - Photo by Martijn Stoof via Pexels
+Denpasar.jpg - Photo by Max Statnykh via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -253,6 +262,14 @@ ToyStore.jpg - Photo by Harini Padmarajan via Pexels
 SkiStore.jpg - Photo by Патимат Магомедова via Pexels
 AncientHistoryExhibit.jpg - Photo by Jonathan Cooper via Pexels
 SushiRestaurant.jpg - Photo by Bhefan Tedjo via Pexels
+BeerStore.jpg - Photo by Haberdoedas Photography via Pexels
+CurryHouse.jpg - Photo by Tim Samuel via Pexels
+MateTeaShop.jpg - Photo by Los Muertos Crew via Pexels
+SandalStore.jpg - Photo by Patrick via Pexels
+YoghurtShop.jpg - Photo by Engin Akyurt via Pexels
+InformationCentre.jpg - Photo by Darya Sannikova via Pexels
+SecurityOfficeExpansion.jpg - Photo by Tima Miroshnichenko via Pexels
+TravelAgency.jpg - Photo by Leeloo The First via Pexels
 
 
 SOUNDS

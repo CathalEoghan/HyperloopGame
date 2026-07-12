@@ -1,12 +1,12 @@
 
 // Athens
 import { City } from "./City.js";
-import { swimmingPool } from "../DevelopmentManager/SwimmingPool.js";
+import { sandalStore } from "../DevelopmentManager/SandalStore.js";
 
 export const Athens = new City(
     "Athens",
     3300000,
-    [swimmingPool],
+    [sandalStore],
     "Greece",
     "Europe",
     2,

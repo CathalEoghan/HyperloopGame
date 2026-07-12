@@ -123,6 +123,17 @@ import Stockholm from '../assets/cities/Stockholm.jpg'
 import Santiago from '../assets/cities/Santiago.jpg'
 import Ulaanbaatar from '../assets/cities/Ulaanbaatar.jpg'
 import Kyoto from '../assets/cities/Kyoto.jpg'
+import Prague from '../assets/cities/Prague.jpg'
+import Durban from '../assets/cities/Durban.jpg'
+import Accra from '../assets/cities/Accra.jpg'
+import Montevideo from '../assets/cities/Montevideo.jpg'
+import Málaga from '../assets/cities/Málaga.jpg'
+import Thessaloniki from '../assets/cities/Thessaloniki.jpg'
+import Naples from '../assets/cities/Naples.jpg'
+import TheHague from '../assets/cities/TheHague.jpg'
+import Denpasar from '../assets/cities/Denpasar.jpg'
+
+
 
 const cityImages = {
     London: London,
@@ -250,7 +261,15 @@ const cityImages = {
     Santiago: Santiago,
     Kyoto: Kyoto,
     Ulaanbaatar: Ulaanbaatar,
-
+    Prague: Prague,
+    Durban: Durban,
+    Accra: Accra,
+    Montevideo: Montevideo,
+    Thessaloniki: Thessaloniki,
+    Málaga: Málaga,
+    Naples: Naples,
+    "The Hague": TheHague,
+    Denpasar: Denpasar,
 }
 
 export default cityImages

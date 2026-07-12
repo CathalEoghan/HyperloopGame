@@ -9,7 +9,7 @@ export const Varanasi = new City(
     [yogaStudio],
     "India",
     "Asia",
-    1,
+    2,
     "Varanasi is a city of temples. It is estimated that there are over 23,000 temples packed into the city.",
     false
 );

@@ -124,6 +124,15 @@ import JazzLounge from '../assets/developments/JazzLounge.jpg'
 import SkiStore from '../assets/developments/SkiStore.jpg'
 import AncientHistoryExhibit from '../assets/developments/AncientHistoryExhibit.jpg'
 import SushiRestaurant from '../assets/developments/SushiRestaurant.jpg'
+import BeerStore from '../assets/developments/BeerStore.jpg'
+import CurryHouse from '../assets/developments/CurryHouse.jpg'
+import JollofRiceRestaurant from '../assets/developments/JollofRiceRestaurant.jpg'
+import MateTeaShop from '../assets/developments/MateTeaShop.jpg'
+import YoghurtShop from '../assets/developments/YoghurtShop.jpg'
+import SandalStore from '../assets/developments/SandalStore.jpg'
+import InformationCentre from '../assets/developments/InformationCentre.jpg'
+import SecurityOfficeExpansion from '../assets/developments/SecurityOfficeExpansion.jpg'
+import TravelAgency from '../assets/developments/TravelAgency.jpg'
 
 
 const developmentImages = {
@@ -252,6 +261,15 @@ const developmentImages = {
     "Ski Store": SkiStore,
     "Ancient History Exhibit": AncientHistoryExhibit,
     "Sushi Restaurant": SushiRestaurant,
+    "Beer Store": BeerStore,
+    "Curry House": CurryHouse,
+    "Jollof Rice Restaurant": JollofRiceRestaurant,
+    "Mate Tea Shop": MateTeaShop,
+    "Yoghurt Shop": YoghurtShop,
+    "Sandal Store": SandalStore,
+    "Information Centre": InformationCentre,
+    "Security Office Expansion": SecurityOfficeExpansion,
+    "Travel Agency": TravelAgency,
 
 }
 
