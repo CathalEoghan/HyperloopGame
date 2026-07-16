@@ -145,6 +145,7 @@ Kolkata.jpg - Photo by Trishik Bose via Pexels
 Brisbane.jpg - Photo by Martin Škeřík via Pexels
 AbuDhabi.jpg - Photo by YFS Visuals via Pexels
 Bangalore.jpg - Photo by Umar Andrabi via Pexels
+Beirut.jpg - Photo by Eyüpcan Timur via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -292,6 +293,7 @@ BiryaniRestaurant.jpg - Photo by Prabal Pratap Singh via Pexels
 ClimbingCentre.jpg - Photo by cottonbro studio via Pexels
 LoungeRenovations.jpg - Photo by Наталья Маркина via Pexels
 CraftBeerBar.jpg - Photo by Jibbe Jaartsveld via Pexels
+MezeRestaurant.jpg - Photo by Eyüpcan Timur via Pexels
 
 
 SOUNDS

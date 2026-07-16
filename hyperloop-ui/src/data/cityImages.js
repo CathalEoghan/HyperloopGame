@@ -143,6 +143,7 @@ import Auckland from '../assets/cities/Auckland.jpg'
 import Brisbane from '../assets/cities/Brisbane.jpg'
 import AbuDhabi from '../assets/cities/AbuDhabi.jpg'
 import Bangalore from '../assets/cities/Bangalore.jpg'
+import Beirut from '../assets/cities/Beirut.jpg'
 
 
 const cityImages = {
@@ -291,6 +292,7 @@ const cityImages = {
     Brisbane: Brisbane,
     "Abu Dhabi": AbuDhabi,
     Bangalore: Bangalore,
+    Beirut: Beirut,
 }
 
 export default cityImages

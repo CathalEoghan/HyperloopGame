@@ -144,7 +144,7 @@ import LocalTours from '../assets/developments/LocalTours.jpg'
 import ClimbingCentre from '../assets/developments/ClimbingCentre.jpg'
 import LoungeRenovations from '../assets/developments/LoungeRenovations.jpg'
 import CraftBeerBar from '../assets/developments/CraftBeerBar.jpg'
-
+import MezeRestaurant from '../assets/developments/MezeRestaurant.jpg'
 
 
 const developmentImages = {
@@ -293,6 +293,7 @@ const developmentImages = {
     "Climbing Centre": ClimbingCentre,
     "Lounge Renovations": LoungeRenovations,
     "Craft Beer Bar": CraftBeerBar,
+    "Meze Restaurant": MezeRestaurant,
 
 
 }

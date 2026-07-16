@@ -80,6 +80,7 @@ const countryFlags = {
     "Czechia": "cz",
     "Ghana": "gh",
     "Uruguay": "uy",
+    "Lebanon": "lb",
     
 
 
