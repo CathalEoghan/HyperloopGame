@@ -146,6 +146,8 @@ Brisbane.jpg - Photo by Martin Škeřík via Pexels
 AbuDhabi.jpg - Photo by YFS Visuals via Pexels
 Bangalore.jpg - Photo by Umar Andrabi via Pexels
 Beirut.jpg - Photo by Eyüpcan Timur via Pexels
+Baghdad.jpg - Photo by Muhammad Nabeel via Pexels
+Muscat.jpg - Photo by Joerg Hartmann via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -294,6 +296,8 @@ ClimbingCentre.jpg - Photo by cottonbro studio via Pexels
 LoungeRenovations.jpg - Photo by Наталья Маркина via Pexels
 CraftBeerBar.jpg - Photo by Jibbe Jaartsveld via Pexels
 MezeRestaurant.jpg - Photo by Eyüpcan Timur via Pexels
+HookahLounge.jpg - Photo by Pavel Danilyuk via Pexels
+IncenseStore.jpg - Photo by Eliza Aldea via Pexels
 
 
 SOUNDS

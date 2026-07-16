@@ -81,6 +81,9 @@ const countryFlags = {
     "Ghana": "gh",
     "Uruguay": "uy",
     "Lebanon": "lb",
+    "Iraq": "iq",
+    "Oman": "om",
+
     
 
 

@@ -4,6 +4,6 @@ import { Development } from "./Development.js";
 export const kavaBar = new Development(
     "Kava Bar",
     20300,
-    "Recreation",
-    590
+    "Food",
+    670
 );

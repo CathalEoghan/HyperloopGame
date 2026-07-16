@@ -145,6 +145,8 @@ import ClimbingCentre from '../assets/developments/ClimbingCentre.jpg'
 import LoungeRenovations from '../assets/developments/LoungeRenovations.jpg'
 import CraftBeerBar from '../assets/developments/CraftBeerBar.jpg'
 import MezeRestaurant from '../assets/developments/MezeRestaurant.jpg'
+import HookahLounge from '../assets/developments/HookahLounge.jpg'
+import IncenseStore from '../assets/developments/IncenseStore.jpg'
 
 
 const developmentImages = {
@@ -294,6 +296,8 @@ const developmentImages = {
     "Lounge Renovations": LoungeRenovations,
     "Craft Beer Bar": CraftBeerBar,
     "Meze Restaurant": MezeRestaurant,
+    "Hookah Lounge": HookahLounge,
+    "Incense Store": IncenseStore,
 
 
 }
