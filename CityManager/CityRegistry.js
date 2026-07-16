@@ -147,6 +147,9 @@ import { Bangalore } from './Bangalore.js'
 import { Beirut } from './Beirut.js'
 import { Baghdad } from './Baghdad.js'
 import { Muscat } from './Muscat.js'
+import { Hanoi } from './Hanoi.js'
+import { Kyiv } from './Kyiv.js'
+import { Mombasa } from './Mombasa.js'
 
 
 export const allCities = [
@@ -298,5 +301,8 @@ export const allCities = [
     Beirut,
     Baghdad,
     Muscat,
+    Hanoi,
+    Kyiv,
+    Mombasa,
 
 ]
