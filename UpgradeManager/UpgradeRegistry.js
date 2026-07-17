@@ -36,6 +36,7 @@ import { travelAgency } from './TravelAgency.js'
 import { localTours } from './LocalTours.js'
 import { loungeRenovations } from './LoungeRenovations.js'
 import { staffCafeteriaRenovations } from './StaffCafeteriaRenovations.js'
+import { ferryTerminal } from './FerryTerminal.js'
 
 
 export const allUpgrades = [
@@ -75,5 +76,6 @@ export const allUpgrades = [
     localTours,
     loungeRenovations,
     staffCafeteriaRenovations,
+    ferryTerminal,
 
 ]

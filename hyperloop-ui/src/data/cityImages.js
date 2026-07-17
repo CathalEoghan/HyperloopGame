@@ -152,6 +152,8 @@ import Kyiv from '../assets/cities/Kyiv.jpg'
 import Mombasa from '../assets/cities/Mombasa.jpg'
 import Chongqing from '../assets/cities/Chongqing.jpg'
 import Boston from '../assets/cities/Boston.jpg'
+import Cancún from '../assets/cities/Cancún.jpg'
+import Tangier from '../assets/cities/Tangier.jpg'
 
 
 const cityImages = {
@@ -309,6 +311,8 @@ const cityImages = {
     Mombasa: Mombasa,
     Chongqing: Chongqing,
     Boston: Boston,
+    Cancún: Cancún,
+    Tangier: Tangier,
 }
 
 export default cityImages

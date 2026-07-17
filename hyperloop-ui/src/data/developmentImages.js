@@ -153,6 +153,9 @@ import StaffCafeteriaRenovations from '../assets/developments/StaffCafeteriaReno
 import CurioShop from '../assets/developments/CurioShop.jpg'
 import HotPotRestaurant from '../assets/developments/HotPotRestaurant.jpg'
 import BaseballShop from '../assets/developments/BaseballShop.jpg'
+import SunglassesStore from '../assets/developments/SunglassesStore.jpg'
+import FerryTerminal from '../assets/developments/FerryTerminal.jpg'
+
 
 
 const developmentImages = {
@@ -310,6 +313,8 @@ const developmentImages = {
     "Curio Shop": CurioShop,
     "Hot Pot Restaurant": HotPotRestaurant,
     "Baseball Shop": BaseballShop,
+    "Sunglasses Store": SunglassesStore,
+    "Ferry Terminal": FerryTerminal,
 
 
 }

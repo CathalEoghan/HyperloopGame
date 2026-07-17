@@ -153,6 +153,8 @@ import { Kyiv } from './Kyiv.js'
 import { Mombasa } from './Mombasa.js'
 import { Chongqing } from './Chongqing.js'
 import { Boston } from './Boston.js'
+import { Cancún } from './Cancún.js'
+import { Tangier } from './Tangier.js'
 
 
 export const allCities = [
@@ -310,5 +312,7 @@ export const allCities = [
     Mombasa,
     Chongqing,
     Boston,
+    Cancún,
+    Tangier,
 
 ]

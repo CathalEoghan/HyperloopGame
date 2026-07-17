@@ -117,6 +117,7 @@ import { phoBar } from './PhoBar.js'
 import { curioShop } from './CurioShop.js'
 import { hotPotRestaurant } from './HotPotRestaurant.js'
 import { baseballShop } from './BaseballShop.js'
+import { sunglassesStore } from './SunglassesStore.js'
 
 
 export const allDevelopments = [
@@ -238,5 +239,6 @@ export const allDevelopments = [
     curioShop,
     hotPotRestaurant,
     baseballShop,
+    sunglassesStore,
 
 ]
