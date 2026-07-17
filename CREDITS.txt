@@ -148,7 +148,13 @@ Bangalore.jpg - Photo by Umar Andrabi via Pexels
 Beirut.jpg - Photo by Eyüpcan Timur via Pexels
 Baghdad.jpg - Photo by Muhammad Nabeel via Pexels
 Muscat.jpg - Photo by Joerg Hartmann via Pexels
+<<<<<<< HEAD
 Amman.jpg - Photo by AXP Photography via Pexels
+=======
+Hanoi.jpg - Photo by Ngân Nguyễn via Pexels
+Kyiv.jpg - Photo by Юрій Роботецький via Pexels
+Mombasa.jpg - Photo by Twilight Kenya via Pexels
+>>>>>>> f7a35392a23321d1ed4c49b62d1ad16053c1d9d1
 
 
 DEVELOPMENTS IMAGES
@@ -299,7 +305,13 @@ CraftBeerBar.jpg - Photo by Jibbe Jaartsveld via Pexels
 MezeRestaurant.jpg - Photo by Eyüpcan Timur via Pexels
 HookahLounge.jpg - Photo by Pavel Danilyuk via Pexels
 IncenseStore.jpg - Photo by Eliza Aldea via Pexels
+<<<<<<< HEAD
 FalafelRestaurant.jpg - Photo by Ali Dashti via Pexels
+=======
+PhoBar.jpg - Photo by RDNE Stock project via Pexels
+StaffCafeteriaRenovations.jpg - Photo by Rashed Hossain via Pexels
+CurioShop.jpg - Photo by withatices via Pexels
+>>>>>>> f7a35392a23321d1ed4c49b62d1ad16053c1d9d1
 
 
 SOUNDS
