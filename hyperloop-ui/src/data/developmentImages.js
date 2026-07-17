@@ -147,6 +147,7 @@ import CraftBeerBar from '../assets/developments/CraftBeerBar.jpg'
 import MezeRestaurant from '../assets/developments/MezeRestaurant.jpg'
 import HookahLounge from '../assets/developments/HookahLounge.jpg'
 import IncenseStore from '../assets/developments/IncenseStore.jpg'
+import FalafelRestaurant from '../assets/developments/FalafelRestaurant.jpg'
 
 
 const developmentImages = {
@@ -298,6 +299,8 @@ const developmentImages = {
     "Meze Restaurant": MezeRestaurant,
     "Hookah Lounge": HookahLounge,
     "Incense Store": IncenseStore,
+    "Falafel Restaurant": FalafelRestaurant,
+
 
 
 }
