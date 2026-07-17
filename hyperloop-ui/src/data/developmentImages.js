@@ -147,13 +147,10 @@ import CraftBeerBar from '../assets/developments/CraftBeerBar.jpg'
 import MezeRestaurant from '../assets/developments/MezeRestaurant.jpg'
 import HookahLounge from '../assets/developments/HookahLounge.jpg'
 import IncenseStore from '../assets/developments/IncenseStore.jpg'
-<<<<<<< HEAD
 import FalafelRestaurant from '../assets/developments/FalafelRestaurant.jpg'
-=======
 import PhoBar from '../assets/developments/PhoBar.jpg'
 import StaffCafeteriaRenovations from '../assets/developments/StaffCafeteriaRenovations.jpg'
 import CurioShop from '../assets/developments/CurioShop.jpg'
->>>>>>> f7a35392a23321d1ed4c49b62d1ad16053c1d9d1
 
 
 const developmentImages = {
@@ -305,14 +302,10 @@ const developmentImages = {
     "Meze Restaurant": MezeRestaurant,
     "Hookah Lounge": HookahLounge,
     "Incense Store": IncenseStore,
-<<<<<<< HEAD
     "Falafel Restaurant": FalafelRestaurant,
-
-=======
     "Pho Bar": PhoBar,
     "Staff Cafeteria Renovations": StaffCafeteriaRenovations,
     "Curio Shop": CurioShop,
->>>>>>> f7a35392a23321d1ed4c49b62d1ad16053c1d9d1
 
 
 }

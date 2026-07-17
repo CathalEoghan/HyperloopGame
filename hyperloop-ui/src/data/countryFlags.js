@@ -83,11 +83,8 @@ const countryFlags = {
     "Lebanon": "lb",
     "Iraq": "iq",
     "Oman": "om",
-<<<<<<< HEAD
     "Jordan": "jo",
-=======
     "Ukraine": "ua",
->>>>>>> f7a35392a23321d1ed4c49b62d1ad16053c1d9d1
 
     
 

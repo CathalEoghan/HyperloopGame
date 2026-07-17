@@ -147,13 +147,10 @@ import { Bangalore } from './Bangalore.js'
 import { Beirut } from './Beirut.js'
 import { Baghdad } from './Baghdad.js'
 import { Muscat } from './Muscat.js'
-<<<<<<< HEAD
 import { Amman } from './Amman.js'
-=======
 import { Hanoi } from './Hanoi.js'
 import { Kyiv } from './Kyiv.js'
 import { Mombasa } from './Mombasa.js'
->>>>>>> f7a35392a23321d1ed4c49b62d1ad16053c1d9d1
 
 
 export const allCities = [
@@ -305,12 +302,9 @@ export const allCities = [
     Beirut,
     Baghdad,
     Muscat,
-<<<<<<< HEAD
     Amman,
-=======
     Hanoi,
     Kyiv,
     Mombasa,
->>>>>>> f7a35392a23321d1ed4c49b62d1ad16053c1d9d1
 
 ]
