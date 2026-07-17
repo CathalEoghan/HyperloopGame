@@ -150,6 +150,8 @@ import Amman from '../assets/cities/Amman.jpg'
 import Hanoi from '../assets/cities/Hanoi.jpg'
 import Kyiv from '../assets/cities/Kyiv.jpg'
 import Mombasa from '../assets/cities/Mombasa.jpg'
+import Chongqing from '../assets/cities/Chongqing.jpg'
+import Boston from '../assets/cities/Boston.jpg'
 
 
 const cityImages = {
@@ -305,6 +307,8 @@ const cityImages = {
     Hanoi: Hanoi,
     Kyiv: Kyiv,
     Mombasa: Mombasa,
+    Chongqing: Chongqing,
+    Boston: Boston,
 }
 
 export default cityImages

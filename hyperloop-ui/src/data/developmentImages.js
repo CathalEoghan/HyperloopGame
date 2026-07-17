@@ -151,6 +151,8 @@ import FalafelRestaurant from '../assets/developments/FalafelRestaurant.jpg'
 import PhoBar from '../assets/developments/PhoBar.jpg'
 import StaffCafeteriaRenovations from '../assets/developments/StaffCafeteriaRenovations.jpg'
 import CurioShop from '../assets/developments/CurioShop.jpg'
+import HotPotRestaurant from '../assets/developments/HotPotRestaurant.jpg'
+import BaseballShop from '../assets/developments/BaseballShop.jpg'
 
 
 const developmentImages = {
@@ -306,6 +308,8 @@ const developmentImages = {
     "Pho Bar": PhoBar,
     "Staff Cafeteria Renovations": StaffCafeteriaRenovations,
     "Curio Shop": CurioShop,
+    "Hot Pot Restaurant": HotPotRestaurant,
+    "Baseball Shop": BaseballShop,
 
 
 }
