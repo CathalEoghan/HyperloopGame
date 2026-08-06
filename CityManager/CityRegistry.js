@@ -155,6 +155,8 @@ import { Chongqing } from './Chongqing.js'
 import { Boston } from './Boston.js'
 import { Cancún } from './Cancún.js'
 import { Tangier } from './Tangier.js'
+import { Detroit } from './Detroit.js'
+import { Guangzhou } from './Guangzhou.js'
 
 
 export const allCities = [
@@ -314,5 +316,7 @@ export const allCities = [
     Boston,
     Cancún,
     Tangier,
+    Detroit,
+    Guangzhou,
 
 ]

@@ -155,6 +155,8 @@ import HotPotRestaurant from '../assets/developments/HotPotRestaurant.jpg'
 import BaseballShop from '../assets/developments/BaseballShop.jpg'
 import SunglassesStore from '../assets/developments/SunglassesStore.jpg'
 import FerryTerminal from '../assets/developments/FerryTerminal.jpg'
+import CarAccessories from '../assets/developments/CarAccessories.jpg'
+import DimSumRestaurant from '../assets/developments/DimSumRestaurant.jpg'
 
 
 
@@ -315,6 +317,9 @@ const developmentImages = {
     "Baseball Shop": BaseballShop,
     "Sunglasses Store": SunglassesStore,
     "Ferry Terminal": FerryTerminal,
+    "Car Accessories": CarAccessories,
+    "Dim Sum Restaurant": DimSumRestaurant,
+
 
 
 }

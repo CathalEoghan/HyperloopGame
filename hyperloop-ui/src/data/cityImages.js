@@ -154,6 +154,8 @@ import Chongqing from '../assets/cities/Chongqing.jpg'
 import Boston from '../assets/cities/Boston.jpg'
 import Cancún from '../assets/cities/Cancún.jpg'
 import Tangier from '../assets/cities/Tangier.jpg'
+import Detroit from '../assets/cities/Detroit.jpg'
+import Guangzhou from '../assets/cities/Guangzhou.jpg'
 
 
 const cityImages = {
@@ -313,6 +315,9 @@ const cityImages = {
     Boston: Boston,
     Cancún: Cancún,
     Tangier: Tangier,
+    Detroit: Detroit,
+    Guangzhou: Guangzhou,
+
 }
 
 export default cityImages

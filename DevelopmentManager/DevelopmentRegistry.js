@@ -118,6 +118,8 @@ import { curioShop } from './CurioShop.js'
 import { hotPotRestaurant } from './HotPotRestaurant.js'
 import { baseballShop } from './BaseballShop.js'
 import { sunglassesStore } from './SunglassesStore.js'
+import { carAccessories } from './CarAccessories.js'
+import { dimSumRestaurant } from './DimSumRestaurant.js'
 
 
 export const allDevelopments = [
@@ -240,5 +242,7 @@ export const allDevelopments = [
     hotPotRestaurant,
     baseballShop,
     sunglassesStore,
+    carAccessories,
+    dimSumRestaurant,
 
 ]

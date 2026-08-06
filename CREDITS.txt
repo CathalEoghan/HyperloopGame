@@ -156,6 +156,8 @@ Chongqing.jpg - Photo by Liuuu _61 via Pexels
 Boston.jpg - Photo by Alexa V. Mato via Pexels
 Cancún.jpg - Photo by Ricky Esquivel via Pexels
 Tangier.jpg - Photo by Med Rofka via Pexels
+Detroit.jpg - Photo by Anon via Pexels
+Guangzhou.jpg - Photo by 何 夏 via Pexels
 
 
 
@@ -315,6 +317,8 @@ HotPotRestaurant.jpg - Photo by Zihang Feng via Pexels
 BaseballShop.jpg - Photo by Jonathan Cooper via Pexels
 SunglassesStore.jpg - Photo by www.kaboompics.com via Pexels
 FerryTerminal.jpg - Photo by Onur via Pexels
+CarAccessories.jpg - Photo by Erik Mclean via Pexels
+DimSumRestaurant.jpg - Photo by Mikhail Nilov via Pexels
 
 
 SOUNDS
