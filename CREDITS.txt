@@ -173,6 +173,7 @@ Nashville.jpg - Photo by Colon Freld via Pexels
 Abidjan.jpg - Photo by Silvere Meya via Pexels
 Praia.jpg - Photo by Cayambe via Pexels
 Hangzhou.jpg - Photo by oner st via Pexels
+Baltimore.jpg - Photo by Adianez Zuniga via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -348,6 +349,7 @@ RecordsStore.jpg - Photo by Yelena from Pexels via Pexels
 EventHall.jpg - Photo by Atlantic Ambience via Pexels
 BeachThemedBar.jpg - Photo by Abdellah Benziane via Pexels
 TeaHouse.jpg - Photo by Musa Ortaç via Pexels
+CrabShack.jpg - Photo by Phong Võ via Pexels
 
 SOUNDS
 

@@ -130,6 +130,7 @@ import { hyperloopMuseum } from './HyperloopMuseum.js'
 import { recordsStore } from './RecordsStore.js'
 import { beachThemedBar } from './BeachThemedBar.js'
 import { teaHouse } from './TeaHouse.js'
+import { crabShack } from './CrabShack.js'
 
 
 export const allDevelopments = [
@@ -264,5 +265,6 @@ export const allDevelopments = [
     recordsStore,
     beachThemedBar,
     teaHouse,
+    crabShack,
 
 ]
