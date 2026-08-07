@@ -158,6 +158,10 @@ Cancún.jpg - Photo by Ricky Esquivel via Pexels
 Tangier.jpg - Photo by Med Rofka via Pexels
 Detroit.jpg - Photo by Anon via Pexels
 Guangzhou.jpg - Photo by 何 夏 via Pexels
+Nagoya.jpg - Photo by Hoi Wai via Pexels
+Frankfurt.jpg - Photo by op23 via Pexels
+Houston.jpg - Photo by Andrew DeGarde via Pexels
+Nuremberg.jpg - Photo by Sergej K. via Pexels
 
 
 
@@ -319,6 +323,10 @@ SunglassesStore.jpg - Photo by www.kaboompics.com via Pexels
 FerryTerminal.jpg - Photo by Onur via Pexels
 CarAccessories.jpg - Photo by Erik Mclean via Pexels
 DimSumRestaurant.jpg - Photo by Mikhail Nilov via Pexels
+GamingArcade.jpg - Photo by Bert Seinstra via Pexels
+SausageShop.jpg - Photo by Towfiqu barbhuiya via Pexels
+ATMMachineEnhancements.jpg - Photo by Liliana Drew via Pexels
+CandyStore.jpg - Photo by Carlos Misael Cruz López via Pexels
 
 
 SOUNDS

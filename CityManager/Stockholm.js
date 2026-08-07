@@ -1,12 +1,12 @@
 
 // Stockholm
 import { City } from "./City.js";
-import { toyStore } from "../DevelopmentManager/ToyStore.js";
+import { candyStore } from "../DevelopmentManager/CandyStore.js";
 
 export const Stockholm = new City(
     "Stockholm",
     2480000,
-    [toyStore],
+    [candyStore],
     "Sweden",
     "Europe",
     2,

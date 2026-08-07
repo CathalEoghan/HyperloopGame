@@ -156,6 +156,10 @@ import Cancún from '../assets/cities/Cancún.jpg'
 import Tangier from '../assets/cities/Tangier.jpg'
 import Detroit from '../assets/cities/Detroit.jpg'
 import Guangzhou from '../assets/cities/Guangzhou.jpg'
+import Nagoya from '../assets/cities/Nagoya.jpg'
+import Frankfurt from '../assets/cities/Frankfurt.jpg'
+import Houston from '../assets/cities/Houston.jpg'
+import Nuremberg from '../assets/cities/Nuremberg.jpg'
 
 
 const cityImages = {
@@ -317,6 +321,10 @@ const cityImages = {
     Tangier: Tangier,
     Detroit: Detroit,
     Guangzhou: Guangzhou,
+    Nagoya: Nagoya,
+    Frankfurt: Frankfurt,
+    Houston: Houston,
+    Nuremberg: Nuremberg,
 
 }
 

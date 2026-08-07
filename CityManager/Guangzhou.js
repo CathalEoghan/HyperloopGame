@@ -4,7 +4,7 @@ import { City } from "./City.js";
 import { dimSumRestaurant } from "../DevelopmentManager/DimSumRestaurant.js";
 
 export const Guangzhou = new City(
-    "Guanzghou",
+    "Guangzhou",
     32000000,
     [dimSumRestaurant],
     "China",

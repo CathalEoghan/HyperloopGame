@@ -157,6 +157,10 @@ import SunglassesStore from '../assets/developments/SunglassesStore.jpg'
 import FerryTerminal from '../assets/developments/FerryTerminal.jpg'
 import CarAccessories from '../assets/developments/CarAccessories.jpg'
 import DimSumRestaurant from '../assets/developments/DimSumRestaurant.jpg'
+import GamingArcade from '../assets/developments/GamingArcade.jpg'
+import SausageShop from '../assets/developments/SausageShop.jpg'
+import ATMMachineEnhancements from '../assets/developments/ATMMachineEnhancements.jpg'
+import CandyStore from '../assets/developments/CandyStore.jpg'
 
 
 
@@ -319,6 +323,10 @@ const developmentImages = {
     "Ferry Terminal": FerryTerminal,
     "Car Accessories": CarAccessories,
     "Dim Sum Restaurant": DimSumRestaurant,
+    "Gaming Arcade": GamingArcade,
+    "Sausage Shop": SausageShop,
+    "ATM Machine Enhancements": ATMMachineEnhancements,
+    "Candy Store": CandyStore,
 
 
 
