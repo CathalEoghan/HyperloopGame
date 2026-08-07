@@ -166,6 +166,8 @@ Doha.jpg - Photo by Abdelghani Sad djaballah via Pexels
 Taichung.jpg - Photo by michael spadoni via Pexels
 Kathmandu.jpg - Photo by Volker Meyer via Pexels
 Lhasa.jpg - Photo by Martin Chan via Pexels
+Hamburg.jpg - Photo by Niklas Jeromin via Pexels
+Toulouse.jpg - Photo by TBD Traveller via Pexels
 
 
 
@@ -335,6 +337,8 @@ LocalAirportLinks.jpg - Photo by Sheldon Li via Pexels
 BubbleTeaShop.jpg - Photo by 🇻🇳🇻🇳Nguyễn Tiến Thịnh 🇻🇳🇻🇳 via Pexels
 CandleShop.jpg - Photo by Christina & Peter via Pexels
 PrayerRoom.jpg - Photo by Mehmet Guzel via Pexels
+BurgerRestaurant.jpg - Photo by Robin Stickel via Pexels
+HyperloopMuseum.jpg - Photo by Neuhausengroup via Wikimedia Commons
 
 
 SOUNDS
