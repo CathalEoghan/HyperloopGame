@@ -39,6 +39,7 @@ import { staffCafeteriaRenovations } from './StaffCafeteriaRenovations.js'
 import { ferryTerminal } from './FerryTerminal.js'
 import { atmMachineEnhancements } from './ATMMachineEnhancements.js'
 import { localAirportLinks } from './LocalAirportLinks.js'
+import { prayerRoom } from './PrayerRoom.js'
 
 
 export const allUpgrades = [
@@ -81,5 +82,6 @@ export const allUpgrades = [
     ferryTerminal,
     atmMachineEnhancements,
     localAirportLinks,
+    prayerRoom,
 
 ]

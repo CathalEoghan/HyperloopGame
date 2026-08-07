@@ -164,6 +164,7 @@ import CandyStore from '../assets/developments/CandyStore.jpg'
 import LocalAirportLinks from '../assets/developments/LocalAirportLinks.jpg'
 import BubbleTeaShop from '../assets/developments/BubbleTeaShop.jpg'
 import CandleShop from '../assets/developments/CandleShop.jpg'
+import PrayerRoom from '../assets/developments/PrayerRoom.jpg'
 
 
 
@@ -333,6 +334,7 @@ const developmentImages = {
     "Local Airport Links": LocalAirportLinks,
     "Bubble Tea Shop": BubbleTeaShop,
     "Candle Shop": CandleShop,
+    "Prayer Room": PrayerRoom,
 
 
 

@@ -163,6 +163,7 @@ import Nuremberg from '../assets/cities/Nuremberg.jpg'
 import Doha from '../assets/cities/Doha.jpg'
 import Taichung from '../assets/cities/Taichung.jpg'
 import Kathmandu from '../assets/cities/Kathmandu.jpg'
+import Lhasa from '../assets/cities/Lhasa.jpg'
 
 
 const cityImages = {
@@ -331,6 +332,7 @@ const cityImages = {
     Doha: Doha,
     Taichung: Taichung,
     Kathmandu: Kathmandu,
+    Lhasa: Lhasa,
 
 }
 
