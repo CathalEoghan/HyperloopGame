@@ -165,6 +165,8 @@ import { Doha } from './Doha.js'
 import { Taichung } from './Taichung.js'
 import { Kathmandu } from './Kathmandu.js'
 import { Lhasa } from './Lhasa.js'
+import { Hamburg } from './Hamburg.js'
+import { Toulouse } from './Toulouse.js'
 
 
 export const allCities = [
@@ -334,5 +336,7 @@ export const allCities = [
     Taichung,
     Kathmandu,
     Lhasa,
+    Hamburg,
+    Toulouse,
 
 ]

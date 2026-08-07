@@ -165,6 +165,8 @@ import LocalAirportLinks from '../assets/developments/LocalAirportLinks.jpg'
 import BubbleTeaShop from '../assets/developments/BubbleTeaShop.jpg'
 import CandleShop from '../assets/developments/CandleShop.jpg'
 import PrayerRoom from '../assets/developments/PrayerRoom.jpg'
+import HamburgerRestaurant from '../assets/developments/HamburgerRestaurant.jpg'
+import HyperloopMuseum from '../assets/developments/HyperloopMuseum.jpg'
 
 
 
@@ -335,6 +337,8 @@ const developmentImages = {
     "Bubble Tea Shop": BubbleTeaShop,
     "Candle Shop": CandleShop,
     "Prayer Room": PrayerRoom,
+    "Hamburger Restaurant": HamburgerRestaurant,
+    "Hyperloop Museum": HyperloopMuseum,
 
 
 
