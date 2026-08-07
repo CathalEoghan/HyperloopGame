@@ -1,6 +1,5 @@
 
-
-// Nairobi
+// Naples
 import { City } from "./City.js";
 import { cakeShop } from "../DevelopmentManager/CakeShop.js";
 

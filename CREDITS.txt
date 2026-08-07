@@ -168,7 +168,9 @@ Kathmandu.jpg - Photo by Volker Meyer via Pexels
 Lhasa.jpg - Photo by Martin Chan via Pexels
 Hamburg.jpg - Photo by Niklas Jeromin via Pexels
 Toulouse.jpg - Photo by TBD Traveller via Pexels
-
+SanJose.jpg - Photo by Adam Schultz via Wikimedia Commons
+Nashville.jpg - Photo by Colon Freld via Pexels
+Abidjan.jpg - Photo by Silvere Meya via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -339,7 +341,9 @@ CandleShop.jpg - Photo by Christina & Peter via Pexels
 PrayerRoom.jpg - Photo by Mehmet Guzel via Pexels
 BurgerRestaurant.jpg - Photo by Robin Stickel via Pexels
 HyperloopMuseum.jpg - Photo by Neuhausengroup via Wikimedia Commons
-
+ArtificialIntelligenceImprovements - Photo by Tara Winstead via Pexels
+RecordsStore.jpg - Photo by Yelena from Pexels via Pexels
+EventHall.jpg - Photo by Atlantic Ambience via Pexels
 
 SOUNDS
 

@@ -127,6 +127,7 @@ import { bubbleTeaShop } from './BubbleTeaShop.js'
 import { candleShop } from './CandleShop.js'
 import { hamburgerRestaurant } from './HamburgerRestaurant.js'
 import { hyperloopMuseum } from './HyperloopMuseum.js'
+import { recordsStore } from './RecordsStore.js'
 
 
 export const allDevelopments = [
@@ -258,5 +259,6 @@ export const allDevelopments = [
     candleShop,
     hamburgerRestaurant,
     hyperloopMuseum,
+    recordsStore,
 
 ]

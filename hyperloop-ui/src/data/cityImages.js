@@ -166,6 +166,9 @@ import Kathmandu from '../assets/cities/Kathmandu.jpg'
 import Lhasa from '../assets/cities/Lhasa.jpg'
 import Hamburg from '../assets/cities/Hamburg.jpg'
 import Toulouse from '../assets/cities/Toulouse.jpg'
+import SanJose from '../assets/cities/SanJose.jpg'
+import Nashville from '../assets/cities/Nashville.jpg'
+import Abidjan from '../assets/cities/Abidjan.jpg'
 
 
 const cityImages = {
@@ -337,7 +340,9 @@ const cityImages = {
     Lhasa: Lhasa,
     Hamburg: Hamburg,
     Toulouse: Toulouse,
-
+    "San Jose": SanJose,
+    Nashville: Nashville,
+    Abidjan: Abidjan,
 }
 
 export default cityImages

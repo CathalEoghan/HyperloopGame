@@ -167,7 +167,9 @@ import CandleShop from '../assets/developments/CandleShop.jpg'
 import PrayerRoom from '../assets/developments/PrayerRoom.jpg'
 import HamburgerRestaurant from '../assets/developments/HamburgerRestaurant.jpg'
 import HyperloopMuseum from '../assets/developments/HyperloopMuseum.jpg'
-
+import ArtificialIntelligenceImprovements from '../assets/developments/ArtificialIntelligenceImprovements.jpg'
+import RecordsStore from '../assets/developments/RecordsStore.jpg'
+import EventHall from '../assets/developments/EventHall.jpg'
 
 
 const developmentImages = {
@@ -339,6 +341,9 @@ const developmentImages = {
     "Prayer Room": PrayerRoom,
     "Hamburger Restaurant": HamburgerRestaurant,
     "Hyperloop Museum": HyperloopMuseum,
+    "Artificial Intelligence Improvements": ArtificialIntelligenceImprovements,
+    "Records Store": RecordsStore,
+    "Event Hall": EventHall,
 
 
 

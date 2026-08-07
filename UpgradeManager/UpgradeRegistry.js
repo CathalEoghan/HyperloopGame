@@ -40,6 +40,8 @@ import { ferryTerminal } from './FerryTerminal.js'
 import { atmMachineEnhancements } from './ATMMachineEnhancements.js'
 import { localAirportLinks } from './LocalAirportLinks.js'
 import { prayerRoom } from './PrayerRoom.js'
+import { artificialIntelligenceImprovements } from './ArtificialIntelligenceImprovements.js'
+import { eventHall } from './EventHall.js'
 
 
 export const allUpgrades = [
@@ -83,5 +85,7 @@ export const allUpgrades = [
     atmMachineEnhancements,
     localAirportLinks,
     prayerRoom,
+    artificialIntelligenceImprovements,
+    eventHall,
 
 ]

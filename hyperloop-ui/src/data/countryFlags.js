@@ -87,6 +87,7 @@ const countryFlags = {
     "Ukraine": "ua",
     "Qatar": "qa",
     "Nepal": "np",
+    "Ivory Coast": "ci"
 
     
 
