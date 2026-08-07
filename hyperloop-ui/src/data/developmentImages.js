@@ -161,6 +161,7 @@ import GamingArcade from '../assets/developments/GamingArcade.jpg'
 import SausageShop from '../assets/developments/SausageShop.jpg'
 import ATMMachineEnhancements from '../assets/developments/ATMMachineEnhancements.jpg'
 import CandyStore from '../assets/developments/CandyStore.jpg'
+import LocalAirportLinks from '../assets/developments/LocalAirportLinks.jpg'
 
 
 
@@ -327,6 +328,7 @@ const developmentImages = {
     "Sausage Shop": SausageShop,
     "ATM Machine Enhancements": ATMMachineEnhancements,
     "Candy Store": CandyStore,
+    "Local Airport Links": LocalAirportLinks,
 
 
 
