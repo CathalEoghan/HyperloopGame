@@ -170,6 +170,8 @@ import { Toulouse } from './Toulouse.js'
 import { SanJose } from './SanJose.js'
 import { Nashville } from './Nashville.js'
 import { Abidjan } from './Abidjan.js'
+import { Praia } from './Praia.js'
+import { Hangzhou } from './Hangzhou.js'
 
 
 export const allCities = [
@@ -344,5 +346,7 @@ export const allCities = [
     SanJose,
     Nashville,
     Abidjan,
+    Praia,
+    Hangzhou,
 
 ]

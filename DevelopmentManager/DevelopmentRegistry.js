@@ -128,6 +128,8 @@ import { candleShop } from './CandleShop.js'
 import { hamburgerRestaurant } from './HamburgerRestaurant.js'
 import { hyperloopMuseum } from './HyperloopMuseum.js'
 import { recordsStore } from './RecordsStore.js'
+import { beachThemedBar } from './BeachThemedBar.js'
+import { teaHouse } from './TeaHouse.js'
 
 
 export const allDevelopments = [
@@ -260,5 +262,7 @@ export const allDevelopments = [
     hamburgerRestaurant,
     hyperloopMuseum,
     recordsStore,
+    beachThemedBar,
+    teaHouse,
 
 ]

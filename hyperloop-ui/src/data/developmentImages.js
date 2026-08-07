@@ -170,6 +170,8 @@ import HyperloopMuseum from '../assets/developments/HyperloopMuseum.jpg'
 import ArtificialIntelligenceImprovements from '../assets/developments/ArtificialIntelligenceImprovements.jpg'
 import RecordsStore from '../assets/developments/RecordsStore.jpg'
 import EventHall from '../assets/developments/EventHall.jpg'
+import BeachThemedBar from '../assets/developments/BeachThemedBar.jpg'
+import TeaHouse from '../assets/developments/TeaHouse.jpg'
 
 
 const developmentImages = {
@@ -344,6 +346,8 @@ const developmentImages = {
     "Artificial Intelligence Improvements": ArtificialIntelligenceImprovements,
     "Records Store": RecordsStore,
     "Event Hall": EventHall,
+    "Beach-Themed Bar": BeachThemedBar,
+    "Tea House": TeaHouse,
 
 
 
