@@ -123,6 +123,8 @@ import { dimSumRestaurant } from './DimSumRestaurant.js'
 import { gamingArcade } from './GamingArcade.js'
 import { sausageShop } from './SausageShop.js'
 import { candyStore } from './CandyStore.js'
+import { bubbleTeaShop } from './BubbleTeaShop.js'
+import { candleShop } from './CandleShop.js'
 
 
 export const allDevelopments = [
@@ -250,5 +252,7 @@ export const allDevelopments = [
     gamingArcade,
     sausageShop,
     candyStore,
+    bubbleTeaShop,
+    candleShop,
 
 ]

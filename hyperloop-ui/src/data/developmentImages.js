@@ -162,6 +162,8 @@ import SausageShop from '../assets/developments/SausageShop.jpg'
 import ATMMachineEnhancements from '../assets/developments/ATMMachineEnhancements.jpg'
 import CandyStore from '../assets/developments/CandyStore.jpg'
 import LocalAirportLinks from '../assets/developments/LocalAirportLinks.jpg'
+import BubbleTeaShop from '../assets/developments/BubbleTeaShop.jpg'
+import CandleShop from '../assets/developments/CandleShop.jpg'
 
 
 
@@ -329,6 +331,8 @@ const developmentImages = {
     "ATM Machine Enhancements": ATMMachineEnhancements,
     "Candy Store": CandyStore,
     "Local Airport Links": LocalAirportLinks,
+    "Bubble Tea Shop": BubbleTeaShop,
+    "Candle Shop": CandleShop,
 
 
 

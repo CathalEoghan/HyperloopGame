@@ -86,6 +86,7 @@ const countryFlags = {
     "Jordan": "jo",
     "Ukraine": "ua",
     "Qatar": "qa",
+    "Nepal": "np",
 
     
 

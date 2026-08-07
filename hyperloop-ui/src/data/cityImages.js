@@ -161,6 +161,8 @@ import Frankfurt from '../assets/cities/Frankfurt.jpg'
 import Houston from '../assets/cities/Houston.jpg'
 import Nuremberg from '../assets/cities/Nuremberg.jpg'
 import Doha from '../assets/cities/Doha.jpg'
+import Taichung from '../assets/cities/Taichung.jpg'
+import Kathmandu from '../assets/cities/Kathmandu.jpg'
 
 
 const cityImages = {
@@ -327,6 +329,8 @@ const cityImages = {
     Houston: Houston,
     Nuremberg: Nuremberg,
     Doha: Doha,
+    Taichung: Taichung,
+    Kathmandu: Kathmandu,
 
 }
 
