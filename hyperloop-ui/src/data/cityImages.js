@@ -172,6 +172,8 @@ import Abidjan from '../assets/cities/Abidjan.jpg'
 import Praia from '../assets/cities/Praia.jpg'
 import Hangzhou from '../assets/cities/Hangzhou.jpg'
 import Baltimore from '../assets/cities/Baltimore.jpg'
+import Stuttgart from '../assets/cities/Stuttgart.jpg'
+import Medellín from '../assets/cities/Medellín.jpg'
 
 
 const cityImages = {
@@ -349,6 +351,9 @@ const cityImages = {
     Praia: Praia,
     Hangzhou: Hangzhou,
     Baltimore: Baltimore,
+    Stuttgart: Stuttgart,
+    Medellín: Medellín,
+
 }
 
 export default cityImages

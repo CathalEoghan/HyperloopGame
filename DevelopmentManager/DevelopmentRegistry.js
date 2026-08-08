@@ -131,6 +131,8 @@ import { recordsStore } from './RecordsStore.js'
 import { beachThemedBar } from './BeachThemedBar.js'
 import { teaHouse } from './TeaHouse.js'
 import { crabShack } from './CrabShack.js'
+import { carMuseum } from './CarMuseum.js'
+import { smoothieShop } from './SmoothieShop.js'
 
 
 export const allDevelopments = [
@@ -266,5 +268,7 @@ export const allDevelopments = [
     beachThemedBar,
     teaHouse,
     crabShack,
+    carMuseum,
+    smoothieShop,
 
 ]

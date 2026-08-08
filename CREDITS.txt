@@ -174,6 +174,8 @@ Abidjan.jpg - Photo by Silvere Meya via Pexels
 Praia.jpg - Photo by Cayambe via Pexels
 Hangzhou.jpg - Photo by oner st via Pexels
 Baltimore.jpg - Photo by Adianez Zuniga via Pexels
+Stuttgart.jpg - Photo by GIUSEPPE DE BERGOLIS via Pexels
+Medellín.jpg - Photo by César Gaviria via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -350,6 +352,9 @@ EventHall.jpg - Photo by Atlantic Ambience via Pexels
 BeachThemedBar.jpg - Photo by Abdellah Benziane via Pexels
 TeaHouse.jpg - Photo by Musa Ortaç via Pexels
 CrabShack.jpg - Photo by Phong Võ via Pexels
+CarMuseum.jpg - Photo by Oktay Köseoğlu via Pexels
+SmoothieShop.jpg - Photo by Farhad Ibrahimzade via Pexels
+
 
 SOUNDS
 

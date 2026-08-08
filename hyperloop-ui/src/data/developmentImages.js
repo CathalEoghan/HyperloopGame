@@ -173,6 +173,8 @@ import EventHall from '../assets/developments/EventHall.jpg'
 import BeachThemedBar from '../assets/developments/BeachThemedBar.jpg'
 import TeaHouse from '../assets/developments/TeaHouse.jpg'
 import CrabShack from '../assets/developments/CrabShack.jpg'
+import CarMuseum from '../assets/developments/CarMuseum.jpg'
+import SmoothieShop from '../assets/developments/SmoothieShop.jpg'
 
 
 const developmentImages = {
@@ -350,6 +352,8 @@ const developmentImages = {
     "Beach-Themed Bar": BeachThemedBar,
     "Tea House": TeaHouse,
     "Crab Shack": CrabShack,
+    "Car Museum": CarMuseum,
+    "Smoothie Shop": SmoothieShop,
 
 
 
