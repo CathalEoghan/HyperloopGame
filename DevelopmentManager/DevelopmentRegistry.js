@@ -133,6 +133,8 @@ import { teaHouse } from './TeaHouse.js'
 import { crabShack } from './CrabShack.js'
 import { carMuseum } from './CarMuseum.js'
 import { smoothieShop } from './SmoothieShop.js'
+import { nihariRestaurant } from './NihariRestaurant.js'
+import { suyaRestaurant } from './SuyaRestaurant.js'
 
 
 export const allDevelopments = [
@@ -270,5 +272,7 @@ export const allDevelopments = [
     crabShack,
     carMuseum,
     smoothieShop,
+    nihariRestaurant,
+    suyaRestaurant,
 
 ]

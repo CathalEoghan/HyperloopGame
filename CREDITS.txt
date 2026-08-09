@@ -176,6 +176,8 @@ Hangzhou.jpg - Photo by oner st via Pexels
 Baltimore.jpg - Photo by Adianez Zuniga via Pexels
 Stuttgart.jpg - Photo by GIUSEPPE DE BERGOLIS via Pexels
 Medellín.jpg - Photo by César Gaviria via Pexels
+Lahore.jpg - Photo by salman kazmi via Pexels
+Kano.jpg - Photo by Abduljalil Attahir via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -354,6 +356,8 @@ TeaHouse.jpg - Photo by Musa Ortaç via Pexels
 CrabShack.jpg - Photo by Phong Võ via Pexels
 CarMuseum.jpg - Photo by Oktay Köseoğlu via Pexels
 SmoothieShop.jpg - Photo by Farhad Ibrahimzade via Pexels
+NihariRestaurant.jpg - Photo by Valeria Boltneva via Pexels
+SuyaRestaurant.jpg - Photo by Zarerh via Pexels
 
 
 SOUNDS

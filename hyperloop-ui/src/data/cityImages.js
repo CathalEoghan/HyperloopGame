@@ -174,6 +174,8 @@ import Hangzhou from '../assets/cities/Hangzhou.jpg'
 import Baltimore from '../assets/cities/Baltimore.jpg'
 import Stuttgart from '../assets/cities/Stuttgart.jpg'
 import Medellín from '../assets/cities/Medellín.jpg'
+import Lahore from '../assets/cities/Lahore.jpg'
+import Kano from '../assets/cities/Kano.jpg'
 
 
 const cityImages = {
@@ -353,6 +355,8 @@ const cityImages = {
     Baltimore: Baltimore,
     Stuttgart: Stuttgart,
     Medellín: Medellín,
+    Lahore: Lahore,
+    Kano: Kano,
 
 }
 

@@ -175,6 +175,8 @@ import TeaHouse from '../assets/developments/TeaHouse.jpg'
 import CrabShack from '../assets/developments/CrabShack.jpg'
 import CarMuseum from '../assets/developments/CarMuseum.jpg'
 import SmoothieShop from '../assets/developments/SmoothieShop.jpg'
+import NihariRestaurant from '../assets/developments/NihariRestaurant.jpg'
+import SuyaRestaurant from '../assets/developments/SuyaRestaurant.jpg'
 
 
 const developmentImages = {
@@ -354,7 +356,8 @@ const developmentImages = {
     "Crab Shack": CrabShack,
     "Car Museum": CarMuseum,
     "Smoothie Shop": SmoothieShop,
-
+    "Nihari Restaurant": NihariRestaurant,
+    "Suya Restaurant": SuyaRestaurant,
 
 
 }
