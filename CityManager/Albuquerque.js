@@ -10,6 +10,6 @@ export const Albuquerque = new City(
     "United States of America",
     "North America",
     1,
-    "Each weekday morning around 8:45 am, the streets of Apia come alive with trumpets, trombones, and drums as the Royal Samoa Police Band marches to the Government Building to raise the national flag.",
+    "Albuquerque is home to the Albuquerque International Balloon Fiesta, the largest hot air balloon festival in the world, drawing hundreds of balloons each October.",
     false
 );
