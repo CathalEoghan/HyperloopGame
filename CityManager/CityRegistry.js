@@ -177,6 +177,8 @@ import { Stuttgart } from './Stuttgart.js'
 import { Medellín } from './Medellín.js'
 import { Lahore } from './Lahore.js'
 import { Kano } from './Kano.js'
+import { Austin } from './Austin.js'
+import { Philadelphia } from './Philadelphia.js'
 
 
 export const allCities = [
@@ -358,5 +360,7 @@ export const allCities = [
     Medellín,
     Lahore,
     Kano,
+    Austin,
+    Philadelphia,
 
 ]
