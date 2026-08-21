@@ -179,6 +179,8 @@ import NihariRestaurant from '../assets/developments/NihariRestaurant.jpg'
 import SuyaRestaurant from '../assets/developments/SuyaRestaurant.jpg'
 import BarbecueRestaurant from '../assets/developments/BarbecueRestaurant.jpg'
 import IrishBar from '../assets/developments/IrishBar.jpg'
+import BurritoRestaurant from '../assets/developments/BurritoRestaurant.jpg'
+import MarzipanCafé from '../assets/developments/MarzipanCafé.jpg'
 
 
 const developmentImages = {
@@ -362,6 +364,8 @@ const developmentImages = {
     "Suya Restaurant": SuyaRestaurant,
     "Barbecue Restaurant": BarbecueRestaurant,
     "Irish Bar": IrishBar,
+    "Burrito Restaurant": BurritoRestaurant,
+    "Marzipan Café": MarzipanCafé,
 
 
 }

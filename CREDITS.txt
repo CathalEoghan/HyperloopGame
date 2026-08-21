@@ -180,6 +180,8 @@ Lahore.jpg - Photo by salman kazmi via Pexels
 Kano.jpg - Photo by Abduljalil Attahir via Pexels
 Austin.jpg - Photo by Pixabay via Pexels
 Philadelphia.jpg - Photo by K via Pexels
+Albuquerque.jpg - Photo by Quintin Soloviev via Wikimedia Commons
+Tallinn.jpg - Photo by Sergei Gussev via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -362,6 +364,8 @@ NihariRestaurant.jpg - Photo by Valeria Boltneva via Pexels
 SuyaRestaurant.jpg - Photo by Zarerh via Pexels
 BarbecueRestaurant.jpg - Photo by RDNE Stock project via Pexels
 IrishBar.jpg - Photo by Darlene Alderson via Pexels
+BurritoRestaurant.jpg - Photo by Snappr via Pexels
+MarzipanCafé.jpg - Photo by Erich73 via Wikimedia Commons
 
 
 SOUNDS

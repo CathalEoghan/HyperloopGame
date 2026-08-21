@@ -89,6 +89,7 @@ const countryFlags = {
     "Nepal": "np",
     "Ivory Coast": "ci",
     "Cape Verde": "cv",
+    "Estonia": "ee",
 
     
 

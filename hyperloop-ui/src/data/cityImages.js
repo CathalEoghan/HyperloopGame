@@ -178,6 +178,8 @@ import Lahore from '../assets/cities/Lahore.jpg'
 import Kano from '../assets/cities/Kano.jpg'
 import Austin from '../assets/cities/Austin.jpg'
 import Philadelphia from '../assets/cities/Philadelphia.jpg'
+import Albuquerque from '../assets/cities/Albuquerque.jpg'
+import Tallinn from '../assets/cities/Tallinn.jpg'
 
 
 const cityImages = {
@@ -361,6 +363,8 @@ const cityImages = {
     Kano: Kano,
     Austin: Austin,
     Philadelphia: Philadelphia,
+    Albuquerque: Albuquerque,
+    Tallinn: Tallinn,
     
 
 }
