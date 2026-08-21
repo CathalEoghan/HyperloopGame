@@ -182,6 +182,8 @@ Austin.jpg - Photo by Pixabay via Pexels
 Philadelphia.jpg - Photo by K via Pexels
 Albuquerque.jpg - Photo by Quintin Soloviev via Wikimedia Commons
 Tallinn.jpg - Photo by Sergei Gussev via Pexels
+Quito.jpg - Photo by Diego F. Parra via Pexels
+Algiers.jpg - Photo by khebab salaheddine via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -366,6 +368,8 @@ BarbecueRestaurant.jpg - Photo by RDNE Stock project via Pexels
 IrishBar.jpg - Photo by Darlene Alderson via Pexels
 BurritoRestaurant.jpg - Photo by Snappr via Pexels
 MarzipanCafé.jpg - Photo by Erich73 via Wikimedia Commons
+HatShop.jpg - Photo by RDNE Stock Project via Pexels
+SoupStall.jpg - Photo by Farhad Ibrahimzade via Pexels
 
 
 SOUNDS

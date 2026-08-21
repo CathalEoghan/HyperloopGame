@@ -90,6 +90,8 @@ const countryFlags = {
     "Ivory Coast": "ci",
     "Cape Verde": "cv",
     "Estonia": "ee",
+    "Ecuador": "ec",
+    "Algeria": "dz",
 
     
 

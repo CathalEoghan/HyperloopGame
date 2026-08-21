@@ -180,6 +180,8 @@ import Austin from '../assets/cities/Austin.jpg'
 import Philadelphia from '../assets/cities/Philadelphia.jpg'
 import Albuquerque from '../assets/cities/Albuquerque.jpg'
 import Tallinn from '../assets/cities/Tallinn.jpg'
+import Quito from '../assets/cities/Quito.jpg'
+import Algiers from '../assets/cities/Algiers.jpg'
 
 
 const cityImages = {
@@ -365,7 +367,9 @@ const cityImages = {
     Philadelphia: Philadelphia,
     Albuquerque: Albuquerque,
     Tallinn: Tallinn,
-    
+    Quito: Quito,
+    Algiers: Algiers,
+
 
 }
 

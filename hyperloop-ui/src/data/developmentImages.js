@@ -181,6 +181,8 @@ import BarbecueRestaurant from '../assets/developments/BarbecueRestaurant.jpg'
 import IrishBar from '../assets/developments/IrishBar.jpg'
 import BurritoRestaurant from '../assets/developments/BurritoRestaurant.jpg'
 import MarzipanCafé from '../assets/developments/MarzipanCafé.jpg'
+import HatShop from '../assets/developments/HatShop.jpg'
+import SoupStall from '../assets/developments/SoupStall.jpg'
 
 
 const developmentImages = {
@@ -366,6 +368,8 @@ const developmentImages = {
     "Irish Bar": IrishBar,
     "Burrito Restaurant": BurritoRestaurant,
     "Marzipan Café": MarzipanCafé,
+    "Hat Shop": HatShop,
+    "Soup Stall": SoupStall,
 
 
 }
