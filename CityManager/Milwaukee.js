@@ -9,7 +9,7 @@ export const Milwaukee = new City(
     [bowlingAlley],
     "United States of America",
     "North America",
-    1,
+    2,
     "The first practical typewriter was invented in Milwaukee in 1869, which is where the familiar QWERTY keyboard layout was perfected by C. Latham Sholes.",
     false
 );

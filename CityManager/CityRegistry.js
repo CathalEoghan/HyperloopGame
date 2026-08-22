@@ -188,6 +188,8 @@ import { Cleveland } from './Cleveland.js'
 import { StLouis } from './StLouis.js'
 import { Valencia } from './Valencia.js'
 import { Bucharest } from './Bucharest.js'
+import { Nice } from './Nice.js'
+import { Dallas } from './Dallas.js'
 
 
 export const allCities = [
@@ -380,5 +382,7 @@ export const allCities = [
     StLouis,
     Valencia,
     Bucharest,
+    Nice,
+    Dallas,
 
 ]

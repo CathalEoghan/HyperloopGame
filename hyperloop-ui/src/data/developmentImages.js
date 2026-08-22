@@ -188,6 +188,8 @@ import ChessClub from '../assets/developments/ChessClub.jpg'
 import RockBar from '../assets/developments/RockBar.jpg'
 import FreshFruitStall from '../assets/developments/FreshFruitStall.jpg'
 import PalatialInteriorRenovations from '../assets/developments/PalatialInteriorRenovations.jpg'
+import CosmeticsStore from '../assets/developments/CosmeticsStore.jpg'
+import FrozenCocktailStand from '../assets/developments/FrozenCocktailStand.jpg'
 
 
 const developmentImages = {
@@ -380,6 +382,8 @@ const developmentImages = {
     "Chess Club": ChessClub,
     "Fresh Fruit Stall": FreshFruitStall,
     "Palatial Interior Renovations": PalatialInteriorRenovations,
+    "Cosmetics Store": CosmeticsStore,
+    "Frozen Cocktail Stand": FrozenCocktailStand,
 
 
 }

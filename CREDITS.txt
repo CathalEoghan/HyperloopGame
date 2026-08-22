@@ -189,6 +189,9 @@ StLouis.jpg - Photo by James L via Pexels
 Cleveland.jpg - Photo by Matt via Pexels
 Valencia.jpg - Photo by Salvatore De Lellis via Pexels
 Bucharest.jpg - Photo by Roman Muntean via Pexels
+Nice.jpg - Photo by Daniel Furrer via Pexels
+Dallas.jpg - Photo by Anat Morad via Pexels
+
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -378,7 +381,9 @@ NecktieShop.jpg - Photo by Fer ID via Pexels
 RockBar.jpg - Photo by Dominik Türk via Pexels
 ChessClub.jpg - Photo by Lars Mai via Pexels
 FreshFruitStall.jpg - Photo by Derya Nur 🕊️ via Pexels
-PalatialInteriorRenovations - Photo by Charlotte May via Pexels
+PalatialInteriorRenovations.jpg - Photo by Charlotte May via Pexels
+CosmeticsStore.jpg - Photo by Alan W via Pexels
+FrozenCocktailStand.jpg - Photo by Rodrigo Ortega via Pexels
 
 
 SOUNDS

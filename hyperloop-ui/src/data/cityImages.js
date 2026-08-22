@@ -187,6 +187,8 @@ import Cleveland from '../assets/cities/Cleveland.jpg'
 import StLouis from '../assets/cities/StLouis.jpg'
 import Valencia from '../assets/cities/Valencia.jpg'
 import Bucharest from '../assets/cities/Bucharest.jpg'
+import Nice from '../assets/cities/Nice.jpg'
+import Dallas from '../assets/cities/Dallas.jpg'
 
 
 const cityImages = {
@@ -379,6 +381,8 @@ const cityImages = {
     "St. Louis": StLouis,
     Valencia: Valencia,
     Bucharest: Bucharest,
+    Nice: Nice,
+    Dallas: Dallas,
 
 }
 
