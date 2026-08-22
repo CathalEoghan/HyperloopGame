@@ -144,6 +144,7 @@ import { soupStall } from './SoupStall.js'
 import { necktieShop } from './NecktieShop.js'
 import { rockBar } from './RockBar.js'
 import { chessClub } from './ChessClub.js'
+import { freshFruitStall } from './FreshFruitStall.js'
 
 
 export const allDevelopments = [
@@ -292,5 +293,6 @@ export const allDevelopments = [
     necktieShop,
     rockBar,
     chessClub,
+    freshFruitStall,
 
 ]

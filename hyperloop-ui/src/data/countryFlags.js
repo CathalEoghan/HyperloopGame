@@ -93,6 +93,7 @@ const countryFlags = {
     "Ecuador": "ec",
     "Algeria": "dz",
     "Croatia": "hr",
+    "Romania": "ro",
 
     
 

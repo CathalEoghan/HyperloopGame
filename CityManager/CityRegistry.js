@@ -186,6 +186,8 @@ import { Algiers } from './Algiers.js'
 import { Zagreb } from './Zagreb.js'
 import { Cleveland } from './Cleveland.js'
 import { StLouis } from './StLouis.js'
+import { Valencia } from './Valencia.js'
+import { Bucharest } from './Bucharest.js'
 
 
 export const allCities = [
@@ -376,5 +378,7 @@ export const allCities = [
     Zagreb,
     Cleveland,
     StLouis,
+    Valencia,
+    Bucharest,
 
 ]

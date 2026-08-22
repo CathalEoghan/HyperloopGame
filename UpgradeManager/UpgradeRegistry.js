@@ -42,6 +42,7 @@ import { localAirportLinks } from './LocalAirportLinks.js'
 import { prayerRoom } from './PrayerRoom.js'
 import { artificialIntelligenceImprovements } from './ArtificialIntelligenceImprovements.js'
 import { eventHall } from './EventHall.js'
+import { palatialInteriorRenovations } from './PalatialInteriorRenovations.js'
 
 
 export const allUpgrades = [
@@ -87,5 +88,6 @@ export const allUpgrades = [
     prayerRoom,
     artificialIntelligenceImprovements,
     eventHall,
+    palatialInteriorRenovations,
 
 ]

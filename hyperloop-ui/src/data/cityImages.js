@@ -185,6 +185,8 @@ import Algiers from '../assets/cities/Algiers.jpg'
 import Zagreb from '../assets/cities/Zagreb.jpg'
 import Cleveland from '../assets/cities/Cleveland.jpg'
 import StLouis from '../assets/cities/StLouis.jpg'
+import Valencia from '../assets/cities/Valencia.jpg'
+import Bucharest from '../assets/cities/Bucharest.jpg'
 
 
 const cityImages = {
@@ -375,7 +377,8 @@ const cityImages = {
     Zagreb: Zagreb,
     Cleveland: Cleveland,
     "St. Louis": StLouis,
-
+    Valencia: Valencia,
+    Bucharest: Bucharest,
 
 }
 

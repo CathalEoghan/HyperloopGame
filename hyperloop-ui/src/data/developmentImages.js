@@ -186,6 +186,8 @@ import SoupStall from '../assets/developments/SoupStall.jpg'
 import NecktieShop from '../assets/developments/NecktieShop.jpg'
 import ChessClub from '../assets/developments/ChessClub.jpg'
 import RockBar from '../assets/developments/RockBar.jpg'
+import FreshFruitStall from '../assets/developments/FreshFruitStall.jpg'
+import PalatialInteriorRenovations from '../assets/developments/PalatialInteriorRenovations.jpg'
 
 
 const developmentImages = {
@@ -376,6 +378,8 @@ const developmentImages = {
     "Necktie Shop": NecktieShop,
     "Rock Bar": RockBar,
     "Chess Club": ChessClub,
+    "Fresh Fruit Stall": FreshFruitStall,
+    "Palatial Interior Renovations": PalatialInteriorRenovations,
 
 
 }
