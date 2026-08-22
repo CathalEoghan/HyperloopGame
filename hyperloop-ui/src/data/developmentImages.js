@@ -190,6 +190,8 @@ import FreshFruitStall from '../assets/developments/FreshFruitStall.jpg'
 import PalatialInteriorRenovations from '../assets/developments/PalatialInteriorRenovations.jpg'
 import CosmeticsStore from '../assets/developments/CosmeticsStore.jpg'
 import FrozenCocktailStand from '../assets/developments/FrozenCocktailStand.jpg'
+import AdvancedTerminalPlanning from '../assets/developments/AdvancedTerminalPlanning.jpg'
+import RiversideExpansionProject from '../assets/developments/RiversideExpansionProject.jpg'
 
 
 const developmentImages = {
@@ -384,7 +386,8 @@ const developmentImages = {
     "Palatial Interior Renovations": PalatialInteriorRenovations,
     "Cosmetics Store": CosmeticsStore,
     "Frozen Cocktail Stand": FrozenCocktailStand,
-
+    "Advanced Terminal Planning": AdvancedTerminalPlanning,
+    "Riverside Expansion Project": RiversideExpansionProject,
 
 }
 

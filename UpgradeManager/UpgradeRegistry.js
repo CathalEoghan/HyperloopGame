@@ -43,6 +43,8 @@ import { prayerRoom } from './PrayerRoom.js'
 import { artificialIntelligenceImprovements } from './ArtificialIntelligenceImprovements.js'
 import { eventHall } from './EventHall.js'
 import { palatialInteriorRenovations } from './PalatialInteriorRenovations.js'
+import { advancedTerminalPlanning } from './AdvancedTerminalPlanning.js'
+import { riversideExpansionProject } from './RiversideExpansionProject.js'
 
 
 export const allUpgrades = [
@@ -89,5 +91,7 @@ export const allUpgrades = [
     artificialIntelligenceImprovements,
     eventHall,
     palatialInteriorRenovations,
+    advancedTerminalPlanning,
+    riversideExpansionProject,
 
 ]
