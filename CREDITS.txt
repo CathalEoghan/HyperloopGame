@@ -23,7 +23,7 @@ Mumbai.jpg - Photo by Asif pav via Pexels
 LosAngeles.jpg - Photo by Soly Moses via Pexels
 Tokyo.jpg - Photo by Daisuke Fujita via Pexels
 Seoul.jpg - Photo by Artem Korolev via Pexels
-Chengdu.jpg - Photo by Liuuu_61 via Pexels
+Chengdu.jpg - Photo by Gatsby Yang via Pexels
 SanDiego.jpg - Photo by Brett Sayles via Pexels
 Hyderabad.jpg - Photo by ALOK DAS via Pexels
 Edinburgh.jpg - Photo by Mario Spencer via Pexels
@@ -184,6 +184,9 @@ Albuquerque.jpg - Photo by Quintin Soloviev via Wikimedia Commons
 Tallinn.jpg - Photo by Sergei Gussev via Pexels
 Quito.jpg - Photo by Diego F. Parra via Pexels
 Algiers.jpg - Photo by khebab salaheddine via Pexels
+Zagreb.jpg - Photo by Vladimir Srajber via Pexels
+StLouis.jpg - Photo by James L via Pexels
+Cleveland.jpg - Photo by Matt via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -370,6 +373,9 @@ BurritoRestaurant.jpg - Photo by Snappr via Pexels
 MarzipanCafé.jpg - Photo by Erich73 via Wikimedia Commons
 HatShop.jpg - Photo by RDNE Stock Project via Pexels
 SoupStall.jpg - Photo by Farhad Ibrahimzade via Pexels
+NecktieShop.jpg - Photo by Fer ID via Pexels
+RockBar.jpg - Photo by Dominik Türk via Pexels
+ChessClub.jpg - Photo by Lars Mai via Pexels
 
 
 SOUNDS

@@ -92,6 +92,7 @@ const countryFlags = {
     "Estonia": "ee",
     "Ecuador": "ec",
     "Algeria": "dz",
+    "Croatia": "hr",
 
     
 

@@ -182,6 +182,9 @@ import Albuquerque from '../assets/cities/Albuquerque.jpg'
 import Tallinn from '../assets/cities/Tallinn.jpg'
 import Quito from '../assets/cities/Quito.jpg'
 import Algiers from '../assets/cities/Algiers.jpg'
+import Zagreb from '../assets/cities/Zagreb.jpg'
+import Cleveland from '../assets/cities/Cleveland.jpg'
+import StLouis from '../assets/cities/StLouis.jpg'
 
 
 const cityImages = {
@@ -369,6 +372,9 @@ const cityImages = {
     Tallinn: Tallinn,
     Quito: Quito,
     Algiers: Algiers,
+    Zagreb: Zagreb,
+    Cleveland: Cleveland,
+    "St. Louis": StLouis,
 
 
 }

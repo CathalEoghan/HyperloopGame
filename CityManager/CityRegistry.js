@@ -183,6 +183,9 @@ import { Albuquerque } from './Albuquerque.js'
 import { Tallinn } from './Tallinn.js'
 import { Quito } from './Quito.js'
 import { Algiers } from './Algiers.js'
+import { Zagreb } from './Zagreb.js'
+import { Cleveland } from './Cleveland.js'
+import { StLouis } from './StLouis.js'
 
 
 export const allCities = [
@@ -370,5 +373,8 @@ export const allCities = [
     Tallinn,
     Quito,
     Algiers,
+    Zagreb,
+    Cleveland,
+    StLouis,
 
 ]

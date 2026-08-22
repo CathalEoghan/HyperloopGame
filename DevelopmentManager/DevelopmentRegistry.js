@@ -141,6 +141,9 @@ import { burritoRestaurant } from './BurritoRestaurant.js'
 import { marzipanCafé } from './MarzipanCafé.js'
 import { hatShop } from './HatShop.js'
 import { soupStall } from './SoupStall.js'
+import { necktieShop } from './NecktieShop.js'
+import { rockBar } from './RockBar.js'
+import { chessClub } from './ChessClub.js'
 
 
 export const allDevelopments = [
@@ -286,5 +289,8 @@ export const allDevelopments = [
     marzipanCafé,
     hatShop,
     soupStall,
+    necktieShop,
+    rockBar,
+    chessClub,
 
 ]
