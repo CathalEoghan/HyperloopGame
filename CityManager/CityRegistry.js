@@ -196,6 +196,9 @@ import { Colombo } from './Colombo.js'
 import { Anchorage } from './Anchorage.js'
 import { Vladivostok } from './Vladivostok.js'
 import { Phoenix } from './Phoenix.js'
+import { Bratislava } from './Bratislava.js'
+import { Dakar } from './Dakar.js'
+import { Riga } from './Riga.js'
 
 
 export const allCities = [
@@ -396,5 +399,8 @@ export const allCities = [
     Anchorage,
     Vladivostok,
     Phoenix,
+    Bratislava,
+    Dakar,
+    Riga,
 
 ]

@@ -96,6 +96,9 @@ const countryFlags = {
     "Romania": "ro",
     "Cambodia": "kh",
     "Sri Lanka": "lk",
+    "Slovakia": "sk",
+    "Senegal": "sn",
+    "Latvia": "lv",
 
     
 

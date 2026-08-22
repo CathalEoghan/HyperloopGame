@@ -195,6 +195,9 @@ import Vladivostok from '../assets/cities/Vladivostok.jpg'
 import Colombo from '../assets/cities/Colombo.jpg'
 import Anchorage from '../assets/cities/Anchorage.jpg'
 import Phoenix from '../assets/cities/Phoenix.jpg'
+import Dakar from '../assets/cities/Dakar.jpg'
+import Bratislava from '../assets/cities/Bratislava.jpg'
+import Riga from '../assets/cities/Riga.jpg'
 
 
 const cityImages = {
@@ -395,6 +398,9 @@ const cityImages = {
     Vladivostok: Vladivostok,
     Colombo: Colombo,
     Phoenix: Phoenix,
+    Bratislava: Bratislava,
+    Dakar: Dakar,
+    Riga: Riga,
 
 }
 

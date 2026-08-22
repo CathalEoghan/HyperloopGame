@@ -77,7 +77,7 @@ import AsianTravelPackages from '../assets/developments/AsianTravelPackages.jpg'
 import EuropeanTravelPackages from '../assets/developments/EuropeanTravelPackages.jpg'
 import OceanianTravelPackages from '../assets/developments/OceanianTravelPackages.jpg'
 import Theatre from '../assets/developments/Theatre.jpg'
-import WineMerchant from '../assets/developments/WineMerchant.jpg'
+import PremierWineImports from '../assets/developments/PremierWineImports.jpg'
 import ImprovedRestroomFacilities from '../assets/developments/ImprovedRestroomFacilities.jpg'
 import EnhancedAdvertisingStrategies from '../assets/developments/EnhancedAdvertisingStrategies.jpg'
 import JewelleryShop from '../assets/developments/JewelleryShop.jpg'
@@ -196,6 +196,9 @@ import FishingStore from '../assets/developments/FishingStore.jpg'
 import ExpandedParkingFacilities from '../assets/developments/ExpandedParkingFacilities.jpg'
 import TrainMuseum from '../assets/developments/TrainMuseum.jpg'
 import FreeTradeAgreements from '../assets/developments/FreeTradeAgreements.jpg'
+import WineBar from '../assets/developments/WineBar.jpg'
+import SmokedFishStall from '../assets/developments/SmokedFishStall.jpg'
+import WrestlingArena from '../assets/developments/WrestlingArena.jpg'
 
 
 const developmentImages = {
@@ -277,7 +280,7 @@ const developmentImages = {
     "European Travel Packages": EuropeanTravelPackages,
     "Oceanian Travel Packages": OceanianTravelPackages,
     "Theatre": Theatre,
-    "Wine Merchant": WineMerchant,
+    "Premier Wine Imports": PremierWineImports,
     "Improved Restroom Facilities": ImprovedRestroomFacilities,
     "Enhanced Advertising Strategies": EnhancedAdvertisingStrategies,
     "Jewellery Shop": JewelleryShop,
@@ -396,6 +399,9 @@ const developmentImages = {
     "Expanded Parking Facilities": ExpandedParkingFacilities,
     "Fishing Store": FishingStore,
     "Free Trade Agreements": FreeTradeAgreements,
+    "Smoked Fish Stall": SmokedFishStall,
+    "Wrestling Arena": WrestlingArena,
+    "Wine Bar": WineBar,
 
 
 }
