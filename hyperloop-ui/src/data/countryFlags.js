@@ -95,6 +95,7 @@ const countryFlags = {
     "Croatia": "hr",
     "Romania": "ro",
     "Cambodia": "kh",
+    "Sri Lanka": "lk",
 
     
 

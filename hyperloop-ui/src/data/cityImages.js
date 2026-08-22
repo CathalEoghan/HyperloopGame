@@ -191,6 +191,10 @@ import Nice from '../assets/cities/Nice.jpg'
 import Dallas from '../assets/cities/Dallas.jpg'
 import Islamabad from '../assets/cities/Islamabad.jpg'
 import PhnomPenh from '../assets/cities/PhnomPenh.jpg'
+import Vladivostok from '../assets/cities/Vladivostok.jpg'
+import Colombo from '../assets/cities/Colombo.jpg'
+import Anchorage from '../assets/cities/Anchorage.jpg'
+import Phoenix from '../assets/cities/Phoenix.jpg'
 
 
 const cityImages = {
@@ -387,6 +391,10 @@ const cityImages = {
     Dallas: Dallas,
     Islamabad: Islamabad,
     "Phnom Penh": PhnomPenh,
+    Anchorage: Anchorage,
+    Vladivostok: Vladivostok,
+    Colombo: Colombo,
+    Phoenix: Phoenix,
 
 }
 

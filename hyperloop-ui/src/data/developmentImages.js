@@ -192,6 +192,10 @@ import CosmeticsStore from '../assets/developments/CosmeticsStore.jpg'
 import FrozenCocktailStand from '../assets/developments/FrozenCocktailStand.jpg'
 import AdvancedTerminalPlanning from '../assets/developments/AdvancedTerminalPlanning.jpg'
 import RiversideExpansionProject from '../assets/developments/RiversideExpansionProject.jpg'
+import FishingStore from '../assets/developments/FishingStore.jpg'
+import ExpandedParkingFacilities from '../assets/developments/ExpandedParkingFacilities.jpg'
+import TrainMuseum from '../assets/developments/TrainMuseum.jpg'
+import FreeTradeAgreements from '../assets/developments/FreeTradeAgreements.jpg'
 
 
 const developmentImages = {
@@ -388,6 +392,11 @@ const developmentImages = {
     "Frozen Cocktail Stand": FrozenCocktailStand,
     "Advanced Terminal Planning": AdvancedTerminalPlanning,
     "Riverside Expansion Project": RiversideExpansionProject,
+    "Train Museum": TrainMuseum,
+    "Expanded Parking Facilities": ExpandedParkingFacilities,
+    "Fishing Store": FishingStore,
+    "Free Trade Agreements": FreeTradeAgreements,
+
 
 }
 
