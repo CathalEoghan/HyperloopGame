@@ -409,5 +409,5 @@ leavingSound.mp3 - Sound by GraceSoundProductions via Pixabay
 
 MISC IMAGES
 
-DepartureBoard.js - Photo by Oscar Chan via Pexels
+DepartureBoard.js - Photo by Neuhausengroup via Wikimedia Commons
 ReputationIcon.png - <a href="https://www.flaticon.com/free-icons/clean" title="clean icons">Clean icons created by Smashicons - Flaticon</a>
