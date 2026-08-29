@@ -50,3 +50,63 @@
 .board-columns .board-table {
     flex: 1;
 }
+
+.flip-card {
+    animation: flipIn 1s ease-out;
+    padding: 12px 16px;
+}
+
+@keyframes flipIn {
+    0% {
+        transform: rotateX(-90deg);
+        opacity: 0;
+    }
+    100% {
+        transform: rotateX(0deg);
+        opacity: 1;
+    }
+}
+
+.flip-cell {
+    padding: 0;
+    perspective: 400px;
+}
+
+.flap-char {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #111;
+    width: 18px;
+    height: 26px;
+    border-radius: 2px;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    position: relative;
+}
+
+.flap-text {
+    display: inline-flex;
+    gap: 1px;
+}
+
+.flap-char::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: #000;
+}
+
+.flap-space {
+    display: inline-block;
+    width: 6px;
+}
+
+.board-table td {
+    padding: 6px 12px;
+    border-bottom: 1px solid #1a1a1a;
+    font-size: 1rem;
+}

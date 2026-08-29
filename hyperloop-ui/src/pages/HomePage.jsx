@@ -3,6 +3,8 @@ import * as THREE from 'three'
 import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
+import earthDay from '../assets/misc/8k_earth_daymap.jpg'
+import earthNight from '../assets/misc/8k_earth_nightmap.jpg'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import './HomePage.css'
 
@@ -70,15 +72,14 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         mount.appendChild(renderer.domElement)
 
         const globeRadius = 1
-        const geometry = new THREE.SphereGeometry(globeRadius, 64, 64)
+      const geometry = new THREE.SphereGeometry(globeRadius, 128, 128)
         const textureLoader = new THREE.TextureLoader()
-        const dayTexture = textureLoader.load(
-            'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_atmos_2048.jpg'
-        )
-        const nightTexture = textureLoader.load(
-            'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/textures/planets/earth_lights_2048.png'
-        )
 
+const dayTexture = textureLoader.load(earthDay)
+       const nightTexture = textureLoader.load(earthNight)
+const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
+dayTexture.anisotropy = maxAnisotropy
+nightTexture.anisotropy = maxAnisotropy
         const sunDir = getSunWorldPosition().normalize()
 
         const material = new THREE.ShaderMaterial({

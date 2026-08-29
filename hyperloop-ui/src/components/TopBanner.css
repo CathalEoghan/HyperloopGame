@@ -1,44 +1,78 @@
-
 .TopBanner {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     background-color: linen;
-    border: 2px solid black;
-    padding-left: 20px;
+    border-bottom: 2px solid black;
     font-family: 'Inter', sans-serif;
+    min-height: 70px;
 }
+
 .TerminalName {
     flex: 2;
     font-family: 'Inter', sans-serif;
-}
-.balance {
-    margin-right: 8px;
-    font-family: 'Inter', sans-serif;
-}
-.rank {
-    margin-right: 8px;
-    font-family: 'Inter', sans-serif;
-}
-.MysterySpot {
-    flex: 1;
-    min-height: 100px;
-    background-color:lightgrey;
-    font-family: 'Inter', sans-serif;
-    
+    font-size: 1.4rem;
+    margin: 0;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    border-right: 1px solid #ccc;
 }
 
 .rightSideDetails {
-    flex-direction: column;
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 16px;
+    gap: 4px;
+    border-right: 1px solid #ccc;
+    min-width: 180px;
 }
 
 .rightSideDetails img {
-    height: 20px;
-    width: 20px;
+    height: 16px;
+    width: 16px;
+    object-fit: contain;
 }
 
-.time, .rank, .balance {
+.time, .rank, .balance, .reputation {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-family: 'Inter', sans-serif;
+    color: #333;
+}
+
+.time {
+    font-weight: bold;
+    font-size: 1rem;
+    color: #111;
+}
+
+.MysterySpot {
+    flex: 1;
+    max-width: 200px;
+    border: none;
+    border-left: 2px solid black;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    cursor: pointer;
+}
+
+.MysterySpotLabel {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.65);
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    text-align: center;
+    padding: 5px 0;
+    text-transform: uppercase;
 }

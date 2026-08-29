@@ -5,6 +5,8 @@ import cashIcon from '../assets/misc/cash.png'
 import starIcon from '../assets/misc/star.png'
 import { playClickSound2 } from '../utils/sound.js'
 import { playClickSound3 } from '../utils/sound.js'
+import departureBoardImg from '../assets/misc/DepartureBoard.jpg'
+import reputationIcon from '../assets/misc/reputation.png'
 
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation }) {
 
@@ -28,7 +30,7 @@ return (
 </div>
 
 <div className="reputation">
-    🏆 {reputation}
+    <img src={reputationIcon} alt="reputation" /> {reputation}
 </div>
 
 </div>
@@ -41,12 +43,16 @@ return (
         } else {
             playClickSound2();
         }
-
         onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard");
     }}
-    style={{ cursor: "pointer" }}
+    style={{
+        cursor: "pointer",
+        backgroundImage: `url(${departureBoardImg})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+    }}
 >
-    Mystery Spot
+    <span className="MysterySpotLabel">Departure Board</span>
 </button>
 </div>
 
