@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
 import './DevelopmentPage.css'
 import developmentImages from '../data/developmentImages.js'
+import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js';
 import { playClickSound2 } from '../utils/sound.js'
@@ -139,7 +140,7 @@ return (
     return (
         <button className="development" key={development.name} onClick={() => setSelectedDevelopment(development)}>
             <div className="city-image-wrapper">
-                <img className={isUnderConstruction ? "unavailable" : "development-image"} src={developmentImages[development.name]} style={{width: '100%', height: '160px'}} />
+                <img className={isUnderConstruction ? "unavailable" : "development-image"} src={developmentThumbnails[development.name] || developmentImages[development.name]} style={{width: '100%', height: '160px'}} />
                 {isUnderConstruction && (
                     <div className="construction-overlay">
                         <p>UNDER CONSTRUCTION</p>
@@ -160,7 +161,7 @@ return (
         <div className="development-row">
             {sortedAvailable.map(development => (
                 <button className="development" key={development.name} onClick={() => setSelectedDevelopment(development)}>
-                    <img className="unavailable" src={developmentImages[development.name]} style={{width: '100%', height: '160px'}} />
+                    <img className="unavailable" src={developmentThumbnails[development.name] || developmentImages[development.name]} style={{width: '100%', height: '160px'}} />
                     <div>{development.name}</div>
                     <div className="category">{development.category}</div>
                 </button>

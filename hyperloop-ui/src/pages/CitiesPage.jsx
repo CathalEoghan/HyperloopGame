@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './CitiesPage.css'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
+import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
 import cashIcon from '../assets/misc/cash.png'
 import { playClickSound2 } from '../utils/sound.js'
@@ -155,7 +156,7 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
                             return (
                                 <button className="city" key={city.name} onClick={() => setSelectedCity(city)}>
                                     <div className="city-image-wrapper">
-                                        <img className={isUnderConstruction ? "unavailable" : "city-image"} src={cityImages[city.name]} style={{width: '100%', height: '160px'}} />
+                                        <img className={isUnderConstruction ? "unavailable" : "city-image"} src={cityThumbnails[city.name] || cityImages[city.name]} style={{width: '100%', height: '160px'}} />
                                         {isUnderConstruction && (
                                             <div className="construction-overlay">
                                                 <p>UNDER CONSTRUCTION</p>
@@ -186,7 +187,7 @@ const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
                 <div className="city-row">
                     {groupedAvailable[country].map(city => (
                         <button className="city" key={city.name} onClick={() => setSelectedCity(city)}>
-                            <img className="unavailable" src={cityImages[city.name]} style={{width: '100%', height: '160px'}} />
+                            <img className="unavailable" src={cityThumbnails[city.name] || cityImages[city.name]} style={{width: '100%', height: '160px'}} />
                             <div>{city.name}</div>
                             <div className="tierAndPopulation">
                                 Tier {city.tier} | {city.population.toLocaleString()}

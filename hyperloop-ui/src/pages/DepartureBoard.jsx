@@ -7,30 +7,71 @@ function DepartureBoard({purchasedCities}) {
     const [schedule, setSchedule] = useState([])
 
 function generateSchedule(cities) {
-    // Pick up to 20 cities randomly
     const shuffled = [...cities].sort(() => Math.random() - 0.5)
-    const selected = shuffled.slice(0, 20)
-    
-    const totalMinutes = 24 * 60 // 1440 minutes in a day
+    const selected = shuffled.slice(0, Math.min(100, cities.length))
+
+    const totalMinutes = 24 * 60
+    const minGap = 10
+    const numPlatforms = 12
+    const minPlatformGap = 30
     const slotSize = Math.floor(totalMinutes / selected.length)
-    
-    return selected.map((city, i) => {
-        // Random minute within this slot
+    const platformLastUsed = new Array(numPlatforms + 1).fill(-Infinity)
+
+    const departures = []
+
+    selected.forEach((city, i) => {
         const slotStart = i * slotSize
-        const minuteOfDay = slotStart + Math.floor(Math.random() * slotSize)
+        const slotEnd = Math.min(slotStart + slotSize, totalMinutes - 1)
+
+        // Random time within slot, rounded to nearest 5
+        let minuteOfDay = slotStart + Math.floor(Math.random() * (slotEnd - slotStart))
+        minuteOfDay = Math.floor(minuteOfDay / 5) * 5
+
+        // Enforce minimum gap from previous departure
+        if (departures.length > 0) {
+            const lastTime = departures[departures.length - 1].minuteOfDay
+            if (minuteOfDay - lastTime < minGap) {
+                minuteOfDay = Math.ceil((lastTime + minGap) / 5) * 5
+            }
+        }
+
+        // Find a platform not used in the last 30 minutes
+        let platform = null
+        for (let p = 1; p <= numPlatforms; p++) {
+            if (minuteOfDay - platformLastUsed[p] >= minPlatformGap) {
+                platform = p
+                break
+            }
+        }
+        // Fallback: pick the platform used longest ago
+        if (!platform) {
+            let earliest = Infinity
+            for (let p = 1; p <= numPlatforms; p++) {
+                if (platformLastUsed[p] < earliest) {
+                    earliest = platformLastUsed[p]
+                    platform = p
+                }
+            }
+        }
+
+        platformLastUsed[platform] = minuteOfDay
+
         const hour = Math.floor(minuteOfDay / 60)
-        const minute = Math.floor((minuteOfDay % 60) / 5) * 5
+        const minute = minuteOfDay % 60
         const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
-        
-        return {
+
+        departures.push({
             name: city.name,
             country: city.country,
             time: timeString,
             hour,
             minute,
-            platform: Math.floor(Math.random() * 12) + 1
-        }
-    }).sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute))
+            minuteOfDay,
+            platform
+        })
+    })
+
+    return departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay)
 }
 
 function getStatus(hour, minute) {
