@@ -45,6 +45,9 @@ import { eventHall } from './EventHall.js'
 import { palatialInteriorRenovations } from './PalatialInteriorRenovations.js'
 import { advancedTerminalPlanning } from './AdvancedTerminalPlanning.js'
 import { riversideExpansionProject } from './RiversideExpansionProject.js'
+import { freeTradeAgreements } from './FreeTradeAgreements.js'
+import { expandedParkingFacilities } from './ExpandedParkingFacilities.js'
+import { premierWineImports } from './PremierWineImports.js'
 
 
 export const allUpgrades = [
@@ -93,5 +96,8 @@ export const allUpgrades = [
     palatialInteriorRenovations,
     advancedTerminalPlanning,
     riversideExpansionProject,
+    freeTradeAgreements,
+    expandedParkingFacilities,
+    premierWineImports,
 
 ]

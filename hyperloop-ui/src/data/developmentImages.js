@@ -77,7 +77,7 @@ import AsianTravelPackages from '../assets/developments/AsianTravelPackages.jpg'
 import EuropeanTravelPackages from '../assets/developments/EuropeanTravelPackages.jpg'
 import OceanianTravelPackages from '../assets/developments/OceanianTravelPackages.jpg'
 import Theatre from '../assets/developments/Theatre.jpg'
-import WineMerchant from '../assets/developments/WineMerchant.jpg'
+import PremierWineImports from '../assets/developments/PremierWineImports.jpg'
 import ImprovedRestroomFacilities from '../assets/developments/ImprovedRestroomFacilities.jpg'
 import EnhancedAdvertisingStrategies from '../assets/developments/EnhancedAdvertisingStrategies.jpg'
 import JewelleryShop from '../assets/developments/JewelleryShop.jpg'
@@ -192,6 +192,13 @@ import CosmeticsStore from '../assets/developments/CosmeticsStore.jpg'
 import FrozenCocktailStand from '../assets/developments/FrozenCocktailStand.jpg'
 import AdvancedTerminalPlanning from '../assets/developments/AdvancedTerminalPlanning.jpg'
 import RiversideExpansionProject from '../assets/developments/RiversideExpansionProject.jpg'
+import FishingStore from '../assets/developments/FishingStore.jpg'
+import ExpandedParkingFacilities from '../assets/developments/ExpandedParkingFacilities.jpg'
+import TrainMuseum from '../assets/developments/TrainMuseum.jpg'
+import FreeTradeAgreements from '../assets/developments/FreeTradeAgreements.jpg'
+import WineBar from '../assets/developments/WineBar.jpg'
+import SmokedFishStall from '../assets/developments/SmokedFishStall.jpg'
+import WrestlingArena from '../assets/developments/WrestlingArena.jpg'
 
 
 const developmentImages = {
@@ -273,7 +280,7 @@ const developmentImages = {
     "European Travel Packages": EuropeanTravelPackages,
     "Oceanian Travel Packages": OceanianTravelPackages,
     "Theatre": Theatre,
-    "Wine Merchant": WineMerchant,
+    "Premier Wine Imports": PremierWineImports,
     "Improved Restroom Facilities": ImprovedRestroomFacilities,
     "Enhanced Advertising Strategies": EnhancedAdvertisingStrategies,
     "Jewellery Shop": JewelleryShop,
@@ -388,6 +395,14 @@ const developmentImages = {
     "Frozen Cocktail Stand": FrozenCocktailStand,
     "Advanced Terminal Planning": AdvancedTerminalPlanning,
     "Riverside Expansion Project": RiversideExpansionProject,
+    "Train Museum": TrainMuseum,
+    "Expanded Parking Facilities": ExpandedParkingFacilities,
+    "Fishing Store": FishingStore,
+    "Free Trade Agreements": FreeTradeAgreements,
+    "Smoked Fish Stall": SmokedFishStall,
+    "Wrestling Arena": WrestlingArena,
+    "Wine Bar": WineBar,
+
 
 }
 

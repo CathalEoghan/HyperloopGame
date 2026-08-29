@@ -57,7 +57,6 @@ import { handbagShop } from './HandbagShop.js'
 import { bazaar } from './Bazaar.js'
 import { danceStudio } from './DanceStudio.js'
 import { theatre } from './Theatre.js'
-import { wineMerchant } from './WineMerchant.js'
 import { jewelleryShop } from './JewelleryShop.js'
 import { streetFoodFair } from './StreetFoodFair.js'
 import { surfShop } from './SurfShop.js'
@@ -147,6 +146,11 @@ import { chessClub } from './ChessClub.js'
 import { freshFruitStall } from './FreshFruitStall.js'
 import { cosmeticsStore } from './CosmeticsStore.js'
 import { frozenCocktailStand } from './FrozenCocktailStand.js'
+import { trainMuseum } from './TrainMuseum.js'
+import { fishingStore } from './FishingStore.js'
+import { smokedFishStall } from './SmokedFishStall.js'
+import { wrestlingArena } from './WrestlingArena.js'
+import { wineBar } from './WineBar.js'
 
 
 export const allDevelopments = [
@@ -208,7 +212,6 @@ export const allDevelopments = [
     bazaar,
     danceStudio,
     theatre,
-    wineMerchant,
     jewelleryShop,
     streetFoodFair,
     surfShop,
@@ -298,5 +301,10 @@ export const allDevelopments = [
     freshFruitStall,
     cosmeticsStore,
     frozenCocktailStand,
+    fishingStore,
+    trainMuseum,
+    smokedFishStall,
+    wrestlingArena,
+    wineBar,
 
 ]

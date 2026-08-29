@@ -192,6 +192,13 @@ import { Nice } from './Nice.js'
 import { Dallas } from './Dallas.js'
 import { Islamabad } from './Islamabad.js'
 import { PhnomPenh } from './PhnomPenh.js'
+import { Colombo } from './Colombo.js'
+import { Anchorage } from './Anchorage.js'
+import { Vladivostok } from './Vladivostok.js'
+import { Phoenix } from './Phoenix.js'
+import { Bratislava } from './Bratislava.js'
+import { Dakar } from './Dakar.js'
+import { Riga } from './Riga.js'
 
 
 export const allCities = [
@@ -388,5 +395,12 @@ export const allCities = [
     Dallas,
     Islamabad,
     PhnomPenh,
+    Colombo,
+    Anchorage,
+    Vladivostok,
+    Phoenix,
+    Bratislava,
+    Dakar,
+    Riga,
 
 ]

@@ -1,12 +1,12 @@
 
 // Bordeaux
 import { City } from "./City.js";
-import { wineMerchant } from "../DevelopmentManager/WineMerchant.js";
+import { premierWineImports } from "../UpgradeManager/PremierWineImports.js";
 
 export const Bordeaux = new City(
     "Bordeaux",
     1030000,
-    [wineMerchant],
+    [premierWineImports],
     "France",
     "Europe",
     1,
