@@ -129,7 +129,7 @@ import { Durban } from './Durban.js'
 import { Accra } from './Accra.js'
 import { Montevideo } from './Montevideo.js'
 import { Thessaloniki } from './Thessaloniki.js'
-import { Málaga } from './Málaga.js'
+import { Malaga } from './Malaga.js'
 import { Naples } from './Naples.js'
 import { TheHague } from './TheHague.js'
 import { Denpasar } from './Denpasar.js'
@@ -325,7 +325,7 @@ export const allCities = [
     Accra,
     Montevideo,
     Thessaloniki,
-    Málaga,
+    Malaga,
     Naples,
     TheHague,
     Denpasar,

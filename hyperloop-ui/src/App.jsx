@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TopBanner from "./components/TopBanner";
 import ExperienceBar from "./components/ExperienceBar";
 import BottomNav from "./components/BottomNav";
 import RankUpModal from "./components/RankUpModal";
 import CityRevealModal from "./components/CityRevealModal"
 import CitiesPage from "./pages/CitiesPage"
+import HomePage from "./pages/HomePage"
 import DepartureBoard from "./pages/DepartureBoard"
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
@@ -18,137 +19,169 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { allDevelopments } from "../../DevelopmentManager/DevelopmentRegistry.js";
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js";
 import { playRankUpSound } from "./utils/sound.js";
+import FarewellModal from "./components/FarewellModal"
 import { formatTime } from './utils/time.js';
 import "./App.css";
 
 function App() {
-
-  const [terminalName, setTerminalName] = useState("Hyperloop Central")
+  const [terminalName, setTerminalName] = useState("Hyperloop Central");
   const [balance, setBalance] = useState(0);
   const [totalCashEarned, setTotalCashEarned] = useState(0);
-  const [rankSet, setRankSet] = useState(1);  
+  const [rankSet, setRankSet] = useState(1);
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
   const [pendingRankUps, setPendingRankUps] = useState(0);
   const [claimedCity, setClaimedCity] = useState(null);
+  const [reputation, setReputation] = useState(0);
+  const [activeDeparture, setActiveDeparture] = useState(null);
+  const triggeredDepartures = useRef(new Set());
 
   // TESTING ONLY — remove before shipping
-const [rankManager] = useState(() => new RankManager());
-const [progressionManager] = useState(() => {
+  const [rankManager] = useState(() => new RankManager());
+  const [progressionManager] = useState(() => {
     const pm = new ProgressionManager(rankManager);
     rankManager.rank = 60;
     allCities.forEach(city => {
-        city.connect();
-        pm.purchasedCities.push(city);
-        city.rewards.forEach(r => pm.unlockReward(r));
-    });
+    try { city.connect(); } catch(e) {}
+    pm.purchasedCities.push(city);
+    city.rewards.forEach(r => pm.unlockReward(r));
+});
+console.log('allCities:', allCities.length, 'purchasedCities:', pm.purchasedCities.length);
     allDevelopments.forEach(d => {
-        pm.unlockedDevelopments.push(d);
-        pm.purchasedDevelopments.push(d);
+      pm.unlockedDevelopments.push(d);
+      pm.purchasedDevelopments.push(d);
     });
     allUpgrades.forEach(u => {
-        pm.unlockedUpgrades.push(u);
-        pm.purchasedUpgrades.push(u);
+      pm.unlockedUpgrades.push(u);
+      pm.purchasedUpgrades.push(u);
     });
     pm.balance = 9999999;
     return pm;
-});
-const [economyManager] = useState(() => new EconomyManager(progressionManager));
-const [timeManager] = useState(() => new TimeManager());
-const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
+  });
+  const [economyManager] = useState(() => new EconomyManager(progressionManager));
+  const [timeManager] = useState(() => new TimeManager());
+  const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
 
+  // Declared AFTER progressionManager so it can read its initial value
+  const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
 
   useEffect(() => {
     setInterval(() => {
       const incomePerSecond = economyManager.calculateDailyIncome();
+      progressionManager.addCash(incomePerSecond);
+      rankManager.convertCashToXP(progressionManager.totalCashEarned);
+      const previousRank = rankManager.rank;
+      rankManager.verifyRank();
+      if (rankManager.rank > previousRank) {
+        playRankUpSound();
+        setPendingRankUps(prev => prev + 1);
+      }
+      constructionManager.update();
 
-        progressionManager.addCash(incomePerSecond)
-        rankManager.convertCashToXP(progressionManager.totalCashEarned);
-const previousRank = rankManager.rank;
-rankManager.verifyRank();
+      const now = new Date();
+      const currentHour = now.getHours();
+      const currentMinute = now.getMinutes();
+      const todayKey = now.toDateString();
+      const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
+      schedule.forEach(entry => {
+        const key = `${todayKey}_${entry.time}`;
+        if (entry.hour === currentHour && entry.minute === currentMinute && !triggeredDepartures.current.has(key)) {
+          triggeredDepartures.current.add(key);
+          setActiveDeparture(entry);
+        }
+      });
 
-if (rankManager.rank > previousRank) {
-  playRankUpSound();
-  setPendingRankUps(prev => prev + 1);
-}
-    constructionManager.update();
-    
       setBalance(progressionManager.balance);
-    setRankSet(rankManager.rank);
-    setTotalCashEarned(progressionManager.totalCashEarned);
-  }, 1000);
-}, [rankManager, progressionManager, economyManager, constructionManager]);
+      setRankSet(rankManager.rank);
+      setTotalCashEarned(progressionManager.totalCashEarned);
+      setReputation(progressionManager.reputation);
+      setPurchasedCitiesCount(progressionManager.purchasedCities.length);
+    }, 1000);
+  }, [rankManager, progressionManager, economyManager, constructionManager]);
 
-// 1. No city picked yet - show opening page
-if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
-    return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName}/>
-}
+  if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
+    return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName} />;
+  }
 
-// 2. City picked, under construction - show timer
-if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
+  if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
     return (
-        <div className="App opening-background">
-            <h2>🚧 Setting up your terminal in {pickedCity.name}...</h2>
-        </div>
+      <div className="App opening-background">
+        <h2>🚧 Setting up your terminal in {pickedCity.name}...</h2>
+      </div>
     );
-}
+  }
 
-      return (
+  return (
     <div className="App">
-    <TopBanner
-    terminalName={terminalName}
-    balance={balance}
-    rank={rankSet}
-    activeTab={activeTab}
-    onSelect={setActiveTab}
-/>
+      <TopBanner
+        terminalName={terminalName}
+        balance={balance}
+        rank={rankSet}
+        activeTab={activeTab}
+        onSelect={setActiveTab}
+        reputation={reputation}
+      />
       <ExperienceBar
         current={totalCashEarned - rankManager.getCumulativeXP(rankSet - 1)}
         max={rankManager.calculateNextRankXP(rankSet)}
         nextRank={rankSet + 1}
       />
-      {activeTab === "Cities" && (
-        <CitiesPage 
-    purchasedCities={progressionManager.purchasedCities} 
-    constructionManager={constructionManager} 
-    unlockedCities={progressionManager.unlockedCities} 
-    balance={balance}
-    totalCashEarned={totalCashEarned}
-    economyManager={economyManager}
-/>
+      {activeTab === "Home" && (
+        <HomePage
+          purchasedCities={progressionManager.purchasedCities}
+          purchasedCitiesCount={purchasedCitiesCount}
+        />
       )}
-  {activeTab === "Development" && (
-    <DevelopmentPage
-        purchasedDevelopments={progressionManager.purchasedDevelopments}
-        unlockedDevelopments={progressionManager.unlockedDevelopments}
-        unlockedUpgrades={progressionManager.unlockedUpgrades}
-        developmentsUnderConstruction={progressionManager.developmentsUnderConstruction}
-        constructionManager={constructionManager}
-        balance={balance}
-        purchasedCities={progressionManager.purchasedCities}
-        purchasedUpgrades={progressionManager.purchasedUpgrades}
-    />
-)}
-{activeTab === "DepartureBoard" && (
-    <DepartureBoard purchasedCities={progressionManager.purchasedCities} />
-)}
+      {activeTab === "Cities" && (
+        <CitiesPage
+          purchasedCities={progressionManager.purchasedCities}
+          constructionManager={constructionManager}
+          unlockedCities={progressionManager.unlockedCities}
+          balance={balance}
+          totalCashEarned={totalCashEarned}
+          economyManager={economyManager}
+        />
+      )}
+      {activeTab === "Development" && (
+        <DevelopmentPage
+          purchasedDevelopments={progressionManager.purchasedDevelopments}
+          unlockedDevelopments={progressionManager.unlockedDevelopments}
+          unlockedUpgrades={progressionManager.unlockedUpgrades}
+          developmentsUnderConstruction={progressionManager.developmentsUnderConstruction}
+          constructionManager={constructionManager}
+          balance={balance}
+          purchasedCities={progressionManager.purchasedCities}
+          purchasedUpgrades={progressionManager.purchasedUpgrades}
+        />
+      )}
+      {activeTab === "DepartureBoard" && (
+        <DepartureBoard purchasedCities={progressionManager.purchasedCities} />
+      )}
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
-   {pendingRankUps > 0 && (
-  <RankUpModal rank={rankSet} onClaim={() => {
-    const newCity = progressionManager.getRandomUnlockedCity(allCities);
-    if (newCity) {
-      progressionManager.unlockCity(newCity);
-      setClaimedCity(newCity);
-    }
-    setPendingRankUps(prev => prev - 1);
-  }} />
-)}
-{claimedCity && (
-  <CityRevealModal city={claimedCity} onClose={() => setClaimedCity(null)} />
-)}
+      {activeDeparture && !claimedCity ? (
+        <FarewellModal
+          departure={activeDeparture}
+          onFarewell={() => {
+            progressionManager.addReputation(5);
+            setActiveDeparture(null);
+          }}
+          onMiss={() => setActiveDeparture(null)}
+        />
+      ) : pendingRankUps > 0 && (
+        <RankUpModal rank={rankSet} onClaim={() => {
+          const newCity = progressionManager.getRandomUnlockedCity(allCities);
+          if (newCity) {
+            progressionManager.unlockCity(newCity);
+            setClaimedCity(newCity);
+          }
+          setPendingRankUps(prev => prev - 1);
+        }} />
+      )}
+      {claimedCity && (
+        <CityRevealModal city={claimedCity} onClose={() => setClaimedCity(null)} />
+      )}
     </div>
-    
-      )
+  );
 }
 
 export default App;

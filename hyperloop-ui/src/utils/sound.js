@@ -2,6 +2,12 @@
 import click_sound_2 from '../assets/click_sound_2.mp3'
 import click_sound_3 from '../assets/click_sound_3.mp3'
 import rankUpSound from '../assets/rankUpSound.mp3'
+import leavingSound from '../assets/leavingSound.mp3'
+
+export function playLeavingSound() {
+    const audio = new Audio(leavingSound)
+    audio.play()
+}
 
 export function playClickSound2() {
 

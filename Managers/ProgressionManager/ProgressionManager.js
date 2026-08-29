@@ -14,6 +14,7 @@ export class ProgressionManager {
         this.citiesUnderConstruction = [];
         this.constructionQueue = [];
         this.balance = 0;
+        this.reputation = 0;
         this.totalCashEarned = 0;
         this.rankManager = rankManager;
         this.developmentsUnderConstruction = [];
@@ -36,10 +37,10 @@ export class ProgressionManager {
     }
 
     unlockCity(city) {
-    if (!this.unlockedCities.includes(city)) {
-        this.unlockedCities.push(city);
+        if (!this.unlockedCities.includes(city)) {
+            this.unlockedCities.push(city);
+        }
     }
-}
 
     // Adds cash to the balance
     addCash(amount) {
@@ -47,6 +48,18 @@ export class ProgressionManager {
         this.balance += amount;
         this.totalCashEarned += amount; // Never decreases
 
+    }
+
+    addReputation(amount) {
+        this.reputation += amount;
+    }
+
+    spendReputation(amount) {
+        if (this.reputation >= amount) {
+            this.reputation -= amount;
+            return true;
+        }
+        return false;
     }
 
     // Spends cash, deducts from balance
@@ -66,14 +79,14 @@ export class ProgressionManager {
     }
 
     getConstructionQueueCapacity() {
-    let size = 2; // default
-    this.purchasedUpgrades.forEach(upgrade => {
-        if (upgrade.effectType === "queueCapacity") {
-            size++;
-        }
-    });
-    return size;
-}
+        let size = 2; // default
+        this.purchasedUpgrades.forEach(upgrade => {
+            if (upgrade.effectType === "queueCapacity") {
+                size++;
+            }
+        });
+        return size;
+    }
 
     purchaseCity(city) {
         if (this.purchasedCities.length >= this.getCityCapacity()) {
@@ -83,7 +96,7 @@ export class ProgressionManager {
         if (this.purchasedCities.includes(city)) {
             return
         }
-            
+
         city.connect();
 
         city.rewards.forEach(reward => {
@@ -94,30 +107,30 @@ export class ProgressionManager {
 
     }
 
-purchaseDevelopment(development) {
-    const isUnlocked = this.unlockedDevelopments.includes(development) || 
-                       this.unlockedUpgrades.includes(development);
-    if (!isUnlocked) return;
+    purchaseDevelopment(development) {
+        const isUnlocked = this.unlockedDevelopments.includes(development) ||
+            this.unlockedUpgrades.includes(development);
+        if (!isUnlocked) return;
 
-    if (this.purchasedDevelopments.includes(development) || 
-        this.purchasedUpgrades.includes(development)) return;
+        if (this.purchasedDevelopments.includes(development) ||
+            this.purchasedUpgrades.includes(development)) return;
 
-    if (development instanceof Upgrade) {
-        this.purchasedUpgrades.push(development);
-    } else {
-        this.purchasedDevelopments.push(development);
+        if (development instanceof Upgrade) {
+            this.purchasedUpgrades.push(development);
+        } else {
+            this.purchasedDevelopments.push(development);
+        }
     }
-}
     getRandomUnlockedCity(allCities) {
-    const eligible = allCities.filter(city => !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city));
-    // pick one at random from `eligible`
-    if (eligible.length === 0) {
-    return null; 
-    } else {
-    const randomIndex = Math.floor(Math.random() * eligible.length);
-    return eligible[randomIndex];
+        const eligible = allCities.filter(city => !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city));
+        // pick one at random from `eligible`
+        if (eligible.length === 0) {
+            return null;
+        } else {
+            const randomIndex = Math.floor(Math.random() * eligible.length);
+            return eligible[randomIndex];
 
-}
+        }
     }
 }
 

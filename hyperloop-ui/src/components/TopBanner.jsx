@@ -6,7 +6,7 @@ import starIcon from '../assets/misc/star.png'
 import { playClickSound2 } from '../utils/sound.js'
 import { playClickSound3 } from '../utils/sound.js'
 
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect }) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation }) {
 
 return (
 
@@ -25,6 +25,10 @@ return (
 
 <div className="balance">
     <img src= {cashIcon} alt="balance" /> £{balance.toFixed(2)}
+</div>
+
+<div className="reputation">
+    🏆 {reputation}
 </div>
 
 </div>

@@ -1,0 +1,39 @@
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    font-family: "Inter", sans-serif;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal {
+    background: linen;
+    border: 2px solid black;
+    font-family: "Inter", sans-serif;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+}
+
+.farewell-modal .farewell-countdown {
+    font-size: 2rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    color: #e74c3c;
+    margin: 12px 0;
+}
+
+.modal-overlay .modal img.modal-city-image {
+    width: 160px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid black;
+    margin-top: 12px;
+}

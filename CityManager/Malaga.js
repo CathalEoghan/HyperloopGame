@@ -3,7 +3,7 @@
 import { City } from "./City.js";
 import { swimmingPool } from "../DevelopmentManager/SwimmingPool.js";
 
-export const Málaga = new City(
+export const Malaga = new City(
     "Málaga",
     1100000,
     [swimmingPool],
