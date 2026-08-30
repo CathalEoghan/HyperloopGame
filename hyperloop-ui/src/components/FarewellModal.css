@@ -20,7 +20,7 @@
     max-width: 500px;
     width: 90%;
     font-family: 'Courier New', Courier, monospace;
-    box-shadow: 0 0 50px rgba(245, 166, 35, 0.25), 0 20px 60px rgba(0, 0, 0, 0.8);
+    box-shadow: 0 0 50px rgb(255, 239, 224), 0 20px 60px rgba(0, 0, 0, 0.8);
 }
 
 .farewell-attention {

@@ -100,11 +100,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
 
         return (
             <div key={country}>
-                <h2
-                    className="country"
-                    style={{ borderLeftColor: borderColour, cursor: 'pointer' }}
-                    onClick={() => toggleCountry(country)}
-                >
+                <h2 className="country" style={{ borderLeftColor: borderColour }} onClick={() => toggleCountry(country)}>
                     {country}
                     <img src={`https://flagcdn.com/w40/${countryFlags[country]}.png`} width="20" alt={country} />
                     <span className="country-city-count">{cities.length}</span>
@@ -135,9 +131,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         )}
                                     </div>
                                     <div>{city.name}</div>
-                                    <div className="tierAndPopulation">
-                                        Tier {city.tier} | {city.population.toLocaleString()}
-                                    </div>
+                                    <div className="tierAndPopulation">Tier {city.tier} | {city.population.toLocaleString()}</div>
                                 </button>
                             )
                         })}
@@ -150,6 +144,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     return (
         <div className="background">
 
+            {/* Toolbar */}
             <div className="city-toolbar">
                 <input
                     className="city-search"
@@ -167,6 +162,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 </select>
             </div>
 
+            {/* Continent filter */}
             <div className="continent-filter">
                 {CONTINENTS.map(c => (
                     <button
@@ -180,38 +176,21 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 ))}
             </div>
 
-            {filteredPurchased.length > 0 && (
-                <div className="city-stats-banner">
-                    <div className="city-stat">
-                        <span>Population served:</span>
-                        <strong>{formatPopulation(totalPopulation)}</strong>
-                    </div>
-                    <div className="city-stat">
-                        <span>City income:</span>
-                        <strong>£{totalIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</strong>
-                    </div>
-                </div>
-            )}
-
-            {/* Enlarged image overlay */}
+            {/* Enlarged image */}
             {enlargedImage && (
                 <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
-                    <img
-                        src={enlargedImage}
-                        alt="enlarged"
-                        style={{ width: '500px', height: '500px', objectFit: 'cover', borderRadius: '12px', border: '3px solid black' }}
-                    />
+                    <img src={enlargedImage} alt="enlarged" style={{ width: '500px', height: '500px', objectFit: 'cover', borderRadius: '12px', border: '3px solid black' }} />
                 </div>
             )}
 
-            {/* City detail modal */}
+            {/* Modals */}
             {selectedCity && (
                 <div className="modal-overlay" onClick={() => setSelectedCity(null)}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         {underConstruction.some(c => c.name === selectedCity.name) ? (
                             <>
                                 <h3>🚧 {selectedCity.name}</h3>
-                                <p>This city's connection is currently under construction!</p>
+                                <p>Under construction!</p>
                                 <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedCity.finishTime))}</strong></p>
                                 <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
                             </>
@@ -272,6 +251,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 </div>
             )}
 
+            {/* Connected cities */}
             {sortedPurchasedCountries.length > 0 && (
                 <>
                     <div className="section-header-row">
@@ -285,13 +265,24 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             <button className="collapse-btn" onClick={expandAll}>Expand all</button>
                         </div>
                     </div>
+                    <div className="city-stats-row">
+                        <div className="city-stat-box">
+                            <span className="city-stat-label">Population served</span>
+                            <strong>{formatPopulation(totalPopulation)}</strong>
+                        </div>
+                        <div className="city-stat-box">
+                            <span className="city-stat-label">City income</span>
+                            <strong>£{totalIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</strong>
+                        </div>
+                    </div>
                     {sortedPurchasedCountries.map(country => renderCountrySection(country, groupedPurchased[country]))}
                 </>
             )}
 
+            {/* Available cities */}
             {sortedAvailableCountries.length > 0 && (
                 <>
-                    <div className="section-header-row">
+                    <div className="section-header-row" style={{ marginTop: '24px' }}>
                         <h1 className="availableCitiesHeader">
                             Cities available to connect
                             <span className="city-count-badge">{filteredAvailable.length}</span>

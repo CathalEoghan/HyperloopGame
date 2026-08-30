@@ -1,0 +1,110 @@
+.delay-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.delay-modal {
+    background: #0a0a1a;
+    border: 2px solid #e74c3c;
+    border-radius: 8px;
+    padding: 40px 48px;
+    text-align: center;
+    max-width: 500px;
+    width: 90%;
+    font-family: 'Courier New', Courier, monospace;
+    box-shadow: 0 0 50px rgba(231, 76, 60, 0.25), 0 20px 60px rgba(0, 0, 0, 0.8);
+}
+
+.delay-header {
+    color: #e74c3c;
+    font-size: 1.8rem;
+    font-weight: bold;
+    letter-spacing: 6px;
+    margin: 0 0 12px;
+}
+
+.delay-divider {
+    color: #e74c3c;
+    opacity: 0.4;
+    margin: 0 0 20px;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+}
+
+.delay-message {
+    color: #ccc;
+    font-size: 0.95rem;
+    line-height: 1.8;
+    margin: 0 0 12px;
+}
+
+.delay-message strong {
+    color: #fff;
+}
+
+.delay-newtime {
+    color: #f5a623;
+    font-size: 1.1rem;
+    margin: 0 0 20px;
+    letter-spacing: 1px;
+}
+
+.delay-newtime strong {
+    font-size: 1.4rem;
+}
+
+.delay-subtext {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 0 0 28px;
+    font-style: italic;
+}
+
+.delay-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.delay-btn-compensate {
+    background: none;
+    border: 2px solid #f5a623;
+    color: #f5a623;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    padding: 14px 24px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.delay-btn-compensate:hover {
+    background: #f5a623;
+    color: #0a0a1a;
+}
+
+.delay-btn-dismiss {
+    background: none;
+    border: 1px solid #555;
+    color: #666;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
+    padding: 10px 24px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.delay-btn-dismiss:hover {
+    background: #1a1a1a;
+    color: #aaa;
+}

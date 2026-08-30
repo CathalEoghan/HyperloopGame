@@ -5,7 +5,7 @@ import cityImages from '../data/cityImages.js'
 import countryFlags from '../data/countryFlags.js'
 import './ProgressPage.css'
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven }) {
     const [sessionSeconds, setSessionSeconds] = useState(0)
 
     useEffect(() => {
@@ -26,6 +26,26 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
         if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
         return pop.toLocaleString()
+    }
+
+    const purchasedNames = new Set(purchasedCities.map(c => c.name))
+    const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
+    const sortedCities = [...allCities].sort((a, b) => a.name.localeCompare(b.name))
+
+    const getCityState = (city) => {
+        if (purchasedNames.has(city.name)) return 'connected'
+        if (unlockedNames.has(city.name)) return 'unlocked'
+        return 'unknown'
+    }
+
+    const sortedCountries = [...new Set(allCities.map(c => c.country))].sort()
+    const purchasedCountries = new Set(purchasedCities.map(c => c.country))
+    const unlockedCountriesSet = new Set((unlockedCities || []).map(c => c.country))
+
+    const getCountryState = (country) => {
+        if (purchasedCountries.has(country)) return 'connected'
+        if (unlockedCountriesSet.has(country)) return 'unlocked'
+        return 'unknown'
     }
 
     const totalPopulation = useMemo(() =>
@@ -53,25 +73,19 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const mostProfitableDev = revenueDevs.length ? revenueDevs.reduce((best, d) => d.revenue > best.revenue ? d : best) : null
     const leastProfitableDev = revenueDevs.length ? revenueDevs.reduce((worst, d) => d.revenue < worst.revenue ? d : worst) : null
 
-    const purchasedNames = new Set(purchasedCities.map(c => c.name))
-    const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
-    const sortedCities = [...allCities].sort((a, b) => a.name.localeCompare(b.name))
-
-    const getCityState = (city) => {
-        if (purchasedNames.has(city.name)) return 'connected'
-        if (unlockedNames.has(city.name)) return 'unlocked'
-        return 'unknown'
-    }
-
     const stats = [
         { label: 'Terminal age', value: terminalAge() },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
         { label: 'Total revenue', value: `£${totalRevenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day` },
+        { label: 'Personal farewells given', value: farewellsGiven ?? 0 },
         { label: 'Most profitable city', value: mostProfitableCity ? `${mostProfitableCity.name} — £${economyManager.calculateCityIncome(mostProfitableCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day` : '—' },
         { label: 'Least profitable city', value: leastProfitableCity ? `${leastProfitableCity.name} — £${economyManager.calculateCityIncome(leastProfitableCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day` : '—' },
         { label: 'Most profitable development', value: mostProfitableDev ? `${mostProfitableDev.name} — £${mostProfitableDev.revenue.toLocaleString()}/day` : '—' },
         { label: 'Least profitable development', value: leastProfitableDev ? `${leastProfitableDev.name} — £${leastProfitableDev.revenue.toLocaleString()}/day` : '—' },
     ]
+
+    const cityProgress = (purchasedCities.length / 200) * 100
+    const countryProgress = (purchasedCountries.size / sortedCountries.length) * 100
 
     return (
         <div className="progress-page">
@@ -85,11 +99,56 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                 ))}
             </div>
 
-            <h2 className="cities-collected-header">
-                Cities collected
-                <span className="cities-fraction">{purchasedCities.length} / 200</span>
+            {/* Countries collected */}
+            <h2 className="progress-section-header">
+                Countries collected
+                <span className="progress-fraction">{purchasedCountries.size} / {sortedCountries.length}</span>
             </h2>
+            <div className="progress-bar-container">
+                <div className="progress-bar-fill" style={{ width: `${countryProgress}%` }} />
+                <span className="progress-bar-label">{Math.round(countryProgress)}%</span>
+            </div>
+            <div className="progress-country-grid">
+                {sortedCountries.map(country => {
+                    const state = getCountryState(country)
+                    const flagCode = countryFlags[country]
+                    return (
+                        <div key={country} className={`progress-country-card progress-country-${state}`}>
+                            {state === 'unknown' ? (
+                                <>
+                                    <div className="progress-flag-unknown">?</div>
+                                    <div className="progress-country-name unknown-name">Unknown</div>
+                                </>
+                            ) : (
+                                <>
+                                    {flagCode ? (
+                                        <img
+                                            className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
+                                            src={`https://flagcdn.com/w80/${flagCode}.png`}
+                                            alt={country}
+                                        />
+                                    ) : (
+                                        <div className="progress-flag-unknown">?</div>
+                                    )}
+                                    <div className={`progress-country-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>
+                                        {country}
+                                    </div>
+                                </>
+                            )}
+                        </div>
+                    )
+                })}
+            </div>
 
+            {/* Cities collected */}
+            <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
+                Cities collected
+                <span className="progress-fraction">{purchasedCities.length} / 200</span>
+            </h2>
+            <div className="progress-bar-container">
+                <div className="progress-bar-fill" style={{ width: `${cityProgress}%` }} />
+                <span className="progress-bar-label">{Math.round(cityProgress)}%</span>
+            </div>
             <div className="progress-city-grid">
                 {sortedCities.map(city => {
                     const state = getCityState(city)
@@ -115,7 +174,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                     {flagCode ? (
                                         <img
                                             className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
-                                            src={`https://flagcdn.com/w40/${flagCode}.png`}
+                                            src={`https://flagcdn.com/w80/${flagCode}.png`}
                                             alt={city.country}
                                         />
                                     ) : (

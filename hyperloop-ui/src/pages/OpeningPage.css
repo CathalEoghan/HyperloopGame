@@ -17,7 +17,7 @@
 }
 
 .starter-city-card {
-    background: linen;
+    background-color: rgb(255, 239, 224);
     border: 2px solid black;
     font-family: "Inter", sans-serif;
     border-radius: 12px;
@@ -42,17 +42,12 @@
 
 .opening-background {
     min-height: 100vh;
-    background-color: linen;
+    background-color: rgb(255, 239, 224);
     font-family: "Inter", sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
-
-.starter-city-card:hover {
-    background-color: #4ec92e;
-    cursor: pointer;
 }
 
 .starter-city-image {
@@ -93,7 +88,7 @@
     font-size: 16px;
     border: 2px solid black;
     border-radius: 8px;
-    background: linen;
+    background-color: rgb(255, 239, 224);
 }
 
 .terminal-name-input span {
@@ -109,12 +104,17 @@
     font-size: 16px;
     border: 2px solid black;
     border-radius: 8px;
-    background: linen;
+    background-color: rgb(255, 239, 224);
+    cursor: pointer;
+}
+
+.starter-city-card:hover {
+    background-color: #f5a623;
     cursor: pointer;
 }
 
 .opening-background button:hover {
-    background-color: #4ec92e;
+    background-color: #f5a623;
 }
 
 .opening-background h1 {

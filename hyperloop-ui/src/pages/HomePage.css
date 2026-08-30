@@ -1,71 +1,54 @@
 .home-page {
     position: relative;
     width: 100%;
-     height: calc(100vh - 220px);
+    height: calc(100vh - 160px);
     background: #0a0a1a;
     overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 
+/* Compact top bar */
 .globe-top-info {
     text-align: center;
-    padding: 12px 0 4px;
-    min-height: 52px;
+    padding: 4px 0;
     z-index: 10;
-}
-
-.tooltip-city {
-    color: #ffffff;
-    font-family: 'Inter', sans-serif;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin: 0;
-    letter-spacing: 0.5px;
-}
-
-.tooltip-detail {
-    color: rgba(255, 255, 255, 0.6);
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    margin: 2px 0 0;
-}
-
-.globe-container {
-    flex: 1;
-    cursor: grab;
-}
-
-.globe-container:active {
-    cursor: grabbing;
-}
-
-.globe-bottom-info {
-    text-align: center;
-    padding: 8px 0 12px;
-    z-index: 10;
+    flex-shrink: 0;
 }
 
 .globe-hint {
     color: rgba(255, 255, 255, 0.35);
     font-family: 'Inter', sans-serif;
-    font-size: 0.75rem;
+    font-size: 0.65rem;
     margin: 0;
 }
 
 .globe-cities {
     color: #f5a623;
     font-family: 'Courier New', monospace;
-    font-size: 0.95rem;
-    margin: 3px 0 0;
+    font-size: 0.75rem;
+    margin: 1px 0 0;
     letter-spacing: 1px;
 }
+
+/* Globe fills remaining space */
+.globe-container {
+    flex: 1;
+    cursor: grab;
+    min-height: 0;
+}
+
+.globe-container:active {
+    cursor: grabbing;
+}
+
+/* City hover panel */
 .city-hover-panel {
     position: absolute;
     left: 16px;
     top: 16px;
-    width: 300px;
-    background: linen;
+    width: 280px;
+    background-color: linen;
     border: 2px solid black;
     border-radius: 12px;
     overflow: hidden;
@@ -76,13 +59,30 @@
 }
 
 .city-hover-image {
-    width: 260px;
-    height: 260px;
+    width: 256px;
+    height: 180px;
     object-fit: cover;
     display: block;
     border: 2px solid black;
     border-radius: 8px;
-    margin: 16px auto 0;
+    margin: 12px auto 0;
+}
+
+.city-hover-name {
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #111;
+    margin: 8px 0 2px;
+    text-align: center;
+}
+
+.city-hover-detail {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: #666;
+    margin: 0 0 4px;
+    text-align: center;
 }
 
 .city-hover-divider {
@@ -91,13 +91,13 @@
     font-size: 0.7rem;
     font-weight: bold;
     letter-spacing: 2px;
-    margin: 14px 0 8px;
+    margin: 10px 0 6px;
 }
 
 .city-hover-fact {
     color: #333;
     font-family: 'Inter', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: bold;
     line-height: 1.6;
     padding: 0 14px;

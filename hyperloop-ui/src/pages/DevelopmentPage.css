@@ -1,8 +1,8 @@
 .background {
   padding: 8px;
   font-family: "Inter", sans-serif;
-  padding-bottom: 80px;
-  background-color: linen;
+  padding-bottom: 116px;
+  background-color: rgb(255, 246, 239);
   min-height: 100vh;
 }
 
@@ -42,7 +42,7 @@
   padding: 4px 14px;
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
-  background: none;
+  background-color: white;
   outline: none;
   color: #333;
   width: 220px;
@@ -58,7 +58,7 @@
   padding: 4px 14px;
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
-  background: linen;
+  background-color: white
   cursor: pointer;
   color: #555;
   outline: none;
@@ -74,7 +74,7 @@
 
 .category-btn {
   display: inline-block;
-  background: none;
+  background-color: white;
   border: 2px solid #ccc;
   border-radius: 20px;
   padding: 4px 14px;
@@ -106,8 +106,9 @@
   padding: 8px 16px;
   border-radius: 8px;
   margin: 8px 0;
-  display: flex;
-  justify-content: space-between;
+  display: inline-flex;
+  justify-content: flex-start;
+  gap: 10px;
   align-items: center;
   letter-spacing: 0.5px;
 }
@@ -231,7 +232,7 @@
 }
 
 .modal {
-  background: linen;
+  background-color: rgb(255, 239, 224);
   border: 2px solid black;
   font-family: "Inter", sans-serif;
   border-radius: 12px;
@@ -300,7 +301,7 @@
 
 .modal .closeButton {
     display: block !important;
-    background-color: linen !important;
+    background-color: rgb(255, 239, 224);
     color: black !important;
     border: 2px solid black !important;
     border-radius: 8px !important;
@@ -316,4 +317,11 @@
 .modal .closeButton:hover {
     background-color: #333 !important;
     color: white !important;
+}
+
+.board-table thead th {
+    position: sticky;
+    top: 0;
+    background: #0a0a1a;
+    z-index: 1;
 }

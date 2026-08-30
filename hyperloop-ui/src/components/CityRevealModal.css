@@ -15,7 +15,7 @@
 }
 
 .modal {
-    background: linen;
+    background-color: rgb(255, 239, 224);
     border: 2px solid black;
     font-family: "Inter", sans-serif;
     border-radius: 12px;
@@ -35,7 +35,7 @@
 }
 
 .modal button {
-    background-color: linen;
+    background-color: rgb(255, 239, 224);
     border: 2px solid black;
     border-radius: 8px;
     padding: 10px 16px;
@@ -46,7 +46,7 @@
 }
 
 .modal button:hover {
-    background-color: #4ec92e;
+    background-color: #f5a623;
 }
 
 .reveal-heading {

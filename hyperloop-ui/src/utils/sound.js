@@ -4,6 +4,12 @@ import click_sound_3 from '../assets/click_sound_3.mp3'
 import rankUpSound from '../assets/rankUpSound.mp3'
 import leavingSound from '../assets/leavingSound.mp3'
 import farewellAcceptSound from '../assets/farewellAccept.mp3'
+import badNewsSound from '../assets/badNews.mp3'
+
+export function playBadNewsSound() {
+    const audio = new Audio(badNewsSound)
+    audio.play()
+}
 
 export function playLeavingSound() {
     const audio = new Audio(leavingSound)

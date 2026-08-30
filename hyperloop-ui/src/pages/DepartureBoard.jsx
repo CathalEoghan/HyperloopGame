@@ -13,29 +13,20 @@ function FlapText({ text }) {
     )
 }
 
-function FlipStatus({ status }) {
-    return (
-        <td className="flip-cell">
-            <div className="flip-card" key={status.label}>
-                <FlapText text={status.label} />
-            </div>
-        </td>
-    )
-}
-
-function DepartureBoard({ purchasedCities }) {
+function DepartureBoard({ purchasedCities, homeCity }) {
     const [schedule, setSchedule] = useState([])
     const [, setTick] = useState(0)
 
     function generateSchedule(cities) {
-        const shuffled = [...cities].sort(() => Math.random() - 0.5)
-        const selected = shuffled.slice(0, Math.min(100, cities.length))
+        const departureCities = cities.filter(c => !homeCity || c.name !== homeCity.name)
+        const shuffled = [...departureCities].sort(() => Math.random() - 0.5)
+        const selected = shuffled.slice(0, Math.min(100, shuffled.length))
         const totalMinutes = 24 * 60
         const minGap = 10
-        const numPlatforms = 30
-        const minPlatformGap = 30
+        const numGates = 30
+        const minGateGap = 30
         const slotSize = Math.floor(totalMinutes / selected.length)
-        const platformLastUsed = new Array(numPlatforms + 1).fill(-Infinity)
+        const gateLastUsed = new Array(numGates + 1).fill(-Infinity)
         const departures = []
 
         selected.forEach((city, i) => {
@@ -45,61 +36,55 @@ function DepartureBoard({ purchasedCities }) {
             minuteOfDay = Math.floor(minuteOfDay / 5) * 5
             if (departures.length > 0) {
                 const lastTime = departures[departures.length - 1].minuteOfDay
-                if (minuteOfDay - lastTime < minGap) {
-                    minuteOfDay = Math.ceil((lastTime + minGap) / 5) * 5
-                }
+                if (minuteOfDay - lastTime < minGap) minuteOfDay = Math.ceil((lastTime + minGap) / 5) * 5
             }
-            const availablePlatforms = []
-            for (let p = 1; p <= numPlatforms; p++) {
-                if (minuteOfDay - platformLastUsed[p] >= minPlatformGap) {
-                    availablePlatforms.push(p)
-                }
+            const availableGates = []
+            for (let g = 1; g <= numGates; g++) {
+                if (minuteOfDay - gateLastUsed[g] >= minGateGap) availableGates.push(g)
             }
-            let platform
-            if (availablePlatforms.length > 0) {
-                platform = availablePlatforms[Math.floor(Math.random() * availablePlatforms.length)]
+            let gate
+            if (availableGates.length > 0) {
+                gate = availableGates[Math.floor(Math.random() * availableGates.length)]
             } else {
                 let earliest = Infinity
-                for (let p = 1; p <= numPlatforms; p++) {
-                    if (platformLastUsed[p] < earliest) {
-                        earliest = platformLastUsed[p]
-                        platform = p
-                    }
+                for (let g = 1; g <= numGates; g++) {
+                    if (gateLastUsed[g] < earliest) { earliest = gateLastUsed[g]; gate = g }
                 }
             }
-            platformLastUsed[platform] = minuteOfDay
+            gateLastUsed[gate] = minuteOfDay
             const hour = Math.floor(minuteOfDay / 60)
             const minute = minuteOfDay % 60
             const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
-            departures.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay, platform })
+            departures.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay, gate })
         })
 
         return departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay)
     }
 
-    function getStatus(hour, minute) {
-        const now = new Date()
-        const currentMinutes = now.getHours() * 60 + now.getMinutes()
-        const departureMinutes = hour * 60 + minute
-        const diff = departureMinutes - currentMinutes
-       if (diff < -5)  return { label: 'DEPARTED',   color: '#888' }
-if (diff <= 0)  return { label: 'FINAL CALL',  color: 'red' }
-if (diff <= 30) return { label: 'BOARDING',    color: 'limegreen' }
-return           { label: 'SCHEDULED',         color: '#aaa' }
-    }
+    function getStatus(hour, minute, delayed) {
+    const now = new Date()
+    const currentMinutes = now.getHours() * 60 + now.getMinutes()
+    const diff = (hour * 60 + minute) - currentMinutes
+    if (diff <= 0)  return { label: 'DEPARTED',    color: '#666' }
+    if (diff <= 5)  return { label: 'GATE CLOSED', color: '#e74c3c' }
+    if (diff <= 10) return { label: 'FINAL CALL',  color: 'red' }
+    if (diff <= 30) return { label: 'BOARDING',    color: 'limegreen' }
+    if (diff <= 45) return { label: 'GO TO GATE',  color: '#f5a623' }
+    if (delayed)    return { label: 'DELAYED',      color: '#e74c3c' }
+    return              { label: 'SCHEDULED',    color: '#aaa' }
+}
 
-    useEffect(() => {
+  useEffect(() => {
+    const interval = setInterval(() => {
+        setTick(t => t + 1)
+        // Reload schedule in case of delays
         const today = new Date().toDateString()
         const key = `departures_${today}`
         const saved = localStorage.getItem(key)
-        if (saved) {
-            setSchedule(JSON.parse(saved))
-        } else {
-            const generated = generateSchedule(purchasedCities)
-            localStorage.setItem(key, JSON.stringify(generated))
-            setSchedule(generated)
-        }
-    }, [])
+        if (saved) setSchedule(JSON.parse(saved))
+    }, 30000)
+    return () => clearInterval(interval)
+}, [])
 
     useEffect(() => {
         const interval = setInterval(() => setTick(t => t + 1), 30000)
@@ -108,53 +93,59 @@ return           { label: 'SCHEDULED',         color: '#aaa' }
 
     const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
     const half = Math.ceil(schedule.length / 2)
-    const leftColumn = schedule.slice(0, half)
-    const rightColumn = schedule.slice(half)
+    const left = schedule.slice(0, half)
+    const right = schedule.slice(half)
+    const pairs = Array.from({ length: half }, (_, i) => [left[i], right[i]])
 
-    const renderRow = (entry, i) => {
-    const status = getStatus(entry.hour, entry.minute)
-    const isGone = status.label === 'DEPARTED'
-    const showPlatform = status.label !== 'SCHEDULED'
-    return (
-        <tr key={i} style={{ opacity: isGone ? 0.4 : 1 }}>
-            <td><FlapText text={entry.name.toUpperCase()} /></td>
-            <td><FlapText text={entry.time} /></td>
-            <td><FlapText text={showPlatform ? String(entry.platform) : '--'} /></td>
-            <FlipStatus status={status} />
-        </tr>
-    )
-}
+    const renderCells = (entry) => {
+        if (!entry) return <><td/><td/><td/><td/></>
+        const status = getStatus(entry.hour, entry.minute, entry.delayed)
+        const isGone = status.label === 'DEPARTED'
+        const showGate = status.label !== 'SCHEDULED'
+        return (
+            <>
+                <td style={{ opacity: isGone ? 0.4 : 1 }}><FlapText text={entry.name.toUpperCase()} /></td>
+                <td style={{ opacity: isGone ? 0.4 : 1 }}><FlapText text={entry.time} /></td>
+                <td style={{ opacity: isGone ? 0.4 : 1 }}><FlapText text={showGate ? String(entry.gate) : '--'} /></td>
+                <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>
+                    <div className="flip-card" key={status.label}>
+                        <FlapText text={status.label} />
+                    </div>
+                </td>
+            </>
+        )
+    }
 
     return (
         <div className="departure-board">
-            <h2 className="board-title">🛫 Departures — {today}</h2>
+            <h2 className="board-title">Departures for {today}</h2>
             {schedule.length === 0 ? (
                 <p>No departures scheduled.</p>
             ) : (
-                <div className="board-columns">
-                    <table className="board-table">
-                        <thead>
-                            <tr>
-                                <th>DESTINATION</th>
-                                <th>DEPARTS</th>
-                                <th>PLATFORM</th>
-                                <th>STATUS</th>
+                <table className="board-table">
+                    <thead>
+                        <tr>
+                            <td className="board-header">DESTINATION</td>
+                            <td className="board-header">DEPARTS</td>
+                            <td className="board-header">GATE</td>
+                            <td className="board-header">STATUS</td>
+                            <td className="board-col-divider board-header"></td>
+                            <td className="board-header">DESTINATION</td>
+                            <td className="board-header">DEPARTS</td>
+                            <td className="board-header">GATE</td>
+                            <td className="board-header">STATUS</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {pairs.map(([l, r], i) => (
+                            <tr key={i}>
+                                {renderCells(l)}
+                                <td className="board-col-divider"></td>
+                                {renderCells(r)}
                             </tr>
-                        </thead>
-                        <tbody>{leftColumn.map(renderRow)}</tbody>
-                    </table>
-                    <table className="board-table">
-                        <thead>
-                            <tr>
-                                <th>DESTINATION</th>
-                                <th>DEPARTS</th>
-                                <th>PLATFORM</th>
-                                <th>STATUS</th>
-                            </tr>
-                        </thead>
-                        <tbody>{rightColumn.map(renderRow)}</tbody>
-                    </table>
-                </div>
+                        ))}
+                    </tbody>
+                </table>
             )}
         </div>
     )

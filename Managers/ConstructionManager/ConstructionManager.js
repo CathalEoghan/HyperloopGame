@@ -1,4 +1,3 @@
-
 import { FIVE_SECONDS, FOUR_HOURS, EIGHT_HOURS, ONE_DAY } from '../TimeManager/TimeManager.js'
 
 export class ConstructionManager {
@@ -103,13 +102,13 @@ export class ConstructionManager {
 
         switch (city.tier) {
             case 3:
-                connectionCost = 50000;
+                connectionCost = 1000000;
                 break;
             case 2:
-                connectionCost = 25000;
+                connectionCost = 250000;
                 break;
             case 1:
-                connectionCost = 10000;
+                connectionCost = 50000;
                 break;
             default:
                 throw new Error("Error: tier not recognised.")
@@ -139,6 +138,3 @@ completeDevelopmentConstruction(development) {
         this.progressionManager.constructionQueue.filter(d => d !== development);
 }
 }
-
-
-

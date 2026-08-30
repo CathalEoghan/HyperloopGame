@@ -1,4 +1,3 @@
-
 .departure-board {
     background-color: #0a0a0a;
     color: #f5a623;
@@ -6,6 +5,8 @@
     padding: 24px;
     min-height: 100vh;
     padding-bottom: 80px;
+    /* Force the dark background to fill everything */
+    position: relative;
 }
 
 .board-title {
@@ -30,63 +31,51 @@
     color: #888;
     font-size: 0.75rem;
     letter-spacing: 2px;
+    white-space: nowrap;
+    /* Force thead row background to match board */
+    background-color: #0a0a0a;
 }
 
-.board-table td {
-    padding: 12px 16px;
-    border-bottom: 1px solid #1a1a1a;
-    font-size: 1rem;
+.board-header {
+    text-align: left;
+    padding: 8px 16px;
+    border-bottom: 1px solid #333;
+    color: #888;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    white-space: nowrap;
+    background-color: #0a0a0a;
+    font-weight: normal;
 }
 
 .board-table tr:hover td {
     background-color: #111;
 }
 
-.board-columns {
-    overflow-x: auto;
+/* Divider between the two halves */
+.board-col-divider {
+    padding: 0 !important;
+    width: 32px;
+    border-left: 1px solid #333 !important;
 }
 
-.board-columns .board-table {
-    flex: 1;
-}
-
-.flip-card {
-    animation: flipIn 1s ease-out;
-    padding: 12px 16px;
-}
-
-@keyframes flipIn {
-    0% {
-        transform: rotateX(-90deg);
-        opacity: 0;
-    }
-    100% {
-        transform: rotateX(0deg);
-        opacity: 1;
-    }
-}
-
-.flip-cell {
-    padding: 0;
-    perspective: 400px;
+/* Flap tile characters */
+.flap-text {
+    display: inline-flex;
+    gap: 1px;
 }
 
 .flap-char {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #111;
+    background: #1a1a1a;
     width: 18px;
     height: 26px;
     border-radius: 2px;
     font-family: 'Courier New', monospace;
     font-size: 1rem;
     position: relative;
-}
-
-.flap-text {
-    display: inline-flex;
-    gap: 1px;
 }
 
 .flap-char::after {
@@ -104,8 +93,17 @@
     width: 6px;
 }
 
-.board-table td {
-    padding: 6px 12px;
-    border-bottom: 1px solid #1a1a1a;
-    font-size: 1rem;
+.flip-cell {
+    padding: 0;
+    perspective: 400px;
+}
+
+.flip-card {
+    animation: flipIn 0.4s ease-out;
+    padding: 12px 16px;
+}
+
+@keyframes flipIn {
+    0%   { transform: rotateX(-90deg); opacity: 0; }
+    100% { transform: rotateX(0deg);   opacity: 1; }
 }

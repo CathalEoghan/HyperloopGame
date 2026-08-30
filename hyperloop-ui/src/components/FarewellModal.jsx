@@ -44,7 +44,7 @@ function FarewellModal({ departure, onFarewell, onMiss }) {
                     <span className="farewell-city-name">{departure.name}</span>
                 </div>
                 <p className="farewell-message">
-                    Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Platform <strong>{departure.platform}</strong>.
+                    Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Gate <strong>{departure.gate}</strong>.
                 </p>
                 <p
                     className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}

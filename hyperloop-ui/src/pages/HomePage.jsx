@@ -70,7 +70,6 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         const globeRadius = 1
         const textureLoader = new THREE.TextureLoader()
 
-        // Try local textures, fall back to CDN
         let dayUrl, nightUrl
         try {
             dayUrl = new URL('../assets/misc/8k_earth_daymap.jpg', import.meta.url).href
@@ -86,7 +85,6 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         dayTexture.anisotropy = maxAnisotropy
         nightTexture.anisotropy = maxAnisotropy
 
-        // GLOBE — day/night shader
         const globeMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 dayTexture: { value: dayTexture },
@@ -124,7 +122,6 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         )
         scene.add(globe)
 
-        // ATMOSPHERE — separate mesh with limb glow shader
         const atmosMaterial = new THREE.ShaderMaterial({
             vertexShader: `
                 varying vec3 vNormal;
@@ -147,25 +144,18 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
             depthWrite: false,
         })
 
-        const atmosphere = new THREE.Mesh(
-            new THREE.SphereGeometry(globeRadius * 1.1, 64, 64),
-            atmosMaterial
-        )
-        scene.add(atmosphere)
+        scene.add(new THREE.Mesh(new THREE.SphereGeometry(globeRadius * 1.1, 64, 64), atmosMaterial))
 
-        // Update sun every 60s
         const sunInterval = setInterval(() => {
             globeMaterial.uniforms.sunDirection.value.copy(getSunWorldPosition().normalize())
         }, 60000)
 
-        // Stars
         const starPositions = new Float32Array(2000 * 3)
         for (let i = 0; i < 2000 * 3; i++) starPositions[i] = (Math.random() - 0.5) * 100
         const starGeo = new THREE.BufferGeometry()
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3))
         scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05 })))
 
-        // City sprites
         const sprites = []
         const purchasedNames = new Set(purchasedCities.map(c => c.name))
 
@@ -191,7 +181,7 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         })
 
         const raycaster = new THREE.Raycaster()
-        raycaster.params.Sprite = { threshold: 0.01 }
+        raycaster.params.Sprite = { threshold: 0.05 }
         const mouse = new THREE.Vector2()
         let isDragging = false
         let prev = { x: 0, y: 0 }
@@ -213,6 +203,7 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         }
         const onMouseUp = () => { isDragging = false }
         const onWheel = (e) => {
+            e.preventDefault()
             camDist = Math.max(1.5, Math.min(5, camDist + e.deltaY * 0.003))
             updateCamera()
         }
@@ -220,7 +211,7 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         mount.addEventListener('mousedown', onMouseDown)
         window.addEventListener('mousemove', onMouseMove)
         window.addEventListener('mouseup', onMouseUp)
-        mount.addEventListener('wheel', onWheel)
+        mount.addEventListener('wheel', onWheel, { passive: false })
 
         const camPos = new THREE.Vector3()
         let animFrameId
@@ -257,20 +248,15 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
 
     return (
         <div className="home-page">
+            {/* Top info bar — always shows hint and city count */}
             <div className="globe-top-info">
-                {hoveredCity ? (
-                    <>
-                        <p className="tooltip-city">{hoveredCity.isPurchased ? hoveredCity.city.name : '?'}</p>
-                        <p className="tooltip-detail">{hoveredCity.city.country} | {formatPopulation(hoveredCity.city.population)}</p>
-                    </>
-                ) : (
-                    <>
-                        <p className="tooltip-city">&nbsp;</p>
-                        <p className="tooltip-detail">&nbsp;</p>
-                    </>
-                )}
+                <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
+                <p className="globe-cities">{purchasedCitiesCount} cities connected</p>
             </div>
+
             <div ref={mountRef} className="globe-container" />
+
+            {/* City hover panel — now includes name, country, population */}
             {hoveredCity && (
                 <div className="city-hover-panel">
                     <img
@@ -279,6 +265,12 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
                         alt={hoveredCity.city.name}
                         style={!hoveredCity.isPurchased ? { filter: 'grayscale(100%)' } : {}}
                     />
+                    <div className="city-hover-name">
+                        {hoveredCity.isPurchased ? hoveredCity.city.name : '?'}
+                    </div>
+                    <div className="city-hover-detail">
+                        {hoveredCity.city.country} · {formatPopulation(hoveredCity.city.population)}
+                    </div>
                     <div className="city-hover-divider">── CITY FACT ──</div>
                     <p className="city-hover-fact">
                         {hoveredCity.isPurchased
@@ -288,10 +280,6 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
                     </p>
                 </div>
             )}
-            <div className="globe-bottom-info">
-                <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
-                <p className="globe-cities">{purchasedCitiesCount} cities connected</p>
-            </div>
         </div>
     )
 }
