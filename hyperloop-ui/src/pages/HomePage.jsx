@@ -3,8 +3,6 @@ import * as THREE from 'three'
 import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
-import earthDay from '../assets/misc/8k_earth_daymap.jpg'
-import earthNight from '../assets/misc/8k_earth_nightmap.jpg'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import './HomePage.css'
 
@@ -48,9 +46,7 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         scene.background = new THREE.Color(0x0a0a1a)
 
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-
-        // Camera orbit state — user spins the camera, not the globe
-        let camLon = 0   // degrees
+        let camLon = 0
         let camLat = 0
         let camDist = 2.5
 
@@ -72,21 +68,30 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
         mount.appendChild(renderer.domElement)
 
         const globeRadius = 1
-      const geometry = new THREE.SphereGeometry(globeRadius, 128, 128)
         const textureLoader = new THREE.TextureLoader()
 
-const dayTexture = textureLoader.load(earthDay)
-       const nightTexture = textureLoader.load(earthNight)
-const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
-dayTexture.anisotropy = maxAnisotropy
-nightTexture.anisotropy = maxAnisotropy
-        const sunDir = getSunWorldPosition().normalize()
+        // Try local textures, fall back to CDN
+        let dayUrl, nightUrl
+        try {
+            dayUrl = new URL('../assets/misc/8k_earth_daymap.jpg', import.meta.url).href
+            nightUrl = new URL('../assets/misc/8k_earth_nightmap.jpg', import.meta.url).href
+        } catch {
+            dayUrl = 'https://unpkg.com/three-globe/example/img/earth-day.jpg'
+            nightUrl = 'https://unpkg.com/three-globe/example/img/earth-night.jpg'
+        }
 
-        const material = new THREE.ShaderMaterial({
+        const dayTexture = textureLoader.load(dayUrl)
+        const nightTexture = textureLoader.load(nightUrl)
+        const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
+        dayTexture.anisotropy = maxAnisotropy
+        nightTexture.anisotropy = maxAnisotropy
+
+        // GLOBE — day/night shader
+        const globeMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 dayTexture: { value: dayTexture },
                 nightTexture: { value: nightTexture },
-                sunDirection: { value: sunDir },
+                sunDirection: { value: getSunWorldPosition().normalize() },
             },
             vertexShader: `
                 varying vec2 vUv;
@@ -113,21 +118,44 @@ nightTexture.anisotropy = maxAnisotropy
             `,
         })
 
-        const globe = new THREE.Mesh(geometry, material)
+        const globe = new THREE.Mesh(
+            new THREE.SphereGeometry(globeRadius, 128, 128),
+            globeMaterial
+        )
         scene.add(globe)
 
-        const atmosMaterial = new THREE.MeshPhongMaterial({
-            color: 0x4488ff, transparent: true, opacity: 0.08, side: THREE.FrontSide
+        // ATMOSPHERE — separate mesh with limb glow shader
+        const atmosMaterial = new THREE.ShaderMaterial({
+            vertexShader: `
+                varying vec3 vNormal;
+                void main() {
+                    vNormal = normalize(normalMatrix * normal);
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vNormal;
+                void main() {
+                    float intensity = pow(0.7 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.0);
+                    intensity = clamp(intensity, 0.0, 1.0);
+                    gl_FragColor = vec4(0.3, 0.6, 1.0, 1.0) * intensity;
+                }
+            `,
+            side: THREE.BackSide,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            depthWrite: false,
         })
+
         const atmosphere = new THREE.Mesh(
-            new THREE.SphereGeometry(globeRadius * 1.02, 64, 64), atmosMaterial
+            new THREE.SphereGeometry(globeRadius * 1.1, 64, 64),
+            atmosMaterial
         )
         scene.add(atmosphere)
 
-        scene.add(new THREE.AmbientLight(0x111133, 0.1))
-
+        // Update sun every 60s
         const sunInterval = setInterval(() => {
-            material.uniforms.sunDirection.value.copy(getSunWorldPosition().normalize())
+            globeMaterial.uniforms.sunDirection.value.copy(getSunWorldPosition().normalize())
         }, 60000)
 
         // Stars
@@ -137,7 +165,7 @@ nightTexture.anisotropy = maxAnisotropy
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3))
         scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05 })))
 
-        // City sprites — placed in absolute world space, no group rotation needed
+        // City sprites
         const sprites = []
         const purchasedNames = new Set(purchasedCities.map(c => c.name))
 
@@ -162,7 +190,6 @@ nightTexture.anisotropy = maxAnisotropy
             sprites.push(sprite)
         })
 
-        // Mouse
         const raycaster = new THREE.Raycaster()
         raycaster.params.Sprite = { threshold: 0.01 }
         const mouse = new THREE.Vector2()
@@ -178,7 +205,6 @@ nightTexture.anisotropy = maxAnisotropy
             const visibleSprites = sprites.filter(s => s.visible)
             const hits = raycaster.intersectObjects(visibleSprites)
             setHoveredCity(hits.length > 0 ? hits[0].object.userData : null)
-
             if (!isDragging) return
             camLon -= (e.clientX - prev.x) * 0.3
             camLat = Math.max(-85, Math.min(85, camLat + (e.clientY - prev.y) * 0.3))
@@ -200,7 +226,6 @@ nightTexture.anisotropy = maxAnisotropy
         let animFrameId
         const animate = () => {
             animFrameId = requestAnimationFrame(animate)
-            // Show sprites on camera-facing hemisphere only
             camPos.copy(camera.position).normalize()
             sprites.forEach(sprite => {
                 sprite.visible = sprite.userData.surfaceNormal.dot(camPos) > 0.1

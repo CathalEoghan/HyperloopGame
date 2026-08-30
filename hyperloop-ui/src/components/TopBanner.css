@@ -51,7 +51,6 @@
 
 .MysterySpot {
     flex: 1;
-    max-width: 200px;
     border: none;
     border-left: 2px solid black;
     font-family: 'Inter', sans-serif;

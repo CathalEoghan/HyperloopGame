@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
-import { playLeavingSound } from '../utils/sound.js'
+import { playLeavingSound, playFarewellAcceptSound } from '../utils/sound.js'
+import reputationIcon from '../assets/misc/reputation.png'
+import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
 
 function FarewellModal({ departure, onFarewell, onMiss }) {
@@ -24,20 +26,37 @@ function FarewellModal({ departure, onFarewell, onMiss }) {
     const seconds = secondsLeft % 60
     const timeDisplay = `${minutes}:${String(seconds).padStart(2, '0')}`
     const isUrgent = secondsLeft <= 60
+    const flagCode = countryFlags[departure.country]
 
     return (
         <div className="farewell-overlay">
             <div className="farewell-modal">
-                <p className="farewell-attention">Departure Announcement</p>
+                <p className="farewell-attention">ATTENTION</p>
+                <div className="farewell-divider">━━━━━━━━━━━━━━━━━━━━</div>
+                <div className="farewell-destination">
+                    {flagCode && (
+                        <img
+                            src={`https://flagcdn.com/w40/${flagCode}.png`}
+                            alt={departure.country}
+                            className="farewell-flag"
+                        />
+                    )}
+                    <span className="farewell-city-name">{departure.name}</span>
+                </div>
                 <p className="farewell-message">
-                    Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to <strong>Platform {departure.platform}</strong>.
+                    Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Platform <strong>{departure.platform}</strong>.
                 </p>
-                <p className="farewell-timer" style={{ color: isUrgent ? 'red' : '#f5a623' }}>
+                <p
+                    className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}
+                >
                     {timeDisplay}
                 </p>
-                <button className="farewell-button" onClick={onFarewell}>
-                    <strong>Give a personal farewell (+5 🏆)</strong>
-                </button>
+                <button className="farewell-button" onClick={() => {
+    playFarewellAcceptSound()
+    onFarewell()
+}}>
+    Give a personal farewell (+5 <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
+</button>
             </div>
         </div>
     )

@@ -6,6 +6,7 @@ import RankUpModal from "./components/RankUpModal";
 import CityRevealModal from "./components/CityRevealModal"
 import CitiesPage from "./pages/CitiesPage"
 import HomePage from "./pages/HomePage"
+import ProgressPage from './pages/ProgressPage.jsx'
 import DepartureBoard from "./pages/DepartureBoard"
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'

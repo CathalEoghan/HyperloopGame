@@ -43,8 +43,7 @@
 }
 
 .board-columns {
-    display: flex;
-    gap: 40px;
+    overflow-x: auto;
 }
 
 .board-columns .board-table {

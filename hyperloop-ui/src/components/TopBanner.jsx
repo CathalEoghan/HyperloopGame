@@ -26,7 +26,7 @@ return (
 </div>
 
 <div className="balance">
-    <img src= {cashIcon} alt="balance" /> £{balance.toFixed(2)}
+    <img src= {cashIcon} alt="balance" /> £{Math.floor(balance).toLocaleString('en-GB')}
 </div>
 
 <div className="reputation">

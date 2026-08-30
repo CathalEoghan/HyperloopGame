@@ -10,6 +10,6 @@ export const Praia = new City(
     "Cape Verde",
     "Africa",
     1,
-    "The word Praia translates directly from Portuguese to mean 'beach'",
+    "The word Praia translates directly from Portuguese to mean 'beach'.",
     false
 );
