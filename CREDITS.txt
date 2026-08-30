@@ -406,6 +406,7 @@ SOUNDS
 
 cityConnectComplete.mp3 - Sound by Robinhood76 via Freesound
 leavingSound.mp3 - Sound by GraceSoundProductions via Pixabay
+farewellAccept.mp3 - Sound by Universfield via Pixabay
 
 MISC IMAGES
 
