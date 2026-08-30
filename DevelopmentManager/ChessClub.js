@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const chessClub = new Development(
     "Chess Club",
-    20850,
+    208500,
     "Recreation",
-    710
+    5680
 );

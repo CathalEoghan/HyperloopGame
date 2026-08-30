@@ -3,7 +3,7 @@ import { Development } from "./Development.js";
 
 export const soapStore = new Development(
     "Soap Store",
-    27000,
+    270000,
     "Shopping",
-    455
+    3640
 );

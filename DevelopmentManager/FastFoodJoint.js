@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const fastFoodJoint = new Development(
     "Fast Food Joint",
-    22500,
+    225000,
     "Food",
-    780
+    6240
 );

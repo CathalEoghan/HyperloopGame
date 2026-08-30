@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const rockBar = new Development(
     "Rock Bar",
-    22500,
+    225000,
     "Recreation",
-    710
+    5680
 );

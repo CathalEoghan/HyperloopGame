@@ -17,7 +17,6 @@ import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManag
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
-import starterCities from "./data/starterCities.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { allDevelopments } from "../../DevelopmentManager/DevelopmentRegistry.js";
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js";
@@ -42,28 +41,8 @@ function App() {
   const triggeredDepartures = useRef(new Set());
   const triggeredDelays = useRef(new Set());
 
-  // TESTING ONLY — remove before shipping
   const [rankManager] = useState(() => new RankManager());
-  const [progressionManager] = useState(() => {
-    const pm = new ProgressionManager(rankManager);
-    rankManager.rank = 60;
-    allCities.forEach(city => {
-      try { city.connect(); } catch(e) {}
-      pm.purchasedCities.push(city);
-      city.rewards.forEach(r => pm.unlockReward(r));
-    });
-    allDevelopments.forEach(d => {
-      pm.unlockedDevelopments.push(d);
-      pm.purchasedDevelopments.push(d);
-    });
-    allUpgrades.forEach(u => {
-      pm.unlockedUpgrades.push(u);
-      pm.purchasedUpgrades.push(u);
-    });
-    pm.balance = 9999999;
-    return pm;
-  });
-
+  const [progressionManager] = useState(() => new ProgressionManager(rankManager));
   const [economyManager] = useState(() => new EconomyManager(progressionManager));
   const [timeManager] = useState(() => new TimeManager());
   const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
@@ -115,10 +94,9 @@ function App() {
           const newTime = `${String(newHour).padStart(2, '0')}:${String(newMinute).padStart(2, '0')}`;
           const compensation = Math.round(delayMinutes * 50);
           triggeredDelays.current.add(entry.time);
-          // Update departure board schedule in localStorage
           const updated = schedule.map(e => e.time === entry.time
-    ? { ...e, hour: newHour, minute: newMinute, time: newTime, delayed: true }
-    : e);
+            ? { ...e, hour: newHour, minute: newMinute, time: newTime, delayed: true }
+            : e);
           localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
           setActiveDelay({ name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation });
         }
@@ -205,7 +183,6 @@ function App() {
       <TickerBar />
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
 
-      {/* Delay modal — highest priority */}
       {activeDelay && (
         <DelayModal
           delay={activeDelay}
@@ -220,7 +197,6 @@ function App() {
         />
       )}
 
-      {/* Farewell modal */}
       {!activeDelay && activeDeparture && !claimedCity && (
         <FarewellModal
           departure={activeDeparture}
@@ -233,7 +209,6 @@ function App() {
         />
       )}
 
-      {/* Rank up modal */}
       {!activeDelay && !activeDeparture && pendingRankUps > 0 && (
         <RankUpModal rank={rankSet} onClaim={() => {
           const newCity = progressionManager.getRandomUnlockedCity(allCities);

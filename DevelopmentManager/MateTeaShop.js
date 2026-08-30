@@ -4,7 +4,7 @@ import { Development } from '../DevelopmentManager/Development.js'
 
 export const mateTeaShop = new Development(
     "Mate Tea Shop",
-    20500,
+    205000,
     "Service",
-    650
+    5200
 )

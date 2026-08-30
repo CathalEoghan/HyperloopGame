@@ -3,7 +3,7 @@ import { Development } from "./Development.js";
 
 export const artMarket = new Development(
     "Art Market",
-    19000,
+    190000,
     "Shopping",
-    650
+    5200
 );

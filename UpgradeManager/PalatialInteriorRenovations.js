@@ -4,7 +4,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 
 export const palatialInteriorRenovations = new Upgrade(
     "Palatial Interior Renovations",
-    29800,
+    149000,
     "Infrastructure",
     "placeholder",
     12.5

@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const sourdoughCafé = new Development(
     "Sourdough Café",
-    21000,
+    210000,
     "Food",
-    640
+    5120
 );

@@ -1,57 +1,17 @@
-
-
 export class RankManager {
     constructor() {
         this.rank = 1;
         this.xp = 0;
     }
 
+    // XP needed to reach the NEXT rank from the given rank
+    // Formula: 1000 * rank^2.5 — scales from ~2,800 at rank 2 to ~565M at rank 200
     calculateNextRankXP(rank) {
-        
-        let xpNeeded = 0;
-
-        switch (rank) {
-        case 1:
-            xpNeeded  = 999999999999999999999;
-        break;
-        case 2:
-            xpNeeded = 1000;
-        break;
-        case 3:
-            xpNeeded = 2500;
-        break;
-        case 4:
-            xpNeeded = 5000;
-        break;
-        case 5:
-            xpNeeded = 10000;
-        break;
-        case 6:
-            xpNeeded = 25000;
-        break;
-        case 7:
-            xpNeeded = 50000;
-        break;
-        case 8:
-            xpNeeded = 100000;
-        break;
-        case 9:
-            xpNeeded = 250000;
-        break;
-        case 10:
-            xpNeeded = 500000;
-        break;
-        case 11:
-            xpNeeded = 750000;
-        break;
-        case 12:
-            xpNeeded = 1000000;
-        break;
-        }
-
-        return Math.round(xpNeeded);
+        if (rank >= 200) return Infinity;
+        return Math.floor(500 * Math.pow(rank, 2.5));
     }
 
+    // Total cumulative XP needed to reach a given rank from rank 1
     getCumulativeXP(rank) {
         let total = 0;
         for (let i = 1; i <= rank; i++) {
@@ -60,16 +20,16 @@ export class RankManager {
         return total;
     }
 
+    // Check if player has earned enough XP to rank up
     verifyRank() {
-        while (this.xp >= this.getCumulativeXP(this.rank)) {
+        if (this.rank >= 200) return;
+        while (this.rank < 200 && this.xp >= this.getCumulativeXP(this.rank)) {
             this.rank++;
         }
     }
 
-    // Decides how much XP you have from your lifetime earnings
+    // XP equals total cash earned
     convertCashToXP(totalCashEarned) {
-        let xpGained = Math.floor(totalCashEarned);
-        this.xp = xpGained;
+        this.xp = Math.floor(totalCashEarned);
     }
-
 }

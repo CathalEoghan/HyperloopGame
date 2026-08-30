@@ -3,7 +3,7 @@ import { Development } from "./Development.js";
 
 export const bazaar = new Development(
     "Bazaar",
-    16900,
+    169000,
     "Shopping",
-    620
+    4960
 );

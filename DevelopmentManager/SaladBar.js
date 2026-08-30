@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const saladBar = new Development(
     "Salad Bar",
-    21000,
+    210000,
     "Food",
-    700
+    5600
 );

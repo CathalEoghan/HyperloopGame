@@ -16,9 +16,9 @@ function BottomNav({activeTab, onSelect}) {
 
     <button className="Cities" onClick={() => {
         if (activeTab == "Cities") {
-            playClickSound3();
+            playClickSound2();
         } else {
-        playClickSound2();
+        playClickSound3();
         }
         onSelect(targetCities)}}>
         Cities
@@ -26,9 +26,9 @@ function BottomNav({activeTab, onSelect}) {
 
      <button className="Development" onClick={() => {
         if (activeTab == "Development") {
-            playClickSound3();
+            playClickSound2();
         } else {
-        playClickSound2();
+        playClickSound3();
         }
         onSelect(targetDevelopment)}}>
         Development
@@ -36,9 +36,9 @@ function BottomNav({activeTab, onSelect}) {
 
     <button className="Progress" onClick={() => {
         if (activeTab == "Progress") {
-            playClickSound3();
+            playClickSound2();
         } else {
-        playClickSound2();
+        playClickSound3();
         }
         onSelect(targetProgress)}}>
         Progress
@@ -46,9 +46,9 @@ function BottomNav({activeTab, onSelect}) {
 
     <button className="Settings" onClick={() => {
         if (activeTab == "Settings") {
-            playClickSound3();
+            playClickSound2();
         } else {
-        playClickSound2();
+        playClickSound3();
         }
         onSelect(targetSettings)}}>
         Settings

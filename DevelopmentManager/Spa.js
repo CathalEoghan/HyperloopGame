@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const spa = new Development(
     "Spa",
-    26500,
+    265000,
     "Recreation",
-    800
+    6400
 );

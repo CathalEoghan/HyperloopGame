@@ -4,7 +4,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 
 export const improvedRestroomFacilities = new Upgrade(
     "Improved Restroom Facilities",
-    14500,
+    72500,
     "Infrastructure",
     10
 );

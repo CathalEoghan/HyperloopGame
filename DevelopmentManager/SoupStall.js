@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const soupStall = new Development(
     "Soup Stall",
-    20700,
+    207000,
     "Food",
-    670
+    5360
 );

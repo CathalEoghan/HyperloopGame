@@ -4,7 +4,7 @@
     font-family: 'Courier New', Courier, monospace;
     padding: 24px;
     min-height: 100vh;
-    padding-bottom: 80px;
+    padding-bottom: 116px;
     /* Force the dark background to fill everything */
     position: relative;
 }
@@ -106,4 +106,23 @@
 @keyframes flipIn {
     0%   { transform: rotateX(-90deg); opacity: 0; }
     100% { transform: rotateX(0deg);   opacity: 1; }
+}
+
+.board-table td:nth-child(1), 
+.board-table td:nth-child(6) { min-width: 200px; } /* DESTINATION */
+
+.board-table td:nth-child(2),
+.board-table td:nth-child(7) { min-width: 80px; }  /* DEPARTS */
+
+.board-table td:nth-child(3),
+.board-table td:nth-child(8) { min-width: 60px; }  /* GATE */
+
+.board-table td:nth-child(4),
+.board-table td:nth-child(9) { min-width: 130px; } /* STATUS */
+
+.board-table td:nth-child(3),
+.board-table td:nth-child(4),
+.board-table td:nth-child(8),
+.board-table td:nth-child(9) {
+    text-align: center;
 }

@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const historyMuseum = new Development(
     "History Museum",
-    32000,
+    320000,
     "Recreation",
-    900
+    7200
 );

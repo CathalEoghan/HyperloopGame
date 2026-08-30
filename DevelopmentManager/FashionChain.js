@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const fashionChain = new Development(
     "Fashion Chain",
-    22000,
+    220000,
     "Shopping",
-    800
+    6400
 );

@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const grandHotel = new Development(
     "Grand Hotel",
-    32500,
+    325000,
     "Service",
-    1250
+    10000
 );

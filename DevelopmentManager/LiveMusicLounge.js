@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const liveMusicLounge = new Development(
     "Live Music Lounge",
-    25000,
+    250000,
     "Recreation",
-    810
+    6480
 );

@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const dimSumRestaurant = new Development(
     "Dim Sum Restaurant",
-    23400,
+    234000,
     "Food",
-    760
+    6080
 );

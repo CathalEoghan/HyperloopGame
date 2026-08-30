@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const frozenCocktailStand = new Development(
     "Frozen Cocktail Stand",
-    21000,
+    210000,
     "Recreation",
-    755
+    6040
 );

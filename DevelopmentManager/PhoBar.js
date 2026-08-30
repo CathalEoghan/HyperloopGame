@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const phoBar = new Development(
     "Pho Bar",
-    19500,
+    195000,
     "Food",
-    645
+    5160
 );

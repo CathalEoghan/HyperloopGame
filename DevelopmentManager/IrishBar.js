@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const irishBar = new Development(
     "Irish Bar",
-    21400,
+    214000,
     "Recreation",
-    720
+    5760
 );

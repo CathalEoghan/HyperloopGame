@@ -4,7 +4,7 @@ import { Upgrade } from "./Upgrade.js";
 
 export const staffCafeteriaRenovations = new Upgrade(
     "Staff Cafeteria Renovations",
-    22500,
+    112500,
     "Infrastructure",
     "developmentUpgradeDiscount",
     25

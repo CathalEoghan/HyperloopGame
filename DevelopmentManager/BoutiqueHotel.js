@@ -3,7 +3,7 @@ import { Development } from "./Development.js";
 
 export const boutiqueHotel = new Development(
     "Boutique Hotel",
-    28500,
+    285000,
     "Service",
-    870
+    6960
 );

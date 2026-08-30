@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const jazzLounge = new Development(
     "Jazz Lounge",
-    24500,
+    245000,
     "Recreation",
-    810
+    6480
 );

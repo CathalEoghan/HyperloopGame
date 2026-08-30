@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const wineBar = new Development(
     "Wine Bar",
-    25100,
+    251000,
     "Recreation",
-    790
+    6320
 );

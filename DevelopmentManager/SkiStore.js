@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const skiStore = new Development(
     "Ski Store",
-    24000,
+    240000,
     "Shopping",
-    650
+    5200
 );

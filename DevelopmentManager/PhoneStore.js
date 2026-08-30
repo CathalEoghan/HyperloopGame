@@ -3,7 +3,7 @@ import { Development } from "./Development.js";
 
 export const phoneStore = new Development(
     "Phone Store",
-    31000,
+    310000,
     "Shopping",
-    1100
+    8800
 );

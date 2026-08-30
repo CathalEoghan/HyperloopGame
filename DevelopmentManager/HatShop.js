@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const hatShop = new Development(
     "Hat Shop",
-    21200,
+    212000,
     "Shopping",
-    670
+    5360
 );

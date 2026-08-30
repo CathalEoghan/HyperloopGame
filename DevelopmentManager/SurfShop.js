@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const surfShop = new Development(
     "Surf Shop",
-    21000,
+    210000,
     "Shopping",
-    580
+    4640
 );

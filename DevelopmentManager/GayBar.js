@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const gayBar = new Development(
     "Gay Bar",
-    23500,
+    235000,
     "Recreation",
-    740
+    5920
 );

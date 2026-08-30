@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const spiceMarket = new Development(
     "Spice Market",
-    21000,
+    210000,
     "Shopping",
-    510
+    4080
 );

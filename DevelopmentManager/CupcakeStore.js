@@ -3,7 +3,7 @@ import { Development } from "./Development.js";
 
 export const cupcakeStore = new Development(
     "Cupcake Store",
-    30000,
+    300000,
     "Food",
-    500
+    4000
 );

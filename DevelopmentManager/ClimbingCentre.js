@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const climbingCentre = new Development(
     "Climbing Centre",
-    24500,
+    245000,
     "Recreation",
-    715
+    5720
 );

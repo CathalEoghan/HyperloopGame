@@ -33,9 +33,11 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, purchasedCitiesCount }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
     const mountRef = useRef(null)
     const [hoveredCity, setHoveredCity] = useState(null)
+    const [showOwned, setShowOwned] = useState(true)
+    const spritesRef = useRef([])
 
     useEffect(() => {
         const mount = mountRef.current
@@ -158,6 +160,7 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
 
         const sprites = []
         const purchasedNames = new Set(purchasedCities.map(c => c.name))
+        const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
 
         allCities.forEach(city => {
             const coords = cityCoordinates[city.name]
@@ -165,20 +168,27 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
             const flagCode = countryFlags[city.country]
             if (!flagCode) return
             const isPurchased = purchasedNames.has(city.name)
+            const isUnlocked = unlockedNames.has(city.name)
             const spritePos = latLngToVector3(coords.lat, coords.lng, globeRadius + 0.035)
             const surfaceNormal = latLngToVector3(coords.lat, coords.lng, 1)
             const flagTexture = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
             const spriteMat = new THREE.SpriteMaterial({
                 map: flagTexture, transparent: true, depthTest: true, depthWrite: false,
             })
-            if (!isPurchased) spriteMat.color = new THREE.Color(0.3, 0.3, 0.3)
+            if (!isPurchased && !isUnlocked) {
+                spriteMat.color = new THREE.Color(0.15, 0.15, 0.15)
+            } else if (!isPurchased && isUnlocked) {
+                spriteMat.color = new THREE.Color(0.6, 0.6, 0.6)
+            }
             const sprite = new THREE.Sprite(spriteMat)
             sprite.position.copy(spritePos)
             sprite.scale.set(0.02, 0.013, 1)
-            sprite.userData = { city, surfaceNormal, isPurchased }
+            sprite.userData = { city, surfaceNormal, isPurchased, isUnlocked }
             scene.add(sprite)
             sprites.push(sprite)
         })
+
+        spritesRef.current = sprites
 
         const raycaster = new THREE.Raycaster()
         raycaster.params.Sprite = { threshold: 0.05 }
@@ -219,7 +229,9 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
             animFrameId = requestAnimationFrame(animate)
             camPos.copy(camera.position).normalize()
             sprites.forEach(sprite => {
-                sprite.visible = sprite.userData.surfaceNormal.dot(camPos) > 0.1
+                const facingCamera = sprite.userData.surfaceNormal.dot(camPos) > 0.1
+                const hiddenByToggle = !showOwned && !sprite.userData.isPurchased
+                sprite.visible = facingCamera && !hiddenByToggle
             })
             renderer.render(scene, camera)
         }
@@ -244,19 +256,32 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
             mount.removeChild(renderer.domElement)
             renderer.dispose()
         }
-    }, [purchasedCities])
+    }, [purchasedCities, unlockedCities])
+
+    useEffect(() => {
+        spritesRef.current.forEach(sprite => {
+            if (!sprite.userData.isPurchased) {
+                sprite.material.opacity = showOwned ? 1 : 0
+            }
+        })
+    }, [showOwned])
 
     return (
         <div className="home-page">
-            {/* Top info bar — always shows hint and city count */}
             <div className="globe-top-info">
                 <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
                 <p className="globe-cities">{purchasedCitiesCount} cities connected</p>
             </div>
 
+            <button
+                className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
+                onClick={() => setShowOwned(prev => !prev)}
+            >
+                {showOwned ? '👁 All cities' : '👁 Owned only'}
+            </button>
+
             <div ref={mountRef} className="globe-container" />
 
-            {/* City hover panel — now includes name, country, population */}
             {hoveredCity && (
                 <div className="city-hover-panel">
                     <img
@@ -266,16 +291,21 @@ function HomePage({ purchasedCities, purchasedCitiesCount }) {
                         style={!hoveredCity.isPurchased ? { filter: 'grayscale(100%)' } : {}}
                     />
                     <div className="city-hover-name">
-                        {hoveredCity.isPurchased ? hoveredCity.city.name : '?'}
+                        {hoveredCity.isPurchased ? hoveredCity.city.name : hoveredCity.isUnlocked ? hoveredCity.city.name : '?'}
                     </div>
                     <div className="city-hover-detail">
-                        {hoveredCity.city.country} · {formatPopulation(hoveredCity.city.population)}
+                        {hoveredCity.isPurchased || hoveredCity.isUnlocked
+                            ? `${hoveredCity.city.country} · ${formatPopulation(hoveredCity.city.population)}`
+                            : 'Unknown location'
+                        }
                     </div>
                     <div className="city-hover-divider">── CITY FACT ──</div>
                     <p className="city-hover-fact">
                         {hoveredCity.isPurchased
                             ? hoveredCity.city.fact
-                            : <em>Unlock this city to reveal its secret!</em>
+                            : hoveredCity.isUnlocked
+                                ? <em>Connect this city to reveal its secret!</em>
+                                : <em>Unlock this city to reveal its secret!</em>
                         }
                     </p>
                 </div>

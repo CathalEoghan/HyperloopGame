@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const hyperloopMuseum = new Development(
     "Hyperloop Museum",
-    27000,
+    270000,
     "Recreation",
-    810
+    6480
 );

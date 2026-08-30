@@ -62,32 +62,54 @@ function DepartureBoard({ purchasedCities, homeCity }) {
     }
 
     function getStatus(hour, minute, delayed) {
-    const now = new Date()
-    const currentMinutes = now.getHours() * 60 + now.getMinutes()
-    const diff = (hour * 60 + minute) - currentMinutes
-    if (diff <= 0)  return { label: 'DEPARTED',    color: '#666' }
-    if (diff <= 5)  return { label: 'GATE CLOSED', color: '#e74c3c' }
-    if (diff <= 10) return { label: 'FINAL CALL',  color: 'red' }
-    if (diff <= 30) return { label: 'BOARDING',    color: 'limegreen' }
-    if (diff <= 45) return { label: 'GO TO GATE',  color: '#f5a623' }
-    if (delayed)    return { label: 'DELAYED',      color: '#e74c3c' }
-    return              { label: 'SCHEDULED',    color: '#aaa' }
-}
+        const now = new Date()
+        const currentMinutes = now.getHours() * 60 + now.getMinutes()
+        const diff = (hour * 60 + minute) - currentMinutes
+        if (diff <= 0)  return { label: 'DEPARTED',    color: '#666' }
+        if (diff <= 5)  return { label: 'GATE CLOSED', color: '#e74c3c' }
+        if (diff <= 10) return { label: 'FINAL CALL',  color: 'red' }
+        if (diff <= 30) return { label: 'BOARDING',    color: 'limegreen' }
+        if (diff <= 45) return { label: 'GO TO GATE',  color: '#f5a623' }
+        if (delayed)    return { label: 'DELAYED',      color: '#e74c3c' }
+        return              { label: 'SCHEDULED',    color: '#aaa' }
+    }
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-        setTick(t => t + 1)
-        // Reload schedule in case of delays
+    useEffect(() => {
+        // Don't run until we have cities
+        if (!purchasedCities || purchasedCities.length === 0) return
+
         const today = new Date().toDateString()
         const key = `departures_${today}`
         const saved = localStorage.getItem(key)
-        if (saved) setSchedule(JSON.parse(saved))
-    }, 30000)
-    return () => clearInterval(interval)
-}, [])
+
+        if (saved) {
+            const parsed = JSON.parse(saved)
+            // If cached schedule is non-empty and has gate property, use it
+            if (parsed.length > 0 && parsed[0].gate !== undefined) {
+                setSchedule(parsed)
+                return
+            }
+        }
+
+        // Generate fresh schedule
+        const generated = generateSchedule(purchasedCities)
+        if (generated.length > 0) {
+            localStorage.setItem(key, JSON.stringify(generated))
+            setSchedule(generated)
+        }
+    }, [purchasedCities])
 
     useEffect(() => {
-        const interval = setInterval(() => setTick(t => t + 1), 30000)
+        const interval = setInterval(() => {
+            setTick(t => t + 1)
+            // Reload from localStorage to pick up any delays
+            const today = new Date().toDateString()
+            const saved = localStorage.getItem(`departures_${today}`)
+            if (saved) {
+                const parsed = JSON.parse(saved)
+                if (parsed.length > 0) setSchedule(parsed)
+            }
+        }, 30000)
         return () => clearInterval(interval)
     }, [])
 
@@ -101,7 +123,7 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         if (!entry) return <><td/><td/><td/><td/></>
         const status = getStatus(entry.hour, entry.minute, entry.delayed)
         const isGone = status.label === 'DEPARTED'
-        const showGate = status.label !== 'SCHEDULED'
+        const showGate = status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
         return (
             <>
                 <td style={{ opacity: isGone ? 0.4 : 1 }}><FlapText text={entry.name.toUpperCase()} /></td>
@@ -118,9 +140,9 @@ function DepartureBoard({ purchasedCities, homeCity }) {
 
     return (
         <div className="departure-board">
-            <h2 className="board-title">Departures for {today}</h2>
+            <h2 className="board-title">🛫 Departures — {today}</h2>
             {schedule.length === 0 ? (
-                <p>No departures scheduled.</p>
+                <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>Loading departures...</p>
             ) : (
                 <table className="board-table">
                     <thead>

@@ -3,7 +3,7 @@ import { Development } from "./Development.js";
 
 export const pizzeria = new Development(
     "Pizzeria",
-    29000,
+    290000,
     "Food",
-    800
+    6400
 );

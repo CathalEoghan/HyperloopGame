@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const pharmacy = new Development(
     "Pharmacy",
-    19000,
+    190000,
     "Service",
-    550
+    4400
 );

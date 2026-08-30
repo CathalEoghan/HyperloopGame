@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const iceSkatingRink = new Development(
     "Ice Skating Rink",
-    22000,
+    220000,
     "Recreation",
-    720
+    5760
 );

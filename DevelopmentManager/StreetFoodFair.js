@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const streetFoodFair = new Development(
     "Street Food Fair",
-    20000,
+    200000,
     "Food",
-    600
+    4800
 );

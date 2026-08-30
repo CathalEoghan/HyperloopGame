@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const toyStore = new Development(
     "Toy Store",
-    23500,
+    235000,
     "Shopping",
-    750
+    6000
 );

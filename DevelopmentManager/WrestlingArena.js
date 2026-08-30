@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const wrestlingArena = new Development(
     "Wrestling Arena",
-    24000,
+    240000,
     "Recreation",
-    800
+    6400
 );

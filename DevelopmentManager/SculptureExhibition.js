@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const sculptureExhibition = new Development(
     "Sculpture Exhibition",
-    24600,
+    246000,
     "Recreation",
-    550
+    4400
 );

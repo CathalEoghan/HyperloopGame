@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const rumTasting = new Development(
     "Rum Tasting",
-    22000,
+    220000,
     "Recreation",
-    750
+    6000
 );

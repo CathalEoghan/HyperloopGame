@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const beachThemedBar = new Development(
     "Beach-Themed Bar",
-    22000,
+    220000,
     "Recreation",
-    810
+    6480
 );

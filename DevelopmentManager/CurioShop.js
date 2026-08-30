@@ -4,7 +4,7 @@ import { Development } from "./Development.js";
 
 export const curioShop = new Development(
     "Curio Shop",
-    21500,
+    215000,
     "Shopping",
-    610
+    4880
 );

@@ -39,9 +39,9 @@ return (
     className="MysterySpot"
     onClick={() => {
         if (activeTab === "DepartureBoard") {
-            playClickSound3();
-        } else {
             playClickSound2();
+        } else {
+            playClickSound3();
         }
         onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard");
     }}

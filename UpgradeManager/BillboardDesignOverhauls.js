@@ -4,7 +4,7 @@ import { Upgrade } from "./Upgrade.js";
 
 export const billboardDesignOverhauls = new Upgrade(
     "Billboard Design Overhauls",
-    11000,
+    55000,
     "Infrastructure",
     "nonContinentPopulationBoost",
     0.15
