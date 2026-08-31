@@ -151,6 +151,7 @@ import { fishingStore } from './FishingStore.js'
 import { smokedFishStall } from './SmokedFishStall.js'
 import { wrestlingArena } from './WrestlingArena.js'
 import { wineBar } from './WineBar.js'
+import { bikingAccessoriesStore } from './BikingAccessoriesStore.js'
 
 
 export const allDevelopments = [
@@ -306,5 +307,6 @@ export const allDevelopments = [
     smokedFishStall,
     wrestlingArena,
     wineBar,
+    bikingAccessoriesStore,
 
 ]

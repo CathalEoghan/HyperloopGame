@@ -48,6 +48,7 @@ import { riversideExpansionProject } from './RiversideExpansionProject.js'
 import { freeTradeAgreements } from './FreeTradeAgreements.js'
 import { expandedParkingFacilities } from './ExpandedParkingFacilities.js'
 import { premierWineImports } from './PremierWineImports.js'
+import { serviceDeliveryTraining } from './ServiceDeliveryTraining.js'
 
 
 export const allUpgrades = [
@@ -99,5 +100,6 @@ export const allUpgrades = [
     freeTradeAgreements,
     expandedParkingFacilities,
     premierWineImports,
+    serviceDeliveryTraining,
 
 ]

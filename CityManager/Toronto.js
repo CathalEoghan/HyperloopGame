@@ -5,7 +5,7 @@ import { danceStudio } from "../DevelopmentManager/DanceStudio.js";
 
 export const Toronto = new City(
     "Toronto",
-    7106379,
+    7110000,
     [danceStudio],
     "Canada",
     "North America",

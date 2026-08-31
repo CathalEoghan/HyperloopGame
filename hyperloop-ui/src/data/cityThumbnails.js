@@ -198,7 +198,8 @@ import Phoenix from '../assets/cities-thumb/Phoenix.jpg'
 import Dakar from '../assets/cities-thumb/Dakar.jpg'
 import Bratislava from '../assets/cities-thumb/Bratislava.jpg'
 import Riga from '../assets/cities-thumb/Riga.jpg'
-
+import Tirana from '../assets/cities-thumb/Tirana.jpg'
+import LaPaz from '../assets/cities-thumb/LaPaz.jpg'
 
 const cityImages = {
     London: London,
@@ -401,6 +402,9 @@ const cityImages = {
     Bratislava: Bratislava,
     Dakar: Dakar,
     Riga: Riga,
+    Tirana: Tirana,
+    "La Paz": LaPaz,
+
 
 }
 

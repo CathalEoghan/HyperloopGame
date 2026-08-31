@@ -200,6 +200,8 @@ Vladivostok.jpg - Photo by  Arthur Shuraev via Pexels
 Riga.jpg - Photo by Boris K. via Pexels
 Dakar.jpg - Photo by Tbo47 via Pexels
 Bratislava.jpg - Photo by Lieke Boersma via Pexels
+Tirana.jpg - Photo by Valter Zhara via Pexels
+LaPaz.jpg - Photo by Julia Volk via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -401,6 +403,8 @@ TrainMuseum.jpg - Photo by Takehiro Yokozeki via Pexels
 SmokedFishStall.jpg - Photo by Vladimir Srajber via Pexels
 WrestlingArena.jpg - Photo by Der_ Hördt via Pexels
 WineBar.jpg - Photo by Наталья Маркина via Pexels
+ServiceDeliveryTraining.jpg - Photo by Kampus Production via Pexels
+BikingAccessoriesStore.jpg - Photo by Adrien Olichon via Pexels
 
 SOUNDS
 

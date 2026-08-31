@@ -99,6 +99,8 @@ const countryFlags = {
     "Slovakia": "sk",
     "Senegal": "sn",
     "Latvia": "lv",
+    "Albania": "al",
+    "Bolivia": "bo",
 
     
 
