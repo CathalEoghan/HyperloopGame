@@ -33,9 +33,16 @@ function TickerBar() {
         return () => clearInterval(interval)
     }, [])
 
-    if (messages.length === 0) return null
+    const idleMessages = [
+        'Welcome to Hyperloop Central. Thank you for travelling with us today.',
+        'Please keep your belongings close to you at all times.',
+        'Hyperloop Central operates 24 hours a day, 7 days a week.',
+        'Please report any unattended luggage to a member of staff.',
+        'We wish you a pleasant journey.',
+    ]
 
-    const text = messages.join('     ✦     ') + '     ✦     '
+    const displayMessages = messages.length > 0 ? messages : idleMessages
+    const text = displayMessages.join('     ✦     ') + '     ✦     '
 
     return (
         <div className="ticker-bar">

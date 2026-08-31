@@ -1,6 +1,5 @@
 const SECONDS_IN_A_DAY = 86400;
 const POPULATION_INCOME_MODIFIER = 0.0001;
-const DEVELOPMENT_INCOME_MODIFIER = 4;
 
 const TIER_INCOME = {
     1: 10000,
@@ -8,14 +7,20 @@ const TIER_INCOME = {
     3: 100000
 };
 
+const UPGRADE_MULTIPLIERS = [1.0, 1.15, 1.50, 2.00];
+
 export class EconomyManager {
     constructor(progressionManager) {
         this.progressionManager = progressionManager;
     }
 
-    // Population earnings — flat tier rate + population bonus
-    calculatePopulationIncome() {
+    getEffectiveDevRevenue(development) {
+        const base = development.revenue || 0;
+        const level = this.progressionManager.developmentUpgradeLevels[development.name] || 0;
+        return Math.floor(base * UPGRADE_MULTIPLIERS[level]);
+    }
 
+    calculatePopulationIncome() {
         let populationIncome = 0;
         this.progressionManager.purchasedCities.forEach(city => {
             const tierBase = TIER_INCOME[city.tier] || 0;
@@ -24,7 +29,6 @@ export class EconomyManager {
         });
 
         let upgradeMultiplier = 1;
-
         this.progressionManager.purchasedUpgrades.forEach(upgrade => {
             if (upgrade.effectType === "populationIncome") {
                 upgradeMultiplier += upgrade.effectValue;
@@ -32,66 +36,21 @@ export class EconomyManager {
         });
 
         return populationIncome * upgradeMultiplier;
-
     }
 
-    // Population earnings for specific city
-    calculateSpecificPopulationIncome(city) {
-
-        let populationIncome = 0;
-        this.progressionManager.purchasedCities.forEach(city => {
-
-            let incomeFromCity = city.population * POPULATION_INCOME_MODIFIER;
-            populationIncome += incomeFromCity;
-        });
-
-
-        let upgradeMultiplier = 1;
-
-        // Adds the upgrade multipliers to the population income
-        this.progressionManager.purchasedUpgrades.forEach(upgrade => {
-
-            if (upgrade.effectType === "populationIncome") {
-
-                upgradeMultiplier += upgrade.effectValue;
-
-            }
-        });
-
-        return populationIncome * upgradeMultiplier;
-
-    }
-
-    // Development earnings
     calculateDevelopmentIncome() {
-
         let developmentIncome = 0;
-
         this.progressionManager.purchasedDevelopments.forEach(development => {
-            developmentIncome += development.revenue;
+            developmentIncome += this.getEffectiveDevRevenue(development);
         });
-
         return developmentIncome;
-
     }
 
-    // Upgrade boosts
-
-    // Calculates daily income
     calculateDailyIncome() {
-
-        let totalIncome = 0;
-
-        totalIncome =
-            this.calculateDevelopmentIncome() +
-            this.calculatePopulationIncome();
-
-        return totalIncome / SECONDS_IN_A_DAY;
-
+        return (this.calculateDevelopmentIncome() + this.calculatePopulationIncome()) / SECONDS_IN_A_DAY;
     }
 
     calculateCityIncome(city) {
-
         const tierBase = TIER_INCOME[city.tier] || 0;
         const popBonus = city.population * POPULATION_INCOME_MODIFIER;
         let incomeFromCity = tierBase + popBonus;
@@ -104,6 +63,5 @@ export class EconomyManager {
         });
 
         return incomeFromCity * upgradeMultiplier;
-
     }
 }

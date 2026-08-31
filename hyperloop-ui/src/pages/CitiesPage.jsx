@@ -5,11 +5,11 @@ import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
 import cashIcon from '../assets/misc/cash.png'
+import reputationIcon from '../assets/misc/reputation.png'
 import { playClickSound2, playConstructionSound, playHoverSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
-
 const CONTINENT_COLOURS = {
     'Europe': '#4a90d9',
     'Asia': '#e67e22',
@@ -20,7 +20,7 @@ const CONTINENT_COLOURS = {
     'All': '#444'
 }
 
-function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, totalCashEarned, economyManager }) {
+function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, homeCity, onSave }) {
     const [selectedCity, setSelectedCity] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [search, setSearch] = useState('')
@@ -28,6 +28,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [sortBy, setSortBy] = useState('alphabetical')
     const [collapsedCountries, setCollapsedCountries] = useState(new Set())
     const [enlargedImage, setEnlargedImage] = useState(null)
+    const [confirmDisconnect, setConfirmDisconnect] = useState(false)
 
     const underConstruction = allCities.filter(city =>
         constructionManager.progressionManager.citiesUnderConstruction.some(c => c.name === city.name)
@@ -38,7 +39,6 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         !purchasedCities.some(p => p.name === city.name) &&
         !underConstruction.some(c => c.name === city.name)
     )
-
     const connectedAndBuilding = [...purchased, ...underConstruction]
 
     const sortCities = (cities) => {
@@ -80,6 +80,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         return pop.toLocaleString()
     }
 
+    const getDisconnectCost = (city) => Math.floor(constructionManager.calculateTierConnectionCost(city) / 2)
+
     const toggleCountry = (country) => {
         setCollapsedCountries(prev => {
             const next = new Set(prev)
@@ -91,12 +93,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
 
     const collapseAll = (countries) => setCollapsedCountries(new Set(countries))
     const expandAll = () => setCollapsedCountries(new Set())
+    const closeModal = () => { setSelectedCity(null); setConfirmDisconnect(false) }
 
     const renderCountrySection = (country, cities, isAvailable = false) => {
         const continent = cities[0]?.continent
         const borderColour = CONTINENT_COLOURS[continent] || '#888'
         const isCollapsed = collapsedCountries.has(country)
-
         return (
             <div key={country}>
                 <h2 className="country" style={{ borderLeftColor: borderColour }} onClick={() => toggleCountry(country)}>
@@ -110,12 +112,17 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             const isUnderConstruction = underConstruction.some(c => c.name === city.name)
                             const dailyIncome = economyManager.calculateCityIncome(city)
                             return (
-                                <button className="city" key={city.name} onMouseEnter={() => playHoverSound()} onClick={() => setSelectedCity(city)}>
+                                <button
+                                    className="city"
+                                    key={city.name}
+                                    onClick={() => setSelectedCity(city)}
+                                    onMouseEnter={() => playHoverSound()}
+                                >
                                     <div className="city-image-wrapper">
                                         <img
                                             className={isUnderConstruction ? "unavailable" : "city-image"}
                                             src={cityThumbnails[city.name] || cityImages[city.name]}
-                                            style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }}
+                                            style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', filter: isAvailable ? 'grayscale(100%)' : 'none' }}
                                         />
                                         {isUnderConstruction && (
                                             <div className="construction-overlay">
@@ -142,8 +149,6 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
 
     return (
         <div className="background">
-
-            {/* Sticky toolbar */}
             <div className="cities-toolbar-strip">
                 <div className="city-toolbar">
                     <input
@@ -175,26 +180,22 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 </div>
             </div>
 
-            {/* Main content */}
             <div className="cities-content">
-
-                {/* Enlarged image */}
                 {enlargedImage && (
                     <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
                         <img src={enlargedImage} alt="enlarged" style={{ width: '500px', height: '500px', objectFit: 'cover', borderRadius: '12px', border: '3px solid black' }} />
                     </div>
                 )}
 
-                {/* Modals */}
                 {selectedCity && (
-                    <div className="modal-overlay" onClick={() => setSelectedCity(null)}>
+                    <div className="modal-overlay" onClick={closeModal}>
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
                             {underConstruction.some(c => c.name === selectedCity.name) ? (
                                 <>
                                     <h3>🚧 {selectedCity.name}</h3>
                                     <p>Under construction!</p>
                                     <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedCity.finishTime))}</strong></p>
-                                    <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
+                                    <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </>
                             ) : available.includes(selectedCity) ? (
                                 <>
@@ -202,12 +203,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <button className="constructionButton" onClick={() => {
                                         playClickSound2();
                                         const cost = constructionManager.calculateTierConnectionCost(selectedCity);
-                                        if (balance < cost) { setShowNoFunds(true); setSelectedCity(null); }
-                                        else { constructionManager.startStationConstruction(selectedCity); playConstructionSound(); setSelectedCity(null); }
+                                        if (balance < cost) { setShowNoFunds(true); closeModal(); }
+                                        else { constructionManager.startStationConstruction(selectedCity); playConstructionSound(); onSave(); closeModal(); }
                                     }}>
-                                        Connect <img className="cashIcon" src={cashIcon} alt="balance" /> ({constructionManager.calculateTierConnectionCost(selectedCity)})
+                                        Connect <img className="cashIcon" src={cashIcon} alt="balance" /> ({constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString()})
                                     </button>
-<button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
+                                    <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </>
                             ) : (
                                 <>
@@ -225,7 +226,41 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         onClick={(e) => { e.stopPropagation(); setEnlargedImage(cityImages[selectedCity.name]) }}
                                         style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', cursor: 'zoom-in' }}
                                     />
-                                    <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
+                                    {homeCity && selectedCity.name !== homeCity.name && (() => {
+                                        const disconnectCost = getDisconnectCost(selectedCity)
+                                        const canAfford = balance >= disconnectCost && reputation >= 20
+                                        return confirmDisconnect ? (
+                                            <>
+                                                <p style={{ color: '#c0392b', fontWeight: 'bold', fontSize: '0.85rem', margin: '12px 0 4px' }}>
+                                                    Are you sure? Unbuilt developments will be lost.
+                                                </p>
+                                                <button
+                                                    className="constructionButton"
+                                                    style={{ borderColor: '#c0392b', color: '#c0392b', opacity: canAfford ? 1 : 0.5 }}
+                                                    onClick={() => {
+                                                        if (!canAfford) return;
+                                                        playClickSound2();
+                                                        onDisconnect(selectedCity);
+                                                        closeModal();
+                                                    }}
+                                                >
+                                                    Confirm — <img className="cashIcon" src={cashIcon} alt="£" />{disconnectCost.toLocaleString()} + 20 <img src={reputationIcon} alt="rep" className="rep-icon" />
+                                                </button>
+                                                {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough funds or reputation</p>}
+                                                <button className="closeButton" onClick={() => { playClickSound2(); setConfirmDisconnect(false) }}>Cancel</button>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <button className="closeButton" style={{ borderColor: '#c0392b', color: '#c0392b', marginTop: '8px' }} onClick={() => { playClickSound2(); setConfirmDisconnect(true) }}>
+                                                    Disconnect city
+                                                </button>
+                                                <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+                                            </>
+                                        )
+                                    })()}
+                                    {(!homeCity || selectedCity.name === homeCity.name) && (
+                                        <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+                                    )}
                                 </>
                             )}
                         </div>
@@ -242,9 +277,6 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     </div>
                 )}
 
-
-
-                {/* Connected cities */}
                 {sortedPurchasedCountries.length > 0 && (
                     <>
                         <div className="section-header-row">
@@ -272,7 +304,6 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     </>
                 )}
 
-                {/* Available cities */}
                 {sortedAvailableCountries.length > 0 && (
                     <>
                         <div className="section-header-row" style={{ marginTop: '24px' }}>

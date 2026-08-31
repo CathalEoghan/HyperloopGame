@@ -325,3 +325,17 @@
     background: #0a0a1a;
     z-index: 1;
 }
+
+.dev-level-strip {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    text-align: center;
+    padding: 3px 0;
+    letter-spacing: 1px;
+}

@@ -13,6 +13,7 @@ import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
 import SettingsPage from './pages/SettingsPage'
 import DelayModal from "./components/DelayModal"
+import OfflineModal from "./components/OfflineModal"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -20,39 +21,79 @@ import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { playRankUpSound, playReputationWorkBonusSound } from './utils/sound.js'
+import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import FarewellModal from "./components/FarewellModal"
 import "./App.css";
 
-function App() {
-  const [terminalName, setTerminalName] = useState("Hyperloop Central");
-  const [balance, setBalance] = useState(0);
-  const [totalCashEarned, setTotalCashEarned] = useState(0);
-  const [rankSet, setRankSet] = useState(1);
-  const [activeTab, setActiveTab] = useState("Home");
-  const [pickedCity, setPickedCity] = useState(null);
-  const [pendingRankUps, setPendingRankUps] = useState(0);
-  const [claimedCity, setClaimedCity] = useState(null);
-  const [reputation, setReputation] = useState(0);
-  const [activeDeparture, setActiveDeparture] = useState(null);
-  const [activeDelay, setActiveDelay] = useState(null);
-  const [farewellsGiven, setFarewellsGiven] = useState(0);
-  const triggeredDepartures = useRef(new Set());
-  const triggeredDelays = useRef(new Set());
-  const hasGivenStarterBonus = useRef(false);
+const OFFLINE_CAP_SECONDS = 86400; // max 24 hours offline income
+const OFFLINE_RATE = 0.10; // 10% of active rate
 
+function App() {
   const [rankManager] = useState(() => new RankManager());
   const [progressionManager] = useState(() => new ProgressionManager(rankManager));
   const [economyManager] = useState(() => new EconomyManager(progressionManager));
   const [timeManager] = useState(() => new TimeManager());
   const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
+
+  const [savedData] = useState(() => hasSave() ? loadGame(progressionManager, rankManager) : null);
+
+  // Calculate offline income immediately after load
+  const [offlineData] = useState(() => {
+    if (!savedData?.lastSaved) return null;
+    const offlineSeconds = Math.min((Date.now() - savedData.lastSaved) / 1000, OFFLINE_CAP_SECONDS);
+    if (offlineSeconds < 60) return null; // ignore if less than 1 minute
+    const incomePerSecond = economyManager.calculateDailyIncome();
+    const offlineIncome = incomePerSecond * offlineSeconds * OFFLINE_RATE;
+    if (offlineIncome < 1) return null;
+    progressionManager.addCash(offlineIncome); // add immediately so balance is correct
+    return { offlineSeconds, offlineIncome };
+  });
+
+  const [showOfflineModal, setShowOfflineModal] = useState(!!offlineData);
+
+  const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || 'Hyperloop Central');
+  const [createdAt] = useState(() => savedData?.createdAt || Date.now());
+  const [farewellsGiven, setFarewellsGiven] = useState(() => savedData?.farewellsGiven || 0);
+  const [lastSaved, setLastSaved] = useState(() => savedData?.lastSaved || null);
+  const [showSaved, setShowSaved] = useState(false);
+
+  const [balance, setBalance] = useState(() => progressionManager.balance);
+  const [totalCashEarned, setTotalCashEarned] = useState(() => progressionManager.totalCashEarned);
+  const [rankSet, setRankSet] = useState(() => rankManager.rank);
+  const [reputation, setReputation] = useState(() => progressionManager.reputation);
   const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
+
+  const [activeTab, setActiveTab] = useState("Home");
+  const [pickedCity, setPickedCity] = useState(null);
+  const [pendingRankUps, setPendingRankUps] = useState(0);
+  const [claimedCity, setClaimedCity] = useState(null);
+  const [activeDeparture, setActiveDeparture] = useState(null);
+  const [activeDelay, setActiveDelay] = useState(null);
+
+  const triggeredDepartures = useRef(new Set());
+  const triggeredDelays = useRef(new Set());
+  const hasGivenStarterBonus = useRef(!!savedData);
+  const tickCount = useRef(0);
+  const prevPurchasedCount = useRef(progressionManager.purchasedCities.length);
+  const prevDevCount = useRef(progressionManager.purchasedDevelopments.length);
+  const prevRank = useRef(rankManager.rank);
+  const farewellsRef = useRef(savedData?.farewellsGiven || 0);
 
   const workEarnings = 100;
 
+  const triggerSave = (farewells) => {
+    saveGame(progressionManager, rankManager, terminalName, farewells ?? farewellsRef.current);
+    setLastSaved(Date.now());
+    setShowSaved(true);
+    setTimeout(() => setShowSaved(false), 2000);
+  };
+
   useState(() => {
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('departures_')) localStorage.removeItem(key)
-    })
+    if (!savedData) {
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('departures_')) localStorage.removeItem(key)
+      })
+    }
   });
 
   useEffect(() => {
@@ -69,6 +110,8 @@ function App() {
 
   useEffect(() => {
     setInterval(() => {
+      tickCount.current += 1;
+
       const incomePerSecond = economyManager.calculateDailyIncome();
       progressionManager.addCash(incomePerSecond);
       rankManager.convertCashToXP(progressionManager.totalCashEarned);
@@ -79,11 +122,28 @@ function App() {
         setPendingRankUps(prev => prev + 1);
       }
       constructionManager.update();
+
+      const citiesChanged = progressionManager.purchasedCities.length !== prevPurchasedCount.current;
+      const devsChanged = progressionManager.purchasedDevelopments.length !== prevDevCount.current;
+      const rankChanged = rankManager.rank !== prevRank.current;
+
+      if (citiesChanged || devsChanged || rankChanged) {
+        prevPurchasedCount.current = progressionManager.purchasedCities.length;
+        prevDevCount.current = progressionManager.purchasedDevelopments.length;
+        prevRank.current = rankManager.rank;
+        triggerSave();
+      }
+
+      if (tickCount.current % 30 === 0) {
+        triggerSave();
+      }
+
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
       const todayKey = now.toDateString();
       const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
+
       schedule.forEach(entry => {
         const key = `${todayKey}_${entry.time}`;
         const depMins = entry.hour * 60 + entry.minute;
@@ -94,6 +154,7 @@ function App() {
           setActiveDeparture(entry);
         }
       });
+
       if (Math.random() < 0.0002) {
         const eligible = schedule.filter(entry => {
           const diff = (entry.hour * 60 + entry.minute) - (currentHour * 60 + currentMinute);
@@ -115,6 +176,7 @@ function App() {
           setActiveDelay({ name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation });
         }
       }
+
       setBalance(progressionManager.balance);
       setRankSet(rankManager.rank);
       setTotalCashEarned(progressionManager.totalCashEarned);
@@ -122,6 +184,10 @@ function App() {
       setPurchasedCitiesCount(progressionManager.purchasedCities.length);
     }, 1000);
   }, [rankManager, progressionManager, economyManager, constructionManager]);
+
+  useEffect(() => {
+    if (savedData) triggerSave();
+  }, [terminalName]);
 
   if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
     return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName} />;
@@ -172,6 +238,20 @@ function App() {
           balance={balance}
           totalCashEarned={totalCashEarned}
           economyManager={economyManager}
+          reputation={reputation}
+          homeCity={progressionManager.purchasedCities[0]}
+          onSave={triggerSave}
+          onDisconnect={(city) => {
+            const disconnectCost = constructionManager.calculateTierConnectionCost(city) / 2;
+            progressionManager.spendCash(disconnectCost);
+            progressionManager.addReputation(-20);
+            progressionManager.disconnectCity(city);
+            const todayKey = new Date().toDateString();
+            const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
+            const updated = schedule.filter(e => e.name !== city.name);
+            localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
+            triggerSave();
+          }}
         />
       )}
       {activeTab === "Development" && (
@@ -182,8 +262,16 @@ function App() {
           developmentsUnderConstruction={progressionManager.developmentsUnderConstruction}
           constructionManager={constructionManager}
           balance={balance}
+          reputation={reputation}
           purchasedCities={progressionManager.purchasedCities}
           purchasedUpgrades={progressionManager.purchasedUpgrades}
+          economyManager={economyManager}
+          onSave={triggerSave}
+          onUpgrade={(development) => {
+            const success = progressionManager.upgradeDevelopment(development);
+            if (success) triggerSave();
+            return success;
+          }}
         />
       )}
       {activeTab === "Progress" && (
@@ -194,6 +282,7 @@ function App() {
           purchasedDevelopments={progressionManager.purchasedDevelopments}
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           farewellsGiven={farewellsGiven}
+          createdAt={createdAt}
         />
       )}
       {activeTab === "DepartureBoard" && (
@@ -202,44 +291,71 @@ function App() {
           homeCity={progressionManager.purchasedCities[0]}
         />
       )}
-      {activeTab === "Settings" && <SettingsPage />}
+      {activeTab === "Settings" && (
+        <SettingsPage
+          terminalName={terminalName}
+          onTerminalNameChange={setTerminalName}
+          lastSaved={lastSaved}
+          onDeleteSave={() => { deleteSave(); window.location.reload(); }}
+          onExportSave={exportSave}
+          onImportSave={async (file) => { await importSave(file); window.location.reload(); }}
+        />
+      )}
       <TickerBar />
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
-      {activeDelay && (
-        <DelayModal
-          delay={activeDelay}
-          onCompensate={() => {
-            progressionManager.addCash(-activeDelay.compensation);
-            setActiveDelay(null);
-          }}
-          onDismiss={() => {
-            progressionManager.addReputation(-10);
-            setActiveDelay(null);
+
+      {showSaved && (
+        <div style={{
+          position: 'fixed', bottom: '108px', right: '16px',
+          background: '#222', color: '#f5a623',
+          fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
+          padding: '4px 12px', borderRadius: '6px',
+          zIndex: 200, pointerEvents: 'none',
+        }}>
+          ✓ Saved
+        </div>
+      )}
+
+      {showOfflineModal && offlineData && (
+        <OfflineModal
+          offlineSeconds={offlineData.offlineSeconds}
+          offlineIncome={offlineData.offlineIncome}
+          onCollect={() => {
+            setShowOfflineModal(false);
+            triggerSave();
           }}
         />
       )}
-      {!activeDelay && activeDeparture && !claimedCity && (
+
+      {!showOfflineModal && activeDelay && (
+        <DelayModal
+          delay={activeDelay}
+          onCompensate={() => { progressionManager.addCash(-activeDelay.compensation); setActiveDelay(null); }}
+          onDismiss={() => { progressionManager.addReputation(-10); setActiveDelay(null); }}
+        />
+      )}
+      {!showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
         <FarewellModal
           departure={activeDeparture}
           onFarewell={() => {
             progressionManager.addReputation(5);
-            setFarewellsGiven(prev => prev + 1);
+            const newCount = farewellsRef.current + 1;
+            farewellsRef.current = newCount;
+            setFarewellsGiven(newCount);
+            triggerSave(newCount);
             setActiveDeparture(null);
           }}
           onMiss={() => setActiveDeparture(null)}
         />
       )}
-      {!activeDelay && !activeDeparture && pendingRankUps > 0 && (
+      {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && (
         <RankUpModal rank={rankSet} onClaim={() => {
           const newCity = progressionManager.getRandomUnlockedCity(allCities);
-          if (newCity) {
-            progressionManager.unlockCity(newCity);
-            setClaimedCity(newCity);
-          }
+          if (newCity) { progressionManager.unlockCity(newCity); setClaimedCity(newCity); }
           setPendingRankUps(prev => prev - 1);
         }} />
       )}
-      {claimedCity && (
+      {!showOfflineModal && claimedCity && (
         <CityRevealModal
           city={claimedCity}
           reputation={reputation}

@@ -1,15 +1,14 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './SettingsPage.css'
 
-function SettingsPage({ terminalName, onTerminalNameChange }) {
-    const [globeQuality, setGlobeQuality] = useState(
-        localStorage.getItem('globeQuality') || '2k'
-    )
-    const [soundEnabled, setSoundEnabled] = useState(
-        localStorage.getItem('soundEnabled') !== 'false'
-    )
+function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave }) {
+    const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '2k')
+    const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
     const [nameInput, setNameInput] = useState(terminalName)
     const [nameSaved, setNameSaved] = useState(false)
+    const [confirmDelete, setConfirmDelete] = useState(false)
+    const [importError, setImportError] = useState(null)
+    const fileInputRef = useRef(null)
 
     const handleQualityChange = (quality) => {
         setGlobeQuality(quality)
@@ -27,6 +26,26 @@ function SettingsPage({ terminalName, onTerminalNameChange }) {
         onTerminalNameChange(trimmed)
         setNameSaved(true)
         setTimeout(() => setNameSaved(false), 2000)
+    }
+
+    const formatLastSaved = () => {
+        if (!lastSaved) return 'Never'
+        const diff = Math.floor((Date.now() - lastSaved) / 1000)
+        if (diff < 10) return 'Just now'
+        if (diff < 60) return `${diff} seconds ago`
+        if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`
+        return new Date(lastSaved).toLocaleTimeString()
+    }
+
+    const handleImport = async (e) => {
+        const file = e.target.files[0]
+        if (!file) return
+        try {
+            setImportError(null)
+            await onImportSave(file)
+        } catch {
+            setImportError('Invalid save file. Please choose a valid Hyperloop save.')
+        }
     }
 
     return (
@@ -66,18 +85,8 @@ function SettingsPage({ terminalName, onTerminalNameChange }) {
                         <span className="settings-label-desc">Enable or disable all in-game sound effects.</span>
                     </div>
                     <div className="settings-options">
-                        <button
-                            className={`settings-option-btn ${soundEnabled ? 'settings-option-active' : ''}`}
-                            onClick={() => handleSoundToggle(true)}
-                        >
-                            On
-                        </button>
-                        <button
-                            className={`settings-option-btn ${!soundEnabled ? 'settings-option-active' : ''}`}
-                            onClick={() => handleSoundToggle(false)}
-                        >
-                            Off
-                        </button>
+                        <button className={`settings-option-btn ${soundEnabled ? 'settings-option-active' : ''}`} onClick={() => handleSoundToggle(true)}>On</button>
+                        <button className={`settings-option-btn ${!soundEnabled ? 'settings-option-active' : ''}`} onClick={() => handleSoundToggle(false)}>Off</button>
                     </div>
                 </div>
             </div>
@@ -91,19 +100,54 @@ function SettingsPage({ terminalName, onTerminalNameChange }) {
                         <span className="settings-label-desc">Higher quality requires more loading time. Changes take effect on next visit to the home screen.</span>
                     </div>
                     <div className="settings-options">
-                        <button
-                            className={`settings-option-btn ${globeQuality === '2k' ? 'settings-option-active' : ''}`}
-                            onClick={() => handleQualityChange('2k')}
-                        >
-                            Standard (2K)
-                        </button>
-                        <button
-                            className={`settings-option-btn ${globeQuality === '8k' ? 'settings-option-active' : ''}`}
-                            onClick={() => handleQualityChange('8k')}
-                        >
-                            Ultra (8K)
-                        </button>
+                        <button className={`settings-option-btn ${globeQuality === '2k' ? 'settings-option-active' : ''}`} onClick={() => handleQualityChange('2k')}>Standard (2K)</button>
+                        <button className={`settings-option-btn ${globeQuality === '8k' ? 'settings-option-active' : ''}`} onClick={() => handleQualityChange('8k')}>Ultra (8K)</button>
                     </div>
+                </div>
+            </div>
+
+            {/* Save management */}
+            <div className="settings-section">
+                <h2 className="settings-section-title">Save Data</h2>
+
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Last saved</span>
+                        <span className="settings-label-desc">{formatLastSaved()}</span>
+                    </div>
+                </div>
+
+                <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Export save</span>
+                        <span className="settings-label-desc">Download your save as a JSON file to back it up or move to another device.</span>
+                    </div>
+                    <button className="settings-save-btn" onClick={onExportSave}>Export</button>
+                </div>
+
+                <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Import save</span>
+                        <span className="settings-label-desc">Load a previously exported save file. This will overwrite your current save.</span>
+                        {importError && <span className="settings-label-desc" style={{ color: '#c0392b' }}>{importError}</span>}
+                    </div>
+                    <input type="file" accept=".json" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImport} />
+                    <button className="settings-save-btn" onClick={() => fileInputRef.current.click()}>Import</button>
+                </div>
+
+                <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Delete save</span>
+                        <span className="settings-label-desc">Permanently delete your save and start a new game. This cannot be undone.</span>
+                    </div>
+                    {confirmDelete ? (
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            <button className="settings-save-btn" style={{ background: '#c0392b' }} onClick={onDeleteSave}>Confirm Delete</button>
+                            <button className="settings-save-btn" style={{ background: '#888' }} onClick={() => setConfirmDelete(false)}>Cancel</button>
+                        </div>
+                    ) : (
+                        <button className="settings-save-btn" style={{ background: '#c0392b' }} onClick={() => setConfirmDelete(true)}>Delete</button>
+                    )}
                 </div>
             </div>
         </div>

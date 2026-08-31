@@ -1,0 +1,56 @@
+.offline-modal {
+    text-align: center;
+    padding: 32px 28px;
+}
+
+.offline-icon {
+    font-size: 2.5rem;
+    margin-bottom: 8px;
+}
+
+.offline-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 0 6px;
+    font-family: 'Inter', sans-serif;
+}
+
+.offline-subtitle {
+    color: #666;
+    font-size: 0.9rem;
+    margin: 0 0 20px;
+    font-family: 'Inter', sans-serif;
+}
+
+.offline-earnings-box {
+    background: #f8f8f8;
+    border: 2px solid #f5a623;
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.offline-earnings-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #888;
+    font-family: 'Inter', sans-serif;
+}
+
+.offline-earnings-amount {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f5a623;
+    font-family: 'Courier New', monospace;
+    font-variant-numeric: tabular-nums;
+}
+
+.offline-earnings-note {
+    font-size: 0.72rem;
+    color: #aaa;
+    font-family: 'Inter', sans-serif;
+}

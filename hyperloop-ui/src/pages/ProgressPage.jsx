@@ -5,18 +5,21 @@ import cityImages from '../data/cityImages.js'
 import countryFlags from '../data/countryFlags.js'
 import './ProgressPage.css'
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven }) {
-    const [sessionSeconds, setSessionSeconds] = useState(0)
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, createdAt }) {
+    const [, setTick] = useState(0)
 
     useEffect(() => {
-        const interval = setInterval(() => setSessionSeconds(s => s + 1), 1000)
+        const interval = setInterval(() => setTick(t => t + 1), 1000)
         return () => clearInterval(interval)
     }, [])
 
     const terminalAge = () => {
-        const h = Math.floor(sessionSeconds / 3600)
-        const m = Math.floor((sessionSeconds % 3600) / 60)
-        const s = sessionSeconds % 60
+        const totalSeconds = Math.floor((Date.now() - createdAt) / 1000)
+        const d = Math.floor(totalSeconds / 86400)
+        const h = Math.floor((totalSeconds % 86400) / 3600)
+        const m = Math.floor((totalSeconds % 3600) / 60)
+        const s = totalSeconds % 60
+        if (d > 0) return `${d}d ${h}h ${m}m`
         if (h > 0) return `${h}h ${m}m ${s}s`
         if (m > 0) return `${m}m ${s}s`
         return `${s}s`
@@ -89,7 +92,6 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     return (
         <div className="progress-page">
-
             <div className="progress-stats">
                 {stats.map(({ label, value }) => (
                     <div key={label} className="stat-card">
@@ -99,7 +101,6 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                 ))}
             </div>
 
-            {/* Countries collected */}
             <h2 className="progress-section-header">
                 Countries collected
                 <span className="progress-fraction">{purchasedCountries.size} / {sortedCountries.length}</span>
@@ -124,7 +125,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                     {flagCode ? (
                                         <img
                                             className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
-                                            src={`https://flagcdn.com/w80/${flagCode}.png`}
+                                            src={`https://flagcdn.com/w40/${flagCode}.png`}
                                             alt={country}
                                         />
                                     ) : (
@@ -140,7 +141,6 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                 })}
             </div>
 
-            {/* Cities collected */}
             <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
                 Cities collected
                 <span className="progress-fraction">{purchasedCities.length} / {allCities.length}</span>
@@ -174,7 +174,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                     {flagCode ? (
                                         <img
                                             className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
-                                            src={`https://flagcdn.com/w80/${flagCode}.png`}
+                                            src={`https://flagcdn.com/w40/${flagCode}.png`}
                                             alt={city.country}
                                         />
                                     ) : (
