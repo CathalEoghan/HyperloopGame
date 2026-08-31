@@ -84,7 +84,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Least profitable development', value: leastProfitableDev ? `${leastProfitableDev.name} — £${leastProfitableDev.revenue.toLocaleString()}/day` : '—' },
     ]
 
-    const cityProgress = (purchasedCities.length / 200) * 100
+    const cityProgress = (purchasedCities.length / allCities.length) * 100
     const countryProgress = (purchasedCountries.size / sortedCountries.length) * 100
 
     return (
@@ -143,7 +143,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             {/* Cities collected */}
             <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
                 Cities collected
-                <span className="progress-fraction">{purchasedCities.length} / 200</span>
+                <span className="progress-fraction">{purchasedCities.length} / {allCities.length}</span>
             </h2>
             <div className="progress-bar-container">
                 <div className="progress-bar-fill" style={{ width: `${cityProgress}%` }} />

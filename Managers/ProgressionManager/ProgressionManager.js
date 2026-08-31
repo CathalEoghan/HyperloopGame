@@ -97,4 +97,8 @@ export class ProgressionManager {
         if (eligible.length === 0) return null;
         return eligible[Math.floor(Math.random() * eligible.length)];
     }
+
+    removeUnlockedCity(city) {
+        this.unlockedCities = this.unlockedCities.filter(c => c !== city);
+    }
 }

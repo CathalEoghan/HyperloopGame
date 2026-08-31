@@ -4,6 +4,7 @@ import './TopBanner.css'
 import clockIcon from '../assets/misc/clock.png'
 import cashIcon from '../assets/misc/cash.png'
 import starIcon from '../assets/misc/star.png'
+import reputationIcon from '../assets/misc/reputation.png'
 import { playClickSound2, playClickSound3, playWorkClickSound } from '../utils/sound.js'
 
 const WORK_PHRASES = [
@@ -67,8 +68,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <img src={cashIcon} alt="balance" /> £{Math.floor(balance).toLocaleString()}
                 </div>
                 <div className="reputation">
-                    🏆 {reputation}
-                </div>
+    <img src={reputationIcon} alt="reputation" /> {reputation}
+</div>
             </div>
 
             <button

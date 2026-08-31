@@ -110,16 +110,13 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             const isUnderConstruction = underConstruction.some(c => c.name === city.name)
                             const dailyIncome = economyManager.calculateCityIncome(city)
                             return (
-                               <button className="city" key={city.name}
-    onClick={() => setSelectedCity(city)}
-    onMouseEnter={() => playHoverSound()}
->
+                                <button className="city" key={city.name} onMouseEnter={() => playHoverSound()} onClick={() => setSelectedCity(city)}>
                                     <div className="city-image-wrapper">
-                                       <img
-    className={isUnderConstruction ? "unavailable" : "city-image"}
-    src={cityThumbnails[city.name] || cityImages[city.name]}
-    style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', filter: isAvailable ? 'grayscale(100%)' : 'none' }}
-/>
+                                        <img
+                                            className={isUnderConstruction ? "unavailable" : "city-image"}
+                                            src={cityThumbnails[city.name] || cityImages[city.name]}
+                                            style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }}
+                                        />
                                         {isUnderConstruction && (
                                             <div className="construction-overlay">
                                                 <p>UNDER CONSTRUCTION</p>
@@ -210,7 +207,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     }}>
                                         Connect <img className="cashIcon" src={cashIcon} alt="balance" /> ({constructionManager.calculateTierConnectionCost(selectedCity)})
                                     </button>
-                                    <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
+<button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
                                 </>
                             ) : (
                                 <>

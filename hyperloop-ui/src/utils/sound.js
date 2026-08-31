@@ -7,6 +7,7 @@ import badNewsSound from '../assets/sounds/badNews.mp3'
 import constructionSound from '../assets/sounds/constructionSound.mp3'
 import workClickSound from '../assets/sounds/workClickSound.mp3'
 import hoverSound from '../assets/sounds/hoverSound.mp3'
+import reputationWorkBonus from '../assets/sounds/reputationBonusWork.mp3'
 
 function canPlay() {
     return localStorage.getItem('soundEnabled') !== 'false'
@@ -25,4 +26,5 @@ export function playFarewellAcceptSound(){ play(farewellAcceptSound) }
 export function playClickSound2()        { play(click_sound_2) }
 export function playClickSound3()        { play(click_sound_3) }
 export function playRankUpSound()        { play(rankUpSound) }
-export function playHoverSound() { play(hoverSound) }
+export function playHoverSound()         { play(hoverSound) }
+export function playReputationWorkBonusSound() { play(reputationWorkBonus) }

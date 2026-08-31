@@ -101,6 +101,7 @@ const countryFlags = {
     "Latvia": "lv",
     "Albania": "al",
     "Bolivia": "bo",
+    "Haiti": "ht",
 
     
 

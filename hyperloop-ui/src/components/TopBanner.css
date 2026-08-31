@@ -18,9 +18,9 @@
 }
 
 .work-banner-btn {
-    background: #f5a623;
-    color: white;
-    border: none;
+    background: white;
+    color: #333;
+    border: 2px solid #f5a623;
     border-radius: 50px;
     margin: 0 16px;
     padding: 8px 24px;
@@ -31,19 +31,20 @@
     letter-spacing: 0.5px;
     flex-shrink: 0;
     align-self: center;
-    transition: background 0.15s ease, transform 0.1s ease;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
     animation: work-pulse 2.5s ease-in-out infinite;
 }
 
 .work-banner-btn:hover {
-    background: #e8890a;
+    background: #f5a623;
+    color: white;
     animation: none;
 }
 
 .work-banner-btn:active {
     transform: scale(0.92);
-    background: white;
-    color: #f5a623;
+    background: #f5a623;
+    color: white;
     animation: none;
 }
 

@@ -19,7 +19,7 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
-import { playRankUpSound } from "./utils/sound.js";
+import { playRankUpSound, playReputationWorkBonusSound } from './utils/sound.js'
 import FarewellModal from "./components/FarewellModal"
 import "./App.css";
 
@@ -143,7 +143,13 @@ function App() {
         activeTab={activeTab}
         onSelect={setActiveTab}
         reputation={reputation}
-        onWork={() => progressionManager.addCash(workEarnings)}
+        onWork={() => {
+          progressionManager.addCash(workEarnings);
+          if (Math.random() < 0.001) {
+            progressionManager.addReputation(-5);
+            playReputationWorkBonusSound();
+          }
+        }}
         workEarnings={workEarnings}
       />
       <ExperienceBar
@@ -196,12 +202,7 @@ function App() {
           homeCity={progressionManager.purchasedCities[0]}
         />
       )}
-      {activeTab === "Settings" && (
-    <SettingsPage
-        terminalName={terminalName}
-        onTerminalNameChange={setTerminalName}
-    />
-)}
+      {activeTab === "Settings" && <SettingsPage />}
       <TickerBar />
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
       {activeDelay && (
@@ -239,7 +240,22 @@ function App() {
         }} />
       )}
       {claimedCity && (
-        <CityRevealModal city={claimedCity} onClose={() => setClaimedCity(null)} />
+        <CityRevealModal
+          city={claimedCity}
+          reputation={reputation}
+          onClose={() => setClaimedCity(null)}
+          onReroll={() => {
+            if (progressionManager.reputation < 15) return;
+            progressionManager.addReputation(-15);
+            progressionManager.removeUnlockedCity(claimedCity);
+            const newCity = progressionManager.getRandomUnlockedCity(allCities);
+            if (newCity) {
+              progressionManager.unlockCity(newCity);
+              setClaimedCity(null);
+              setTimeout(() => setClaimedCity(newCity), 0);
+            }
+          }}
+        />
       )}
     </div>
   );
