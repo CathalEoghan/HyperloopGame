@@ -124,3 +124,16 @@
 .globe-toggle-active {
     background: rgba(0, 0, 0, 0.2);
 }
+
+.globe-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #f5a623;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    z-index: 5;
+    pointer-events: none;
+}

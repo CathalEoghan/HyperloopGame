@@ -37,6 +37,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
     const mountRef = useRef(null)
     const [hoveredCity, setHoveredCity] = useState(null)
     const [showOwned, setShowOwned] = useState(true)
+    const [globeReady, setGlobeReady] = useState(false)
     const spritesRef = useRef([])
 
     useEffect(() => {
@@ -48,9 +49,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
         scene.background = new THREE.Color(0x0a0a1a)
 
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
-        let camLon = 0
-        let camLat = 0
-        let camDist = 2.5
+        let camLon = 0, camLat = 0, camDist = 2.5
 
         function updateCamera() {
             const lon = THREE.MathUtils.degToRad(camLon)
@@ -66,23 +65,31 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
 
         const renderer = new THREE.WebGLRenderer({ antialias: true })
         renderer.setSize(width, height)
-        renderer.setPixelRatio(window.devicePixelRatio)
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
         mount.appendChild(renderer.domElement)
 
         const globeRadius = 1
         const textureLoader = new THREE.TextureLoader()
 
-        let dayUrl, nightUrl
-        try {
-            dayUrl = new URL('../assets/misc/8k_earth_daymap.jpg', import.meta.url).href
-            nightUrl = new URL('../assets/misc/8k_earth_nightmap.jpg', import.meta.url).href
-        } catch {
-            dayUrl = 'https://unpkg.com/three-globe/example/img/earth-day.jpg'
-            nightUrl = 'https://unpkg.com/three-globe/example/img/earth-night.jpg'
+       const quality = localStorage.getItem('globeQuality') || '2k'
+let dayUrl, nightUrl
+try {
+    dayUrl = new URL(`../assets/misc/${quality}_earth_daymap.jpg`, import.meta.url).href
+    nightUrl = new URL(`../assets/misc/${quality}_earth_nightmap.jpg`, import.meta.url).href
+} catch {
+    dayUrl = 'https://unpkg.com/three-globe/example/img/earth-day.jpg'
+    nightUrl = 'https://unpkg.com/three-globe/example/img/earth-night.jpg'
+}
+
+        // Load textures — show globe immediately, textures fill in as they load
+        let loadedCount = 0
+        const onTextureLoad = () => {
+            loadedCount++
+            if (loadedCount === 2) setGlobeReady(true)
         }
 
-        const dayTexture = textureLoader.load(dayUrl)
-        const nightTexture = textureLoader.load(nightUrl)
+        const dayTexture = textureLoader.load(dayUrl, onTextureLoad)
+        const nightTexture = textureLoader.load(nightUrl, onTextureLoad)
         const maxAnisotropy = renderer.capabilities.getMaxAnisotropy()
         dayTexture.anisotropy = maxAnisotropy
         nightTexture.anisotropy = maxAnisotropy
@@ -118,8 +125,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
             `,
         })
 
+        // Reduced segments: 64x64 instead of 128x128 — visually identical at this scale
         const globe = new THREE.Mesh(
-            new THREE.SphereGeometry(globeRadius, 128, 128),
+            new THREE.SphereGeometry(globeRadius, 64, 64),
             globeMaterial
         )
         scene.add(globe)
@@ -145,8 +153,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
             transparent: true,
             depthWrite: false,
         })
-
-        scene.add(new THREE.Mesh(new THREE.SphereGeometry(globeRadius * 1.1, 64, 64), atmosMaterial))
+        scene.add(new THREE.Mesh(new THREE.SphereGeometry(globeRadius * 1.1, 48, 48), atmosMaterial))
 
         const sunInterval = setInterval(() => {
             globeMaterial.uniforms.sunDirection.value.copy(getSunWorldPosition().normalize())
@@ -176,9 +183,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
                 map: flagTexture, transparent: true, depthTest: true, depthWrite: false,
             })
             if (!isPurchased && !isUnlocked) {
-                spriteMat.color = new THREE.Color(0.15, 0.15, 0.15)
+                spriteMat.color = new THREE.Color(0.12, 0.12, 0.12)
             } else if (!isPurchased && isUnlocked) {
-                spriteMat.color = new THREE.Color(0.6, 0.6, 0.6)
+                spriteMat.color = new THREE.Color(0.5, 0.5, 0.5)
             }
             const sprite = new THREE.Sprite(spriteMat)
             sprite.position.copy(spritePos)
@@ -279,6 +286,12 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
             >
                 {showOwned ? '👁 All cities' : '👁 Owned only'}
             </button>
+
+            {!globeReady && (
+                <div className="globe-loading">
+                    <p>Loading globe...</p>
+                </div>
+            )}
 
             <div ref={mountRef} className="globe-container" />
 

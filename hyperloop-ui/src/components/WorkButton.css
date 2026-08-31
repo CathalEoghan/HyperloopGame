@@ -1,0 +1,66 @@
+.work-btn {
+    position: fixed;
+    bottom: 116px;
+    right: 16px;
+    z-index: 60;
+    background: #f5a623;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 24px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(245, 166, 35, 0.4);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+    letter-spacing: 0.5px;
+}
+
+.work-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 166, 35, 0.5);
+}
+
+.work-btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(245, 166, 35, 0.3);
+}
+
+.work-float {
+    position: fixed;
+    pointer-events: none;
+    z-index: 999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+    animation: float-up 1.5s ease-out forwards;
+    white-space: nowrap;
+}
+
+.work-float-phrase {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: bold;
+    color: #333;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    padding: 3px 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.work-float-earnings {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    font-weight: bold;
+    color: #f5a623;
+    margin-top: 2px;
+}
+
+@keyframes float-up {
+    0%   { transform: translateX(-50%) translateY(0);   opacity: 1; }
+    70%  { transform: translateX(-50%) translateY(-60px); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(-80px); opacity: 0; }
+}

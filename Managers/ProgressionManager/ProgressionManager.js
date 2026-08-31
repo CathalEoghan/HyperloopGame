@@ -1,4 +1,3 @@
-
 import { Upgrade } from "../../UpgradeManager/Upgrade.js";
 import { Development } from "../../DevelopmentManager/Development.js";
 
@@ -12,27 +11,22 @@ export class ProgressionManager {
         this.unlockedDevelopments = [];
         this.purchasedDevelopments = [];
         this.citiesUnderConstruction = [];
-        this.constructionQueue = [];
         this.balance = 250000;
         this.reputation = 50;
         this.totalCashEarned = 0;
         this.rankManager = rankManager;
         this.developmentsUnderConstruction = [];
-        this.upgradesUnderConstruction = [];
     }
 
-    // Unlocks the reward, includes it in a broad list of unlocked upgrades + stores
     unlockReward(reward) {
-        if (!this.unlockedRewards.includes(reward)) { // If it's not already included
+        if (!this.unlockedRewards.includes(reward)) {
             this.unlockedRewards.push(reward);
         }
-
-        if (reward instanceof Upgrade && !this.unlockedUpgrades.includes(reward)) { // If it's not already included
-            this.unlockedUpgrades.push(reward)
+        if (reward instanceof Upgrade && !this.unlockedUpgrades.includes(reward)) {
+            this.unlockedUpgrades.push(reward);
         }
-
-        if (reward instanceof Development && !this.unlockedDevelopments.includes(reward)) { // If it's not already included
-            this.unlockedDevelopments.push(reward)
+        if (reward instanceof Development && !this.unlockedDevelopments.includes(reward)) {
+            this.unlockedDevelopments.push(reward);
         }
     }
 
@@ -42,12 +36,9 @@ export class ProgressionManager {
         }
     }
 
-    // Adds cash to the balance
     addCash(amount) {
-
         this.balance += amount;
-        this.totalCashEarned += amount; // Never decreases
-
+        this.totalCashEarned += amount;
     }
 
     addReputation(amount) {
@@ -62,75 +53,48 @@ export class ProgressionManager {
         return false;
     }
 
-    // Spends cash, deducts from balance
     spendCash(amount) {
-        if (this.balance >= amount) { // If balance is bigger than the amount, OK to spend
+        if (this.balance >= amount) {
             this.balance -= amount;
             return true;
         }
-        return false; // Otherwise reject
+        return false;
     }
 
-
+    // Capacity = rank + 1 so rank 1 allows 2 cities, rank 2 allows 3, etc.
     getCityCapacity() {
-        // Capacity = rank, not rank + 1
-        let cityCapacity = this.rankManager.rank;
-        return cityCapacity;
-    }
-
-    getConstructionQueueCapacity() {
-        let size = 2; // default
-        this.purchasedUpgrades.forEach(upgrade => {
-            if (upgrade.effectType === "queueCapacity") {
-                size++;
-            }
-        });
-        return size;
+        return this.rankManager.rank + 1;
     }
 
     purchaseCity(city) {
-        if (this.purchasedCities.length >= this.getCityCapacity()) {
-            return;
-        }
-
-        if (this.purchasedCities.includes(city)) {
-            return
-        }
-
+        if (this.purchasedCities.length >= this.getCityCapacity()) return;
+        if (this.purchasedCities.includes(city)) return;
         city.connect();
-
         city.rewards.forEach(reward => {
             this.unlockReward(reward);
         });
-
-        this.purchasedCities.push(city); // only reached if everything above succeeded
-
+        this.purchasedCities.push(city);
     }
 
     purchaseDevelopment(development) {
         const isUnlocked = this.unlockedDevelopments.includes(development) ||
             this.unlockedUpgrades.includes(development);
         if (!isUnlocked) return;
-
         if (this.purchasedDevelopments.includes(development) ||
             this.purchasedUpgrades.includes(development)) return;
-
         if (development instanceof Upgrade) {
             this.purchasedUpgrades.push(development);
         } else {
             this.purchasedDevelopments.push(development);
         }
     }
-    getRandomUnlockedCity(allCities) {
-        const eligible = allCities.filter(city => !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city));
-        // pick one at random from `eligible`
-        if (eligible.length === 0) {
-            return null;
-        } else {
-            const randomIndex = Math.floor(Math.random() * eligible.length);
-            return eligible[randomIndex];
 
-        }
+    getRandomUnlockedCity(allCities) {
+        const eligible = allCities.filter(city =>
+            !this.purchasedCities.includes(city) &&
+            !this.unlockedCities.includes(city)
+        );
+        if (eligible.length === 0) return null;
+        return eligible[Math.floor(Math.random() * eligible.length)];
     }
 }
-

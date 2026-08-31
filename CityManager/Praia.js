@@ -5,7 +5,7 @@ import { beachThemedBar } from "../DevelopmentManager/BeachThemedBar.js";
 
 export const Praia = new City(
     "Praia",
-    189897,
+    190000,
     [beachThemedBar],
     "Cape Verde",
     "Africa",

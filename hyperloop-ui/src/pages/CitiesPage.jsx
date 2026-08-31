@@ -5,7 +5,7 @@ import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
 import cashIcon from '../assets/misc/cash.png'
-import { playClickSound2 } from '../utils/sound.js'
+import { playClickSound2, playConstructionSound, playHoverSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
@@ -23,7 +23,6 @@ const CONTINENT_COLOURS = {
 function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, totalCashEarned, economyManager }) {
     const [selectedCity, setSelectedCity] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
-    const [showQueueFull, setShowQueueFull] = useState(false)
     const [search, setSearch] = useState('')
     const [activeContinent, setActiveContinent] = useState('All')
     const [sortBy, setSortBy] = useState('alphabetical')
@@ -111,13 +110,16 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             const isUnderConstruction = underConstruction.some(c => c.name === city.name)
                             const dailyIncome = economyManager.calculateCityIncome(city)
                             return (
-                                <button className="city" key={city.name} onClick={() => setSelectedCity(city)}>
+                               <button className="city" key={city.name}
+    onClick={() => setSelectedCity(city)}
+    onMouseEnter={() => playHoverSound()}
+>
                                     <div className="city-image-wrapper">
-                                        <img
-                                            className={isUnderConstruction ? "unavailable" : "city-image"}
-                                            src={cityThumbnails[city.name] || cityImages[city.name]}
-                                            style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover' }}
-                                        />
+                                       <img
+    className={isUnderConstruction ? "unavailable" : "city-image"}
+    src={cityThumbnails[city.name] || cityImages[city.name]}
+    style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', filter: isAvailable ? 'grayscale(100%)' : 'none' }}
+/>
                                         {isUnderConstruction && (
                                             <div className="construction-overlay">
                                                 <p>UNDER CONSTRUCTION</p>
@@ -144,157 +146,152 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     return (
         <div className="background">
 
-            {/* Toolbar */}
-            <div className="city-toolbar">
-                <input
-                    className="city-search"
-                    type="text"
-                    placeholder="Search cities..."
-                    value={search}
-                    onChange={e => setSearch(e.target.value)}
-                />
-                <select className="city-sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
-                    <option value="alphabetical">A–Z</option>
-                    <option value="income-high">Income: High to Low</option>
-                    <option value="income-low">Income: Low to High</option>
-                    <option value="population-high">Population: High to Low</option>
-                    <option value="tier">Tier</option>
-                </select>
+            {/* Sticky toolbar */}
+            <div className="cities-toolbar-strip">
+                <div className="city-toolbar">
+                    <input
+                        className="city-search"
+                        type="text"
+                        placeholder="Search cities..."
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
+                    />
+                    <select className="city-sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                        <option value="alphabetical">A–Z</option>
+                        <option value="income-high">Income: High to Low</option>
+                        <option value="income-low">Income: Low to High</option>
+                        <option value="population-high">Population: High to Low</option>
+                        <option value="tier">Tier</option>
+                    </select>
+                </div>
+                <div className="continent-filter">
+                    {CONTINENTS.map(c => (
+                        <button
+                            key={c}
+                            className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}
+                            style={activeContinent === c ? { background: CONTINENT_COLOURS[c], borderColor: CONTINENT_COLOURS[c] } : {}}
+                            onClick={() => setActiveContinent(c)}
+                        >
+                            {c}
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            {/* Continent filter */}
-            <div className="continent-filter">
-                {CONTINENTS.map(c => (
-                    <button
-                        key={c}
-                        className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}
-                        style={activeContinent === c ? { background: CONTINENT_COLOURS[c], borderColor: CONTINENT_COLOURS[c] } : {}}
-                        onClick={() => setActiveContinent(c)}
-                    >
-                        {c}
-                    </button>
-                ))}
+            {/* Main content */}
+            <div className="cities-content">
+
+                {/* Enlarged image */}
+                {enlargedImage && (
+                    <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
+                        <img src={enlargedImage} alt="enlarged" style={{ width: '500px', height: '500px', objectFit: 'cover', borderRadius: '12px', border: '3px solid black' }} />
+                    </div>
+                )}
+
+                {/* Modals */}
+                {selectedCity && (
+                    <div className="modal-overlay" onClick={() => setSelectedCity(null)}>
+                        <div className="modal" onClick={(e) => e.stopPropagation()}>
+                            {underConstruction.some(c => c.name === selectedCity.name) ? (
+                                <>
+                                    <h3>🚧 {selectedCity.name}</h3>
+                                    <p>Under construction!</p>
+                                    <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedCity.finishTime))}</strong></p>
+                                    <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
+                                </>
+                            ) : available.includes(selectedCity) ? (
+                                <>
+                                    <h3>Connect {selectedCity.name}?</h3>
+                                    <button className="constructionButton" onClick={() => {
+                                        playClickSound2();
+                                        const cost = constructionManager.calculateTierConnectionCost(selectedCity);
+                                        if (balance < cost) { setShowNoFunds(true); setSelectedCity(null); }
+                                        else { constructionManager.startStationConstruction(selectedCity); playConstructionSound(); setSelectedCity(null); }
+                                    }}>
+                                        Connect <img className="cashIcon" src={cashIcon} alt="balance" /> ({constructionManager.calculateTierConnectionCost(selectedCity)})
+                                    </button>
+                                    <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
+                                </>
+                            ) : (
+                                <>
+                                    <img src={`https://flagcdn.com/w40/${countryFlags[selectedCity.country]}.png`} />
+                                    <h3>{selectedCity.name}</h3>
+                                    <hr />
+                                    <p><strong>Country</strong>: {selectedCity.country}</p>
+                                    <p><strong>Population</strong>: {selectedCity.population.toLocaleString()}</p>
+                                    <p>Earning <strong>£{economyManager.calculateCityIncome(selectedCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })}</strong> per day</p>
+                                    <p><em>{selectedCity.fact}</em></p>
+                                    <img
+                                        className="modal-city-image"
+                                        src={cityImages[selectedCity.name]}
+                                        alt={selectedCity.name}
+                                        onClick={(e) => { e.stopPropagation(); setEnlargedImage(cityImages[selectedCity.name]) }}
+                                        style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', cursor: 'zoom-in' }}
+                                    />
+                                    <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
+
+                {showNoFunds && (
+                    <div className="modal-overlay" onClick={() => setShowNoFunds(false)}>
+                        <div className="modal" onClick={(e) => e.stopPropagation()}>
+                            <h3>💸 Not enough funds!</h3>
+                            <p>You need more money to connect this city.</p>
+                            <button className="closeButton" onClick={() => { playClickSound2(); setShowNoFunds(false) }}>Close</button>
+                        </div>
+                    </div>
+                )}
+
+
+
+                {/* Connected cities */}
+                {sortedPurchasedCountries.length > 0 && (
+                    <>
+                        <div className="section-header-row">
+                            <h1 className="purchasedCitiesHeader">
+                                Connected cities
+                                <span className="city-count-badge">{filteredPurchased.length}</span>
+                                <span className="city-count-badge" style={{ background: '#555' }}>{sortedPurchasedCountries.length} countries</span>
+                            </h1>
+                            <div className="collapse-controls">
+                                <button className="collapse-btn" onClick={() => collapseAll(sortedPurchasedCountries)}>Collapse all</button>
+                                <button className="collapse-btn" onClick={expandAll}>Expand all</button>
+                            </div>
+                        </div>
+                        <div className="city-stats-row">
+                            <div className="city-stat-box">
+                                <span className="city-stat-label">Population served</span>
+                                <strong>{formatPopulation(totalPopulation)}</strong>
+                            </div>
+                            <div className="city-stat-box">
+                                <span className="city-stat-label">City income</span>
+                                <strong>£{totalIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</strong>
+                            </div>
+                        </div>
+                        {sortedPurchasedCountries.map(country => renderCountrySection(country, groupedPurchased[country]))}
+                    </>
+                )}
+
+                {/* Available cities */}
+                {sortedAvailableCountries.length > 0 && (
+                    <>
+                        <div className="section-header-row" style={{ marginTop: '24px' }}>
+                            <h1 className="availableCitiesHeader">
+                                Cities available to connect
+                                <span className="city-count-badge">{filteredAvailable.length}</span>
+                            </h1>
+                            <div className="collapse-controls">
+                                <button className="collapse-btn" onClick={() => collapseAll(sortedAvailableCountries)}>Collapse all</button>
+                                <button className="collapse-btn" onClick={expandAll}>Expand all</button>
+                            </div>
+                        </div>
+                        {sortedAvailableCountries.map(country => renderCountrySection(country, groupedAvailable[country], true))}
+                    </>
+                )}
             </div>
-
-            {/* Enlarged image */}
-            {enlargedImage && (
-                <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
-                    <img src={enlargedImage} alt="enlarged" style={{ width: '500px', height: '500px', objectFit: 'cover', borderRadius: '12px', border: '3px solid black' }} />
-                </div>
-            )}
-
-            {/* Modals */}
-            {selectedCity && (
-                <div className="modal-overlay" onClick={() => setSelectedCity(null)}>
-                    <div className="modal" onClick={(e) => e.stopPropagation()}>
-                        {underConstruction.some(c => c.name === selectedCity.name) ? (
-                            <>
-                                <h3>🚧 {selectedCity.name}</h3>
-                                <p>Under construction!</p>
-                                <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedCity.finishTime))}</strong></p>
-                                <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
-                            </>
-                        ) : available.includes(selectedCity) ? (
-                            <>
-                                <h3>Connect {selectedCity.name}?</h3>
-                                <button className="constructionButton" onClick={() => {
-                                    playClickSound2();
-                                    const cost = constructionManager.calculateTierConnectionCost(selectedCity);
-                                    if (balance < cost) { setShowNoFunds(true); setSelectedCity(null); }
-                                    else if (constructionManager.isConstructionQueueFull()) { setShowQueueFull(true); setSelectedCity(null); }
-                                    else { constructionManager.startStationConstruction(selectedCity); playClickSound2(); setSelectedCity(null); }
-                                }}>
-                                    Connect <img className="cashIcon" src={cashIcon} alt="balance" /> ({constructionManager.calculateTierConnectionCost(selectedCity)})
-                                </button>
-                                <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
-                            </>
-                        ) : (
-                            <>
-                                <img src={`https://flagcdn.com/w40/${countryFlags[selectedCity.country]}.png`} />
-                                <h3>{selectedCity.name}</h3>
-                                <hr />
-                                <p><strong>Country</strong>: {selectedCity.country}</p>
-                                <p><strong>Population</strong>: {selectedCity.population.toLocaleString()}</p>
-                                <p>Earning <strong>£{economyManager.calculateCityIncome(selectedCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })}</strong> per day</p>
-                                <p><em>{selectedCity.fact}</em></p>
-                                <img
-                                    className="modal-city-image"
-                                    src={cityImages[selectedCity.name]}
-                                    alt={selectedCity.name}
-                                    onClick={(e) => { e.stopPropagation(); setEnlargedImage(cityImages[selectedCity.name]) }}
-                                    style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', cursor: 'zoom-in' }}
-                                />
-                                <button className="closeButton" onClick={() => { playClickSound2(); setSelectedCity(null) }}>Close</button>
-                            </>
-                        )}
-                    </div>
-                </div>
-            )}
-
-            {showNoFunds && (
-                <div className="modal-overlay" onClick={() => setShowNoFunds(false)}>
-                    <div className="modal" onClick={(e) => e.stopPropagation()}>
-                        <h3>💸 Not enough funds!</h3>
-                        <p>You need more money to connect this city.</p>
-                        <button className="closeButton" onClick={() => { playClickSound2(); setShowNoFunds(false) }}>Close</button>
-                    </div>
-                </div>
-            )}
-
-            {showQueueFull && (
-                <div className="modal-overlay" onClick={() => setShowQueueFull(false)}>
-                    <div className="modal" onClick={(e) => e.stopPropagation()}>
-                        <h3>🚧 Construction queue full!</h3>
-                        <p>Wait for your current construction to finish before starting another.</p>
-                        <button className="closeButton" onClick={() => { playClickSound2(); setShowQueueFull(false) }}>Close</button>
-                    </div>
-                </div>
-            )}
-
-            {/* Connected cities */}
-            {sortedPurchasedCountries.length > 0 && (
-                <>
-                    <div className="section-header-row">
-                        <h1 className="purchasedCitiesHeader">
-                            Connected cities
-                            <span className="city-count-badge">{filteredPurchased.length}</span>
-                            <span className="city-count-badge" style={{ background: '#555' }}>{sortedPurchasedCountries.length} countries</span>
-                        </h1>
-                        <div className="collapse-controls">
-                            <button className="collapse-btn" onClick={() => collapseAll(sortedPurchasedCountries)}>Collapse all</button>
-                            <button className="collapse-btn" onClick={expandAll}>Expand all</button>
-                        </div>
-                    </div>
-                    <div className="city-stats-row">
-                        <div className="city-stat-box">
-                            <span className="city-stat-label">Population served</span>
-                            <strong>{formatPopulation(totalPopulation)}</strong>
-                        </div>
-                        <div className="city-stat-box">
-                            <span className="city-stat-label">City income</span>
-                            <strong>£{totalIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</strong>
-                        </div>
-                    </div>
-                    {sortedPurchasedCountries.map(country => renderCountrySection(country, groupedPurchased[country]))}
-                </>
-            )}
-
-            {/* Available cities */}
-            {sortedAvailableCountries.length > 0 && (
-                <>
-                    <div className="section-header-row" style={{ marginTop: '24px' }}>
-                        <h1 className="availableCitiesHeader">
-                            Cities available to connect
-                            <span className="city-count-badge">{filteredAvailable.length}</span>
-                        </h1>
-                        <div className="collapse-controls">
-                            <button className="collapse-btn" onClick={() => collapseAll(sortedAvailableCountries)}>Collapse all</button>
-                            <button className="collapse-btn" onClick={expandAll}>Expand all</button>
-                        </div>
-                    </div>
-                    {sortedAvailableCountries.map(country => renderCountrySection(country, groupedAvailable[country], true))}
-                </>
-            )}
         </div>
     )
 }
