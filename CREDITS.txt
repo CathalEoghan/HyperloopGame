@@ -407,6 +407,10 @@ SOUNDS
 cityConnectComplete.mp3 - Sound by Robinhood76 via Freesound
 leavingSound.mp3 - Sound by GraceSoundProductions via Pixabay
 farewellAccept.mp3 - Sound by Universfield via Pixabay
+constructionSound.mp3 - Sound by freesound community via Pixabay
+workClickSound.mp3 - Sound by linhmitto via Pixabay
+openingAudio.mp3 - Sound via Pixabay
+hoverSound.mp3 - Sound via tunetank
 
 MISC IMAGES
 

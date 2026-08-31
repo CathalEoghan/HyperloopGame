@@ -5,21 +5,19 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
-import { playClickSound2 } from '../utils/sound.js'
+import { playClickSound2, playHoverSound } from '../utils/sound.js'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure']
 
 function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, purchasedCities, purchasedUpgrades }) {
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
-    const [showQueueFull, setShowQueueFull] = useState(false)
     const [activeCategory, setActiveCategory] = useState('All')
     const [sortBy, setSortBy] = useState('alphabetical')
     const [search, setSearch] = useState('')
     const [enlargedImage, setEnlargedImage] = useState(null)
 
     const allItems = [...allDevelopments, ...allUpgrades]
-
     const underConstruction = allItems.filter(item =>
         developmentsUnderConstruction.some(d => d.name === item.name)
     )
@@ -57,7 +55,6 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
     return (
         <div className="background">
-
             <div className="dev-toolbar">
                 <input
                     className="dev-search"
@@ -66,11 +63,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                 />
-                <select
-                    className="sort-select"
-                    value={sortBy}
-                    onChange={e => setSortBy(e.target.value)}
-                >
+                <select className="sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
                     <option value="alphabetical">A–Z</option>
                     <option value="revenue-high">Revenue: High to Low</option>
                     <option value="revenue-low">Revenue: Low to High</option>
@@ -98,24 +91,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 </div>
             )}
 
-            {/* Enlarged image overlay */}
             {enlargedImage && (
                 <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
-                    <img
-                        src={enlargedImage}
-                        alt="enlarged"
-                        style={{
-                            width: '500px',
-                            height: '500px',
-                            objectFit: 'cover',
-                            borderRadius: '12px',
-                            border: '3px solid black'
-                        }}
-                    />
+                    <img src={enlargedImage} alt="enlarged" style={{ width: '500px', height: '500px', objectFit: 'cover', borderRadius: '12px', border: '3px solid black' }} />
                 </div>
             )}
 
-            {/* Main development modal */}
             {selectedDevelopment && (
                 <div className="modal-overlay" onClick={() => setSelectedDevelopment(null)}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -143,7 +124,6 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <button className="constructionButton" onClick={() => {
                                     const cost = selectedDevelopment.cost
                                     if (balance < cost) { playClickSound2(); setShowNoFunds(true); setSelectedDevelopment(null) }
-                                    else if (constructionManager.isConstructionQueueFull()) { playClickSound2(); setShowQueueFull(true); setSelectedDevelopment(null) }
                                     else { playClickSound2(); constructionManager.startDevelopmentConstruction(selectedDevelopment); setSelectedDevelopment(null) }
                                 }}>
                                     Build (£{selectedDevelopment.cost.toLocaleString()})
@@ -184,16 +164,6 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 </div>
             )}
 
-            {showQueueFull && (
-                <div className="modal-overlay" onClick={() => setShowQueueFull(false)}>
-                    <div className="modal" onClick={(e) => e.stopPropagation()}>
-                        <h3>🚧 Construction queue full!</h3>
-                        <p>Wait for your current construction to finish before starting another.</p>
-                        <button className="closeButton" onClick={() => { playClickSound2(); setShowQueueFull(false) }}>Close</button>
-                    </div>
-                </div>
-            )}
-
             {sortedPurchased.length > 0 && (
                 <>
                     <h2 className="section-header">
@@ -203,7 +173,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         {sortedPurchased.map(development => {
                             const isUnderConstruction = underConstruction.some(d => d.name === development.name)
                             return (
-                                <button className="development" key={development.name} onClick={() => setSelectedDevelopment(development)}>
+                                <button
+                                    className="development"
+                                    key={development.name}
+                                    onClick={() => setSelectedDevelopment(development)}
+                                    onMouseEnter={() => playHoverSound()}
+                                >
                                     <div className="city-image-wrapper">
                                         <img
                                             className={isUnderConstruction ? "unavailable" : "development-image"}
@@ -236,7 +211,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
             </h2>
             <div className="development-row">
                 {sortedAvailable.map(development => (
-                    <button className="development" key={development.name} onClick={() => setSelectedDevelopment(development)}>
+                    <button
+                        className="development"
+                        key={development.name}
+                        onClick={() => setSelectedDevelopment(development)}
+                        onMouseEnter={() => playHoverSound()}
+                    >
                         <div className="city-image-wrapper">
                             <img
                                 className="unavailable"

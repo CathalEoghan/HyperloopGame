@@ -1,43 +1,28 @@
+import click_sound_2 from '../assets/sounds/click_sound_2.mp3'
+import click_sound_3 from '../assets/sounds/click_sound_3.mp3'
+import rankUpSound from '../assets/sounds/rankUpSound.mp3'
+import leavingSound from '../assets/sounds/leavingSound.mp3'
+import farewellAcceptSound from '../assets/sounds/farewellAccept.mp3'
+import badNewsSound from '../assets/sounds/badNews.mp3'
+import constructionSound from '../assets/sounds/constructionSound.mp3'
+import workClickSound from '../assets/sounds/workClickSound.mp3'
+import hoverSound from '../assets/sounds/hoverSound.mp3'
 
-import click_sound_2 from '../assets/click_sound_2.mp3'
-import click_sound_3 from '../assets/click_sound_3.mp3'
-import rankUpSound from '../assets/rankUpSound.mp3'
-import leavingSound from '../assets/leavingSound.mp3'
-import farewellAcceptSound from '../assets/farewellAccept.mp3'
-import badNewsSound from '../assets/badNews.mp3'
-
-export function playBadNewsSound() {
-    const audio = new Audio(badNewsSound)
-    audio.play()
+function canPlay() {
+    return localStorage.getItem('soundEnabled') !== 'false'
 }
 
-export function playLeavingSound() {
-    const audio = new Audio(leavingSound)
-    audio.play()
+function play(src) {
+    if (!canPlay()) return
+    new Audio(src).play()
 }
 
-export function playFarewellAcceptSound() {
-    const audio = new Audio(farewellAcceptSound)
-    audio.play()
-}
-
-export function playClickSound2() {
-
-const audio = new Audio(click_sound_2)
-
-audio.play()
-
-}
-
-export function playRankUpSound() {
-    const audio = new Audio(rankUpSound)
-    audio.play()
-}
-
-export function playClickSound3() {
-
-const audio = new Audio(click_sound_3)
-
-audio.play()
-
-}
+export function playWorkClickSound()     { play(workClickSound) }
+export function playConstructionSound()  { play(constructionSound) }
+export function playBadNewsSound()       { play(badNewsSound) }
+export function playLeavingSound()       { play(leavingSound) }
+export function playFarewellAcceptSound(){ play(farewellAcceptSound) }
+export function playClickSound2()        { play(click_sound_2) }
+export function playClickSound3()        { play(click_sound_3) }
+export function playRankUpSound()        { play(rankUpSound) }
+export function playHoverSound() { play(hoverSound) }

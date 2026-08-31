@@ -1,6 +1,12 @@
 import { useState, useEffect } from "react"
 import './DepartureBoard.css'
 
+function getOrdinal(n) {
+    const s = ['th', 'st', 'nd', 'rd']
+    const v = n % 100
+    return n + (s[(v - 20) % 10] || s[v] || s[0])
+}
+
 function FlapText({ text }) {
     return (
         <span className="flap-text">
@@ -113,7 +119,12 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         return () => clearInterval(interval)
     }, [])
 
-    const today = new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+    const now = new Date()
+    const weekday = now.toLocaleDateString('en-GB', { weekday: 'long' })
+    const day = getOrdinal(now.getDate())
+    const month = now.toLocaleDateString('en-GB', { month: 'long' })
+    const year = now.getFullYear()
+    const today = `for ${weekday}, ${day} ${month} ${year}`
     const half = Math.ceil(schedule.length / 2)
     const left = schedule.slice(0, half)
     const right = schedule.slice(half)
@@ -140,7 +151,7 @@ function DepartureBoard({ purchasedCities, homeCity }) {
 
     return (
         <div className="departure-board">
-            <h2 className="board-title">🛫 Departures — {today}</h2>
+            <h2 className="board-title">Departures {today}</h2>
             {schedule.length === 0 ? (
                 <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>Loading departures...</p>
             ) : (

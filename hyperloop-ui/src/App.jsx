@@ -11,6 +11,7 @@ import ProgressPage from './pages/ProgressPage.jsx'
 import DepartureBoard from "./pages/DepartureBoard"
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
+import SettingsPage from './pages/SettingsPage'
 import DelayModal from "./components/DelayModal"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
@@ -18,11 +19,8 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
-import { allDevelopments } from "../../DevelopmentManager/DevelopmentRegistry.js";
-import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js";
 import { playRankUpSound } from "./utils/sound.js";
 import FarewellModal from "./components/FarewellModal"
-import { formatTime } from './utils/time.js';
 import "./App.css";
 
 function App() {
@@ -40,6 +38,7 @@ function App() {
   const [farewellsGiven, setFarewellsGiven] = useState(0);
   const triggeredDepartures = useRef(new Set());
   const triggeredDelays = useRef(new Set());
+  const hasGivenStarterBonus = useRef(false);
 
   const [rankManager] = useState(() => new RankManager());
   const [progressionManager] = useState(() => new ProgressionManager(rankManager));
@@ -47,6 +46,26 @@ function App() {
   const [timeManager] = useState(() => new TimeManager());
   const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
   const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
+
+  const workEarnings = 100;
+
+  useState(() => {
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('departures_')) localStorage.removeItem(key)
+    })
+  });
+
+  useEffect(() => {
+    if (purchasedCitiesCount === 1 && !hasGivenStarterBonus.current) {
+      hasGivenStarterBonus.current = true;
+      const tier2Cities = allCities.filter(c => c.tier === 2);
+      const bonus = progressionManager.getRandomUnlockedCity(tier2Cities);
+      if (bonus) {
+        progressionManager.unlockCity(bonus);
+        setClaimedCity(bonus);
+      }
+    }
+  }, [purchasedCitiesCount]);
 
   useEffect(() => {
     setInterval(() => {
@@ -60,14 +79,11 @@ function App() {
         setPendingRankUps(prev => prev + 1);
       }
       constructionManager.update();
-
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
       const todayKey = now.toDateString();
       const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
-
-      // Farewell trigger — fires 5 minutes before departure (at GATE CLOSED)
       schedule.forEach(entry => {
         const key = `${todayKey}_${entry.time}`;
         const depMins = entry.hour * 60 + entry.minute;
@@ -78,8 +94,6 @@ function App() {
           setActiveDeparture(entry);
         }
       });
-
-      // Delay trigger — fires randomly, ~2-3 times per day
       if (Math.random() < 0.0002) {
         const eligible = schedule.filter(entry => {
           const diff = (entry.hour * 60 + entry.minute) - (currentHour * 60 + currentMinute);
@@ -101,7 +115,6 @@ function App() {
           setActiveDelay({ name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation });
         }
       }
-
       setBalance(progressionManager.balance);
       setRankSet(rankManager.rank);
       setTotalCashEarned(progressionManager.totalCashEarned);
@@ -130,6 +143,8 @@ function App() {
         activeTab={activeTab}
         onSelect={setActiveTab}
         reputation={reputation}
+        onWork={() => progressionManager.addCash(workEarnings)}
+        workEarnings={workEarnings}
       />
       <ExperienceBar
         current={totalCashEarned - rankManager.getCumulativeXP(rankSet - 1)}
@@ -139,6 +154,7 @@ function App() {
       {activeTab === "Home" && (
         <HomePage
           purchasedCities={progressionManager.purchasedCities}
+          unlockedCities={progressionManager.unlockedCities}
           purchasedCitiesCount={purchasedCitiesCount}
         />
       )}
@@ -180,9 +196,14 @@ function App() {
           homeCity={progressionManager.purchasedCities[0]}
         />
       )}
+      {activeTab === "Settings" && (
+    <SettingsPage
+        terminalName={terminalName}
+        onTerminalNameChange={setTerminalName}
+    />
+)}
       <TickerBar />
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
-
       {activeDelay && (
         <DelayModal
           delay={activeDelay}
@@ -196,7 +217,6 @@ function App() {
           }}
         />
       )}
-
       {!activeDelay && activeDeparture && !claimedCity && (
         <FarewellModal
           departure={activeDeparture}
@@ -208,7 +228,6 @@ function App() {
           onMiss={() => setActiveDeparture(null)}
         />
       )}
-
       {!activeDelay && !activeDeparture && pendingRankUps > 0 && (
         <RankUpModal rank={rankSet} onClaim={() => {
           const newCity = progressionManager.getRandomUnlockedCity(allCities);
@@ -219,7 +238,6 @@ function App() {
           setPendingRankUps(prev => prev - 1);
         }} />
       )}
-
       {claimedCity && (
         <CityRevealModal city={claimedCity} onClose={() => setClaimedCity(null)} />
       )}
