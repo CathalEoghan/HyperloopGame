@@ -6,7 +6,7 @@ import { skiStore } from "../DevelopmentManager/SkiStore.js";
 
 export const Santiago = new City(
     "Santiago",
-    7400741,
+    7400700,
     [skiStore],
     "Chile",
     "South America",

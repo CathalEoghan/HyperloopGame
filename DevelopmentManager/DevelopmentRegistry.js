@@ -154,6 +154,9 @@ import { wineBar } from './WineBar.js'
 import { bikingAccessoriesStore } from './BikingAccessoriesStore.js'
 import { indoorSurfing } from './IndoorSurfing.js'
 import { scarfShop } from './ScarfShop.js'
+import { paintedCeramicsStore } from './PaintedCeramicsStore.js'
+import { artsAndCraftsStore } from './ArtsAndCraftsStore.js'
+import { snowGlobeStore } from './SnowGlobeStore.js'
 
 
 export const allDevelopments = [
@@ -312,5 +315,8 @@ export const allDevelopments = [
     bikingAccessoriesStore,
     indoorSurfing,
     scarfShop,
+    paintedCeramicsStore,
+    artsAndCraftsStore,
+    snowGlobeStore,
 
 ]

@@ -211,6 +211,19 @@ import SummerHolidayPackages from '../assets/developments-thumb/SummerHolidayPac
 import ExteriorBeautificationProject from '../assets/developments-thumb/ExteriorBeautificationProject.jpg'
 import ScarfShop from '../assets/developments-thumb/ScarfShop.jpg'
 import RouteImprovements from '../assets/developments-thumb/RouteImprovements.jpg'
+import AutumnGetawayPackages from '../assets/developments-thumb/AutumnGetawayPackages.jpg'
+import ArtsAndCraftsStore from '../assets/developments-thumb/ArtsAndCraftsStore.jpg'
+import SnowGlobeStore from '../assets/developments-thumb/SnowGlobeStore.jpg'
+import EmbassyHotlineCentre from '../assets/developments-thumb/EmbassyHotlineCentre.jpg'
+import SecurityStreamlining from '../assets/developments-thumb/SecurityStreamlining.jpg'
+import MuralCommissions from '../assets/developments-thumb/MuralCommissions.jpg'
+import OutdoorGarden from '../assets/developments-thumb/OutdoorGarden.jpg'
+import MaintenanceImprovements from '../assets/developments-thumb/MaintenanceImprovements.jpg'
+import PaintedCeramicsStore from '../assets/developments-thumb/PaintedCeramicsStore.jpg'
+import SpringVacationPackages from '../assets/developments-thumb/SpringVacationPackages.jpg'
+import SuperiorCoffeeImports from '../assets/developments-thumb/SuperiorCoffeeImports.jpg'
+import QualityTropicalFruitImports from '../assets/developments-thumb/QualityTropicalFruitImports.jpg'
+import WinterEscapePackages from '../assets/developments-thumb/WinterEscapePackages.jpg'
 
 
 
@@ -428,6 +441,19 @@ const developmentImages = {
     "Temperature Regulation Enhancements": TemperatureRegulationEnhancements,
     "Scarf Shop": ScarfShop,
     "Route Improvements": RouteImprovements,
+    "Embassy Hotline Centre": EmbassyHotlineCentre,
+        "Autumn Getaway Packages": AutumnGetawayPackages,
+        "Arts and Crafts Store": ArtsAndCraftsStore,
+        "Mural Commissions": MuralCommissions,
+        "Outdoor Garden": OutdoorGarden,
+        "Painted Ceramics Store": PaintedCeramicsStore,
+        "Maintenance Improvements": MaintenanceImprovements,
+        "Security Streamlining": SecurityStreamlining,
+        "Snow Globe Store": SnowGlobeStore,
+        "Spring Vacation Packages": SpringVacationPackages,
+    "Quality Tropical Fruit Imports": QualityTropicalFruitImports,
+    "Superior Coffee Imports": SuperiorCoffeeImports,
+    "Winter Escape Packages": WinterEscapePackages,
 
 
 

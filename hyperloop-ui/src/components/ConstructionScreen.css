@@ -1,0 +1,102 @@
+.construction-screen {
+    min-height: 100vh;
+    background-color: rgb(255, 240, 224);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    font-family: 'Inter', sans-serif;
+}
+
+.construction-logo {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #f5a623;
+    text-transform: uppercase;
+}
+
+.construction-city-img {
+    width: 180px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 3px solid black;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    animation: construction-pulse 2s ease-in-out infinite;
+}
+
+@keyframes construction-pulse {
+    0%, 100% { box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+    50%       { box-shadow: 0 8px 32px rgba(245, 166, 35, 0.4); }
+}
+
+.construction-text {
+    text-align: center;
+}
+
+.construction-title {
+    font-size: 1.6rem;
+    font-weight: 900;
+    margin: 0 0 8px;
+    color: #111;
+}
+
+.construction-subtitle {
+    font-size: 0.9rem;
+    color: #888;
+    margin: 0;
+}
+
+.construction-dots span {
+    animation: construction-dot 1.4s infinite;
+    opacity: 0;
+}
+
+.construction-dots span:nth-child(1) { animation-delay: 0s; }
+.construction-dots span:nth-child(2) { animation-delay: 0.2s; }
+.construction-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes construction-dot {
+    0%, 80%, 100% { opacity: 0; }
+    40%            { opacity: 1; }
+}
+
+.construction-tip {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(10, 10, 10, 0.85);
+    border: 1px solid #f5a623;
+    border-radius: 50px;
+    padding: 8px 20px 8px 12px;
+    max-width: 560px;
+    width: calc(100% - 48px);
+    transition: opacity 0.5s ease;
+    position: absolute;
+    bottom: 80px;
+}
+
+.tip-visible { opacity: 1; }
+.tip-hidden  { opacity: 0; }
+
+.construction-tip-label {
+    background: #f5a623;
+    color: black;
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    flex-shrink: 0;
+}
+
+.construction-tip-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: #ddd;
+    line-height: 1.4;
+}

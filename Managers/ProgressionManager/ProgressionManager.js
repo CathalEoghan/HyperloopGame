@@ -40,7 +40,7 @@ export class ProgressionManager {
     }
 
     addReputation(amount) {
-        this.reputation += amount;
+        this.reputation = Math.max(0, this.reputation + amount);
     }
 
     spendReputation(amount) {
@@ -53,12 +53,7 @@ export class ProgressionManager {
         return false;
     }
 
-    getCityCapacity() {
-        return this.rankManager.rank + 1;
-    }
-
     purchaseCity(city) {
-        if (this.purchasedCities.length >= this.getCityCapacity()) return;
         if (this.purchasedCities.includes(city)) return;
         city.connect();
         city.rewards.forEach(reward => this.unlockReward(reward));

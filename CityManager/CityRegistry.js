@@ -211,6 +211,19 @@ import { Malé } from './Malé.js'
 import { LuxembourgCity } from './LuxembourgCity.js'
 import { Denver } from './Denver.js'
 import { PanamaCity } from './PanamaCity.js'
+import { Tbilisi } from './Tbilisi.js'
+import { Bilbao } from './Bilbao.js'
+import { Ottawa } from './Ottawa.js'
+import { Valletta } from './Valletta.js'
+import { Nicosia } from './Nicosia.js'
+import { Porto } from './Porto.js'
+import { Yangon } from './Yangon.js'
+import { Sanaa } from './Sanaa.js'
+import { Mogadishu } from './Mogadishu.js'
+import { Hobart } from './Hobart.js'
+import { SantoDomingo } from './SantoDomingo.js'
+import { SanJosé } from './SanJosé.js'
+import { Wrocław } from './Wrocław.js'
 
 
 
@@ -427,5 +440,18 @@ export const allCities = [
     Rotterdam,
     Denver,
     PanamaCity,
+    Bilbao,
+    Yangon,
+    Tbilisi,
+    Ottawa,
+    Valletta,
+    Nicosia,
+    Mogadishu,
+    Sanaa,
+    Porto,
+    Wrocław,
+    Hobart,
+    SantoDomingo,
+    SanJosé,
 
 ]

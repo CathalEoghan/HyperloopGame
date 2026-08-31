@@ -4,6 +4,7 @@
     export const EIGHT_HOURS = 8 * 60 * 60 * 1000;
     export const ONE_DAY = 24 * 60 * 60 * 1000;
     export const FIVE_SECONDS = 5 * 1000;
+    export const TEN_SECONDS = 5 * 1000 * 2;
     export const TWENTY_SECONDS = 20 * 1000;
 export const FORTY_FIVE_SECONDS = 45 * 1000;
 export const TWO_MINUTES = 2 * 60 * 1000;

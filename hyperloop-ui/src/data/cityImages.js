@@ -209,6 +209,20 @@ import Antananarivo from '../assets/cities/Antananarivo.jpg'
 import Rotterdam from '../assets/cities/Rotterdam.jpg'
 import LuxembourgCity from '../assets/cities/LuxembourgCity.jpg'
 import Denver from '../assets/cities/Denver.jpg'
+import PanamaCity from '../assets/cities/PanamaCity.jpg'
+import Bilbao from '../assets/cities/Bilbao.jpg'
+import Nicosia from '../assets/cities/Nicosia.jpg'
+import Valletta from '../assets/cities/Valletta.jpg'
+import Tbilisi from '../assets/cities/Tbilisi.jpg'
+import Yangon from '../assets/cities/Yangon.jpg'
+import Porto from '../assets/cities/Porto.jpg'
+import Mogadishu from '../assets/cities/Mogadishu.jpg'
+import Sanaa from '../assets/cities/Sanaa.jpg'
+import Ottawa from '../assets/cities/Ottawa.jpg'
+import SantoDomingo from '../assets/cities/SantoDomingo.jpg'
+import Wrocław from '../assets/cities/Wrocław.jpg'
+import Hobart from '../assets/cities/Hobart.jpg'
+import SanJosé from '../assets/cities/SanJosé.jpg'
 
 
 const cityImages = {
@@ -423,6 +437,21 @@ const cityImages = {
     Sarajevo: Sarajevo,
     Rotterdam: Rotterdam,
     Denver: Denver,
+    "Panama City": PanamaCity,
+    "Sana'a": Sanaa,
+        Ottawa: Ottawa,
+        Bilbao: Bilbao,
+        Valletta: Valletta,
+        Porto: Porto,
+        Mogadishu: Mogadishu,
+        Tbilisi: Tbilisi,
+        Nicosia: Nicosia,
+        Yangon: Yangon,
+        "San José": SanJosé,
+        "Santo Domingo": SantoDomingo,
+        Wrocław: Wrocław,
+        Hobart: Hobart,
+
 
 }
 

@@ -57,6 +57,16 @@ import { shippingPort } from './ShippingPort.js'
 import { ecotourismAwarenessCampaigns } from './EcotourismAwarenessCampaigns.js'
 import { temperatureRegulationEnhancements } from './TemperatureRegulationEnhancements.js'
 import { routeImprovements } from './RouteImprovements.js'
+import { autumnGetawayPackages } from './AutumnGetawayPackages.js'
+import { embassyHotlineCentre } from './EmbassyHotlineCentre.js'
+import { muralCommissions } from './MuralCommissions.js'
+import { maintenanceImprovements } from './MaintenanceImprovements.js'
+import { outdoorGarden } from './OutdoorGarden.js'
+import { securityStreamlining } from './SecurityStreamlining.js'
+import { superiorCoffeeImports } from './SuperiorCoffeeImports.js'
+import { winterEscapePackages } from './WinterEscapePackages.js'
+import { springVacationPackages } from './SpringVacationPackages.js'
+import { qualityTropicalFruitImports } from './QualityTropicalFruitImports.js'
 
 
 export const allUpgrades = [
@@ -117,5 +127,15 @@ export const allUpgrades = [
     exteriorBeautificationProject,
     shippingPort,
     routeImprovements,
+    securityStreamlining,
+    autumnGetawayPackages,
+    embassyHotlineCentre,
+    maintenanceImprovements,
+    muralCommissions,
+    outdoorGarden,
+    qualityTropicalFruitImports,
+    springVacationPackages,
+    winterEscapePackages,
+    superiorCoffeeImports,
 
 ]

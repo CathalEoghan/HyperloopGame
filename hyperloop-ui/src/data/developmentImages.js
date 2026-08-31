@@ -211,6 +211,21 @@ import SummerHolidayPackages from '../assets/developments/SummerHolidayPackages.
 import ExteriorBeautificationProject from '../assets/developments/ExteriorBeautificationProject.jpg'
 import ScarfShop from '../assets/developments/ScarfShop.jpg'
 import RouteImprovements from '../assets/developments/RouteImprovements.jpg'
+import AutumnGetawayPackages from '../assets/developments/AutumnGetawayPackages.jpg'
+import ArtsAndCraftsStore from '../assets/developments/ArtsAndCraftsStore.jpg'
+import SnowGlobeStore from '../assets/developments/SnowGlobeStore.jpg'
+import EmbassyHotlineCentre from '../assets/developments/EmbassyHotlineCentre.jpg'
+import SecurityStreamlining from '../assets/developments/SecurityStreamlining.jpg'
+import MuralCommissions from '../assets/developments/MuralCommissions.jpg'
+import OutdoorGarden from '../assets/developments/OutdoorGarden.jpg'
+import MaintenanceImprovements from '../assets/developments/MaintenanceImprovements.jpg'
+import PaintedCeramicsStore from '../assets/developments/PaintedCeramicsStore.jpg'
+import SpringVacationPackages from '../assets/developments/SpringVacationPackages.jpg'
+import SuperiorCoffeeImports from '../assets/developments/SuperiorCoffeeImports.jpg'
+import QualityTropicalFruitImports from '../assets/developments/QualityTropicalFruitImports.jpg'
+import WinterEscapePackages from '../assets/developments/WinterEscapePackages.jpg'
+
+
 
 
 const developmentImages = {
@@ -426,6 +441,19 @@ const developmentImages = {
     "Temperature Regulation Enhancements": TemperatureRegulationEnhancements,
     "Scarf Shop": ScarfShop,
     "Route Improvements": RouteImprovements,
+    "Embassy Hotline Centre": EmbassyHotlineCentre,
+    "Autumn Getaway Packages": AutumnGetawayPackages,
+    "Arts and Crafts Store": ArtsAndCraftsStore,
+    "Mural Commissions": MuralCommissions,
+    "Outdoor Garden": OutdoorGarden,
+    "Painted Ceramics Store": PaintedCeramicsStore,
+    "Maintenance Improvements": MaintenanceImprovements,
+    "Security Streamlining": SecurityStreamlining,
+    "Snow Globe Store": SnowGlobeStore,
+    "Spring Vacation Packages": SpringVacationPackages,
+    "Quality Tropical Fruit Imports": QualityTropicalFruitImports,
+    "Superior Coffee Imports": SuperiorCoffeeImports,
+    "Winter Escape Packages": WinterEscapePackages,
 
 
 }

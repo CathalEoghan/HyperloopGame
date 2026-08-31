@@ -1,4 +1,4 @@
-import { FIVE_SECONDS, TWENTY_SECONDS, FORTY_FIVE_SECONDS, TWO_MINUTES } from '../TimeManager/TimeManager.js'
+import { FIVE_SECONDS, TEN_SECONDS, TWENTY_SECONDS, FORTY_FIVE_SECONDS, TWO_MINUTES } from '../TimeManager/TimeManager.js'
 
 export class ConstructionManager {
     constructor(progressionManager, timeManager) {
@@ -30,17 +30,14 @@ export class ConstructionManager {
     }
 
     startTutorialConstruction(city) {
-        const duration = FIVE_SECONDS;
+        const duration = TEN_SECONDS;
         city.finishTime = this.timeManager.getFinishTime(duration);
         city.underConstruction = true;
         this.progressionManager.citiesUnderConstruction.push(city);
     }
 
     startStationConstruction(city) {
-        // Check city capacity before deducting money
-        if (this.progressionManager.purchasedCities.length >= this.progressionManager.getCityCapacity()) return;
-
-        const connectionCost = this.calculateTierConnectionCost(city);
+const connectionCost = this.calculateTierConnectionCost(city);
         const canAfford = this.progressionManager.spendCash(connectionCost);
         if (!canAfford) return;
 

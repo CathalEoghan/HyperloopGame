@@ -80,8 +80,9 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         return              { label: 'SCHEDULED',    color: '#aaa' }
     }
 
+    const currentCityNames = new Set(purchasedCities.map(c => c.name))
+
     useEffect(() => {
-        // Don't run until we have cities
         if (!purchasedCities || purchasedCities.length === 0) return
 
         const today = new Date().toDateString()
@@ -90,14 +91,16 @@ function DepartureBoard({ purchasedCities, homeCity }) {
 
         if (saved) {
             const parsed = JSON.parse(saved)
-            // If cached schedule is non-empty and has gate property, use it
             if (parsed.length > 0 && parsed[0].gate !== undefined) {
-                setSchedule(parsed)
-                return
+                // Filter to only currently connected cities
+                const filtered = parsed.filter(e => currentCityNames.has(e.name))
+                if (filtered.length > 0) {
+                    setSchedule(filtered)
+                    return
+                }
             }
         }
 
-        // Generate fresh schedule
         const generated = generateSchedule(purchasedCities)
         if (generated.length > 0) {
             localStorage.setItem(key, JSON.stringify(generated))
@@ -108,16 +111,19 @@ function DepartureBoard({ purchasedCities, homeCity }) {
     useEffect(() => {
         const interval = setInterval(() => {
             setTick(t => t + 1)
-            // Reload from localStorage to pick up any delays
             const today = new Date().toDateString()
             const saved = localStorage.getItem(`departures_${today}`)
             if (saved) {
                 const parsed = JSON.parse(saved)
-                if (parsed.length > 0) setSchedule(parsed)
+                if (parsed.length > 0) {
+                    // Always filter to current cities on reload
+                    const filtered = parsed.filter(e => currentCityNames.has(e.name))
+                    setSchedule(filtered)
+                }
             }
         }, 30000)
         return () => clearInterval(interval)
-    }, [])
+    }, [purchasedCities])
 
     const now = new Date()
     const weekday = now.toLocaleDateString('en-GB', { weekday: 'long' })

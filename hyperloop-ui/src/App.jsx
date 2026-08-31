@@ -5,6 +5,7 @@ import BottomNav from "./components/BottomNav";
 import TickerBar from "./components/TickerBar";
 import RankUpModal from "./components/RankUpModal";
 import CityRevealModal from "./components/CityRevealModal"
+import TipsBar from "./components/TipsBar"
 import CitiesPage from "./pages/CitiesPage"
 import HomePage from "./pages/HomePage"
 import ProgressPage from './pages/ProgressPage.jsx'
@@ -14,6 +15,7 @@ import OpeningPage from './pages/OpeningPage'
 import SettingsPage from './pages/SettingsPage'
 import DelayModal from "./components/DelayModal"
 import OfflineModal from "./components/OfflineModal"
+import ConstructionScreen from "./components/ConstructionScreen"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -25,7 +27,7 @@ import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 
 import FarewellModal from "./components/FarewellModal"
 import "./App.css";
 
-const OFFLINE_CAP_SECONDS = 86400; // max 24 hours offline income
+const OFFLINE_CAP_SECONDS = 172800; // max 48 hours offline income
 const OFFLINE_RATE = 0.10; // 10% of active rate
 
 function App() {
@@ -39,13 +41,15 @@ function App() {
 
   // Calculate offline income immediately after load
   const [offlineData] = useState(() => {
-    if (!savedData?.lastSaved) return null;
-    const offlineSeconds = Math.min((Date.now() - savedData.lastSaved) / 1000, OFFLINE_CAP_SECONDS);
-    if (offlineSeconds < 60) return null; // ignore if less than 1 minute
+    const hiddenAt = localStorage.getItem('hyperloop_hidden_at')
+    if (!hiddenAt) return null;
+    const offlineSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, OFFLINE_CAP_SECONDS);
+    localStorage.removeItem('hyperloop_hidden_at'); // clear it so we don't show again on next render
+    if (offlineSeconds < 60) return null;
     const incomePerSecond = economyManager.calculateDailyIncome();
     const offlineIncome = incomePerSecond * offlineSeconds * OFFLINE_RATE;
     if (offlineIncome < 1) return null;
-    progressionManager.addCash(offlineIncome); // add immediately so balance is correct
+    progressionManager.addCash(offlineIncome);
     return { offlineSeconds, offlineIncome };
   });
 
@@ -189,15 +193,25 @@ function App() {
     if (savedData) triggerSave();
   }, [terminalName]);
 
+  // Record when tab is hidden so offline income can be calculated on return
+  useEffect(() => {
+    const handleVisibility = () => {
+      if (document.hidden) {
+        localStorage.setItem('hyperloop_hidden_at', Date.now());
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('beforeunload', () => {
+      localStorage.setItem('hyperloop_hidden_at', Date.now());
+    });
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, []);
+
   if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
     return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName} />;
   }
-  if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
-    return (
-      <div className="App opening-background">
-        <h2>🚧 Setting up your terminal in {pickedCity.name}...</h2>
-      </div>
-    );
+ if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
+    return <ConstructionScreen city={pickedCity} />;
   }
 
   return (
@@ -301,6 +315,7 @@ function App() {
           onImportSave={async (file) => { await importSave(file); window.location.reload(); }}
         />
       )}
+      <TipsBar />
       <TickerBar />
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
 

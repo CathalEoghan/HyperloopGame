@@ -212,6 +212,19 @@ LuxembourgCity.jpg - Photo by Mehmet Hardal via Pexels
 Malé.jpg - Photo by Asad Photo Maldives via Pexels
 Denver.jpg - Photo by Elena Golbraykh via Pexels
 PanamaCity.jpg - Photo by Osvaldo Madariaga via Pexels
+Nicosia.jpg - Photo by Sergei Gussev via Pexels
+Valletta.jpg - Photo by Angelos Lamprakopoulos via Pexels
+Ottawa.jpg - Photo by Alex Ohan via Pexels
+Porto.jpg - Photo by Harry Shum via Pexels
+Sanaa.jpg - Photo by alimkasem via Pexels
+Bilbao.jpg - Photo by Enrique via Pexels
+Mogadishu.jpg - Photo by Maxamed qalid via Pexels
+Yangon.jpg - Photo by thiha soe via Pexels
+Tbilisi.jpg - Photo by Eyup Sayar via Pexels
+Hobart.jpg - Photo by MB via Pexels
+Wrocław.jpg - Photo by Kaiwalya Limaye via Pexels
+SantoDomingo.jpg - Photo by Anthony Camilo via Pexels
+SanJosé.jpg - Photo by Spicypepper999 via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -425,6 +438,20 @@ SummerHolidayPackages.jpg - Photo by Isaac Garcia via Pexels
 ExteriorBeautificationProject.jpg - Photo by Muhammed İKİTEPE via Pexels
 ScarfShop.jpg - Photo by Diego F. Parra via Pexels
 RouteImprovements.jpg - Photo by Negative Space via Pexels
+SecurityStreamlining.jpg - Photo by El gringo photo via Pexels
+OutdoorGarden.jpg - Photo by 寅 陈 via Pexels
+SnowGlobeStore.jpg - Photo by Tim Heckmann via Pexels
+PaintedCeramicsStore.jpg - Photo by X1ntao ZHOU via Pexels
+MaintenanceImprovements.jpg - Photo by Bulat843 🌙 via Pexels
+MuralCommissions.jpg - Photo by Felicity Tai via Pexels
+EmbassyHotlineCentre.jpg - Photo by Tima Miroshnichenko via Pexels
+ArtsAndCraftsStore.jpg - Photo by Маргарита Константинова via Pexels
+AutumnGetawayPackages.jpg - Photo by Alexander Popadin via Pexels
+WinterEscapePackages.jpg - Photo by Mustafa Mašetić via Pexels
+SpringVacationPackages.jpg - Photo by Marcelo Verfe via Pexels
+SuperiorCoffeeImports.jpg - Photo by Jess Ho via Pexels
+QualityTropicalFruitImports.jpg - Photo by Darkside Photography via Pexels
+
 
 SOUNDS
 

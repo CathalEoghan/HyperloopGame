@@ -108,7 +108,13 @@ const countryFlags = {
     "Maldives": "mv",
     "Bosnia and Herzegovina": "ba",
     "Panama": "pa",
-
+    "Malta": "mt",
+    "Cyprus": "cy",
+    "Georgia": "ge",
+    "Myanmar": "mm",
+    "Somalia": "so",
+    "Dominican Republic": "do",
+    "Costa Rica": "cr",
     
 
 

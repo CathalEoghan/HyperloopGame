@@ -8,6 +8,7 @@ import constructionSound from '../assets/sounds/constructionSound.mp3'
 import workClickSound from '../assets/sounds/workClickSound.mp3'
 import hoverSound from '../assets/sounds/hoverSound.mp3'
 import reputationWorkBonus from '../assets/sounds/reputationBonusWork.mp3'
+import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
 
 function canPlay() {
     return localStorage.getItem('soundEnabled') !== 'false'
@@ -28,3 +29,4 @@ export function playClickSound3()        { play(click_sound_3) }
 export function playRankUpSound()        { play(rankUpSound) }
 export function playHoverSound()         { play(hoverSound) }
 export function playReputationWorkBonusSound() { play(reputationWorkBonus) }
+export function playBottomNavbarHoverSound() { play(bottomNavbarHover) }
