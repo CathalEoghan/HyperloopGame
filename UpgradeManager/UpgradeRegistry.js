@@ -50,6 +50,13 @@ import { expandedParkingFacilities } from './ExpandedParkingFacilities.js'
 import { premierWineImports } from './PremierWineImports.js'
 import { serviceDeliveryTraining } from './ServiceDeliveryTraining.js'
 import { emergencyTraining } from './EmergencyTraining.js'
+import { terminalRadio } from './TerminalRadio.js'
+import { summerHolidayPackages } from './SummerHolidayPackages.js'
+import { exteriorBeautificationProject } from './ExteriorBeautificationProject.js'
+import { shippingPort } from './ShippingPort.js'
+import { ecotourismAwarenessCampaigns } from './EcotourismAwarenessCampaigns.js'
+import { temperatureRegulationEnhancements } from './TemperatureRegulationEnhancements.js'
+import { routeImprovements } from './RouteImprovements.js'
 
 
 export const allUpgrades = [
@@ -103,5 +110,12 @@ export const allUpgrades = [
     premierWineImports,
     serviceDeliveryTraining,
     emergencyTraining,
+    terminalRadio,
+    ecotourismAwarenessCampaigns,
+    summerHolidayPackages,
+    temperatureRegulationEnhancements,
+    exteriorBeautificationProject,
+    shippingPort,
+    routeImprovements,
 
 ]

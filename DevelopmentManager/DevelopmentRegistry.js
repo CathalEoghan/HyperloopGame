@@ -153,6 +153,7 @@ import { wrestlingArena } from './WrestlingArena.js'
 import { wineBar } from './WineBar.js'
 import { bikingAccessoriesStore } from './BikingAccessoriesStore.js'
 import { indoorSurfing } from './IndoorSurfing.js'
+import { scarfShop } from './ScarfShop.js'
 
 
 export const allDevelopments = [
@@ -310,5 +311,6 @@ export const allDevelopments = [
     wineBar,
     bikingAccessoriesStore,
     indoorSurfing,
+    scarfShop,
 
 ]

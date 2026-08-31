@@ -203,6 +203,15 @@ import ServiceDeliveryTraining from '../assets/developments-thumb/ServiceDeliver
 import BikingAccessoriesStore from '../assets/developments-thumb/BikingAccessoriesStore.jpg'
 import EmergencyTraining from '../assets/developments-thumb/EmergencyTraining.jpg'
 import IndoorSurfing from '../assets/developments-thumb/IndoorSurfing.jpg'
+import TemperatureRegulationEnhancements from '../assets/developments-thumb/TemperatureRegulationEnhancements.jpg'
+import EcotourismAwarenessCampaigns from '../assets/developments-thumb/EcotourismAwarenessCampaigns.jpg'
+import ShippingPort from '../assets/developments-thumb/ShippingPort.jpg'
+import TerminalRadio from '../assets/developments-thumb/TerminalRadio.jpg'
+import SummerHolidayPackages from '../assets/developments-thumb/SummerHolidayPackages.jpg'
+import ExteriorBeautificationProject from '../assets/developments-thumb/ExteriorBeautificationProject.jpg'
+import ScarfShop from '../assets/developments-thumb/ScarfShop.jpg'
+import RouteImprovements from '../assets/developments-thumb/RouteImprovements.jpg'
+
 
 
 
@@ -218,7 +227,7 @@ const developmentImages = {
     "Soap Store": SoapStore,
     "Bowling Alley": BowlingAlley,
     "Ice Cream Parlour": IceCreamParlour,
-    "Coffee Shop" : CoffeeShop,
+    "Coffee Shop": CoffeeShop,
     "Beer Tent": BeerTent,
     "High-End Boutique": HighEndBoutique,
     "Florist": Florist,
@@ -411,7 +420,16 @@ const developmentImages = {
     "Biking Accessories Store": BikingAccessoriesStore,
     "Indoor Surfing": IndoorSurfing,
     "Emergency Training": EmergencyTraining,
-    
+    "Summer Holiday Packages": SummerHolidayPackages,
+    "Exterior Beautification Project": ExteriorBeautificationProject,
+    "Shipping Port": ShippingPort,
+    "Terminal Radio": TerminalRadio,
+    "Ecotourism Awareness Campaigns": EcotourismAwarenessCampaigns,
+    "Temperature Regulation Enhancements": TemperatureRegulationEnhancements,
+    "Scarf Shop": ScarfShop,
+    "Route Improvements": RouteImprovements,
+
+
 
 
 }

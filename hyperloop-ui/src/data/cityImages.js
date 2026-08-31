@@ -202,6 +202,13 @@ import Tirana from '../assets/cities/Tirana.jpg'
 import LaPaz from '../assets/cities/LaPaz.jpg'
 import Fortaleza from '../assets/cities/Fortaleza.jpg'
 import PortAuPrince from '../assets/cities/PortAuPrince.jpg'
+import Malé from '../assets/cities/Malé.jpg'
+import Tripoli from '../assets/cities/Tripoli.jpg'
+import Sarajevo from '../assets/cities/Sarajevo.jpg'
+import Antananarivo from '../assets/cities/Antananarivo.jpg'
+import Rotterdam from '../assets/cities/Rotterdam.jpg'
+import LuxembourgCity from '../assets/cities/LuxembourgCity.jpg'
+import Denver from '../assets/cities/Denver.jpg'
 
 
 const cityImages = {
@@ -409,6 +416,13 @@ const cityImages = {
     "La Paz": LaPaz,
     "Port-au-Prince": PortAuPrince,
     Fortaleza: Fortaleza,
+    Antananarivo: Antananarivo,
+    Tripoli: Tripoli,
+    "Luxembourg City": LuxembourgCity,
+    Malé: Malé,
+    Sarajevo: Sarajevo,
+    Rotterdam: Rotterdam,
+    Denver: Denver,
 
 }
 

@@ -102,6 +102,12 @@ const countryFlags = {
     "Albania": "al",
     "Bolivia": "bo",
     "Haiti": "ht",
+    "Libya": "ly",
+    "Madagascar": "mg",
+    "Luxembourg": "lu",
+    "Maldives": "mv",
+    "Bosnia and Herzegovina": "ba",
+    "Panama": "pa",
 
     
 

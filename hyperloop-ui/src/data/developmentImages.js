@@ -203,6 +203,14 @@ import ServiceDeliveryTraining from '../assets/developments/ServiceDeliveryTrain
 import BikingAccessoriesStore from '../assets/developments/BikingAccessoriesStore.jpg'
 import IndoorSurfing from '../assets/developments/IndoorSurfing.jpg'
 import EmergencyTraining from '../assets/developments/EmergencyTraining.jpg'
+import TemperatureRegulationEnhancements from '../assets/developments/TemperatureRegulationEnhancements.jpg'
+import EcotourismAwarenessCampaigns from '../assets/developments/EcotourismAwarenessCampaigns.jpg'
+import ShippingPort from '../assets/developments/ShippingPort.jpg'
+import TerminalRadio from '../assets/developments/TerminalRadio.jpg'
+import SummerHolidayPackages from '../assets/developments/SummerHolidayPackages.jpg'
+import ExteriorBeautificationProject from '../assets/developments/ExteriorBeautificationProject.jpg'
+import ScarfShop from '../assets/developments/ScarfShop.jpg'
+import RouteImprovements from '../assets/developments/RouteImprovements.jpg'
 
 
 const developmentImages = {
@@ -410,6 +418,14 @@ const developmentImages = {
     "Biking Accessories Store": BikingAccessoriesStore,
     "Indoor Surfing": IndoorSurfing,
     "Emergency Training": EmergencyTraining,
+    "Summer Holiday Packages": SummerHolidayPackages,
+    "Exterior Beautification Project": ExteriorBeautificationProject,
+    "Shipping Port": ShippingPort,
+    "Terminal Radio": TerminalRadio,
+    "Ecotourism Awareness Campaigns": EcotourismAwarenessCampaigns,
+    "Temperature Regulation Enhancements": TemperatureRegulationEnhancements,
+    "Scarf Shop": ScarfShop,
+    "Route Improvements": RouteImprovements,
 
 
 }
