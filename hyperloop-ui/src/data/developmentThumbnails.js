@@ -201,6 +201,10 @@ import SmokedFishStall from '../assets/developments-thumb/SmokedFishStall.jpg'
 import WrestlingArena from '../assets/developments-thumb/WrestlingArena.jpg'
 import ServiceDeliveryTraining from '../assets/developments-thumb/ServiceDeliveryTraining.jpg'
 import BikingAccessoriesStore from '../assets/developments-thumb/BikingAccessoriesStore.jpg'
+import EmergencyTraining from '../assets/developments-thumb/EmergencyTraining.jpg'
+import IndoorSurfing from '../assets/developments-thumb/IndoorSurfing.jpg'
+
+
 
 const developmentImages = {
     "Cupcake Store": CupcakeStore,
@@ -405,6 +409,8 @@ const developmentImages = {
     "Wine Bar": WineBar,
     "Service Delivery Training": ServiceDeliveryTraining,
     "Biking Accessories Store": BikingAccessoriesStore,
+    "Indoor Surfing": IndoorSurfing,
+    "Emergency Training": EmergencyTraining,
     
 
 

@@ -201,6 +201,8 @@ import SmokedFishStall from '../assets/developments/SmokedFishStall.jpg'
 import WrestlingArena from '../assets/developments/WrestlingArena.jpg'
 import ServiceDeliveryTraining from '../assets/developments/ServiceDeliveryTraining.jpg'
 import BikingAccessoriesStore from '../assets/developments/BikingAccessoriesStore.jpg'
+import IndoorSurfing from '../assets/developments/IndoorSurfing.jpg'
+import EmergencyTraining from '../assets/developments/EmergencyTraining.jpg'
 
 
 const developmentImages = {
@@ -406,6 +408,8 @@ const developmentImages = {
     "Wine Bar": WineBar,
     "Service Delivery Training": ServiceDeliveryTraining,
     "Biking Accessories Store": BikingAccessoriesStore,
+    "Indoor Surfing": IndoorSurfing,
+    "Emergency Training": EmergencyTraining,
 
 
 }

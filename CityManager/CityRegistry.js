@@ -201,6 +201,9 @@ import { Dakar } from './Dakar.js'
 import { Riga } from './Riga.js'
 import { Tirana } from './Tirana.js'
 import { LaPaz } from './LaPaz.js'
+import { Fortaleza } from './Fortaleza.js'
+import { PortAuPrince } from './PortAuPrince.js'
+
 
 
 export const allCities = [
@@ -406,5 +409,7 @@ export const allCities = [
     Riga,
     Tirana,
     LaPaz,
+    PortAuPrince,
+    Fortaleza,
 
 ]

@@ -49,6 +49,7 @@ import { freeTradeAgreements } from './FreeTradeAgreements.js'
 import { expandedParkingFacilities } from './ExpandedParkingFacilities.js'
 import { premierWineImports } from './PremierWineImports.js'
 import { serviceDeliveryTraining } from './ServiceDeliveryTraining.js'
+import { emergencyTraining } from './EmergencyTraining.js'
 
 
 export const allUpgrades = [
@@ -101,5 +102,6 @@ export const allUpgrades = [
     expandedParkingFacilities,
     premierWineImports,
     serviceDeliveryTraining,
+    emergencyTraining,
 
 ]

@@ -200,6 +200,9 @@ import Bratislava from '../assets/cities-thumb/Bratislava.jpg'
 import Riga from '../assets/cities-thumb/Riga.jpg'
 import Tirana from '../assets/cities-thumb/Tirana.jpg'
 import LaPaz from '../assets/cities-thumb/LaPaz.jpg'
+import Fortaleza from '../assets/cities-thumb/Fortaleza.jpg'
+import PortAuPrince from '../assets/cities-thumb/PortAuPrince.jpg'
+
 
 const cityImages = {
     London: London,
@@ -404,6 +407,8 @@ const cityImages = {
     Riga: Riga,
     Tirana: Tirana,
     "La Paz": LaPaz,
+    Fortaleza: Fortaleza,
+    "Port-au-Prince": PortAuPrince,
 
 
 }
