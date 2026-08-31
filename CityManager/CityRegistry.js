@@ -203,6 +203,14 @@ import { Tirana } from './Tirana.js'
 import { LaPaz } from './LaPaz.js'
 import { Fortaleza } from './Fortaleza.js'
 import { PortAuPrince } from './PortAuPrince.js'
+import { Antananarivo } from './Antananarivo.js'
+import { Tripoli } from './Tripoli.js'
+import { Rotterdam } from './Rotterdam.js'
+import { Sarajevo } from './Sarajevo.js'
+import { Malé } from './Malé.js'
+import { LuxembourgCity } from './LuxembourgCity.js'
+import { Denver } from './Denver.js'
+import { PanamaCity } from './PanamaCity.js'
 
 
 
@@ -411,5 +419,13 @@ export const allCities = [
     LaPaz,
     PortAuPrince,
     Fortaleza,
+    Antananarivo,
+    Tripoli,
+    Sarajevo,
+    LuxembourgCity,
+    Malé,
+    Rotterdam,
+    Denver,
+    PanamaCity,
 
 ]
