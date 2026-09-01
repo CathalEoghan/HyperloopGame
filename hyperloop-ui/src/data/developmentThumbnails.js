@@ -224,6 +224,12 @@ import SpringVacationPackages from '../assets/developments-thumb/SpringVacationP
 import SuperiorCoffeeImports from '../assets/developments-thumb/SuperiorCoffeeImports.jpg'
 import QualityTropicalFruitImports from '../assets/developments-thumb/QualityTropicalFruitImports.jpg'
 import WinterEscapePackages from '../assets/developments-thumb/WinterEscapePackages.jpg'
+import CaviarBar from '../assets/developments-thumb/CaviarBar.jpg'
+import CrimePreventionCampaign from '../assets/developments-thumb/CarpetEmporium.jpg'
+import CarpetEmporium from '../assets/developments-thumb/QualityTropicalFruitImports.jpg'
+import ItalianDeli from '../assets/developments-thumb/ItalianDeli.jpg'
+import AntiLitteringCampaign from '../assets/developments-thumb/AntiLitteringCampaign.jpg'
+import CostumeStore from '../assets/developments-thumb/CostumeStore.jpg'
 
 
 
@@ -454,6 +460,12 @@ const developmentImages = {
     "Quality Tropical Fruit Imports": QualityTropicalFruitImports,
     "Superior Coffee Imports": SuperiorCoffeeImports,
     "Winter Escape Packages": WinterEscapePackages,
+    "Caviar Bar": CaviarBar,
+        "Carpet Emporium": CarpetEmporium,
+        "Costume Store": CostumeStore,
+        "Anti-Littering Campaign": AntiLitteringCampaign,
+        "Italian Deli": ItalianDeli,
+        "Crime Prevention Campaign": CrimePreventionCampaign,
 
 
 

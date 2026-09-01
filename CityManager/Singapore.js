@@ -1,12 +1,12 @@
 
 // Singapore
 import { City } from "./City.js";
-import { indoorGarden } from "../UpgradeManager/IndoorGarden.js";
+import { antiLitteringCampaign } from "../UpgradeManager/AntiLitteringCampaign.js";
 
 export const Singapore = new City(
     "Singapore",
     6196000,
-    [indoorGarden],
+    [antiLitteringCampaign],
     "Singapore",
     "Asia",
     2,

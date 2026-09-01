@@ -224,6 +224,12 @@ import { Hobart } from './Hobart.js'
 import { SantoDomingo } from './SantoDomingo.js'
 import { SanJosé } from './SanJosé.js'
 import { Wrocław } from './Wrocław.js'
+import { Adelaide } from './Adelaide.js'
+import { Kabul } from './Kabul.js'
+import { Baku } from './Baku.js'
+import { Genoa } from './Genoa.js'
+import { Chihuahua } from './Chihuahua.js'
+import { Tianjin } from './Tianjin.js'
 
 
 
@@ -453,5 +459,12 @@ export const allCities = [
     Hobart,
     SantoDomingo,
     SanJosé,
+    Adelaide,
+    Tianjin,
+    Chihuahua,
+    Baku,
+    Kabul,
+    Genoa
+
 
 ]

@@ -116,6 +116,8 @@ const countryFlags = {
     "Dominican Republic": "do",
     "Costa Rica": "cr",
     "Yemen": "ye",
+    "Afghanistan": "af",
+    "Azerbaijan": "az",
     
 
 

@@ -225,6 +225,12 @@ Hobart.jpg - Photo by MB via Pexels
 Wrocław.jpg - Photo by Kaiwalya Limaye via Pexels
 SantoDomingo.jpg - Photo by Anthony Camilo via Pexels
 SanJosé.jpg - Photo by Spicypepper999 via Pexels
+Adelaide.jpg - Photo by Patrick McLachlan via Pexels
+Tianjin.jpg - Photo by 逐光 创梦 via Pexels
+Chihuahua.jpg - Photo by Comisión Mexicana de Filmaciones via Wikimedia Commons
+Baku.jpg - Photo by Zulfugar Karimov via Pexels
+Kabul.jpg - Photo by Qasim Mirzaie via Pexels
+Genoa.jpg - Photo by Diego F. Parra via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -451,6 +457,11 @@ WinterEscapePackages.jpg - Photo by Mustafa Mašetić via Pexels
 SpringVacationPackages.jpg - Photo by Marcelo Verfe via Pexels
 SuperiorCoffeeImports.jpg - Photo by Jess Ho via Pexels
 QualityTropicalFruitImports.jpg - Photo by Darkside Photography via Pexels
+ItalianDeli.jpg - Photo by Pam Crane via Pexels
+CarpetEmporium.jpg - Photo by Gül Işık via Pexels
+CaviarBar.jpg - Photo by Luiz Henrique Mendes via Pexels
+CrimePreventionCampaign.jpg - Photo by Giant Asparagus via Pexels
+CostumeStore.jpg - Photo by Mikhail Nilov via Pexels
 
 
 SOUNDS

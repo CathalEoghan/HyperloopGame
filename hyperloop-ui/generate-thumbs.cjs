@@ -4,7 +4,7 @@ const path = require('path')
 const inputDir = './src/assets/developments'
 const outputDir = './src/assets/developments-thumb'
 
-const devs = ['SpringVacationPackages', 'SuperiorCoffeeImports', 'QualityTropicalFruitImports', 'WinterEscapePackages']
+const devs = ['AntiLitteringCampaign', 'CrimePreventionCampaign', 'CarpetEmporium', 'ItalianDeli', 'CostumeStore', 'CaviarBar']
 
 devs.forEach(dev => {
     sharp(path.join(inputDir, `${dev}.jpg`))

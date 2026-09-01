@@ -223,6 +223,12 @@ import SantoDomingo from '../assets/cities-thumb/SantoDomingo.jpg'
 import Wrocław from '../assets/cities-thumb/Wrocław.jpg'
 import Hobart from '../assets/cities-thumb/Hobart.jpg'
 import SanJosé from '../assets/cities-thumb/SanJosé.jpg'
+import Tianjin from '../assets/cities-thumb/Tianjin.jpg'
+import Genoa from '../assets/cities-thumb/Genoa.jpg'
+import Adelaide from '../assets/cities-thumb/Adelaide.jpg'
+import Baku from '../assets/cities-thumb/Baku.jpg'
+import Chihuahua from '../assets/cities-thumb/Chihuahua.jpg'
+import Kabul from '../assets/cities-thumb/Kabul.jpg'
 
 
 const cityImages = {
@@ -451,6 +457,12 @@ const cityImages = {
             "Santo Domingo": SantoDomingo,
             Wrocław: Wrocław,
             Hobart: Hobart,
+            Kabul: Kabul,
+                    Genoa: Genoa,
+                    Chihuahua: Chihuahua,
+                    Tianjin: Tianjin,
+                    Adelaide: Adelaide,
+                    Baku: Baku,
 
 
 }

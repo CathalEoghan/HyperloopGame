@@ -67,6 +67,8 @@ import { superiorCoffeeImports } from './SuperiorCoffeeImports.js'
 import { winterEscapePackages } from './WinterEscapePackages.js'
 import { springVacationPackages } from './SpringVacationPackages.js'
 import { qualityTropicalFruitImports } from './QualityTropicalFruitImports.js'
+import { antiLitteringCampaign } from './AntiLitteringCampaign.js'
+import { crimePreventionCampaign } from './CrimePreventionCampaign.js'
 
 
 export const allUpgrades = [
@@ -137,5 +139,7 @@ export const allUpgrades = [
     springVacationPackages,
     winterEscapePackages,
     superiorCoffeeImports,
+    antiLitteringCampaign,
+    crimePreventionCampaign,
 
 ]

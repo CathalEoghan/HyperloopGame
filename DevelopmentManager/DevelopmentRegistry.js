@@ -157,6 +157,10 @@ import { scarfShop } from './ScarfShop.js'
 import { paintedCeramicsStore } from './PaintedCeramicsStore.js'
 import { artsAndCraftsStore } from './ArtsAndCraftsStore.js'
 import { snowGlobeStore } from './SnowGlobeStore.js'
+import { caviarBar } from './CaviarBar.js'
+import { italianDeli } from './ItalianDeli.js'
+import { costumeStore } from './CostumeStore.js'
+import { carpetEmporium } from './CarpetEmporium.js'
 
 
 export const allDevelopments = [
@@ -318,5 +322,9 @@ export const allDevelopments = [
     paintedCeramicsStore,
     artsAndCraftsStore,
     snowGlobeStore,
+    caviarBar,
+    costumeStore,
+    italianDeli,
+    carpetEmporium,
 
 ]
