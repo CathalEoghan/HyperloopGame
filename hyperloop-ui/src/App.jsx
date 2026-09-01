@@ -31,7 +31,7 @@ import OnboardingModal from "./components/OnboardingModal"
 import "./App.css";
 
 const OFFLINE_CAP_SECONDS = 172800;
-const OFFLINE_RATE = 0.10;
+const OFFLINE_RATE = 1.0;
 
 function App() {
   const [rankManager] = useState(() => new RankManager());

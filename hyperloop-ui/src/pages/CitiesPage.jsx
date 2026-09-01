@@ -169,13 +169,14 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 <div className="continent-filter">
                     {CONTINENTS.map(c => (
                         <button
-                            key={c}
-                            className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}
-                            style={activeContinent === c ? { background: CONTINENT_COLOURS[c], borderColor: CONTINENT_COLOURS[c] } : {}}
-                            onClick={() => setActiveContinent(c)}
-                        >
-                            {c}
-                        </button>
+    key={c}
+    className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}
+    style={activeContinent === c ? { background: CONTINENT_COLOURS[c], borderColor: CONTINENT_COLOURS[c] } : {}}
+    onClick={() => setActiveContinent(c)}
+    onMouseEnter={() => playHoverSound()}
+>
+    {c}
+</button>
                     ))}
                 </div>
             </div>
