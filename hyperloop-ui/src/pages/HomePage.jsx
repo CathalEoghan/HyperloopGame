@@ -3,6 +3,7 @@ import * as THREE from 'three'
 import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
+import { playOpeningAudio } from '../utils/sound.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import './HomePage.css'
 
@@ -40,6 +41,15 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
     const [globeReady, setGlobeReady] = useState(false)
     const spritesRef = useRef([])
 
+    // Play opening audio once per session — separate from globe setup
+    useEffect(() => {
+        if (!sessionStorage.getItem('openingPlayed')) {
+            sessionStorage.setItem('openingPlayed', 'true')
+            playOpeningAudio()
+        }
+    }, [])
+
+    // Globe setup
     useEffect(() => {
         const mount = mountRef.current
         const width = mount.clientWidth
@@ -71,17 +81,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
         const globeRadius = 1
         const textureLoader = new THREE.TextureLoader()
 
-       const quality = localStorage.getItem('globeQuality') || '2k'
-let dayUrl, nightUrl
-try {
-    dayUrl = new URL(`../assets/misc/${quality}_earth_daymap.jpg`, import.meta.url).href
-    nightUrl = new URL(`../assets/misc/${quality}_earth_nightmap.jpg`, import.meta.url).href
-} catch {
-    dayUrl = 'https://unpkg.com/three-globe/example/img/earth-day.jpg'
-    nightUrl = 'https://unpkg.com/three-globe/example/img/earth-night.jpg'
-}
+        const quality = localStorage.getItem('globeQuality') || '2k'
+        let dayUrl, nightUrl
+        try {
+            dayUrl = new URL(`../assets/misc/${quality}_earth_daymap.jpg`, import.meta.url).href
+            nightUrl = new URL(`../assets/misc/${quality}_earth_nightmap.jpg`, import.meta.url).href
+        } catch {
+            dayUrl = 'https://unpkg.com/three-globe/example/img/earth-day.jpg'
+            nightUrl = 'https://unpkg.com/three-globe/example/img/earth-night.jpg'
+        }
 
-        // Load textures — show globe immediately, textures fill in as they load
         let loadedCount = 0
         const onTextureLoad = () => {
             loadedCount++
@@ -125,7 +134,6 @@ try {
             `,
         })
 
-        // Reduced segments: 64x64 instead of 128x128 — visually identical at this scale
         const globe = new THREE.Mesh(
             new THREE.SphereGeometry(globeRadius, 64, 64),
             globeMaterial
@@ -174,19 +182,23 @@ try {
             if (!coords) return
             const flagCode = countryFlags[city.country]
             if (!flagCode) return
+
             const isPurchased = purchasedNames.has(city.name)
             const isUnlocked = unlockedNames.has(city.name)
             const spritePos = latLngToVector3(coords.lat, coords.lng, globeRadius + 0.035)
             const surfaceNormal = latLngToVector3(coords.lat, coords.lng, 1)
+
             const flagTexture = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
             const spriteMat = new THREE.SpriteMaterial({
                 map: flagTexture, transparent: true, depthTest: true, depthWrite: false,
             })
+
             if (!isPurchased && !isUnlocked) {
                 spriteMat.color = new THREE.Color(0.12, 0.12, 0.12)
             } else if (!isPurchased && isUnlocked) {
                 spriteMat.color = new THREE.Color(0.5, 0.5, 0.5)
             }
+
             const sprite = new THREE.Sprite(spriteMat)
             sprite.position.copy(spritePos)
             sprite.scale.set(0.02, 0.013, 1)
@@ -194,7 +206,6 @@ try {
             scene.add(sprite)
             sprites.push(sprite)
         })
-
         spritesRef.current = sprites
 
         const raycaster = new THREE.Raycaster()
@@ -279,22 +290,18 @@ try {
                 <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
                 <p className="globe-cities">{purchasedCitiesCount} cities connected</p>
             </div>
-
             <button
                 className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
                 onClick={() => setShowOwned(prev => !prev)}
             >
                 {showOwned ? '👁 All cities' : '👁 Owned only'}
             </button>
-
             {!globeReady && (
                 <div className="globe-loading">
                     <p>Loading globe...</p>
                 </div>
             )}
-
             <div ref={mountRef} className="globe-container" />
-
             {hoveredCity && (
                 <div className="city-hover-panel">
                     <img

@@ -5,7 +5,6 @@ import BottomNav from "./components/BottomNav";
 import TickerBar from "./components/TickerBar";
 import RankUpModal from "./components/RankUpModal";
 import CityRevealModal from "./components/CityRevealModal"
-import TipsBar from "./components/TipsBar"
 import CitiesPage from "./pages/CitiesPage"
 import HomePage from "./pages/HomePage"
 import ProgressPage from './pages/ProgressPage.jsx'
@@ -16,6 +15,8 @@ import SettingsPage from './pages/SettingsPage'
 import DelayModal from "./components/DelayModal"
 import OfflineModal from "./components/OfflineModal"
 import ConstructionScreen from "./components/ConstructionScreen"
+import LoadingScreen from "./components/LoadingScreen"
+import DevelopmentRevealModal from "./components/DevelopmentRevealModal"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -24,11 +25,13 @@ import { ConstructionManager } from "Managers/ConstructionManager/ConstructionMa
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { playRankUpSound, playReputationWorkBonusSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
+import openingAudio from './assets/sounds/openingAudio.mp3'
 import FarewellModal from "./components/FarewellModal"
+import OnboardingModal from "./components/OnboardingModal"
 import "./App.css";
 
-const OFFLINE_CAP_SECONDS = 172800; // max 48 hours offline income
-const OFFLINE_RATE = 0.10; // 10% of active rate
+const OFFLINE_CAP_SECONDS = 172800;
+const OFFLINE_RATE = 0.10;
 
 function App() {
   const [rankManager] = useState(() => new RankManager());
@@ -39,12 +42,11 @@ function App() {
 
   const [savedData] = useState(() => hasSave() ? loadGame(progressionManager, rankManager) : null);
 
-  // Calculate offline income immediately after load
   const [offlineData] = useState(() => {
     const hiddenAt = localStorage.getItem('hyperloop_hidden_at')
     if (!hiddenAt) return null;
     const offlineSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, OFFLINE_CAP_SECONDS);
-    localStorage.removeItem('hyperloop_hidden_at'); // clear it so we don't show again on next render
+    localStorage.removeItem('hyperloop_hidden_at');
     if (offlineSeconds < 60) return null;
     const incomePerSecond = economyManager.calculateDailyIncome();
     const offlineIncome = incomePerSecond * offlineSeconds * OFFLINE_RATE;
@@ -53,27 +55,29 @@ function App() {
     return { offlineSeconds, offlineIncome };
   });
 
+  const [isLoading, setIsLoading] = useState(() => hasSave() && progressionManager.purchasedCities.length > 0);
+  const [constructionReady, setConstructionReady] = useState(false);
   const [showOfflineModal, setShowOfflineModal] = useState(!!offlineData);
-
   const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || 'Hyperloop Central');
   const [createdAt] = useState(() => savedData?.createdAt || Date.now());
   const [farewellsGiven, setFarewellsGiven] = useState(() => savedData?.farewellsGiven || 0);
   const [lastSaved, setLastSaved] = useState(() => savedData?.lastSaved || null);
   const [showSaved, setShowSaved] = useState(false);
-
   const [balance, setBalance] = useState(() => progressionManager.balance);
   const [totalCashEarned, setTotalCashEarned] = useState(() => progressionManager.totalCashEarned);
   const [rankSet, setRankSet] = useState(() => rankManager.rank);
   const [reputation, setReputation] = useState(() => progressionManager.reputation);
   const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
-
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
   const [pendingRankUps, setPendingRankUps] = useState(0);
   const [claimedCity, setClaimedCity] = useState(null);
   const [activeDeparture, setActiveDeparture] = useState(null);
   const [activeDelay, setActiveDelay] = useState(null);
+  const [devRevealQueue, setDevRevealQueue] = useState([]);
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
+  const prevUnlockedDevCount = useRef(progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length);
   const triggeredDepartures = useRef(new Set());
   const triggeredDelays = useRef(new Set());
   const hasGivenStarterBonus = useRef(!!savedData);
@@ -101,18 +105,6 @@ function App() {
   });
 
   useEffect(() => {
-    if (purchasedCitiesCount === 1 && !hasGivenStarterBonus.current) {
-      hasGivenStarterBonus.current = true;
-      const tier2Cities = allCities.filter(c => c.tier === 2);
-      const bonus = progressionManager.getRandomUnlockedCity(tier2Cities);
-      if (bonus) {
-        progressionManager.unlockCity(bonus);
-        setClaimedCity(bonus);
-      }
-    }
-  }, [purchasedCitiesCount]);
-
-  useEffect(() => {
     setInterval(() => {
       tickCount.current += 1;
 
@@ -126,6 +118,17 @@ function App() {
         setPendingRankUps(prev => prev + 1);
       }
       constructionManager.update();
+
+      // Detect newly unlocked developments when a city connects
+      const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];
+      const currentUnlockedCount = currentUnlocked.length;
+      if (currentUnlockedCount > prevUnlockedDevCount.current) {
+        if (progressionManager.purchasedCities.length > 1) {
+          const newOnes = currentUnlocked.slice(prevUnlockedDevCount.current);
+          setDevRevealQueue(q => [...q, ...newOnes]);
+        }
+        prevUnlockedDevCount.current = currentUnlockedCount;
+      }
 
       const citiesChanged = progressionManager.purchasedCities.length !== prevPurchasedCount.current;
       const devsChanged = progressionManager.purchasedDevelopments.length !== prevDevCount.current;
@@ -193,7 +196,6 @@ function App() {
     if (savedData) triggerSave();
   }, [terminalName]);
 
-  // Record when tab is hidden so offline income can be calculated on return
   useEffect(() => {
     const handleVisibility = () => {
       if (document.hidden) {
@@ -207,11 +209,22 @@ function App() {
     return () => document.removeEventListener('visibilitychange', handleVisibility);
   }, []);
 
+  if (isLoading) return <LoadingScreen onComplete={() => setIsLoading(false)} />;
+
   if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
     return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName} />;
   }
- if (progressionManager.purchasedCities.length === 0 && pickedCity !== null) {
-    return <ConstructionScreen city={pickedCity} />;
+
+  if (pickedCity !== null && !constructionReady) {
+    return <ConstructionScreen
+      city={pickedCity}
+      isComplete={progressionManager.purchasedCities.length > 0}
+      onEnter={() => {
+        new Audio(openingAudio).play().catch(() => {})
+        setConstructionReady(true)
+        if (!savedData) setShowOnboarding(true)
+      }}
+    />;
   }
 
   return (
@@ -226,7 +239,7 @@ function App() {
         onWork={() => {
           progressionManager.addCash(workEarnings);
           if (Math.random() < 0.001) {
-            progressionManager.addReputation(-5);
+            progressionManager.addReputation(5);
             playReputationWorkBonusSound();
           }
         }}
@@ -315,7 +328,6 @@ function App() {
           onImportSave={async (file) => { await importSave(file); window.location.reload(); }}
         />
       )}
-      <TipsBar />
       <TickerBar />
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
 
@@ -331,14 +343,18 @@ function App() {
         </div>
       )}
 
+      {showOnboarding && (
+        <OnboardingModal
+          terminalName={terminalName}
+          onDismiss={() => setShowOnboarding(false)}
+        />
+      )}
+
       {showOfflineModal && offlineData && (
         <OfflineModal
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
-          onCollect={() => {
-            setShowOfflineModal(false);
-            triggerSave();
-          }}
+          onCollect={() => { setShowOfflineModal(false); triggerSave(); }}
         />
       )}
 
@@ -369,6 +385,12 @@ function App() {
           if (newCity) { progressionManager.unlockCity(newCity); setClaimedCity(newCity); }
           setPendingRankUps(prev => prev - 1);
         }} />
+      )}
+      {devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
+        <DevelopmentRevealModal
+          development={devRevealQueue[0]}
+          onContinue={() => setDevRevealQueue(q => q.slice(1))}
+        />
       )}
       {!showOfflineModal && claimedCity && (
         <CityRevealModal

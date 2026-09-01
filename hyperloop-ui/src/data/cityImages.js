@@ -222,7 +222,7 @@ import Ottawa from '../assets/cities/Ottawa.jpg'
 import SantoDomingo from '../assets/cities/SantoDomingo.jpg'
 import Wrocław from '../assets/cities/Wrocław.jpg'
 import Hobart from '../assets/cities/Hobart.jpg'
-import SanJosé from '../assets/cities/SanJosé.jpg'
+import SanJosé from '../assets/cities/SanJosé.png'
 
 
 const cityImages = {

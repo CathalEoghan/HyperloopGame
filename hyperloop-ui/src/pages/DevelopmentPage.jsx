@@ -5,7 +5,7 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
-import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure']
@@ -35,8 +35,6 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         !purchasedUpgrades.some(p => p.name === item.name) &&
         !developmentsUnderConstruction.some(d => d.name === item.name)
     )
-
-    const isUpgradeType = (item) => !item.revenue
 
     const filterAndSort = (items) => {
         let result = [...items]
@@ -151,7 +149,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <button className="constructionButton" onClick={() => {
                                     const cost = selectedDevelopment.cost
                                     if (balance < cost) { playClickSound2(); setShowNoFunds(true); setSelectedDevelopment(null) }
-                                    else { playClickSound2(); constructionManager.startDevelopmentConstruction(selectedDevelopment); onSave(); setSelectedDevelopment(null) }
+                                    else { playClickSound2(); playConstructionSound(); constructionManager.startDevelopmentConstruction(selectedDevelopment); onSave(); setSelectedDevelopment(null) }
                                 }}>
                                     Build (£{selectedDevelopment.cost.toLocaleString()})
                                 </button>

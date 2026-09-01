@@ -352,3 +352,8 @@
     object-fit: contain;
     margin-bottom: 0;
 }
+
+.modal .constructionButton:hover {
+    background: #333 !important;
+    color: white !important;
+}

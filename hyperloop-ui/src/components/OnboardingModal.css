@@ -1,0 +1,77 @@
+.onboarding-modal {
+    text-align: center;
+    padding: 32px 36px;
+    max-width: 480px;
+}
+
+.onboarding-logo {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #f5a623;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.onboarding-title {
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #111;
+    margin: 0 0 12px;
+    font-family: 'Inter', sans-serif;
+}
+
+.onboarding-intro {
+    font-size: 0.88rem;
+    color: #333;
+    margin: 0 0 20px;
+    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+}
+
+.onboarding-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.onboarding-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    color: #333;
+    line-height: 1.4;
+}
+
+.onboarding-step-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.onboarding-hint {
+    font-size: 0.82rem;
+    color: #333;
+    margin: 0 0 20px;
+    font-family: 'Inter', sans-serif;
+    line-height: 1.5;
+}
+
+.onboarding-modal .opening-btn {
+    background: #f5a623;
+    color: white;
+    border: 2px solid white;
+}
+
+.onboarding-modal .opening-btn:hover {
+    background: #e8890a;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+}

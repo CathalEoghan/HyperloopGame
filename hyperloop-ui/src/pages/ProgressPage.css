@@ -294,3 +294,22 @@
     color: #999;
     font-weight: bold;
 }
+
+.progress-country-card,
+.progress-city-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.progress-country-connected:hover,
+.progress-country-unlocked:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}
+
+.progress-city-connected:hover,
+.progress-city-unlocked:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+}

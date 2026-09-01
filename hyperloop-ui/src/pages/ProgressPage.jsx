@@ -3,6 +3,7 @@ import { allCities } from '../../../CityManager/CityRegistry'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
 import countryFlags from '../data/countryFlags.js'
+import { playHoverSound } from '../utils/sound.js'
 import './ProgressPage.css'
 
 function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, createdAt }) {
@@ -114,7 +115,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     const state = getCountryState(country)
                     const flagCode = countryFlags[country]
                     return (
-                        <div key={country} className={`progress-country-card progress-country-${state}`}>
+                        <div
+                            key={country}
+                            className={`progress-country-card progress-country-${state}`}
+                            onMouseEnter={() => state !== 'unknown' && playHoverSound()}
+                        >
                             {state === 'unknown' ? (
                                 <>
                                     <div className="progress-flag-unknown">?</div>
@@ -125,7 +130,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                     {flagCode ? (
                                         <img
                                             className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
-                                            src={`https://flagcdn.com/w40/${flagCode}.png`}
+                                            src={`https://flagcdn.com/w80/${flagCode}.png`}
                                             alt={country}
                                         />
                                     ) : (
@@ -154,7 +159,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     const state = getCityState(city)
                     const flagCode = countryFlags[city.country]
                     return (
-                        <div key={city.name} className={`progress-city-card progress-city-${state}`}>
+                        <div
+                            key={city.name}
+                            className={`progress-city-card progress-city-${state}`}
+                            onMouseEnter={() => state !== 'unknown' && playHoverSound()}
+                        >
                             {state === 'unknown' ? (
                                 <>
                                     <div className="progress-city-image-unknown">?</div>
@@ -174,7 +183,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                     {flagCode ? (
                                         <img
                                             className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
-                                            src={`https://flagcdn.com/w40/${flagCode}.png`}
+                                            src={`https://flagcdn.com/w80/${flagCode}.png`}
                                             alt={city.country}
                                         />
                                     ) : (

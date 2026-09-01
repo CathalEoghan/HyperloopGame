@@ -70,7 +70,7 @@ const connectionCost = this.calculateTierConnectionCost(city);
 
     startDevelopmentConstruction(development) {
         if (!this.progressionManager.spendCash(development.cost)) return;
-        const duration = FIVE_SECONDS;
+        const duration = TWENTY_SECONDS;
         development.finishTime = this.timeManager.getFinishTime(duration);
         development.underConstruction = true;
         this.progressionManager.developmentsUnderConstruction.push(development);

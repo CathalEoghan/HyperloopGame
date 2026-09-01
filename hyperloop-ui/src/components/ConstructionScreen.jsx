@@ -13,40 +13,60 @@ const TIPS = [
     "Disconnecting a city costs half the connection fee and 20 reputation.",
     "Your terminal earns a small income while you're away.",
     "Tier 2 and 3 cities earn significantly more than Tier 1 cities.",
-    "Work your terminal manually to earn extra cash between paydays.",
+    "Work your terminal manually to earn extra cash.",
 ]
 
-function ConstructionScreen({ city }) {
+function ConstructionScreen({ city, isComplete, onEnter }) {
     const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * TIPS.length))
-    const [visible, setVisible] = useState(true)
+    const [tipVisible, setTipVisible] = useState(true)
+    const [fading, setFading] = useState(false)
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setVisible(false)
+            setTipVisible(false)
             setTimeout(() => {
                 setTipIndex(i => (i + 1) % TIPS.length)
-                setVisible(true)
+                setTipVisible(true)
             }, 600)
         }, 4000)
         return () => clearInterval(interval)
     }, [])
 
+    const handleEnter = () => {
+        if (!isComplete) return
+        setFading(true)
+        setTimeout(onEnter, 500)
+    }
+
     return (
-        <div className="construction-screen">
+        <div
+            className={`construction-screen ${fading ? 'construction-fading' : ''} ${isComplete ? 'construction-clickable' : ''}`}
+            onClick={handleEnter}
+        >
             <div className="construction-logo">⚡ HYPERLOOP CENTRAL</div>
             <img
-                className="construction-city-img"
+                className={`construction-city-img ${isComplete ? 'construction-img-ready' : ''}`}
                 src={cityThumbnails[city.name] || cityImages[city.name]}
                 alt={city.name}
             />
             <div className="construction-text">
-                <h2 className="construction-title">
-                    Building your terminal in {city.name}
-                    <span className="construction-dots"><span>.</span><span>.</span><span>.</span></span>
-                </h2>
-                <p className="construction-subtitle">Connecting {city.name} to the hyperloop network</p>
+                {isComplete ? (
+                    <>
+                        <h2 className="construction-title">{city.name} is ready!</h2>
+                        <p className="construction-subtitle">Your terminal is open for business.</p>
+                        <p className="construction-enter">Click anywhere to enter</p>
+                    </>
+                ) : (
+                    <>
+                        <h2 className="construction-title">
+                            Building your terminal in {city.name}
+                            <span className="construction-dots"><span>.</span><span>.</span><span>.</span></span>
+                        </h2>
+                        <p className="construction-subtitle">Connecting {city.name} to the hyperloop network</p>
+                    </>
+                )}
             </div>
-            <div className={`construction-tip ${visible ? 'tip-visible' : 'tip-hidden'}`}>
+            <div className={`construction-tip ${tipVisible ? 'tip-visible' : 'tip-hidden'}`}>
                 <span className="construction-tip-label">TIP</span>
                 <span className="construction-tip-text">{TIPS[tipIndex]}</span>
             </div>

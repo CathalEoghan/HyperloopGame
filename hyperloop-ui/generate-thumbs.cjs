@@ -1,12 +1,12 @@
 const sharp = require('sharp')
 const path = require('path')
 
-const inputDir = './src/assets/cities'
-const outputDir = './src/assets/cities-thumb'
+const inputDir = './src/assets/developments'
+const outputDir = './src/assets/developments-thumb'
 
-const newCities = ['SantoDomingo', 'SanJosé', 'Hobart', 'Wrocław']
+const devs = ['SpringVacationPackages', 'SuperiorCoffeeImports', 'QualityTropicalFruitImports', 'WinterEscapePackages']
 
-newCities.forEach(dev => {
+devs.forEach(dev => {
     sharp(path.join(inputDir, `${dev}.jpg`))
         .resize(366, 160, { fit: 'cover' })
         .jpeg({ quality: 80 })
