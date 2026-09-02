@@ -3,7 +3,8 @@ import * as THREE from 'three'
 import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
-import { playOpeningAudio } from '../utils/sound.js'
+import cityThumbnails from '../data/cityThumbnails.js'
+import { playHoverSound } from '../utils/sound.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import './HomePage.css'
 
@@ -40,14 +41,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
     const [showOwned, setShowOwned] = useState(true)
     const [globeReady, setGlobeReady] = useState(false)
     const spritesRef = useRef([])
-
-    // Play opening audio once per session — separate from globe setup
-    useEffect(() => {
-        if (!sessionStorage.getItem('openingPlayed')) {
-            sessionStorage.setItem('openingPlayed', 'true')
-            playOpeningAudio()
-        }
-    }, [])
+    const prevHoveredCity = useRef(null)
 
     // Globe setup
     useEffect(() => {
@@ -222,7 +216,12 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
             raycaster.setFromCamera(mouse, camera)
             const visibleSprites = sprites.filter(s => s.visible)
             const hits = raycaster.intersectObjects(visibleSprites)
-            setHoveredCity(hits.length > 0 ? hits[0].object.userData : null)
+            const newHovered = hits.length > 0 ? hits[0].object.userData : null
+            if (newHovered !== prevHoveredCity.current) {
+                if (newHovered) playHoverSound()
+                prevHoveredCity.current = newHovered
+            }
+            setHoveredCity(newHovered)
             if (!isDragging) return
             camLon -= (e.clientX - prev.x) * 0.3
             camLat = Math.max(-85, Math.min(85, camLat + (e.clientY - prev.y) * 0.3))
@@ -306,7 +305,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
                 <div className="city-hover-panel">
                     <img
                         className="city-hover-image"
-                        src={cityImages[hoveredCity.city.name]}
+                        src={cityThumbnails[hoveredCity.city.name] || cityImages[hoveredCity.city.name]}
                         alt={hoveredCity.city.name}
                         style={!hoveredCity.isPurchased ? { filter: 'grayscale(100%)' } : {}}
                     />
