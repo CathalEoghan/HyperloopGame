@@ -224,6 +224,12 @@ const cityCoordinates = {
     "Yangon":           { lat: 16.8661,  lng:  96.1951 },
     "Zagreb":           { lat: 45.8150,  lng:  15.9819 },
     "Zurich":           { lat: 47.3769,  lng:   8.5417 },
+    "Adelaide":   { lat: -34.9285, lng: 138.6007 },
+"Baku":       { lat:  40.4093, lng:  49.8671 },
+"Chihuahua":  { lat:  28.6353, lng: -106.0889 },
+"Genoa":      { lat:  44.4056, lng:   8.9463 },
+"Tianjin":    { lat:  39.3434, lng: 117.3616 },
+"Kabul": { lat: 34.5253, lng: 69.1783 },
 };
 
 export default cityCoordinates;
