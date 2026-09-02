@@ -1,474 +1,234 @@
-
-import CupcakeStore from '../assets/developments/CupcakeStore.jpg'
-import SeafoodRestaurant from '../assets/developments/SeafoodRestaurant.jpg'
-import WaffleHouse from '../assets/developments/WaffleHouse.jpg'
-import KaraokeBar from '../assets/developments/KaraokeBar.jpg'
-import Bakery from '../assets/developments/Bakery.jpg'
-import Pizzeria from '../assets/developments/Pizzeria.jpg'
-import Pub from '../assets/developments/Pub.jpg'
-import HotDogRestaurant from '../assets/developments/HotDogRestaurant.jpg'
-import SoapStore from '../assets/developments/SoapStore.jpg'
-import BowlingAlley from '../assets/developments/BowlingAlley.jpg'
-import IceCreamParlour from '../assets/developments/IceCreamParlour.jpg'
-import CoffeeShop from '../assets/developments/CoffeeShop.jpg'
-import BeerTent from '../assets/developments/BeerTent.jpg'
-import HighEndBoutique from '../assets/developments/HighEndBoutique.jpg'
-import Florist from '../assets/developments/Florist.jpg'
-import NightLounge from '../assets/developments/NightLounge.jpg'
-import TableTennisCourt from '../assets/developments/TableTennisCourt.jpg'
-import SodaMachines from '../assets/developments/SodaMachines.jpg'
-import Bank from '../assets/developments/Bank.jpg'
-import PostalOffice from '../assets/developments/PostalOffice.jpg'
-import Cinema from '../assets/developments/Cinema.jpg'
-import ConvenienceStore from '../assets/developments/ConvenienceStore.jpg'
-import SkincareStore from '../assets/developments/SkincareStore.jpg'
-import NoodleBar from '../assets/developments/NoodleBar.jpg'
-import Gym from '../assets/developments/Gym.jpg'
-import Pharmacy from '../assets/developments/Pharmacy.jpg'
-import Bookstore from '../assets/developments/Bookstore.jpg'
-import YogaStudio from '../assets/developments/YogaStudio.jpg'
-import RumTasting from '../assets/developments/RumTasting.jpg'
-import HistoryMuseum from '../assets/developments/HistoryMuseum.jpg'
-import LuxuryHotel from '../assets/developments/LuxuryHotel.jpg'
-import ComedyClub from '../assets/developments/ComedyClub.jpg'
-import SwimwearStore from '../assets/developments/SwimwearStore.jpg'
-import SwimmingPool from '../assets/developments/SwimmingPool.jpg'
-import SaladBar from '../assets/developments/SaladBar.jpg'
-import FashionChain from '../assets/developments/FashionChain.jpg'
-import CheeseShop from '../assets/developments/CheeseShop.jpg'
-import CakeShop from '../assets/developments/CakeShop.jpg'
-import CustomerServiceCentre from '../assets/developments/CustomerServiceCentre.jpg'
-import QuietRoom from '../assets/developments/QuietRoom.jpg'
-import OutdoorsStore from '../assets/developments/OutdoorsStore.jpg'
-import CraftsShop from '../assets/developments/CraftsShop.jpg'
-import EnhancedCommunications from '../assets/developments/EnhancedCommunications.jpg'
-import EliteFisheryContracts from '../assets/developments/EliteFisheryContracts.jpg'
-import WaterTaxiTransfers from '../assets/developments/WaterTaxiTransfers.jpg'
-import CocktailBar from '../assets/developments/CocktailBar.jpg'
-import PhoneStore from '../assets/developments/PhoneStore.jpg'
-import BusTransfers from '../assets/developments/BusTransfers.jpg'
-import TrainStation from '../assets/developments/TrainStation.jpg'
-import PhotoRoom from '../assets/developments/PhotoRoom.jpg'
-import PettingZoo from '../assets/developments/PettingZoo.jpg'
-import Aquarium from '../assets/developments/Aquarium.jpg'
-import WatchStore from '../assets/developments/WatchStore.jpg'
-import FragranceStore from '../assets/developments/FragranceStore.jpg'
-import BillboardDesignOverhauls from '../assets/developments/BillboardDesignOverhauls.jpg'
-import ArtGallery from '../assets/developments/ArtGallery.jpg'
-import MetalBar from '../assets/developments/MetalBar.jpg'
-import TacoRestaurant from '../assets/developments/TacoRestaurant.jpg'
-import ArtMarket from '../assets/developments/ArtMarket.jpg'
-import IndoorGarden from '../assets/developments/IndoorGarden.jpg'
-import GiftShop from '../assets/developments/GiftShop.jpg'
-import Casino from '../assets/developments/Casino.jpg'
-import CeramicsStore from '../assets/developments/CeramicsStore.jpg'
-import TapasRestaurant from '../assets/developments/TapasRestaurant.jpg'
-import SouthernHemisphereTradeAgreements from '../assets/developments/SouthernHemisphereTradeAgreements.jpg'
-import CatCafé from '../assets/developments/CatCafé.jpg'
-import KebabShop from '../assets/developments/KebabShop.jpg'
-import HandbagShop from '../assets/developments/HandbagShop.jpg'
-import SteakHouse from '../assets/developments/SteakHouse.jpg'
-import Bazaar from '../assets/developments/Bazaar.jpg'
-import AfricanTravelPackages from '../assets/developments/AfricanTravelPackages.jpg'
-import NorthAmericanTravelPackages from '../assets/developments/NorthAmericanTravelPackages.jpg'
-import DanceStudio from '../assets/developments/DanceStudio.jpg'
-import SouthAmericanTravelPackages from '../assets/developments/SouthAmericanTravelPackages.jpg'
-import AsianTravelPackages from '../assets/developments/AsianTravelPackages.jpg'
-import EuropeanTravelPackages from '../assets/developments/EuropeanTravelPackages.jpg'
-import OceanianTravelPackages from '../assets/developments/OceanianTravelPackages.jpg'
-import Theatre from '../assets/developments/Theatre.jpg'
-import PremierWineImports from '../assets/developments/PremierWineImports.jpg'
-import ImprovedRestroomFacilities from '../assets/developments/ImprovedRestroomFacilities.jpg'
-import EnhancedAdvertisingStrategies from '../assets/developments/EnhancedAdvertisingStrategies.jpg'
-import JewelleryShop from '../assets/developments/JewelleryShop.jpg'
-import StreetFoodFair from '../assets/developments/StreetFoodFair.jpg'
-import CrossTerminalRickshawService from '../assets/developments/CrossTerminalRickshawService.jpg'
-import SurfShop from '../assets/developments/SurfShop.jpg'
-import CigarShop from '../assets/developments/CigarShop.jpg'
-import FishAndChips from '../assets/developments/FishAndChips.jpg'
-import SculptureExhibition from '../assets/developments/SculptureExhibition.jpg'
-import SpiceMarket from '../assets/developments/SpiceMarket.jpg'
-import CouscousRestaurant from '../assets/developments/CouscousRestaurant.jpg'
-import RenovatedCorporateOffices from '../assets/developments/RenovatedCorporateOffices.jpg'
-import MusicStore from '../assets/developments/MusicStore.jpg'
-import CevicheRestaurant from '../assets/developments/CevicheRestaurant.jpg'
-import WarehouseExpansionProjects from '../assets/developments/WarehouseExpansionProjects.jpg'
-import ArepaRestaurant from '../assets/developments/ArepaRestaurant.jpg'
-import DedicatedMotorcycleParking from '../assets/developments/DedicatedMotorcycleParking.jpg'
-import IndianRestaurant from '../assets/developments/IndianRestaurant.jpg'
-import BasketballCourts from '../assets/developments/BasketballCourts.jpg'
-import VietnameseRestaurant from '../assets/developments/VietnameseRestaurant.jpg'
-import ExpeditedShippingLogistics from '../assets/developments/ExpeditedShippingLogistics.jpg'
-import EnergyEfficiencyImprovements from '../assets/developments/EnergyEfficiencyImprovements.jpg'
-import SatayRestaurant from '../assets/developments/SatayRestaurant.jpg'
-import KavaBar from '../assets/developments/KavaBar.jpg'
-import BudgetHotel from '../assets/developments/BudgetHotel.jpg'
-import GrandHotel from '../assets/developments/GrandHotel.jpg'
-import BedAndBreakfast from '../assets/developments/BedAndBreakfast.jpg'
-import Hostel from '../assets/developments/Hostel.jpg'
-import ResortHotel from '../assets/developments/ResortHotel.jpg'
-import BoutiqueHotel from '../assets/developments/BoutiqueHotel.jpg'
-import IceSkatingRink from '../assets/developments/IceSkatingRink.jpg'
-import ChaiHouse from '../assets/developments/ChaiHouse.jpg'
-import JerkChickenShop from '../assets/developments/JerkChickenShop.jpg'
-import TramDepot from '../assets/developments/TramDepot.jpg'
-import LiveMusicLounge from '../assets/developments/LiveMusicLounge.jpg'
-import IceHockeyRink from '../assets/developments/IceHockeyRink.jpg'
-import MoroccanRestaurant from '../assets/developments/MoroccanRestaurant.jpg'
-import FastFoodJoint from '../assets/developments/FastFoodJoint.jpg'
-import IntegratedMetroSystem from '../assets/developments/IntegratedMetroSystem.jpg'
-import SourdoughCafé from '../assets/developments/SourdoughCafé.jpg'
-import HyperloopPodRefurbishments from '../assets/developments/HyperloopPodRefurbishments.jpg'
-import ToyStore from '../assets/developments/ToyStore.jpg'
-import JazzLounge from '../assets/developments/JazzLounge.jpg'
-import SkiStore from '../assets/developments/SkiStore.jpg'
-import AncientHistoryExhibit from '../assets/developments/AncientHistoryExhibit.jpg'
-import SushiRestaurant from '../assets/developments/SushiRestaurant.jpg'
-import BeerStore from '../assets/developments/BeerStore.jpg'
-import CurryHouse from '../assets/developments/CurryHouse.jpg'
-import JollofRiceRestaurant from '../assets/developments/JollofRiceRestaurant.jpg'
-import MateTeaShop from '../assets/developments/MateTeaShop.jpg'
-import YoghurtShop from '../assets/developments/YoghurtShop.jpg'
-import SandalStore from '../assets/developments/SandalStore.jpg'
-import InformationCentre from '../assets/developments/InformationCentre.jpg'
-import SecurityOfficeExpansion from '../assets/developments/SecurityOfficeExpansion.jpg'
-import TravelAgency from '../assets/developments/TravelAgency.jpg'
-import Chocolatier from '../assets/developments/Chocolatier.jpg'
-import HealthClinic from '../assets/developments/HealthClinic.jpg'
-import GayBar from '../assets/developments/GayBar.jpg'
-import Spa from '../assets/developments/Spa.jpg'
-import WhiskyBar from '../assets/developments/WhiskyBar.jpg'
-import BiryaniRestaurant from '../assets/developments/BiryaniRestaurant.jpg'
-import SportsStore from '../assets/developments/SportsStore.jpg'
-import LocalTours from '../assets/developments/LocalTours.jpg'
-import ClimbingCentre from '../assets/developments/ClimbingCentre.jpg'
-import LoungeRenovations from '../assets/developments/LoungeRenovations.jpg'
-import CraftBeerBar from '../assets/developments/CraftBeerBar.jpg'
-import MezeRestaurant from '../assets/developments/MezeRestaurant.jpg'
-import HookahLounge from '../assets/developments/HookahLounge.jpg'
-import IncenseStore from '../assets/developments/IncenseStore.jpg'
-import FalafelRestaurant from '../assets/developments/FalafelRestaurant.jpg'
-import PhoBar from '../assets/developments/PhoBar.jpg'
-import StaffCafeteriaRenovations from '../assets/developments/StaffCafeteriaRenovations.jpg'
-import CurioShop from '../assets/developments/CurioShop.jpg'
-import HotPotRestaurant from '../assets/developments/HotPotRestaurant.jpg'
-import BaseballShop from '../assets/developments/BaseballShop.jpg'
-import SunglassesStore from '../assets/developments/SunglassesStore.jpg'
-import FerryTerminal from '../assets/developments/FerryTerminal.jpg'
-import CarAccessories from '../assets/developments/CarAccessories.jpg'
-import DimSumRestaurant from '../assets/developments/DimSumRestaurant.jpg'
-import GamingArcade from '../assets/developments/GamingArcade.jpg'
-import SausageShop from '../assets/developments/SausageShop.jpg'
-import ATMMachineEnhancements from '../assets/developments/ATMMachineEnhancements.jpg'
-import CandyStore from '../assets/developments/CandyStore.jpg'
-import LocalAirportLinks from '../assets/developments/LocalAirportLinks.jpg'
-import BubbleTeaShop from '../assets/developments/BubbleTeaShop.jpg'
-import CandleShop from '../assets/developments/CandleShop.jpg'
-import PrayerRoom from '../assets/developments/PrayerRoom.jpg'
-import HamburgerRestaurant from '../assets/developments/HamburgerRestaurant.jpg'
-import HyperloopMuseum from '../assets/developments/HyperloopMuseum.jpg'
-import ArtificialIntelligenceImprovements from '../assets/developments/ArtificialIntelligenceImprovements.jpg'
-import RecordsStore from '../assets/developments/RecordsStore.jpg'
-import EventHall from '../assets/developments/EventHall.jpg'
-import BeachThemedBar from '../assets/developments/BeachThemedBar.jpg'
-import TeaHouse from '../assets/developments/TeaHouse.jpg'
-import CrabShack from '../assets/developments/CrabShack.jpg'
-import CarMuseum from '../assets/developments/CarMuseum.jpg'
-import SmoothieShop from '../assets/developments/SmoothieShop.jpg'
-import NihariRestaurant from '../assets/developments/NihariRestaurant.jpg'
-import SuyaRestaurant from '../assets/developments/SuyaRestaurant.jpg'
-import BarbecueRestaurant from '../assets/developments/BarbecueRestaurant.jpg'
-import IrishBar from '../assets/developments/IrishBar.jpg'
-import BurritoRestaurant from '../assets/developments/BurritoRestaurant.jpg'
-import MarzipanCafé from '../assets/developments/MarzipanCafé.jpg'
-import HatShop from '../assets/developments/HatShop.jpg'
-import SoupStall from '../assets/developments/SoupStall.jpg'
-import NecktieShop from '../assets/developments/NecktieShop.jpg'
-import ChessClub from '../assets/developments/ChessClub.jpg'
-import RockBar from '../assets/developments/RockBar.jpg'
-import FreshFruitStall from '../assets/developments/FreshFruitStall.jpg'
-import PalatialInteriorRenovations from '../assets/developments/PalatialInteriorRenovations.jpg'
-import CosmeticsStore from '../assets/developments/CosmeticsStore.jpg'
-import FrozenCocktailStand from '../assets/developments/FrozenCocktailStand.jpg'
-import AdvancedTerminalPlanning from '../assets/developments/AdvancedTerminalPlanning.jpg'
-import RiversideExpansionProject from '../assets/developments/RiversideExpansionProject.jpg'
-import FishingStore from '../assets/developments/FishingStore.jpg'
-import ExpandedParkingFacilities from '../assets/developments/ExpandedParkingFacilities.jpg'
-import TrainMuseum from '../assets/developments/TrainMuseum.jpg'
-import FreeTradeAgreements from '../assets/developments/FreeTradeAgreements.jpg'
-import WineBar from '../assets/developments/WineBar.jpg'
-import SmokedFishStall from '../assets/developments/SmokedFishStall.jpg'
-import WrestlingArena from '../assets/developments/WrestlingArena.jpg'
-import ServiceDeliveryTraining from '../assets/developments/ServiceDeliveryTraining.jpg'
-import BikingAccessoriesStore from '../assets/developments/BikingAccessoriesStore.jpg'
-import IndoorSurfing from '../assets/developments/IndoorSurfing.jpg'
-import EmergencyTraining from '../assets/developments/EmergencyTraining.jpg'
-import TemperatureRegulationEnhancements from '../assets/developments/TemperatureRegulationEnhancements.jpg'
-import EcotourismAwarenessCampaigns from '../assets/developments/EcotourismAwarenessCampaigns.jpg'
-import ShippingPort from '../assets/developments/ShippingPort.jpg'
-import TerminalRadio from '../assets/developments/TerminalRadio.jpg'
-import SummerHolidayPackages from '../assets/developments/SummerHolidayPackages.jpg'
-import ExteriorBeautificationProject from '../assets/developments/ExteriorBeautificationProject.jpg'
-import ScarfShop from '../assets/developments/ScarfShop.jpg'
-import RouteImprovements from '../assets/developments/RouteImprovements.jpg'
-import AutumnGetawayPackages from '../assets/developments/AutumnGetawayPackages.jpg'
-import ArtsAndCraftsStore from '../assets/developments/ArtsAndCraftsStore.jpg'
-import SnowGlobeStore from '../assets/developments/SnowGlobeStore.jpg'
-import EmbassyHotlineCentre from '../assets/developments/EmbassyHotlineCentre.jpg'
-import SecurityStreamlining from '../assets/developments/SecurityStreamlining.jpg'
-import MuralCommissions from '../assets/developments/MuralCommissions.jpg'
-import OutdoorGarden from '../assets/developments/OutdoorGarden.jpg'
-import MaintenanceImprovements from '../assets/developments/MaintenanceImprovements.jpg'
-import PaintedCeramicsStore from '../assets/developments/PaintedCeramicsStore.jpg'
-import SpringVacationPackages from '../assets/developments/SpringVacationPackages.jpg'
-import SuperiorCoffeeImports from '../assets/developments/SuperiorCoffeeImports.jpg'
-import QualityTropicalFruitImports from '../assets/developments/QualityTropicalFruitImports.jpg'
-import WinterEscapePackages from '../assets/developments/WinterEscapePackages.jpg'
-import CaviarBar from '../assets/developments/CaviarBar.jpg'
-import CrimePreventionCampaign from '../assets/developments/CarpetEmporium.jpg'
-import CarpetEmporium from '../assets/developments/QualityTropicalFruitImports.jpg'
-import ItalianDeli from '../assets/developments/ItalianDeli.jpg'
-import AntiLitteringCampaign from '../assets/developments/AntiLitteringCampaign.jpg'
-import CostumeStore from '../assets/developments/CostumeStore.jpg'
-
-
-
-
 const developmentImages = {
-    "Cupcake Store": CupcakeStore,
-    "Seafood Restaurant": SeafoodRestaurant,
-    "Waffle House": WaffleHouse,
-    "Karaoke Bar": KaraokeBar,
-    "Bakery": Bakery,
-    "Pizzeria": Pizzeria,
-    "Pub": Pub,
-    "Hot Dog Restaurant": HotDogRestaurant,
-    "Soap Store": SoapStore,
-    "Bowling Alley": BowlingAlley,
-    "Ice Cream Parlour": IceCreamParlour,
-    "Coffee Shop" : CoffeeShop,
-    "Beer Tent": BeerTent,
-    "High-End Boutique": HighEndBoutique,
-    "Florist": Florist,
-    "Night Lounge": NightLounge,
-    "Table Tennis Court": TableTennisCourt,
-    "Soda Machines": SodaMachines,
-    "Bank": Bank,
-    "Postal Office": PostalOffice,
-    "Cinema": Cinema,
-    "Convenience Store": ConvenienceStore,
-    "Skincare Store": SkincareStore,
-    "Noodle Bar": NoodleBar,
-    "Gym": Gym,
-    "Pharmacy": Pharmacy,
-    "Bookstore": Bookstore,
-    "Yoga Studio": YogaStudio,
-    "Rum Tasting": RumTasting,
-    "History Museum": HistoryMuseum,
-    "Luxury Hotel": LuxuryHotel,
-    "Comedy Club": ComedyClub,
-    "Swimwear Store": SwimwearStore,
-    "Swimming Pool": SwimmingPool,
-    "Salad Bar": SaladBar,
-    "Fashion Chain": FashionChain,
-    "Cheese Shop": CheeseShop,
-    "Cake Shop": CakeShop,
-    "Customer Service Centre": CustomerServiceCentre,
-    "Quiet Room": QuietRoom,
-    "Outdoors Store": OutdoorsStore,
-    "Crafts Shop": CraftsShop,
-    "Enhanced Communications": EnhancedCommunications,
-    "Elite Fishery Contracts": EliteFisheryContracts,
-    "Water Taxi Transfers": WaterTaxiTransfers,
-    "Cocktail Bar": CocktailBar,
-    "Phone Store": PhoneStore,
-    "Bus Transfers": BusTransfers,
-    "Train Station": TrainStation,
-    "Photo Room": PhotoRoom,
-    "Petting Zoo": PettingZoo,
-    "Aquarium": Aquarium,
-    "Watch Store": WatchStore,
-    "Fragrance Store": FragranceStore,
-    "Billboard Design Overhauls": BillboardDesignOverhauls,
-    "Art Gallery": ArtGallery,
-    "Metal Bar": MetalBar,
-    "Taco Restaurant": TacoRestaurant,
-    "Art Market": ArtMarket,
-    "Indoor Garden": IndoorGarden,
-    "Gift Shop": GiftShop,
-    "Casino": Casino,
-    "Ceramics Store": CeramicsStore,
-    "Tapas Restaurant": TapasRestaurant,
-    "Southern Hemisphere Trade Agreements": SouthernHemisphereTradeAgreements,
-    "Cat Café": CatCafé,
-    "Kebab Shop": KebabShop,
-    "Steak House": SteakHouse,
-    "Handbag Shop": HandbagShop,
-    "Bazaar": Bazaar,
-    "African Travel Packages": AfricanTravelPackages,
-    "North American Travel Packages": NorthAmericanTravelPackages,
-    "Dance Studio": DanceStudio,
-    "South American Travel Packages": SouthAmericanTravelPackages,
-    "Asian Travel Packages": AsianTravelPackages,
-    "European Travel Packages": EuropeanTravelPackages,
-    "Oceanian Travel Packages": OceanianTravelPackages,
-    "Theatre": Theatre,
-    "Premier Wine Imports": PremierWineImports,
-    "Improved Restroom Facilities": ImprovedRestroomFacilities,
-    "Enhanced Advertising Strategies": EnhancedAdvertisingStrategies,
-    "Jewellery Shop": JewelleryShop,
-    "Street Food Fair": StreetFoodFair,
-    "Cross-Terminal Rickshaw Service": CrossTerminalRickshawService,
-    "Surf Shop": SurfShop,
-    "Fish & Chips": FishAndChips,
-    "Cigar Shop": CigarShop,
-    "Spice Market": SpiceMarket,
-    "Sculpture Exhibition": SculptureExhibition,
-    "Couscous Restaurant": CouscousRestaurant,
-    "Renovated Corporate Offices": RenovatedCorporateOffices,
-    "Music Store": MusicStore,
-    "Warehouse Expansion Projects": WarehouseExpansionProjects,
-    "Dedicated Motorcycle Parking": DedicatedMotorcycleParking,
-    "Arepa Restaurant": ArepaRestaurant,
-    "Ceviche Restaurant": CevicheRestaurant,
-    "Indian Restaurant": IndianRestaurant,
-    "Basketball Courts": BasketballCourts,
-    "Vietnamese Restaurant": VietnameseRestaurant,
-    "Expedited Shipping Logistics": ExpeditedShippingLogistics,
-    "Energy Efficiency Improvements": EnergyEfficiencyImprovements,
-    "Satay Restaurant": SatayRestaurant,
-    "Kava Bar": KavaBar,
-    "Budget Hotel": BudgetHotel,
-    "Grand Hotel": GrandHotel,
-    "Bed & Breakfast": BedAndBreakfast,
-    "Hostel": Hostel,
-    "Resort Hotel": ResortHotel,
-    "Boutique Hotel": BoutiqueHotel,
-    "Ice Skating Rink": IceSkatingRink,
-    "Chai House": ChaiHouse,
-    "Jerk Chicken Shop": JerkChickenShop,
-    "Tram Depot": TramDepot,
-    "Live Music Lounge": LiveMusicLounge,
-    "Ice Hockey Rink": IceHockeyRink,
-    "Moroccan Restaurant": MoroccanRestaurant,
-    "Fast Food Joint": FastFoodJoint,
-    "Integrated Metro System": IntegratedMetroSystem,
-    "Sourdough Café": SourdoughCafé,
-    "Hyperloop Pod Refurbishments": HyperloopPodRefurbishments,
-    "Jazz Lounge": JazzLounge,
-    "Toy Store": ToyStore,
-    "Ski Store": SkiStore,
-    "Ancient History Exhibit": AncientHistoryExhibit,
-    "Sushi Restaurant": SushiRestaurant,
-    "Beer Store": BeerStore,
-    "Curry House": CurryHouse,
-    "Jollof Rice Restaurant": JollofRiceRestaurant,
-    "Mate Tea Shop": MateTeaShop,
-    "Yoghurt Shop": YoghurtShop,
-    "Sandal Store": SandalStore,
-    "Information Centre": InformationCentre,
-    "Security Office Expansion": SecurityOfficeExpansion,
-    "Travel Agency": TravelAgency,
-    "Chocolatier": Chocolatier,
-    "Health Clinic": HealthClinic,
-    "Whisky Bar": WhiskyBar,
-    "Spa": Spa,
-    "Gay Bar": GayBar,
-    "Sports Store": SportsStore,
-    "Local Tours": LocalTours,
-    "Biryani Restaurant": BiryaniRestaurant,
-    "Climbing Centre": ClimbingCentre,
-    "Lounge Renovations": LoungeRenovations,
-    "Craft Beer Bar": CraftBeerBar,
-    "Meze Restaurant": MezeRestaurant,
-    "Hookah Lounge": HookahLounge,
-    "Incense Store": IncenseStore,
-    "Falafel Restaurant": FalafelRestaurant,
-    "Pho Bar": PhoBar,
-    "Staff Cafeteria Renovations": StaffCafeteriaRenovations,
-    "Curio Shop": CurioShop,
-    "Hot Pot Restaurant": HotPotRestaurant,
-    "Baseball Shop": BaseballShop,
-    "Sunglasses Store": SunglassesStore,
-    "Ferry Terminal": FerryTerminal,
-    "Car Accessories": CarAccessories,
-    "Dim Sum Restaurant": DimSumRestaurant,
-    "Gaming Arcade": GamingArcade,
-    "Sausage Shop": SausageShop,
-    "ATM Machine Enhancements": ATMMachineEnhancements,
-    "Candy Store": CandyStore,
-    "Local Airport Links": LocalAirportLinks,
-    "Bubble Tea Shop": BubbleTeaShop,
-    "Candle Shop": CandleShop,
-    "Prayer Room": PrayerRoom,
-    "Hamburger Restaurant": HamburgerRestaurant,
-    "Hyperloop Museum": HyperloopMuseum,
-    "Artificial Intelligence Improvements": ArtificialIntelligenceImprovements,
-    "Records Store": RecordsStore,
-    "Event Hall": EventHall,
-    "Beach-Themed Bar": BeachThemedBar,
-    "Tea House": TeaHouse,
-    "Crab Shack": CrabShack,
-    "Car Museum": CarMuseum,
-    "Smoothie Shop": SmoothieShop,
-    "Nihari Restaurant": NihariRestaurant,
-    "Suya Restaurant": SuyaRestaurant,
-    "Barbecue Restaurant": BarbecueRestaurant,
-    "Irish Bar": IrishBar,
-    "Burrito Restaurant": BurritoRestaurant,
-    "Marzipan Café": MarzipanCafé,
-    "Hat Shop": HatShop,
-    "Soup Stall": SoupStall,
-    "Necktie Shop": NecktieShop,
-    "Rock Bar": RockBar,
-    "Chess Club": ChessClub,
-    "Fresh Fruit Stall": FreshFruitStall,
-    "Palatial Interior Renovations": PalatialInteriorRenovations,
-    "Cosmetics Store": CosmeticsStore,
-    "Frozen Cocktail Stand": FrozenCocktailStand,
-    "Advanced Terminal Planning": AdvancedTerminalPlanning,
-    "Riverside Expansion Project": RiversideExpansionProject,
-    "Train Museum": TrainMuseum,
-    "Expanded Parking Facilities": ExpandedParkingFacilities,
-    "Fishing Store": FishingStore,
-    "Free Trade Agreements": FreeTradeAgreements,
-    "Smoked Fish Stall": SmokedFishStall,
-    "Wrestling Arena": WrestlingArena,
-    "Wine Bar": WineBar,
-    "Service Delivery Training": ServiceDeliveryTraining,
-    "Biking Accessories Store": BikingAccessoriesStore,
-    "Indoor Surfing": IndoorSurfing,
-    "Emergency Training": EmergencyTraining,
-    "Summer Holiday Packages": SummerHolidayPackages,
-    "Exterior Beautification Project": ExteriorBeautificationProject,
-    "Shipping Port": ShippingPort,
-    "Terminal Radio": TerminalRadio,
-    "Ecotourism Awareness Campaigns": EcotourismAwarenessCampaigns,
-    "Temperature Regulation Enhancements": TemperatureRegulationEnhancements,
-    "Scarf Shop": ScarfShop,
-    "Route Improvements": RouteImprovements,
-    "Embassy Hotline Centre": EmbassyHotlineCentre,
-    "Autumn Getaway Packages": AutumnGetawayPackages,
-    "Arts and Crafts Store": ArtsAndCraftsStore,
-    "Mural Commissions": MuralCommissions,
-    "Outdoor Garden": OutdoorGarden,
-    "Painted Ceramics Store": PaintedCeramicsStore,
-    "Maintenance Improvements": MaintenanceImprovements,
-    "Security Streamlining": SecurityStreamlining,
-    "Snow Globe Store": SnowGlobeStore,
-    "Spring Vacation Packages": SpringVacationPackages,
-    "Quality Tropical Fruit Imports": QualityTropicalFruitImports,
-    "Superior Coffee Imports": SuperiorCoffeeImports,
-    "Winter Escape Packages": WinterEscapePackages,
-    "Caviar Bar": CaviarBar,
-    "Carpet Emporium": CarpetEmporium,
-    "Costume Store": CostumeStore,
-    "Anti-Littering Campaign": AntiLitteringCampaign,
-    "Italian Deli": ItalianDeli,
-    "Crime Prevention Campaign": CrimePreventionCampaign,
-
-
+    "Cupcake Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CupcakeStore.jpg",
+    "Seafood Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SeafoodRestaurant.jpg",
+    "Waffle House": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/WaffleHouse.jpg",
+    "Karaoke Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/KaraokeBar.jpg",
+    "Bakery": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Bakery.jpg",
+    "Pizzeria": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Pizzeria.jpg",
+    "Pub": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Pub.jpg",
+    "Hot Dog Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HotDogRestaurant.jpg",
+    "Soap Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SoapStore.jpg",
+    "Bowling Alley": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BowlingAlley.jpg",
+    "Ice Cream Parlour": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IceCreamParlour.jpg",
+    "Beer Tent": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BeerTent.jpg",
+    "High-End Boutique": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HighEndBoutique.jpg",
+    "Florist": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Florist.jpg",
+    "Night Lounge": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/NightLounge.jpg",
+    "Table Tennis Court": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TableTennisCourt.jpg",
+    "Soda Machines": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SodaMachines.jpg",
+    "Bank": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Bank.jpg",
+    "Postal Office": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PostalOffice.jpg",
+    "Cinema": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Cinema.jpg",
+    "Convenience Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ConvenienceStore.jpg",
+    "Skincare Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SkincareStore.jpg",
+    "Noodle Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/NoodleBar.jpg",
+    "Gym": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Gym.jpg",
+    "Pharmacy": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Pharmacy.jpg",
+    "Bookstore": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Bookstore.jpg",
+    "Yoga Studio": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/YogaStudio.jpg",
+    "Rum Tasting": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/RumTasting.jpg",
+    "History Museum": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HistoryMuseum.jpg",
+    "Luxury Hotel": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/LuxuryHotel.jpg",
+    "Comedy Club": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ComedyClub.jpg",
+    "Swimwear Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SwimwearStore.jpg",
+    "Swimming Pool": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SwimmingPool.jpg",
+    "Salad Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SaladBar.jpg",
+    "Fashion Chain": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FashionChain.jpg",
+    "Cheese Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CheeseShop.jpg",
+    "Cake Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CakeShop.jpg",
+    "Customer Service Centre": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CustomerServiceCentre.jpg",
+    "Quiet Room": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/QuietRoom.jpg",
+    "Outdoors Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/OutdoorsStore.jpg",
+    "Crafts Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CraftsShop.jpg",
+    "Enhanced Communications": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EnhancedCommunications.jpg",
+    "Elite Fishery Contracts": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EliteFisheryContracts.jpg",
+    "Water Taxi Transfers": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/WaterTaxiTransfers.jpg",
+    "Cocktail Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CocktailBar.jpg",
+    "Phone Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PhoneStore.jpg",
+    "Bus Transfers": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BusTransfers.jpg",
+    "Train Station": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TrainStation.jpg",
+    "Photo Room": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PhotoRoom.jpg",
+    "Petting Zoo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PettingZoo.jpg",
+    "Aquarium": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Aquarium.jpg",
+    "Watch Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/WatchStore.jpg",
+    "Fragrance Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FragranceStore.jpg",
+    "Billboard Design Overhauls": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BillboardDesignOverhauls.jpg",
+    "Art Gallery": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ArtGallery.jpg",
+    "Metal Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/MetalBar.jpg",
+    "Taco Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TacoRestaurant.jpg",
+    "Art Market": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ArtMarket.jpg",
+    "Indoor Garden": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IndoorGarden.jpg",
+    "Gift Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/GiftShop.jpg",
+    "Casino": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Casino.jpg",
+    "Ceramics Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CeramicsStore.jpg",
+    "Tapas Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TapasRestaurant.jpg",
+    "Southern Hemisphere Trade Agreements": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SouthernHemisphereTradeAgreements.jpg",
+    "Cat Café": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CatCafé.jpg",
+    "Kebab Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/KebabShop.jpg",
+    "Steak House": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SteakHouse.jpg",
+    "Handbag Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HandbagShop.jpg",
+    "Bazaar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Bazaar.jpg",
+    "African Travel Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/AfricanTravelPackages.jpg",
+    "North American Travel Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/NorthAmericanTravelPackages.jpg",
+    "Dance Studio": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/DanceStudio.jpg",
+    "South American Travel Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SouthAmericanTravelPackages.jpg",
+    "Asian Travel Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/AsianTravelPackages.jpg",
+    "European Travel Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EuropeanTravelPackages.jpg",
+    "Oceanian Travel Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/OceanianTravelPackages.jpg",
+    "Theatre": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Theatre.jpg",
+    "Premier Wine Imports": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PremierWineImports.jpg",
+    "Improved Restroom Facilities": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ImprovedRestroomFacilities.jpg",
+    "Enhanced Advertising Strategies": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EnhancedAdvertisingStrategies.jpg",
+    "Jewellery Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/JewelleryShop.jpg",
+    "Street Food Fair": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/StreetFoodFair.jpg",
+    "Cross-Terminal Rickshaw Service": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CrossTerminalRickshawService.jpg",
+    "Surf Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SurfShop.jpg",
+    "Fish & Chips": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FishAndChips.jpg",
+    "Cigar Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CigarShop.jpg",
+    "Spice Market": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SpiceMarket.jpg",
+    "Sculpture Exhibition": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SculptureExhibition.jpg",
+    "Couscous Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CouscousRestaurant.jpg",
+    "Renovated Corporate Offices": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/RenovatedCorporateOffices.jpg",
+    "Music Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/MusicStore.jpg",
+    "Warehouse Expansion Projects": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/WarehouseExpansionProjects.jpg",
+    "Dedicated Motorcycle Parking": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/DedicatedMotorcycleParking.jpg",
+    "Arepa Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ArepaRestaurant.jpg",
+    "Ceviche Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CevicheRestaurant.jpg",
+    "Indian Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IndianRestaurant.jpg",
+    "Basketball Courts": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BasketballCourts.jpg",
+    "Vietnamese Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/VietnameseRestaurant.jpg",
+    "Expedited Shipping Logistics": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ExpeditedShippingLogistics.jpg",
+    "Energy Efficiency Improvements": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EnergyEfficiencyImprovements.jpg",
+    "Satay Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SatayRestaurant.jpg",
+    "Kava Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/KavaBar.jpg",
+    "Budget Hotel": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BudgetHotel.jpg",
+    "Grand Hotel": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/GrandHotel.jpg",
+    "Bed & Breakfast": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BedAndBreakfast.jpg",
+    "Hostel": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Hostel.jpg",
+    "Resort Hotel": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ResortHotel.jpg",
+    "Boutique Hotel": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BoutiqueHotel.jpg",
+    "Ice Skating Rink": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IceSkatingRink.jpg",
+    "Chai House": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ChaiHouse.jpg",
+    "Jerk Chicken Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/JerkChickenShop.jpg",
+    "Tram Depot": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TramDepot.jpg",
+    "Live Music Lounge": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/LiveMusicLounge.jpg",
+    "Ice Hockey Rink": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IceHockeyRink.jpg",
+    "Moroccan Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/MoroccanRestaurant.jpg",
+    "Fast Food Joint": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FastFoodJoint.jpg",
+    "Integrated Metro System": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IntegratedMetroSystem.jpg",
+    "Sourdough Café": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SourdoughCafé.jpg",
+    "Hyperloop Pod Refurbishments": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HyperloopPodRefurbishments.jpg",
+    "Jazz Lounge": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/JazzLounge.jpg",
+    "Toy Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ToyStore.jpg",
+    "Ski Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SkiStore.jpg",
+    "Ancient History Exhibit": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/AncientHistoryExhibit.jpg",
+    "Sushi Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SushiRestaurant.jpg",
+    "Beer Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BeerStore.jpg",
+    "Curry House": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CurryHouse.jpg",
+    "Jollof Rice Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/JollofRiceRestaurant.jpg",
+    "Mate Tea Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/MateTeaShop.jpg",
+    "Yoghurt Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/YoghurtShop.jpg",
+    "Sandal Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SandalStore.jpg",
+    "Information Centre": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/InformationCentre.jpg",
+    "Security Office Expansion": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SecurityOfficeExpansion.jpg",
+    "Travel Agency": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TravelAgency.jpg",
+    "Chocolatier": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Chocolatier.jpg",
+    "Health Clinic": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HealthClinic.jpg",
+    "Whisky Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/WhiskyBar.jpg",
+    "Spa": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/Spa.jpg",
+    "Gay Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/GayBar.jpg",
+    "Sports Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SportsStore.jpg",
+    "Local Tours": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/LocalTours.jpg",
+    "Biryani Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BiryaniRestaurant.jpg",
+    "Climbing Centre": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ClimbingCentre.jpg",
+    "Lounge Renovations": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/LoungeRenovations.jpg",
+    "Craft Beer Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CraftBeerBar.jpg",
+    "Meze Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/MezeRestaurant.jpg",
+    "Hookah Lounge": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HookahLounge.jpg",
+    "Incense Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IncenseStore.jpg",
+    "Falafel Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FalafelRestaurant.jpg",
+    "Pho Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PhoBar.jpg",
+    "Staff Cafeteria Renovations": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/StaffCafeteriaRenovations.jpg",
+    "Curio Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CurioShop.jpg",
+    "Hot Pot Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HotPotRestaurant.jpg",
+    "Baseball Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BaseballShop.jpg",
+    "Sunglasses Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SunglassesStore.jpg",
+    "Ferry Terminal": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FerryTerminal.jpg",
+    "Car Accessories": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CarAccessories.jpg",
+    "Dim Sum Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/DimSumRestaurant.jpg",
+    "Gaming Arcade": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/GamingArcade.jpg",
+    "Sausage Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SausageShop.jpg",
+    "ATM Machine Enhancements": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ATMMachineEnhancements.jpg",
+    "Candy Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CandyStore.jpg",
+    "Local Airport Links": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/LocalAirportLinks.jpg",
+    "Bubble Tea Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BubbleTeaShop.jpg",
+    "Candle Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CandleShop.jpg",
+    "Prayer Room": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PrayerRoom.jpg",
+    "Hamburger Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HamburgerRestaurant.jpg",
+    "Hyperloop Museum": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HyperloopMuseum.jpg",
+    "Artificial Intelligence Improvements": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ArtificialIntelligenceImprovements.jpg",
+    "Records Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/RecordsStore.jpg",
+    "Event Hall": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EventHall.jpg",
+    "Beach-Themed Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BeachThemedBar.jpg",
+    "Tea House": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TeaHouse.jpg",
+    "Crab Shack": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CrabShack.jpg",
+    "Car Museum": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CarMuseum.jpg",
+    "Smoothie Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SmoothieShop.jpg",
+    "Nihari Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/NihariRestaurant.jpg",
+    "Suya Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SuyaRestaurant.jpg",
+    "Barbecue Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BarbecueRestaurant.jpg",
+    "Irish Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IrishBar.jpg",
+    "Burrito Restaurant": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BurritoRestaurant.jpg",
+    "Marzipan Café": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/MarzipanCafé.jpg",
+    "Hat Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/HatShop.jpg",
+    "Soup Stall": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SoupStall.jpg",
+    "Necktie Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/NecktieShop.jpg",
+    "Rock Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/RockBar.jpg",
+    "Chess Club": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ChessClub.jpg",
+    "Fresh Fruit Stall": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FreshFruitStall.jpg",
+    "Palatial Interior Renovations": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PalatialInteriorRenovations.jpg",
+    "Cosmetics Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CosmeticsStore.jpg",
+    "Frozen Cocktail Stand": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FrozenCocktailStand.jpg",
+    "Advanced Terminal Planning": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/AdvancedTerminalPlanning.jpg",
+    "Riverside Expansion Project": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/RiversideExpansionProject.jpg",
+    "Train Museum": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TrainMuseum.jpg",
+    "Expanded Parking Facilities": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ExpandedParkingFacilities.jpg",
+    "Fishing Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FishingStore.jpg",
+    "Free Trade Agreements": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/FreeTradeAgreements.jpg",
+    "Smoked Fish Stall": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SmokedFishStall.jpg",
+    "Wrestling Arena": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/WrestlingArena.jpg",
+    "Wine Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/WineBar.jpg",
+    "Service Delivery Training": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ServiceDeliveryTraining.jpg",
+    "Biking Accessories Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/BikingAccessoriesStore.jpg",
+    "Indoor Surfing": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/IndoorSurfing.jpg",
+    "Emergency Training": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EmergencyTraining.jpg",
+    "Summer Holiday Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SummerHolidayPackages.jpg",
+    "Exterior Beautification Project": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ExteriorBeautificationProject.jpg",
+    "Shipping Port": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ShippingPort.jpg",
+    "Terminal Radio": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TerminalRadio.jpg",
+    "Ecotourism Awareness Campaigns": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EcotourismAwarenessCampaigns.jpg",
+    "Temperature Regulation Enhancements": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/TemperatureRegulationEnhancements.jpg",
+    "Scarf Shop": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ScarfShop.jpg",
+    "Route Improvements": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/RouteImprovements.jpg",
+    "Embassy Hotline Centre": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/EmbassyHotlineCentre.jpg",
+    "Autumn Getaway Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/AutumnGetawayPackages.jpg",
+    "Arts and Crafts Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ArtsAndCraftsStore.jpg",
+    "Mural Commissions": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/MuralCommissions.jpg",
+    "Outdoor Garden": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/OutdoorGarden.jpg",
+    "Painted Ceramics Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/PaintedCeramicsStore.jpg",
+    "Maintenance Improvements": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/MaintenanceImprovements.jpg",
+    "Security Streamlining": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SecurityStreamlining.jpg",
+    "Snow Globe Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SnowGlobeStore.jpg",
+    "Spring Vacation Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SpringVacationPackages.jpg",
+    "Quality Tropical Fruit Imports": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/QualityTropicalFruitImports.jpg",
+    "Superior Coffee Imports": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/SuperiorCoffeeImports.jpg",
+    "Winter Escape Packages": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/WinterEscapePackages.jpg",
+    "Caviar Bar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CaviarBar.jpg",
+    "Carpet Emporium": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CarpetEmporium.jpg",
+    "Costume Store": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CostumeStore.jpg",
+    "Anti-Littering Campaign": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/AntiLitteringCampaign.jpg",
+    "Italian Deli": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/ItalianDeli.jpg",
+    "Crime Prevention Campaign": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/developments/CrimePreventionCampaign.jpg",
 }
-
 
 export default developmentImages

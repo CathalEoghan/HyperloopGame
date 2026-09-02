@@ -1,470 +1,234 @@
-
-import London from '../assets/cities/London.jpg'
-import Paris from '../assets/cities/Paris.jpg'
-import NewYork from '../assets/cities/NewYork.jpg'
-import Marseille from '../assets/cities/Marseille.jpg'
-import Osaka from '../assets/cities/Osaka.jpg'
-import Busan from '../assets/cities/Busan.jpg'
-import Rome from '../assets/cities/Rome.jpg'
-import Brussels from '../assets/cities/Brussels.jpg'
-import Atlanta from '../assets/cities/Atlanta.jpg'
-import Dublin from '../assets/cities/Dublin.jpg'
-import Milwaukee from '../assets/cities/Milwaukee.jpg'
-import Portland from '../assets/cities/Portland.jpg'
-import Seattle from '../assets/cities/Seattle.jpg'
-import Munich from '../assets/cities/Munich.jpg'
-import Milan from '../assets/cities/Milan.jpg'
-import ChiangMai from '../assets/cities/ChiangMai.jpg'
-import Berlin from '../assets/cities/Berlin.jpg'
-import Shanghai from '../assets/cities/Shanghai.jpg'
-import Riyadh from '../assets/cities/Riyadh.jpg'
-import Mumbai from '../assets/cities/Mumbai.jpg'
-import LosAngeles from '../assets/cities/LosAngeles.jpg'
-import Tokyo from '../assets/cities/Tokyo.jpg'
-import Seoul from '../assets/cities/Seoul.jpg'
-import Chengdu from '../assets/cities/Chengdu.jpg'
-import SanDiego from '../assets/cities/SanDiego.jpg'
-import Hyderabad from '../assets/cities/Hyderabad.jpg'
-import Edinburgh from '../assets/cities/Edinburgh.jpg'
-import Varanasi from '../assets/cities/Varanasi.jpg'
-import Havana from '../assets/cities/Havana.jpg'
-import Cairo from '../assets/cities/Cairo.jpg'
-import Dubai from '../assets/cities/Dubai.jpg'
-import Montréal from '../assets/cities/Montréal.jpg'
-import RioDeJaneiro from '../assets/cities/RioDeJaneiro.jpg'
-import Athens from '../assets/cities/Athens.jpg'
-import Tijuana from '../assets/cities/Tijuana.jpg'
-import Barcelona from '../assets/cities/Barcelona.jpg'
-import Amsterdam from '../assets/cities/Amsterdam.jpg'
-import Vienna from '../assets/cities/Vienna.jpg'
-import Manila from '../assets/cities/Manila.jpg'
-import BuenosAires from '../assets/cities/BuenosAires.jpg'
-import Windhoek from '../assets/cities/Windhoek.jpg'
-import Nairobi from '../assets/cities/Nairobi.jpg'
-import Johannesburg from '../assets/cities/Johannesburg.jpg'
-import Gothenburg from '../assets/cities/Gothenburg.jpg'
-import Venice from '../assets/cities/Venice.jpg'
-import Bangkok from '../assets/cities/Bangkok.jpg'
-import Shenzhen from '../assets/cities/Shenzhen.jpg'
-import Bogotá from '../assets/cities/Bogotá.jpg'
-import Beijing from '../assets/cities/Beijing.jpg'
-import Taipei from '../assets/cities/Taipei.jpg'
-import Melbourne from '../assets/cities/Melbourne.jpg'
-import Apia from '../assets/cities/Apia.jpg'
-import Geneva from '../assets/cities/Geneva.jpg'
-import Cologne from '../assets/cities/Cologne.jpg'
-import Lagos from '../assets/cities/Lagos.jpg'
-import Madrid from '../assets/cities/Madrid.jpg'
-import Helsinki from '../assets/cities/Helsinki.jpg'
-import MexicoCity from '../assets/cities/MexicoCity.jpg'
-import Miami from '../assets/cities/Miami.jpg'
-import Singapore from '../assets/cities/Singapore.jpg'
-import Cork from '../assets/cities/Cork.jpg'
-import LasVegas from '../assets/cities/LasVegas.jpg'
-import Lisbon from '../assets/cities/Lisbon.jpg'
-import Seville from '../assets/cities/Seville.jpg'
-import Sydney from '../assets/cities/Sydney.jpg'
-import Istanbul from '../assets/cities/Istanbul.jpg'
-import Tehran from '../assets/cities/Tehran.jpg'
-import Canberra from '../assets/cities/Canberra.jpg'
-import Florence from '../assets/cities/Florence.jpg'
-import Marrakech from '../assets/cities/Marrakech.jpg'
-import AddisAbaba from '../assets/cities/AddisAbaba.jpg'
-import WashingtonDC from '../assets/cities/WashingtonDC.jpg'
-import Toronto from '../assets/cities/Toronto.jpg'
-import Asunción from '../assets/cities/Asunción.jpg'
-import KualaLumpur from '../assets/cities/KualaLumpur.jpg'
-import Reykjavik from '../assets/cities/Reykjavik.jpg'
-import Wellington from '../assets/cities/Wellington.jpg'
-import SaintPetersburg from '../assets/cities/SaintPetersburg.jpg'
-import Bordeaux from '../assets/cities/Bordeaux.jpg'
-import Copenhagen from '../assets/cities/Copenhagen.jpg'
-import Warsaw from '../assets/cities/Warsaw.jpg'
-import Gdánsk from "../assets/cities/Gdánsk.jpg";import Karachi from '../assets/cities/Karachi.jpg'
-import Dhaka from '../assets/cities/Dhaka.jpg'
-import Honolulu from '../assets/cities/Honolulu.jpg'
-import GuatemalaCity from '../assets/cities/GuatemalaCity.jpg'
-import Vancouver from '../assets/cities/Vancouver.jpg'
-import DarEsSalaam from '../assets/cities/DarEsSalaam.jpg'
-import Harare from '../assets/cities/Harare.jpg'
-import SãoPaulo from '../assets/cities/SãoPaulo.jpg'
-import Tunis from '../assets/cities/Tunis.jpg'
-import Caracas from '../assets/cities/Caracas.jpg'
-import Lima from '../assets/cities/Lima.jpg'
-import Douala from '../assets/cities/Douala.jpg'
-import Kampala from '../assets/cities/Kampala.jpg'
-import Bamako from '../assets/cities/Bamako.jpg'
-import NewDelhi from '../assets/cities/NewDelhi.jpg'
-import Belgrade from '../assets/cities/Belgrade.jpg'
-import HoChiMinhCity from '../assets/cities/HoChiMinhCity.jpg'
-import Belfast from '../assets/cities/Belfast.jpg'
-import Oslo from '../assets/cities/Oslo.jpg'
-import Jakarta from '../assets/cities/Jakarta.jpg'
-import Suva from '../assets/cities/Suva.jpg'
-import Kraków from '../assets/cities/Kraków.jpg'
-import MonteCarlo from '../assets/cities/MonteCarlo.jpg'
-import Galway from '../assets/cities/Galway.jpg'
-import Budapest from '../assets/cities/Budapest.jpg'
-import Orlando from '../assets/cities/Orlando.jpg'
-import CapeTown from '../assets/cities/CapeTown.jpg'
-import Almaty from '../assets/cities/Almaty.jpg'
-import Tashkent from '../assets/cities/Tashkent.jpg'
-import Kingston from '../assets/cities/Kingston.jpg'
-import Cusco from '../assets/cities/Cusco.jpg'
-import Kinshasa from '../assets/cities/Kinshasa.jpg'
-import Minsk from '../assets/cities/Minsk.jpg'
-import Casablanca from '../assets/cities/Casablanca.jpg'
-import Chicago from '../assets/cities/Chicago.jpg'
-import Moscow from '../assets/cities/Moscow.jpg'
-import SanFrancisco from '../assets/cities/SanFrancisco.jpg'
-import NewOrleans from '../assets/cities/NewOrleans.jpg'
-import HongKong from '../assets/cities/HongKong.jpg'
-import Stockholm from '../assets/cities/Stockholm.jpg'
-import Santiago from '../assets/cities/Santiago.jpg'
-import Ulaanbaatar from '../assets/cities/Ulaanbaatar.jpg'
-import Kyoto from '../assets/cities/Kyoto.jpg'
-import Prague from '../assets/cities/Prague.jpg'
-import Durban from '../assets/cities/Durban.jpg'
-import Accra from '../assets/cities/Accra.jpg'
-import Montevideo from '../assets/cities/Montevideo.jpg'
-import Málaga from '../assets/cities/Málaga.jpg'
-import Thessaloniki from '../assets/cities/Thessaloniki.jpg'
-import Naples from '../assets/cities/Naples.jpg'
-import TheHague from '../assets/cities/TheHague.jpg'
-import Denpasar from '../assets/cities/Denpasar.jpg'
-import Turin from '../assets/cities/Turin.jpg'
-import Zurich from '../assets/cities/Zurich.jpg'
-import Glasgow from '../assets/cities/Glasgow.jpg'
-import Bath from '../assets/cities/Bath.jpg'
-import Manchester from '../assets/cities/Manchester.jpg'
-import Kolkata from '../assets/cities/Kolkata.jpg'
-import Perth from '../assets/cities/Perth.jpg'
-import Auckland from '../assets/cities/Auckland.jpg'
-import Brisbane from '../assets/cities/Brisbane.jpg'
-import AbuDhabi from '../assets/cities/AbuDhabi.jpg'
-import Bangalore from '../assets/cities/Bangalore.jpg'
-import Beirut from '../assets/cities/Beirut.jpg'
-import Baghdad from '../assets/cities/Baghdad.jpg'
-import Muscat from '../assets/cities/Muscat.jpg'
-import Amman from '../assets/cities/Amman.jpg'
-import Hanoi from '../assets/cities/Hanoi.jpg'
-import Kyiv from '../assets/cities/Kyiv.jpg'
-import Mombasa from '../assets/cities/Mombasa.jpg'
-import Chongqing from '../assets/cities/Chongqing.jpg'
-import Boston from '../assets/cities/Boston.jpg'
-import Cancún from '../assets/cities/Cancún.jpg'
-import Tangier from '../assets/cities/Tangier.jpg'
-import Detroit from '../assets/cities/Detroit.jpg'
-import Guangzhou from '../assets/cities/Guangzhou.jpg'
-import Nagoya from '../assets/cities/Nagoya.jpg'
-import Frankfurt from '../assets/cities/Frankfurt.jpg'
-import Houston from '../assets/cities/Houston.jpg'
-import Nuremberg from '../assets/cities/Nuremberg.jpg'
-import Doha from '../assets/cities/Doha.jpg'
-import Taichung from '../assets/cities/Taichung.jpg'
-import Kathmandu from '../assets/cities/Kathmandu.jpg'
-import Lhasa from '../assets/cities/Lhasa.jpg'
-import Hamburg from '../assets/cities/Hamburg.jpg'
-import Toulouse from '../assets/cities/Toulouse.jpg'
-import SanJose from '../assets/cities/SanJose.jpg'
-import Nashville from '../assets/cities/Nashville.jpg'
-import Abidjan from '../assets/cities/Abidjan.jpg'
-import Praia from '../assets/cities/Praia.jpg'
-import Hangzhou from '../assets/cities/Hangzhou.jpg'
-import Baltimore from '../assets/cities/Baltimore.jpg'
-import Stuttgart from '../assets/cities/Stuttgart.jpg'
-import Medellín from '../assets/cities/Medellín.jpg'
-import Lahore from '../assets/cities/Lahore.jpg'
-import Kano from '../assets/cities/Kano.jpg'
-import Austin from '../assets/cities/Austin.jpg'
-import Philadelphia from '../assets/cities/Philadelphia.jpg'
-import Albuquerque from '../assets/cities/Albuquerque.jpg'
-import Tallinn from '../assets/cities/Tallinn.jpg'
-import Quito from '../assets/cities/Quito.jpg'
-import Algiers from '../assets/cities/Algiers.jpg'
-import Zagreb from '../assets/cities/Zagreb.jpg'
-import Cleveland from '../assets/cities/Cleveland.jpg'
-import StLouis from '../assets/cities/StLouis.jpg'
-import Valencia from '../assets/cities/Valencia.jpg'
-import Bucharest from '../assets/cities/Bucharest.jpg'
-import Nice from '../assets/cities/Nice.jpg'
-import Dallas from '../assets/cities/Dallas.jpg'
-import Islamabad from '../assets/cities/Islamabad.jpg'
-import PhnomPenh from '../assets/cities/PhnomPenh.jpg'
-import Vladivostok from '../assets/cities/Vladivostok.jpg'
-import Colombo from '../assets/cities/Colombo.jpg'
-import Anchorage from '../assets/cities/Anchorage.jpg'
-import Phoenix from '../assets/cities/Phoenix.jpg'
-import Dakar from '../assets/cities/Dakar.jpg'
-import Bratislava from '../assets/cities/Bratislava.jpg'
-import Riga from '../assets/cities/Riga.jpg'
-import Tirana from '../assets/cities/Tirana.jpg'
-import LaPaz from '../assets/cities/LaPaz.jpg'
-import Fortaleza from '../assets/cities/Fortaleza.jpg'
-import PortAuPrince from '../assets/cities/PortAuPrince.jpg'
-import Malé from '../assets/cities/Malé.jpg'
-import Tripoli from '../assets/cities/Tripoli.jpg'
-import Sarajevo from '../assets/cities/Sarajevo.jpg'
-import Antananarivo from '../assets/cities/Antananarivo.jpg'
-import Rotterdam from '../assets/cities/Rotterdam.jpg'
-import LuxembourgCity from '../assets/cities/LuxembourgCity.jpg'
-import Denver from '../assets/cities/Denver.jpg'
-import PanamaCity from '../assets/cities/PanamaCity.jpg'
-import Bilbao from '../assets/cities/Bilbao.jpg'
-import Nicosia from '../assets/cities/Nicosia.jpg'
-import Valletta from '../assets/cities/Valletta.jpg'
-import Tbilisi from '../assets/cities/Tbilisi.jpg'
-import Yangon from '../assets/cities/Yangon.jpg'
-import Porto from '../assets/cities/Porto.jpg'
-import Mogadishu from '../assets/cities/Mogadishu.jpg'
-import Sanaa from '../assets/cities/Sanaa.jpg'
-import Ottawa from '../assets/cities/Ottawa.jpg'
-import SantoDomingo from '../assets/cities/SantoDomingo.jpg'
-import Wrocław from '../assets/cities/Wrocław.jpg'
-import Hobart from '../assets/cities/Hobart.jpg'
-import SanJosé from '../assets/cities/SanJosé.png'
-import Tianjin from '../assets/cities/Tianjin.jpg'
-import Genoa from '../assets/cities/Genoa.jpg'
-import Adelaide from '../assets/cities/Adelaide.jpg'
-import Baku from '../assets/cities/Baku.jpg'
-import Chihuahua from '../assets/cities/Chihuahua.jpg'
-import Kabul from '../assets/cities/Kabul.jpg'
-
-
 const cityImages = {
-    London: London,
-    Paris: Paris,
-    "New York": NewYork,
-    Marseille: Marseille,
-    Osaka: Osaka,
-    Busan: Busan,
-    Rome: Rome,
-    Brussels: Brussels,
-    Atlanta: Atlanta,
-    Dublin: Dublin,
-    Milwaukee: Milwaukee,
-    Portland: Portland,
-    Seattle: Seattle,
-    Munich: Munich,
-    Milan: Milan,
-    "Chiang Mai": ChiangMai,
-    Berlin: Berlin,
-    Shanghai: Shanghai,
-    Riyadh: Riyadh,
-    Mumbai: Mumbai,
-    "Los Angeles": LosAngeles,
-    Tokyo: Tokyo,
-    Seoul: Seoul,
-    Chengdu: Chengdu,
-    "San Diego": SanDiego,
-    Hyderabad: Hyderabad,
-    Edinburgh: Edinburgh,
-    Varanasi: Varanasi,
-    Havana: Havana,
-    Cairo: Cairo,
-    Dubai: Dubai,
-    Montréal: Montréal,
-    "Rio de Janeiro": RioDeJaneiro,
-    Athens: Athens,
-    Tijuana: Tijuana,
-    Barcelona: Barcelona,
-    Amsterdam: Amsterdam,
-    Vienna: Vienna,
-    Manila: Manila,
-    "Buenos Aires": BuenosAires,
-    Windhoek: Windhoek,
-    Nairobi: Nairobi,
-    Johannesburg: Johannesburg,
-    Gothenburg: Gothenburg,
-    Venice: Venice,
-    Bangkok: Bangkok,
-    Shenzhen: Shenzhen,
-    Bogotá: Bogotá,
-    Beijing: Beijing,
-    Taipei: Taipei,
-    Melbourne: Melbourne,
-    Apia: Apia,
-    Geneva: Geneva,
-    Cologne: Cologne,
-    Lagos: Lagos,
-    Madrid: Madrid,
-    Helsinki: Helsinki,
-    "Mexico City": MexicoCity,
-    Miami: Miami,
-    Singapore: Singapore,
-    Cork: Cork,
-    "Las Vegas": LasVegas,
-    Lisbon: Lisbon,
-    Seville: Seville,
-    Sydney: Sydney,
-    Istanbul: Istanbul,
-    Tehran: Tehran,
-    Canberra: Canberra,
-    Florence: Florence,
-    Marrakech: Marrakech,
-    "Addis Ababa": AddisAbaba,
-    "Washington, D.C.": WashingtonDC,
-    Toronto: Toronto,
-    Asunción: Asunción,
-    "Kuala Lumpur": KualaLumpur,
-    Reykjavik: Reykjavik,
-    Wellington: Wellington,
-    "Saint Petersburg": SaintPetersburg,
-    Bordeaux: Bordeaux,
-    Copenhagen: Copenhagen,
-    Warsaw: Warsaw,
-    Gdánsk: Gdánsk,
-    Karachi: Karachi,
-    Dhaka: Dhaka,
-    Honolulu: Honolulu,
-    "Guatemala City": GuatemalaCity,
-    Vancouver: Vancouver,
-    "Dar Es Salaam": DarEsSalaam,
-    Harare: Harare,
-    Tunis: Tunis,
-    "São Paulo": SãoPaulo, 
-    Bamako: Bamako,
-    Kampala: Kampala,
-    Lima: Lima,
-    Caracas: Caracas,
-    Douala: Douala,
-    "New Delhi": NewDelhi,
-    Belgrade: Belgrade,
-    "Ho Chi Minh City": HoChiMinhCity,
-    Belfast: Belfast,
-    Oslo: Oslo,
-    Jakarta: Jakarta,
-    Suva: Suva,
-    Kraków: Kraków,
-    "Monte Carlo": MonteCarlo,
-    Galway: Galway,
-    Budapest: Budapest,
-    Orlando: Orlando,
-    "Cape Town": CapeTown,
-    Almaty: Almaty,
-    Tashkent: Tashkent,
-    Kingston: Kingston,
-    Cusco: Cusco,
-    Kinshasa: Kinshasa,
-    Minsk: Minsk,
-    Casablanca: Casablanca,
-    Chicago: Chicago,
-    Moscow: Moscow,
-    "San Francisco": SanFrancisco,
-    "New Orleans": NewOrleans,
-    "Hong Kong": HongKong,
-    Stockholm: Stockholm,
-    Santiago: Santiago,
-    Kyoto: Kyoto,
-    Ulaanbaatar: Ulaanbaatar,
-    Prague: Prague,
-    Durban: Durban,
-    Accra: Accra,
-    Montevideo: Montevideo,
-    Thessaloniki: Thessaloniki,
-    Málaga: Málaga,
-    Naples: Naples,
-    "The Hague": TheHague,
-    Denpasar: Denpasar,
-    Zurich: Zurich,
-    Turin: Turin,
-    Manchester: Manchester,
-    Glasgow: Glasgow,
-    Bath: Bath,
-    Kolkata: Kolkata,
-    Perth: Perth,
-    Auckland: Auckland,
-    Brisbane: Brisbane,
-    "Abu Dhabi": AbuDhabi,
-    Bangalore: Bangalore,
-    Beirut: Beirut,
-    Baghdad: Baghdad,
-    Muscat: Muscat,
-    Amman: Amman,
-    Hanoi: Hanoi,
-    Kyiv: Kyiv,
-    Mombasa: Mombasa,
-    Chongqing: Chongqing,
-    Boston: Boston,
-    Cancún: Cancún,
-    Tangier: Tangier,
-    Detroit: Detroit,
-    Guangzhou: Guangzhou,
-    Nagoya: Nagoya,
-    Frankfurt: Frankfurt,
-    Houston: Houston,
-    Nuremberg: Nuremberg,
-    Doha: Doha,
-    Taichung: Taichung,
-    Kathmandu: Kathmandu,
-    Lhasa: Lhasa,
-    Hamburg: Hamburg,
-    Toulouse: Toulouse,
-    "San Jose": SanJose,
-    Nashville: Nashville,
-    Abidjan: Abidjan,
-    Praia: Praia,
-    Hangzhou: Hangzhou,
-    Baltimore: Baltimore,
-    Stuttgart: Stuttgart,
-    Medellín: Medellín,
-    Lahore: Lahore,
-    Kano: Kano,
-    Austin: Austin,
-    Philadelphia: Philadelphia,
-    Albuquerque: Albuquerque,
-    Tallinn: Tallinn,
-    Quito: Quito,
-    Algiers: Algiers,
-    Zagreb: Zagreb,
-    Cleveland: Cleveland,
-    "St. Louis": StLouis,
-    Valencia: Valencia,
-    Bucharest: Bucharest,
-    Nice: Nice,
-    Dallas: Dallas,
-    Islamabad: Islamabad,
-    "Phnom Penh": PhnomPenh,
-    Anchorage: Anchorage,
-    Vladivostok: Vladivostok,
-    Colombo: Colombo,
-    Phoenix: Phoenix,
-    Bratislava: Bratislava,
-    Dakar: Dakar,
-    Riga: Riga,
-    Tirana: Tirana,
-    "La Paz": LaPaz,
-    "Port-au-Prince": PortAuPrince,
-    Fortaleza: Fortaleza,
-    Antananarivo: Antananarivo,
-    Tripoli: Tripoli,
-    "Luxembourg City": LuxembourgCity,
-    Malé: Malé,
-    Sarajevo: Sarajevo,
-    Rotterdam: Rotterdam,
-    Denver: Denver,
-    "Panama City": PanamaCity,
-    "Sana'a": Sanaa,
-        Ottawa: Ottawa,
-        Bilbao: Bilbao,
-        Valletta: Valletta,
-        Porto: Porto,
-        Mogadishu: Mogadishu,
-        Tbilisi: Tbilisi,
-        Nicosia: Nicosia,
-        Yangon: Yangon,
-        "San José": SanJosé,
-        "Santo Domingo": SantoDomingo,
-        Wrocław: Wrocław,
-        Hobart: Hobart,
-        Kabul: Kabul,
-        Genoa: Genoa,
-        Chihuahua: Chihuahua,
-        Tianjin: Tianjin,
-        Adelaide: Adelaide,
-        Baku: Baku,
-
-
+    "Abidjan": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Abidjan.jpg",
+    "Abu Dhabi": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/AbuDhabi.jpg",
+    "Accra": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Accra.jpg",
+    "Addis Ababa": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/AddisAbaba.jpg",
+    "Adelaide": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Adelaide.jpg",
+    "Albuquerque": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Albuquerque.jpg",
+    "Algiers": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Algiers.jpg",
+    "Almaty": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Almaty.jpg",
+    "Amman": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Amman.jpg",
+    "Amsterdam": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Amsterdam.jpg",
+    "Anchorage": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Anchorage.jpg",
+    "Antananarivo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Antananarivo.jpg",
+    "Apia": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Apia.jpg",
+    "Asunción": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Asunción.jpg",
+    "Athens": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Athens.jpg",
+    "Atlanta": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Atlanta.jpg",
+    "Auckland": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Auckland.jpg",
+    "Austin": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Austin.jpg",
+    "Baghdad": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Baghdad.jpg",
+    "Baku": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Baku.jpg",
+    "Baltimore": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Baltimore.jpg",
+    "Bamako": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bamako.jpg",
+    "Bangalore": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bangalore.jpg",
+    "Bangkok": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bangkok.jpg",
+    "Barcelona": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Barcelona.jpg",
+    "Bath": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bath.jpg",
+    "Beijing": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Beijing.jpg",
+    "Beirut": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Beirut.jpg",
+    "Belfast": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Belfast.jpg",
+    "Belgrade": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Belgrade.jpg",
+    "Berlin": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Berlin.jpg",
+    "Bilbao": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bilbao.jpg",
+    "Bogotá": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bogotá.jpg",
+    "Bordeaux": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bordeaux.jpg",
+    "Boston": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Boston.jpg",
+    "Bratislava": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bratislava.jpg",
+    "Brisbane": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Brisbane.jpg",
+    "Brussels": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Brussels.jpg",
+    "Bucharest": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Bucharest.jpg",
+    "Budapest": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Budapest.jpg",
+    "Buenos Aires": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/BuenosAires.jpg",
+    "Busan": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Busan.jpg",
+    "Cairo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Cairo.jpg",
+    "Canberra": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Canberra.jpg",
+    "Cancún": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Cancún.jpg",
+    "Cape Town": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/CapeTown.jpg",
+    "Caracas": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Caracas.jpg",
+    "Casablanca": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Casablanca.jpg",
+    "Chengdu": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Chengdu.jpg",
+    "Chiang Mai": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/ChiangMai.jpg",
+    "Chicago": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Chicago.jpg",
+    "Chihuahua": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Chihuahua.jpg",
+    "Chongqing": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Chongqing.jpg",
+    "Cleveland": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Cleveland.jpg",
+    "Cologne": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Cologne.jpg",
+    "Colombo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Colombo.jpg",
+    "Copenhagen": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Copenhagen.jpg",
+    "Cork": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Cork.jpg",
+    "Cusco": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Cusco.jpg",
+    "Dakar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Dakar.jpg",
+    "Dallas": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Dallas.jpg",
+    "Dar Es Salaam": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/DarEsSalaam.jpg",
+    "Denpasar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Denpasar.jpg",
+    "Denver": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Denver.jpg",
+    "Detroit": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Detroit.jpg",
+    "Dhaka": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Dhaka.jpg",
+    "Doha": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Doha.jpg",
+    "Douala": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Douala.jpg",
+    "Dubai": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Dubai.jpg",
+    "Dublin": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Dublin.jpg",
+    "Durban": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Durban.jpg",
+    "Edinburgh": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Edinburgh.jpg",
+    "Florence": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Florence.jpg",
+    "Fortaleza": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Fortaleza.jpg",
+    "Frankfurt": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Frankfurt.jpg",
+    "Galway": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Galway.jpg",
+    "Gdánsk": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Gdánsk.jpg",
+    "Geneva": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Geneva.jpg",
+    "Genoa": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Genoa.jpg",
+    "Glasgow": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Glasgow.jpg",
+    "Gothenburg": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Gothenburg.jpg",
+    "Guangzhou": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Guangzhou.jpg",
+    "Guatemala City": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/GuatemalaCity.jpg",
+    "Hamburg": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Hamburg.jpg",
+    "Hangzhou": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Hangzhou.jpg",
+    "Hanoi": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Hanoi.jpg",
+    "Harare": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Harare.jpg",
+    "Havana": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Havana.jpg",
+    "Helsinki": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Helsinki.jpg",
+    "Ho Chi Minh City": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/HoChiMinhCity.jpg",
+    "Hobart": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Hobart.jpg",
+    "Hong Kong": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/HongKong.jpg",
+    "Honolulu": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Honolulu.jpg",
+    "Houston": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Houston.jpg",
+    "Hyderabad": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Hyderabad.jpg",
+    "Islamabad": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Islamabad.jpg",
+    "Istanbul": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Istanbul.jpg",
+    "Jakarta": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Jakarta.jpg",
+    "Johannesburg": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Johannesburg.jpg",
+    "Kampala": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kampala.jpg",
+    "Kano": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kano.jpg",
+    "Karachi": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Karachi.jpg",
+    "Kathmandu": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kathmandu.jpg",
+    "Kingston": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kingston.jpg",
+    "Kinshasa": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kinshasa.jpg",
+    "Kolkata": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kolkata.jpg",
+    "Kraków": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kraków.jpg",
+    "Kuala Lumpur": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/KualaLumpur.jpg",
+    "Kyiv": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kyiv.jpg",
+    "Kyoto": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Kyoto.jpg",
+    "La Paz": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/LaPaz.jpg",
+    "Lagos": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Lagos.jpg",
+    "Lahore": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Lahore.jpg",
+    "Las Vegas": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/LasVegas.jpg",
+    "Lhasa": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Lhasa.jpg",
+    "Lima": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Lima.jpg",
+    "Lisbon": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Lisbon.jpg",
+    "London": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/London.jpg",
+    "Los Angeles": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/LosAngeles.jpg",
+    "Luxembourg City": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/LuxembourgCity.jpg",
+    "Madrid": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Madrid.jpg",
+    "Malé": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Malé.jpg",
+    "Manchester": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Manchester.jpg",
+    "Manila": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Manila.jpg",
+    "Marrakech": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Marrakech.jpg",
+    "Marseille": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Marseille.jpg",
+    "Medellín": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Medellín.jpg",
+    "Melbourne": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Melbourne.jpg",
+    "Mexico City": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/MexicoCity.jpg",
+    "Miami": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Miami.jpg",
+    "Milan": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Milan.jpg",
+    "Milwaukee": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Milwaukee.jpg",
+    "Minsk": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Minsk.jpg",
+    "Mogadishu": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Mogadishu.jpg",
+    "Mombasa": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Mombasa.jpg",
+    "Monte Carlo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/MonteCarlo.jpg",
+    "Montevideo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Montevideo.jpg",
+    "Montréal": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Montréal.jpg",
+    "Moscow": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Moscow.jpg",
+    "Mumbai": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Mumbai.jpg",
+    "Munich": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Munich.jpg",
+    "Muscat": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Muscat.jpg",
+    "Málaga": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Málaga.jpg",
+    "Nagoya": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Nagoya.jpg",
+    "Nairobi": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Nairobi.jpg",
+    "Naples": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Naples.jpg",
+    "Nashville": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Nashville.jpg",
+    "New Delhi": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/NewDelhi.jpg",
+    "New Orleans": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/NewOrleans.jpg",
+    "New York": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/NewYork.jpg",
+    "Nice": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Nice.jpg",
+    "Nicosia": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Nicosia.jpg",
+    "Nuremberg": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Nuremberg.jpg",
+    "Orlando": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Orlando.jpg",
+    "Osaka": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Osaka.jpg",
+    "Oslo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Oslo.jpg",
+    "Ottawa": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Ottawa.jpg",
+    "Panama City": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/PanamaCity.jpg",
+    "Paris": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Paris.jpg",
+    "Perth": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Perth.jpg",
+    "Philadelphia": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Philadelphia.jpg",
+    "Phnom Penh": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/PhnomPenh.jpg",
+    "Phoenix": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Phoenix.jpg",
+    "Port-au-Prince": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/PortAuPrince.jpg",
+    "Portland": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Portland.jpg",
+    "Porto": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Porto.jpg",
+    "Prague": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Prague.jpg",
+    "Praia": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Praia.jpg",
+    "Quito": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Quito.jpg",
+    "Reykjavik": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Reykjavik.jpg",
+    "Riga": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Riga.jpg",
+    "Rio de Janeiro": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/RioDeJaneiro.jpg",
+    "Riyadh": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Riyadh.jpg",
+    "Rome": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Rome.jpg",
+    "Rotterdam": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Rotterdam.jpg",
+    "Saint Petersburg": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/SaintPetersburg.jpg",
+    "San Diego": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/SanDiego.jpg",
+    "San Francisco": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/SanFrancisco.jpg",
+    "San Jose": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/SanJose.jpg",
+    "San José": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/SanJose.jpg",
+    "Sana": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Sana.jpg",
+    "Santiago": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Santiago.jpg",
+    "Santo Domingo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/SantoDomingo.jpg",
+    "Sarajevo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Sarajevo.jpg",
+    "Seattle": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Seattle.jpg",
+    "Seoul": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Seoul.jpg",
+    "Seville": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Seville.jpg",
+    "Shanghai": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Shanghai.jpg",
+    "Shenzhen": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Shenzhen.jpg",
+    "Singapore": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Singapore.jpg",
+    "St. Louis": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/StLouis.jpg",
+    "Stockholm": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Stockholm.jpg",
+    "Stuttgart": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Stuttgart.jpg",
+    "Suva": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Suva.jpg",
+    "Sydney": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Sydney.jpg",
+    "São Paulo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/SaoPaulo.jpg",
+    "Taichung": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Taichung.jpg",
+    "Taipei": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Taipei.jpg",
+    "Tallinn": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tallinn.jpg",
+    "Tangier": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tangier.jpg",
+    "Tashkent": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tashkent.jpg",
+    "Tbilisi": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tbilisi.jpg",
+    "Tehran": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tehran.jpg",
+    "The Hague": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/TheHague.jpg",
+    "Thessaloniki": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Thessaloniki.jpg",
+    "Tianjin": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tianjin.jpg",
+    "Tijuana": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tijuana.jpg",
+    "Tirana": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tirana.jpg",
+    "Tokyo": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tokyo.jpg",
+    "Toronto": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Toronto.jpg",
+    "Toulouse": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Toulouse.jpg",
+    "Tripoli": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tripoli.jpg",
+    "Tunis": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Tunis.jpg",
+    "Turin": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Turin.jpg",
+    "Ulaanbaatar": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Ulaanbaatar.jpg",
+    "Valencia": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Valencia.jpg",
+    "Valletta": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Valletta.jpg",
+    "Vancouver": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Vancouver.jpg",
+    "Varanasi": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Varanasi.jpg",
+    "Venice": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Venice.jpg",
+    "Vienna": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Vienna.jpg",
+    "Vladivostok": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Vladivostok.jpg",
+    "Warsaw": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Warsaw.jpg",
+    "Washington, D.C.": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/WashingtonDC.jpg",
+    "Wellington": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Wellington.jpg",
+    "Windhoek": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Windhoek.jpg",
+    "Wrocław": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Wrocław.jpg",
+    "Yangon": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Yangon.jpg",
+    "Zagreb": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Zagreb.jpg",
+    "Zurich": "https://res.cloudinary.com/CathalEoghan/image/upload/hyperloop/cities/Zurich.jpg",
 }
 
 export default cityImages

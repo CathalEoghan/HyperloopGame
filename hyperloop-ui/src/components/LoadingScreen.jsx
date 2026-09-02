@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import cityThumbnails from '../data/cityThumbnails.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
-import cityImages from '../data/cityImages.js'
-import developmentImages from '../data/developmentImages.js'
 import countryFlags from '../data/countryFlags.js'
 import earthDay2k from '../assets/misc/2k_earth_daymap.jpg'
 import earthNight2k from '../assets/misc/2k_earth_nightmap.jpg'
@@ -72,8 +70,6 @@ function LoadingScreen({ onComplete }) {
         const imageSrcs = [
             ...Object.values(cityThumbnails),
             ...Object.values(developmentThumbnails),
-            ...Object.values(cityImages),
-            ...Object.values(developmentImages),
             ...globeTextures,
             cashIcon, clockIcon, reputationIcon, starIcon, departureBoardImg,
         ]
