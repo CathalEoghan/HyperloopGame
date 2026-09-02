@@ -95,11 +95,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         <div className="progress-page">
             <div className="progress-stats">
                 {stats.map(({ label, value }) => (
-                    <div key={label} className="stat-card">
-                        <span className="stat-label">{label}</span>
-                        <span className="stat-value">{value}</span>
-                    </div>
-                ))}
+    <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
+        <span className="stat-label">{label}</span>
+        <span className="stat-value">{value}</span>
+    </div>
+))}
             </div>
 
             <h2 className="progress-section-header">

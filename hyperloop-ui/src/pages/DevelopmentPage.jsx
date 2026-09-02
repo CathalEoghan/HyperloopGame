@@ -75,10 +75,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
             <div className="category-filter">
                 {CATEGORIES.map(cat => (
-                    <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`} onClick={() => setActiveCategory(cat)}>
-                        {cat}
-                    </button>
-                ))}
+    <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
+        onClick={() => setActiveCategory(cat)}
+        onMouseEnter={() => playHoverSound()}>
+        {cat}
+    </button>
+))}
             </div>
 
             {purchased.length > 0 && (

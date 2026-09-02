@@ -22,7 +22,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect }) {
                 <div className="offline-earnings-box">
                     <span className="offline-earnings-label">Offline earnings</span>
                     <span className="offline-earnings-amount">£{Math.floor(offlineIncome).toLocaleString()}</span>
-                    <span className="offline-earnings-note">10% of active income rate</span>
+                    <span className="offline-earnings-note">Capped at 48 hours</span>
                 </div>
                 <button className="closeButton" style={{ marginTop: '16px' }} onClick={onCollect}>
                     Collect & Continue
