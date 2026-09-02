@@ -80,7 +80,7 @@ import SaintPetersburg from '../assets/cities-thumb/SaintPetersburg.jpg'
 import Bordeaux from '../assets/cities-thumb/Bordeaux.jpg'
 import Copenhagen from '../assets/cities-thumb/Copenhagen.jpg'
 import Warsaw from '../assets/cities-thumb/Warsaw.jpg'
-import Gdánsk from "../assets/cities-thumb/Gdánsk.jpg";import Karachi from '../assets/cities-thumb/Karachi.jpg'
+import Gdańsk from "../assets/cities-thumb/Gdańsk.jpg";import Karachi from '../assets/cities-thumb/Karachi.jpg'
 import Dhaka from '../assets/cities-thumb/Dhaka.jpg'
 import Honolulu from '../assets/cities-thumb/Honolulu.jpg'
 import GuatemalaCity from '../assets/cities-thumb/GuatemalaCity.jpg'
@@ -313,7 +313,7 @@ const cityImages = {
     Bordeaux: Bordeaux,
     Copenhagen: Copenhagen,
     Warsaw: Warsaw,
-    Gdánsk: Gdánsk,
+    Gdańsk: Gdańsk,
     Karachi: Karachi,
     Dhaka: Dhaka,
     Honolulu: Honolulu,

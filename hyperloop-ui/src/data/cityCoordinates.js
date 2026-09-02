@@ -72,7 +72,7 @@ const cityCoordinates = {
     "Fortaleza":        { lat: -3.7172,  lng: -38.5431 },
     "Frankfurt":        { lat: 50.1109,  lng:   8.6821 },
     "Galway":           { lat: 53.2707,  lng:  -9.0568 },
-    "Gdánsk":           { lat: 54.3520,  lng:  18.6466 },
+    "Gdańsk":           { lat: 54.3520,  lng:  18.6466 },
     "Geneva":           { lat: 46.2044,  lng:   6.1432 },
     "Glasgow":          { lat: 55.8642,  lng:  -4.2518 },
     "Gothenburg":       { lat: 57.7089,  lng:  11.9746 },

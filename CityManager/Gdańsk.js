@@ -1,10 +1,10 @@
 
-// Gdánsk
+// Gdańsk
 import { City } from "./City.js";
 import { jewelleryShop } from "../DevelopmentManager/JewelleryShop.js";
 
-export const Gdánsk = new City(
-    "Gdánsk",
+export const Gdańsk = new City(
+    "Gdańsk",
     1500000,
     [jewelleryShop],
     "Poland",
