@@ -234,6 +234,9 @@ const developmentImages = {
     "Personal Styling Retinue": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PersonalStylingRetinue.jpg",
     "Free Phone Charging Stations": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FreePhoneChargingStations.jpg",
     "Flexible Network Contracts": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FlexibleNetworkContracts.jpg",
+    "Advertising Campaign: Spain": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignSpain.jpg",
+    "Advertising Campaign: Brazil": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignBrazil.jpg",
+    "Advertising Campaign: England": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignEngland.jpg",
 
 
 

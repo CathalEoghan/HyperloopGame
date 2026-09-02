@@ -241,6 +241,8 @@ Abuja.jpg - Photo by Abdullahi Santuraki via Pexels
 BeloHorizonte.jpg - Photo by Luiz Felipe via Pexels
 Maputo.jpg - Photo by SINAL Multimédia via Pexels
 Monterrey.jpg - Photo by Dante Muñoz via Pexels
+Recife.jpg - Photo by Pedro Gonçalves via Pexels
+Birmingham.js - Photo by Richard Hunter-Rice via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -481,6 +483,9 @@ PersonalStylingRetinue.jpg - Photo by Ron Lach via Pexels
 MariachiBar.jpg - Photo by RDNE Stock project via Pexels
 TaxiDepot.jpg - Photo by Efrem Efre via Pexels
 FreePhoneChargingStations.jpg - Photo by KIEU TRUONG via Pexels
+AdvertisingCampaignSpain.jpg - Photo by Gregory via Pexels
+AdvertisingCampaignBrazil.jpg - Photo by Jonathan Borba via Pexels
+AdvertisingCampaignEngland.jpg - Photo by Neil via Pexels
 
 
 SOUNDS

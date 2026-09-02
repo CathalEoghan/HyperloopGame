@@ -230,6 +230,14 @@ import CarpetEmporium from '../assets/developments-thumb/QualityTropicalFruitImp
 import ItalianDeli from '../assets/developments-thumb/ItalianDeli.jpg'
 import AntiLitteringCampaign from '../assets/developments-thumb/AntiLitteringCampaign.jpg'
 import CostumeStore from '../assets/developments-thumb/CostumeStore.jpg'
+import PersonalStylingRetinue from '../assets/developments-thumb/PersonalStylingRetinue.jpg'
+import TaxiDepot from '../assets/developments-thumb/TaxiDepot.jpg'
+import FreePhoneChargingStations from '../assets/developments-thumb/FreePhoneChargingStations.jpg'
+import FlexibleNetworkContracts from '../assets/developments-thumb/FlexibleNetworkContracts.jpg'
+import AdvertisingCampaignSpain from '../assets/developments-thumb/AdvertisingCampaignSpain.jpg'
+import AdvertisingCampaignBrazil from '../assets/developments-thumb/AdvertisingCampaignBrazil.jpg'
+import AdvertisingCampaignEngland from '../assets/developments-thumb/AdvertisingCampaignEngland.jpg'
+import MariachiBar from '../assets/developments-thumb/MariachiBar.jpg'
 
 
 
@@ -466,6 +474,14 @@ const developmentImages = {
         "Anti-Littering Campaign": AntiLitteringCampaign,
         "Italian Deli": ItalianDeli,
         "Crime Prevention Campaign": CrimePreventionCampaign,
+        "AdvertisingCampaignEngland": AdvertisingCampaignEngland,
+        "AdvertisingCampaignBrazil": AdvertisingCampaignBrazil,
+        "AdvertisingCampaignSpain": AdvertisingCampaignSpain,
+        "Mariachi Bar": MariachiBar,
+        "Taxi Depot": TaxiDepot,
+        "Personal Styling Retinue": PersonalStylingRetinue,
+        "Flexible Network Contracts": FlexibleNetworkContracts,
+        "Free Phone Charging Stations": FreePhoneChargingStations,
 
 
 

@@ -80,7 +80,7 @@ import SaintPetersburg from '../assets/cities-thumb/SaintPetersburg.jpg'
 import Bordeaux from '../assets/cities-thumb/Bordeaux.jpg'
 import Copenhagen from '../assets/cities-thumb/Copenhagen.jpg'
 import Warsaw from '../assets/cities-thumb/Warsaw.jpg'
-import Gdańsk from "../assets/cities-thumb/Gdańsk.jpg";import Karachi from '../assets/cities-thumb/Karachi.jpg'
+import Gdańsk from "../assets/cities-thumb/Gdańsk.jpg"; import Karachi from '../assets/cities-thumb/Karachi.jpg'
 import Dhaka from '../assets/cities-thumb/Dhaka.jpg'
 import Honolulu from '../assets/cities-thumb/Honolulu.jpg'
 import GuatemalaCity from '../assets/cities-thumb/GuatemalaCity.jpg'
@@ -229,7 +229,13 @@ import Adelaide from '../assets/cities-thumb/Adelaide.jpg'
 import Baku from '../assets/cities-thumb/Baku.jpg'
 import Chihuahua from '../assets/cities-thumb/Chihuahua.jpg'
 import Kabul from '../assets/cities-thumb/Kabul.jpg'
-
+import Monterrey from '../assets/cities-thumb/Monterrey.jpg'
+import Abuja from '../assets/cities-thumb/Abuja.jpg'
+import Montpellier from '../assets/cities-thumb/Montpellier.jpg'
+import Maputo from '../assets/cities-thumb/Maputo.jpg'
+import BeloHorizonte from '../assets/cities-thumb/BeloHorizonte.jpg'
+import Recife from '../assets/cities-thumb/Recife.jpg'
+import Birmingham from '../assets/cities-thumb/Birmingham.jpg'
 
 const cityImages = {
     London: London,
@@ -322,7 +328,7 @@ const cityImages = {
     "Dar Es Salaam": DarEsSalaam,
     Harare: Harare,
     Tunis: Tunis,
-    "São Paulo": SãoPaulo, 
+    "São Paulo": SãoPaulo,
     Bamako: Bamako,
     Kampala: Kampala,
     Lima: Lima,
@@ -453,16 +459,23 @@ const cityImages = {
     Tbilisi: Tbilisi,
     Nicosia: Nicosia,
     Yangon: Yangon,
-     "San José": SanJosé,
-            "Santo Domingo": SantoDomingo,
-            Wrocław: Wrocław,
-            Hobart: Hobart,
-            Kabul: Kabul,
-                    Genoa: Genoa,
-                    Chihuahua: Chihuahua,
-                    Tianjin: Tianjin,
-                    Adelaide: Adelaide,
-                    Baku: Baku,
+    "San José": SanJosé,
+    "Santo Domingo": SantoDomingo,
+    Wrocław: Wrocław,
+    Hobart: Hobart,
+    Kabul: Kabul,
+    Genoa: Genoa,
+    Chihuahua: Chihuahua,
+    Tianjin: Tianjin,
+    Adelaide: Adelaide,
+    Baku: Baku,
+    "Belo Horizonte": BeloHorizonte,
+    Recife: Recife,
+    Birmingham: Birmingham,
+    Monterrey: Monterrey,
+    Maputo: Maputo,
+    Abuja: Abuja,
+    Montpellier: Montpellier,
 
 
 }
