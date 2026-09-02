@@ -69,6 +69,10 @@ import { springVacationPackages } from './SpringVacationPackages.js'
 import { qualityTropicalFruitImports } from './QualityTropicalFruitImports.js'
 import { antiLitteringCampaign } from './AntiLitteringCampaign.js'
 import { crimePreventionCampaign } from './CrimePreventionCampaign.js'
+import { personalStylingRetinue } from './PersonalStylingRetinue.js'
+import { taxiDepot } from './TaxiDepot.js'
+import { freePhoneChargingStations } from './FreePhoneChargingStations.js'
+import { flexibleNetworkContracts } from './FlexibleNetworkContracts.js'
 
 
 export const allUpgrades = [
@@ -141,5 +145,9 @@ export const allUpgrades = [
     superiorCoffeeImports,
     antiLitteringCampaign,
     crimePreventionCampaign,
+    flexibleNetworkContracts,
+    freePhoneChargingStations,
+    taxiDepot,
+    personalStylingRetinue,
 
 ]

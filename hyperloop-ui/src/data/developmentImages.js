@@ -229,6 +229,16 @@ const developmentImages = {
     "Anti-Littering Campaign": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AntiLitteringCampaign.jpg",
     "Italian Deli": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ItalianDeli.jpg",
     "Crime Prevention Campaign": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CrimePreventionCampaign.jpg",
+    "Taxi Depot": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TaxiDepot.jpg",
+    "Mariachi Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/MariachiBar.jpg",
+    "Personal Styling Retinue": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PersonalStylingRetinue.jpg",
+    "Free Phone Charging Stations": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FreePhoneChargingStations.jpg",
+    "Flexible Network Contracts": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FlexibleNetworkContracts.jpg",
+
+
+
+
+
 }
 
 export default developmentImages

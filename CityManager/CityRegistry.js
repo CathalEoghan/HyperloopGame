@@ -230,6 +230,11 @@ import { Baku } from './Baku.js'
 import { Genoa } from './Genoa.js'
 import { Chihuahua } from './Chihuahua.js'
 import { Tianjin } from './Tianjin.js'
+import { Guadalajara } from './Guadalajara.js'
+import { Monterrey } from './Monterrey.js'
+import { Abuja } from './Abuja.js'
+import { Montpellier } from './Montpellier.js'
+import { Maputo } from './Maputo.js'
 
 
 
@@ -464,7 +469,12 @@ export const allCities = [
     Chihuahua,
     Baku,
     Kabul,
-    Genoa
+    Genoa,
+    Montpellier,
+    Abuja,
+    Guadalajara,
+    Maputo,
+    Monterrey,
 
 
 ]

@@ -229,6 +229,13 @@ const cityImages = {
     "Yangon": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Yangon.jpg",
     "Zagreb": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Zagreb.jpg",
     "Zurich": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Zurich.jpg",
+    "Abuja": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Abuja.jpg",
+    "Monterrey": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Monterrey.jpg",
+    "Guadalajara": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Guadalajara.jpg",
+    "Montpellier": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Montpellier.jpg",
+    "Maputo": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Maputo.jpg",
+
+
 }
 
 export default cityImages

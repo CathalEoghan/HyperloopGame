@@ -161,6 +161,7 @@ import { caviarBar } from './CaviarBar.js'
 import { italianDeli } from './ItalianDeli.js'
 import { costumeStore } from './CostumeStore.js'
 import { carpetEmporium } from './CarpetEmporium.js'
+import { mariachiBar } from './MariachiBar.js'
 
 
 export const allDevelopments = [
@@ -326,5 +327,6 @@ export const allDevelopments = [
     costumeStore,
     italianDeli,
     carpetEmporium,
+    mariachiBar,
 
 ]

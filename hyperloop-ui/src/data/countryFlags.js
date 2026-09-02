@@ -118,6 +118,7 @@ const countryFlags = {
     "Yemen": "ye",
     "Afghanistan": "af",
     "Azerbaijan": "az",
+    "Mozambique": "mz",
     
 
 
