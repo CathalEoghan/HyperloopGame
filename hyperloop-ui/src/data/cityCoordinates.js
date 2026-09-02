@@ -230,6 +230,15 @@ const cityCoordinates = {
 "Genoa":      { lat:  44.4056, lng:   8.9463 },
 "Tianjin":    { lat:  39.3434, lng: 117.3616 },
 "Kabul": { lat: 34.5253, lng: 69.1783 },
+"Abuja":         { lat:  9.0765, lng:  7.3986 },
+"Belo Horizonte":{ lat: -19.9167, lng: -43.9345 },
+"Birmingham":    { lat:  52.4862, lng:  -1.8904 },
+"Guadalajara":   { lat:  20.6597, lng: -103.3496 },
+"Maputo":        { lat: -25.9692, lng:   32.5732 },
+"Monterrey":     { lat:  25.6866, lng: -100.3161 },
+"Montpellier":   { lat:  43.6108, lng:   3.8767 },
+"Recife":        { lat:  -8.0539, lng: -34.8811 },
+"Sana'a":        { lat:  15.3694, lng:  44.1910 },
 };
 
 export default cityCoordinates;

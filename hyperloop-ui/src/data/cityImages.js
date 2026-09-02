@@ -234,7 +234,7 @@ const cityImages = {
     "Guadalajara": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Guadalajara.jpg",
     "Montpellier": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Montpellier.jpg",
     "Maputo": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Maputo.jpg",
-    "BeloHorizonte": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BeloHorizonte.jpg",
+    "Belo Horizonte": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BeloHorizonte.jpg",
     "Recife": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Recife.jpg",
     "Birmingham": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Birmingham.jpg",
 

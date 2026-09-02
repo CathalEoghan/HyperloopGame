@@ -235,7 +235,7 @@ import { Monterrey } from './Monterrey.js'
 import { Abuja } from './Abuja.js'
 import { Montpellier } from './Montpellier.js'
 import { Maputo } from './Maputo.js'
-import { BeloHorizonte } from './Montpellier.js'
+import { BeloHorizonte } from './BeloHorizonte.js'
 import { Recife } from './Recife.js'
 import { Birmingham } from './Birmingham.js'
 

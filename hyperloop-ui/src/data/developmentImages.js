@@ -237,6 +237,7 @@ const developmentImages = {
     "Advertising Campaign: Spain": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignSpain.jpg",
     "Advertising Campaign: Brazil": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignBrazil.jpg",
     "Advertising Campaign: England": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignEngland.jpg",
+    "Coffee Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CoffeeShop.jpg",
 
 
 

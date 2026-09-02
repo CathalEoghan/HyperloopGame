@@ -73,9 +73,9 @@ import { personalStylingRetinue } from './PersonalStylingRetinue.js'
 import { taxiDepot } from './TaxiDepot.js'
 import { freePhoneChargingStations } from './FreePhoneChargingStations.js'
 import { flexibleNetworkContracts } from './FlexibleNetworkContracts.js'
-import { advertisingCampaignSpain } from './AdvertisingCampaignSpain'
+import { advertisingCampaignSpain } from './AdvertisingCampaignSpain.js'
 import { advertisingCampaignBrazil } from './AdvertisingCampaignBrazil'
-import { advertisingCampaignEngland } from './AdvertisingCampaignEngland'
+import { advertisingCampaignEngland } from './AdvertisingCampaignEngland.js'
 
 
 export const allUpgrades = [

@@ -4,7 +4,7 @@ import { City } from "./City.js";
 import { carpetEmporium } from "../DevelopmentManager/CarpetEmporium.js";
 
 export const Kabul = new City(
-    "Johannesburg",
+    "Kabul",
     5300000,
     [carpetEmporium],
     "Afghanistan",
