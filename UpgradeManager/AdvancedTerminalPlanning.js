@@ -5,7 +5,8 @@ import { Upgrade } from "./Upgrade.js";
 export const advancedTerminalPlanning = new Upgrade(
     "Advanced Terminal Planning",
     155000,
+    "Service",
     "Infrastructure",
-    "placeholder",
-    0.05
+    "freeRerollOnRankUp",
+    1
 );

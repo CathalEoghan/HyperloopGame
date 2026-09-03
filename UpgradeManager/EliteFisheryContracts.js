@@ -7,5 +7,5 @@ export const eliteFisheryContracts = new Upgrade(
     145000,
     "Food",
     "foodIncome",
-    0.10
+    0.2
 );

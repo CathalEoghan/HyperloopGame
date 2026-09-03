@@ -6,6 +6,6 @@ export const embassyHotlineCentre = new Upgrade(
     "Embassy Hotline Centre",
     145000,
     "Service",
-    "foodIncome",
-    0.10
+    "workClickBonus",
+    0.1
 );

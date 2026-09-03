@@ -6,6 +6,6 @@ export const freePhoneChargingStations = new Upgrade(
     "Free Phone Charging Stations",
     64500,
     "Service",
-    "placeholder",
-    0.10
+    "bonusDurationExtension",
+    0.15
 );

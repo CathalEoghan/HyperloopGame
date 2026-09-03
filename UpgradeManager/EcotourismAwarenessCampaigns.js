@@ -6,6 +6,6 @@ export const ecotourismAwarenessCampaigns = new Upgrade(
     "Ecotourism Awareness Campaigns",
     112500,
     "Service",
-    "placeholder",
-    0.05
+    "workRepChanceDouble",
+    1
 );

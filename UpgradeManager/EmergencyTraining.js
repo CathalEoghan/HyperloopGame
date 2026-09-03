@@ -6,6 +6,6 @@ export const emergencyTraining = new Upgrade(
     "Emergency Training",
     125000,
     "Service",
-    "placeholder",
-    0.10
+    "negativeEventReduction",
+    0.2
 );

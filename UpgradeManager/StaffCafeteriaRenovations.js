@@ -6,6 +6,6 @@ export const staffCafeteriaRenovations = new Upgrade(
     "Staff Cafeteria Renovations",
     112500,
     "Infrastructure",
-    "developmentUpgradeDiscount",
-    25
+    "negativeEventReduction",
+    0.2
 );

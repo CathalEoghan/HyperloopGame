@@ -6,6 +6,6 @@ export const indoorGarden = new Upgrade(
     "Indoor Garden",
     130000,
     "Recreation",
-    "placeholder",
-    0
+    "developmentBoost",
+    0.1
 );

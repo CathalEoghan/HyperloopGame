@@ -149,11 +149,11 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     return sourceCity ? <p><em>Unlocked with: <strong>{sourceCity.name}</strong></em></p> : null
                                 })()}
                                 <button className="constructionButton" onClick={() => {
-                                    const cost = selectedDevelopment.cost
+                                    const cost = economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost)
                                     if (balance < cost) { playClickSound2(); setShowNoFunds(true); setSelectedDevelopment(null) }
                                     else { playClickSound2(); playConstructionSound(); constructionManager.startDevelopmentConstruction(selectedDevelopment); onSave(); setSelectedDevelopment(null) }
                                 }}>
-                                    Build (£{selectedDevelopment.cost.toLocaleString()})
+                                    Build (£{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString()})
                                 </button>
                                 <button className="closeButton" onClick={() => { playClickSound2(); setSelectedDevelopment(null) }}>Close</button>
                             </>

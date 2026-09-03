@@ -236,6 +236,8 @@ import Maputo from '../assets/cities-thumb/Maputo.jpg'
 import BeloHorizonte from '../assets/cities-thumb/BeloHorizonte.jpg'
 import Recife from '../assets/cities-thumb/Recife.jpg'
 import Birmingham from '../assets/cities-thumb/Birmingham.jpg'
+import Guadalajara from '../assets/cities-thumb/Guadalajara.jpg'
+
 
 const cityImages = {
     London: London,
@@ -476,6 +478,7 @@ const cityImages = {
     Maputo: Maputo,
     Abuja: Abuja,
     Montpellier: Montpellier,
+    Guadalajara: Guadalajara,
 
 
 }

@@ -7,6 +7,6 @@ export const energyEfficiencyImprovements = new Upgrade(
     "Energy Efficiency Improvements",
     145000,
     "Infrastructure",
-    "placeholder",
-    0.10
+    "offlineCapExtension",
+    86400
 );

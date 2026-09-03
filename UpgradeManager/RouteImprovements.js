@@ -6,6 +6,6 @@ export const routeImprovements = new Upgrade(
     "Route Improvements",
     95000,
     "Infrastructure",
-    "placeholder",
-    0.10
+    "workClickBonus",
+    0.1
 )

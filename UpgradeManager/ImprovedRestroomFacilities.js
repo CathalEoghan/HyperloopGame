@@ -6,5 +6,6 @@ export const improvedRestroomFacilities = new Upgrade(
     "Improved Restroom Facilities",
     72500,
     "Infrastructure",
-    10
+    "connectionBoost",
+    0.1
 );

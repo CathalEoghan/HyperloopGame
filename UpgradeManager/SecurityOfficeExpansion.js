@@ -6,7 +6,7 @@ export const securityOfficeExpansion = new Upgrade(
     "Security Office Expansion",
     130000,
     "Infrastructure",
-    "placeholder",
-    0.05
+    "workClickBonus",
+    0.1
 )
     

@@ -6,6 +6,6 @@ export const billboardDesignOverhauls = new Upgrade(
     "Billboard Design Overhauls",
     55000,
     "Infrastructure",
-    "nonContinentPopulationBoost",
-    0.15
+    "connectionBoost",
+    0.1
 );

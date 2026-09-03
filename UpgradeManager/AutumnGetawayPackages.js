@@ -6,6 +6,6 @@ export const autumnGetawayPackages = new Upgrade(
     "Autumn Getaway Packages",
     90000,
     "Service",
-    "placeholder",
-    0.10
+    "seasonBoost",
+    0.25
 );

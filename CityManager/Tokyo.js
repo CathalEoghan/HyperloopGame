@@ -11,5 +11,7 @@ export const Tokyo = new City(
     "Asia",
     3,
     "Tokyo's Shinjuku Station has nabbed the Guinness World Record as the busiest train station on Earth, handling up to 3.5 million passengers daily. It operates like a small city with over 200 exits.",
-    false
+    false,
+    true,
+    0.12
 );

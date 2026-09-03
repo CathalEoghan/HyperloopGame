@@ -1,7 +1,7 @@
 
 // Birmingham
 import { City } from "./City.js";
-import { advertisingCampaignEngland } from "../UpgradeManager/advertisingCampaignEngland.js";
+import { advertisingCampaignEngland } from "../UpgradeManager/AdvertisingCampaignEngland.js";
 
 export const Birmingham = new City(
     "Birmingham",

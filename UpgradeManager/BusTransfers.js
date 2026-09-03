@@ -6,6 +6,6 @@ export const busTransfers = new Upgrade(
     "Bus Transfers",
     155000,
     "Service",
-    "shoppingFoodRecreationBoost",
-    0.05
+    "localCountryBoost",
+    0
 );

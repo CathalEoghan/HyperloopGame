@@ -6,6 +6,6 @@ export const securityStreamlining = new Upgrade(
     "Security Streamlining",
     97000,
     "Infrastructure",
-    "placeholder",
-    0.10
+    "recreationIncome",
+    0.2
 )

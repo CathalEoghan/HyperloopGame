@@ -6,6 +6,6 @@ export const premierWineImports = new Upgrade(
     "Premier Wine Imports",
     127500,
     "Service",
-    "placeholder",
-    0.10
+    "foodIncome",
+    0.2
 )

@@ -1,11 +1,12 @@
 
+// Soda Machines
 import { Upgrade } from '../UpgradeManager/Upgrade.js'
 
 export const sodaMachines = new Upgrade(
     "Soda Machines",
-    70000,
+    71000,
     "Food",
-    "populationIncome",
-    0.05
+    "developmentBoost",
+    0.1
 )
     

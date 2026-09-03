@@ -6,6 +6,6 @@ export const taxiDepot = new Upgrade(
     "Taxi Depot",
     203000,
     "Service",
-    "southernHemisphereCitiesBoost",
-    25
+    "bonusDurationExtension",
+    0.15
 );

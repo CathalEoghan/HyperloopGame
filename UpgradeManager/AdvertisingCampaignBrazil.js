@@ -6,5 +6,7 @@ export const advertisingCampaignBrazil = new Upgrade(
     "Advertising Campaign: Brazil",
     87000,
     "Service",
-    17.5
+    "countryAdvertisingBoost",
+    0.25,
+    "Brazil"
 );

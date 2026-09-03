@@ -6,6 +6,6 @@ export const superiorCoffeeImports = new Upgrade(
     "Superior Coffee Imports",
     79000,
     "Service",
-    "southernHemisphereCitiesBoost",
-    25
+    "foodIncome",
+    0.2
 );

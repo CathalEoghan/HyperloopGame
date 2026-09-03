@@ -6,7 +6,7 @@ export const shippingPort = new Upgrade(
     "Shipping Port",
     150000,
     "Infrastructure",
-    "placeholder",
-    0.05
+    "workClickBonus",
+    0.1
 )
     

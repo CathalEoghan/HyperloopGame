@@ -30,7 +30,6 @@ import FarewellModal from "./components/FarewellModal"
 import OnboardingModal from "./components/OnboardingModal"
 import "./App.css";
 
-const OFFLINE_CAP_SECONDS = 172800;
 const OFFLINE_RATE = 1.0;
 
 function App() {
@@ -45,7 +44,7 @@ function App() {
   const [offlineData] = useState(() => {
     const hiddenAt = localStorage.getItem('hyperloop_hidden_at')
     if (!hiddenAt) return null;
-    const offlineSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, OFFLINE_CAP_SECONDS);
+    const offlineSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
     localStorage.removeItem('hyperloop_hidden_at');
     if (offlineSeconds < 60) return null;
     const incomePerSecond = economyManager.calculateDailyIncome();
@@ -76,6 +75,7 @@ function App() {
   const [activeDelay, setActiveDelay] = useState(null);
   const [devRevealQueue, setDevRevealQueue] = useState([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [hasFreeReroll, setHasFreeReroll] = useState(false);
 
   const prevUnlockedDevCount = useRef(progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length);
   const triggeredDepartures = useRef(new Set());
@@ -86,8 +86,9 @@ function App() {
   const prevDevCount = useRef(progressionManager.purchasedDevelopments.length);
   const prevRank = useRef(rankManager.rank);
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
+  const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
 
-  const workEarnings = 100;
+  const workEarnings = economyManager.calculateWorkClickEarnings(100);
 
   const triggerSave = (farewells) => {
     saveGame(progressionManager, rankManager, terminalName, farewells ?? farewellsRef.current);
@@ -238,7 +239,7 @@ function App() {
         reputation={reputation}
         onWork={() => {
           progressionManager.addCash(workEarnings);
-          if (Math.random() < 0.001) {
+          if (Math.random() < economyManager.getWorkRepChance()) {
             progressionManager.addReputation(5);
             playReputationWorkBonusSound();
           }
@@ -361,15 +362,25 @@ function App() {
       {!showOfflineModal && activeDelay && (
         <DelayModal
           delay={activeDelay}
-          onCompensate={() => { progressionManager.addCash(-activeDelay.compensation); setActiveDelay(null); }}
-          onDismiss={() => { progressionManager.addReputation(-10); setActiveDelay(null); }}
+          economyManager={economyManager}
+          onCompensate={(cost) => { progressionManager.addCash(-cost); setActiveDelay(null); }}
+          onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); }}
         />
       )}
       {!showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
         <FarewellModal
           departure={activeDeparture}
-          onFarewell={() => {
-            progressionManager.addReputation(5);
+          economyManager={economyManager}
+          onFarewell={(repGain) => {
+            const today = new Date().toDateString();
+            const isFirstToday = lastFarewellDateRef.current !== today;
+            const hasDoubleFirst = economyManager.hasUpgrade('firstFarewellOfDayDouble');
+            const finalRep = (isFirstToday && hasDoubleFirst) ? (repGain ?? 5) * 2 : (repGain ?? 5);
+            if (isFirstToday) {
+              lastFarewellDateRef.current = today;
+              localStorage.setItem('hyperloop_last_farewell_date', today);
+            }
+            progressionManager.addReputation(finalRep);
             const newCount = farewellsRef.current + 1;
             farewellsRef.current = newCount;
             setFarewellsGiven(newCount);
@@ -383,6 +394,7 @@ function App() {
         <RankUpModal rank={rankSet} onClaim={() => {
           const newCity = progressionManager.getRandomUnlockedCity(allCities);
           if (newCity) { progressionManager.unlockCity(newCity); setClaimedCity(newCity); }
+          if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
           setPendingRankUps(prev => prev - 1);
         }} />
       )}
@@ -398,8 +410,10 @@ function App() {
           reputation={reputation}
           onClose={() => setClaimedCity(null)}
           onReroll={() => {
-            if (progressionManager.reputation < 15) return;
-            progressionManager.addReputation(-15);
+            const rerollCost = hasFreeReroll ? 0 : economyManager.getRerollRepCost(15);
+            if (progressionManager.reputation < rerollCost) return;
+            progressionManager.addReputation(-rerollCost);
+            setHasFreeReroll(false);
             progressionManager.removeUnlockedCity(claimedCity);
             const newCity = progressionManager.getRandomUnlockedCity(allCities);
             if (newCity) {

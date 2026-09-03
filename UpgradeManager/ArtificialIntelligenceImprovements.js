@@ -6,5 +6,6 @@ export const artificialIntelligenceImprovements = new Upgrade(
     "Artificial Intelligence Improvements",
     110000,
     "Infrastructure",
-    17.5
+    "negativeEventReduction",
+    0.2
 );

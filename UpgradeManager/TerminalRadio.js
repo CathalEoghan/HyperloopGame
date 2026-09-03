@@ -6,6 +6,6 @@ export const terminalRadio = new Upgrade(
     "Terminal Radio",
     125000,
     "Service",
-    "placeholder",
-    0.15
+    "shoppingIncome",
+    0.2
 )

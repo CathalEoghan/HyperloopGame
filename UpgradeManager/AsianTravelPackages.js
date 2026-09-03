@@ -6,5 +6,6 @@ export const asianTravelPackages = new Upgrade(
     "Asian Travel Packages",
     87500,
     "Service",
-    12.5
+    "continentBoost",
+    0.12
 );

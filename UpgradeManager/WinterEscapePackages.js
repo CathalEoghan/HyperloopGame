@@ -6,6 +6,6 @@ export const winterEscapePackages = new Upgrade(
     "Winter Escape Packages",
     109000,
     "Service",
-    "sameContinentBoost", 
-    0.10
+    "seasonBoost", 
+    0.25
 )

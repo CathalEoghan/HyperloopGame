@@ -6,6 +6,6 @@ export const enhancedAdvertisingStrategies = new Upgrade(
     "Enhanced Advertising Strategies",
     87500,
     "Infrastructure",
-    "placeholder",
-    0.10
+    "connectionBoost",
+    0.1
 );

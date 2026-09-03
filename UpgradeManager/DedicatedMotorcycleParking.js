@@ -6,6 +6,6 @@ export const dedicatedMotorcycleParking = new Upgrade(
     "Dedicated Motorcycle Parking",
     112500,
     "Service",
-    "placeholder",
-    0.05
+    "localCountryBoost",
+    0
 );

@@ -6,6 +6,6 @@ export const ferryTerminal = new Upgrade(
     "Ferry Terminal",
     132500,
     "Service",
-    "placeholder",
-    0.10
+    "continentExpansionBoost",
+    0.05
 );

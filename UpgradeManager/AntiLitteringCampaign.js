@@ -6,5 +6,6 @@ export const antiLitteringCampaign = new Upgrade(
     "Anti-Littering Campaign",
     67000,
     "Service",
-    17.5
+    "bonusDurationExtension",
+    0.15
 );

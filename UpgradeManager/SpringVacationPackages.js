@@ -6,6 +6,6 @@ export const springVacationPackages = new Upgrade(
     "Spring Vacation Packages",
     100500,
     "Service",
-    "southernHemisphereCitiesBoost",
-    25
+    "seasonBoost",
+    0.25
 );

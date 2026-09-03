@@ -6,6 +6,6 @@ export const exteriorBeautificationProject = new Upgrade(
     "Exterior Beautification Project",
     125000,
     "Infrastructure",
-    "Placeholder",
-    10
+    "bonusDurationExtension",
+    0.15
 );

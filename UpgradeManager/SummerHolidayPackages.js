@@ -6,6 +6,6 @@ export const summerHolidayPackages = new Upgrade(
     "Summer Holiday Packages",
     105000,
     "Service",
-    "summerHolidayPackages",
-    25
+    "seasonBoost",
+    0.25
 );

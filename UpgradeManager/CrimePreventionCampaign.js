@@ -6,6 +6,6 @@ export const crimePreventionCampaign = new Upgrade(
     "Crime Prevention Campaign",
     155000,
     "Service",
-    "shoppingFoodRecreationBoost",
-    0.05
+    "recreationIncome",
+    0.2
 );

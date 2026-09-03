@@ -6,6 +6,6 @@ export const localTours = new Upgrade(
     "Local Tours",
     115000,
     "Service",
-    "starterCityIncomeBoost",
+    "localCountryBoost",
     0
 );

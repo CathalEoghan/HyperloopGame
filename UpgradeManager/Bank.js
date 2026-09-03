@@ -1,4 +1,5 @@
 
+// Bank
 import { Upgrade } from '../UpgradeManager/Upgrade.js'
 
 export const bank = new Upgrade(
@@ -6,6 +7,6 @@ export const bank = new Upgrade(
     155000,
     "Service",
     "developmentDiscount",
-    0.10
+    0.15
 )
     

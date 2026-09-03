@@ -4,8 +4,8 @@ import { Upgrade } from "./Upgrade.js";
 
 export const temperatureRegulationEnhancements = new Upgrade(
     "Temperature Regulation Enhancements",
-    85000,
+    82000,
     "Infrastructure",
-    "summerHolidayPackages",
-    25
+    "recreationIncome",
+    0.2
 );

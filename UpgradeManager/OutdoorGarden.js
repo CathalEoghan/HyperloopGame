@@ -6,6 +6,6 @@ export const outdoorGarden = new Upgrade(
     "Outdoor Garden",
     95000,
     "Recreation",
-    "shoppingIncome",
-    0.10
+    "developmentBoost",
+    0.1
 )

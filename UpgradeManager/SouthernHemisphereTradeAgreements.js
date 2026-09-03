@@ -6,6 +6,6 @@ export const southernHemisphereTradeAgreements = new Upgrade(
     "Southern Hemisphere Trade Agreements",
     135000,
     "Infrastructure",
-    "southernHemisphereCitiesBoost",
-    25
+    "southernHemisphereBoost",
+    0.25
 );

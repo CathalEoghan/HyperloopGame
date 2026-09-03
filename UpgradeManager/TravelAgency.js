@@ -6,6 +6,6 @@ export const travelAgency = new Upgrade(
     "Travel Agency",
     122500,
     "Service",
-    "placeholder",
-    0.15
+    "connectionBoost",
+    0.1
 )

@@ -6,5 +6,6 @@ export const expeditedShippingLogistics = new Upgrade(
     "Expedited Shipping Logistics",
     95000,
     "Service",
-    10
+    "workClickBonus",
+    0.1
 );

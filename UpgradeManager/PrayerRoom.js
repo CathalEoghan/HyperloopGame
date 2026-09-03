@@ -6,5 +6,6 @@ export const prayerRoom = new Upgrade(
     "Prayer Room",
     94500,
     "Service",
-    22.5
+    "delayCompensationReduction",
+    0.25
 );

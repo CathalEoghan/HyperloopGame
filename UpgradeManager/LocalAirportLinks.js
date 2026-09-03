@@ -6,6 +6,6 @@ export const localAirportLinks = new Upgrade(
     "Local Airport Links",
     172500,
     "Service",
-    "placeholder",
-    0
+    "continentExpansionBoost",
+    0.05
 );

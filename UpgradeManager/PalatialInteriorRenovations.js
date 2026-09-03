@@ -1,11 +1,11 @@
 
-// North American Travel Packages
+// Palatial Interior Renovations
 import { Upgrade } from '../UpgradeManager/Upgrade.js'
 
 export const palatialInteriorRenovations = new Upgrade(
     "Palatial Interior Renovations",
     149000,
     "Infrastructure",
-    "placeholder",
-    12.5
+    "bonusDurationExtension",
+    0.15
 );

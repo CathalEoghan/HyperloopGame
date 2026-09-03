@@ -6,7 +6,7 @@ export const warehouseExpansionProjects = new Upgrade(
     "Warehouse Expansion Projects",
     155000,
     "Infrastructure",
-    "placeholder",
-    0.05
+    "shoppingIncome",
+    0.2
 )
     

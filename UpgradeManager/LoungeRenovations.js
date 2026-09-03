@@ -6,5 +6,6 @@ export const loungeRenovations = new Upgrade(
     "Lounge Renovations",
     117500,
     "Infrastructure",
-    22.5
+    "farewellWindowExtension",
+    5
 );

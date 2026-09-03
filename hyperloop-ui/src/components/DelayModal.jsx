@@ -1,13 +1,15 @@
 import { useEffect } from 'react'
+import { playClickSound2 } from '../utils/sound.js'
 import './DelayModal.css'
 
-function DelayModal({ delay, onCompensate, onDismiss }) {
-    useEffect(() => {
-        try {
-            const audio = new Audio('/src/assets/badNews.mp3')
-            audio.play()
-        } catch(e) {}
-    }, [])
+function DelayModal({ delay, onCompensate, onDismiss, economyManager }) {
+    const adjustedCompensation = economyManager
+        ? economyManager.calculateDelayCompensation(delay.compensation)
+        : delay.compensation
+
+    const adjustedRepCost = economyManager
+        ? economyManager.calculateDelayRepCost(10)
+        : 10
 
     return (
         <div className="delay-overlay">
@@ -24,11 +26,11 @@ function DelayModal({ delay, onCompensate, onDismiss }) {
                     Passengers are angry and some are demanding compensation.
                 </p>
                 <div className="delay-buttons">
-                    <button className="delay-btn-compensate" onClick={onCompensate}>
-                        Issue compensation (£{delay.compensation.toLocaleString()})
+                    <button className="delay-btn-compensate" onClick={() => { playClickSound2(); onCompensate(adjustedCompensation) }}>
+                        Issue compensation (£{adjustedCompensation.toLocaleString()})
                     </button>
-                    <button className="delay-btn-dismiss" onClick={onDismiss}>
-                        Refuse compensation (-10 🏆)
+                    <button className="delay-btn-dismiss" onClick={() => { playClickSound2(); onDismiss(adjustedRepCost) }}>
+                        Refuse compensation (-{adjustedRepCost} 🏆)
                     </button>
                 </div>
             </div>

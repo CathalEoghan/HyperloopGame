@@ -11,5 +11,7 @@ export const NewYork = new City(
     "North America",
     3,
     "Spanning 843 acres in the heart of Manhattan, New York City's Central Park is actually larger than the entire country of Monaco.",
-    false
+    false,
+    true,
+    0.03
 );

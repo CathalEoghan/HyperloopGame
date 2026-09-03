@@ -6,6 +6,6 @@ export const qualityTropicalFruitImports = new Upgrade(
     "Quality Tropical Fruit Imports",
     97500,
     "Service",
-    "placeholder",
-    0.10
+    "foodIncome",
+    0.2
 )

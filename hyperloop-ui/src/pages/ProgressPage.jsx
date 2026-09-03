@@ -77,7 +77,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const mostProfitableDev = revenueDevs.length ? revenueDevs.reduce((best, d) => d.revenue > best.revenue ? d : best) : null
     const leastProfitableDev = revenueDevs.length ? revenueDevs.reduce((worst, d) => d.revenue < worst.revenue ? d : worst) : null
 
-    const stats = [
+    const generalStats = [
         { label: 'Terminal age', value: terminalAge() },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
         { label: 'Total revenue', value: `£${totalRevenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day` },
@@ -88,21 +88,69 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Least profitable development', value: leastProfitableDev ? `${leastProfitableDev.name} — £${leastProfitableDev.revenue.toLocaleString()}/day` : '—' },
     ]
 
+    const getUpgradeStats = () => {
+        const upgrades = purchasedUpgrades || []
+        const sum = (type) => upgrades.filter(u => u.effectType === type).reduce((acc, u) => acc + u.effectValue, 0)
+        const count = (type) => upgrades.filter(u => u.effectType === type).length
+        const has = (type) => upgrades.some(u => u.effectType === type)
+
+        const now = new Date()
+        const month = now.getMonth()
+        const seasons = {
+            'Spring': [2, 3, 4], 'Summer': [5, 6, 7],
+            'Autumn': [8, 9, 10], 'Winter': [11, 0, 1]
+        }
+        const currentSeason = Object.entries(seasons).find(([, months]) => months.includes(month))?.[0]
+        const seasonActive = upgrades.some(u => u.effectType === 'seasonBoost' && u.name.toLowerCase().includes(currentSeason?.toLowerCase()))
+
+        return [
+            { label: 'Food Category Bonus',         value: sum('foodIncome') > 0 ? `+${Math.round(sum('foodIncome') * 100)}%` : '—' },
+            { label: 'Recreation Category Bonus',   value: sum('recreationIncome') > 0 ? `+${Math.round(sum('recreationIncome') * 100)}%` : '—' },
+            { label: 'Shopping Category Bonus',     value: sum('shoppingIncome') > 0 ? `+${Math.round(sum('shoppingIncome') * 100)}%` : '—' },
+            { label: 'Service Category Bonus',      value: sum('serviceIncome') > 0 ? `+${Math.round(sum('serviceIncome') * 100)}%` : '—' },
+            { label: 'All Developments Bonus',      value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
+            { label: 'Connection Earnings Bonus',   value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
+            { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? `+£${count('workClickBonus') * 100}/click` : '—' },
+            { label: 'Farewell Window Extension',   value: count('farewellWindowExtension') > 0 ? `+${count('farewellWindowExtension') * 5} mins` : '—' },
+            { label: 'Farewell Rep Bonus',          value: has('farewellRepDoubled') ? '×2' : '—' },
+            { label: 'Offline Earnings Cap',        value: `${48 + count('offlineCapExtension') * 24}h` },
+            { label: 'Dev Construction Discount',   value: sum('developmentDiscount') > 0 ? `-${Math.round(sum('developmentDiscount') * 100)}%` : '—' },
+            { label: 'Delay Compensation Cut',      value: sum('delayCompensationReduction') > 0 ? `-${Math.round(sum('delayCompensationReduction') * 100)}%` : '—' },
+            { label: 'Seasonal Boost',              value: seasonActive ? `+25% (${currentSeason})` : '—' },
+            { label: 'Continent Expansion Bonus',   value: sum('continentExpansionBoost') > 0 ? `+${Math.round(sum('continentExpansionBoost') * 100)}% per continent` : '—' },
+            { label: 'Country Expansion Bonus',     value: sum('countryExpansionBoost') > 0 ? `+${(sum('countryExpansionBoost') * 100).toFixed(1)}% per country` : '—' },
+            { label: 'Terminal Age Bonus',          value: sum('terminalAgeBoost') > 0 ? `+${Math.round(sum('terminalAgeBoost') * 100)}%/day` : '—' },
+        ]
+    }
+
+    const upgradeStats = getUpgradeStats()
     const cityProgress = (purchasedCities.length / allCities.length) * 100
     const countryProgress = (purchasedCountries.size / sortedCountries.length) * 100
 
     return (
         <div className="progress-page">
+
+            <h2 className="progress-section-header">General Stats</h2>
             <div className="progress-stats">
-                {stats.map(({ label, value }) => (
-    <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
-        <span className="stat-label">{label}</span>
-        <span className="stat-value">{value}</span>
-    </div>
-))}
+                {generalStats.map(({ label, value }) => (
+                    <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
+                        <span className="stat-label">{label}</span>
+                        <span className="stat-value">{value}</span>
+                    </div>
+                ))}
             </div>
 
-            <h2 className="progress-section-header">
+            <h2 className="progress-section-header" style={{ marginTop: '24px' }}>Upgrade Stats</h2>
+            <div className="progress-stats">
+                {upgradeStats.map(({ label, value }) => (
+                    <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
+                        <span className="stat-label">{label}</span>
+                        <span className="stat-value">{value}</span>
+                    </div>
+                ))}
+            </div>
+
+            <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
                 Countries collected
                 <span className="progress-fraction">{purchasedCountries.size} / {sortedCountries.length}</span>
             </h2>

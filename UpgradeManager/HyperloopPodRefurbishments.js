@@ -6,5 +6,6 @@ export const hyperloopPodRefurbishments = new Upgrade(
     "Hyperloop Pod Refurbishments",
     105000,
     "Infrastructure",
-    10
+    "farewellRepDoubled",
+    1
 );
