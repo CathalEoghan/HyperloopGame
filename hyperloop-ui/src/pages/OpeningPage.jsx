@@ -20,7 +20,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
         return (
             <div className="opening-background">
                 <div className="opening-card">
-                    <div className="opening-logo">⚡ HYPERLOOP CENTRAL</div>
+                    <div className="opening-logo">⚡ HYPERLOOP EMPIRE</div>
                     <h1 className="opening-welcome">Welcome.</h1>
                     <p className="opening-tagline">
                         You're in charge of the world's first hyperloop network.<br />

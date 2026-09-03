@@ -1,0 +1,66 @@
+.event-modal {
+    background: white;
+    border: 2px solid black;
+    border-radius: 12px;
+    padding: 28px 32px;
+    width: 420px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.event-positive { border-color: #27ae60; }
+.event-negative { border-color: #c0392b; }
+
+.event-type-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    font-weight: bold;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+}
+
+.event-positive .event-type-label { color: #27ae60; }
+.event-negative .event-type-label { color: #c0392b; }
+
+.event-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    color: #111;
+    margin: 0 0 12px;
+}
+
+.event-description {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0 0 20px;
+}
+
+.event-effect-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-bottom: 20px;
+}
+
+.event-multiplier {
+    font-family: 'Courier New', monospace;
+    font-size: 1.4rem;
+    font-weight: bold;
+}
+
+.event-positive .event-multiplier { color: #27ae60; }
+.event-negative .event-multiplier { color: #c0392b; }
+
+.event-effect-text {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+}

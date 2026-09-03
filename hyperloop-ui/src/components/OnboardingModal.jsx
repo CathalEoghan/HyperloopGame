@@ -5,7 +5,7 @@ function OnboardingModal({ onDismiss }) {
     return (
         <div className="modal-overlay">
             <div className="modal onboarding-modal">
-                <div className="onboarding-logo">⚡ HYPERLOOP CENTRAL</div>
+                <div className="onboarding-logo">⚡ HYPERLOOP EMPIRE</div>
                 <h2 className="onboarding-title">Welcome!</h2>
                 <p className="onboarding-intro">
                     You're now the manager of the world's first <strong>hyperloop terminal</strong>.

@@ -43,7 +43,7 @@ function ConstructionScreen({ city, isComplete, onEnter }) {
             className={`construction-screen ${fading ? 'construction-fading' : ''} ${isComplete ? 'construction-clickable' : ''}`}
             onClick={handleEnter}
         >
-            <div className="construction-logo">⚡ HYPERLOOP CENTRAL</div>
+            <div className="construction-logo">⚡ HYPERLOOP EMPIRE</div>
             <img
                 className={`construction-city-img ${isComplete ? 'construction-img-ready' : ''}`}
                 src={cityThumbnails[city.name] || cityImages[city.name]}

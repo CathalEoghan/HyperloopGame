@@ -12,6 +12,7 @@ const UPGRADE_MULTIPLIERS = [1.0, 1.15, 1.50, 2.00];
 export class EconomyManager {
     constructor(progressionManager) {
         this.progressionManager = progressionManager;
+        this.activeEvent = null;
     }
 
     getUpgradeSum(effectType) {
@@ -129,7 +130,11 @@ export class EconomyManager {
     }
 
     calculateDailyIncome(coordinates = null) {
-        return (this.calculateDevelopmentIncome() + this.calculatePopulationIncome(coordinates)) / SECONDS_IN_A_DAY;
+        const base = (this.calculateDevelopmentIncome() + this.calculatePopulationIncome(coordinates)) / SECONDS_IN_A_DAY;
+        if (this.activeEvent?.effect.target === 'passive') {
+            return base * this.activeEvent.effect.multiplier;
+        }
+        return base;
     }
 
     calculateDiscountedBuildCost(baseCost) {
@@ -140,7 +145,11 @@ export class EconomyManager {
     calculateWorkClickEarnings(baseEarnings) {
         const bonus = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length * 100;
-        return baseEarnings + bonus;
+        const total = baseEarnings + bonus;
+        if (this.activeEvent?.effect.target === 'work') {
+            return Math.floor(total * this.activeEvent.effect.multiplier);
+        }
+        return total;
     }
 
     calculateOfflineCap() {

@@ -135,7 +135,7 @@ function LoadingScreen({ onComplete }) {
         >
             <div className="loading-content">
                 <div className="loading-logo">⚡</div>
-                <h1 className="loading-title">HYPERLOOP CENTRAL</h1>
+                <h1 className="loading-title">HYPERLOOP EMPIRE</h1>
                 <p className="loading-tagline">The world's first hyperloop network</p>
                 <div className="loading-bar-track">
                     <div className="loading-bar-fill" style={{ width: `${progress}%` }} />

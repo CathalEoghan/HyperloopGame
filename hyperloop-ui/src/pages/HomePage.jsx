@@ -42,6 +42,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
     const [globeReady, setGlobeReady] = useState(false)
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
+    const showOwnedRef = useRef(true)
 
     // Globe setup
     useEffect(() => {
@@ -247,7 +248,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
             camPos.copy(camera.position).normalize()
             sprites.forEach(sprite => {
                 const facingCamera = sprite.userData.surfaceNormal.dot(camPos) > 0.1
-                const hiddenByToggle = !showOwned && !sprite.userData.isPurchased
+                const hiddenByToggle = !showOwnedRef.current && !sprite.userData.isPurchased
                 sprite.visible = facingCamera && !hiddenByToggle
             })
             renderer.render(scene, camera)
@@ -275,14 +276,6 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
         }
     }, [purchasedCities, unlockedCities])
 
-    useEffect(() => {
-        spritesRef.current.forEach(sprite => {
-            if (!sprite.userData.isPurchased) {
-                sprite.material.opacity = showOwned ? 1 : 0
-            }
-        })
-    }, [showOwned])
-
     return (
         <div className="home-page">
             <div className="globe-top-info">
@@ -291,7 +284,12 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
             </div>
             <button
                 className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
-                onClick={() => setShowOwned(prev => !prev)}
+                onClick={() => {
+                    setShowOwned(prev => {
+                        showOwnedRef.current = !prev
+                        return !prev
+                    })
+                }}
             >
                 {showOwned ? '👁 All cities' : '👁 Owned only'}
             </button>

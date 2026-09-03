@@ -28,6 +28,8 @@ import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 
 import openingAudio from './assets/sounds/openingAudio.mp3'
 import FarewellModal from "./components/FarewellModal"
 import OnboardingModal from "./components/OnboardingModal"
+import EventModal from "./components/EventModal"
+import { EVENTS, getRandomEvent } from "./data/events.js"
 import "./App.css";
 
 const OFFLINE_RATE = 1.0;
@@ -57,7 +59,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(() => hasSave() && progressionManager.purchasedCities.length > 0);
   const [constructionReady, setConstructionReady] = useState(false);
   const [showOfflineModal, setShowOfflineModal] = useState(!!offlineData);
-  const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || 'Hyperloop Central');
+  const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || 'Hyperloop Empire');
   const [createdAt] = useState(() => savedData?.createdAt || Date.now());
   const [farewellsGiven, setFarewellsGiven] = useState(() => savedData?.farewellsGiven || 0);
   const [lastSaved, setLastSaved] = useState(() => savedData?.lastSaved || null);
@@ -76,6 +78,8 @@ function App() {
   const [devRevealQueue, setDevRevealQueue] = useState([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [hasFreeReroll, setHasFreeReroll] = useState(false);
+  const [activeEvent, setActiveEvent] = useState(null);
+  const activeEventRef = useRef(null);
 
   const prevUnlockedDevCount = useRef(progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length);
   const triggeredDepartures = useRef(new Set());
@@ -183,6 +187,23 @@ function App() {
           localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
           setActiveDelay({ name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation });
         }
+      }
+
+      // Sync active event to EconomyManager
+      economyManager.activeEvent = activeEventRef.current;
+
+      // Random event trigger (~every 20-40 mins on average)
+      if (Math.random() < 0.0004 && !activeEventRef.current) {
+        const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
+        const event = getRandomEvent(positiveOnly);
+        const durationSeconds = event.duration();
+        const fullEvent = { ...event, durationSeconds };
+        activeEventRef.current = fullEvent;
+        setActiveEvent(fullEvent);
+        setTimeout(() => {
+          activeEventRef.current = null;
+          setActiveEvent(null);
+        }, durationSeconds * 1000);
       }
 
       setBalance(progressionManager.balance);
@@ -329,7 +350,7 @@ function App() {
           onImportSave={async (file) => { await importSave(file); window.location.reload(); }}
         />
       )}
-      <TickerBar />
+      <TickerBar terminalName={terminalName} />
       <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
 
       {showSaved && (
@@ -342,6 +363,13 @@ function App() {
         }}>
           ✓ Saved
         </div>
+      )}
+
+      {activeEvent && (
+        <EventModal
+          event={activeEvent}
+          onContinue={() => {}}
+        />
       )}
 
       {showOnboarding && (
