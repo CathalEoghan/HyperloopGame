@@ -1,0 +1,46 @@
+.credits-modal {
+    background: white;
+    border: 2px solid black;
+    border-radius: 12px;
+    padding: 28px 32px;
+    width: 480px;
+    max-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.credits-heading {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #f5a623;
+    text-transform: uppercase;
+    text-align: center;
+    margin: 0 0 16px;
+}
+
+.credits-body {
+    overflow-y: auto;
+    flex: 1;
+    margin-bottom: 16px;
+    padding-right: 8px;
+}
+
+.credits-section {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #111;
+    margin: 12px 0 4px;
+    letter-spacing: 1px;
+}
+
+.credits-line {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    color: #555;
+    margin: 2px 0;
+    line-height: 1.5;
+}
