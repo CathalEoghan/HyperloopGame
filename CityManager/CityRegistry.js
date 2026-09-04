@@ -238,7 +238,13 @@ import { Maputo } from './Maputo.js'
 import { BeloHorizonte } from './BeloHorizonte.js'
 import { Recife } from './Recife.js'
 import { Birmingham } from './Birmingham.js'
-
+import { Łódź } from './Łódź.js'
+import { Ljubljana } from './Ljubljana.js'
+import { Luanda } from './Luanda.js'
+import { Inverness } from './Inverness.js'
+import { Dili } from './Dili.js'
+import { Daegu } from './Daegu.js'
+import { Vilnius } from './Vilnius.js'
 
 
 export const allCities = [
@@ -481,6 +487,13 @@ export const allCities = [
     BeloHorizonte,
     Recife,
     Birmingham,
+    Łódź,
+    Ljubljana,
+    Dili,
+    Inverness,
+    Luanda,
+    Vilnius,
+    Daegu,
 
 
 ]

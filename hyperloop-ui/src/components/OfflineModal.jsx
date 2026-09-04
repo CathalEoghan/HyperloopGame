@@ -1,3 +1,4 @@
+import helloIcon from '../assets/misc/hello.png'
 import './OfflineModal.css'
 
 function formatDuration(seconds) {
@@ -14,7 +15,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect }) {
     return (
         <div className="modal-overlay">
             <div className="modal offline-modal">
-                <div className="offline-icon">🌙</div>
+                <img src={helloIcon} alt="hello" className="offline-icon" style={{ width: '64px', height: '64px', objectFit: 'contain', border: 'none', borderRadius: '0' }} />
                 <h2 className="offline-title">Welcome back!</h2>
                 <p className="offline-subtitle">
                     You were away for <strong>{formatDuration(offlineSeconds)}</strong>

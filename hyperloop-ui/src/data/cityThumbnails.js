@@ -237,6 +237,14 @@ import BeloHorizonte from '../assets/cities-thumb/BeloHorizonte.jpg'
 import Recife from '../assets/cities-thumb/Recife.jpg'
 import Birmingham from '../assets/cities-thumb/Birmingham.jpg'
 import Guadalajara from '../assets/cities-thumb/Guadalajara.jpg'
+import Łódź from '../assets/cities-thumb/Łódź.jpg'
+import Inverness from '../assets/cities-thumb/Inverness.jpg'
+import Ljubljana from '../assets/cities-thumb/Ljubljana.jpg'
+import Dili from '../assets/cities-thumb/Dili.jpg'
+import Luanda from '../assets/cities-thumb/Luanda.jpg'
+import Daegu from '../assets/cities-thumb/Daegu.jpg'
+import Vilnius from '../assets/cities-thumb/Vilnius.jpg'
+
 
 
 const cityImages = {
@@ -479,6 +487,14 @@ const cityImages = {
     Abuja: Abuja,
     Montpellier: Montpellier,
     Guadalajara: Guadalajara,
+    Dili: Dili,
+    Luanda: Luanda,
+    Ljubljana: Ljubljana,
+    Inverness: Inverness,
+    Łódź: Łódź,
+    Daegu: Daegu,
+    Vilnius: Vilnius,
+
 
 
 }

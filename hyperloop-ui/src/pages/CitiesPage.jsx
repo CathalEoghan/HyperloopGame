@@ -169,14 +169,14 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 <div className="continent-filter">
                     {CONTINENTS.map(c => (
                         <button
-    key={c}
-    className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}
-    style={activeContinent === c ? { background: CONTINENT_COLOURS[c], borderColor: CONTINENT_COLOURS[c] } : {}}
-    onClick={() => setActiveContinent(c)}
-    onMouseEnter={() => playHoverSound()}
->
-    {c}
-</button>
+                            key={c}
+                            className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}
+                            style={activeContinent === c ? { background: CONTINENT_COLOURS[c], borderColor: CONTINENT_COLOURS[c] } : {}}
+                            onClick={() => setActiveContinent(c)}
+                            onMouseEnter={() => playHoverSound()}
+                        >
+                            {c}
+                        </button>
                     ))}
                 </div>
             </div>
@@ -207,7 +207,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         if (balance < cost) { setShowNoFunds(true); closeModal(); }
                                         else { constructionManager.startStationConstruction(selectedCity); playConstructionSound(); onSave(); closeModal(); }
                                     }}>
-                                        Connect <img className="cashIcon" src={cashIcon} alt="balance" /> ({constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString()})
+                                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                            Connect (<img className="cashIcon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />{constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString()})
+                                        </span>
                                     </button>
                                     <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </>
@@ -245,7 +247,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                         closeModal();
                                                     }}
                                                 >
-                                                    Confirm — <img className="cashIcon" src={cashIcon} alt="£" />{disconnectCost.toLocaleString()} + 20 <img src={reputationIcon} alt="rep" className="rep-icon" />
+                                                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                                        Confirm — <img className="cashIcon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />{disconnectCost.toLocaleString()} + 20 <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
+                                                    </span>
                                                 </button>
                                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough funds or reputation</p>}
                                                 <button className="closeButton" onClick={() => { playClickSound2(); setConfirmDisconnect(false) }}>Cancel</button>

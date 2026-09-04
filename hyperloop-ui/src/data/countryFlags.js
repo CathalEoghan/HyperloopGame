@@ -119,6 +119,11 @@ const countryFlags = {
     "Afghanistan": "af",
     "Azerbaijan": "az",
     "Mozambique": "mz",
+    "Angola": "ao",
+    "Timor-Leste": "tl",
+    "Slovenia": "sl",
+    "Lithuania": "lt",
+
     
 
 

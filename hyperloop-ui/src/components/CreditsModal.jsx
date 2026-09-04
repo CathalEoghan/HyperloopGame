@@ -1,4 +1,5 @@
 import { playClickSound2 } from '../utils/sound.js'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './CreditsModal.css'
 
 const CREDITS_TEXT = `CITY IMAGES
@@ -33,7 +34,7 @@ function CreditsModal({ onClose }) {
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="credits-modal" onClick={e => e.stopPropagation()}>
-                <p className="credits-heading">⚡ CREDITS</p>
+                <p className="credits-heading"><img src={globeIcon} alt="globe" className="brand-icon" /> CREDITS</p>
                 <div className="credits-body">
                     {CREDITS_TEXT.split('\n').map((line, i) => (
                         <p key={i} className={line === line.toUpperCase() && line.trim() ? 'credits-section' : 'credits-line'}>

@@ -76,6 +76,13 @@ import { flexibleNetworkContracts } from './FlexibleNetworkContracts.js'
 import { advertisingCampaignSpain } from './AdvertisingCampaignSpain.js'
 import { advertisingCampaignBrazil } from './AdvertisingCampaignBrazil'
 import { advertisingCampaignEngland } from './AdvertisingCampaignEngland.js'
+import { passengerLoyaltyScheme } from './PassengerLoyaltyScheme.js'
+import { improvedCyclingInfrastructure } from './ImprovedCyclingInfrastructure.js'
+import { uniformRedesign } from './UniformRedesign.js'
+import { fineWhiskyImports } from './FineWhiskyImports.js'
+import { cheaperFuelImports } from './CheaperFuelImports.js'
+import { nighttimePayIncentives } from './NighttimePayIncentives.js'
+import { advertisingCampaignSouthKorea } from './AdvertisingCampaignSouthKorea.js'
 
 
 export const allUpgrades = [
@@ -155,6 +162,13 @@ export const allUpgrades = [
     advertisingCampaignSpain,
     advertisingCampaignBrazil,
     advertisingCampaignEngland,
+    cheaperFuelImports,
+    improvedCyclingInfrastructure,
+    uniformRedesign,
+    fineWhiskyImports,
+    passengerLoyaltyScheme,
+    nighttimePayIncentives,
+    advertisingCampaignSouthKorea,
 
 
 ]

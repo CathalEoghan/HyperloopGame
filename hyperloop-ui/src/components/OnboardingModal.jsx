@@ -1,11 +1,12 @@
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './OnboardingModal.css'
 
 function OnboardingModal({ onDismiss }) {
     return (
         <div className="modal-overlay">
             <div className="modal onboarding-modal">
-                <div className="onboarding-logo">⚡ HYPERLOOP EMPIRE</div>
+                <div className="onboarding-logo"><img src={globeIcon} alt="globe" className="brand-icon" /> HYPERLOOP EMPIRE</div>
                 <h2 className="onboarding-title">Welcome!</h2>
                 <p className="onboarding-intro">
                     You're now the manager of the world's first <strong>hyperloop terminal</strong>.

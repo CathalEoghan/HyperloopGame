@@ -1,13 +1,14 @@
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import cashIcon from '../assets/misc/cash.png'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './DailyLoginModal.css'
 
 function DailyLoginModal({ cashBonus, repBonus, onCollect }) {
     return (
         <div className="modal-overlay">
             <div className="daily-login-modal">
-                <p className="daily-login-heading">⚡ DAILY BONUS</p>
+                <p className="daily-login-heading"><img src={globeIcon} alt="globe" className="brand-icon" /> DAILY BONUS</p>
                 <h2 className="daily-login-title">Welcome back!</h2>
                 <p className="daily-login-subtitle">Your terminal has been busy while you were away. Here's your daily reward:</p>
 

@@ -6,11 +6,12 @@ import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
 import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
+import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure']
 
-function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave }) {
+function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onUpgradeBuilt }) {
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [activeCategory, setActiveCategory] = useState('All')
@@ -60,6 +61,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const getUpgradeInfo = (dev) => progressionManager.getDevelopmentUpgradeCostInfo(dev)
     const getLevel = (dev) => progressionManager.getDevelopmentUpgradeLevel(dev)
 
+    const closeModal = () => { setSelectedDevelopment(null); setShowUpgradeModal(false) }
+
     return (
         <div className="background">
             <div className="dev-toolbar">
@@ -75,12 +78,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
             <div className="category-filter">
                 {CATEGORIES.map(cat => (
-    <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
-        onClick={() => setActiveCategory(cat)}
-        onMouseEnter={() => playHoverSound()}>
-        {cat}
-    </button>
-))}
+                    <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
+                        onClick={() => setActiveCategory(cat)}
+                        onMouseEnter={() => playHoverSound()}>
+                        {cat}
+                    </button>
+                ))}
             </div>
 
             {purchased.length > 0 && (
@@ -129,14 +132,14 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
             {/* Main development modal */}
             {selectedDevelopment && !showUpgradeModal && (
-                <div className="modal-overlay" onClick={() => setSelectedDevelopment(null)}>
+                <div className="modal-overlay" onClick={closeModal}>
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         {underConstruction.some(d => d.name === selectedDevelopment.name) ? (
                             <>
                                 <h3>🚧 {selectedDevelopment.name}</h3>
                                 <p>Under construction!</p>
                                 <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedDevelopment.finishTime))}</strong></p>
-                                <button className="closeButton" onClick={() => setSelectedDevelopment(null)}>Close</button>
+                                <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                             </>
                         ) : available.some(d => d.name === selectedDevelopment.name) ? (
                             <>
@@ -151,11 +154,20 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <button className="constructionButton" onClick={() => {
                                     const cost = economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost)
                                     if (balance < cost) { playClickSound2(); setShowNoFunds(true); setSelectedDevelopment(null) }
-                                    else { playClickSound2(); playConstructionSound(); constructionManager.startDevelopmentConstruction(selectedDevelopment); onSave(); setSelectedDevelopment(null) }
+                                    else {
+                                        playClickSound2();
+                                        playConstructionSound();
+                                        constructionManager.startDevelopmentConstruction(selectedDevelopment);
+                                        if (selectedDevelopment.effectType) onUpgradeBuilt?.(selectedDevelopment);
+                                        onSave();
+                                        closeModal();
+                                    }
                                 }}>
-                                    Build (£{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString()})
+                                    <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                        Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString()})
+                                    </span>
                                 </button>
-                                <button className="closeButton" onClick={() => { playClickSound2(); setSelectedDevelopment(null) }}>Close</button>
+                                <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                             </>
                         ) : (
                             <>
@@ -188,7 +200,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             Upgrade
                                         </button>
                                     )}
-                                    <button className="closeButton" onClick={() => { playClickSound2(); setSelectedDevelopment(null) }}>Close</button>
+                                    <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </div>
                             </>
                         )}

@@ -24,6 +24,7 @@ import reputationWorkBonus from '../assets/sounds/reputationBonusWork.mp3'
 import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
 import openingAudio from '../assets/sounds/openingAudio.mp3'
 import { preloadImages } from '../utils/imageCache.js'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './LoadingScreen.css'
 
 const DURATION = 5000
@@ -134,7 +135,7 @@ function LoadingScreen({ onComplete }) {
             onClick={handleEnter}
         >
             <div className="loading-content">
-                <div className="loading-logo">⚡</div>
+                <img src={globeIcon} alt="globe" className="loading-logo" />
                 <h1 className="loading-title">HYPERLOOP EMPIRE</h1>
                 <p className="loading-tagline">The world's first hyperloop network</p>
                 <div className="loading-bar-track">

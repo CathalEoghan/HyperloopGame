@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
 import { playClickSound2 } from '../utils/sound.js'
+import cashIcon from '../assets/misc/cash.png'
+import reputationIcon from '../assets/misc/reputation.png'
 import './DelayModal.css'
 
 function DelayModal({ delay, onCompensate, onDismiss, economyManager }) {
@@ -27,10 +28,14 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager }) {
                 </p>
                 <div className="delay-buttons">
                     <button className="delay-btn-compensate" onClick={() => { playClickSound2(); onCompensate(adjustedCompensation) }}>
-                        Issue compensation (£{adjustedCompensation.toLocaleString()})
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                            Issue compensation (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedCompensation.toLocaleString()})
+                        </span>
                     </button>
                     <button className="delay-btn-dismiss" onClick={() => { playClickSound2(); onDismiss(adjustedRepCost) }}>
-                        Refuse compensation (-{adjustedRepCost} 🏆)
+                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                            Refuse compensation (-{adjustedRepCost} <img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />)
+                        </span>
                     </button>
                 </div>
             </div>

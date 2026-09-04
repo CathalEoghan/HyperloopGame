@@ -238,6 +238,13 @@ const developmentImages = {
     "Advertising Campaign: Brazil": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignBrazil.jpg",
     "Advertising Campaign: England": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignEngland.jpg",
     "Coffee Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CoffeeShop.jpg",
+    "Passenger Loyalty Scheme": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PassengerLoyaltyScheme.jpg",
+    "Improved Cycling Infrastructure": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ImprovedCyclingInfrastructure.jpg",
+    "Uniform Redesign": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/UniformRedesign.jpg",
+    "Fine Whisky Imports": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FineWhiskyImports.jpg",
+    "Cheaper Fuel Imports": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CheaperFuelImports.jpg",
+    "Nighttime Pay Incentives": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NighttimePayIncentives.jpg",
+    "Advertising Campaign: South Korea": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignSouthKorea.jpg",
 
 
 

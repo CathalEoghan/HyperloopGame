@@ -339,3 +339,13 @@
     padding: 3px 0;
     letter-spacing: 1px;
 }
+
+.constructionButton img {
+    width: 14px;
+    height: 14px;
+    border: none;
+    border-radius: 0;
+    vertical-align: middle;
+    margin: 0;
+    display: inline;
+}

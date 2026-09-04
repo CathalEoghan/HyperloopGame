@@ -98,7 +98,7 @@ function App() {
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
 
   // Daily login check
-  useState(() => {
+useEffect(() => {
     if (!hasSave() || progressionManager.purchasedCities.length === 0) return;
     const today = new Date().toDateString();
     const lastLogin = localStorage.getItem('hyperloop_last_login');
@@ -109,7 +109,7 @@ function App() {
     const cashBonus = hasCommemorativeDisplays ? 50000 : 25000;
     const repBonus = hasPassengerLoyalty ? 5 : 0;
     setDailyLoginData({ cashBonus, repBonus });
-  });
+}, []);
 
   const workEarnings = economyManager.calculateWorkClickEarnings(100);
 

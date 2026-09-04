@@ -3,6 +3,7 @@ import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from "../data/countryFlags"
 import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
 import { useState } from 'react'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './OpeningPage.css'
 
 function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
@@ -20,7 +21,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
         return (
             <div className="opening-background">
                 <div className="opening-card">
-                    <div className="opening-logo">⚡ HYPERLOOP EMPIRE</div>
+                    <div className="opening-logo"><img src={globeIcon} alt="globe" className="brand-icon" /> HYPERLOOP EMPIRE</div>
                     <h1 className="opening-welcome">Welcome.</h1>
                     <p className="opening-tagline">
                         You're in charge of the world's first hyperloop network.<br />
@@ -54,7 +55,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
     return (
         <div className="opening-background">
             <div className="opening-city-step">
-                <div className="opening-logo">⚡ HYPERLOOP CENTRAL</div>
+                <div className="opening-logo"><img src={globeIcon} alt="globe" className="brand-icon" /> HYPERLOOP EMPIRE</div>
                 <h1 className="opening-welcome">Good name.</h1>
                 <p className="opening-tagline">
                     Where in the world is <strong>{localName}</strong> located?<br />

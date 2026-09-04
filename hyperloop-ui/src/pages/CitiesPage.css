@@ -19,6 +19,10 @@
     gap: 4px;
 }
 
+.constructionButton {
+    line-height: 1;
+}
+
 .background .tierAndPopulation {
     display: flex;
     flex-direction: column;
@@ -345,15 +349,18 @@
     cursor: pointer !important;
 }
 
+.modal .constructionButton:hover {
+    background: #333 !important;
+    color: white !important;
+}
+
 .modal .constructionButton img.cashIcon {
     width: 18px;
     height: 18px;
     border: none;
     object-fit: contain;
     margin-bottom: 0;
-}
-
-.modal .constructionButton:hover {
-    background: #333 !important;
-    color: white !important;
+    vertical-align: middle;
+    display: inline-block;
+    margin: 0 1px;
 }

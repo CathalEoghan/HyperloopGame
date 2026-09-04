@@ -237,6 +237,15 @@ const cityImages = {
     "Belo Horizonte": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BeloHorizonte.jpg",
     "Recife": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Recife.jpg",
     "Birmingham": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Birmingham.jpg",
+    "Luanda": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Luanda.jpg",
+    "Ljubljana": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ljubljana.jpg",
+    "Inverness": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Inverness.jpg",
+    "Łódź": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Łódź.jpg",
+    "Dili": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Dili.jpg",
+    "Daegu": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Daegu.jpg",
+    "Vilnius": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Vilnius.jpg",
+
+
 
 
 }

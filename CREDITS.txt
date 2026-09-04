@@ -244,6 +244,9 @@ Maputo.jpg - Photo by SINAL Multimédia via Pexels
 Monterrey.jpg - Photo by Dante Muñoz via Pexels
 Recife.jpg - Photo by Pedro Gonçalves via Pexels
 Birmingham.js - Photo by Richard Hunter-Rice via Pexels
+Dili.js - Photo by Bahnfrend via Wikimedia Commons
+Daegu.js - Photo by Khan ishaan via Pexels
+Vilnius.js - Photo by Omar via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -487,6 +490,9 @@ FreePhoneChargingStations.jpg - Photo by KIEU TRUONG via Pexels
 AdvertisingCampaignSpain.jpg - Photo by Gregory via Pexels
 AdvertisingCampaignBrazil.jpg - Photo by Jonathan Borba via Pexels
 AdvertisingCampaignEngland.jpg - Photo by Neil via Pexels
+PassengerLoyaltyScheme.jpg - Photo by Gustavo Fring via Pexels
+AdvertisingCampaignSouthKorea.jpg - Photo by aboodi vesakaran via Pexels
+NighttimePayIncentives.jpg - Photo by Vitaly Gariev via Pexels
 
 
 SOUNDS
@@ -505,3 +511,4 @@ MISC IMAGES
 DepartureBoard.js - Photo by Neuhausengroup via Wikimedia Commons
 ReputationIcon.png - <a href="https://www.flaticon.com/free-icons/clean" title="clean icons">Clean icons created by Smashicons - Flaticon</a>
 globeIcon.png - Photo by pngtree via pngtree
+hello.png - Photo by Magnific via flaticon.com

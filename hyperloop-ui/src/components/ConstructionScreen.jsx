@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './ConstructionScreen.css'
 
 const TIPS = [
@@ -43,7 +44,7 @@ function ConstructionScreen({ city, isComplete, onEnter }) {
             className={`construction-screen ${fading ? 'construction-fading' : ''} ${isComplete ? 'construction-clickable' : ''}`}
             onClick={handleEnter}
         >
-            <div className="construction-logo">⚡ HYPERLOOP EMPIRE</div>
+            <div className="construction-logo"><img src={globeIcon} alt="globe" className="brand-icon" /> HYPERLOOP EMPIRE</div>
             <img
                 className={`construction-city-img ${isComplete ? 'construction-img-ready' : ''}`}
                 src={cityThumbnails[city.name] || cityImages[city.name]}
