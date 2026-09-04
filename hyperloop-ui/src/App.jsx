@@ -29,13 +29,14 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
-import { playRankUpSound, playReputationWorkBonusSound } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
 import "./App.css";
 
 const OFFLINE_RATE = 1.0;
+const SECONDS_IN_A_DAY = 86400;
 
 function App() {
   const [rankManager] = useState(() => new RankManager());
@@ -83,10 +84,29 @@ function App() {
   const [hasFreeReroll, setHasFreeReroll] = useState(false);
   const [showNotEnoughRep, setShowNotEnoughRep] = useState(false);
   const [revealedUpgrade, setRevealedUpgrade] = useState(null);
-  const [activeEvent, setActiveEvent] = useState(null);
+  const [activeEvent, setActiveEvent] = useState(() => {
+    const saved = localStorage.getItem('hyperloop_active_event')
+    if (!saved) return null
+    try {
+      const event = JSON.parse(saved)
+      if (Date.now() > event.expiresAt) {
+        localStorage.removeItem('hyperloop_active_event')
+        return null
+      }
+      return { ...event, durationSeconds: Math.floor((event.expiresAt - Date.now()) / 1000) }
+    } catch { return null }
+  });
   const [dailyLoginData, setDailyLoginData] = useState(null);
 
-  const activeEventRef = useRef(null);
+  const activeEventRef = useRef(() => {
+    const saved = localStorage.getItem('hyperloop_active_event')
+    if (!saved) return null
+    try {
+      const event = JSON.parse(saved)
+      if (Date.now() > event.expiresAt) return null
+      return event
+    } catch { return null }
+  });
   const prevUnlockedDevCount = useRef(progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length);
   const triggeredDepartures = useRef(new Set());
   const triggeredDelays = useRef(new Set());
@@ -97,8 +117,20 @@ function App() {
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
 
+  // Immediate rank detection on load (catches offline rank ups)
+  useEffect(() => {
+    rankManager.convertCashToXP(progressionManager.totalCashEarned);
+    const startRank = rankManager.rank;
+    rankManager.verifyRank();
+    const rankUpsGained = rankManager.rank - startRank;
+    if (rankUpsGained > 0) {
+      playRankUpSound();
+      setPendingRankUps(rankUpsGained);
+    }
+  }, []);
+
   // Daily login check
-useEffect(() => {
+  useEffect(() => {
     if (!hasSave() || progressionManager.purchasedCities.length === 0) return;
     const today = new Date().toDateString();
     const lastLogin = localStorage.getItem('hyperloop_last_login');
@@ -109,7 +141,7 @@ useEffect(() => {
     const cashBonus = hasCommemorativeDisplays ? 50000 : 25000;
     const repBonus = hasPassengerLoyalty ? 5 : 0;
     setDailyLoginData({ cashBonus, repBonus });
-}, []);
+  }, []);
 
   const workEarnings = economyManager.calculateWorkClickEarnings(100);
 
@@ -207,19 +239,44 @@ useEffect(() => {
         }
       }
 
+      // Sync active event to EconomyManager
       economyManager.activeEvent = activeEventRef.current;
 
-      if (Math.random() < 0.0004 && !activeEventRef.current) {
+      // Random event trigger — rank 3+ only
+      if (Math.random() < 0.0004 && !activeEventRef.current && rankSet >= 3) {
         const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
         const event = getRandomEvent(positiveOnly);
         const durationSeconds = event.duration();
-        const fullEvent = { ...event, durationSeconds };
-        activeEventRef.current = fullEvent;
-        setActiveEvent(fullEvent);
-        setTimeout(() => {
-          activeEventRef.current = null;
-          setActiveEvent(null);
-        }, durationSeconds * 1000);
+
+        if (event.effectType === 'instantCash') {
+          const bonus = Math.floor(economyManager.calculateDailyIncome() * SECONDS_IN_A_DAY * 0.1);
+          progressionManager.addCash(bonus);
+          const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
+          activeEventRef.current = fullEvent;
+          localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+          playEventSound();
+          setActiveEvent(fullEvent);
+          setTimeout(() => { activeEventRef.current = null; setActiveEvent(null); localStorage.removeItem('hyperloop_active_event'); }, 8000);
+        } else if (event.effectType === 'instantCashLoss') {
+          const loss = Math.floor(economyManager.calculateDailyIncome() * SECONDS_IN_A_DAY * 0.1);
+          progressionManager.addCash(-loss);
+          const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
+          activeEventRef.current = fullEvent;
+          playEventSound();
+          setActiveEvent(fullEvent);
+          setTimeout(() => { activeEventRef.current = null; setActiveEvent(null); }, 8000);
+        } else {
+          const fullEvent = { ...event, durationSeconds, expiresAt: Date.now() + durationSeconds * 1000 };
+          activeEventRef.current = fullEvent;
+          localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+          playEventSound();
+          setActiveEvent(fullEvent);
+          setTimeout(() => {
+            activeEventRef.current = null;
+            setActiveEvent(null);
+            localStorage.removeItem('hyperloop_active_event');
+          }, durationSeconds * 1000);
+        }
       }
 
       setBalance(progressionManager.balance);
@@ -276,11 +333,12 @@ useEffect(() => {
         reputation={reputation}
         hasFarewellPending={!!activeDeparture}
         activeEvent={activeEvent}
-        onWork={() => {
+        onWork={(onRepGain) => {
           progressionManager.addCash(workEarnings);
           if (Math.random() < economyManager.getWorkRepChance()) {
             progressionManager.addReputation(5);
             playReputationWorkBonusSound();
+            onRepGain?.();
           }
         }}
         workEarnings={workEarnings}
@@ -401,7 +459,8 @@ useEffect(() => {
       {activeEvent && (
         <EventModal
           event={activeEvent}
-          onContinue={() => {}}
+          terminalName={terminalName}
+          onContinue={() => setActiveEvent(null)}
         />
       )}
 

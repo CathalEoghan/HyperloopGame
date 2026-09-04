@@ -3,12 +3,19 @@ import { allCities } from '../../../CityManager/CityRegistry'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
 import countryFlags from '../data/countryFlags.js'
+import cashIcon from '../assets/misc/cash.png'
 import { playHoverSound } from '../utils/sound.js'
 import './ProgressPage.css'
 
+const CashValue = ({ amount, suffix = '' }) => (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />
+        {amount.toLocaleString('en-GB', { maximumFractionDigits: 0 })}{suffix}
+    </span>
+)
+
 function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, createdAt }) {
     const [, setTick] = useState(0)
-
     useEffect(() => {
         const interval = setInterval(() => setTick(t => t + 1), 1000)
         return () => clearInterval(interval)
@@ -80,12 +87,12 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const generalStats = [
         { label: 'Terminal age', value: terminalAge() },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
-        { label: 'Total revenue', value: `£${totalRevenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day` },
+        { label: 'Total revenue', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
         { label: 'Personal farewells given', value: farewellsGiven ?? 0 },
-        { label: 'Most profitable city', value: mostProfitableCity ? `${mostProfitableCity.name} — £${economyManager.calculateCityIncome(mostProfitableCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day` : '—' },
-        { label: 'Least profitable city', value: leastProfitableCity ? `${leastProfitableCity.name} — £${economyManager.calculateCityIncome(leastProfitableCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day` : '—' },
-        { label: 'Most profitable development', value: mostProfitableDev ? `${mostProfitableDev.name} — £${mostProfitableDev.revenue.toLocaleString()}/day` : '—' },
-        { label: 'Least profitable development', value: leastProfitableDev ? `${leastProfitableDev.name} — £${leastProfitableDev.revenue.toLocaleString()}/day` : '—' },
+        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.calculateCityIncome(mostProfitableCity)} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.calculateCityIncome(leastProfitableCity)} suffix="/day" /></span> : '—' },
+        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{mostProfitableDev.name}</span><CashValue amount={mostProfitableDev.revenue} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{leastProfitableDev.name}</span><CashValue amount={leastProfitableDev.revenue} suffix="/day" /></span> : '—' },
     ]
 
     const getUpgradeStats = () => {
@@ -93,16 +100,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         const sum = (type) => upgrades.filter(u => u.effectType === type).reduce((acc, u) => acc + u.effectValue, 0)
         const count = (type) => upgrades.filter(u => u.effectType === type).length
         const has = (type) => upgrades.some(u => u.effectType === type)
-
         const now = new Date()
         const month = now.getMonth()
-        const seasons = {
-            'Spring': [2, 3, 4], 'Summer': [5, 6, 7],
-            'Autumn': [8, 9, 10], 'Winter': [11, 0, 1]
-        }
+        const seasons = { 'Spring': [2, 3, 4], 'Summer': [5, 6, 7], 'Autumn': [8, 9, 10], 'Winter': [11, 0, 1] }
         const currentSeason = Object.entries(seasons).find(([, months]) => months.includes(month))?.[0]
         const seasonActive = upgrades.some(u => u.effectType === 'seasonBoost' && u.name.toLowerCase().includes(currentSeason?.toLowerCase()))
-
         return [
             { label: 'Food Category Bonus',         value: sum('foodIncome') > 0 ? `+${Math.round(sum('foodIncome') * 100)}%` : '—' },
             { label: 'Recreation Category Bonus',   value: sum('recreationIncome') > 0 ? `+${Math.round(sum('recreationIncome') * 100)}%` : '—' },
@@ -110,7 +112,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Service Category Bonus',      value: sum('serviceIncome') > 0 ? `+${Math.round(sum('serviceIncome') * 100)}%` : '—' },
             { label: 'All Developments Bonus',      value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
             { label: 'Connection Earnings Bonus',   value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
-            { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? `+£${count('workClickBonus') * 100}/click` : '—' },
+            { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>+<img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{count('workClickBonus') * 100}/click</span> : '—' },
             { label: 'Farewell Window Extension',   value: count('farewellWindowExtension') > 0 ? `+${count('farewellWindowExtension') * 5} mins` : '—' },
             { label: 'Farewell Rep Bonus',          value: has('farewellRepDoubled') ? '×2' : '—' },
             { label: 'Offline Earnings Cap',        value: `${48 + count('offlineCapExtension') * 24}h` },
@@ -129,7 +131,6 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     return (
         <div className="progress-page">
-
             <h2 className="progress-section-header">General Stats</h2>
             <div className="progress-stats">
                 {generalStats.map(({ label, value }) => (
@@ -163,11 +164,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     const state = getCountryState(country)
                     const flagCode = countryFlags[country]
                     return (
-                        <div
-                            key={country}
-                            className={`progress-country-card progress-country-${state}`}
-                            onMouseEnter={() => state !== 'unknown' && playHoverSound()}
-                        >
+                        <div key={country} className={`progress-country-card progress-country-${state}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()}>
                             {state === 'unknown' ? (
                                 <>
                                     <div className="progress-flag-unknown">?</div>
@@ -176,17 +173,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                             ) : (
                                 <>
                                     {flagCode ? (
-                                        <img
-                                            className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
-                                            src={`https://flagcdn.com/w80/${flagCode}.png`}
-                                            alt={country}
-                                        />
+                                        <img className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={`https://flagcdn.com/w80/${flagCode}.png`} alt={country} />
                                     ) : (
                                         <div className="progress-flag-unknown">?</div>
                                     )}
-                                    <div className={`progress-country-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>
-                                        {country}
-                                    </div>
+                                    <div className={`progress-country-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{country}</div>
                                 </>
                             )}
                         </div>
@@ -207,11 +198,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     const state = getCityState(city)
                     const flagCode = countryFlags[city.country]
                     return (
-                        <div
-                            key={city.name}
-                            className={`progress-city-card progress-city-${state}`}
-                            onMouseEnter={() => state !== 'unknown' && playHoverSound()}
-                        >
+                        <div key={city.name} className={`progress-city-card progress-city-${state}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()}>
                             {state === 'unknown' ? (
                                 <>
                                     <div className="progress-city-image-unknown">?</div>
@@ -220,20 +207,10 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                 </>
                             ) : (
                                 <>
-                                    <img
-                                        className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
-                                        src={cityThumbnails[city.name] || cityImages[city.name]}
-                                        alt={city.name}
-                                    />
-                                    <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>
-                                        {city.name}
-                                    </div>
+                                    <img className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={cityThumbnails[city.name] || cityImages[city.name]} alt={city.name} />
+                                    <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{city.name}</div>
                                     {flagCode ? (
-                                        <img
-                                            className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`}
-                                            src={`https://flagcdn.com/w80/${flagCode}.png`}
-                                            alt={city.country}
-                                        />
+                                        <img className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={`https://flagcdn.com/w80/${flagCode}.png`} alt={city.country} />
                                     ) : (
                                         <div className="progress-city-flag-unknown">?</div>
                                     )}

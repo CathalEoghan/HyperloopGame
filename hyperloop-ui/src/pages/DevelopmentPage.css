@@ -242,7 +242,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.modal img:not(.modal-city-image) {
+.modal img:not(.modal-city-image):not(.cash-icon) {
   border: 1px solid black;
   width: 60px;
   height: 40px;

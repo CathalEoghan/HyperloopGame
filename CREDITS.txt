@@ -243,10 +243,26 @@ BeloHorizonte.jpg - Photo by Luiz Felipe via Pexels
 Maputo.jpg - Photo by SINAL Multimédia via Pexels
 Monterrey.jpg - Photo by Dante Muñoz via Pexels
 Recife.jpg - Photo by Pedro Gonçalves via Pexels
-Birmingham.js - Photo by Richard Hunter-Rice via Pexels
-Dili.js - Photo by Bahnfrend via Wikimedia Commons
-Daegu.js - Photo by Khan ishaan via Pexels
-Vilnius.js - Photo by Omar via Pexels
+Birmingham.jpg - Photo by Richard Hunter-Rice via Pexels
+Dili.jpg - Photo by Bahnfrend via Wikimedia Commons
+Daegu.jpg - Photo by Khan ishaan via Pexels
+Vilnius.jpg - Photo by Omar via Pexels
+Verona.jpg - Photo by Ensar * via Pexels
+Omsk.jpg - Photo by Ninara via Flickr
+Nanjing.jpg - Photo by Cheng Shi Song via Pexels
+Astana.jpg - Photo by Valeria Drozdova via Pexels
+Chișinău.jpg - Photo by Anaghan Km via Pexels
+Antwerp.jpg - Photo by Willy De Laet via Pexels
+Calgary.jpg - Photo by Donovan Kelly via Pexels
+Nuuk.jpg - Photo by Биљана via Pexels
+Bruges.jpg - Photo by Cristian Salinas Cisternas via Pexels
+Darwin.jpg - Photo by Hagai Agmon-Snir via Wikimedia Commons
+Hiroshima.jpg - Photo by Hoi Wai via Pexels
+Lyon.jpg - Photo by Luca Nardone via Pexels
+Lublin.jpg - Photo by Karolina Grabowska www.kaboompics.com via Pexels
+Derry.jpg - Photo by K via Pexels
+Georgetown.jpg - Photo by amanderson2 via Wikimedia Commons
+
 
 
 DEVELOPMENTS IMAGES
@@ -493,6 +509,20 @@ AdvertisingCampaignEngland.jpg - Photo by Neil via Pexels
 PassengerLoyaltyScheme.jpg - Photo by Gustavo Fring via Pexels
 AdvertisingCampaignSouthKorea.jpg - Photo by aboodi vesakaran via Pexels
 NighttimePayIncentives.jpg - Photo by Vitaly Gariev via Pexels
+AprilTicketDeals.jpg - Photo by Michael via Pexels
+AdvertisingCampaignRussia.jpg - Photo by Сергей Велов via Pexels
+BusinessClassCabins.jpg - Photo by Lara Jameson via Pexels
+JanuaryTicketDeals.jpg - Photo by Klaus Dieter via Pexels
+OctoberTicketDeals.jpg - Photo by Fatma Gül via Pexels
+AdvertisingCampaignBelgium.jpg - Photo by Ivy Nguyen via Pexels
+ArcticTourismInitiaves.jpg - Photo by Markku Soini via Pexels
+DecemberTicketDeals.jpg - Photo by Fritz Jaspers via Pexels
+AdvertisingCampaignAustralia.jpg - Photo by Grantuking via Pexels
+AdvertisingCampaignPoland.jpg - Photo by Karolina Grabowska www.kaboompics.com via Pexels
+AdvertisingCampaignIreland.jpg - Photo by aboodi vesakaran via Pexels
+MayTicketDeals.jpg - Photo by Felix Mittermeier via Pexels
+
+
 
 
 SOUNDS
@@ -505,6 +535,7 @@ workClickSound.mp3 - Sound by linhmitto via Pixabay
 openingAudio.mp3 - Sound via Pixabay
 hoverSound.mp3 - Sound by tunetank via Pixabay
 developmentUnlocked.mp3 - Sound by freesound via Pixabay
+eventSound.mp3 - Sound by DRAGON-STUDIO via Pixabay
 
 MISC IMAGES
 

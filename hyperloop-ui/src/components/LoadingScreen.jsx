@@ -24,7 +24,7 @@ import reputationWorkBonus from '../assets/sounds/reputationBonusWork.mp3'
 import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
 import openingAudio from '../assets/sounds/openingAudio.mp3'
 import { preloadImages } from '../utils/imageCache.js'
-import globeIcon from '../assets/misc/globeIcon.png'
+import globeIcon from '/public/globeIcon.png'
 import './LoadingScreen.css'
 
 const DURATION = 5000

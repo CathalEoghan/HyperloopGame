@@ -244,6 +244,21 @@ import Dili from '../assets/cities-thumb/Dili.jpg'
 import Luanda from '../assets/cities-thumb/Luanda.jpg'
 import Daegu from '../assets/cities-thumb/Daegu.jpg'
 import Vilnius from '../assets/cities-thumb/Vilnius.jpg'
+import Georgetown from '../assets/cities-thumb/Georgetown.jpg'
+import Derry from '../assets/cities-thumb/Derry.jpg'
+import Lublin from '../assets/cities-thumb/Lublin.jpg'
+import Chișinău from '../assets/cities-thumb/Chișinău.jpg'
+import Nanjing from '../assets/cities-thumb/Najing.jpg'
+import Omsk from '../assets/cities-thumb/Omsk.jpg'
+import Verona from '../assets/cities-thumb/Verona.jpg'
+import Astana from '../assets/cities-thumb/Astana.jpg'
+import Antwerp from '../assets/cities-thumb/Antwerp.jpg'
+import Calgary from '../assets/cities-thumb/Calgary.jpg'
+import Nuuk from '../assets/cities-thumb/Nuuk.jpg'
+import Bruges from '../assets/cities-thumb/Bruges.jpg'
+import Darwin from '../assets/cities-thumb/Darwin.jpg'
+import Hiroshima from '../assets/cities-thumb/Hirosima.jpg'
+import Lyon from '../assets/cities-thumb/Lyon.jpg'
 
 
 
@@ -494,6 +509,21 @@ const cityImages = {
     Łódź: Łódź,
     Daegu: Daegu,
     Vilnius: Vilnius,
+    Chișinău: Chișinău,
+    Georgetown: Georgetown,
+    Astana: Astana,
+    Omsk: Omsk,
+    Lublin: Lublin,
+    Derry: Derry,
+    Nanjing: Nanjing,
+    Verona: Verona,
+    Antwerp: Antwerp,
+    Calgary: Calgary,
+    Nuuk: Nuuk,
+    Bruges: Bruges,
+    Darwin: Darwin,
+    Hiroshima: Hiroshima,
+    Lyon: Lyon,
 
 
 

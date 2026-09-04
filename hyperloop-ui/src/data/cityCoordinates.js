@@ -238,7 +238,13 @@ const cityCoordinates = {
 "Monterrey":     { lat:  25.6866, lng: -100.3161 },
 "Montpellier":   { lat:  43.6108, lng:   3.8767 },
 "Recife":        { lat:  -8.0539, lng: -34.8811 },
-"Sana'a":        { lat:  15.3694, lng:  44.1910 },
+"Daegu":     { lat: 35.8714,  lng: 128.6014 },
+"Dili":      { lat: -8.5569,  lng: 125.5789 },
+"Inverness": { lat: 57.4778,  lng:  -4.2247 },
+"Ljubljana": { lat: 46.0569,  lng:  14.5058 },
+"Luanda":    { lat: -8.8368,  lng:  13.2343 },
+"Vilnius":   { lat: 54.6872,  lng:  25.2797 },
+"Łódź":      { lat: 51.7592,  lng:  19.4560 },
 };
 
 export default cityCoordinates;

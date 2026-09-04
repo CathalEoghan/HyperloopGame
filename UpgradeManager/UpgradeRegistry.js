@@ -83,6 +83,22 @@ import { fineWhiskyImports } from './FineWhiskyImports.js'
 import { cheaperFuelImports } from './CheaperFuelImports.js'
 import { nighttimePayIncentives } from './NighttimePayIncentives.js'
 import { advertisingCampaignSouthKorea } from './AdvertisingCampaignSouthKorea.js'
+import { mayTicketDeals } from './MayTicketDeals.js'
+import { aprilTicketDeals } from './AprilTicketDeals.js'
+import { januaryTicketDeals } from './JanuaryTicketDeals.js'
+import { decemberTicketDeals } from './DecemberTicketDeals.js'
+import { octoberTicketDeals } from './OctoberTicketDeals.js'
+import { advertisingCampaignFrance } from './AdvertisingCampaignFrance.js'
+import { advertisingCampaignBelgium } from './AdvertisingCampaignBelgium.js'
+import { advertisingCampaignIreland } from './AdvertisingCampaignIreland.js'
+import { advertisingCampaignCanada } from './AdvertisingCampaignCanada.js'
+import { advertisingCampaignJapan } from './AdvertisingCampaignJapan.js'
+import { advertisingCampaignPoland } from './AdvertisingCampaignPoland.js'
+import { advertisingCampaignRussia } from './AdvertisingCampaignRussia.js'
+import { advertisingCampaignAustralia } from './AdvertisingCampaignAustralia.js'
+import { businessClassCabins } from './BusinessClassCabins.js'
+import { arcticTourismInitiatives } from './ArcticTourismInitiatives.js'
+
 
 
 export const allUpgrades = [
@@ -169,6 +185,21 @@ export const allUpgrades = [
     passengerLoyaltyScheme,
     nighttimePayIncentives,
     advertisingCampaignSouthKorea,
+    advertisingCampaignAustralia,
+    advertisingCampaignBelgium,
+    advertisingCampaignFrance,
+    advertisingCampaignCanada,
+    advertisingCampaignIreland,
+    advertisingCampaignPoland,
+    advertisingCampaignRussia,
+    advertisingCampaignJapan,
+    octoberTicketDeals,
+    mayTicketDeals,
+    decemberTicketDeals,
+    januaryTicketDeals,
+    aprilTicketDeals,
+    businessClassCabins,
+    arcticTourismInitiatives
 
 
 ]

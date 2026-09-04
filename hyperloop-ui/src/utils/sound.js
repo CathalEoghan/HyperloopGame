@@ -11,6 +11,12 @@ import reputationWorkBonus from '../assets/sounds/reputationBonusWork.mp3'
 import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
 import openingAudio from '../assets/sounds/openingAudio.mp3'
 import developmentUnlocked from '../assets/sounds/developmentUnlocked.mp3'
+import eventSound from '../assets/sounds/eventSound.mp3'
+
+export const playEventSound = () => {
+    const audio = new Audio(eventSound)
+    audio.play().catch(() => {})
+}
 
 function canPlay() {
     return localStorage.getItem('soundEnabled') !== 'false'

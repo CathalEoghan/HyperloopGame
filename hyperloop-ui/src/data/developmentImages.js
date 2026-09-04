@@ -245,6 +245,26 @@ const developmentImages = {
     "Cheaper Fuel Imports": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CheaperFuelImports.jpg",
     "Nighttime Pay Incentives": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NighttimePayIncentives.jpg",
     "Advertising Campaign: South Korea": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignSouthKorea.jpg",
+    "Advertising Campaign: France": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignFrance.jpg",
+    "Advertising Campaign: Ireland": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignIreland.jpg",
+    "Advertising Campaign: Russia": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignRussia.jpg",
+    "Advertising Campaign: Japan": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignJapan.jpg",
+    "Advertising Campaign: Belgium": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignBelgium.jpg",
+    "Advertising Campaign: Australia": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignAustralia.jpg",
+    "Advertising Campaign: Canada": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignCanada.jpg",
+    "Advertising Campaign: Poland": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignPoland.jpg",
+    "May Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/MayTicketDeals.jpg",
+    "October Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/OctoberTicketDeals.jpg",
+    "April Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AprilTicketDeals.jpg",
+    "January Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/JanuaryTicketDeals.jpg",
+    "December Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/DecemberTicketDeals.jpg",
+    "Business-Class Cabins": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BusinessClassCabins.jpg",
+    "Arctic Tourism Initiatives": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ArcticTourismInitiatives.jpg",
+
+
+
+
+
 
 
 

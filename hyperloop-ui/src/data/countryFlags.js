@@ -123,6 +123,8 @@ const countryFlags = {
     "Timor-Leste": "tl",
     "Slovenia": "sl",
     "Lithuania": "lt",
+    "Guyana": "gy",
+    "Moldova": "md",
 
     
 

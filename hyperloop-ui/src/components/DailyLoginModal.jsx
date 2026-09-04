@@ -1,7 +1,7 @@
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import cashIcon from '../assets/misc/cash.png'
-import globeIcon from '../assets/misc/globeIcon.png'
+import globeIcon from '/public/globeIcon.png'
 import './DailyLoginModal.css'
 
 function DailyLoginModal({ cashBonus, repBonus, onCollect }) {

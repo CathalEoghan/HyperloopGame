@@ -3,7 +3,7 @@ import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from "../data/countryFlags"
 import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
 import { useState } from 'react'
-import globeIcon from '../assets/misc/globeIcon.png'
+import globeIcon from '/public/globeIcon.png'
 import './OpeningPage.css'
 
 function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {

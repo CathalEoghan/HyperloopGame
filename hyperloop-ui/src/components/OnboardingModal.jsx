@@ -1,5 +1,5 @@
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
-import globeIcon from '../assets/misc/globeIcon.png'
+import globeIcon from '/public/globeIcon.png'
 import './OnboardingModal.css'
 
 function OnboardingModal({ onDismiss }) {

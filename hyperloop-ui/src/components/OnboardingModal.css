@@ -75,3 +75,10 @@
     background: #e8890a;
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
 }
+
+.onboarding-logo img {
+    border: none !important;
+    width: auto !important;
+    height: auto !important;
+    max-height: 40px;
+}

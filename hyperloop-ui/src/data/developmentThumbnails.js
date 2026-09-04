@@ -245,8 +245,21 @@ import CheaperFuelImports from '../assets/developments-thumb/MariachiBar.jpg'
 import ImprovedCyclingInfrastructure from '../assets/developments-thumb/ImprovedCyclingInfrastructure.jpg'
 import NighttimePayIncentives from '../assets/developments-thumb/NighttimePayIncentives.jpg'
 import AdvertisingCampaignSouthKorea from '../assets/developments-thumb/AdvertisingCampaignSouthKorea.jpg'
-
-
+import AdvertisingCampaignAustralia from '../assets/developments-thumb/AdvertisingCampaignAustralia.jpg'
+import AdvertisingCampaignBelgium from '../assets/developments-thumb/AdvertisingCampaignBelgium.jpg'
+import AdvertisingCampaignCanada from '../assets/developments-thumb/advertisingCampaignCanada.jpg'
+import AdvertisingCampaignIreland from '../assets/developments-thumb/advertisingCampaignIreland.jpg'
+import AdvertisingCampaignFrance from '../assets/developments-thumb/advertisingCampaignFrance.jpg'
+import AdvertisingCampaignJapan from '../assets/developments-thumb/advertisingCampaignJapan.jpg'
+import AdvertisingCampaignPoland from '../assets/developments-thumb/advertisingCampaignPoland.jpg'
+import AdvertisingCampaignRussia from '../assets/developments-thumb/advertisingCampaignRussia.jpg'
+import MayTicketDeals from '../assets/developments-thumb/MayTicketDeals.jpg'
+import AprilTicketDeals from '../assets/developments-thumb/AprilTicketDeals.jpg'
+import JanuaryTicketDeals from '../assets/developments-thumb/januaryTicketDeals.jpg'
+import OctoberTicketDeals from '../assets/developments-thumb/octoberTicketDeals.jpg'
+import DecemberTicketDeals from '../assets/developments-thumb/DecemberTicketDeals.jpg'
+import BusinessClassCabins from '../assets/developments-thumb/BusinessClassCabins.jpg'
+import ArcticTourismInitiatives from '../assets/developments-thumb/ArcticTourismInitiatives.jpg'
 
 
 const developmentImages = {
@@ -496,7 +509,21 @@ const developmentImages = {
         "Cheaper Fuel Imports": CheaperFuelImports,
         "Advertising Campaign: South Korea": AdvertisingCampaignSouthKorea,
         "Nighttime Pay Incentives": NighttimePayIncentives,
-
+        "Arctic Tourism Initiatives": ArcticTourismInitiatives,
+        "Business-Class Cabins": BusinessClassCabins,
+        "April Ticket Deals": AprilTicketDeals,
+        "May Ticket Deals": MayTicketDeals,
+        "October Ticket Deals": OctoberTicketDeals,
+        "January Ticket Deals": JanuaryTicketDeals,
+        "December Ticket Deals": DecemberTicketDeals,
+        "Advertising Campaign: Canada": AdvertisingCampaignCanada,
+        "Advertising Campaign: Belgium": AdvertisingCampaignBelgium,
+        "Advertising Campaign: Ireland": AdvertisingCampaignIreland,
+        "Advertising Campaign: France": AdvertisingCampaignFrance,
+        "Advertising Campaign: Russia": AdvertisingCampaignRussia,
+        "Advertising Campaign: Poland": AdvertisingCampaignPoland,
+        "Advertising Campaign: Japan": AdvertisingCampaignJapan,
+        "Advertising Campaign: Australia": AdvertisingCampaignAustralia,
 
 
 

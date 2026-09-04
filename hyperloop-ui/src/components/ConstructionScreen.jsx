@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
-import globeIcon from '../assets/misc/globeIcon.png'
+import globeIcon from '/public/globeIcon.png'
 import './ConstructionScreen.css'
 
 const TIPS = [

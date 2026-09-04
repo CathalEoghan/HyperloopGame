@@ -1,3 +1,4 @@
+import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import helloIcon from '../assets/misc/hello.png'
 import './OfflineModal.css'
 
@@ -7,7 +8,7 @@ function formatDuration(seconds) {
     const m = Math.floor((seconds % 3600) / 60)
     if (d > 0) return `${d}d ${h}h ${m}m`
     if (h > 0) return `${h}h ${m}m`
-    if (m > 0) return `${m}m`
+    if (m > 0) return `${m} minutes`
     return 'a moment'
 }
 
@@ -25,7 +26,12 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect }) {
                     <span className="offline-earnings-amount">£{Math.floor(offlineIncome).toLocaleString()}</span>
                     <span className="offline-earnings-note">Capped at 48 hours</span>
                 </div>
-                <button className="closeButton" style={{ marginTop: '16px' }} onClick={onCollect}>
+                <button
+                    className="closeButton"
+                    style={{ marginTop: '16px' }}
+                    onMouseEnter={() => playHoverSound()}
+                    onClick={() => { playClickSound2(); onCollect() }}
+                >
                     Collect & Continue
                 </button>
             </div>

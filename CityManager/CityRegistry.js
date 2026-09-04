@@ -245,6 +245,21 @@ import { Inverness } from './Inverness.js'
 import { Dili } from './Dili.js'
 import { Daegu } from './Daegu.js'
 import { Vilnius } from './Vilnius.js'
+import { Georgetown } from './Georgetown.js'
+import { Derry } from './Derry.js'
+import { Lublin } from './Lublin.js'
+import { Chișinău } from './Chișinău.js'
+import { Nanjing } from './Nanjing.js'
+import { Omsk } from './Omsk.js'
+import { Astana } from './Astana.js'
+import { Verona } from './Verona.js'
+import { Antwerp } from './Antwerp.js'
+import { Nuuk } from './Nuuk.js'
+import { Calgary } from './Calgary.js'
+import { Bruges } from './Bruges.js'
+import { Darwin } from './Darwin.js'
+import { Hiroshima } from './Hiroshima.js'
+import { Lyon } from './Lyon.js'
 
 
 export const allCities = [
@@ -494,6 +509,21 @@ export const allCities = [
     Luanda,
     Vilnius,
     Daegu,
+    Georgetown,
+    Derry,
+    Lublin,
+    Chișinău,
+    Nanjing,
+    Omsk,
+    Verona,
+    Astana,
+    Antwerp,
+    Calgary,
+    Nuuk,
+    Bruges,
+    Darwin,
+    Hiroshima,
+    Lyon,
 
 
 ]

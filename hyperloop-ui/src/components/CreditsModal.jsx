@@ -1,5 +1,5 @@
 import { playClickSound2 } from '../utils/sound.js'
-import globeIcon from '../assets/misc/globeIcon.png'
+import globeIcon from '/public/globeIcon.png'
 import './CreditsModal.css'
 
 const CREDITS_TEXT = `CITY IMAGES

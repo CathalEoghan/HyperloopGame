@@ -5,7 +5,7 @@ import clockIcon from '../assets/misc/clock.png'
 import cashIcon from '../assets/misc/cash.png'
 import starIcon from '../assets/misc/star.png'
 import reputationIcon from '../assets/misc/reputation.png'
-import { playClickSound2, playClickSound3, playWorkClickSound } from '../utils/sound.js'
+import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } from '../utils/sound.js'
 
 const WORK_PHRASES = [
     'Processed passenger',
@@ -36,7 +36,6 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     const btnRef = useRef(null)
     const [displayBalance, setDisplayBalance] = useState(balance)
     const animationRef = useRef(null)
-    const startBalanceRef = useRef(balance)
     const startTimeRef = useRef(null)
 
     useEffect(() => {
@@ -73,25 +72,42 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     }, [balance])
 
     const handleWork = () => {
-        onWork()
+        onWork(() => {
+            const id = floatId++
+            const rect = btnRef.current.getBoundingClientRect()
+            setFloats(prev => [...prev, { id, isRep: true, x: rect.left + rect.width / 2, y: rect.top }])
+            setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
+        })
         playWorkClickSound()
         const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
         const id = floatId++
         const rect = btnRef.current.getBoundingClientRect()
-        const x = rect.left + rect.width / 2
-        const y = rect.top
-        setFloats(prev => [...prev, { id, phrase, x, y }])
-        setTimeout(() => {
-            setFloats(prev => prev.filter(f => f.id !== id))
-        }, 1500)
+        setFloats(prev => [...prev, { id, phrase, isRep: false, x: rect.left + rect.width / 2, y: rect.top }])
+        setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
     }
+
+    const getEventIndicatorText = () => {
+        if (!activeEvent) return ''
+        const { effectType, title, instantCashAmount } = activeEvent
+        if (effectType === 'instantCash') return `${title} — +£${instantCashAmount?.toLocaleString()}`
+        if (effectType === 'instantCashLoss') return `${title} — -£${Math.abs(instantCashAmount)?.toLocaleString()}`
+        if (effectType === 'passiveBoost') return `${title} — +50% passive income`
+        if (effectType === 'passivePenalty') return `${title} — -50% passive income`
+        if (effectType === 'workBoost') return `${title} — +50% work earnings`
+        if (effectType === 'workPenalty') return `${title} — -50% work earnings`
+        return title
+    }
+
+    const isInstantEvent = activeEvent?.effectType === 'instantCash' || activeEvent?.effectType === 'instantCashLoss'
 
     return (
         <>
         <div className="TopBanner">
             <h1 className="TerminalName">{terminalName}</h1>
-            <button ref={btnRef} className="work-banner-btn" onClick={handleWork}>
-                Work (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', marginBottom: '1px' }} /> {workEarnings.toLocaleString()})
+            <button ref={btnRef} className="work-banner-btn" onClick={handleWork} onMouseEnter={() => playHoverSound()}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    Work (+<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{workEarnings.toLocaleString()})
+                </span>
             </button>
             <div className="work-divider" />
             <div className="rightSideDetails">
@@ -110,6 +126,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             </div>
             <button
                 className="MysterySpot"
+                onMouseEnter={() => playHoverSound()}
                 onClick={() => {
                     if (activeTab === "DepartureBoard") {
                         playClickSound3();
@@ -129,16 +146,26 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             </button>
             {floats.map(f => (
                 <div key={f.id} className="work-float" style={{ left: f.x, top: f.y }}>
-                    <span className="work-float-phrase">{f.phrase}</span>
-                    <span className="work-float-earnings">+£{workEarnings.toLocaleString()}</span>
+                    {f.isRep ? (
+                        <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                            +<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />5 Reputation
+                        </span>
+                    ) : (
+                        <>
+                            <span className="work-float-phrase">{f.phrase}</span>
+                            <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
+                                +<img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline-block' }} />{workEarnings.toLocaleString()}
+                            </span>
+                        </>
+                    )}
                 </div>
             ))}
         </div>
         {activeEvent && (
             <div className={`event-indicator ${activeEvent.type === 'positive' ? 'event-indicator-positive' : 'event-indicator-negative'}`}>
                 <span className="event-indicator-icon">{activeEvent.type === 'positive' ? '▲' : '▼'}</span>
-                <span className="event-indicator-text">{activeEvent.title} — {activeEvent.effect.target === 'passive' ? 'passive income' : 'work earnings'} ×{activeEvent.effect.multiplier}</span>
-                <span className="event-indicator-timer">{eventSecondsLeft}s remaining</span>
+                <span className="event-indicator-text">{getEventIndicatorText()}</span>
+                {!isInstantEvent && <span className="event-indicator-timer">{eventSecondsLeft}s remaining</span>}
             </div>
         )}
         </>

@@ -85,9 +85,9 @@
 }
 
 .settings-option-active {
-    background: #f5a623 !important;
-    border-color: #f5a623 !important;
-    color: white !important;
+    background: #f5a623;
+    border-color: #f5a623;
+    color: white;
 }
 
 .settings-name-input-row {
@@ -127,4 +127,12 @@
 
 .settings-save-btn:hover {
     background: #e8890a;
+}
+
+.settings-save-btn-danger {
+    background: #c0392b;
+}
+
+.settings-save-btn-danger:hover {
+    background: #a93226;
 }

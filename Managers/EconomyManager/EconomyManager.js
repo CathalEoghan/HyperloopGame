@@ -59,23 +59,19 @@ export class EconomyManager {
         const popBonus = city.population * POPULATION_INCOME_MODIFIER;
         let income = tierBase + popBonus;
 
-        // Connection boost
         income *= (1 + this.getUpgradeSum('connectionBoost'));
 
-        // Continent boost
         const continentUpgrade = this.progressionManager.purchasedUpgrades.find(u =>
             u.effectType === 'continentBoost' &&
             u.name.toLowerCase().includes(city.continent?.toLowerCase().split(' ')[0])
         );
         if (continentUpgrade) income *= (1 + continentUpgrade.effectValue);
 
-        // Country advertising boost
         const countryAdBoost = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'countryAdvertisingBoost' && u.country === city.country)
             .reduce((sum, u) => sum + u.effectValue, 0);
         if (countryAdBoost > 0) income *= (1 + countryAdBoost);
 
-        // Local country boost (home city's country)
         const homeCity = this.progressionManager.purchasedCities[0];
         if (homeCity && city.country === homeCity.country && homeCity.localCountryBoostValue > 0) {
             const localBoostCount = this.progressionManager.purchasedUpgrades
@@ -83,12 +79,10 @@ export class EconomyManager {
             income *= (1 + homeCity.localCountryBoostValue * localBoostCount);
         }
 
-        // Southern hemisphere boost
         if (city.isSouthern && this.hasUpgrade('southernHemisphereBoost')) {
             income *= (1 + this.getUpgradeSum('southernHemisphereBoost'));
         }
 
-        // Arctic boost (lat > 60)
         if (coordinates && coordinates[city.name]) {
             const lat = coordinates[city.name].lat;
             if (lat > 60 && this.hasUpgrade('arcticBoost')) {
@@ -96,21 +90,18 @@ export class EconomyManager {
             }
         }
 
-        // Continent expansion boost
         const continentExpansionBoost = this.getUpgradeSum('continentExpansionBoost');
         if (continentExpansionBoost > 0) {
             const uniqueContinents = new Set(this.progressionManager.purchasedCities.map(c => c.continent)).size;
             income *= (1 + continentExpansionBoost * uniqueContinents);
         }
 
-        // Country expansion boost
         const countryExpansionBoost = this.getUpgradeSum('countryExpansionBoost');
         if (countryExpansionBoost > 0) {
             const uniqueCountries = new Set(this.progressionManager.purchasedCities.map(c => c.country)).size;
             income *= (1 + countryExpansionBoost * uniqueCountries);
         }
 
-        // Seasonal boost
         if (this.hasUpgrade('seasonBoost')) {
             const month = new Date().getMonth();
             const seasons = { Spring: [2,3,4], Summer: [5,6,7], Autumn: [8,9,10], Winter: [11,0,1] };
@@ -131,7 +122,7 @@ export class EconomyManager {
 
     calculateDailyIncome(coordinates = null) {
         const base = (this.calculateDevelopmentIncome() + this.calculatePopulationIncome(coordinates)) / SECONDS_IN_A_DAY;
-        if (this.activeEvent?.effect.target === 'passive') {
+        if (this.activeEvent?.effectType === 'passiveBoost' || this.activeEvent?.effectType === 'passivePenalty') {
             return base * this.activeEvent.effect.multiplier;
         }
         return base;
@@ -146,7 +137,7 @@ export class EconomyManager {
         const bonus = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length * 100;
         const total = baseEarnings + bonus;
-        if (this.activeEvent?.effect.target === 'work') {
+        if (this.activeEvent?.effectType === 'workBoost' || this.activeEvent?.effectType === 'workPenalty') {
             return Math.floor(total * this.activeEvent.effect.multiplier);
         }
         return total;

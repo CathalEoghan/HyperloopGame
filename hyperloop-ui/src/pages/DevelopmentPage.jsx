@@ -19,6 +19,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [search, setSearch] = useState('')
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [showUpgradeModal, setShowUpgradeModal] = useState(false)
+    const [showBoostTooltip, setShowBoostTooltip] = useState(false)
 
     const progressionManager = constructionManager.progressionManager
 
@@ -89,7 +90,10 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
             {purchased.length > 0 && (
                 <div className="total-revenue-banner">
                     <span>Total development income:</span>
-                    <strong>£{totalRevenue.toLocaleString()}/day</strong>
+                    <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
+                        {totalRevenue.toLocaleString()}/day
+                    </strong>
                 </div>
             )}
 
@@ -112,10 +116,10 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
                                 {info.totalPct === 100 && ' 🎉 Maximum reached!'}
                             </p>
-                            <p>Cost: <strong>£{info.cashCost.toLocaleString()}</strong> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></p>
+                            <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString()}</span></strong> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></p>
                             {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
-                                <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onClick={() => {
+                                <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
                                     if (!canAfford) return;
                                     playClickSound2();
                                     onUpgrade(selectedDevelopment);
@@ -123,7 +127,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 }}>
                                     Upgrade
                                 </button>
-                                <button className="closeButton" onClick={() => { playClickSound2(); setShowUpgradeModal(false) }}>Cancel</button>
+                                <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowUpgradeModal(false) }}>Cancel</button>
                             </div>
                         </div>
                     </div>
@@ -182,25 +186,70 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 })()}
                                 <p><strong>Category</strong>: {selectedDevelopment.category}</p>
                                 {selectedDevelopment.revenue ? (
-                                    <>
-                                        <p><strong>Base Revenue</strong>: £{selectedDevelopment.revenue.toLocaleString()}/day</p>
+                                    <div style={{ width: '100%', margin: '8px 0' }}>
+                                        {(() => {
+                                            const catBoost = economyManager.getCategoryMultiplier(selectedDevelopment.category) - 1
+                                            const devBoost = economyManager.getUpgradeSum('developmentBoost')
+                                            const totalBoostPct = Math.round(((1 + catBoost) * (1 + devBoost) - 1) * 100)
+                                            const tooltipLines = []
+                                            if (catBoost > 0) tooltipLines.push(`${selectedDevelopment.category} bonus: +${Math.round(catBoost * 100)}%`)
+                                            if (devBoost > 0) tooltipLines.push(`Development boost: +${Math.round(devBoost * 100)}%`)
+                                            return (
+                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #eee', position: 'relative' }}>
+                                                    <span style={{ fontSize: '0.85rem', color: '#888' }}>Base Revenue</span>
+                                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
+                                                        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
+                                                        {selectedDevelopment.revenue.toLocaleString()}/day
+                                                        {totalBoostPct > 0 && (
+                                                            <span
+                                                                style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
+                                                                onMouseEnter={() => setShowBoostTooltip(true)}
+                                                                onMouseLeave={() => setShowBoostTooltip(false)}
+                                                            >
+                                                                +{totalBoostPct}%
+                                                                {showBoostTooltip && (
+                                                                    <div style={{
+                                                                        position: 'absolute', bottom: '120%', right: 0,
+                                                                        background: '#222', color: 'white',
+                                                                        borderRadius: '6px', padding: '6px 10px',
+                                                                        fontSize: '0.75rem', whiteSpace: 'nowrap',
+                                                                        zIndex: 10, fontWeight: 'normal',
+                                                                        boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                                                                    }}>
+                                                                        {tooltipLines.map((line, i) => <div key={i}>{line}</div>)}
+                                                                    </div>
+                                                                )}
+                                                            </span>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            )
+                                        })()}
                                         {getLevel(selectedDevelopment) > 0 && (
-                                            <p><strong>Upgraded Revenue</strong>: £{economyManager.getEffectiveDevRevenue(selectedDevelopment).toLocaleString()}/day
-                                                <span style={{ color: '#27ae60', marginLeft: '6px' }}>(+{[0,15,50,100][getLevel(selectedDevelopment)]}%)</span>
-                                            </p>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #eee' }}>
+                                                <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgraded Revenue</span>
+                                                <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 'bold' }}>
+                                                    <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0', display: 'block' }} />
+                                                    <span>{economyManager.getEffectiveDevRevenue(selectedDevelopment).toLocaleString()}/day</span>
+                                                    <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0,15,50,100][getLevel(selectedDevelopment)]}%)</span>
+                                                </span>
+                                            </div>
                                         )}
-                                        <p><strong>Upgrade Level</strong>: {getLevel(selectedDevelopment)} / 3</p>
-                                    </>
+                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
+                                            <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgrade Level</span>
+                                            <span style={{ fontWeight: 'bold' }}>{getLevel(selectedDevelopment)} / 3</span>
+                                        </div>
+                                    </div>
                                 ) : (
                                     <p><strong>Revenue</strong>: N/A</p>
                                 )}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     {selectedDevelopment.revenue && getLevel(selectedDevelopment) < 3 && (
-                                        <button className="closeButton" onClick={() => { playClickSound2(); setShowUpgradeModal(true) }}>
+                                        <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowUpgradeModal(true) }}>
                                             Upgrade
                                         </button>
                                     )}
-                                    <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+                                    <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </div>
                             </>
                         )}
@@ -249,7 +298,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         {!isUnderConstruction && (
                                             <div className="dev-revenue-strip">
                                                 {development.revenue
-                                                    ? `£${economyManager.getEffectiveDevRevenue(development).toLocaleString()}/day`
+                                                    ? <><img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.getEffectiveDevRevenue(development).toLocaleString()}/day</>
                                                     : 'UPGRADE'}
                                             </div>
                                         )}
@@ -277,7 +326,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 style={{ width: '100%', height: '160px' }}
                             />
                             <div className="dev-revenue-strip" style={{ color: '#aaa' }}>
-                                {development.revenue ? `£${development.revenue.toLocaleString()}/day` : 'UPGRADE'}
+                                {development.revenue ? <><img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.revenue.toLocaleString()}/day</> : 'UPGRADE'}
                             </div>
                         </div>
                         <div>{development.name}</div>

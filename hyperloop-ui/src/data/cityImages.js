@@ -244,6 +244,23 @@ const cityImages = {
     "Dili": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Dili.jpg",
     "Daegu": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Daegu.jpg",
     "Vilnius": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Vilnius.jpg",
+    "Kabul": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Kabul.jpg",
+    "Georgetown": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Georgetown.jpg",
+    "Lublin": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Lublin.jpg",
+    "Derry": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Derry.jpg",
+    "Chișinău": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Chișinău.jpg",
+    "Nanjing": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Nanjing.jpg",
+    "Verona": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Verona.jpg",
+    "Omsk": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Omsk.jpg",
+    "Astana": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Astana.jpg",
+    "Antwerp": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Antwerp.jpg",
+    "Calgary": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Calgary.jpg",
+    "Nuuk": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Nuuk.jpg",
+    "Bruges": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Bruges.jpg",
+    "Darwin": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Darwin.jpg",
+    "Hiroshima": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Hiroshima.jpg",
+    "Lyon": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Lyon.jpg",
+
 
 
 

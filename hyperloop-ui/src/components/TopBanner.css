@@ -147,10 +147,12 @@
     font-family: 'Courier New', monospace;
     font-size: 0.72rem;
     font-weight: bold;
-    color: black;
+    color: #333;
     margin-top: 2px;
+    display: flex;
+    align-items: center;
+    gap: 1px;
 }
-
 @keyframes work-float-up {
     0%   { transform: translateX(-50%) translateY(0);    opacity: 1; }
     70%  { transform: translateX(-50%) translateY(-60px); opacity: 1; }
