@@ -121,7 +121,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <h2 className="settings-section-title">Save Data</h2>
                 <div className="settings-row">
                     <div className="settings-label">
-                        <span className="settings-label-title">Last saved</span>
+                        <span className="settings-label-title">Last Saved</span>
                         <span className="settings-label-desc">{formatLastSaved()}</span>
                     </div>
                     <button className="settings-save-btn" onClick={handleManualSave}>
@@ -130,14 +130,14 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
                     <div className="settings-label">
-                        <span className="settings-label-title">Export save</span>
+                        <span className="settings-label-title">Export Save</span>
                         <span className="settings-label-desc">Download your save as a JSON file to back it up or move to another device.</span>
                     </div>
                     <button className="settings-save-btn" onClick={onExportSave}>Export</button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
                     <div className="settings-label">
-                        <span className="settings-label-title">Import save</span>
+                        <span className="settings-label-title">Import Save</span>
                         <span className="settings-label-desc">Load a previously exported save file. This will overwrite your current save.</span>
                         {importError && <span className="settings-label-desc" style={{ color: '#c0392b' }}>{importError}</span>}
                     </div>
@@ -146,7 +146,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
                     <div className="settings-label">
-                        <span className="settings-label-title">Delete save</span>
+                        <span className="settings-label-title">Delete Save</span>
                         <span className="settings-label-desc">Permanently delete your save and start a new game. This cannot be undone.</span>
                     </div>
                     {confirmDelete ? (

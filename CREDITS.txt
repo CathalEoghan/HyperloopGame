@@ -504,3 +504,4 @@ MISC IMAGES
 
 DepartureBoard.js - Photo by Neuhausengroup via Wikimedia Commons
 ReputationIcon.png - <a href="https://www.flaticon.com/free-icons/clean" title="clean icons">Clean icons created by Smashicons - Flaticon</a>
+globeIcon.png - Photo by pngtree via pngtree
