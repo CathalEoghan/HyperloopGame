@@ -1,0 +1,73 @@
+.daily-login-modal {
+    background: white;
+    border: 2px solid black;
+    border-radius: 12px;
+    padding: 32px 36px;
+    width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.daily-login-heading {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 3px;
+    color: #f5a623;
+    text-transform: uppercase;
+    margin: 0 0 12px;
+}
+
+.daily-login-title {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: #111;
+    margin: 0 0 8px;
+}
+
+.daily-login-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.5;
+    margin: 0 0 24px;
+}
+
+.daily-login-rewards {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #f8f8f8;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+}
+
+.daily-login-reward-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.daily-login-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.daily-login-reward-text {
+    font-family: 'Courier New', monospace;
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #f5a623;
+}
+
+.daily-login-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    color: #aaa;
+    margin: 0 0 20px;
+    font-style: italic;
+}

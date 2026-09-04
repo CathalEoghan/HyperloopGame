@@ -1,13 +1,18 @@
 import { useState, useRef } from 'react'
+import CreditsModal from '../components/CreditsModal.jsx'
+import GuideModal from '../components/GuideModal.jsx'
 import './SettingsPage.css'
 
-function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave }) {
+function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave }) {
     const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '2k')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
     const [nameInput, setNameInput] = useState(terminalName)
     const [nameSaved, setNameSaved] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [importError, setImportError] = useState(null)
+    const [showCredits, setShowCredits] = useState(false)
+    const [showGuide, setShowGuide] = useState(false)
+    const [manualSaved, setManualSaved] = useState(false)
     const fileInputRef = useRef(null)
 
     const handleQualityChange = (quality) => {
@@ -26,6 +31,12 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         onTerminalNameChange(trimmed)
         setNameSaved(true)
         setTimeout(() => setNameSaved(false), 2000)
+    }
+
+    const handleManualSave = () => {
+        onManualSave()
+        setManualSaved(true)
+        setTimeout(() => setManualSaved(false), 2000)
     }
 
     const formatLastSaved = () => {
@@ -50,9 +61,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
 
     return (
         <div className="settings-page">
+            {showCredits && <CreditsModal onClose={() => setShowCredits(false)} />}
+            {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
+
             <h1 className="settings-title">Settings</h1>
 
-            {/* Terminal */}
             <div className="settings-section">
                 <h2 className="settings-section-title">Terminal</h2>
                 <div className="settings-row">
@@ -76,7 +89,6 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
             </div>
 
-            {/* Audio */}
             <div className="settings-section">
                 <h2 className="settings-section-title">Audio</h2>
                 <div className="settings-row">
@@ -91,7 +103,6 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
             </div>
 
-            {/* Graphics */}
             <div className="settings-section">
                 <h2 className="settings-section-title">Graphics</h2>
                 <div className="settings-row">
@@ -106,17 +117,17 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
             </div>
 
-            {/* Save management */}
             <div className="settings-section">
                 <h2 className="settings-section-title">Save Data</h2>
-
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Last saved</span>
                         <span className="settings-label-desc">{formatLastSaved()}</span>
                     </div>
+                    <button className="settings-save-btn" onClick={handleManualSave}>
+                        {manualSaved ? '✓ Saved' : 'Save now'}
+                    </button>
                 </div>
-
                 <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Export save</span>
@@ -124,7 +135,6 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     </div>
                     <button className="settings-save-btn" onClick={onExportSave}>Export</button>
                 </div>
-
                 <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Import save</span>
@@ -134,7 +144,6 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <input type="file" accept=".json" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImport} />
                     <button className="settings-save-btn" onClick={() => fileInputRef.current.click()}>Import</button>
                 </div>
-
                 <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Delete save</span>
@@ -148,6 +157,31 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     ) : (
                         <button className="settings-save-btn" style={{ background: '#c0392b' }} onClick={() => setConfirmDelete(true)}>Delete</button>
                     )}
+                </div>
+            </div>
+
+            <div className="settings-section">
+                <h2 className="settings-section-title">Info</h2>
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Game Guide</span>
+                        <span className="settings-label-desc">Learn how to play Hyperloop Empire.</span>
+                    </div>
+                    <button className="settings-save-btn" onClick={() => setShowGuide(true)}>Guide</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Credits</span>
+                        <span className="settings-label-desc">Photo and sound attribution.</span>
+                    </div>
+                    <button className="settings-save-btn" onClick={() => setShowCredits(true)}>Credits</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #eee' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Report a Bug</span>
+                        <span className="settings-label-desc">Found something broken? Let us know.</span>
+                    </div>
+                    <button className="settings-save-btn" onClick={() => window.open('https://github.com/CathalEoghan/HyperloopGame/issues/new', '_blank')}>Report</button>
                 </div>
             </div>
         </div>

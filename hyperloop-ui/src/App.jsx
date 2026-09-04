@@ -17,6 +17,12 @@ import OfflineModal from "./components/OfflineModal"
 import ConstructionScreen from "./components/ConstructionScreen"
 import LoadingScreen from "./components/LoadingScreen"
 import DevelopmentRevealModal from "./components/DevelopmentRevealModal"
+import FarewellModal from "./components/FarewellModal"
+import NotEnoughRepModal from "./components/NotEnoughRepModal"
+import UpgradeRevealModal from "./components/UpgradeRevealModal"
+import EventModal from "./components/EventModal"
+import DailyLoginModal from "./components/DailyLoginModal"
+import OnboardingModal from "./components/OnboardingModal"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -25,11 +31,8 @@ import { ConstructionManager } from "Managers/ConstructionManager/ConstructionMa
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { playRankUpSound, playReputationWorkBonusSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
+import { getRandomEvent } from "./data/events.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
-import FarewellModal from "./components/FarewellModal"
-import OnboardingModal from "./components/OnboardingModal"
-import EventModal from "./components/EventModal"
-import { EVENTS, getRandomEvent } from "./data/events.js"
 import "./App.css";
 
 const OFFLINE_RATE = 1.0;
@@ -78,19 +81,35 @@ function App() {
   const [devRevealQueue, setDevRevealQueue] = useState([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [hasFreeReroll, setHasFreeReroll] = useState(false);
+  const [showNotEnoughRep, setShowNotEnoughRep] = useState(false);
+  const [revealedUpgrade, setRevealedUpgrade] = useState(null);
   const [activeEvent, setActiveEvent] = useState(null);
-  const activeEventRef = useRef(null);
+  const [dailyLoginData, setDailyLoginData] = useState(null);
 
+  const activeEventRef = useRef(null);
   const prevUnlockedDevCount = useRef(progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length);
   const triggeredDepartures = useRef(new Set());
   const triggeredDelays = useRef(new Set());
-  const hasGivenStarterBonus = useRef(!!savedData);
   const tickCount = useRef(0);
   const prevPurchasedCount = useRef(progressionManager.purchasedCities.length);
   const prevDevCount = useRef(progressionManager.purchasedDevelopments.length);
   const prevRank = useRef(rankManager.rank);
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
+
+  // Daily login check
+  useState(() => {
+    if (!hasSave() || progressionManager.purchasedCities.length === 0) return;
+    const today = new Date().toDateString();
+    const lastLogin = localStorage.getItem('hyperloop_last_login');
+    if (lastLogin === today) return;
+    localStorage.setItem('hyperloop_last_login', today);
+    const hasCommemorativeDisplays = progressionManager.purchasedDevelopments.some(d => d.name === 'Commemorative Displays');
+    const hasPassengerLoyalty = progressionManager.purchasedUpgrades.some(u => u.name === 'Passenger Loyalty Scheme');
+    const cashBonus = hasCommemorativeDisplays ? 50000 : 25000;
+    const repBonus = hasPassengerLoyalty ? 5 : 0;
+    setDailyLoginData({ cashBonus, repBonus });
+  });
 
   const workEarnings = economyManager.calculateWorkClickEarnings(100);
 
@@ -124,7 +143,6 @@ function App() {
       }
       constructionManager.update();
 
-      // Detect newly unlocked developments when a city connects
       const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];
       const currentUnlockedCount = currentUnlocked.length;
       if (currentUnlockedCount > prevUnlockedDevCount.current) {
@@ -189,10 +207,8 @@ function App() {
         }
       }
 
-      // Sync active event to EconomyManager
       economyManager.activeEvent = activeEventRef.current;
 
-      // Random event trigger (~every 20-40 mins on average)
       if (Math.random() < 0.0004 && !activeEventRef.current) {
         const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
         const event = getRandomEvent(positiveOnly);
@@ -258,6 +274,8 @@ function App() {
         activeTab={activeTab}
         onSelect={setActiveTab}
         reputation={reputation}
+        hasFarewellPending={!!activeDeparture}
+        activeEvent={activeEvent}
         onWork={() => {
           progressionManager.addCash(workEarnings);
           if (Math.random() < economyManager.getWorkRepChance()) {
@@ -316,6 +334,7 @@ function App() {
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           economyManager={economyManager}
           onSave={triggerSave}
+          onUpgradeBuilt={(upgrade) => setRevealedUpgrade(upgrade)}
           onUpgrade={(development) => {
             const success = progressionManager.upgradeDevelopment(development);
             if (success) triggerSave();
@@ -348,6 +367,7 @@ function App() {
           onDeleteSave={() => { deleteSave(); window.location.reload(); }}
           onExportSave={exportSave}
           onImportSave={async (file) => { await importSave(file); window.location.reload(); }}
+          onManualSave={triggerSave}
         />
       )}
       <TickerBar terminalName={terminalName} />
@@ -365,6 +385,19 @@ function App() {
         </div>
       )}
 
+      {dailyLoginData && (
+        <DailyLoginModal
+          cashBonus={dailyLoginData.cashBonus}
+          repBonus={dailyLoginData.repBonus}
+          onCollect={() => {
+            progressionManager.addCash(dailyLoginData.cashBonus);
+            if (dailyLoginData.repBonus > 0) progressionManager.addReputation(dailyLoginData.repBonus);
+            setDailyLoginData(null);
+            triggerSave();
+          }}
+        />
+      )}
+
       {activeEvent && (
         <EventModal
           event={activeEvent}
@@ -372,9 +405,19 @@ function App() {
         />
       )}
 
+      {revealedUpgrade && (
+        <UpgradeRevealModal
+          upgrade={revealedUpgrade}
+          onContinue={() => setRevealedUpgrade(null)}
+        />
+      )}
+
+      {showNotEnoughRep && (
+        <NotEnoughRepModal onClose={() => setShowNotEnoughRep(false)} />
+      )}
+
       {showOnboarding && (
         <OnboardingModal
-          terminalName={terminalName}
           onDismiss={() => setShowOnboarding(false)}
         />
       )}
@@ -439,7 +482,7 @@ function App() {
           onClose={() => setClaimedCity(null)}
           onReroll={() => {
             const rerollCost = hasFreeReroll ? 0 : economyManager.getRerollRepCost(15);
-            if (progressionManager.reputation < rerollCost) return;
+            if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
             progressionManager.addReputation(-rerollCost);
             setHasFreeReroll(false);
             progressionManager.removeUnlockedCity(claimedCity);
