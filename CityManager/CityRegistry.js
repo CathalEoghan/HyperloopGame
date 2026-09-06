@@ -260,6 +260,22 @@ import { Bruges } from './Bruges.js'
 import { Darwin } from './Darwin.js'
 import { Hiroshima } from './Hiroshima.js'
 import { Lyon } from './Lyon.js'
+import { Kigali } from './Kigali.js'
+import { Liverpool } from './Liverpool.js'
+import { George_Town } from './George_Town.js'
+import { Tucson } from './Tucson.js'
+import { PortOfSpain } from './PortOfSpain.js'
+import { Christchurch } from './Christchurch.js'
+import { Palermo } from './Palermo.js'
+import { Sapporo } from './Sapporo.js'
+import { Wuhan } from './Wuhan.js'
+import { Yerevan } from './Yerevan.js'
+import { Chennai } from './Chennai.js'
+import { Pretoria } from './Pretoria.js'
+import { İzmir } from './İzmir.js'
+import { Bandung } from './Bandung.js'
+import { Salzburg } from './Salzburg.js'
+import { Düsseldorf } from './Düsseldorf.js'
 
 
 export const allCities = [
@@ -524,6 +540,23 @@ export const allCities = [
     Darwin,
     Hiroshima,
     Lyon,
+    PortOfSpain,
+    Wuhan,
+    Liverpool,
+    Kigali,
+    George_Town,
+    Tucson,
+    Christchurch,
+    Palermo,
+    Sapporo,
+    Yerevan,
+    Chennai,
+    Pretoria,
+    Bandung,
+    Salzburg,
+    Düsseldorf,
+    İzmir,
+
 
 
 ]

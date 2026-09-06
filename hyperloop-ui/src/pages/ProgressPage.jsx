@@ -112,7 +112,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Service Category Bonus',      value: sum('serviceIncome') > 0 ? `+${Math.round(sum('serviceIncome') * 100)}%` : '—' },
             { label: 'All Developments Bonus',      value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
             { label: 'Connection Earnings Bonus',   value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
-            { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? `\u00d7${Math.pow(3, count('workClickBonus'))} (\u00a3${Math.floor(100 * Math.pow(3, count('workClickBonus'))).toLocaleString()}/click)` : '\u2014' },
+            { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>×{Math.pow(3, count('workClickBonus'))} (<CashValue amount={Math.floor(100 * Math.pow(3, count('workClickBonus')))} suffix="/click" />)</span> : '—' },
             { label: 'Farewell Window Extension',   value: count('farewellWindowExtension') > 0 ? `+${count('farewellWindowExtension') * 5} mins` : '—' },
             { label: 'Farewell Rep Bonus',          value: has('farewellRepDoubled') ? '×2' : '—' },
             { label: 'Offline Earnings Cap',        value: `${48 + count('offlineCapExtension') * 24}h` },
@@ -131,6 +131,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     return (
         <div className="progress-page">
+            <div className="progress-content">
             <h2 className="progress-section-header">General Stats</h2>
             <div className="progress-stats">
                 {generalStats.map(({ label, value }) => (
@@ -219,6 +220,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                         </div>
                     )
                 })}
+            </div>
             </div>
         </div>
     )

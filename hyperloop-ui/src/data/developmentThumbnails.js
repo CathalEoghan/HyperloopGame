@@ -260,6 +260,22 @@ import OctoberTicketDeals from '../assets/developments-thumb/OctoberTicketDeals.
 import DecemberTicketDeals from '../assets/developments-thumb/DecemberTicketDeals.jpg'
 import BusinessClassCabins from '../assets/developments-thumb/BusinessClassCabins.jpg'
 import ArcticTourismInitiatives from '../assets/developments-thumb/ArcticTourismInitiatives.jpg'
+import MarchTicketDeals from '../assets/developments-thumb/MarchTicketDeals.jpg'
+import PlushTerminalSeating from '../assets/developments-thumb/PlushTerminalSeating.jpg'
+import FreeStaffBreakfasts from '../assets/developments-thumb/FreeStaffBreakfasts.jpg'
+import FebruaryTicketDeals from '../assets/developments-thumb/FebruaryTicketDeals.jpg'
+import WeekendGetawayDeals from '../assets/developments-thumb/WeekendGetawayDeals.jpg'
+import AdvertisingCampaignNewZealand from '../assets/developments-thumb/AdvertisingCampaignNewZealand.jpg'
+import ComplementaryAfternoonStaffMeals from '../assets/developments-thumb/ComplementaryAfternoonStaffMeals.jpg'
+import AdvertisingCampaignGermany from '../assets/developments-thumb/AdvertisingCampaignGermany.jpg'
+import AugustTicketDeals from '../assets/developments-thumb/AugustTicketDeals.jpg'
+import AdvertisingCampaignChina from '../assets/developments-thumb/AdvertisingCampaignChina.jpg'
+import EveningStaffMealTickets from '../assets/developments-thumb/EveningStaffMealTickets.jpg'
+import AdvertisingCampaignIndia from '../assets/developments-thumb/AdvertisingCampaignIndia.jpg'
+import AdvertisingCampaignSouthAfrica from '../assets/developments-thumb/AdvertisingCampaignSouthAfrica.jpg'
+import AdvertisingCampaignTurkey from '../assets/developments-thumb/AdvertisingCampaignTurkey.jpg'
+import AdvertisingCampaignIndonesia from '../assets/developments-thumb/AdvertisingCampaignIndonesia.jpg'
+import AdvertisingCampaignAustria from '../assets/developments-thumb/AdvertisingCampaignAustria.jpg'
 
 
 const developmentImages = {
@@ -524,6 +540,24 @@ const developmentImages = {
         "Advertising Campaign: Poland": AdvertisingCampaignPoland,
         "Advertising Campaign: Japan": AdvertisingCampaignJapan,
         "Advertising Campaign: Australia": AdvertisingCampaignAustralia,
+        "Advertising Campaign: Turkey": AdvertisingCampaignTurkey,
+        "Advertising Campaign: China": AdvertisingCampaignChina,
+        "Advertising Campaign: New Zealand": AdvertisingCampaignNewZealand,
+        "Advertising Campaign: Austria": AdvertisingCampaignAustria,
+        "Advertising Campaign: Germany": AdvertisingCampaignGermany,
+        "Advertising Campaign: India": AdvertisingCampaignIndia,
+        "Advertising Campaign: South Africa": AdvertisingCampaignSouthAfrica,
+        "Advertising Campaign: Indonesia": AdvertisingCampaignIndonesia,
+        "August Ticket Deals": AugustTicketDeals,
+        "February Ticket Deals": FebruaryTicketDeals,
+        "March Ticket Deals": MarchTicketDeals,
+        "Weekend Getaway Deals": WeekendGetawayDeals,
+        "Plush Terminal Seating": PlushTerminalSeating,
+        "Free Staff Breakfasts": FreeStaffBreakfasts,
+        "Complementary Afternoon Staff Meals": ComplementaryAfternoonStaffMeals,
+        "Evening Staff Meal Tickets": EveningStaffMealTickets,
+
+
 
 
 

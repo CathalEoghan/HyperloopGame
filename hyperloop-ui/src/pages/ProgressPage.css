@@ -1,9 +1,18 @@
 .progress-page {
-    padding: 16px;
-    padding-bottom: 116px;
+    padding: 16px 16px 0;
     background-color: rgb(255, 246, 239);
-    min-height: 100vh;
     font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 180px);
+    overflow: hidden;
+}
+
+.progress-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px;
+    padding-right: 4px;
 }
 
 /* Stats grid */
@@ -319,4 +328,24 @@
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     cursor: pointer;
+}
+
+.progress-city-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.progress-country-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 24px;
+    max-height: 400px;
+    overflow-y: auto;
+    padding-right: 4px;
 }

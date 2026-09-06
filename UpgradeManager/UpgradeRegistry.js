@@ -1,5 +1,5 @@
 
-// Upgrade registry
+// Upgrade Registry
 import { sodaMachines } from './SodaMachines.js'
 import { bank } from './Bank.js'
 import { postalOffice } from './PostalOffice.js'
@@ -98,6 +98,25 @@ import { advertisingCampaignRussia } from './AdvertisingCampaignRussia.js'
 import { advertisingCampaignAustralia } from './AdvertisingCampaignAustralia.js'
 import { businessClassCabins } from './BusinessClassCabins.js'
 import { arcticTourismInitiatives } from './ArcticTourismInitiatives.js'
+import { advertisingCampaignIndia } from './AdvertisingCampaignIndia.js'
+import { advertisingCampaignAustria } from './AdvertisingCampaignAustria.js'
+import { advertisingCampaignGermany } from './AdvertisingCampaignGermany.js'
+import { advertisingCampaignNewZealand } from './AdvertisingCampaignNewZealand.js'
+import { advertisingCampaignIndonesia } from './AdvertisingCampaignIndonesia.js'
+import { advertisingCampaignChina } from './AdvertisingCampaignChina.js'
+import { advertisingCampaignSouthAfrica } from './AdvertisingCampaignSouthAfrica.js'
+import { augustTicketDeals } from './AugustTicketDeals.js'
+import { marchTicketDeals } from './MarchTicketDeals.js'
+import { februaryTicketDeals } from './FebruaryTicketDeals.js'
+import { eveningStaffMealTickets } from './EveningStaffMealTickets.js'
+import { weekendGetawayDeals } from './WeekendGetawayDeals.js'
+import { complementaryAfternoonStaffMeals } from './ComplementaryAfternoonStaffMeals.js'
+import { freeStaffBreakfasts } from './FreeStaffBreakfasts.js'
+import { plushTerminalSeating } from './PlushTerminalSeating.js'
+import { advertisingCampaignTurkey } from './AdvertisingCampaignTurkey.js'
+
+
+
 
 
 
@@ -199,7 +218,25 @@ export const allUpgrades = [
     januaryTicketDeals,
     aprilTicketDeals,
     businessClassCabins,
-    arcticTourismInitiatives
+    arcticTourismInitiatives,
+    marchTicketDeals,
+    plushTerminalSeating,
+    freeStaffBreakfasts,
+    februaryTicketDeals,
+    weekendGetawayDeals,
+    advertisingCampaignNewZealand,
+    complementaryAfternoonStaffMeals,
+    advertisingCampaignGermany,
+    augustTicketDeals,
+    advertisingCampaignChina,
+    eveningStaffMealTickets,
+    advertisingCampaignIndia,
+    advertisingCampaignSouthAfrica,
+    advertisingCampaignTurkey,
+    advertisingCampaignIndonesia,
+    advertisingCampaignAustria,
+
+    
 
 
 ]

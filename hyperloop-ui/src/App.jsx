@@ -49,11 +49,10 @@ function App() {
 
   const [offlineData] = useState(() => {
     const hiddenAt = localStorage.getItem('hyperloop_hidden_at');
-    const accumulated = parseFloat(localStorage.getItem('hyperloop_accumulated_offline') || '0');
-    const recentSeconds = hiddenAt ? (Date.now() - parseInt(hiddenAt)) / 1000 : 0;
-    const totalSeconds = Math.min(accumulated + recentSeconds, economyManager.calculateOfflineCap());
     localStorage.removeItem('hyperloop_hidden_at');
     localStorage.removeItem('hyperloop_accumulated_offline');
+    if (!hiddenAt) return null;
+    const totalSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
     if (totalSeconds < 60) return null;
     const incomePerSecond = economyManager.calculateDailyIncome();
     const offlineIncome = incomePerSecond * totalSeconds * OFFLINE_RATE;
@@ -79,7 +78,19 @@ function App() {
   const [pickedCity, setPickedCity] = useState(null);
   const [pendingRankUps, setPendingRankUps] = useState(0);
   const [claimedCity, setClaimedCity] = useState(null);
-  const [activeDeparture, setActiveDeparture] = useState(null);
+  const [activeDeparture, setActiveDeparture] = useState(() => {
+    const saved = localStorage.getItem('hyperloop_active_departure');
+    if (!saved) return null;
+    try {
+      const dep = JSON.parse(saved);
+      if (dep.expiresAt && Date.now() > dep.expiresAt) {
+        localStorage.removeItem('hyperloop_active_departure');
+        return null;
+      }
+      const secondsRemaining = Math.max(30, Math.floor((dep.expiresAt - Date.now()) / 1000));
+      return { ...dep, secondsRemaining };
+    } catch { return null; }
+  });
   const [activeDelay, setActiveDelay] = useState(null);
   const [devRevealQueue, setDevRevealQueue] = useState([]);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -240,14 +251,17 @@ function App() {
           const windowStartSeconds = windowStart * 60;
           const secondsElapsed = Math.max(0, currentTotalSeconds - windowStartSeconds);
           const secondsRemaining = Math.max(30, windowMinutes * 60 - secondsElapsed);
-          setActiveDeparture({ ...entry, secondsRemaining });
+          const expiresAt = Date.now() + secondsRemaining * 1000;
+          const depEntry = { ...entry, secondsRemaining, expiresAt };
+          localStorage.setItem('hyperloop_active_departure', JSON.stringify(depEntry));
+          setActiveDeparture(depEntry);
         }
       });
 
       if (Math.random() < 0.0002) {
         const eligible = schedule.filter(entry => {
           const diff = (entry.hour * 60 + entry.minute) - (currentHour * 60 + currentMinute);
-          return diff > 60 && !triggeredDelays.current.has(entry.time);
+          return diff > 60 && diff <= 120 && !triggeredDelays.current.has(entry.time) && !entry.delayed;
         });
         if (eligible.length > 0) {
           const entry = eligible[Math.floor(Math.random() * eligible.length)];
@@ -347,32 +361,11 @@ function App() {
   }, [terminalName]);
 
   useEffect(() => {
-    const handleHide = () => {
+    const handleUnload = () => {
       localStorage.setItem('hyperloop_hidden_at', Date.now());
     };
-
-    const handleShow = () => {
-      const hiddenAt = localStorage.getItem('hyperloop_hidden_at');
-      if (hiddenAt) {
-        const elapsed = (Date.now() - parseInt(hiddenAt)) / 1000;
-        const existing = parseFloat(localStorage.getItem('hyperloop_accumulated_offline') || '0');
-        localStorage.setItem('hyperloop_accumulated_offline', String(existing + elapsed));
-        localStorage.removeItem('hyperloop_hidden_at');
-      }
-    };
-
-    const handleVisibility = () => {
-      if (document.hidden) handleHide();
-      else handleShow();
-    };
-
-    document.addEventListener('visibilitychange', handleVisibility);
-    window.addEventListener('beforeunload', handleHide);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibility);
-      window.removeEventListener('beforeunload', handleHide);
-    };
+    window.addEventListener('beforeunload', handleUnload);
+    return () => window.removeEventListener('beforeunload', handleUnload);
   }, []);
 
   if (isLoading) return <LoadingScreen onComplete={() => setIsLoading(false)} />;
@@ -586,9 +579,10 @@ function App() {
             farewellsRef.current = newCount;
             setFarewellsGiven(newCount);
             triggerSave(newCount);
+            localStorage.removeItem('hyperloop_active_departure');
             setActiveDeparture(null);
           }}
-          onMiss={() => setActiveDeparture(null)}
+          onMiss={() => { localStorage.removeItem('hyperloop_active_departure'); setActiveDeparture(null); }}
         />
       )}
       {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && (

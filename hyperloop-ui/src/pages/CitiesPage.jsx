@@ -339,7 +339,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 )}
 
                 {sortedPurchasedCountries.length > 0 && (
-                    <>
+                    <div className="cities-connected-section">
                         <div className="section-header-row">
                             <h1 className="purchasedCitiesHeader">
                                 Connected {purchasedCities.length === 1 ? 'city' : 'cities'}
@@ -362,12 +362,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             </div>
                         </div>
                         {sortedPurchasedCountries.map(country => renderCountrySection(country, groupedPurchased[country]))}
-                    </>
+                    </div>
                 )}
 
                 {sortedAvailableCountries.length > 0 && (
-                    <>
-                        <div className="section-header-row" style={{ marginTop: '24px' }}>
+                    <div className="cities-available-section">
+                        <div className="section-header-row">
                             <h1 className="availableCitiesHeader">
                                 Cities available to connect
                                 <span className="city-count-badge">{filteredAvailable.length}</span>
@@ -378,7 +378,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             </div>
                         </div>
                         {sortedAvailableCountries.map(country => renderCountrySection(country, groupedAvailable[country], true))}
-                    </>
+                    </div>
                 )}
             </div>
         </div>

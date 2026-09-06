@@ -259,6 +259,22 @@ import Bruges from '../assets/cities-thumb/Bruges.jpg'
 import Darwin from '../assets/cities-thumb/Darwin.jpg'
 import Hiroshima from '../assets/cities-thumb/Hiroshima.jpg'
 import Lyon from '../assets/cities-thumb/Lyon.jpg'
+import Liverpool from '../assets/cities-thumb/Liverpool.jpg'
+import Kigali from '../assets/cities-thumb/Kigali.jpg'
+import George_Town from '../assets/cities-thumb/George_Town.jpg'
+import PortOfSpain from '../assets/cities-thumb/PortOfSpain.jpg'
+import Tucson from '../assets/cities-thumb/Tucson.jpg'
+import İzmir from '../assets/cities-thumb/İzmir.jpg'
+import Christchurch from '../assets/cities-thumb/Christchurch.jpg'
+import Palermo from '../assets/cities-thumb/Palermo.jpg'
+import Sapporo from '../assets/cities-thumb/Sapporo.jpg'
+import Wuhan from '../assets/cities-thumb/Wuhan.jpg'
+import Chennai from '../assets/cities-thumb/Chennai.jpg'
+import Yerevan from '../assets/cities-thumb/Yerevan.jpg'
+import Pretoria from '../assets/cities-thumb/Pretoria.jpg'
+import Bandung from '../assets/cities-thumb/Bandung.jpg'
+import Salzburg from '../assets/cities-thumb/Salzburg.jpg'
+import Düsseldorf from '../assets/cities-thumb/Düsseldorf.jpg'
 
 
 
@@ -524,6 +540,22 @@ const cityImages = {
     Darwin: Darwin,
     Hiroshima: Hiroshima,
     Lyon: Lyon,
+    Liverpool: Liverpool,
+    "George Town": George_Town,
+    "Port of Spain": PortOfSpain,
+    Tucson: Tucson,
+    Kigali: Kigali,
+    Christchurch: Christchurch,
+    Palermo: Palermo,
+    Sapporo: Sapporo,
+    Wuhan: Wuhan,
+    Yerevan: Yerevan,
+    Chennai: Chennai,
+    Pretoria: Pretoria,
+    İzmir: İzmir,
+    Bandung: Bandung,
+    Salzburg: Salzburg,
+    Düsseldorf: Düsseldorf,
 
 
 

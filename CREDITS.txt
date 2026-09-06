@@ -190,7 +190,7 @@ Zagreb.jpg - Photo by Vladimir Srajber via Pexels
 StLouis.jpg - Photo by James L via Pexels
 Cleveland.jpg - Photo by Matt via Pexels
 Valencia.jpg - Photo by Salvatore De Lellis via Pexels
-Bucharest.jpg - Photo by Roman Muntean via Pexels
+Bucharest.jpg - Photo by Madalin Pentelie via Wikimedia Commons
 Nice.jpg - Photo by Daniel Furrer via Pexels
 Dallas.jpg - Photo by Anat Morad via Pexels
 Islamabad.jpg - Photo by Waqas Arshad via Pexels
@@ -268,7 +268,18 @@ Düsseldorf.jpg - Photo by Radwan Menzer via Pexels
 Christchurch.jpg - Photo by Michal Klajban via Wikimedia Commons
 Tucson.jpg - Photo by Daquella manera via Flickr
 Sapporo.jpg - Photo via Pixabay
-
+Wuhan.jpg - Photo by CHINA YU via Pexels
+PortOfSpain.jpg - Photo by Anderson Jagradatt Sonnysingh via Pexels
+George Town.jpg - Photo by Jun Lei Lim via Pexels
+Kigali.jpg - Photo by Faustin NKURUNZIZA via Pexels
+Yerevan.jpg - Photo by Valeria Drozdova via Pexels
+Pretoria.jpg - Photo by South African Tourism via Flickr
+İzmir.jpg - Photo by Picasa via Wikimedia Commons
+Bandung.jpg - Photo by Irma Sjachlan via Pexels
+Salzburg.jpg - Photo by Picryl via Pixabay
+Liverpool.jpg - Photo by Balázs Gábor via Pexels
+Nassau.jpg - Photo by Mikhail Nilov via Pexels
+Curitiba.jpg - Photo by Lenandro Melo via Pexels
 
 
 DEVELOPMENTS IMAGES
@@ -532,7 +543,19 @@ AdvertisingCampaignGermany.jpg - Photo by Wolfgang Weiser via Pexels
 AdvertisingCampaignNewZealand.jpg - Photo by Tākuta / Edward Hyde via Wikimedia Commons
 WeekendGetawayDeals.jpg - Photo by Ron Lach via Pexels
 AugustTicketDeals.jpg - Photo by Valeria Nikitina via Pexels
-
+AdvertisingCampaignChina.jpg - Photo by aboodi vesakaran via Pexels
+FebruaryTicketDeals.jpg - Photo by Eva Bronzini via Pexels
+FreeStaffBreakfasts.jpg - Photo by Sergey Meshkov via Pexels
+PlushTerminalSeating.jpg - Photo by Наталья Маркина via Pexels
+EveningStaffMealTickets.jpg - Photo by Valeria Boltneva via Pexels
+AdvertisingCampaignIndia.jpg - Photo by Amit Rai via Pexels
+AdvertisingCampaignAustria.jpg - Photo by aboodi vesakaran via Pexels
+AdvertisingCampaignSouthAfrica.jpg - Photo by Ubuntu Images via Pexels
+AdvertisingCampaignTurkey.jpg - Photo by Şengül Keleş via Pexels
+AdvertisingCampaignIndonesia.jpg - Photo by aboodi vesakaran via Pexels
+MarchTicketDeals.jpg - Photo by Gosia K via Pexels
+ValentinesDaySales.jpg - Photo by Heber Vazquez via Pexels
+ChristmasDayFestival.jpg - Photo by Sami TÜRK via Pexels
 
 
 

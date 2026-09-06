@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { playLeavingSound, playFarewellAcceptSound } from '../utils/sound.js'
+import { playLeavingSound, playFarewellAcceptSound, playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
@@ -56,7 +56,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 <p className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}>
                     {timeDisplay}
                 </p>
-                <button className="farewell-button" onClick={() => {
+                <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={() => {
                     playFarewellAcceptSound()
                     onFarewell(repGain)
                 }}>
