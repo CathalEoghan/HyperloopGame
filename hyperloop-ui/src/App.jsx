@@ -214,6 +214,7 @@ function App() {
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
+      const currentSecond = now.getSeconds();
       const todayKey = now.toDateString();
       const storedDeparturesDate = localStorage.getItem('hyperloop_departures_date');
       if (storedDeparturesDate !== todayKey) {
@@ -235,8 +236,10 @@ function App() {
         if (currentMins >= windowStart && currentMins < depMins && !triggeredDepartures.current.has(key)) {
           triggeredDepartures.current.add(key);
           localStorage.setItem('hyperloop_triggered_departures', JSON.stringify([...triggeredDepartures.current]));
-          const minutesElapsed = currentMins - windowStart;
-          const secondsRemaining = (windowMinutes - minutesElapsed) * 60;
+          const currentTotalSeconds = currentHour * 3600 + currentMinute * 60 + currentSecond;
+          const windowStartSeconds = windowStart * 60;
+          const secondsElapsed = Math.max(0, currentTotalSeconds - windowStartSeconds);
+          const secondsRemaining = Math.max(30, windowMinutes * 60 - secondsElapsed);
           setActiveDeparture({ ...entry, secondsRemaining });
         }
       });
