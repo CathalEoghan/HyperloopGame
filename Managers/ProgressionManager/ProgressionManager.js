@@ -58,6 +58,7 @@ export class ProgressionManager {
         city.connect();
         city.rewards.forEach(reward => this.unlockReward(reward));
         this.purchasedCities.push(city);
+        this.unlockedCities = this.unlockedCities.filter(c => c !== city);
     }
 
     purchaseDevelopment(development) {
@@ -66,9 +67,12 @@ export class ProgressionManager {
         if (this.purchasedDevelopments.includes(development) || this.purchasedUpgrades.includes(development)) return;
         if (development instanceof Upgrade) {
             this.purchasedUpgrades.push(development);
+            this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u !== development);
         } else {
             this.purchasedDevelopments.push(development);
+            this.unlockedDevelopments = this.unlockedDevelopments.filter(d => d !== development);
         }
+        this.unlockedRewards = this.unlockedRewards.filter(r => r !== development);
     }
 
     getRandomUnlockedCity(allCities) {

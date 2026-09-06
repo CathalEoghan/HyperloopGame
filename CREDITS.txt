@@ -102,6 +102,7 @@ Belgrade.jpg - Photo by Boris Hamer via Pexels
 HoChiMinhCity.jpg - Photo by Nguyên Đoàn via Pexels
 Belfast.jpg - Photo by Donovan Kelly via Pexels
 Oslo.jpg - Photo by @nomundodejr Jr. via Pexels
+Accra.jpg - Photo by Goldenwabbit via Wikimedia Commons
 Jakarta.jpg - Photo by el jusuf via Pexels 
 Suva.jpg - Photo by Donovan Kelly via Pexels
 Kraków.jpg - Photo by Justyna Sieczka via Pexels
@@ -262,6 +263,11 @@ Lyon.jpg - Photo by Luca Nardone via Pexels
 Lublin.jpg - Photo by Karolina Grabowska www.kaboompics.com via Pexels
 Derry.jpg - Photo by K via Pexels
 Georgetown.jpg - Photo by amanderson2 via Wikimedia Commons
+Palermo.jpg - Photo by Elijah Cobb via Pexels
+Düsseldorf.jpg - Photo by Radwan Menzer via Pexels
+Christchurch.jpg - Photo by Michal Klajban via Wikimedia Commons
+Tucson.jpg - Photo by Daquella manera via Flickr
+Sapporo.jpg - Photo via Pixabay
 
 
 
@@ -521,6 +527,11 @@ AdvertisingCampaignAustralia.jpg - Photo by Grantuking via Pexels
 AdvertisingCampaignPoland.jpg - Photo by Karolina Grabowska www.kaboompics.com via Pexels
 AdvertisingCampaignIreland.jpg - Photo by aboodi vesakaran via Pexels
 MayTicketDeals.jpg - Photo by Felix Mittermeier via Pexels
+ComplementaryAfternoonStaffMeals.jpg - Photo by Prosper Buka via Pexels
+AdvertisingCampaignGermany.jpg - Photo by Wolfgang Weiser via Pexels
+AdvertisingCampaignNewZealand.jpg - Photo by Tākuta / Edward Hyde via Wikimedia Commons
+WeekendGetawayDeals.jpg - Photo by Ron Lach via Pexels
+AugustTicketDeals.jpg - Photo by Valeria Nikitina via Pexels
 
 
 

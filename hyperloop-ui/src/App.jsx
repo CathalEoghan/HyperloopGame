@@ -48,16 +48,18 @@ function App() {
   const [savedData] = useState(() => hasSave() ? loadGame(progressionManager, rankManager) : null);
 
   const [offlineData] = useState(() => {
-    const hiddenAt = localStorage.getItem('hyperloop_hidden_at')
-    if (!hiddenAt) return null;
-    const offlineSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
+    const hiddenAt = localStorage.getItem('hyperloop_hidden_at');
+    const accumulated = parseFloat(localStorage.getItem('hyperloop_accumulated_offline') || '0');
+    const recentSeconds = hiddenAt ? (Date.now() - parseInt(hiddenAt)) / 1000 : 0;
+    const totalSeconds = Math.min(accumulated + recentSeconds, economyManager.calculateOfflineCap());
     localStorage.removeItem('hyperloop_hidden_at');
-    if (offlineSeconds < 60) return null;
+    localStorage.removeItem('hyperloop_accumulated_offline');
+    if (totalSeconds < 60) return null;
     const incomePerSecond = economyManager.calculateDailyIncome();
-    const offlineIncome = incomePerSecond * offlineSeconds * OFFLINE_RATE;
+    const offlineIncome = incomePerSecond * totalSeconds * OFFLINE_RATE;
     if (offlineIncome < 1) return null;
     progressionManager.addCash(offlineIncome);
-    return { offlineSeconds, offlineIncome };
+    return { offlineSeconds: totalSeconds, offlineIncome };
   });
 
   const [isLoading, setIsLoading] = useState(() => hasSave() && progressionManager.purchasedCities.length > 0);
@@ -108,13 +110,16 @@ function App() {
     } catch { return null }
   });
   const prevUnlockedDevCount = useRef(progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length);
-  const triggeredDepartures = useRef(new Set());
+  const triggeredDepartures = useRef(new Set(
+    JSON.parse(localStorage.getItem('hyperloop_triggered_departures') || '[]')
+  ));
   const triggeredDelays = useRef(new Set());
   const tickCount = useRef(0);
   const prevPurchasedCount = useRef(progressionManager.purchasedCities.length);
   const prevDevCount = useRef(progressionManager.purchasedDevelopments.length);
   const prevRank = useRef(rankManager.rank);
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
+  const lastTickTimeRef = useRef(Date.now());
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
 
   // Immediate rank detection on load (catches offline rank ups)
@@ -143,7 +148,7 @@ function App() {
     setDailyLoginData({ cashBonus, repBonus });
   }, []);
 
-  const workEarnings = economyManager.calculateWorkClickEarnings(100);
+  const [workEarnings, setWorkEarnings] = useState(() => economyManager.calculateWorkClickEarnings(100));
 
   const triggerSave = (farewells) => {
     saveGame(progressionManager, rankManager, terminalName, farewells ?? farewellsRef.current);
@@ -160,12 +165,18 @@ function App() {
     }
   });
 
-  useEffect(() => {
-    setInterval(() => {
+  const tickIntervalRef = useRef(null);
+
+  const startTick = () => {
+    if (tickIntervalRef.current) return;
+    tickIntervalRef.current = setInterval(() => {
       tickCount.current += 1;
 
+      const now2 = Date.now();
+      const elapsed = Math.min((now2 - lastTickTimeRef.current) / 1000, 10);
+      lastTickTimeRef.current = now2;
       const incomePerSecond = economyManager.calculateDailyIncome();
-      progressionManager.addCash(incomePerSecond);
+      progressionManager.addCash(incomePerSecond * elapsed);
       rankManager.convertCashToXP(progressionManager.totalCashEarned);
       const previousRank = rankManager.rank;
       rankManager.verifyRank();
@@ -204,16 +215,29 @@ function App() {
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
       const todayKey = now.toDateString();
+      const storedDeparturesDate = localStorage.getItem('hyperloop_departures_date');
+      if (storedDeparturesDate !== todayKey) {
+        localStorage.setItem('hyperloop_departures_date', todayKey);
+        localStorage.removeItem('hyperloop_triggered_departures');
+        triggeredDepartures.current = new Set();
+      }
       const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
+
+      const farewellExtensions = progressionManager.purchasedUpgrades
+        .filter(u => u.effectType === 'farewellWindowExtension').length;
+      const windowMinutes = 5 + (farewellExtensions * 5);
 
       schedule.forEach(entry => {
         const key = `${todayKey}_${entry.time}`;
         const depMins = entry.hour * 60 + entry.minute;
-        const farewellHour = Math.floor((depMins - 5) / 60);
-        const farewellMin = (depMins - 5) % 60;
-        if (currentHour === farewellHour && currentMinute === farewellMin && !triggeredDepartures.current.has(key)) {
+        const windowStart = depMins - windowMinutes;
+        const currentMins = currentHour * 60 + currentMinute;
+        if (currentMins >= windowStart && currentMins < depMins && !triggeredDepartures.current.has(key)) {
           triggeredDepartures.current.add(key);
-          setActiveDeparture(entry);
+          localStorage.setItem('hyperloop_triggered_departures', JSON.stringify([...triggeredDepartures.current]));
+          const minutesElapsed = currentMins - windowStart;
+          const secondsRemaining = (windowMinutes - minutesElapsed) * 60;
+          setActiveDeparture({ ...entry, secondsRemaining });
         }
       });
 
@@ -224,7 +248,11 @@ function App() {
         });
         if (eligible.length > 0) {
           const entry = eligible[Math.floor(Math.random() * eligible.length)];
-          const delayMinutes = Math.ceil((Math.floor(Math.random() * 230) + 10) / 5) * 5;
+          const maxDelay = (23 * 60 + 55) - (entry.hour * 60 + entry.minute);
+          const delayMinutes = Math.min(
+            Math.ceil((Math.floor(Math.random() * 230) + 10) / 5) * 5,
+            Math.floor(maxDelay / 5) * 5
+          );
           const newTotalMins = (entry.hour * 60 + entry.minute) + delayMinutes;
           const newHour = Math.floor(newTotalMins / 60) % 24;
           const newMinute = newTotalMins % 60;
@@ -246,7 +274,18 @@ function App() {
       if (Math.random() < 0.0004 && !activeEventRef.current && rankSet >= 3) {
         const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
         const event = getRandomEvent(positiveOnly);
-        const durationSeconds = event.duration();
+
+        // Skip negative events based on negativeEventReduction
+        if (event.type === 'negative') {
+          const reduction = economyManager.getUpgradeSum('negativeEventReduction');
+          if (Math.random() < reduction) return;
+        }
+
+        // bonusDurationExtension only applies to positive events
+        const bonusExtension = event.type === 'positive'
+          ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
+          : 1;
+        const durationSeconds = Math.floor(event.duration() * bonusExtension);
 
         if (event.effectType === 'instantCash') {
           const bonus = Math.floor(economyManager.calculateDailyIncome() * SECONDS_IN_A_DAY * 0.1);
@@ -279,12 +318,25 @@ function App() {
         }
       }
 
+      setWorkEarnings(economyManager.calculateWorkClickEarnings(100));
       setBalance(progressionManager.balance);
       setRankSet(rankManager.rank);
       setTotalCashEarned(progressionManager.totalCashEarned);
       setReputation(progressionManager.reputation);
       setPurchasedCitiesCount(progressionManager.purchasedCities.length);
     }, 1000);
+  };
+
+  const stopTick = () => {
+    if (tickIntervalRef.current) {
+      clearInterval(tickIntervalRef.current);
+      tickIntervalRef.current = null;
+    }
+  };
+
+  useEffect(() => {
+    startTick();
+    return () => stopTick();
   }, [rankManager, progressionManager, economyManager, constructionManager]);
 
   useEffect(() => {
@@ -292,16 +344,32 @@ function App() {
   }, [terminalName]);
 
   useEffect(() => {
-    const handleVisibility = () => {
-      if (document.hidden) {
-        localStorage.setItem('hyperloop_hidden_at', Date.now());
+    const handleHide = () => {
+      localStorage.setItem('hyperloop_hidden_at', Date.now());
+    };
+
+    const handleShow = () => {
+      const hiddenAt = localStorage.getItem('hyperloop_hidden_at');
+      if (hiddenAt) {
+        const elapsed = (Date.now() - parseInt(hiddenAt)) / 1000;
+        const existing = parseFloat(localStorage.getItem('hyperloop_accumulated_offline') || '0');
+        localStorage.setItem('hyperloop_accumulated_offline', String(existing + elapsed));
+        localStorage.removeItem('hyperloop_hidden_at');
       }
     };
+
+    const handleVisibility = () => {
+      if (document.hidden) handleHide();
+      else handleShow();
+    };
+
     document.addEventListener('visibilitychange', handleVisibility);
-    window.addEventListener('beforeunload', () => {
-      localStorage.setItem('hyperloop_hidden_at', Date.now());
-    });
-    return () => document.removeEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('beforeunload', handleHide);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('beforeunload', handleHide);
+    };
   }, []);
 
   if (isLoading) return <LoadingScreen onComplete={() => setIsLoading(false)} />;

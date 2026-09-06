@@ -29,13 +29,14 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [collapsedCountries, setCollapsedCountries] = useState(new Set())
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)
+    const [showCityBoostTip, setShowCityBoostTip] = useState(false)
 
     const underConstruction = allCities.filter(city =>
         constructionManager.progressionManager.citiesUnderConstruction.some(c => c.name === city.name)
     )
     const purchased = allCities.filter(city => purchasedCities.some(p => p.name === city.name))
     const available = allCities.filter(city =>
-        unlockedCities.includes(city) &&
+        (unlockedCities || []).includes(city) &&
         !purchasedCities.some(p => p.name === city.name) &&
         !underConstruction.some(c => c.name === city.name)
     )
@@ -132,7 +133,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         )}
                                         {!isUnderConstruction && !isAvailable && (
                                             <div className="city-income-strip">
-                                                £{dailyIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
+                                                <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle', marginBottom: '1px' }} />{dailyIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
                                             </div>
                                         )}
                                     </div>
@@ -196,22 +197,22 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <h3>🚧 {selectedCity.name}</h3>
                                     <p>Under construction!</p>
                                     <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedCity.finishTime))}</strong></p>
-                                    <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+                                    <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </>
                             ) : available.includes(selectedCity) ? (
                                 <>
                                     <h3>Connect {selectedCity.name}?</h3>
-                                    <button className="constructionButton" onClick={() => {
+                                    <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
                                         playClickSound2();
                                         const cost = constructionManager.calculateTierConnectionCost(selectedCity);
                                         if (balance < cost) { setShowNoFunds(true); closeModal(); }
                                         else { constructionManager.startStationConstruction(selectedCity); playConstructionSound(); onSave(); closeModal(); }
                                     }}>
                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                            Connect (<img className="cashIcon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />{constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString()})
+                                            Connect (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString()})
                                         </span>
                                     </button>
-                                    <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+                                    <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </>
                             ) : (
                                 <>
@@ -220,7 +221,61 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <hr />
                                     <p><strong>Country</strong>: {selectedCity.country}</p>
                                     <p><strong>Population</strong>: {selectedCity.population.toLocaleString()}</p>
-                                    <p>Earning <strong>£{economyManager.calculateCityIncome(selectedCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })}</strong> per day</p>
+                                    {(() => {
+                                        const TIER_INCOME = { 1: 10000, 2: 50000, 3: 100000 }
+                                        const baseIncome = (TIER_INCOME[selectedCity.tier] || 0) + selectedCity.population * 0.0001
+                                        const effectiveIncome = economyManager.calculateCityIncome(selectedCity)
+                                        const boostPct = Math.round(((effectiveIncome / baseIncome) - 1) * 100)
+                                        const lines = []
+                                        const connBoost = economyManager.getUpgradeSum('connectionBoost')
+                                        if (connBoost > 0) lines.push(`Connection bonus: +${Math.round(connBoost * 100)}%`)
+                                        const contExp = economyManager.getUpgradeSum('continentExpansionBoost')
+                                        if (contExp > 0) {
+                                            const uniqueCont = new Set(economyManager.progressionManager.purchasedCities.map(c => c.continent)).size
+                                            lines.push(`Continent expansion: +${Math.round(contExp * uniqueCont * 100)}%`)
+                                        }
+                                        const countryExp = economyManager.getUpgradeSum('countryExpansionBoost')
+                                        if (countryExp > 0) {
+                                            const uniqueCountries = new Set(economyManager.progressionManager.purchasedCities.map(c => c.country)).size
+                                            lines.push(`Country expansion: +${Math.round(countryExp * uniqueCountries * 100)}%`)
+                                        }
+                                        const seasonBoost = economyManager.getUpgradeSum('seasonBoost')
+                                        if (seasonBoost > 0) lines.push(`Seasonal bonus: +${Math.round(seasonBoost * 100)}%`)
+                                        const bizBoost = economyManager.getUpgradeSum('businessWeekBoost')
+                                        if (bizBoost > 0 && economyManager.isBusinessWeek()) lines.push(`Business week: +${Math.round(bizBoost * 100)}%`)
+                                        return (
+                                            <p>
+                                                Earning{' '}
+                                                <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                                                    <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />
+                                                    {effectiveIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                                    {boostPct > 0 && (
+                                                        <span
+                                                            style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
+                                                            onMouseEnter={() => setShowCityBoostTip(true)}
+                                                            onMouseLeave={() => setShowCityBoostTip(false)}
+                                                        >
+                                                            (+{boostPct}%)
+                                                            {showCityBoostTip && lines.length > 0 && (
+                                                                <div style={{
+                                                                    position: 'absolute', bottom: '120%', left: '50%',
+                                                                    transform: 'translateX(-50%)',
+                                                                    background: '#222', color: 'white',
+                                                                    borderRadius: '6px', padding: '6px 10px',
+                                                                    fontSize: '0.75rem', whiteSpace: 'nowrap',
+                                                                    zIndex: 10, fontWeight: 'normal',
+                                                                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
+                                                                }}>
+                                                                    {lines.map((line, i) => <div key={i}>{line}</div>)}
+                                                                </div>
+                                                            )}
+                                                        </span>
+                                                    )}
+                                                </strong>
+                                                {' '}per day
+                                            </p>
+                                        )
+                                    })()}
                                     <p><em>{selectedCity.fact}</em></p>
                                     <img
                                         className="modal-city-image"
@@ -239,6 +294,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                 </p>
                                                 <button
                                                     className="constructionButton"
+                                                    onMouseEnter={() => playHoverSound()}
                                                     style={{ borderColor: '#c0392b', color: '#c0392b', opacity: canAfford ? 1 : 0.5 }}
                                                     onClick={() => {
                                                         if (!canAfford) return;
@@ -248,23 +304,23 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     }}
                                                 >
                                                     <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                        Confirm — <img className="cashIcon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />{disconnectCost.toLocaleString()} + 20 <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
+                                                        Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString()} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)
                                                     </span>
                                                 </button>
                                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough funds or reputation</p>}
-                                                <button className="closeButton" onClick={() => { playClickSound2(); setConfirmDisconnect(false) }}>Cancel</button>
+                                                <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setConfirmDisconnect(false) }}>Cancel</button>
                                             </>
                                         ) : (
                                             <>
-                                                <button className="closeButton" style={{ borderColor: '#c0392b', color: '#c0392b', marginTop: '8px' }} onClick={() => { playClickSound2(); setConfirmDisconnect(true) }}>
+                                                <button className="closeButton" onMouseEnter={() => playHoverSound()} style={{ borderColor: '#c0392b', color: '#c0392b', marginTop: '8px' }} onClick={() => { playClickSound2(); setConfirmDisconnect(true) }}>
                                                     Disconnect city
                                                 </button>
-                                                <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+                                                <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                             </>
                                         )
                                     })()}
                                     {(!homeCity || selectedCity.name === homeCity.name) && (
-                                        <button className="closeButton" onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+                                        <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                     )}
                                 </>
                             )}
@@ -277,7 +333,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
                             <h3>💸 Not enough funds!</h3>
                             <p>You need more money to connect this city.</p>
-                            <button className="closeButton" onClick={() => { playClickSound2(); setShowNoFunds(false) }}>Close</button>
+                            <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowNoFunds(false) }}>Close</button>
                         </div>
                     </div>
                 )}
@@ -286,7 +342,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     <>
                         <div className="section-header-row">
                             <h1 className="purchasedCitiesHeader">
-                                Connected cities
+                                Connected {purchasedCities.length === 1 ? 'city' : 'cities'}
                                 <span className="city-count-badge">{filteredPurchased.length}</span>
                                 <span className="city-count-badge" style={{ background: '#555' }}>{sortedPurchasedCountries.length} countries</span>
                             </h1>
@@ -302,7 +358,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             </div>
                             <div className="city-stat-box">
                                 <span className="city-stat-label">City income</span>
-                                <strong>£{totalIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</strong>
+                                <strong><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />{totalIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</strong>
                             </div>
                         </div>
                         {sortedPurchasedCountries.map(country => renderCountrySection(country, groupedPurchased[country]))}

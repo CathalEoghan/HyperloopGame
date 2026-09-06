@@ -10,7 +10,7 @@ const EFFECT_DESCRIPTIONS = {
     serviceIncome: (v) => `+${Math.round(v * 100)}% income from all Service developments`,
     developmentBoost: (v) => `+${Math.round(v * 100)}% income from all developments`,
     connectionBoost: (v) => `+${Math.round(v * 100)}% income from all city connections`,
-    workClickBonus: () => `+£100 per Work click`,
+    workClickBonus: () => `Work click earnings tripled`,
     offlineCapExtension: () => `+24 hours offline earnings cap`,
     developmentDiscount: (v) => `-${Math.round(v * 100)}% development construction cost`,
     delayCompensationReduction: (v) => `-${Math.round(v * 100)}% delay compensation cost`,
@@ -33,6 +33,11 @@ const EFFECT_DESCRIPTIONS = {
     firstFarewellOfDayDouble: () => `First farewell of the day earns double Reputation`,
     freeRerollOnRankUp: () => `One free city re-roll each time you rank up`,
     positiveEventBoost: (v) => `+${Math.round(v * 100)}% chance of positive events`,
+    dailyLoginRep: (v) => `+${v} Reputation every day you log in`,
+    freeRepOnRankUp: (v) => `+${v} Reputation each time you rank up`,
+    businessWeekBoost: (v) => `+${Math.round(v * 100)}% earnings Monday to Friday`,
+    dailyRepDoubled: () => `Daily Reputation doubled`,
+    equatorBoost: (v) => `+${Math.round(v * 100)}% income from cities near the equator`,
 }
 
 function UpgradeRevealModal({ upgrade, onContinue }) {

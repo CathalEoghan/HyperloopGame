@@ -1,12 +1,13 @@
 .background {
   padding: 8px;
   font-family: "Inter", sans-serif;
-  padding-bottom: 116px;
   background-color: rgb(255, 246, 239);
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 180px);
+  overflow: hidden;
 }
 
-/* Only target actual card/modal buttons, not filter buttons */
 .background .development,
 .background .constructionButton {
   background: none;
@@ -29,6 +30,10 @@
 }
 
 /* Toolbar */
+.dev-toolbar-strip {
+  flex-shrink: 0;
+}
+
 .dev-toolbar {
   display: flex;
   gap: 10px;
@@ -64,7 +69,6 @@
   outline: none;
 }
 
-/* Category filter */
 .category-filter {
   display: flex;
   gap: 8px;
@@ -87,7 +91,7 @@
 }
 
 .category-btn:hover {
-  border-color: #888;
+  border-color: #f5a623;
   color: #222;
 }
 
@@ -97,7 +101,30 @@
   color: white;
 }
 
-/* Revenue banner */
+.category-filter .category-btn-active {
+  background: rgb(68, 68, 68) !important;
+  border-color: rgb(68, 68, 68) !important;
+  color: white !important;
+}
+
+/* Scrollable content */
+.dev-content {
+    flex: 1;
+    overflow-y: auto;
+    padding-bottom: 80px;
+    padding-right: 4px;
+}
+
+/* Revenue banner sticky wrapper */
+.dev-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: rgb(255, 246, 239);
+  padding-bottom: 4px;
+  width: 100%;
+}
+
 .total-revenue-banner {
   background: #222;
   color: white;
@@ -117,11 +144,16 @@
   color: #f5a623;
 }
 
-/* Section headers */
 .section-header {
   font-size: 1.1rem;
   font-weight: bold;
-  margin: 16px 0 10px;
+  margin: 0 0 10px;
+  position: sticky;
+  top: 48px;
+  background: rgb(255, 246, 239);
+  z-index: 9;
+  padding: 8px 0 4px;
+  width: 100%;
 }
 
 .section-count {
@@ -142,7 +174,6 @@
   margin-top: 24px;
 }
 
-/* Development grid */
 .development-row {
   display: flex;
   flex-wrap: wrap;
@@ -218,7 +249,6 @@
   font-weight: normal;
 }
 
-/* Modals */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0;
@@ -242,7 +272,7 @@
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
-.modal img:not(.modal-city-image):not(.cash-icon) {
+.modal img:not(.modal-city-image):not(.cash-icon):not(.rep-icon) {
   border: 1px solid black;
   width: 60px;
   height: 40px;
@@ -268,6 +298,31 @@
   font-weight: bold;
   text-align: center;
   align-self: center;
+  background: none;
+  border: 2px solid black;
+  padding: 6px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal .closeButton {
+  display: block !important;
+  background-color: rgb(255, 239, 224);
+  color: black !important;
+  border: 2px solid black !important;
+  border-radius: 8px !important;
+  padding: 8px 20px !important;
+  margin: 8px auto 0 !important;
+  cursor: pointer !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: bold !important;
+  flex-direction: unset !important;
+  align-items: unset !important;
+}
+
+.modal .closeButton:hover {
+  background-color: #f5a623 !important;
+  color: #333 !important;
 }
 
 .construction-overlay {
@@ -283,69 +338,39 @@
   border-radius: 6px;
 }
 
-.category-filter .category-btn-active {
-    background: #222 !important;
-    border-color: #222 !important;
-    color: white !important;
-}
-
-.closeButton {
-    background: none;
-    border: 2px solid black;
-    padding: 6px 20px;
-    border-radius: 6px;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    font-weight: bold;
-}
-
-.modal .closeButton {
-    display: block !important;
-    background-color: rgb(255, 239, 224);
-    color: black !important;
-    border: 2px solid black !important;
-    border-radius: 8px !important;
-    padding: 8px 20px !important;
-    margin: 8px auto 0 !important;
-    cursor: pointer !important;
-    font-family: 'Inter', sans-serif !important;
-    font-weight: bold !important;
-    flex-direction: unset !important;
-    align-items: unset !important;
-}
-
-.modal .closeButton:hover {
-    background-color: #333 !important;
-    color: white !important;
-}
-
 .board-table thead th {
-    position: sticky;
-    top: 0;
-    background: #0a0a1a;
-    z-index: 1;
+  position: sticky;
+  top: 0;
+  background: #0a0a1a;
+  z-index: 1;
 }
 
 .dev-level-strip {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.85);
-    color: white;
-    font-family: 'Courier New', monospace;
-    font-size: 0.7rem;
-    text-align: center;
-    padding: 3px 0;
-    letter-spacing: 1px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  font-family: 'Courier New', monospace;
+  font-size: 0.7rem;
+  text-align: center;
+  padding: 3px 0;
+  letter-spacing: 1px;
 }
 
 .constructionButton img {
-    width: 14px;
-    height: 14px;
-    border: none;
-    border-radius: 0;
-    vertical-align: middle;
-    margin: 0;
-    display: inline;
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 0;
+  vertical-align: middle;
+  margin: 0;
+  display: inline;
+}
+
+.cash-icon {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
 }

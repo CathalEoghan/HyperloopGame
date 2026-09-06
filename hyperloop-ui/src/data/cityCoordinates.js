@@ -245,6 +245,21 @@ const cityCoordinates = {
 "Luanda":    { lat: -8.8368,  lng:  13.2343 },
 "Vilnius":   { lat: 54.6872,  lng:  25.2797 },
 "Łódź":      { lat: 51.7592,  lng:  19.4560 },
+"Antwerp":   { lat: 51.2194,  lng:  4.4025 },
+"Astana":    { lat: 51.1801,  lng: 71.4460 },
+"Bruges":    { lat: 51.2093,  lng:  3.2247 },
+"Calgary":   { lat: 51.0447,  lng: -114.0719 },
+"Chișinău":  { lat: 47.0105,  lng: 28.8638 },
+"Darwin":    { lat: -12.4634, lng: 130.8456 },
+"Derry":     { lat: 54.9966,  lng: -7.3086 },
+"Georgetown":{ lat:  6.8013,  lng: -58.1551 },
+"Hiroshima": { lat: 34.3853,  lng: 132.4553 },
+"Lublin":    { lat: 51.2465,  lng: 22.5684 },
+"Lyon":      { lat: 45.7640,  lng:  4.8357 },
+"Nanjing":   { lat: 32.0603,  lng: 118.7969 },
+"Nuuk":      { lat: 64.1814,  lng: -51.6941 },
+"Omsk":      { lat: 54.9885,  lng: 73.3242 },
+"Verona":    { lat: 45.4384,  lng: 10.9916 },
 };
 
 export default cityCoordinates;

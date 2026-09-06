@@ -6,12 +6,10 @@ import './FarewellModal.css'
 
 function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const [secondsLeft, setSecondsLeft] = useState(() => {
-        const base = 300
-        if (!economyManager) return base
-        const extensions = economyManager.progressionManager.purchasedUpgrades
-            .filter(u => u.effectType === 'farewellWindowExtension')
-            .reduce((sum, u) => sum + u.effectValue, 0)
-        return base + (extensions * 60)
+        if (departure.secondsRemaining) return departure.secondsRemaining;
+        const extensionCount = economyManager?.progressionManager.purchasedUpgrades
+            .filter(u => u.effectType === 'farewellWindowExtension').length || 0
+        return (5 + extensionCount * 5) * 60
     })
 
     useEffect(() => {
@@ -33,12 +31,9 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const seconds = secondsLeft % 60
     const timeDisplay = `${minutes}:${String(seconds).padStart(2, '0')}`
     const isUrgent = secondsLeft <= 60
-    const flagCode = countryFlags[departure.country]
 
-    // Calculate rep gain
-    const baseRep = 5
-    const repDoubled = economyManager?.progressionManager.purchasedUpgrades.some(u => u.effectType === 'farewellRepDoubled')
-    const repGain = repDoubled ? baseRep * 2 : baseRep
+    const flagCode = countryFlags[departure.country]
+    const repGain = economyManager ? economyManager.getFarewellRepGain(5) : 5
 
     return (
         <div className="farewell-overlay">

@@ -178,7 +178,7 @@ const cityImages = {
     "San Diego": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanDiego.jpg",
     "San Francisco": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanFrancisco.jpg",
     "San Jose": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanJose.jpg",
-    "San José": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanJose.jpg",
+    "San José": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanJosé.jpg",
     "Sana'a": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Sanaa.jpg",
     "Santiago": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Santiago.jpg",
     "Santo Domingo": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SantoDomingo.jpg",

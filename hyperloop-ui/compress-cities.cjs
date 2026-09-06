@@ -1,6 +1,6 @@
 const sharp = require('sharp')
 
-const cities = ['Beijing', 'Chengdu', 'Riga']
+const cities = ['Vilnius']
 
 cities.forEach(city => {
     sharp(`./src/assets/cities/${city}.jpg`)

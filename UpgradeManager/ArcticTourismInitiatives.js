@@ -1,11 +1,11 @@
 
 // Arctic Tourism Initiatives
-import { Upgrade } from '../UpgradeManager/Upgrade.js'
+import { Upgrade } from './Upgrade.js'
 
 export const arcticTourismInitiatives = new Upgrade(
     "Arctic Tourism Initiatives",
     67000,
     "Service",
-    "bonusDurationExtension",
-    0.15
-);
+    "arcticBoost",
+    0.1
+)

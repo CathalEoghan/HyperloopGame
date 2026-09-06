@@ -43,16 +43,20 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
     const showOwnedRef = useRef(true)
+    const purchasedCitiesRef = useRef(purchasedCities)
+    const unlockedCitiesRef = useRef(unlockedCities)
 
-    // Globe setup
+    useEffect(() => {
+        purchasedCitiesRef.current = purchasedCities
+        unlockedCitiesRef.current = unlockedCities
+    }, [purchasedCities, unlockedCities])
+
     useEffect(() => {
         const mount = mountRef.current
         const width = mount.clientWidth
         const height = mount.clientHeight
-
         const scene = new THREE.Scene()
         scene.background = new THREE.Color(0x0a0a1a)
-
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
         let camLon = 0, camLat = 0, camDist = 2.5
 
@@ -75,7 +79,6 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
 
         const globeRadius = 1
         const textureLoader = new THREE.TextureLoader()
-
         const quality = localStorage.getItem('globeQuality') || '2k'
         let dayUrl, nightUrl
         try {
@@ -169,31 +172,27 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
         scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05 })))
 
         const sprites = []
-        const purchasedNames = new Set(purchasedCities.map(c => c.name))
-        const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
+        const purchasedNames = new Set(purchasedCitiesRef.current.map(c => c.name))
+        const unlockedNames = new Set((unlockedCitiesRef.current || []).map(c => c.name))
 
         allCities.forEach(city => {
             const coords = cityCoordinates[city.name]
             if (!coords) return
             const flagCode = countryFlags[city.country]
             if (!flagCode) return
-
             const isPurchased = purchasedNames.has(city.name)
             const isUnlocked = unlockedNames.has(city.name)
             const spritePos = latLngToVector3(coords.lat, coords.lng, globeRadius + 0.035)
             const surfaceNormal = latLngToVector3(coords.lat, coords.lng, 1)
-
             const flagTexture = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
             const spriteMat = new THREE.SpriteMaterial({
                 map: flagTexture, transparent: true, depthTest: true, depthWrite: false,
             })
-
             if (!isPurchased && !isUnlocked) {
                 spriteMat.color = new THREE.Color(0.12, 0.12, 0.12)
             } else if (!isPurchased && isUnlocked) {
                 spriteMat.color = new THREE.Color(0.5, 0.5, 0.5)
             }
-
             const sprite = new THREE.Sprite(spriteMat)
             sprite.position.copy(spritePos)
             sprite.scale.set(0.02, 0.013, 1)
@@ -271,16 +270,17 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
             window.removeEventListener('mouseup', onMouseUp)
             mount.removeEventListener('wheel', onWheel)
             window.removeEventListener('resize', onResize)
-            mount.removeChild(renderer.domElement)
+            if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement)
+            renderer.forceContextLoss()
             renderer.dispose()
         }
-    }, [purchasedCities, unlockedCities])
+    }, [])
 
     return (
         <div className="home-page">
             <div className="globe-top-info">
                 <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
-                <p className="globe-cities">{purchasedCitiesCount} cities connected</p>
+                <p className="globe-cities">{purchasedCitiesCount} {purchasedCitiesCount === 1 ? 'city' : 'cities'} connected</p>
             </div>
             <button
                 className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}

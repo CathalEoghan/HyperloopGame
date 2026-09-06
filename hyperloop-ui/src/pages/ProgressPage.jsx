@@ -64,7 +64,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     const totalRevenue = useMemo(() => {
         const cityIncome = purchasedCities.reduce((sum, c) => sum + economyManager.calculateCityIncome(c), 0)
-        const devIncome = [...(purchasedDevelopments || []), ...(purchasedUpgrades || [])].reduce((sum, d) => sum + (d.revenue || 0), 0)
+        const devIncome = [...(purchasedDevelopments || []), ...(purchasedUpgrades || [])].reduce((sum, d) => sum + economyManager.getEffectiveDevRevenue(d), 0)
         return cityIncome + devIncome
     }, [purchasedCities, purchasedDevelopments, purchasedUpgrades])
 
@@ -81,8 +81,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     }, [purchasedCities])
 
     const revenueDevs = [...(purchasedDevelopments || []), ...(purchasedUpgrades || [])].filter(d => d.revenue > 0)
-    const mostProfitableDev = revenueDevs.length ? revenueDevs.reduce((best, d) => d.revenue > best.revenue ? d : best) : null
-    const leastProfitableDev = revenueDevs.length ? revenueDevs.reduce((worst, d) => d.revenue < worst.revenue ? d : worst) : null
+    const mostProfitableDev = revenueDevs.length ? revenueDevs.reduce((best, d) => economyManager.getEffectiveDevRevenue(d) > economyManager.getEffectiveDevRevenue(best) ? d : best) : null
+    const leastProfitableDev = revenueDevs.length ? revenueDevs.reduce((worst, d) => economyManager.getEffectiveDevRevenue(d) < economyManager.getEffectiveDevRevenue(worst) ? d : worst) : null
 
     const generalStats = [
         { label: 'Terminal age', value: terminalAge() },
@@ -91,8 +91,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Personal farewells given', value: farewellsGiven ?? 0 },
         { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.calculateCityIncome(mostProfitableCity)} suffix="/day" /></span> : '—' },
         { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.calculateCityIncome(leastProfitableCity)} suffix="/day" /></span> : '—' },
-        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{mostProfitableDev.name}</span><CashValue amount={mostProfitableDev.revenue} suffix="/day" /></span> : '—' },
-        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{leastProfitableDev.name}</span><CashValue amount={leastProfitableDev.revenue} suffix="/day" /></span> : '—' },
+        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{mostProfitableDev.name}</span><CashValue amount={economyManager.getEffectiveDevRevenue(mostProfitableDev)} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{leastProfitableDev.name}</span><CashValue amount={economyManager.getEffectiveDevRevenue(leastProfitableDev)} suffix="/day" /></span> : '—' },
     ]
 
     const getUpgradeStats = () => {
@@ -112,7 +112,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Service Category Bonus',      value: sum('serviceIncome') > 0 ? `+${Math.round(sum('serviceIncome') * 100)}%` : '—' },
             { label: 'All Developments Bonus',      value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
             { label: 'Connection Earnings Bonus',   value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
-            { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>+<img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{count('workClickBonus') * 100}/click</span> : '—' },
+            { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? `\u00d7${Math.pow(3, count('workClickBonus'))} (\u00a3${Math.floor(100 * Math.pow(3, count('workClickBonus'))).toLocaleString()}/click)` : '\u2014' },
             { label: 'Farewell Window Extension',   value: count('farewellWindowExtension') > 0 ? `+${count('farewellWindowExtension') * 5} mins` : '—' },
             { label: 'Farewell Rep Bonus',          value: has('farewellRepDoubled') ? '×2' : '—' },
             { label: 'Offline Earnings Cap',        value: `${48 + count('offlineCapExtension') * 24}h` },

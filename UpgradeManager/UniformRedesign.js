@@ -6,6 +6,6 @@ export const uniformRedesign = new Upgrade(
     "Uniform Redesign",
     98700,
     "Service",
-    "connectionBoost",
-    0.1
+    "negativeEventReduction",
+    0.2
 )

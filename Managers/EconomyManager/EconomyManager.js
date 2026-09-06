@@ -25,6 +25,10 @@ export class EconomyManager {
         return this.progressionManager.purchasedUpgrades.some(u => u.effectType === effectType);
     }
 
+    hasUpgradeByName(name) {
+        return this.progressionManager.purchasedUpgrades.some(u => u.name === name);
+    }
+
     getCategoryMultiplier(category) {
         const effectTypeMap = {
             'Food':       'foodIncome',
@@ -41,6 +45,23 @@ export class EconomyManager {
         const base = development.revenue || 0;
         const level = this.progressionManager.developmentUpgradeLevels[development.name] || 0;
         return Math.floor(base * UPGRADE_MULTIPLIERS[level]);
+    }
+
+    isBusinessWeek() {
+        const day = new Date().getDay();
+        return day >= 1 && day <= 5;
+    }
+
+    getSpecialDayMultiplier() {
+        const now = new Date();
+        const month = now.getMonth();
+        const date = now.getDate();
+        if (month === 9 && date === 31 && this.hasUpgradeByName('Halloween Fair')) return 2.0;
+        if (month === 6 && date === 4 && this.hasUpgradeByName('Fourth of July Show')) return 2.0;
+        if (month === 0 && date === 1 && this.hasUpgradeByName("New Year's Celebrations Event")) return 2.0;
+        if (month === 11 && date === 25 && this.hasUpgradeByName('Christmas Day Festival')) return 2.0;
+        if (month === 1 && date === 14 && this.hasUpgradeByName("Valentine's Weekend Sales")) return 2.0;
+        return 1.0;
     }
 
     calculateDevelopmentIncome() {
@@ -88,6 +109,9 @@ export class EconomyManager {
             if (lat > 60 && this.hasUpgrade('arcticBoost')) {
                 income *= (1 + this.getUpgradeSum('arcticBoost'));
             }
+            if (Math.abs(lat) <= 23 && this.hasUpgrade('equatorBoost')) {
+                income *= (1 + this.getUpgradeSum('equatorBoost'));
+            }
         }
 
         const continentExpansionBoost = this.getUpgradeSum('continentExpansionBoost');
@@ -112,6 +136,12 @@ export class EconomyManager {
             if (seasonUpgrade) income *= (1 + seasonUpgrade.effectValue);
         }
 
+        if (this.hasUpgrade('businessWeekBoost') && this.isBusinessWeek()) {
+            income *= (1 + this.getUpgradeSum('businessWeekBoost'));
+        }
+
+        income *= this.getSpecialDayMultiplier();
+
         return income;
     }
 
@@ -133,14 +163,19 @@ export class EconomyManager {
         return Math.floor(baseCost * (1 - discount));
     }
 
+    calculateDiscountedUpgradeCost(baseCost) {
+        const discount = this.getUpgradeSum('developmentUpgradeDiscount');
+        return Math.floor(baseCost * (1 - discount));
+    }
+
     calculateWorkClickEarnings(baseEarnings) {
-        const bonus = this.progressionManager.purchasedUpgrades
-            .filter(u => u.effectType === 'workClickBonus').length * 100;
-        const total = baseEarnings + bonus;
+        const count = this.progressionManager.purchasedUpgrades
+            .filter(u => u.effectType === 'workClickBonus').length;
+        const total = baseEarnings * Math.pow(3, count);
         if (this.activeEvent?.effectType === 'workBoost' || this.activeEvent?.effectType === 'workPenalty') {
             return Math.floor(total * this.activeEvent.effect.multiplier);
         }
-        return total;
+        return Math.floor(total);
     }
 
     calculateOfflineCap() {
@@ -169,5 +204,27 @@ export class EconomyManager {
     getRerollRepCost(baseCost) {
         const discount = this.getUpgradeSum('rerollRepDiscount');
         return Math.max(0, baseCost - discount);
+    }
+
+    getFarewellRepGain(baseRep = 5) {
+        let rep = baseRep;
+        if (this.hasUpgrade('farewellRepDoubled')) rep *= 2;
+        return rep;
+    }
+
+    getFarewellCityIncomeBonus(city) {
+        if (!this.hasUpgrade('personalImageBranding')) return 0;
+        const dailyIncome = this.calculateCityIncome(city);
+        return Math.floor(dailyIncome * 0.1);
+    }
+
+    getMinCityTierOnRankUp() {
+        if (this.hasUpgrade('skilledNegotiationTeams')) return 2;
+        return 1;
+    }
+
+    getDailyRepBonus(rank) {
+        if (!this.hasUpgrade('dailyRepPerRank')) return 0;
+        return Math.floor(rank / 5);
     }
 }

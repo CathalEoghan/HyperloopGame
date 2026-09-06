@@ -1,11 +1,11 @@
 
 // Improved Cycling Infrastructure
-import { Upgrade } from '../UpgradeManager/Upgrade.js'
+import { Upgrade } from './Upgrade.js'
 
 export const improvedCyclingInfrastructure = new Upgrade(
     "Improved Cycling Infrastructure",
     129000,
     "Infrastructure",
-    "farewellRepDoubled",
-    1
-);
+    "connectionBoost",
+    0.1
+)

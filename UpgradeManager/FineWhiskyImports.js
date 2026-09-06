@@ -6,6 +6,6 @@ export const fineWhiskyImports = new Upgrade(
     "Fine Whisky Imports",
     102800,
     "Service",
-    "continentExpansionBoost",
-    0.05
+    "recreationIncome",
+    0.2
 );

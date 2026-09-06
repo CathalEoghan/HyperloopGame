@@ -6,6 +6,6 @@ export const passengerLoyaltyScheme = new Upgrade(
     "Passenger Loyalty Scheme",
     79000,
     "Service",
-    "bonusDurationExtension",
-    0.15
+    "dailyLoginRep",
+    5
 );

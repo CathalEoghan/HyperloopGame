@@ -66,34 +66,38 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
     return (
         <div className="background">
-            <div className="dev-toolbar">
-                <input className="dev-search" type="text" placeholder="Search developments..." value={search} onChange={e => setSearch(e.target.value)} />
-                <select className="sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
-                    <option value="alphabetical">A–Z</option>
-                    <option value="revenue-high">Revenue: High to Low</option>
-                    <option value="revenue-low">Revenue: Low to High</option>
-                    <option value="category">Category</option>
-                    <option value="upgrades-first">Upgrades First</option>
-                </select>
+            <div className="dev-toolbar-strip">
+                <div className="dev-toolbar">
+                    <input className="dev-search" type="text" placeholder="Search developments..." value={search} onChange={e => setSearch(e.target.value)} />
+                    <select className="sort-select" value={sortBy} onChange={e => setSortBy(e.target.value)}>
+                        <option value="alphabetical">A–Z</option>
+                        <option value="revenue-high">Revenue: High to Low</option>
+                        <option value="revenue-low">Revenue: Low to High</option>
+                        <option value="category">Category</option>
+                        <option value="upgrades-first">Upgrades First</option>
+                    </select>
+                </div>
+                <div className="category-filter">
+                    {CATEGORIES.map(cat => (
+                        <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
+                            onClick={() => setActiveCategory(cat)}
+                            onMouseEnter={() => playHoverSound()}>
+                            {cat}
+                        </button>
+                    ))}
+                </div>
             </div>
 
-            <div className="category-filter">
-                {CATEGORIES.map(cat => (
-                    <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
-                        onClick={() => setActiveCategory(cat)}
-                        onMouseEnter={() => playHoverSound()}>
-                        {cat}
-                    </button>
-                ))}
-            </div>
-
+            <div className="dev-content">
             {purchased.length > 0 && (
-                <div className="total-revenue-banner">
-                    <span>Total development income:</span>
-                    <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                        {totalRevenue.toLocaleString()}/day
-                    </strong>
+                <div className="dev-sticky-header">
+                    <div className="total-revenue-banner">
+                        <span>Total development income:</span>
+                        <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                            <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
+                            {totalRevenue.toLocaleString()}/day
+                        </strong>
+                    </div>
                 </div>
             )}
 
@@ -241,7 +245,47 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         </div>
                                     </div>
                                 ) : (
-                                    <p><strong>Revenue</strong>: N/A</p>
+                                    <p style={{ fontSize: '0.88rem', color: '#555', margin: '8px 0' }}>
+                                        <strong>Effect:</strong> {(() => {
+                                            const effects = {
+                                                foodIncome: (v) => `+${Math.round(v * 100)}% income from Food developments`,
+                                                recreationIncome: (v) => `+${Math.round(v * 100)}% income from Recreation developments`,
+                                                shoppingIncome: (v) => `+${Math.round(v * 100)}% income from Shopping developments`,
+                                                serviceIncome: (v) => `+${Math.round(v * 100)}% income from Service developments`,
+                                                developmentBoost: (v) => `+${Math.round(v * 100)}% income from all developments`,
+                                                connectionBoost: (v) => `+${Math.round(v * 100)}% income from all city connections`,
+                                                workClickBonus: () => `Work click earnings tripled`,
+                                                offlineCapExtension: () => `+24 hours offline earnings cap`,
+                                                developmentDiscount: (v) => `-${Math.round(v * 100)}% development construction cost`,
+                                                delayCompensationReduction: (v) => `-${Math.round(v * 100)}% delay compensation cost`,
+                                                delayRepCostReduction: (v) => `-${v} Reputation when ignoring delays`,
+                                                bonusDurationExtension: (v) => `Bonus events last ${Math.round(v * 100)}% longer`,
+                                                farewellWindowExtension: (v) => `+${v} minutes farewell window`,
+                                                farewellRepDoubled: () => `Reputation from farewells doubled`,
+                                                negativeEventReduction: (v) => `Negative events ${Math.round(v * 100)}% less likely`,
+                                                workRepChanceDouble: () => `Double chance of Reputation from Work`,
+                                                workRepChanceTriple: () => `Triple chance of Reputation from Work`,
+                                                continentExpansionBoost: (v) => `+${Math.round(v * 100)}% earnings per unique continent`,
+                                                countryExpansionBoost: (v) => `+${v * 100}% earnings per unique country`,
+                                                southernHemisphereBoost: (v) => `+${Math.round(v * 100)}% from southern hemisphere cities`,
+                                                arcticBoost: (v) => `+${Math.round(v * 100)}% income from Arctic cities`,
+                                                continentBoost: (v) => `+${Math.round(v * 100)}% income from cities on this continent`,
+                                                countryAdvertisingBoost: (v) => `+${Math.round(v * 100)}% income from cities in this country`,
+                                                localCountryBoost: () => `Bonus income from cities in your home country`,
+                                                seasonBoost: (v) => `+${Math.round(v * 100)}% income during this season`,
+                                                rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll cities`,
+                                                freeRerollOnRankUp: () => `One free city re-roll each time you rank up`,
+                                                positiveEventBoost: (v) => `+${Math.round(v * 100)}% chance of positive events`,
+                                                dailyLoginRep: (v) => `+${v} Reputation every day you log in`,
+                                                freeRepOnRankUp: (v) => `+${v} Reputation each time you rank up`,
+                                                businessWeekBoost: (v) => `+${Math.round(v * 100)}% earnings Monday to Friday`,
+                                                dailyRepDoubled: () => `Daily Reputation doubled`,
+                                                equatorBoost: (v) => `+${Math.round(v * 100)}% income from cities near the equator`,
+                                            }
+                                            const fn = effects[selectedDevelopment.effectType]
+                                            return fn ? fn(selectedDevelopment.effectValue) : 'Special effect'
+                                        })()}
+                                    </p>
                                 )}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     {selectedDevelopment.revenue && getLevel(selectedDevelopment) < 3 && (
@@ -333,6 +377,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         <div className="category">{development.category}</div>
                     </button>
                 ))}
+            </div>
             </div>
         </div>
     )

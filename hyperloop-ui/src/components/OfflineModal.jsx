@@ -1,5 +1,6 @@
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import helloIcon from '../assets/misc/hello.png'
+import cashIcon from '../assets/misc/cash.png'
 import './OfflineModal.css'
 
 function formatDuration(seconds) {
@@ -23,7 +24,9 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect }) {
                 </p>
                 <div className="offline-earnings-box">
                     <span className="offline-earnings-label">Offline earnings</span>
-                    <span className="offline-earnings-amount">£{Math.floor(offlineIncome).toLocaleString()}</span>
+                    <span className="offline-earnings-amount" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '22px', height: '22px', border: 'none', borderRadius: '0', objectFit: 'contain', marginTop: '3px' }} />                        {Math.floor(offlineIncome).toLocaleString()}
+                    </span>
                     <span className="offline-earnings-note">Capped at 48 hours</span>
                 </div>
                 <button

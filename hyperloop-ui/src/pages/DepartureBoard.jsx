@@ -159,8 +159,14 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         <div className="departure-board">
             <h2 className="board-title">Departures {today}</h2>
             {schedule.length === 0 ? (
-                <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>Loading departures...</p>
-            ) : (
+    purchasedCities.length <= 1 ? (
+        <p style={{ color: '#f5a623', fontFamily: 'Courier New', marginTop: '24px' }}>
+            Connect more cities to unlock departures!
+        </p>
+    ) : (
+        <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>Loading departures...</p>
+    )
+) : (
                 <table className="board-table">
                     <thead>
                         <tr>

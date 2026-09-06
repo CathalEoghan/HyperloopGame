@@ -1,5 +1,5 @@
 .dev-reveal-modal {
-    background: white;
+    background: rgb(255, 239, 224);
     border: 2px solid black;
     border-radius: 12px;
     padding: 28px 32px;
@@ -46,6 +46,6 @@
 }
 
 .dev-reveal-modal .closeButton:hover {
-    background: #333 !important;
-    color: white !important;
+    background: #f5a623 !important;
+    color: #333 !important;
 }
