@@ -162,6 +162,9 @@ import { italianDeli } from './ItalianDeli.js'
 import { costumeStore } from './CostumeStore.js'
 import { carpetEmporium } from './CarpetEmporium.js'
 import { mariachiBar } from './MariachiBar.js'
+import { ramenBar } from './RamenBar.js'
+import { tofuRestaurant } from './TofuRestaurant.js'
+import { shoeStore } from './ShoeStore.js'
 
 
 export const allDevelopments = [
@@ -328,5 +331,8 @@ export const allDevelopments = [
     italianDeli,
     carpetEmporium,
     mariachiBar,
+    tofuRestaurant,
+    ramenBar,
+    shoeStore,
 
 ]

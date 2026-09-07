@@ -276,6 +276,26 @@ const cityImages = {
     "Salzburg": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Salzburg.jpg",
     "Düsseldorf": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Düsseldorf.jpg",
     "İzmir": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/İzmir.jpg",
+    "Nassau": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Nassau.jpg",
+    "Bern": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Bern.jpg",
+    "Curitiba": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Curitiba.jpg",
+    "Palikir": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Nassau.jpg",
+    "Paramaribo": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Nassau.jpg",
+    "Bishkek": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Nassau.jpg",
+    "Bridgetown": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Nassau.jpg",
+    "Port Vila": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PortVila.jpg",
+    "Heraklion": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Heraklion.jpg",
+    "Rabat": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Rabat.jpg",
+    "Alexandria": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Alexandria.jpg",
+    "Aberdeen": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Aberdeen.jpg",
+    "Charleston": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Charleston.jpg",
+    "Puebla": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Puebla.jpg",
+    "Malmö": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Malmö.jpg",
+    "Pisa": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Pisa.jpg",
+    "León": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/León.jpg",
+    "Fukuoka": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Fukuoka.jpg",
+    "Surabaya": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Surabaya.jpg",
+
 
 
 

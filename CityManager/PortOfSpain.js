@@ -4,7 +4,7 @@ import { City } from "./City.js";
 import { februaryTicketDeals } from "../UpgradeManager/FebruaryTicketDeals.js";
 
 export const PortOfSpain = new City(
-    "PortOfSpain",
+    "Port of Spain",
     600000,
     [februaryTicketDeals],
     "TrinidadAndTobago",

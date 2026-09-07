@@ -129,6 +129,12 @@ const countryFlags = {
     "TrinidadAndTobago": "tt",
     "Rwanda": "rw",
     "Greenland": "gl",
+    "The Bahamas": "bs",
+    "Barbados": "bb",
+    "Suriname": "sr",
+    "Vanuatu": "vu",
+    "Kyrgyzstan": "kg",
+    "Federated States of Micronesia": "fm"
 
 
     

@@ -114,6 +114,22 @@ import { complementaryAfternoonStaffMeals } from './ComplementaryAfternoonStaffM
 import { freeStaffBreakfasts } from './FreeStaffBreakfasts.js'
 import { plushTerminalSeating } from './PlushTerminalSeating.js'
 import { advertisingCampaignTurkey } from './AdvertisingCampaignTurkey.js'
+import { advertisingCampaignSwitzerland } from './AdvertisingCampaignSwitzerland.js'
+import { valentinesDaySales } from './ValentinesDaySales.js'
+import { christmasDayFestival } from './ChristmasDayFestival.js'
+import { emergingDestinationsResearch } from './EmergingDestinationsResearch.js'
+import { translationServiceAugmentations } from './TranslationServiceAugmentations.js'
+import { passengerApprecitationInitiatives } from './PassengerAppreciationInitiatives.js'
+import { juneTicketDeals } from './JuneTicketDeals.js'
+import { novemberTicketDeals } from './NovemberTicketDeals.js'
+import { advertisingCampaignGreece } from './AdvertisingCampaignGreece.js'
+import { advertisingCampaignMorocco } from './AdvertisingCampaignMorocco.js'
+import { advertisingCampaignEgypt } from './AdvertisingCampaignEgypt.js'
+import { advertisingCampaignScotland } from './AdvertisingCampaignScotland.js'
+import { advertisingCampaignUSA } from './AdvertisingCampaignUSA.js'
+import { advertisingCampaignMexico } from './AdvertisingCampaignMexico.js'
+import { advertisingCampaignSweden } from './AdvertisingCampaignSweden.js'
+import { advertisingCampaignItaly } from './AdvertisingCampaignItaly.js'
 
 
 
@@ -235,6 +251,22 @@ export const allUpgrades = [
     advertisingCampaignTurkey,
     advertisingCampaignIndonesia,
     advertisingCampaignAustria,
+    valentinesDaySales,
+    christmasDayFestival,
+    advertisingCampaignSwitzerland,
+    emergingDestinationsResearch,
+    translationServiceAugmentations,
+    passengerApprecitationInitiatives,
+    juneTicketDeals,
+    novemberTicketDeals,
+    advertisingCampaignGreece,
+    advertisingCampaignMorocco,
+    advertisingCampaignEgypt,
+    advertisingCampaignScotland,
+    advertisingCampaignUSA,
+    advertisingCampaignMexico,
+    advertisingCampaignSweden,
+    advertisingCampaignItaly,
 
     
 

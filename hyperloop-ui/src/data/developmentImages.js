@@ -276,7 +276,25 @@ const developmentImages = {
     "Advertising Campaign: Turkey": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignTurkey.jpg",
     "Advertising Campaign: Indonesia": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignIndonesia.jpg",
     "Advertising Campaign: Austria": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignAustria.jpg",
-
+    "Advertising Campaign: Switzerland": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignSwitzerland.jpg",
+    "Christmas Day Festival": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ChristmasDayFestival.jpg",
+    "Valentine's Day Sales": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ValentinesDaySales.jpg",
+    "Emerging Destinations Research": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/EmergingDestinationsResearch.jpg",
+    "Translation Service Augmentations": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TranslationServiceAugmentations.jpg",
+    "Passenger Appreciation Initiatives": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PassengerAppreciationInitiatives.jpg",
+    "June Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/JuneTicketDeals.jpg",
+    "November Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NovemberTicketDeals.jpg",
+    "Advertising Campaign: Greece": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignGreece.jpg",
+    "Advertising Campaign: Italy": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignItaly.jpg",
+    "Advertising Campaign: Morocco": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignMorocco.jpg",
+    "Advertising Campaign: Egypt": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignEgypt.jpg",
+    "Advertising Campaign: Scotland": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignScotland.jpg",
+    "Advertising Campaign: USA": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignUSA.jpg",
+    "Advertising Campaign: Mexico": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignMexico.jpg",
+    "Advertising Campaign: Sweden": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignSweden.jpg",
+    "Shoe Store": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ShoeStore.jpg",
+    "Ramen Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/RamenBar.jpg",
+    "Tofu Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TofuRestaurant.jpg",
 
 
 

@@ -275,6 +275,27 @@ import Pretoria from '../assets/cities-thumb/Pretoria.jpg'
 import Bandung from '../assets/cities-thumb/Bandung.jpg'
 import Salzburg from '../assets/cities-thumb/Salzburg.jpg'
 import Düsseldorf from '../assets/cities-thumb/Düsseldorf.jpg'
+import Bern from '../assets/cities-thumb/Bern.jpg'
+import Curitiba from '../assets/cities-thumb/Curitiba.jpg'
+import Nassau from '../assets/cities-thumb/Nassau.jpg'
+import Palikir from '../assets/cities-thumb/Palikir.jpg'
+import PortVila from '../assets/cities-thumb/PortVila.jpg'
+import Bishkek from '../assets/cities-thumb/Bishkek.jpg'
+import Paramaribo from '../assets/cities-thumb/Paramaribo.jpg'
+import Bridgetown from '../assets/cities-thumb/Bridgetown.jpg'
+import Heraklion from '../assets/cities-thumb/Heraklion.jpg'
+import Rabat from '../assets/cities-thumb/Rabat.jpg'
+import Alexandria from '../assets/cities-thumb/Alexandria.jpg'
+import Aberdeen from '../assets/cities-thumb/Aberdeen.jpg'
+import Charleston from '../assets/cities-thumb/Charleston.jpg'
+import Puebla from '../assets/cities-thumb/Puebla.jpg'
+import Malmö from '../assets/cities-thumb/Malmö.jpg'
+import Pisa from '../assets/cities-thumb/Pisa.jpg'
+import León from '../assets/cities-thumb/León.jpg'
+import Fukuoka from '../assets/cities-thumb/Fukuoka.jpg'
+import Surabaya from '../assets/cities-thumb/Surabaya.jpg'
+
+
 
 
 
@@ -556,6 +577,28 @@ const cityImages = {
     Bandung: Bandung,
     Salzburg: Salzburg,
     Düsseldorf: Düsseldorf,
+    Curitiba: Curitiba,
+    Nassau: Nassau,
+    Bern: Bern,
+    "Port Vila": PortVila,
+    Bishkek: Bishkek,
+    Bridgetown: Bridgetown,
+    Paramaribo: Paramaribo,
+    Palikir: Palikir,
+    Malmö: Malmö,
+    Rabat: Rabat,
+    Heraklion: Heraklion,
+    Alexandria: Alexandria,
+    Aberdeen: Aberdeen,
+    Charleston: Charleston,
+    Puebla: Puebla,
+    Pisa: Pisa,
+    León: León,
+    Fukuoka: Fukuoka,
+    Surabaya: Surabaya,
+
+
+
 
 
 

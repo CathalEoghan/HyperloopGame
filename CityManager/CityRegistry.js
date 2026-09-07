@@ -276,6 +276,25 @@ import { İzmir } from './İzmir.js'
 import { Bandung } from './Bandung.js'
 import { Salzburg } from './Salzburg.js'
 import { Düsseldorf } from './Düsseldorf.js'
+import { Bern } from './Bern.js'
+import { Curitiba } from './Curitiba.js'
+import { Nassau } from './Nassau.js'
+import { Palikir } from './Palikir.js'
+import { PortVila } from './PortVila.js'
+import { Bishkek } from './Bishkek.js'
+import { Bridgetown } from './Bridgetown.js'
+import { Paramaribo } from './Paramaribo.js'
+import { Heraklion } from './Heraklion.js'
+import { Rabat } from './Rabat.js'
+import { Alexandria } from './Alexandria.js'
+import { Aberdeen } from './Aberdeen.js'
+import { Charleston } from './Charleston.js'
+import { Puebla } from './Puebla.js'
+import { Malmö } from './Malmö.js'
+import { Pisa } from './Pisa.js'
+import { León } from './León.js'
+import { Fukuoka } from './Fukuoka.js'
+import { Surabaya } from './Surabaya.js'
 
 
 export const allCities = [
@@ -556,6 +575,25 @@ export const allCities = [
     Salzburg,
     Düsseldorf,
     İzmir,
+    Bern,
+    Curitiba,
+    Nassau,
+    Paramaribo,
+    Bridgetown,
+    Bishkek,
+    PortVila,
+    Palikir,
+    Heraklion,
+    Rabat,
+    Alexandria,
+    Aberdeen,
+    Charleston,
+    Puebla,
+    Malmö,
+    Pisa,
+    León,
+    Fukuoka,
+    Surabaya,
 
 
 

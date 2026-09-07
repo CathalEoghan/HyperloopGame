@@ -260,6 +260,22 @@ const cityCoordinates = {
 "Nuuk":      { lat: 64.1814,  lng: -51.6941 },
 "Omsk":      { lat: 54.9885,  lng: 73.3242 },
 "Verona":    { lat: 45.4384,  lng: 10.9916 },
+"Bandung":       { lat: -6.9175,  lng: 107.6191 },
+"Chennai":       { lat: 13.0827,  lng: 80.2707  },
+"Christchurch":  { lat: -43.5320, lng: 172.6362 },
+"Düsseldorf":    { lat: 51.2217,  lng: 6.7762   },
+"George Town":   { lat: 5.4141,   lng: 100.3288 },
+"Liverpool":     { lat: 53.4084,  lng: -2.9916  },
+"Palermo":       { lat: 38.1157,  lng: 13.3615  },
+"Port of Spain": { lat: 10.6596,  lng: -61.5086 },
+"Pretoria":      { lat: -25.7479, lng: 28.2293  },
+"Salzburg":      { lat: 47.8095,  lng: 13.0550  },
+"Sapporo":       { lat: 43.0618,  lng: 141.3545 },
+"Tucson":        { lat: 32.2226,  lng: -110.9747},
+"Wuhan":         { lat: 30.5928,  lng: 114.3055 },
+"Yerevan":       { lat: 40.1872,  lng: 44.5152  },
+"Kigali":         { lat: -1.9501,  lng: 30.0588 },
+"İzmir":         { lat: 38.4192,  lng: 27.1287  },
 };
 
 export default cityCoordinates;

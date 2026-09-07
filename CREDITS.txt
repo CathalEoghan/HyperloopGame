@@ -280,6 +280,24 @@ Salzburg.jpg - Photo by Picryl via Pixabay
 Liverpool.jpg - Photo by Balázs Gábor via Pexels
 Nassau.jpg - Photo by Mikhail Nilov via Pexels
 Curitiba.jpg - Photo by Lenandro Melo via Pexels
+Bern.jpg - Photo by Vish Pix via Pexels
+Paramaribo.jpg - Photo by Jean-Pierre Ricardo Veira via Wikimedia Commons
+Bridgetown.jpg - Photo by Barry Haynes via Wikimedia Commons
+Bishkek.jpg - Photo by Jeremy Woodhouse via Wikimedia Commons
+PortVila.jpg - Photo by Phillip Capper via Wikimedia Commons
+Palikir.jpg - Photo by MaxMonaco via Wikimedia Commons
+Pisa.jpg - Photo by Lucas Klein via Pexels
+Puebla.jpg - Photo by Sisgeo via Wikimedia Commons
+Malmö.jpg - Photo by Nik Nikolla via Pexels
+Aberdeen.jpg - Photo by Bruce McAdam via NDLA
+Charleston.jpg - Photo by 1778011 via Pixabay
+Heraklion.jpg - Photo by Gintare K. via Pexels
+Alexandria.jpg - Photo by Moaz Ahmed Kamel via Pexels
+Rabat.jpg - Photo by MAG Photography via Pexels
+León.jpg - Photo by Juan Carlos Fonseca Mata via Wikimedia Commons
+Fukuoka.jpg - Photo by arnaud audoin via Pexels
+Surabaya.jpg - Photo by Andy Pinaria via Pexels
+
 
 
 DEVELOPMENTS IMAGES
@@ -556,8 +574,22 @@ AdvertisingCampaignIndonesia.jpg - Photo by aboodi vesakaran via Pexels
 MarchTicketDeals.jpg - Photo by Gosia K via Pexels
 ValentinesDaySales.jpg - Photo by Heber Vazquez via Pexels
 ChristmasDayFestival.jpg - Photo by Sami TÜRK via Pexels
-
-
+AdvertisingCampaignSwitzerland.jpg - Photo by Nanda Gopal Lakshman via Pexels
+EmergingDestinationsResearch.jpg - Photo by Lara Jameson via Pexels
+TranslationServiceAugmentations.jpg - Photo by Tima Miroshnichenko via Pexels
+PassengerAppreciationInitiatives.jpg - Photo by Edmond Dantès via Pexels
+NovemberTicketDeals.jpg - Photo by Kadir Akman via Pexels
+AdvertisingCampaignSweden.jpg - Photo by Damir K via Pexels
+AdvertisingCampaignUSA.jpg - Photo by Linda Rusinko via Pexels
+AdvertisingCampaignItaly.jpg - Photo by Renan Martini via Pexels
+AdvertisingCampaignMexico.jpg - Photo by Diego Sanchez via Pexels
+AdvertisingCampaignScotland.jpg - Photo by Adrien Olichon via Pexels
+AdvertisingCampaignEgypt.jpg - Photo by aboodi vesakaran via Pexels
+AdvertisingCampaignGreece.jpg - Photo by Gintare K. via Pexels
+AdvertisingCampaignMorocco.jpg - Photo by Atmar lens  via Pexels
+ShoeStore.jpg - Photo by Rachel Claire via Pexels
+RamenBar.jpg - Photo by Viridiana Rivera via Pexels
+TofuRestaurant.jpg - Photo by Savia Rocks via Pexels
 
 SOUNDS
 
