@@ -92,7 +92,12 @@ function App() {
     } catch { return null; }
   });
   const [activeDelay, setActiveDelay] = useState(null);
-  const [devRevealQueue, setDevRevealQueue] = useState([]);
+  const [devRevealQueue, setDevRevealQueue] = useState(() => {
+    const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+    const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
+    if (progressionManager.purchasedCities.length <= 1) return []
+    return allUnlocked.filter(d => !shown.includes(d.name))
+  });
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [hasFreeReroll, setHasFreeReroll] = useState(false);
   const [showNotEnoughRep, setShowNotEnoughRep] = useState(false);
@@ -128,6 +133,7 @@ function App() {
   const tickCount = useRef(0);
   const prevPurchasedCount = useRef(progressionManager.purchasedCities.length);
   const prevDevCount = useRef(progressionManager.purchasedDevelopments.length);
+  const prevUpgradesCount = useRef(progressionManager.purchasedUpgrades.length);
   const prevRank = useRef(rankManager.rank);
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
   const lastTickTimeRef = useRef(Date.now());
@@ -201,10 +207,21 @@ function App() {
       const currentUnlockedCount = currentUnlocked.length;
       if (currentUnlockedCount > prevUnlockedDevCount.current) {
         if (progressionManager.purchasedCities.length > 1) {
+          const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
           const newOnes = currentUnlocked.slice(prevUnlockedDevCount.current);
           setDevRevealQueue(q => [...q, ...newOnes]);
+          // Don't pre-mark as shown — they'll be marked when dismissed
         }
         prevUnlockedDevCount.current = currentUnlockedCount;
+      }
+
+      // Detect newly completed upgrades and show reveal modal
+      if (progressionManager.purchasedUpgrades.length > prevUpgradesCount.current) {
+        const newUpgrades = progressionManager.purchasedUpgrades.slice(prevUpgradesCount.current);
+        newUpgrades.forEach(upgrade => {
+          if (upgrade.effectType) setRevealedUpgrade(upgrade);
+        });
+        prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
       }
 
       const citiesChanged = progressionManager.purchasedCities.length !== prevPurchasedCount.current;
@@ -486,7 +503,7 @@ function App() {
           terminalName={terminalName}
           onTerminalNameChange={setTerminalName}
           lastSaved={lastSaved}
-          onDeleteSave={() => { deleteSave(); window.location.reload(); }}
+          onDeleteSave={() => { deleteSave(); localStorage.removeItem('hyperloop_shown_reveals'); window.location.reload(); }}
           onExportSave={exportSave}
           onImportSave={async (file) => { await importSave(file); window.location.reload(); }}
           onManualSave={triggerSave}
@@ -596,7 +613,12 @@ function App() {
       {devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
         <DevelopmentRevealModal
           development={devRevealQueue[0]}
-          onContinue={() => setDevRevealQueue(q => q.slice(1))}
+          onContinue={() => {
+            const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+            shown.push(devRevealQueue[0].name)
+            localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shown))
+            setDevRevealQueue(q => q.slice(1))
+          }}
         />
       )}
       {!showOfflineModal && claimedCity && (

@@ -109,10 +109,10 @@
 
 /* Scrollable content */
 .dev-content {
-    flex: 1;
-    overflow-y: auto;
-    padding-bottom: 80px;
-    padding-right: 4px;
+  flex: 1;
+  overflow-y: auto;
+  padding-bottom: 80px;
+  padding-right: 4px;
 }
 
 /* Revenue banner sticky wrapper */
@@ -147,12 +147,12 @@
 .section-header {
   font-size: 1.1rem;
   font-weight: bold;
-  margin: 0 0 10px;
+  margin: 16px 0 10px;
   position: sticky;
-  top: 48px;
+  top: 52px;
   background: rgb(255, 246, 239);
   z-index: 9;
-  padding: 8px 0 4px;
+  padding: 4px 0;
   width: 100%;
 }
 
@@ -209,19 +209,20 @@
 .city-image-wrapper {
   position: relative;
   width: 180px;
-  height: 160px;
+  height: 180px;
   flex-shrink: 0;
 }
 
 .development-image, .unavailable {
-  width: 180px;
-  height: 160px;
-  object-fit: cover;
-  border-radius: 6px;
-  flex-shrink: 0;
-  border: 2px solid black;
-  box-sizing: border-box;
-  display: block;
+    width: 180px;
+    height: 180px;
+    object-fit: contain;
+    background: #111;
+    border-radius: 6px;
+    flex-shrink: 0;
+    border: 2px solid black;
+    box-sizing: border-box;
+    display: block;
 }
 
 .unavailable {

@@ -165,7 +165,6 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             playClickSound2();
                                             playConstructionSound();
                                             constructionManager.startDevelopmentConstruction(selectedDevelopment);
-                                            if (selectedDevelopment.effectType) onUpgradeBuilt?.(selectedDevelopment);
                                             onSave();
                                             closeModal();
                                         }
@@ -316,7 +315,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
                 {sortedPurchased.length > 0 && (
                     <>
-                        <h2 className="section-header">
+                        <h2 className="section-header" style={{ top: purchased.length === 0 ? '0' : '44px' }}>
                             Completed developments <span className="section-count">{sortedPurchased.length}</span>
                         </h2>
                         <div className="development-row">
@@ -331,7 +330,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             <img
                                                 className={isUnderConstruction ? "unavailable" : "development-image"}
                                                 src={developmentThumbnails[development.name] || developmentImages[development.name]}
-                                                style={{ width: '100%', height: '160px' }}
+                                                style={{ width: '100%', height: '180px' }}
                                             />
                                             {!isUnderConstruction && level > 0 && (
                                                 <div className="dev-level-strip">LVL {level}</div>
@@ -359,7 +358,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     </>
                 )}
 
-                <h2 className="section-header section-header-available">
+                <h2 className="section-header section-header-available" style={{ marginTop: sortedPurchased.length === 0 ? '8px' : '24px', borderTop: sortedPurchased.length === 0 ? 'none' : '2px solid #ddd', top: sortedPurchased.length === 0 ? '0' : '44px' }}>
                     Available to build <span className="section-count">{sortedAvailable.length}</span>
                 </h2>
                 <div className="development-row">
@@ -370,7 +369,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                             <div className="city-image-wrapper">
                                 <img className="unavailable"
                                     src={developmentThumbnails[development.name] || developmentImages[development.name]}
-                                    style={{ width: '100%', height: '160px' }}
+                                    style={{ width: '100%', height: '180px' }}
                                 />
                                 <div className="dev-revenue-strip" style={{ color: '#aaa' }}>
                                     {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.revenue.toLocaleString()}/day</> : 'UPGRADE'}

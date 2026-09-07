@@ -16,7 +16,7 @@ export class ProgressionManager {
         this.unlockedDevelopments = [];
         this.purchasedDevelopments = [];
         this.citiesUnderConstruction = [];
-        this.balance = 250000;
+        this.balance = 1000000;
         this.reputation = 50;
         this.totalCashEarned = 0;
         this.rankManager = rankManager;

@@ -34,12 +34,13 @@ function TickerBar({ terminalName }) {
     }, [])
 
     const idleMessages = [
-        `Welcome to ${terminalName}. Thank you for travelling with us today.`,
-        'Please keep your belongings close to you at all times.',
-        `${terminalName} operates 24 hours a day, 7 days a week.`,
-        'Please report any unattended luggage to a member of staff.',
-        'We wish you a pleasant journey.',
-    ]
+    `Welcome to ${terminalName}. Thank you for travelling with us today.`,
+    'Please keep your belongings close to you at all times.',
+    `${terminalName} operates 24 hours a day, 7 days a week.`,
+    'Please report any unattended luggage to a member of staff.',
+    'We wish you a pleasant journey.',
+    'Departure updates will display here. Please stand by.',
+]
 
     const displayMessages = messages.length > 0 ? messages : idleMessages
     const text = displayMessages.join('     ✦     ') + '     ✦     '

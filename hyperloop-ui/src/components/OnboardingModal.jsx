@@ -38,7 +38,7 @@ function OnboardingModal({ onDismiss }) {
                         </div>
                     </div>
                 </div>
-                <p className="onboarding-hint">Start by tapping the <strong>Work</strong> button — your first city unlock is just a few taps away!</p>
+                <p className="onboarding-hint">Start by tapping the <strong>Work</strong> button.</p>
                 <button
                     className="opening-btn"
                     onMouseEnter={() => playHoverSound()}

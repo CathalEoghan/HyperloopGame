@@ -12,6 +12,7 @@ import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
 import openingAudio from '../assets/sounds/openingAudio.mp3'
 import developmentUnlocked from '../assets/sounds/developmentUnlocked.mp3'
 import eventSound from '../assets/sounds/eventSound.mp3'
+import diceRollSound from '../assets/sounds/diceRoll.mp3'
 
 export const playEventSound = () => {
     const audio = new Audio(eventSound)
@@ -27,6 +28,7 @@ function play(src) {
     new Audio(src).play()
 }
 
+export const playDiceRollSound = () => { new Audio(diceRollSound).play().catch(() => {}) }
 export function playWorkClickSound()     { play(workClickSound) }
 export function playConstructionSound()  { play(constructionSound) }
 export function playBadNewsSound()       { play(badNewsSound) }
