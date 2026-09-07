@@ -295,6 +295,10 @@ import AdvertisingCampaignItaly from '../assets/developments-thumb/AdvertisingCa
 import ShoeStore from '../assets/developments-thumb/ShoeStore.jpg'
 import TofuRestaurant from '../assets/developments-thumb/TofuRestaurant.jpg'
 import RamenBar from '../assets/developments-thumb/RamenBar.jpg'
+import PancakeHouse from '../assets/developments-thumb/PancakeHouse.jpg'
+import PastriesStall from '../assets/developments-thumb/PastriesStall.jpg'
+import OysterShack from '../assets/developments-thumb/OysterShack.jpg'
+import EscapeRoom from '../assets/developments-thumb/EscapeRoom.jpg'
 
 
 const developmentImages = {
@@ -594,6 +598,10 @@ const developmentImages = {
     "Shoe Store": ShoeStore,
     "Ramen Bar": RamenBar,
     "Tofu Restaurant": TofuRestaurant,
+    "Pastries Stall": PastriesStall,
+    "Oyster Shack": OysterShack,
+    "Pancake House": PancakeHouse,
+    "Escape Room": EscapeRoom,
 
 
 

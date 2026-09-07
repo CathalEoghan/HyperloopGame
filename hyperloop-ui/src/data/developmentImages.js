@@ -295,6 +295,10 @@ const developmentImages = {
     "Shoe Store": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ShoeStore.jpg",
     "Ramen Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/RamenBar.jpg",
     "Tofu Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TofuRestaurant.jpg",
+    "Pancake House": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PancakeHouse.jpg",
+    "Pastries Stall": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PastriesStall.jpg",
+    "Escape Room": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/EscapeRoom.jpg",
+    "Oyster Shack": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/OysterShack.jpg",
 
 
 

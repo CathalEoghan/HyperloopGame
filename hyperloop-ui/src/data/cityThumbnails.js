@@ -294,6 +294,10 @@ import Pisa from '../assets/cities-thumb/Pisa.jpg'
 import León from '../assets/cities-thumb/León.jpg'
 import Fukuoka from '../assets/cities-thumb/Fukuoka.jpg'
 import Surabaya from '../assets/cities-thumb/Surabaya.jpg'
+import Zhengzhou from '../assets/cities-thumb/Zhengzhou.jpg'
+import QuebecCity from '../assets/cities-thumb/QuebecCity.jpg'
+import Dubrovnik from '../assets/cities-thumb/Dubrovnik.jpg'
+import Cagliari from '../assets/cities-thumb/Cagliari.jpg'
 
 
 
@@ -387,7 +391,7 @@ const cityImages = {
     Honolulu: Honolulu,
     "Guatemala City": GuatemalaCity,
     Vancouver: Vancouver,
-    "Dar Es Salaam": DarEsSalaam,
+    "Dar es Salaam": DarEsSalaam,
     Harare: Harare,
     Tunis: Tunis,
     "São Paulo": SãoPaulo,
@@ -596,6 +600,10 @@ const cityImages = {
     León: León,
     Fukuoka: Fukuoka,
     Surabaya: Surabaya,
+    Cagliari: Cagliari,
+    Dubrovnik: Dubrovnik,
+    QuebecCity: QuebecCity,
+    Zhengzhou: Zhengzhou,
 
 
 

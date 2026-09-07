@@ -295,6 +295,10 @@ import { Pisa } from './Pisa.js'
 import { León } from './León.js'
 import { Fukuoka } from './Fukuoka.js'
 import { Surabaya } from './Surabaya.js'
+import { Zhengzhou } from './Zhengzhou.js'
+import { Dubrovnik } from './Dubrovnik.js'
+import { QuebecCity } from './QuebecCity.js'
+import { Cagliari } from './Cagliari.js'
 
 
 export const allCities = [
@@ -594,6 +598,10 @@ export const allCities = [
     León,
     Fukuoka,
     Surabaya,
+    Cagliari,
+    Zhengzhou,
+    Dubrovnik,
+    QuebecCity,
 
 
 

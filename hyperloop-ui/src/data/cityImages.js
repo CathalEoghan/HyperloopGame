@@ -60,7 +60,7 @@ const cityImages = {
     "Cusco": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Cusco.jpg",
     "Dakar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Dakar.jpg",
     "Dallas": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Dallas.jpg",
-    "Dar Es Salaam": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/DarEsSalaam.jpg",
+    "Dar es Salaam": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/DarEsSalaam.jpg",
     "Denpasar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Denpasar.jpg",
     "Denver": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Denver.jpg",
     "Detroit": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Detroit.jpg",
@@ -295,6 +295,10 @@ const cityImages = {
     "León": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/León.jpg",
     "Fukuoka": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Fukuoka.jpg",
     "Surabaya": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Surabaya.jpg",
+    "Zhengzhou": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Zhengzhou.jpg",
+    "Dubrovnik": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Dubrovnik.jpg",
+    "QuebecCity": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/QuebecCity.jpg",
+    "Cagliari": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Cagliari.jpg",
 
 
 

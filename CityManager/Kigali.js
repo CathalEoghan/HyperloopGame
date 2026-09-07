@@ -4,7 +4,7 @@ import { City } from "./City.js";
 import { plushTerminalSeating } from "../UpgradeManager/PlushTerminalSeating.js";
 
 export const Kigali = new City(
-    "Plush Terminal Seating",
+    "Kigali",
     2050000,
     [plushTerminalSeating],
     "Rwanda",

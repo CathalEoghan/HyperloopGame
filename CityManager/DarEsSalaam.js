@@ -4,7 +4,7 @@ import { City } from "./City.js";
 import { spiceMarket } from "../DevelopmentManager/SpiceMarket.js";
 
 export const DarEsSalaam = new City(
-    "Dar Es Salaam",
+    "Dar es Salaam",
     8100000,
     [spiceMarket],
     "Tanzania",
