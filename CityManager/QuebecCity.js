@@ -4,7 +4,7 @@ import { City } from "./City.js";
 import { pancakeHouse } from "../DevelopmentManager/PancakeHouse.js";
 
 export const QuebecCity = new City(
-    "Quebec City",
+    "Québec City",
     903000,
     [pancakeHouse],
     "Canada",

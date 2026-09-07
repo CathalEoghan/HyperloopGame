@@ -297,7 +297,7 @@ const cityImages = {
     "Surabaya": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Surabaya.jpg",
     "Zhengzhou": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Zhengzhou.jpg",
     "Dubrovnik": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Dubrovnik.jpg",
-    "QuebecCity": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/QuebecCity.jpg",
+    "Québec City": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/QuebecCity.jpg",
     "Cagliari": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Cagliari.jpg",
 
 

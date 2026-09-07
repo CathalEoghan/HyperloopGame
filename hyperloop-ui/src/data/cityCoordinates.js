@@ -57,7 +57,7 @@ const cityCoordinates = {
     "Cusco":            { lat:-13.5320,  lng: -71.9675 },
     "Dakar":            { lat: 14.6937,  lng: -17.4441 },
     "Dallas":           { lat: 32.7767,  lng: -96.7970 },
-    "Dar Es Salaam":    { lat: -6.7924,  lng:  39.2083 },
+    "Dar es Salaam":    { lat: -6.7924,  lng:  39.2083 },
     "Denpasar":         { lat: -8.6705,  lng: 115.2126 },
     "Denver":           { lat: 39.7392,  lng: -104.9850 },
     "Detroit":          { lat: 42.3314,  lng: -83.0458 },

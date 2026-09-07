@@ -602,7 +602,7 @@ const cityImages = {
     Surabaya: Surabaya,
     Cagliari: Cagliari,
     Dubrovnik: Dubrovnik,
-    QuebecCity: QuebecCity,
+    "Québec City": QuebecCity,
     Zhengzhou: Zhengzhou,
 
 
