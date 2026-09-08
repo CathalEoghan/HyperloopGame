@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const enhancedAdvertisingStrategies = new Upgrade(
     "Enhanced Advertising Strategies",
     87500,
-    "Infrastructure",
+    "Enterprise",
     "connectionBoost",
     0.1
 );

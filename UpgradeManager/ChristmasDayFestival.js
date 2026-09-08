@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const christmasDayFestival = new Upgrade(
     "Christmas Day Festival",
     105000,
-    "Service",
+    "Recreation",
     "farewellWindowExtension",
     5
 );

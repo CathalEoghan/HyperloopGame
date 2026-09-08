@@ -5,7 +5,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 export const eveningStaffMealTickets = new Upgrade(
     "Evening Staff Meal Tickets",
     78000,
-    "Service",
+    "Enterprise",
     "continentBoost",
     0.10
 );

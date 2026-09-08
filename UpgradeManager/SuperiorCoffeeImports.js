@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const superiorCoffeeImports = new Upgrade(
     "Superior Coffee Imports",
     79000,
-    "Service",
+    "Enterprise",
     "foodIncome",
     0.2
 );

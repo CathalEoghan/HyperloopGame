@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const summerHolidayPackages = new Upgrade(
     "Summer Holiday Packages",
     105000,
-    "Service",
+    "Enterprise",
     "seasonBoost",
     0.25
 );

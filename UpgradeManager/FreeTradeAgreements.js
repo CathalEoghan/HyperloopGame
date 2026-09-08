@@ -5,7 +5,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 export const freeTradeAgreements = new Upgrade(
     "Free Trade Agreements",
     108000,
-    "Service",
+    "Enterprise",
     "foodIncome",
     0.2
 );

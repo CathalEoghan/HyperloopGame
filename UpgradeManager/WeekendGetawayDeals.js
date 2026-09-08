@@ -5,7 +5,7 @@ import { Upgrade } from './Upgrade.js'
 export const weekendGetawayDeals = new Upgrade(
     "Weekend Getaway Deals",
     150000,
-    "Service",
+    "Enterprise",
     "continentExpansionBoost", 
     0.05
 )

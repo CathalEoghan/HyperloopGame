@@ -6,6 +6,6 @@ export const muralCommissions = new Upgrade(
     "Mural Commissions",
     55000,
     "Service",
-    "bonusDurationExtension",
+    "Infrastructure",
     0.15
 )

@@ -5,7 +5,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 export const europeanTravelPackages = new Upgrade(
     "European Travel Packages",
     87500,
-    "Service",
+    "Enterprise",
     "continentBoost",
     0.10
 );

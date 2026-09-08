@@ -5,7 +5,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 export const nighttimePayIncentives = new Upgrade(
     "Nighttime Pay Incentives",
     91000,
-    "Service",
+    "Enterprise",
     "continentBoost",
     0.25
 );

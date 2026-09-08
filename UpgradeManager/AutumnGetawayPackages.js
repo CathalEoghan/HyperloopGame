@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const autumnGetawayPackages = new Upgrade(
     "Autumn Getaway Packages",
     90000,
-    "Service",
+    "Enterprise",
     "seasonBoost",
     0.25
 );

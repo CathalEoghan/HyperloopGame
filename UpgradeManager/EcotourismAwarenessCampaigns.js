@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const ecotourismAwarenessCampaigns = new Upgrade(
     "Ecotourism Awareness Campaigns",
     112500,
-    "Service",
+    "Enterprise",
     "workRepChanceDouble",
     1
 );

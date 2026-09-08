@@ -5,7 +5,7 @@ import { Upgrade } from './Upgrade.js'
 export const cheaperFuelImports = new Upgrade(
     "Cheaper Fuel Imports",
     189000,
-    "Infrastructure",
+    "Enterprise",
     "offlineCapExtension",
     86400
 )

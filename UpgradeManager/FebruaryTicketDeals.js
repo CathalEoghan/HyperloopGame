@@ -5,7 +5,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 export const februaryTicketDeals = new Upgrade(
     "February Ticket Deals",
     65000,
-    "Infrastructure",
+    "Enterprise",
     "offlineCapExtension",
     86400
 );

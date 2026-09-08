@@ -5,7 +5,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 export const uniformRedesign = new Upgrade(
     "Uniform Redesign",
     98700,
-    "Service",
+    "Enterprise",
     "negativeEventReduction",
     0.2
 )

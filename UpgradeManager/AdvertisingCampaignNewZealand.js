@@ -5,7 +5,7 @@ import { Upgrade } from '../UpgradeManager/Upgrade.js'
 export const advertisingCampaignNewZealand = new Upgrade(
     "Advertising Campaign: New Zealand",
     87000,
-    "Service",
+    "Enterprise",
     "countryAdvertisingBoost",
     0.25,
     "New Zealand"

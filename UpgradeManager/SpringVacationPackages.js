@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const springVacationPackages = new Upgrade(
     "Spring Vacation Packages",
     100500,
-    "Service",
+    "Enterprise",
     "seasonBoost",
     0.25
 );

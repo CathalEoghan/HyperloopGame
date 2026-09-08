@@ -5,7 +5,7 @@ import { Upgrade } from './Upgrade.js'
 export const complementaryAfternoonStaffMeals = new Upgrade(
     "Complementary Afternoon Staff Meals",
     71000,
-    "Infrastructure",
+    "Enterprise",
     "offlineCapExtension",
     86400
 )
