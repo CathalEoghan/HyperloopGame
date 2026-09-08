@@ -302,6 +302,7 @@ const cityImages = {
     "Port Moresby": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PortMoresby.jpg",
     "Harbin": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Harbin.jpg",
     "Cebu City": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CebuCity.jpg",
+    "Livingstone": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Livingstone.jpg",
 
 
 

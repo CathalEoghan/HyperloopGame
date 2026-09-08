@@ -301,6 +301,7 @@ import Cagliari from '../assets/cities-thumb/Cagliari.jpg'
 import PortMoresby from '../assets/cities-thumb/PortMoresby.jpg'
 import Harbin from '../assets/cities-thumb/Harbin.jpg'
 import CebuCity from '../assets/cities-thumb/CebuCity.jpg'
+import Livingstone from '../assets/cities-thumb/Livingstone.jpg'
 
 
 
@@ -610,6 +611,7 @@ const cityImages = {
     "Port Moresby": PortMoresby,
     Harbin: Harbin,
     "Cebu City": CebuCity,
+    Livingstone: Livingstone,
 
 
 

@@ -301,6 +301,8 @@ const developmentImages = {
     "Oyster Shack": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/OysterShack.jpg",
     "Rainforest Conservation Projects": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/RainforestConservationProjects.jpg",
     "Ice Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/IceBar.jpg",
+    "Squid Shack": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SquidShack.jpg",
+    "Arrivals Hall Renovation": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ArrivalsHallRenovation.jpg",
 
 
 

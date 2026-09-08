@@ -302,6 +302,7 @@ import { Cagliari } from './Cagliari.js'
 import { PortMoresby } from './PortMoresby.js'
 import { Harbin } from './Harbin.js'
 import { CebuCity } from './CebuCity.js'
+import { Livingstone } from './Livingstone.js'
 
 
 export const allCities = [
@@ -608,6 +609,7 @@ export const allCities = [
     PortMoresby,
     Harbin,
     CebuCity,
+    Livingstone,
 
 
 

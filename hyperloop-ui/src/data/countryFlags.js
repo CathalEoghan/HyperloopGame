@@ -136,6 +136,7 @@ const countryFlags = {
     "Kyrgyzstan": "kg",
     "Federated States of Micronesia": "fm",
     "Papua New Guinea": "pg",
+    "Zambia": "zm",
 
 
 

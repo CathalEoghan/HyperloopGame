@@ -301,6 +301,8 @@ import OysterShack from '../assets/developments-thumb/OysterShack.jpg'
 import EscapeRoom from '../assets/developments-thumb/EscapeRoom.jpg'
 import RainforestConservationProjects from '../assets/developments-thumb/RainforestConservationProjects.jpg'
 import IceBar from '../assets/developments-thumb/IceBar.jpg'
+import SquidShack from '../assets/developments-thumb/SquidShack.jpg'
+import ArrivalsHallRenovation from '../assets/developments-thumb/ArrivalsHallRenovation.jpg'
 
 
 const developmentImages = {
@@ -606,6 +608,8 @@ const developmentImages = {
     "Escape Room": EscapeRoom,
     "Rainforest Conservation Projects": RainforestConservationProjects,
     "Ice Bar": IceBar,
+    "Squid Shack": SquidShack,
+    "Arrivals Hall Renovation": ArrivalsHallRenovation,
 
 
 
