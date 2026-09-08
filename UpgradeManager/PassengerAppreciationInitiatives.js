@@ -6,6 +6,6 @@ export const passengerApprecitationInitiatives = new Upgrade(
     "Passenger Appreciation Initiatives",
     149000,
     "Infrastructure",
-    "bonusDurationExtension",
-    0.15
+    "freeRepOnRankUp",
+    10
 );

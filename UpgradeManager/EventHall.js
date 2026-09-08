@@ -7,5 +7,5 @@ export const eventHall = new Upgrade(
     137500,
     "Service",
     "positiveEventBoost",
-    0.5
+    0.2
 );
