@@ -134,7 +134,9 @@ const countryFlags = {
     "Suriname": "sr",
     "Vanuatu": "vu",
     "Kyrgyzstan": "kg",
-    "Federated States of Micronesia": "fm"
+    "Federated States of Micronesia": "fm",
+    "Papua New Guinea": "pg",
+
 
 
     

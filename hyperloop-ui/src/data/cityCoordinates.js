@@ -299,6 +299,8 @@ const cityCoordinates = {
 "Dubrovnik":    { lat: 42.6507,  lng: 18.0944  },
 "Cagliari":     { lat: 39.2238,  lng: 9.1217   },
 "Québec City":  { lat: 46.8139,  lng: -71.2080 },
+"Port Moresby":    { lat: -9.4789,  lng: 147.1494 },
+
 };
 
 export default cityCoordinates;

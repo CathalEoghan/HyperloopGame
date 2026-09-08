@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const emergencyTraining = new Upgrade(
     "Emergency Training",
     125000,
-    "Enterprise",
+    "Service",
     "negativeEventReduction",
     0.2
 );

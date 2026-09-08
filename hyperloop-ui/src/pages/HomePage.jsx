@@ -35,7 +35,7 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled }) {
     const mountRef = useRef(null)
     const [hoveredCity, setHoveredCity] = useState(null)
     const [showOwned, setShowOwned] = useState(true)
@@ -45,11 +45,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
     const showOwnedRef = useRef(true)
     const purchasedCitiesRef = useRef(purchasedCities)
     const unlockedCitiesRef = useRef(unlockedCities)
+    const disabledRef = useRef(disabled)
 
     useEffect(() => {
         purchasedCitiesRef.current = purchasedCities
         unlockedCitiesRef.current = unlockedCities
     }, [purchasedCities, unlockedCities])
+
+    useEffect(() => {
+        disabledRef.current = disabled
+    }, [disabled])
 
     useEffect(() => {
         const mount = mountRef.current
@@ -213,6 +218,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
 
         const onMouseDown = (e) => { isDragging = true; prev = { x: e.clientX, y: e.clientY } }
         const onMouseMove = (e) => {
+            if (disabledRef.current) return
             const rect = mount.getBoundingClientRect()
             mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
             mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
@@ -280,7 +286,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
     }, [])
 
     return (
-        <div className="home-page">
+        <div className="home-page" style={{ pointerEvents: disabled ? 'none' : 'auto' }}>
             <div className="globe-top-info">
                 <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
                 <p className="globe-cities">{purchasedCitiesCount} {purchasedCitiesCount === 1 ? 'city' : 'cities'} connected</p>

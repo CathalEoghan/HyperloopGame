@@ -5,11 +5,11 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
-import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 
-const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure']
+const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
 function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onUpgradeBuilt }) {
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
@@ -123,7 +123,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
-                                        if (!canAfford) return;
+                                        if (!canAfford) { playNotEnoughFundsSound(); return; }
                                         playClickSound2();
                                         onUpgrade(selectedDevelopment);
                                         setShowUpgradeModal(false);
@@ -160,7 +160,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     })()}
                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
                                         const cost = economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost)
-                                        if (balance < cost) { playClickSound2(); setShowNoFunds(true); setSelectedDevelopment(null) }
+                                        if (balance < cost) { playClickSound2(); playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
                                         else {
                                             playClickSound2();
                                             playConstructionSound();
@@ -219,7 +219,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                                             background: '#222', color: 'white',
                                                                             borderRadius: '6px', padding: '6px 10px',
                                                                             fontSize: '0.75rem', whiteSpace: 'nowrap',
-                                                                            zIndex: 10, fontWeight: 'normal',
+                                                                            zIndex: 999, fontWeight: 'normal',
                                                                             boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                                                                         }}>
                                                                             {tooltipLines.map((line, i) => <div key={i}>{line}</div>)}

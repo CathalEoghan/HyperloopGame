@@ -17,11 +17,10 @@ function EventModal({ event, onContinue, terminalName }) {
     }, [])
 
     const isPositive = event.type === 'positive'
-    const isInstant = event.effectType === 'instantCash' || event.effectType === 'instantCashLoss'
 
     const getEffectText = () => {
-        if (event.effectType === 'instantCash') return `+£${event.instantCashAmount?.toLocaleString()} added to your balance`
-        if (event.effectType === 'instantCashLoss') return `-£${Math.abs(event.instantCashAmount)?.toLocaleString()} deducted from your balance`
+        if (event.effectType === 'instantCash') return `£${event.instantCashAmount?.toLocaleString()} has been added to your balance`
+        if (event.effectType === 'instantCashLoss') return `£${Math.abs(event.instantCashAmount)?.toLocaleString()} has been deducted from your balance`
         if (event.effectType === 'passiveBoost') return `+50% passive income for ${secondsLeft}s`
         if (event.effectType === 'passivePenalty') return `-50% passive income for ${secondsLeft}s`
         if (event.effectType === 'workBoost') return `+50% work earnings for ${secondsLeft}s`

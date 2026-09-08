@@ -6,7 +6,7 @@ import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
-import { playClickSound2, playConstructionSound, playHoverSound } from '../utils/sound.js'
+import { playClickSound2, playConstructionSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
@@ -205,7 +205,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
                                         playClickSound2();
                                         const cost = constructionManager.calculateTierConnectionCost(selectedCity);
-                                        if (balance < cost) { setShowNoFunds(true); closeModal(); }
+                                        if (balance < cost) { setShowNoFunds(true); playNotEnoughFundsSound(); closeModal(); }
                                         else { constructionManager.startStationConstruction(selectedCity); playConstructionSound(); onSave(); closeModal(); }
                                     }}>
                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
@@ -246,7 +246,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         return (
                                             <p>
                                                 Earning{' '}
-                                                <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '3px' }}>
+                                                <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', overflow: 'visible' }}>
                                                     <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />
                                                     {effectiveIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                                                     {boostPct > 0 && (
@@ -263,7 +263,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                                     background: '#222', color: 'white',
                                                                     borderRadius: '6px', padding: '6px 10px',
                                                                     fontSize: '0.75rem', whiteSpace: 'nowrap',
-                                                                    zIndex: 10, fontWeight: 'normal',
+                                                                    zIndex: 999, fontWeight: 'normal',
                                                                     boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
                                                                 }}>
                                                                     {lines.map((line, i) => <div key={i}>{line}</div>)}
@@ -297,7 +297,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     onMouseEnter={() => playHoverSound()}
                                                     style={{ borderColor: '#c0392b', color: '#c0392b', opacity: canAfford ? 1 : 0.5 }}
                                                     onClick={() => {
-                                                        if (!canAfford) return;
+                                                        if (!canAfford) { playNotEnoughFundsSound(); return; }
                                                         playClickSound2();
                                                         onDisconnect(selectedCity);
                                                         closeModal();

@@ -115,6 +115,7 @@ function App() {
     } catch { return null }
   });
   const [dailyLoginData, setDailyLoginData] = useState(null);
+  const [showMobileWarning, setShowMobileWarning] = useState(() => window.innerWidth < 900);
 
   const activeEventRef = useRef(() => {
     const saved = localStorage.getItem('hyperloop_active_event')
@@ -160,8 +161,11 @@ function App() {
     localStorage.setItem('hyperloop_last_login', today);
     const hasCommemorativeDisplays = progressionManager.purchasedDevelopments.some(d => d.name === 'Commemorative Displays');
     const hasPassengerLoyalty = progressionManager.purchasedUpgrades.some(u => u.name === 'Passenger Loyalty Scheme');
-    const cashBonus = hasCommemorativeDisplays ? 50000 : 25000;
-    const repBonus = hasPassengerLoyalty ? 5 : 0;
+    const hasDailyRepDoubled = progressionManager.purchasedUpgrades.some(u => u.effectType === 'dailyRepDoubled');
+    const dailyIncome = economyManager.calculateDailyIncome() * 86400;
+    const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
+    let repBonus = hasPassengerLoyalty ? 5 : 0;
+    if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
     setDailyLoginData({ cashBonus, repBonus });
   }, []);
 
@@ -299,6 +303,7 @@ function App() {
 
       if (tickCount.current % 30 === 0) {
         triggerSave();
+        localStorage.setItem('hyperloop_hidden_at', Date.now());
       }
 
       const now = new Date();
@@ -367,7 +372,7 @@ function App() {
       economyManager.activeEvent = activeEventRef.current;
 
       // Random event trigger — rank 3+ only
-      if (Math.random() < 0.0004 && !activeEventRef.current && rankSet >= 3) {
+      if (Math.random() < 0.002 && !activeEventRef.current && rankSet >= 3) {
         const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
         const event = getRandomEvent(positiveOnly);
 
@@ -444,7 +449,11 @@ function App() {
       localStorage.setItem('hyperloop_hidden_at', Date.now());
     };
     window.addEventListener('beforeunload', handleUnload);
-    return () => window.removeEventListener('beforeunload', handleUnload);
+    window.addEventListener('pagehide', handleUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload);
+      window.removeEventListener('pagehide', handleUnload);
+    };
   }, []);
 
   if (isLoading) return <LoadingScreen onComplete={() => setIsLoading(false)} />;
@@ -496,6 +505,7 @@ function App() {
           purchasedCities={progressionManager.purchasedCities}
           unlockedCities={progressionManager.unlockedCities}
           purchasedCitiesCount={purchasedCitiesCount}
+          disabled={showOnboarding}
         />
       )}
       {activeTab === "Cities" && (
@@ -636,6 +646,7 @@ function App() {
         <DelayModal
           delay={activeDelay}
           economyManager={economyManager}
+          balance={balance}
           onCompensate={(cost) => { progressionManager.addCash(-cost); setActiveDelay(null); }}
           onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); }}
         />
@@ -702,6 +713,39 @@ function App() {
             }
           }}
         />
+      )}
+      {showMobileWarning && (
+        <div style={{
+          position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+          background: 'rgba(0,0,0,0.85)', zIndex: 9999,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '24px', boxSizing: 'border-box'
+        }}>
+          <div style={{
+            background: 'rgb(255, 239, 224)', border: '2px solid black',
+            borderRadius: '12px', padding: '32px 24px', maxWidth: '340px',
+            textAlign: 'center', fontFamily: 'Inter, sans-serif',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
+          }}>
+            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🖥️</div>
+            <h2 style={{ fontFamily: 'Courier New, monospace', color: '#f5a623', margin: '0 0 12px' }}>
+              Desktop Recommended
+            </h2>
+            <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
+              Hyperloop Empire is designed for desktop browsers. On smaller screens some features may not display correctly.
+            </p>
+            <button
+              style={{
+                background: '#222', color: 'white', border: 'none',
+                borderRadius: '8px', padding: '10px 24px', cursor: 'pointer',
+                fontFamily: 'Inter, sans-serif', fontWeight: 'bold', fontSize: '0.9rem'
+              }}
+              onClick={() => setShowMobileWarning(false)}
+            >
+              Continue anyway
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

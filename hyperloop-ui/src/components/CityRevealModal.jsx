@@ -1,7 +1,7 @@
 import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
 import reputationIcon from '../assets/misc/reputation.png'
-import { playClickSound2, playHoverSound, playDiceRollSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playDiceRollSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import './CityRevealModal.css'
 
 function CityRevealModal({ city, onClose, onReroll, reputation }) {
@@ -20,7 +20,15 @@ function CityRevealModal({ city, onClose, onReroll, reputation }) {
                     <button
                         className="rerollButton"
                         onMouseEnter={() => playHoverSound()}
-                        onClick={() => { playClickSound2(); playDiceRollSound(); canReroll && onReroll() }}
+                        onClick={() => {
+                            if (canReroll) {
+                                playClickSound2()
+                                playDiceRollSound()
+                                onReroll()
+                            } else {
+                                playNotEnoughFundsSound()
+                            }
+                        }}
                         style={{ opacity: canReroll ? 1 : 0.5, cursor: canReroll ? 'pointer' : 'not-allowed' }}
                     >
                         {canReroll

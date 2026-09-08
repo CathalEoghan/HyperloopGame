@@ -13,11 +13,8 @@ import openingAudio from '../assets/sounds/openingAudio.mp3'
 import developmentUnlocked from '../assets/sounds/developmentUnlocked.mp3'
 import eventSound from '../assets/sounds/eventSound.mp3'
 import diceRollSound from '../assets/sounds/diceRoll.mp3'
-
-export const playEventSound = () => {
-    const audio = new Audio(eventSound)
-    audio.play().catch(() => {})
-}
+import dailyLoginSound from '../assets/sounds/dailyLogin.wav'
+import notEnoughFundsSound from '../assets/sounds/notEnoughFunds.wav'
 
 function canPlay() {
     return localStorage.getItem('soundEnabled') !== 'false'
@@ -25,20 +22,23 @@ function canPlay() {
 
 function play(src) {
     if (!canPlay()) return
-    new Audio(src).play()
+    new Audio(src).play().catch(() => {})
 }
 
-export const playDiceRollSound = () => { new Audio(diceRollSound).play().catch(() => {}) }
-export function playWorkClickSound()     { play(workClickSound) }
-export function playConstructionSound()  { play(constructionSound) }
-export function playBadNewsSound()       { play(badNewsSound) }
-export function playLeavingSound()       { play(leavingSound) }
-export function playFarewellAcceptSound(){ play(farewellAcceptSound) }
-export function playClickSound2()        { play(click_sound_2) }
-export function playClickSound3()        { play(click_sound_3) }
-export function playRankUpSound()        { play(rankUpSound) }
-export function playHoverSound()         { play(hoverSound) }
-export function playReputationWorkBonusSound() { play(reputationWorkBonus) }
-export function playBottomNavbarHoverSound() { play(bottomNavbarHover) }
-export function playOpeningAudio()         { play(openingAudio) }
-export function playDevelopmentUnlockedSound() { play(developmentUnlocked) }
+export const playEventSound = () => play(eventSound)
+export const playDiceRollSound = () => play(diceRollSound)
+export function playWorkClickSound()            { play(workClickSound) }
+export function playConstructionSound()         { play(constructionSound) }
+export function playBadNewsSound()              { play(badNewsSound) }
+export function playLeavingSound()              { play(leavingSound) }
+export function playFarewellAcceptSound()       { play(farewellAcceptSound) }
+export function playClickSound2()               { play(click_sound_2) }
+export function playClickSound3()               { play(click_sound_3) }
+export function playRankUpSound()               { play(rankUpSound) }
+export function playHoverSound()                { play(hoverSound) }
+export function playReputationWorkBonusSound()  { play(reputationWorkBonus) }
+export function playBottomNavbarHoverSound()    { play(bottomNavbarHover) }
+export function playOpeningAudio()              { play(openingAudio) }
+export function playDevelopmentUnlockedSound()  { play(developmentUnlocked) }
+export function playDailyLoginSound()           { play(dailyLoginSound) }
+export function playNotEnoughFundsSound()       { play(notEnoughFundsSound) }

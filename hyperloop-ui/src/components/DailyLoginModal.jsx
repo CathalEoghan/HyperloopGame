@@ -1,17 +1,21 @@
-import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import { useEffect } from 'react'
+import { playClickSound2, playHoverSound, playDailyLoginSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import cashIcon from '../assets/misc/cash.png'
 import globeIcon from '/public/globeIcon.png'
 import './DailyLoginModal.css'
 
 function DailyLoginModal({ cashBonus, repBonus, onCollect }) {
+    useEffect(() => {
+        playDailyLoginSound()
+    }, [])
+
     return (
         <div className="modal-overlay">
             <div className="daily-login-modal">
                 <p className="daily-login-heading"><img src={globeIcon} alt="globe" className="brand-icon" /> DAILY BONUS</p>
                 <h2 className="daily-login-title">Welcome back!</h2>
                 <p className="daily-login-subtitle">Your terminal has been busy while you were away. Here's your daily reward:</p>
-
                 <div className="daily-login-rewards">
                     <div className="daily-login-reward-row">
                         <img src={cashIcon} alt="cash" className="daily-login-icon" />
@@ -24,11 +28,9 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect }) {
                         </div>
                     )}
                 </div>
-
                 {repBonus > 0 && (
                     <p className="daily-login-note">Reputation bonus from Passenger Loyalty Scheme</p>
                 )}
-
                 <button
                     className="opening-btn"
                     style={{ border: '2px solid white' }}

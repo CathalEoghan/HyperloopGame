@@ -130,6 +130,7 @@ import { advertisingCampaignUSA } from './AdvertisingCampaignUSA.js'
 import { advertisingCampaignMexico } from './AdvertisingCampaignMexico.js'
 import { advertisingCampaignSweden } from './AdvertisingCampaignSweden.js'
 import { advertisingCampaignItaly } from './AdvertisingCampaignItaly.js'
+import { rainforestConservationProjects } from './RainforestConservationProjects.js'
 
 
 
@@ -267,6 +268,7 @@ export const allUpgrades = [
     advertisingCampaignMexico,
     advertisingCampaignSweden,
     advertisingCampaignItaly,
+    rainforestConservationProjects,
 
     
 

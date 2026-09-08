@@ -299,6 +299,7 @@ import { Zhengzhou } from './Zhengzhou.js'
 import { Dubrovnik } from './Dubrovnik.js'
 import { QuebecCity } from './QuebecCity.js'
 import { Cagliari } from './Cagliari.js'
+import { PortMoresby } from './PortMoresby.js'
 
 
 export const allCities = [
@@ -602,6 +603,7 @@ export const allCities = [
     Zhengzhou,
     Dubrovnik,
     QuebecCity,
+    PortMoresby,
 
 
 
