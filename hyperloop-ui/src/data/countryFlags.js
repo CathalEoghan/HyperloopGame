@@ -126,7 +126,7 @@ const countryFlags = {
     "Guyana": "gy",
     "Moldova": "md",
     "Armenia": "am",
-    "TrinidadAndTobago": "tt",
+    "Trinidad and Tobago": "tt",
     "Rwanda": "rw",
     "Greenland": "gl",
     "The Bahamas": "bs",

@@ -7,7 +7,7 @@ export const PortOfSpain = new City(
     "Port of Spain",
     600000,
     [februaryTicketDeals],
-    "TrinidadAndTobago",
+    "Trinidad and Tobago",
     "North America",
     1,
     "Port of Spain features the Queen's Park Savannah, which is famously known as the largest roundabout in the world.",
