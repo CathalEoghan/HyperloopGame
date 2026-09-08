@@ -5,7 +5,7 @@ import { arrivalsHallRenovation } from "../UpgradeManager/ArrivalsHallRenovation
 
 export const Livingstone = new City(
     "Livingstone",
-    196000
+    196000,
     [arrivalsHallRenovation],
     "Zambia",
     "Africa",
