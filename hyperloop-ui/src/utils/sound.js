@@ -16,6 +16,18 @@ import diceRollSound from '../assets/sounds/diceRoll.mp3'
 import dailyLoginSound from '../assets/sounds/dailyLogin.wav'
 import notEnoughFundsSound from '../assets/sounds/notEnoughFunds.wav'
 
+let audioUnlocked = false
+
+const unlockAudio = () => {
+    if (audioUnlocked) return
+    const ctx = new (window.AudioContext || window.webkitAudioContext)()
+    ctx.resume().catch(() => {})
+    audioUnlocked = true
+}
+
+document.addEventListener('touchstart', unlockAudio, { once: true })
+document.addEventListener('click', unlockAudio, { once: true })
+
 function canPlay() {
     return localStorage.getItem('soundEnabled') !== 'false'
 }

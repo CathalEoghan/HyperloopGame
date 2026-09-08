@@ -300,6 +300,7 @@ const developmentImages = {
     "Escape Room": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/EscapeRoom.jpg",
     "Oyster Shack": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/OysterShack.jpg",
     "Rainforest Conservation Projects": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/RainforestConservationProjects.jpg",
+    "Ice Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/IceBar.jpg",
 
 
 

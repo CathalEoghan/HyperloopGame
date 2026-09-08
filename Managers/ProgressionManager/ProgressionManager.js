@@ -35,8 +35,12 @@ export class ProgressionManager {
     }
 
     addCash(amount) {
-    this.balance = Math.max(0, this.balance + amount);
-    if (amount > 0) this.totalCashEarned += amount;
+    if (amount > 0) {
+        this.totalCashEarned += amount;
+        this.balance += amount;
+    } else {
+        this.balance = Math.max(0, this.balance + amount);
+    }
 }
 
     addReputation(amount) {

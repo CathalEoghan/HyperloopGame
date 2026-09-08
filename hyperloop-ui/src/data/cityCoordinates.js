@@ -300,6 +300,10 @@ const cityCoordinates = {
 "Cagliari":     { lat: 39.2238,  lng: 9.1217   },
 "Québec City":  { lat: 46.8139,  lng: -71.2080 },
 "Port Moresby":    { lat: -9.4789,  lng: 147.1494 },
+"Harbin":    { lat: 45.7500,  lng: 126.6500 },
+"Cebu City":    { lat: 10.3157,  lng: 123.8854 }, 
+"Livingstone":    { lat: -17.8419,  lng: 25.8543 }, 
+
 
 };
 

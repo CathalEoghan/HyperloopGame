@@ -300,6 +300,8 @@ import { Dubrovnik } from './Dubrovnik.js'
 import { QuebecCity } from './QuebecCity.js'
 import { Cagliari } from './Cagliari.js'
 import { PortMoresby } from './PortMoresby.js'
+import { Harbin } from './Harbin.js'
+import { CebuCity } from './CebuCity.js'
 
 
 export const allCities = [
@@ -604,6 +606,8 @@ export const allCities = [
     Dubrovnik,
     QuebecCity,
     PortMoresby,
+    Harbin,
+    CebuCity,
 
 
 

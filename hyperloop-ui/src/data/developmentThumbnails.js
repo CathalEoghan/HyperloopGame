@@ -300,6 +300,7 @@ import PastriesStall from '../assets/developments-thumb/PastriesStall.jpg'
 import OysterShack from '../assets/developments-thumb/OysterShack.jpg'
 import EscapeRoom from '../assets/developments-thumb/EscapeRoom.jpg'
 import RainforestConservationProjects from '../assets/developments-thumb/RainforestConservationProjects.jpg'
+import IceBar from '../assets/developments-thumb/IceBar.jpg'
 
 
 const developmentImages = {
@@ -604,6 +605,7 @@ const developmentImages = {
     "Pancake House": PancakeHouse,
     "Escape Room": EscapeRoom,
     "Rainforest Conservation Projects": RainforestConservationProjects,
+    "Ice Bar": IceBar,
 
 
 

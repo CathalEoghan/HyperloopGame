@@ -85,14 +85,12 @@ function LoadingScreen({ onComplete }) {
             audio.preload = 'auto'
         })
 
-        const interval = 50
-        const steps = DURATION / interval
-        let current = 0
+        const startTime = Date.now()
 
         const timer = setInterval(() => {
-            current++
-            const pct = current / steps
-            setProgress(Math.min(pct * 100, 100))
+            const elapsed = Date.now() - startTime
+            const pct = Math.min(elapsed / DURATION, 1)
+            setProgress(pct * 100)
 
             if (pct < 0.20)      setStatusText('Loading city thumbnails...')
             else if (pct < 0.40) setStatusText('Loading developments...')
@@ -100,17 +98,16 @@ function LoadingScreen({ onComplete }) {
             else if (pct < 0.80) setStatusText('Loading globe textures...')
             else                 setStatusText('Ready.')
 
-            if (current >= steps && !done.current) {
+            if (pct >= 1 && !done.current) {
                 done.current = true
                 clearInterval(timer)
                 setReady(true)
             }
-        }, interval)
+        }, 50)
 
         return () => clearInterval(timer)
     }, [])
 
-    // Rotate tips
     useEffect(() => {
         const interval = setInterval(() => {
             setTipVisible(false)

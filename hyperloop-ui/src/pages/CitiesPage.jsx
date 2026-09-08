@@ -243,6 +243,20 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         if (seasonBoost > 0) lines.push(`Seasonal bonus: +${Math.round(seasonBoost * 100)}%`)
                                         const bizBoost = economyManager.getUpgradeSum('businessWeekBoost')
                                         if (bizBoost > 0 && economyManager.isBusinessWeek()) lines.push(`Business week: +${Math.round(bizBoost * 100)}%`)
+                                        const countryAdBoost = economyManager.getUpgradeSum('countryAdvertisingBoost')
+                                        if (countryAdBoost > 0) {
+                                            const hasAdForCountry = economyManager.progressionManager.purchasedUpgrades.some(
+                                                u => u.effectType === 'countryAdvertisingBoost' && u.name.includes(selectedCity.country)
+                                            )
+                                            if (hasAdForCountry) lines.push(`Advertising campaign: +${Math.round(countryAdBoost * 100)}%`)
+                                        }
+                                        const arcticBoost = economyManager.getUpgradeSum('arcticBoost')
+                                        if (arcticBoost > 0 && selectedCity.lat && selectedCity.lat > 60) lines.push(`Arctic bonus: +${Math.round(arcticBoost * 100)}%`)
+                                        const equatorBoost = economyManager.getUpgradeSum('equatorBoost')
+                                        if (equatorBoost > 0 && selectedCity.lat && Math.abs(selectedCity.lat) < 23.5) lines.push(`Equator bonus: +${Math.round(equatorBoost * 100)}%`)
+                                        const localBoost = economyManager.getUpgradeSum('localCountryBoost')
+                                        const homeCity = economyManager.progressionManager.purchasedCities[0]
+                                        if (localBoost > 0 && homeCity && selectedCity.country === homeCity.country) lines.push(`Local country bonus: +${Math.round(localBoost * 100)}%`)
                                         return (
                                             <p>
                                                 Earning{' '}

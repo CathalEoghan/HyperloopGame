@@ -299,6 +299,8 @@ import QuebecCity from '../assets/cities-thumb/QuebecCity.jpg'
 import Dubrovnik from '../assets/cities-thumb/Dubrovnik.jpg'
 import Cagliari from '../assets/cities-thumb/Cagliari.jpg'
 import PortMoresby from '../assets/cities-thumb/PortMoresby.jpg'
+import Harbin from '../assets/cities-thumb/Harbin.jpg'
+import CebuCity from '../assets/cities-thumb/CebuCity.jpg'
 
 
 
@@ -606,6 +608,8 @@ const cityImages = {
     "Québec City": QuebecCity,
     Zhengzhou: Zhengzhou,
     "Port Moresby": PortMoresby,
+    Harbin: Harbin,
+    "Cebu City": CebuCity,
 
 
 

@@ -677,10 +677,21 @@ function App() {
       )}
       {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && (
         <RankUpModal rank={rankSet} onClaim={() => {
-          const newCity = progressionManager.getRandomUnlockedCity(allCities);
-          if (newCity) { progressionManager.unlockCity(newCity); setClaimedCity(newCity); }
-          if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
-          setPendingRankUps(prev => prev - 1);
+    const minTier = economyManager.getMinCityTierOnRankUp();
+    let newCity = progressionManager.getRandomUnlockedCity(allCities);
+    if (minTier > 1 && newCity && newCity.tier < minTier) {
+        const betterCity = allCities.filter(c =>
+            c.tier >= minTier &&
+            !progressionManager.purchasedCities.includes(c) &&
+            !progressionManager.unlockedCities.includes(c)
+        )[0];
+        if (betterCity) newCity = betterCity;
+    }
+    if (newCity) { progressionManager.unlockCity(newCity); setClaimedCity(newCity); }
+    if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
+    const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
+    if (freeRep > 0) progressionManager.addReputation(freeRep);
+    setPendingRankUps(prev => prev - 1);
         }} />
       )}
       {devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
