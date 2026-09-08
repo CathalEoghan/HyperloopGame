@@ -6,6 +6,6 @@ export const translationServiceAugmentations = new Upgrade(
     "Translation Service Augmentations",
     98700,
     "Service",
-    "negativeEventReduction",
-    0.2
+    "countryExpansionBoost",
+    0.005
 )

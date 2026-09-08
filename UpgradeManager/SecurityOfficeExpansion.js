@@ -7,6 +7,6 @@ export const securityOfficeExpansion = new Upgrade(
     130000,
     "Infrastructure",
     "workClickBonus",
-    0.1
+    1
 )
     

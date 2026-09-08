@@ -7,5 +7,5 @@ export const expeditedShippingLogistics = new Upgrade(
     95000,
     "Service",
     "workClickBonus",
-    0.1
+    1
 );

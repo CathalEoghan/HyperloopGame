@@ -7,5 +7,5 @@ export const embassyHotlineCentre = new Upgrade(
     145000,
     "Service",
     "workClickBonus",
-    0.1
+    1
 );

@@ -7,5 +7,5 @@ export const localTours = new Upgrade(
     115000,
     "Service",
     "localCountryBoost",
-    0
+    1
 );

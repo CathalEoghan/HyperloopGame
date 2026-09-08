@@ -634,6 +634,8 @@ openingAudio.mp3 - Sound via Pixabay
 hoverSound.mp3 - Sound by tunetank via Pixabay
 developmentUnlocked.mp3 - Sound by freesound via Pixabay
 eventSound.mp3 - Sound by DRAGON-STUDIO via Pixabay
+dailyLogin.wav - Sound by rhodesmas via Freesound
+notEnoughFunds.wav - Sound by rhodesmas via Freesound
 
 MISC IMAGES
 

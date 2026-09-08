@@ -23,14 +23,16 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     const terminalAge = () => {
         const totalSeconds = Math.floor((Date.now() - createdAt) / 1000)
-        const d = Math.floor(totalSeconds / 86400)
+        const weeks = Math.floor(totalSeconds / 604800)
+        const days = Math.floor((totalSeconds % 604800) / 86400)
         const h = Math.floor((totalSeconds % 86400) / 3600)
         const m = Math.floor((totalSeconds % 3600) / 60)
-        const s = totalSeconds % 60
-        if (d > 0) return `${d}d ${h}h ${m}m`
-        if (h > 0) return `${h}h ${m}m ${s}s`
-        if (m > 0) return `${m}m ${s}s`
-        return `${s}s`
+        const parts = []
+        if (weeks > 0) parts.push(`${weeks} ${weeks === 1 ? 'week' : 'weeks'}`)
+        if (days > 0) parts.push(`${days} ${days === 1 ? 'day' : 'days'}`)
+        if (h > 0 && weeks === 0) parts.push(`${h} ${h === 1 ? 'hour' : 'hours'}`)
+        if (m > 0 && weeks === 0 && days === 0) parts.push(`${m} ${m === 1 ? 'minute' : 'minutes'}`)
+        return parts.join(' ') || 'Just started'
     }
 
     const formatPopulation = (pop) => {
@@ -113,9 +115,26 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'All Developments Bonus',      value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
             { label: 'Connection Earnings Bonus',   value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
             { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>×{Math.pow(3, count('workClickBonus'))} (<CashValue amount={Math.floor(100 * Math.pow(3, count('workClickBonus')))} suffix="/click" />)</span> : '—' },
-            { label: 'Farewell Window Extension',   value: count('farewellWindowExtension') > 0 ? `+${count('farewellWindowExtension') * 5} mins` : '—' },
+            { label: 'Farewell Window Extension',   value: (() => {
+                const total = 5 + count('farewellWindowExtension') * 5
+                const weeks = Math.floor(total / 10080)
+                const days = Math.floor((total % 10080) / 1440)
+                const hours = Math.floor((total % 1440) / 60)
+                const mins = total % 60
+                const parts = []
+                if (weeks > 0) parts.push(`${weeks} ${weeks === 1 ? 'week' : 'weeks'}`)
+                if (days > 0) parts.push(`${days} ${days === 1 ? 'day' : 'days'}`)
+                if (hours > 0) parts.push(`${hours} ${hours === 1 ? 'hour' : 'hours'}`)
+                if (mins > 0) parts.push(`${mins} ${mins === 1 ? 'minute' : 'minutes'}`)
+                return count('farewellWindowExtension') > 0 ? parts.join(' ') : '—'
+            })() },
             { label: 'Farewell Rep Bonus',          value: has('farewellRepDoubled') ? '×2' : '—' },
-            { label: 'Offline Earnings Cap',        value: `${48 + count('offlineCapExtension') * 24}h` },
+            { label: 'Offline Earnings Cap',        value: (() => {
+                const hours = 48 + count('offlineCapExtension') * 24
+                if (hours >= 168) return '1 week'
+                if (hours >= 48) return `${Math.round(hours / 24)} days`
+                return `${hours}h`
+            })() },
             { label: 'Dev Construction Discount',   value: sum('developmentDiscount') > 0 ? `-${Math.round(sum('developmentDiscount') * 100)}%` : '—' },
             { label: 'Delay Compensation Cut',      value: sum('delayCompensationReduction') > 0 ? `-${Math.round(sum('delayCompensationReduction') * 100)}%` : '—' },
             { label: 'Seasonal Boost',              value: seasonActive ? `+25% (${currentSeason})` : '—' },

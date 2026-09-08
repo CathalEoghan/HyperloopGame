@@ -7,5 +7,5 @@ export const dedicatedMotorcycleParking = new Upgrade(
     112500,
     "Service",
     "localCountryBoost",
-    0
+    1
 );

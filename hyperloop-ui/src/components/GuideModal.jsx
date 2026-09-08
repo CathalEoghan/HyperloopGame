@@ -1,4 +1,4 @@
-import { playClickSound2 } from '../utils/sound.js'
+import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import './GuideModal.css'
 
 const GUIDE_SECTIONS = [
@@ -21,13 +21,23 @@ function GuideModal({ onClose }) {
                 <p className="guide-heading">📖 GUIDE</p>
                 <div className="guide-body">
                     {GUIDE_SECTIONS.map(section => (
-                        <div key={section.title} className="guide-section">
+                        <div
+                            key={section.title}
+                            className="guide-section"
+                            onMouseEnter={() => playHoverSound()}
+                        >
                             <p className="guide-section-title">{section.title}</p>
                             <p className="guide-section-content">{section.content}</p>
                         </div>
                     ))}
                 </div>
-                <button className="closeButton" onClick={() => { playClickSound2(); onClose() }}>Close</button>
+                <button
+                    className="closeButton"
+                    onMouseEnter={() => playHoverSound()}
+                    onClick={() => { playClickSound2(); onClose() }}
+                >
+                    Close
+                </button>
             </div>
         </div>
     )

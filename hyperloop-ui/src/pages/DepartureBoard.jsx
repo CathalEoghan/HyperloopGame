@@ -101,7 +101,41 @@ function DepartureBoard({ purchasedCities, homeCity }) {
             }
         }
 
-        const generated = generateSchedule(purchasedCities)
+        let generated = generateSchedule(purchasedCities)
+
+        // Inject any pending cities that were connected before the schedule was generated
+        const pending = JSON.parse(localStorage.getItem('hyperloop_pending_injections') || '[]')
+        if (pending.length > 0) {
+            const now = new Date()
+            const currentMins = now.getHours() * 60 + now.getMinutes()
+            const maxMins = 23 * 60 + 30
+            pending.forEach(cityName => {
+                if (generated.some(e => e.name === cityName)) return
+                const city = purchasedCities.find(c => c.name === cityName)
+                if (!city) return
+                let newMinutes = Math.ceil((currentMins + 30 + Math.floor(Math.random() * 30)) / 5) * 5
+                let attempts = 0
+                while (attempts < 24) {
+                    const clash = generated.some(e => Math.abs((e.hour * 60 + e.minute) - newMinutes) < 10)
+                    if (!clash && newMinutes <= maxMins) break
+                    newMinutes += 5
+                    attempts++
+                }
+                if (newMinutes > maxMins) return
+                const usedGates = new Set(generated.map(e => e.gate))
+                let gate = Math.floor(Math.random() * 30) + 1
+                for (let g = 1; g <= 30; g++) {
+                    if (!usedGates.has(g)) { gate = g; break }
+                }
+                const hour = Math.floor(newMinutes / 60)
+                const minute = newMinutes % 60
+                const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
+                generated.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay: newMinutes, gate })
+            })
+            generated = generated.sort((a, b) => a.minuteOfDay - b.minuteOfDay)
+            localStorage.removeItem('hyperloop_pending_injections')
+        }
+
         if (generated.length > 0) {
             localStorage.setItem(key, JSON.stringify(generated))
             setSchedule(generated)

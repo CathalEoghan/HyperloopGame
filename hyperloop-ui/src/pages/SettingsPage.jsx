@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { playHoverSound } from '../utils/sound.js'
+import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
 import './SettingsPage.css'
@@ -24,8 +24,40 @@ const OptionBtn = ({ active, onClick, children }) => {
     )
 }
 
+function LegalModal({ onClose }) {
+    return (
+        <div className="modal-overlay" onClick={onClose}>
+            <div className="credits-modal" onClick={e => e.stopPropagation()}>
+                <p className="credits-heading">⚖️ LEGAL & PRIVACY</p>
+                <div className="credits-body">
+                    <p className="credits-section">PRIVACY</p>
+                    <p className="credits-line">All save data is stored locally on your device using localStorage.</p>
+                    <p className="credits-line">No personal data is collected, transmitted or stored on any server.</p>
+                    <p className="credits-line">No analytics, tracking or third-party cookies are used.</p>
+                    <p className="credits-line">Deleting your save removes all locally stored game data.</p>
+                    <p className="credits-section">CONTENT</p>
+                    <p className="credits-line">City and development images are sourced from Pexels and Wikimedia Commons under their respective licences.</p>
+                    <p className="credits-line">Sound effects are sourced from Freesound and Pixabay under their respective licences.</p>
+                    <p className="credits-line">Globe textures courtesy of NASA Visible Earth.</p>
+                    <p className="credits-section">DISCLAIMER</p>
+                    <p className="credits-line">Hyperloop Empire is a fictional idle game provided for entertainment purposes only. All city names, facts and figures are used in a fictional context.</p>
+                    <p className="credits-line">The game is provided as-is with no warranties expressed or implied.</p>
+                </div>
+                <button
+                    className="closeButton"
+                    onMouseEnter={() => playHoverSound()}
+                    onClick={() => { playClickSound2(); onClose() }}
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+    )
+}
+
 function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave }) {
     const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '2k')
+    const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
     const [nameInput, setNameInput] = useState(terminalName)
     const [nameSaved, setNameSaved] = useState(false)
@@ -33,6 +65,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const [importError, setImportError] = useState(null)
     const [showCredits, setShowCredits] = useState(false)
     const [showGuide, setShowGuide] = useState(false)
+    const [showLegal, setShowLegal] = useState(false)
     const [manualSaved, setManualSaved] = useState(false)
     const [deleteHover, setDeleteHover] = useState(false)
     const [confirmDeleteHover, setConfirmDeleteHover] = useState(false)
@@ -42,6 +75,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleQualityChange = (quality) => {
         setGlobeQuality(quality)
         localStorage.setItem('globeQuality', quality)
+    }
+
+    const handleNightModeChange = (enabled) => {
+        setGlobeNightMode(enabled)
+        localStorage.setItem('globeNightMode', enabled)
     }
 
     const handleSoundToggle = (enabled) => {
@@ -87,6 +125,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         <div className="settings-page">
             {showCredits && <CreditsModal onClose={() => setShowCredits(false)} />}
             {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
+            {showLegal && <LegalModal onClose={() => setShowLegal(false)} />}
 
             <h1 className="settings-title">Settings</h1>
 
@@ -137,6 +176,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <div className="settings-options">
                         <OptionBtn active={globeQuality === '2k'} onClick={() => handleQualityChange('2k')}>Standard (2K)</OptionBtn>
                         <OptionBtn active={globeQuality === '8k'} onClick={() => handleQualityChange('8k')}>Ultra (8K)</OptionBtn>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Globe Night Mode</span>
+                        <span className="settings-label-desc">Show day/night shading on the globe. Disable for a consistently bright globe.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={globeNightMode} onClick={() => handleNightModeChange(true)}>On</OptionBtn>
+                        <OptionBtn active={!globeNightMode} onClick={() => handleNightModeChange(false)}>Off</OptionBtn>
                     </div>
                 </div>
             </div>
@@ -223,6 +272,13 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <span className="settings-label-desc">Photo and sound attribution.</span>
                     </div>
                     <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => setShowCredits(true)}>Credits</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Legal & Privacy</span>
+                        <span className="settings-label-desc">Data storage, content licencing and disclaimer.</span>
+                    </div>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => setShowLegal(true)}>View</button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">

@@ -44,3 +44,8 @@
     margin: 2px 0;
     line-height: 1.5;
 }
+
+.closeButton:hover {
+    background: #f5a623 !important;
+    color: white !important;
+}

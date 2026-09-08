@@ -7,5 +7,5 @@ export const tramDepot = new Upgrade(
     155000,
     "Service",
     "localCountryBoost",
-    0
+    1
 )

@@ -1,15 +1,13 @@
-import { playClickSound2 } from '../utils/sound.js'
+import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import globeIcon from '/public/globeIcon.png'
 import './CreditsModal.css'
 
 const CREDITS_TEXT = `CITY IMAGES
 All city photographs sourced via Pexels and Wikimedia Commons.
 Full attribution available at github.com/CathalEoghan/HyperloopGame
-
 DEVELOPMENT IMAGES
 All development photographs sourced via Pexels and Wikimedia Commons.
 Full attribution available at github.com/CathalEoghan/HyperloopGame
-
 SOUNDS
 cityConnectComplete.mp3 — Robinhood76 via Freesound
 leavingSound.mp3 — GraceSoundProductions via Pixabay
@@ -19,13 +17,10 @@ workClickSound.mp3 — linhmitto via Pixabay
 openingAudio.mp3 — via Pixabay
 hoverSound.mp3 — tunetank via Pixabay
 developmentUnlocked.mp3 — freesound via Pixabay
-
 REPUTATION ICON
 Clean icons created by Smashicons — Flaticon
-
 GLOBE TEXTURES
 NASA Visible Earth
-
 GAME DESIGN & DEVELOPMENT
 Cathal Eoghan
 Built with React, Three.js and a lot of Monster energy drinks.`
@@ -42,7 +37,7 @@ function CreditsModal({ onClose }) {
                         </p>
                     ))}
                 </div>
-                <button className="closeButton" onClick={() => { playClickSound2(); onClose() }}>Close</button>
+                <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>Close</button>
             </div>
         </div>
     )

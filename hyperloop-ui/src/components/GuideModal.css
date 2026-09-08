@@ -52,3 +52,19 @@
     line-height: 1.6;
     margin: 0;
 }
+
+.guide-section {
+    cursor: default;
+    border-radius: 8px;
+    padding: 8px;
+    transition: background 0.15s ease;
+}
+
+.guide-section:hover {
+    background: rgba(245, 166, 35, 0.1);
+}
+
+.closeButton:hover {
+    background: #f5a623 !important;
+    color: white !important;
+}

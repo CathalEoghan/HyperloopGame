@@ -6,6 +6,6 @@ export const plushTerminalSeating = new Upgrade(
     "Plush Terminal Seating",
     65900,
     "Service",
-    "dailyRepDoubled",
-    2
+    "bonusDurationExtension",
+    0.15
 )

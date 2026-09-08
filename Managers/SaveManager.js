@@ -3,6 +3,50 @@ import { allDevelopments } from '../DevelopmentManager/DevelopmentRegistry.js'
 import { allUpgrades } from '../UpgradeManager/UpgradeRegistry.js'
 
 const SAVE_KEY = 'hyperloop_save'
+const MAX_BALANCE = 999_000_000_000
+const MAX_RANK = 100
+
+// Simple checksum — hash key fields into a reproducible string
+function computeChecksum(save) {
+    const str = [
+        save.version,
+        save.createdAt,
+        save.totalCashEarned,
+        save.rank,
+        save.balance,
+        save.purchasedCities?.length ?? 0,
+        save.purchasedDevelopments?.length ?? 0,
+        save.purchasedUpgrades?.length ?? 0,
+    ].join('|')
+    let hash = 0
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i)
+        hash = (hash << 5) - hash + char
+        hash |= 0
+    }
+    return Math.abs(hash).toString(36)
+}
+
+function validateSave(save) {
+    if (!save.version || !save.purchasedCities) return false
+    if (save.balance < 0 || save.balance > MAX_BALANCE) return false
+    if (save.reputation < 0 || save.reputation > 100000) return false
+    if (save.rank < 1 || save.rank > MAX_RANK) return false
+    if (save.totalCashEarned < save.balance) return false
+    if (save.purchasedCities.length > allCities.length) return false
+    if (save.purchasedDevelopments.length > allDevelopments.length) return false
+    if (save.purchasedUpgrades.length > allUpgrades.length) return false
+
+    // Rate check — earnings can't be impossibly high relative to terminal age
+    const ageSeconds = (Date.now() - save.createdAt) / 1000
+    if (ageSeconds > 0) {
+        const maxTheoreticalRate = 50_000_000 // £50M/second absolute ceiling
+        const impliedRate = save.totalCashEarned / ageSeconds
+        if (impliedRate > maxTheoreticalRate) return false
+    }
+
+    return true
+}
 
 export function saveGame(progressionManager, rankManager, terminalName, farewellsGiven) {
     const existing = getSaveRaw()
@@ -34,6 +78,8 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
             finishTime: d.finishTime
         })),
     }
+
+    save.checksum = computeChecksum(save)
     localStorage.setItem(SAVE_KEY, JSON.stringify(save))
 }
 
@@ -44,7 +90,7 @@ export function loadGame(progressionManager, rankManager) {
     try {
         const save = JSON.parse(raw)
 
-        progressionManager.balance = save.balance ?? 250000
+        progressionManager.balance = save.balance ?? 1000000
         progressionManager.reputation = save.reputation ?? 50
         progressionManager.totalCashEarned = save.totalCashEarned ?? 0
         rankManager.rank = save.rank ?? 1
@@ -93,7 +139,6 @@ export function loadGame(progressionManager, rankManager) {
             }
         })
 
-        // Restore cities under construction
         ;(save.citiesUnderConstruction || []).forEach(({ name, finishTime }) => {
             const city = allCities.find(c => c.name === name)
             if (city && !progressionManager.purchasedCities.includes(city)) {
@@ -103,7 +148,6 @@ export function loadGame(progressionManager, rankManager) {
             }
         })
 
-        // Restore developments under construction
         const allItems = [...allDevelopments, ...allUpgrades]
         ;(save.developmentsUnderConstruction || []).forEach(({ name, finishTime }) => {
             const dev = allItems.find(d => d.name === name)
@@ -155,7 +199,21 @@ export function importSave(file) {
         reader.onload = (e) => {
             try {
                 const data = JSON.parse(e.target.result)
-                if (!data.version || !data.purchasedCities) throw new Error('Invalid save file')
+
+                // Validate structure
+                if (!validateSave(data)) throw new Error('Invalid save file')
+
+                // Verify checksum if present
+                if (data.checksum) {
+                    const storedChecksum = data.checksum
+                    const { checksum: _, ...saveWithoutChecksum } = data
+                    const computed = computeChecksum(saveWithoutChecksum)
+                    if (computed !== storedChecksum) {
+                        data.tampered = true
+                        console.warn('Save checksum mismatch — save may have been modified')
+                    }
+                }
+
                 localStorage.setItem(SAVE_KEY, JSON.stringify(data))
                 resolve()
             } catch {
@@ -164,6 +222,15 @@ export function importSave(file) {
         }
         reader.readAsText(file)
     })
+}
+
+export function isSaveTampered() {
+    const save = getSaveRaw()
+    if (!save) return false
+    if (save.tampered) return true
+    if (!save.checksum) return false
+    const { checksum: _, ...saveWithoutChecksum } = save
+    return computeChecksum(saveWithoutChecksum) !== save.checksum
 }
 
 function getSaveRaw() {

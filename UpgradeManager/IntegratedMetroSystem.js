@@ -7,5 +7,5 @@ export const integratedMetroSystem = new Upgrade(
     155000,
     "Service",
     "localCountryBoost",
-    0
+    1
 );

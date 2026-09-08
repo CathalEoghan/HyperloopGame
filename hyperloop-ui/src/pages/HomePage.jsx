@@ -101,11 +101,13 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
         dayTexture.anisotropy = maxAnisotropy
         nightTexture.anisotropy = maxAnisotropy
 
+        const nightMode = localStorage.getItem('globeNightMode') !== 'false'
         const globeMaterial = new THREE.ShaderMaterial({
             uniforms: {
                 dayTexture: { value: dayTexture },
                 nightTexture: { value: nightTexture },
                 sunDirection: { value: getSunWorldPosition().normalize() },
+                nightMode: { value: nightMode ? 1.0 : 0.0 },
             },
             vertexShader: `
                 varying vec2 vUv;
@@ -120,13 +122,14 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount }) {
                 uniform sampler2D dayTexture;
                 uniform sampler2D nightTexture;
                 uniform vec3 sunDirection;
+                uniform float nightMode;
                 varying vec2 vUv;
                 varying vec3 vNormal;
                 void main() {
                     vec4 dayColor = texture2D(dayTexture, vUv);
                     vec4 nightColor = texture2D(nightTexture, vUv) * 1.8;
                     float cosAngle = dot(vNormal, sunDirection);
-                    float blend = smoothstep(-0.1, 0.2, cosAngle);
+                    float blend = nightMode > 0.5 ? smoothstep(-0.1, 0.2, cosAngle) : 1.0;
                     gl_FragColor = mix(nightColor, dayColor, blend);
                 }
             `,

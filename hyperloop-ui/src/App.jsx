@@ -182,6 +182,58 @@ function App() {
     }
   });
 
+
+  const injectCityIntoSchedule = (city) => {
+    const todayKey = new Date().toDateString();
+    const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
+
+    // No schedule yet — store as pending for DepartureBoard to pick up
+    if (schedule.length === 0) {
+      const pending = JSON.parse(localStorage.getItem('hyperloop_pending_injections') || '[]');
+      if (!pending.includes(city.name)) {
+        pending.push(city.name);
+        localStorage.setItem('hyperloop_pending_injections', JSON.stringify(pending));
+      }
+      return;
+    }
+
+    // Don't add if already in schedule
+    if (schedule.some(e => e.name === city.name)) return;
+
+    const now = new Date();
+    const currentMins = now.getHours() * 60 + now.getMinutes();
+    const minFutureMins = currentMins + 30;
+    const maxMins = 23 * 60 + 30;
+
+    if (minFutureMins >= maxMins) return; // too late in the day
+
+    // Find a slot at least 30 mins from now with 10 min gap from other departures
+    let newMinutes = Math.ceil((minFutureMins + Math.floor(Math.random() * 30)) / 5) * 5;
+    let attempts = 0;
+    while (attempts < 24) {
+      const clash = schedule.some(e => Math.abs((e.hour * 60 + e.minute) - newMinutes) < 10);
+      if (!clash && newMinutes <= maxMins) break;
+      newMinutes += 5;
+      attempts++;
+    }
+    if (newMinutes > maxMins) return;
+
+    // Find an available gate
+    const usedGates = new Set(schedule.map(e => e.gate));
+    let gate = Math.floor(Math.random() * 30) + 1;
+    for (let g = 1; g <= 30; g++) {
+      if (!usedGates.has(g)) { gate = g; break; }
+    }
+
+    const hour = Math.floor(newMinutes / 60);
+    const minute = newMinutes % 60;
+    const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+
+    const newEntry = { name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay: newMinutes, gate };
+    const updated = [...schedule, newEntry].sort((a, b) => a.minuteOfDay - b.minuteOfDay);
+    localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
+  };
+
   const tickIntervalRef = useRef(null);
 
   const startTick = () => {
@@ -222,6 +274,16 @@ function App() {
           if (upgrade.effectType) setRevealedUpgrade(upgrade);
         });
         prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
+      }
+
+      // Inject newly connected cities into today's departure schedule
+      if (progressionManager.purchasedCities.length > prevPurchasedCount.current) {
+        const newCities = progressionManager.purchasedCities.slice(prevPurchasedCount.current);
+        const homeCity = progressionManager.purchasedCities[0];
+        newCities.forEach(city => {
+          if (homeCity && city.name === homeCity.name) return;
+          injectCityIntoSchedule(city);
+        });
       }
 
       const citiesChanged = progressionManager.purchasedCities.length !== prevPurchasedCount.current;
