@@ -7,7 +7,7 @@ export const HongKong = new City(
     "Hong Kong",
     7800000,
     [hyperloopPodRefurbishments],
-    "China",
+    "Hong Kong",
     "Asia",
     2,
     "Most toilets in Hong Kong use untreated seawater for flushing to conserve the city's freshwater supply. Because of this widespread dual-piping system, the amount of fresh water saved daily is massive.",

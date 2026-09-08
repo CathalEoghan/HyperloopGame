@@ -171,6 +171,8 @@ import { pastriesStall } from './PastriesStall.js'
 import { escapeRoom } from './EscapeRoom.js'
 import { iceBar } from './IceBar.js'
 import { squidShack } from './SquidShack.js'
+import { laserTag } from './LaserTag.js'
+import { businessHotel } from './BusinessHotel.js'
 
 
 export const allDevelopments = [
@@ -346,5 +348,7 @@ export const allDevelopments = [
     oysterShack,
     iceBar,
     squidShack,
+    laserTag,
+    businessHotel,
 
 ]

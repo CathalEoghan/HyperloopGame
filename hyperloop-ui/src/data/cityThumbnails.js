@@ -302,6 +302,15 @@ import PortMoresby from '../assets/cities-thumb/PortMoresby.jpg'
 import Harbin from '../assets/cities-thumb/Harbin.jpg'
 import CebuCity from '../assets/cities-thumb/CebuCity.jpg'
 import Livingstone from '../assets/cities-thumb/Livingstone.jpg'
+import Samarkand from '../assets/cities-thumb/Samarkand.jpg'
+import Lusaka from '../assets/cities-thumb/Lusaka.jpg'
+import Poznań from '../assets/cities-thumb/Poznań.jpg'
+import Macau from '../assets/cities-thumb/Macau.jpg'
+import Ankara from '../assets/cities-thumb/Ankara.jpg'
+import Brazzaville from '../assets/cities-thumb/Brazzaville.jpg'
+import Sofia from '../assets/cities-thumb/Sofia.jpg'
+import Ibadan from '../assets/cities-thumb/Ibadan.jpg'
+
 
 
 
@@ -612,6 +621,14 @@ const cityImages = {
     Harbin: Harbin,
     "Cebu City": CebuCity,
     Livingstone: Livingstone,
+    Samarkand: Samarkand,
+    Lusaka: Lusaka,
+    Poznań: Poznań,
+    Ankara: Ankara,
+    Macau: Macau,
+    Brazzaville: Brazzaville,
+    Ibadan: Ibadan,
+    Sofia: Sofia,
 
 
 

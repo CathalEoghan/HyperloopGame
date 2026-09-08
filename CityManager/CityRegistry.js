@@ -303,6 +303,14 @@ import { PortMoresby } from './PortMoresby.js'
 import { Harbin } from './Harbin.js'
 import { CebuCity } from './CebuCity.js'
 import { Livingstone } from './Livingstone.js'
+import { Lusaka } from './Lusaka.js'
+import { Samarkand } from './Samarkand.js'
+import { Poznań } from './Poznań.js'
+import { Ankara } from './Ankara.js'
+import { Macau } from './Macau.js'
+import { Ibadan } from './Ibadan.js'
+import { Sofia } from './Sofia.js'
+import { Brazzaville } from './Brazzaville.js'
 
 
 export const allCities = [
@@ -610,6 +618,14 @@ export const allCities = [
     Harbin,
     CebuCity,
     Livingstone,
+    Lusaka,
+    Samarkand,
+    Poznań,
+    Ankara,
+    Macau,
+    Brazzaville,
+    Ibadan,
+    Sofia,
 
 
 

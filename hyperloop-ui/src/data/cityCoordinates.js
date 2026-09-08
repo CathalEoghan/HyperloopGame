@@ -303,6 +303,15 @@ const cityCoordinates = {
 "Harbin":    { lat: 45.7500,  lng: 126.6500 },
 "Cebu City":    { lat: 10.3157,  lng: 123.8854 }, 
 "Livingstone":    { lat: -17.8419,  lng: 25.8543 }, 
+"Lusaka":    { lat: -15.4166,  lng: 28.2833 }, 
+"Samarkand":    { lat: 39.6505,  lng: 66.9652 }, 
+"Poznań":    { lat: 52.4064,  lng: 16.9252 }, 
+"Ankara":    { lat: 39.9255,  lng: 32.8663 }, 
+"Macau":    { lat: 22.2109,  lng: 113.5530 }, 
+"Ibadan":    { lat: 7.3775,  lng: 3.9059 }, 
+"Sofia":    { lat: 42.6983,  lng: 23.3199 }, 
+"Brazzaville":    { lat: -4.2678,  lng: 15.2919 }, 
+
 
 
 };

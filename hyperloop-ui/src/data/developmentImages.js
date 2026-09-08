@@ -303,6 +303,14 @@ const developmentImages = {
     "Ice Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/IceBar.jpg",
     "Squid Shack": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SquidShack.jpg",
     "Arrivals Hall Renovation": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ArrivalsHallRenovation.jpg",
+    "International Development Schemes": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/InternationalDevelopmentSchemes.jpg",
+    "September Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SeptemberTicketDeals.jpg",
+    "Skilled Negotiation Teams": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SkilledNegotiationTeams.jpg",
+    "Laser Tag": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LaserTag.jpg",
+    "Business Hotel": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BusinessHotel.jpg",
+    "Halloween Fair": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/HalloweenFair.jpg",
+    "Personal Image Branding": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PersonalImageBranding.jpg",
+    "Advertising Campaign: Nigeria": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignNigeria.jpg",
 
 
 

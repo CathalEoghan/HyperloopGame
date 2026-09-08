@@ -132,6 +132,12 @@ import { advertisingCampaignSweden } from './AdvertisingCampaignSweden.js'
 import { advertisingCampaignItaly } from './AdvertisingCampaignItaly.js'
 import { rainforestConservationProjects } from './RainforestConservationProjects.js'
 import { arrivalsHallRenovation } from './ArrivalsHallRenovation.js'
+import { internationalDevelopmentSchemes } from './InternationalDevelopmentSchemes.js'
+import { septemberTicketDeals } from './SeptemberTicketDeals.js'
+import { skilledNegotiationTeams } from './SkilledNegotiationTeams.js'
+import { personalImageBranding } from './PersonalImageBranding.js'
+import { halloweenFair } from './HalloweenFair.js'
+import { advertisingCampaignNigeria } from './AdvertisingCampaignNigeria.js'
 
 
 
@@ -271,6 +277,12 @@ export const allUpgrades = [
     advertisingCampaignItaly,
     rainforestConservationProjects,
     arrivalsHallRenovation,
+    septemberTicketDeals,
+    internationalDevelopmentSchemes,
+    skilledNegotiationTeams,
+    personalImageBranding,
+    advertisingCampaignNigeria,
+    halloweenFair,
 
     
 

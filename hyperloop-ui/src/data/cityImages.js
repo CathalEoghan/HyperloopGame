@@ -303,6 +303,14 @@ const cityImages = {
     "Harbin": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Harbin.jpg",
     "Cebu City": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CebuCity.jpg",
     "Livingstone": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Livingstone.jpg",
+    "Samarkand": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Samarkand.jpg",
+    "Lusaka": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Lusaka.jpg",
+    "Poznań": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Poznań.jpg",
+    "Ankara": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ankara.jpg",
+    "Macau": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Macau.jpg",
+    "Brazzaville": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Brazzaville.jpg",
+    "Ibadan": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ibadan.jpg",
+    "Sofia": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Sofia.jpg",
 
 
 

@@ -1,15 +1,15 @@
 
 // Lusaka
 import { City } from "./City.js";
-import { advertisingCampaignPoland } from "../UpgradeManager/AdvertisingCampaignPoland.js";
+import { internationalDevelopmentSchemes } from "../UpgradeManager/InternationalDevelopmentSchemes.js";
 
 export const Lusaka = new City(
     "Lusaka",
-    700000,
-    [advertisingCampaignPoland],
-    "Poland",
-    "Europe",
-    1,
-    "Lublin features a public interactive portal in Litewski Square that connects people in real-time with distant cities like New York and Dublin.",
-    false
+    3600000,
+    [internationalDevelopmentSchemes],
+    "Zambia",
+    "Africa",
+    2,
+    "Lusaka is built on the site of a former village named after a local headman, Lusaaka, whose settlement was located near where the country's National Assembly and Manda Hill shopping area stand today.",
+    true
 );

@@ -303,6 +303,14 @@ import RainforestConservationProjects from '../assets/developments-thumb/Rainfor
 import IceBar from '../assets/developments-thumb/IceBar.jpg'
 import SquidShack from '../assets/developments-thumb/SquidShack.jpg'
 import ArrivalsHallRenovation from '../assets/developments-thumb/ArrivalsHallRenovation.jpg'
+import SeptemberTicketDeals from '../assets/developments-thumb/SeptemberTicketDeals.jpg'
+import InternationalDevelopmentSchemes from '../assets/developments-thumb/InternationalDevelopmentSchemes.jpg'
+import SkilledNegotiationTeams from '../assets/developments-thumb/SkilledNegotiationTeams.jpg'
+import BusinessHotel from '../assets/developments-thumb/BusinessHotel.jpg'
+import LaserTag from '../assets/developments-thumb/LaserTag.jpg'
+import HalloweenFair from '../assets/developments-thumb/HalloweenFair.jpg'
+import PersonalImageBranding from '../assets/developments-thumb/PersonalImageBranding.jpg'
+import AdvertisingCampaignNigeria from '../assets/developments-thumb/AdvertisingCampaignNigeria.jpg'
 
 
 const developmentImages = {
@@ -610,6 +618,14 @@ const developmentImages = {
     "Ice Bar": IceBar,
     "Squid Shack": SquidShack,
     "Arrivals Hall Renovation": ArrivalsHallRenovation,
+    "International Development Schemes": InternationalDevelopmentSchemes,
+    "September Ticket Deals": SeptemberTicketDeals,
+    "Skilled Negotiation Teams": SkilledNegotiationTeams,
+    "Laser Tag": LaserTag,
+    "Business Hotel": BusinessHotel,
+    "Advertising Campaign: Nigeria": AdvertisingCampaignNigeria,
+    "Halloween Fair": HalloweenFair,
+    "Personal Image Branding": PersonalImageBranding,
 
 
 

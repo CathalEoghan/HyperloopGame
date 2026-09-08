@@ -121,7 +121,7 @@ const countryFlags = {
     "Mozambique": "mz",
     "Angola": "ao",
     "Timor-Leste": "tl",
-    "Slovenia": "sl",
+    "Slovenia": "si",
     "Lithuania": "lt",
     "Guyana": "gy",
     "Moldova": "md",
@@ -137,6 +137,10 @@ const countryFlags = {
     "Federated States of Micronesia": "fm",
     "Papua New Guinea": "pg",
     "Zambia": "zm",
+    "Hong Kong": "hk",
+    "Macau": "mo",
+    "Republic of the Congo": "cg",
+    "Bulgaria": "bg",
 
 
 
