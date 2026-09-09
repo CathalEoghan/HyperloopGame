@@ -146,6 +146,7 @@ const countryFlags = {
     "Sierra Leone": "sl",
     "Sudan": "sd",
     "Nicaragua": "ni",
+    "Bhutan": "bt",
 
 
 

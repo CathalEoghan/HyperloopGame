@@ -316,6 +316,15 @@ const cityCoordinates = {
 "Mazatlán":    { lat: 23.217,  lng: -1.6308 }, 
 "Bari":    { lat: 41.1252,  lng: 16.8666 }, 
 "Brasília":    { lat: -15.7939,  lng: -47.8828 }, 
+ "Khartoum": { lat: 15.5007, lng: 32.5599 },
+    "Faro": { lat: 37.0194, lng: -7.9322 },
+    "Freetown": { lat: 8.4657, lng: -13.2317 },
+    "Monrovia": { lat: 6.2907, lng: -10.7605 },
+    "Managua": { lat: 12.1364, lng: -86.2514 },
+    "Cali": { lat: 3.4516, lng: -76.5319 },
+    "Thimphu": { lat: 27.4728, lng: 89.6393 },
+    "Pittsburgh": { lat: 40.4406, lng: -79.9959 },
+    "Bergen": { lat: 60.3913, lng: 5.3221 },
 
 
 

@@ -179,6 +179,7 @@ import { antiquesStore } from './AntiquesStore.js'
 import { tangoBar } from './TangoBar.js'
 import { salsaBar } from './SalsaBar.js'
 import { tropicalJuiceBar } from './TropicalJuiceBar.js'
+import { kennel } from './Kennel.js'
 
 
 
@@ -363,6 +364,7 @@ export const allDevelopments = [
     salsaBar,
     tropicalJuiceBar,
     tangoBar,
+    kennel,
 
 
 ]
