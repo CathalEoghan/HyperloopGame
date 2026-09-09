@@ -141,6 +141,7 @@ const countryFlags = {
     "Macau": "mo",
     "Republic of the Congo": "cg",
     "Bulgaria": "bg",
+    "Botswana": "bw",
 
 
 

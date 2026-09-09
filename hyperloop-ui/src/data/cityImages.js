@@ -311,6 +311,9 @@ const cityImages = {
     "Brazzaville": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Brazzaville.jpg",
     "Ibadan": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ibadan.jpg",
     "Sofia": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Sofia.jpg",
+    "Gaborone": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Gaborone.jpg",
+    "Mazatlán": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Mazatlán.jpg",
+    "Kumasi": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Kumasi.jpg",
 
 
 

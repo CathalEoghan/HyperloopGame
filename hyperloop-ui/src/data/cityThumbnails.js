@@ -310,6 +310,9 @@ import Ankara from '../assets/cities-thumb/Ankara.jpg'
 import Brazzaville from '../assets/cities-thumb/Brazzaville.jpg'
 import Sofia from '../assets/cities-thumb/Sofia.jpg'
 import Ibadan from '../assets/cities-thumb/Ibadan.jpg'
+import Mazatlán from '../assets/cities-thumb/Mazatlán.jpg'
+import Kumasi from '../assets/cities-thumb/Kumasi.jpg'
+import Gaborone from '../assets/cities-thumb/Gaborone.jpg'
 
 
 
@@ -629,6 +632,9 @@ const cityImages = {
     Brazzaville: Brazzaville,
     Ibadan: Ibadan,
     Sofia: Sofia,
+    Mazatlán: Mazatlán,
+    Kumasi: Kumasi,
+    Gaborone: Gaborone,
 
 
 

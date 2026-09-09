@@ -311,6 +311,9 @@ import { Macau } from './Macau.js'
 import { Ibadan } from './Ibadan.js'
 import { Sofia } from './Sofia.js'
 import { Brazzaville } from './Brazzaville.js'
+import { Mazatlán } from './Mazatlán.js'
+import { Gaborone } from './Gaborone.js'
+import { Kumasi } from './Kumasi.js'
 
 
 export const allCities = [
@@ -626,6 +629,9 @@ export const allCities = [
     Brazzaville,
     Ibadan,
     Sofia,
+    Gaborone,
+    Kumasi,
+    Mazatlán,
 
 
 

@@ -311,6 +311,9 @@ const developmentImages = {
     "Halloween Fair": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/HalloweenFair.jpg",
     "Personal Image Branding": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PersonalImageBranding.jpg",
     "Advertising Campaign: Nigeria": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignNigeria.jpg",
+    "Shrimp Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ShrimpRestaurant.jpg",
+    "Local Business Investments": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LocalBusinessInvestments.jpg",
+    "Tree Planting Schemes": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TreePlantingSchemes.jpg",
 
 
 

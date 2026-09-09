@@ -173,6 +173,7 @@ import { iceBar } from './IceBar.js'
 import { squidShack } from './SquidShack.js'
 import { laserTag } from './LaserTag.js'
 import { businessHotel } from './BusinessHotel.js'
+import { shrimpRestaurant } from './ShrimpRestaurant.js'
 
 
 export const allDevelopments = [
@@ -350,5 +351,6 @@ export const allDevelopments = [
     squidShack,
     laserTag,
     businessHotel,
+    shrimpRestaurant,
 
 ]

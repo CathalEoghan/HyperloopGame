@@ -311,6 +311,9 @@ const cityCoordinates = {
 "Ibadan":    { lat: 7.3775,  lng: 3.9059 }, 
 "Sofia":    { lat: 42.6983,  lng: 23.3199 }, 
 "Brazzaville":    { lat: -4.2678,  lng: 15.2919 }, 
+"Kumasi":    { lat: 6.6871,  lng: -1.6219 }, 
+"Gaborone":    { lat: -24.6581,  lng: 25.9088 }, 
+"Mazatlán":    { lat: 23.217,  lng: -1.6308 }, 
 
 
 

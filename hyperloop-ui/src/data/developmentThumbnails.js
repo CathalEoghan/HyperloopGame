@@ -311,6 +311,9 @@ import LaserTag from '../assets/developments-thumb/LaserTag.jpg'
 import HalloweenFair from '../assets/developments-thumb/HalloweenFair.jpg'
 import PersonalImageBranding from '../assets/developments-thumb/PersonalImageBranding.jpg'
 import AdvertisingCampaignNigeria from '../assets/developments-thumb/AdvertisingCampaignNigeria.jpg'
+import ShrimpRestaurant from '../assets/developments-thumb/ShrimpRestaurant.jpg'
+import LocalBusinessInvestments from '../assets/developments-thumb/LocalBusinessInvestments.jpg'
+import TreePlantingSchemes from '../assets/developments-thumb/TreePlantingSchemes.jpg'
 
 
 const developmentImages = {
@@ -626,6 +629,9 @@ const developmentImages = {
     "Advertising Campaign: Nigeria": AdvertisingCampaignNigeria,
     "Halloween Fair": HalloweenFair,
     "Personal Image Branding": PersonalImageBranding,
+    "Tree Planting Schemes": TreePlantingSchemes,
+    "Local Business Investments": LocalBusinessInvestments,
+    "Shrimp Restaurant": ShrimpRestaurant,
 
 
 

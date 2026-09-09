@@ -319,6 +319,8 @@ Macau.jpg - Photo by tian Jin via Pexels
 Ibadan.jpg - Photo by ShotbyWRZ via Pexels
 Sofia.jpg - Photo by Orlin Ratchev via Pexels
 Brazzaville.jpg - Photo by Africany via Wikimedia Commons
+Gaborone.jpg - Photo by CNJerem via Wikimedia Commons
+Kumasi.jpg - Photo by Maven Egote via Wikimedia Commons
 
 
 
@@ -636,7 +638,9 @@ LaserTag.jpg - Photo by Laserblast Laser Tag Equipment via Pexels
 AdvertisingCampaignNigeria.jpg - Photo by LekePOV via Pexels
 HalloweenFair.jpg - Photo by Mathias Reding via Pexels
 PersonalImageBranding.jpg - Photo by Paloma Clarice via Pexels
-
+EasterWeekendDeals.jpg - Photo by Viktoria Lunyakova via Pexels
+LocalBusinessInvestments.jpg - Photo by https://kaboompics.com/ via Pexels
+ShrimpRestaurant.jpg - Photo by Tony Wu via Pexels
 
 
 SOUNDS
