@@ -335,6 +335,7 @@ SaltLakeCity.jpg - Photo by Lukas Kloeppel via Pexels
 Niamey.jpg - Photo by Sakou Gado via Wikimedia Commons
 SanJuan.jpg - Photo by Diego F. Parra via Pexels
 Guayaquil.jpg - Photo by Viajante Dibujero via Pexels
+AntarcticPeninsula.jpg - Photo by Hugo Sykes via Pexels
 
 
 
@@ -668,6 +669,9 @@ WorkersSolidarityFund.jpg - Photo by Özkan Öztaş via Pexels
 CurrencyExchangeCentre.jpg - Photo by Audy of Course via Pexels
 CargoOfficeExpansion.jpg - Photo by Tima Miroshnichenko via Pexels
 TrafficManagementStrategy.jpg - Photo by Mr Whittington via Pexels
+ExperimentalTechnology.jpg - Photo by Greyson Miguel via Pexels
+FoundersHall.jpg - Photo by Michael D Beckwith via Pexels
+CommemorativeDisplays.jpg - Photo by Robert So via Pexels
 
 SOUNDS
 

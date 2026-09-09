@@ -334,6 +334,9 @@ const developmentImages = {
     "Complementary Onboard Coffee": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ComplementaryOnboardCoffee.jpg",
     "July Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/JulyTicketDeals.jpg",
     "Cargo Office Expansion": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CargoOfficeExpansion.jpg",
+    "Founders' Hall": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FoundersHall.jpg",
+    "Commemorative Displays": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CommemorativeDisplays.jpg",
+    "Experimental Technology": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ExperimentalTechnology.jpg",
 
 
 

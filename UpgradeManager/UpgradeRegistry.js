@@ -154,6 +154,9 @@ import { currencyExchangeCentre } from './CurrencyExchangeCentre.js'
 import { trafficManagementStrategy } from './TrafficManagementStrategy.js'
 import { complementaryOnboardCoffee } from './ComplementaryOnboardCoffee.js'
 import { julyTicketDeals } from './JulyTicketDeals.js'
+import { foundersHall } from './FoundersHall.js'
+import { experimentalTechnology } from './ExperimentalTechnology.js'
+import { commemorativeDisplays } from './CommemorativeDisplays.js'
 
 
 
@@ -315,6 +318,9 @@ export const allUpgrades = [
     trafficManagementStrategy,
     complementaryOnboardCoffee,
     julyTicketDeals,
+    foundersHall,
+    commemorativeDisplays,
+    experimentalTechnology,
 
     
 

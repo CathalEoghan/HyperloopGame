@@ -334,6 +334,9 @@ import WorkersSolidarityFund from '../assets/developments-thumb/WorkersSolidarit
 import CurrencyExchangeCentre from '../assets/developments-thumb/CurrencyExchangeCentre.jpg'
 import ComplementaryOnboardCoffee from '../assets/developments-thumb/ComplementaryOnboardCoffee.jpg'
 import JulyTicketDeals from '../assets/developments-thumb/JulyTicketDeals.jpg'
+import ExperimentalTechnology from '../assets/developments-thumb/ExperimentalTechnology.jpg'
+import FoundersHall from '../assets/developments-thumb/FoundersHall.jpg'
+import CommemorativeDisplays from '../assets/developments-thumb/CommemorativeDisplays.jpg'
 
 
 const developmentImages = {
@@ -672,6 +675,9 @@ const developmentImages = {
     "Traffic Management Strategy": TrafficManagementStrategy,
     "Complementary Onboard Coffee": ComplementaryOnboardCoffee,
     "July Ticket Deals": JulyTicketDeals,
+    "Experimental Technology": ExperimentalTechnology,
+    "Commemorative Displays": CommemorativeDisplays,
+    "Founders' Hall": FoundersHall,
 
 
 

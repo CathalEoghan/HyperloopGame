@@ -332,6 +332,7 @@ import Skopje from '../assets/cities-thumb/Skopje.jpg'
 import SaltLakeCity from '../assets/cities-thumb/SaltLakeCity.jpg'
 import Niamey from '../assets/cities-thumb/Niamey.jpg'
 import Conakry from '../assets/cities-thumb/Conakry.jpg'
+import AntarcticPeninsula from '../assets/cities-thumb/AntarcticPeninsula.jpg'
 
 
 
@@ -673,6 +674,7 @@ const cityImages = {
     "Salt Lake City": SaltLakeCity,
     Niamey: Niamey,
     "San Juan": SanJuan,
+    "Antarctic Peninsula": AntarcticPeninsula
     
 
 

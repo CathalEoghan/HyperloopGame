@@ -151,7 +151,8 @@ const countryFlags = {
     "North Macedonia": "mk",
     "Niger": "ne",
     "Puerto Rico": "pr",
-    "Guinea": "gn"
+    "Guinea": "gn",
+    "Antarctica": "aq",
     
 
 
