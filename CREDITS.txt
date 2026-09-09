@@ -303,7 +303,7 @@ QuebecCity.jpg - Photo by Quintin Soloviev via Wikimedia Commons
 Zhengzhou.jpg - Photo by Windmemories via Wikimedia Commons
 Pittsburgh.jpg - Photo by Nicolas DeSarno via Pexels
 Kuching.jpg - Photo by Kevin T via Pexels
-Córdoba.jpg - Photo by Daka via Pexels
+CórdobaSpain.jpg - Photo by Daka via Pexels
 PortMoresby.jpg  - Photo by Toktok No Maski Productions via Pexels
 CebuCity.jpg - Photo by HAVI3 via Pexels
 Lusaka.jpg - Photo by Mondoka via Large Norwegian Encyclopedia
@@ -323,6 +323,12 @@ Gaborone.jpg - Photo by CNJerem via Wikimedia Commons
 Kumasi.jpg - Photo by Maven Egote via Wikimedia Commons
 Bari.jpg - Photo by K via Pexels
 Brasília.jpg - Photo by Governo do Brasil via Wikimedia Commons
+Freetown.jpg - Photo by Tappiah Sesay via Pexels
+Cali.jpg - Photo by K via Pexels
+Monrovia.jpg - Photo by jbdodane via Flickr
+Bergen.jpg - Photo by mysurrogateband via Pexels
+CórdobaArgentina.jpg - Photo by Juan Coronel via Pexels
+Faro.jpg - Photo by Micheile Henderson via Pexels
 
 
 
@@ -471,7 +477,7 @@ SportsStore.jpg - Photo by BI ravencrow via Pexels
 LocalTours.jpg - Photo by Lorna Pauli via Pexels
 BiryaniRestaurant.jpg - Photo by Prabal Pratap Singh via Pexels
 ClimbingCentre.jpg - Photo by cottonbro studio via Pexels
-LoungeRenovations.jpg - Photo by Наталья Маркина via Pexels
+CreditCardLounges.jpg - Photo by Наталья Маркина via Pexels
 CraftBeerBar.jpg - Photo by Jibbe Jaartsveld via Pexels
 MezeRestaurant.jpg - Photo by Eyüpcan Timur via Pexels
 HookahLounge.jpg - Photo by Pavel Danilyuk via Pexels
@@ -645,7 +651,12 @@ LocalBusinessInvestments.jpg - Photo by https://kaboompics.com/ via Pexels
 ShrimpRestaurant.jpg - Photo by Tony Wu via Pexels
 SwankyHotel.jpg - Photo by Pedro Dias via Pexels
 StarArchitectRecruitment.jpg - Photo by Vitaly Gariev via Pexels
-
+AdvertisingCampaignNorway.jpg - Photo by Fabio Riccobono via Pexels
+SalsaBar.jpg - Photo by Los Muertos Crew via Pexels
+LuxuryJewelImports.jpg - Photo by Naresh Babu via Pexels
+TropicalJuiceBar.jpg - Photo by Ann H via Pexels
+BusinessLoungeRenovations.jpg - Photo by BOOM 💥 Photography via Pexels
+AdvertisingCampaignPortugal.jpg - Photo by Jean-Paul Colemonts via Pexels
 
 SOUNDS
 

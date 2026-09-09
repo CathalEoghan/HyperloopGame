@@ -48,8 +48,10 @@ function App() {
   const [savedData] = useState(() => hasSave() ? loadGame(progressionManager, rankManager) : null);
 
   const [offlineData] = useState(() => {
-    const hiddenAt = localStorage.getItem('hyperloop_hidden_at');
+    const hiddenAt = localStorage.getItem('hyperloop_hidden_at')
+        || localStorage.getItem('hyperloop_heartbeat_at');
     localStorage.removeItem('hyperloop_hidden_at');
+    localStorage.removeItem('hyperloop_heartbeat_at');
     localStorage.removeItem('hyperloop_accumulated_offline');
     if (!hiddenAt) return null;
     const totalSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
@@ -139,6 +141,7 @@ function App() {
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
   const lastTickTimeRef = useRef(Date.now());
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
+  const lastModalClearedAt = useRef(Date.now() + 180000);
 
   // Immediate rank detection on load (catches offline rank ups)
   useEffect(() => {
@@ -255,7 +258,8 @@ function App() {
       rankManager.verifyRank();
       if (rankManager.rank > previousRank) {
         playRankUpSound();
-        setPendingRankUps(prev => prev + 1);
+        const gained = rankManager.rank - previousRank;
+        setPendingRankUps(prev => prev + gained);
       }
       constructionManager.update();
 
@@ -303,7 +307,7 @@ function App() {
 
       if (tickCount.current % 30 === 0) {
         triggerSave();
-        localStorage.setItem('hyperloop_hidden_at', Date.now());
+        localStorage.setItem('hyperloop_heartbeat_at', Date.now());
       }
 
       const now = new Date();
@@ -372,7 +376,7 @@ function App() {
       economyManager.activeEvent = activeEventRef.current;
 
       // Random event trigger — rank 3+ only
-      if (Math.random() < 0.002 && !activeEventRef.current && rankSet >= 3) {
+      if (Math.random() < 0.002 && !activeEventRef.current && rankSet >= 3 && Date.now() > lastModalClearedAt.current) {
         const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
         const event = getRandomEvent(positiveOnly);
 
@@ -606,6 +610,7 @@ function App() {
             progressionManager.addCash(finalBonus);
             if (dailyLoginData.repBonus > 0) progressionManager.addReputation(dailyLoginData.repBonus);
             setDailyLoginData(null);
+            lastModalClearedAt.current = Date.now() + 180000;
             triggerSave();
           }}
         />
@@ -647,6 +652,7 @@ function App() {
               progressionManager.addCash(finalIncome - offlineData.offlineIncome);
             }
             setShowOfflineModal(false);
+            lastModalClearedAt.current = Date.now() + 180000;
             triggerSave();
           }}
         />
@@ -685,7 +691,7 @@ function App() {
           onMiss={() => { localStorage.removeItem('hyperloop_active_departure'); setActiveDeparture(null); }}
         />
       )}
-      {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && (
+      {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
         <RankUpModal rank={rankSet} onClaim={() => {
     const minTier = economyManager.getMinCityTierOnRankUp();
     let newCity = progressionManager.getRandomUnlockedCity(allCities);

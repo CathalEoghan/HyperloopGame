@@ -1,12 +1,12 @@
 
 // Abu Dhabi
 import { City } from "./City.js";
-import { loungeRenovations } from "../UpgradeManager/LoungeRenovations.js";
+import { creditCardLounges } from "../UpgradeManager/CreditCardLounges.js";
 
 export const AbuDhabi = new City(
     "Abu Dhabi",
     4130000,
-    [loungeRenovations],
+    [creditCardLounges],
     "United Arab Emirates",
     "Asia",
     2,

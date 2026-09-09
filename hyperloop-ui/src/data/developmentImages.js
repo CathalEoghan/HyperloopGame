@@ -141,7 +141,7 @@ const developmentImages = {
     "Local Tours": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LocalTours.jpg",
     "Biryani Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BiryaniRestaurant.jpg",
     "Climbing Centre": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ClimbingCentre.jpg",
-    "Lounge Renovations": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LoungeRenovations.jpg",
+    "Credit Card Lounges": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CreditCardLounges.jpg",
     "Craft Beer Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CraftBeerBar.jpg",
     "Meze Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/MezeRestaurant.jpg",
     "Hookah Lounge": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/HookahLounge.jpg",
@@ -316,6 +316,18 @@ const developmentImages = {
     "Tree Planting Schemes": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TreePlantingSchemes.jpg",
     "Swanky Hotel": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SwankyHotel.jpg",
     "Star Architect Recruitment": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/StarArchitectRecruitment.jpg",
+    "Advertising Campaign: Norway": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignNorway.jpg",
+    "Advertising Campaign: Portugal": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignPortugal.jpg",
+    "Tropical Juice Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TropicalJuiceBar.jpg",
+    "Salsa Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SalsaBar.jpg",
+    "Luxury Jewel Imports": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LuxuryJewelImports.jpg",
+    "Business Lounge Renovations": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BusinessLoungeRenovations.jpg",
+    "Kennel": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Kennel.jpg",
+    "Tango Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TangoBar.jpg",
+    "Fourth of July Shows": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FourthOfJulyShows.jpg",
+    "Antiques Store": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AntiquesStore.jpg",
+    "New Year's Celebrations": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NewYearsCelebrations.jpg",
+    "Easter Weekend Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/EasterWeekendDeals.jpg",
 
 
 

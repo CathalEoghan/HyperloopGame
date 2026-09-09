@@ -10,6 +10,6 @@ export const Mombasa = new City(
     "Kenya",
     "Africa",
     2,
-    "Mombasa is famous for the giant aluminum elephant tusks arching over Moi Avenue. They were built to commemorate the 1956 visit of Princess Margaret",
+    "Mombasa is famous for the giant aluminum elephant tusks arching over Moi Avenue. They were built to commemorate the 1956 visit of Princess Margaret.",
     true
 );

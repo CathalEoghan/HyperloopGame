@@ -34,7 +34,7 @@ import { informationCentre } from './InformationCentre.js'
 import { securityOfficeExpansion } from './SecurityOfficeExpansion.js'
 import { travelAgency } from './TravelAgency.js'
 import { localTours } from './LocalTours.js'
-import { loungeRenovations } from './LoungeRenovations.js'
+import { creditCardLounges } from './CreditCardLounges.js'
 import { staffCafeteriaRenovations } from './StaffCafeteriaRenovations.js'
 import { ferryTerminal } from './FerryTerminal.js'
 import { atmMachineEnhancements } from './ATMMachineEnhancements.js'
@@ -141,6 +141,13 @@ import { advertisingCampaignNigeria } from './AdvertisingCampaignNigeria.js'
 import { treePlantingSchemes } from './TreePlantingSchemes.js'
 import { localBusinessInvestments } from './LocalBusinessInvestments.js'
 import { starArchitectRecruitment } from './StarArchitectRecruitment.js'
+import { advertisingCampaignNorway } from './AdvertisingCampaignNorway.js'
+import { advertisingCampaignPortugal } from './AdvertisingCampaignPortugal.js'
+import { businessLoungeExpansions } from './BusinessLoungeRenovations.js'
+import { luxuryJewelImports } from './LuxuryJewelImports.js'
+import { easterWeekendDeals } from './EasterWeekendDeals.js'
+import { newYearsCelebrations } from './NewYearsCelebrations.js'
+import { fourthOfJulyShows } from './FourthOfJulyShows.js'
 
 
 
@@ -182,7 +189,7 @@ export const allUpgrades = [
     securityOfficeExpansion,
     travelAgency,
     localTours,
-    loungeRenovations,
+    creditCardLounges,
     staffCafeteriaRenovations,
     ferryTerminal,
     atmMachineEnhancements,
@@ -289,6 +296,13 @@ export const allUpgrades = [
     localBusinessInvestments,
     treePlantingSchemes,
     starArchitectRecruitment,
+    advertisingCampaignNorway,
+    advertisingCampaignPortugal,
+    businessLoungeExpansions,
+    luxuryJewelImports,
+    easterWeekendDeals,
+    newYearsCelebrations,
+    fourthOfJulyShows,
 
     
 

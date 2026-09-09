@@ -316,6 +316,17 @@ const cityImages = {
     "Kumasi": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Kumasi.jpg",
     "Bari": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Bari.jpg",
     "Brasília": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Brasília.jpg",
+    "Faro": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Faro.jpg",
+    "Bergen": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Bergen.jpg",
+    "Pittsburgh": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Pittsburgh.jpg",
+    "Freetown": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Freetown.jpg",
+    "Thimphu": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Thimphu.jpg",
+    "Cali": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Cali.jpg",
+    "Monrovia": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Monrovia.jpg",
+    "Managua": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Managua.jpg",
+    "Khartoum": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Khartoum.jpg",
+    "Kuching": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Kuching.jpg",
+    
 
 
 

@@ -142,6 +142,10 @@ const countryFlags = {
     "Republic of the Congo": "cg",
     "Bulgaria": "bg",
     "Botswana": "bw",
+    "Liberia": "lr",
+    "Sierra Leone": "sl",
+    "Sudan": "sd",
+    "Nicaragua": "ni",
 
 
 

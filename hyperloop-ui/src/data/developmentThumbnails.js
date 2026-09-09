@@ -142,7 +142,7 @@ import BiryaniRestaurant from '../assets/developments-thumb/BiryaniRestaurant.jp
 import SportsStore from '../assets/developments-thumb/SportsStore.jpg'
 import LocalTours from '../assets/developments-thumb/LocalTours.jpg'
 import ClimbingCentre from '../assets/developments-thumb/ClimbingCentre.jpg'
-import LoungeRenovations from '../assets/developments-thumb/LoungeRenovations.jpg'
+import CreditCardLounges from '../assets/developments-thumb/CreditCardLounges.jpg'
 import CraftBeerBar from '../assets/developments-thumb/CraftBeerBar.jpg'
 import MezeRestaurant from '../assets/developments-thumb/MezeRestaurant.jpg'
 import HookahLounge from '../assets/developments-thumb/HookahLounge.jpg'
@@ -316,6 +316,18 @@ import LocalBusinessInvestments from '../assets/developments-thumb/LocalBusiness
 import TreePlantingSchemes from '../assets/developments-thumb/TreePlantingSchemes.jpg'
 import StarArchitectRecruitment from '../assets/developments-thumb/StarArchitectRecruitment.jpg'
 import SwankyHotel from '../assets/developments-thumb/SwankyHotel.jpg'
+import AdvertisingCampaignPortugal from '../assets/developments-thumb/AdvertisingCampaignPortugal.jpg'
+import AdvertisingCampaignNorway from '../assets/developments-thumb/AdvertisingCampaignNorway.jpg'
+import TropicalJuiceBar from '../assets/developments-thumb/TropicalJuiceBar.jpg'
+import SalsaBar from '../assets/developments-thumb/SalsaBar.jpg'
+import LuxuryJewelImports from '../assets/developments-thumb/LuxuryJewelImports.jpg'
+import Kennel from '../assets/developments-thumb/Kennel.jpg'
+import BusinessLoungeRenovations from '../assets/developments-thumb/BusinessLoungeRenovations.jpg'
+import AntiquesStore from '../assets/developments-thumb/AntiquesStore.jpg'
+import TangoBar from '../assets/developments-thumb/TangoBar.jpg'
+import NewYearsCelebrations from '../assets/developments-thumb/NewYearsCelebrations.jpg'
+import EasterWeekendDeals from '../assets/developments-thumb/EasterWeekendDeals.jpg'
+import FourthOfJulyShows from '../assets/developments-thumb/FourthOfJulyShows.jpg'
 
 
 const developmentImages = {
@@ -462,7 +474,7 @@ const developmentImages = {
     "Local Tours": LocalTours,
     "Biryani Restaurant": BiryaniRestaurant,
     "Climbing Centre": ClimbingCentre,
-    "Lounge Renovations": LoungeRenovations,
+    "Credit Card Lounges": CreditCardLounges,
     "Craft Beer Bar": CraftBeerBar,
     "Meze Restaurant": MezeRestaurant,
     "Hookah Lounge": HookahLounge,
@@ -636,6 +648,20 @@ const developmentImages = {
     "Shrimp Restaurant": ShrimpRestaurant,
     "Star Architect Recruitment": StarArchitectRecruitment,
     "Swanky Hotel": SwankyHotel,
+    "Advertising Campaign: Portugal": AdvertisingCampaignPortugal,
+    "Advertising Campaign: Norway": AdvertisingCampaignNorway,
+    "Tropical Juice Bar": TropicalJuiceBar,
+    "Salsa Bar": SalsaBar,
+    "Luxury Jewel Imports": LuxuryJewelImports,
+    "Business Lounge Renovations": BusinessLoungeRenovations,
+    "Kennel": Kennel,
+    "Tango Bar": TangoBar,
+    "Fourth of July Shows": FourthOfJulyShows,
+    "Antiques Store": AntiquesStore,
+    "New Year's Celebrations": NewYearsCelebrations,
+    "Easter Weekend Deals": EasterWeekendDeals
+
+
 
 
 

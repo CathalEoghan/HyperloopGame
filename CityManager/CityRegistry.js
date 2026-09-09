@@ -316,6 +316,17 @@ import { Gaborone } from './Gaborone.js'
 import { Kumasi } from './Kumasi.js'
 import { Brasília } from './Brasília.js'
 import { Bari } from './Bari.js'
+import { Bergen } from './Bergen.js'
+import { Faro } from './Faro.js'
+import { Monrovia } from './Monrovia.js'
+import { Freetown } from './Freetown.js'
+import { Cali } from './Cali.js'
+import { Kuching } from './Kuching.js'
+import { Pittsburgh } from './Pittsburgh.js'
+import { Managua } from './Managua.js'
+import { Khartoum } from './Khartoum.js'
+import { Thimphu } from './Thimphu.js'
+
 
 export const allCities = [
     Atlanta,
@@ -635,6 +646,16 @@ export const allCities = [
     Mazatlán,
     Brasília,
     Bari,
+    Bergen,
+    Faro,
+    Monrovia,
+    Freetown,
+    Cali,
+    Kuching,
+    Pittsburgh,
+    Managua,
+    Khartoum,
+    Thimphu,
 
 
 

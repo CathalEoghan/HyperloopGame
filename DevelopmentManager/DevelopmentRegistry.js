@@ -175,6 +175,11 @@ import { laserTag } from './LaserTag.js'
 import { businessHotel } from './BusinessHotel.js'
 import { shrimpRestaurant } from './ShrimpRestaurant.js'
 import { swankyHotel } from './SwankyHotel.js'
+import { antiquesStore } from './AntiquesStore.js'
+import { tangoBar } from './TangoBar.js'
+import { salsaBar } from './SalsaBar.js'
+import { tropicalJuiceBar } from './TropicalJuiceBar.js'
+
 
 
 export const allDevelopments = [
@@ -354,5 +359,10 @@ export const allDevelopments = [
     businessHotel,
     shrimpRestaurant,
     swankyHotel,
+    antiquesStore,
+    salsaBar,
+    tropicalJuiceBar,
+    tangoBar,
+
 
 ]

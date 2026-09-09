@@ -315,6 +315,16 @@ import Kumasi from '../assets/cities-thumb/Kumasi.jpg'
 import Gaborone from '../assets/cities-thumb/Gaborone.jpg'
 import Bari from '../assets/cities-thumb/Bari.jpg'
 import Brasília from '../assets/cities-thumb/Brasília.jpg'
+import Faro from '../assets/cities-thumb/Faro.jpg'
+import Bergen from '../assets/cities-thumb/Bergen.jpg'
+import Monrovia from '../assets/cities-thumb/Monrovia.jpg'
+import Cali from '../assets/cities-thumb/Cali.jpg'
+import Freetown from '../assets/cities-thumb/Freetown.jpg'
+import Kuching from '../assets/cities-thumb/Kuching.jpg'
+import Managua from '../assets/cities-thumb/Managua.jpg'
+import Khartoum from '../assets/cities-thumb/Khartoum.jpg'
+import Thimphu from '../assets/cities-thumb/Thimphu.jpg'
+import Pittsburgh from '../assets/cities-thumb/Pittsburgh.jpg'
 
 
 
@@ -638,6 +648,17 @@ const cityImages = {
     Gaborone: Gaborone,
     Bari: Bari,
     Brasília: Brasília,
+    Faro: Faro,
+    Bergen: Bergen,
+    Monrovia: Monrovia,
+    Cali: Cali,
+    Freetown: Freetown,
+    Kuching: Kuching,
+    Pittsburgh: Pittsburgh,
+    Khartoum: Khartoum,
+    Managua: Managua,
+    Thimphu: Thimphu,
+    
 
 
 
