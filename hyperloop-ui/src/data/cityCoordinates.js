@@ -314,6 +314,8 @@ const cityCoordinates = {
 "Kumasi":    { lat: 6.6871,  lng: -1.6219 }, 
 "Gaborone":    { lat: -24.6581,  lng: 25.9088 }, 
 "Mazatlán":    { lat: 23.217,  lng: -1.6308 }, 
+"Bari":    { lat: 41.1252,  lng: 16.8666 }, 
+"Brasília":    { lat: -15.7939,  lng: -47.8828 }, 
 
 
 

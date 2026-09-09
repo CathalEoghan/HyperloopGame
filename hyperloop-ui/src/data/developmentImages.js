@@ -314,6 +314,8 @@ const developmentImages = {
     "Shrimp Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ShrimpRestaurant.jpg",
     "Local Business Investments": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LocalBusinessInvestments.jpg",
     "Tree Planting Schemes": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TreePlantingSchemes.jpg",
+    "Swanky Hotel": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SwankyHotel.jpg",
+    "Star Architect Recruitment": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/StarArchitectRecruitment.jpg",
 
 
 

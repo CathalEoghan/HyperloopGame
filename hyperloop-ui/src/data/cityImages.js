@@ -314,6 +314,8 @@ const cityImages = {
     "Gaborone": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Gaborone.jpg",
     "Mazatlán": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Mazatlán.jpg",
     "Kumasi": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Kumasi.jpg",
+    "Bari": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Bari.jpg",
+    "Brasília": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Brasília.jpg",
 
 
 

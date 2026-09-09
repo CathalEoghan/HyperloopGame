@@ -314,7 +314,8 @@ import { Brazzaville } from './Brazzaville.js'
 import { Mazatlán } from './Mazatlán.js'
 import { Gaborone } from './Gaborone.js'
 import { Kumasi } from './Kumasi.js'
-
+import { Brasília } from './Brasília.js'
+import { Bari } from './Bari.js'
 
 export const allCities = [
     Atlanta,
@@ -632,6 +633,8 @@ export const allCities = [
     Gaborone,
     Kumasi,
     Mazatlán,
+    Brasília,
+    Bari,
 
 
 

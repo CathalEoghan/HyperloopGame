@@ -174,6 +174,7 @@ import { squidShack } from './SquidShack.js'
 import { laserTag } from './LaserTag.js'
 import { businessHotel } from './BusinessHotel.js'
 import { shrimpRestaurant } from './ShrimpRestaurant.js'
+import { swankyHotel } from './SwankyHotel.js'
 
 
 export const allDevelopments = [
@@ -352,5 +353,6 @@ export const allDevelopments = [
     laserTag,
     businessHotel,
     shrimpRestaurant,
+    swankyHotel,
 
 ]

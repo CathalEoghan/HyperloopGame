@@ -600,8 +600,10 @@ function App() {
         <DailyLoginModal
           cashBonus={dailyLoginData.cashBonus}
           repBonus={dailyLoginData.repBonus}
-          onCollect={() => {
-            progressionManager.addCash(dailyLoginData.cashBonus);
+          reputation={reputation}
+          onSpendRep={(amount) => progressionManager.addReputation(-amount)}
+          onCollect={(finalBonus) => {
+            progressionManager.addCash(finalBonus);
             if (dailyLoginData.repBonus > 0) progressionManager.addReputation(dailyLoginData.repBonus);
             setDailyLoginData(null);
             triggerSave();
@@ -638,7 +640,15 @@ function App() {
         <OfflineModal
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
-          onCollect={() => { setShowOfflineModal(false); triggerSave(); }}
+          reputation={reputation}
+          onSpendRep={(amount) => progressionManager.addReputation(-amount)}
+          onCollect={(finalIncome) => {
+            if (finalIncome > offlineData.offlineIncome) {
+              progressionManager.addCash(finalIncome - offlineData.offlineIncome);
+            }
+            setShowOfflineModal(false);
+            triggerSave();
+          }}
         />
       )}
 
@@ -687,7 +697,11 @@ function App() {
         )[0];
         if (betterCity) newCity = betterCity;
     }
-    if (newCity) { progressionManager.unlockCity(newCity); setClaimedCity(newCity); }
+    if (newCity) {
+        progressionManager.unlockCity(newCity);
+        setClaimedCity(newCity);
+        prevUnlockedDevCount.current = progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length;
+    }
     if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
     if (freeRep > 0) progressionManager.addReputation(freeRep);
@@ -709,7 +723,13 @@ function App() {
         <CityRevealModal
           city={claimedCity}
           reputation={reputation}
-          onClose={() => setClaimedCity(null)}
+          onClose={() => {
+            const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+            const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
+            const unshown = allUnlocked.filter(d => !shown.includes(d.name))
+            if (unshown.length > 0) setDevRevealQueue(unshown)
+            setClaimedCity(null)
+          }}
           onReroll={() => {
             const rerollCost = hasFreeReroll ? 0 : economyManager.getRerollRepCost(15);
             if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }

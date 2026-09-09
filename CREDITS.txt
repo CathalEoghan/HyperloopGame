@@ -321,6 +321,8 @@ Sofia.jpg - Photo by Orlin Ratchev via Pexels
 Brazzaville.jpg - Photo by Africany via Wikimedia Commons
 Gaborone.jpg - Photo by CNJerem via Wikimedia Commons
 Kumasi.jpg - Photo by Maven Egote via Wikimedia Commons
+Bari.jpg - Photo by K via Pexels
+Brasília.jpg - Photo by Governo do Brasil via Wikimedia Commons
 
 
 
@@ -641,6 +643,8 @@ PersonalImageBranding.jpg - Photo by Paloma Clarice via Pexels
 EasterWeekendDeals.jpg - Photo by Viktoria Lunyakova via Pexels
 LocalBusinessInvestments.jpg - Photo by https://kaboompics.com/ via Pexels
 ShrimpRestaurant.jpg - Photo by Tony Wu via Pexels
+SwankyHotel.jpg - Photo by Pedro Dias via Pexels
+StarArchitectRecruitment.jpg - Photo by Vitaly Gariev via Pexels
 
 
 SOUNDS

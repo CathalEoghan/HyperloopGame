@@ -140,6 +140,7 @@ import { halloweenFair } from './HalloweenFair.js'
 import { advertisingCampaignNigeria } from './AdvertisingCampaignNigeria.js'
 import { treePlantingSchemes } from './TreePlantingSchemes.js'
 import { localBusinessInvestments } from './LocalBusinessInvestments.js'
+import { starArchitectRecruitment } from './StarArchitectRecruitment.js'
 
 
 
@@ -287,6 +288,7 @@ export const allUpgrades = [
     halloweenFair,
     localBusinessInvestments,
     treePlantingSchemes,
+    starArchitectRecruitment,
 
     
 

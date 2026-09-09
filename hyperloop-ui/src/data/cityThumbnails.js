@@ -313,7 +313,8 @@ import Ibadan from '../assets/cities-thumb/Ibadan.jpg'
 import Mazatlán from '../assets/cities-thumb/Mazatlán.jpg'
 import Kumasi from '../assets/cities-thumb/Kumasi.jpg'
 import Gaborone from '../assets/cities-thumb/Gaborone.jpg'
-
+import Bari from '../assets/cities-thumb/Bari.jpg'
+import Brasília from '../assets/cities-thumb/Brasília.jpg'
 
 
 
@@ -635,6 +636,8 @@ const cityImages = {
     Mazatlán: Mazatlán,
     Kumasi: Kumasi,
     Gaborone: Gaborone,
+    Bari: Bari,
+    Brasília: Brasília,
 
 
 

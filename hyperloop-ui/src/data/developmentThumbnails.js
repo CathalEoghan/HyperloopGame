@@ -314,6 +314,8 @@ import AdvertisingCampaignNigeria from '../assets/developments-thumb/Advertising
 import ShrimpRestaurant from '../assets/developments-thumb/ShrimpRestaurant.jpg'
 import LocalBusinessInvestments from '../assets/developments-thumb/LocalBusinessInvestments.jpg'
 import TreePlantingSchemes from '../assets/developments-thumb/TreePlantingSchemes.jpg'
+import StarArchitectRecruitment from '../assets/developments-thumb/StarArchitectRecruitment.jpg'
+import SwankyHotel from '../assets/developments-thumb/SwankyHotel.jpg'
 
 
 const developmentImages = {
@@ -632,6 +634,8 @@ const developmentImages = {
     "Tree Planting Schemes": TreePlantingSchemes,
     "Local Business Investments": LocalBusinessInvestments,
     "Shrimp Restaurant": ShrimpRestaurant,
+    "Star Architect Recruitment": StarArchitectRecruitment,
+    "Swanky Hotel": SwankyHotel,
 
 
 
