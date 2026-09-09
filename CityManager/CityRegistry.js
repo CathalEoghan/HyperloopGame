@@ -333,6 +333,7 @@ import { Guayaquil } from './Guayaquil.js'
 import { SaltLakeCity } from './SaltLakeCity.js'
 import { Skopje } from './Skopje.js'
 import { SanJuan } from './SanJuan.js'
+import { Córdoba } from './Córdoba.js'
 
 
 export const allCities = [
@@ -670,6 +671,7 @@ export const allCities = [
     Skopje,
     SaltLakeCity,
     NDjamena,
+    Córdoba,
 
 
 
