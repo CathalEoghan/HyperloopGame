@@ -6,6 +6,6 @@ export const easterWeekendDeals = new Upgrade(
     "Easter Weekend Deals",
     112500,
     "Enterprise",
-    "placeholder",
-    1
+    "easterBoost",
+    1.0
 );

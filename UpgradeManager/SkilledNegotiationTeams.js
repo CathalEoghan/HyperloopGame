@@ -6,7 +6,7 @@ export const skilledNegotiationTeams = new Upgrade(
     "Skilled Negotiation Teams",
     93000,
     "Enterprise",
-    "placeholder",
-    1
+    "skilledNegotiationTeams",
+    2.0
 )
     

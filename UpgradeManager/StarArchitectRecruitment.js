@@ -6,6 +6,6 @@ export const starArchitectRecruitment = new Upgrade(
     "Star Architect Recruitment",
     100500,
     "Enterprise",
-    "placeholder",
-    0.25
+    "developmentUpgradeDiscount",
+    0.2
 );

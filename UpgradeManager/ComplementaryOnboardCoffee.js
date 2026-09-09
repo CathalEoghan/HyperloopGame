@@ -6,6 +6,6 @@ export const complementaryOnboardCoffee = new Upgrade(
     "Complementary Onboard Coffee",
     71000,
     "Service",
-    "placeholder",
-    86400
+    "connectionBoost",
+    0.1
 )

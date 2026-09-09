@@ -6,6 +6,6 @@ export const treePlantingSchemes = new Upgrade(
     "Tree Planting Schemes",
     94500,
     "Enterprise",
-    "placeholder",
-    0.005
+    "negativeEventReduction",
+    0.2
 )

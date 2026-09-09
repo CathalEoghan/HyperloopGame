@@ -49,3 +49,12 @@
     background: #f5a623 !important;
     color: #333 !important;
 }
+
+.dev-reveal-modal {
+    animation: modal-fadein 0.25s ease;
+}
+
+@keyframes modal-fadein {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: scale(1); }
+}

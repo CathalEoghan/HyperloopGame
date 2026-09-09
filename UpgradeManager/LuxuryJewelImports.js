@@ -6,6 +6,6 @@ export const luxuryJewelImports = new Upgrade(
     "Luxury Jewel Imports",
     108000,
     "Enterprise",
-    "placeholder",
-    5
+    "shoppingIncome",
+    0.2
 );

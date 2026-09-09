@@ -6,6 +6,6 @@ export const internationalDevelopmentSchemes = new Upgrade(
     "International Development Schemes",
     175000,
     "Enterprise",
-    "placeholder",
-    1
+    "workRepChanceTriple",
+    1.0
 );

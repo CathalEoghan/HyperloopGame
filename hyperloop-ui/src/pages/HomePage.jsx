@@ -184,6 +184,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         const unlockedNames = new Set((unlockedCitiesRef.current || []).map(c => c.name))
 
         allCities.forEach(city => {
+            if (city.continent === 'Antarctica' && !purchasedCitiesRef.current.some(c => c.name === city.name)) return;
             const coords = cityCoordinates[city.name]
             if (!coords) return
             const flagCode = countryFlags[city.country]

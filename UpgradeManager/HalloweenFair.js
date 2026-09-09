@@ -6,6 +6,6 @@ export const halloweenFair = new Upgrade(
     "Halloween Fair",
     83000,
     "Recreation",
-    "placeholder",
-    0.2
+    "halloweenBoost",
+    1.0
 );

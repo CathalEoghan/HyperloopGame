@@ -6,6 +6,7 @@ import './CityRevealModal.css'
 
 function CityRevealModal({ city, onClose, onReroll, reputation }) {
     const canReroll = reputation >= 15
+    const isSecret = city.name === 'Antarctic Peninsula'
 
     return (
         <div className="modal-overlay">
@@ -16,7 +17,7 @@ function CityRevealModal({ city, onClose, onReroll, reputation }) {
                 <p style={{ fontSize: '0.8rem', color: '#888', margin: '4px 0 12px' }}>
                     {city.country} · Tier {city.tier}
                 </p>
-                {onReroll && (
+                {onReroll && !isSecret && (
                     <button
                         className="rerollButton"
                         onMouseEnter={() => playHoverSound()}

@@ -23,6 +23,7 @@ import UpgradeRevealModal from "./components/UpgradeRevealModal"
 import EventModal from "./components/EventModal"
 import DailyLoginModal from "./components/DailyLoginModal"
 import OnboardingModal from "./components/OnboardingModal"
+import SecretCityModal from "./components/SecretCityModal"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -103,7 +104,7 @@ function App() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [hasFreeReroll, setHasFreeReroll] = useState(false);
   const [showNotEnoughRep, setShowNotEnoughRep] = useState(false);
-  const [revealedUpgrade, setRevealedUpgrade] = useState(null);
+  const [revealedUpgradeQueue, setRevealedUpgradeQueue] = useState([]);
   const [activeEvent, setActiveEvent] = useState(() => {
     const saved = localStorage.getItem('hyperloop_active_event')
     if (!saved) return null
@@ -118,6 +119,9 @@ function App() {
   });
   const [dailyLoginData, setDailyLoginData] = useState(null);
   const [showMobileWarning, setShowMobileWarning] = useState(() => window.innerWidth < 900);
+  const [showSecretCityModal, setShowSecretCityModal] = useState(false);
+  const secretCityTriggered = useRef(false);
+  const claimedCityRef = useRef(null);
 
   const activeEventRef = useRef(() => {
     const saved = localStorage.getItem('hyperloop_active_event')
@@ -266,7 +270,7 @@ function App() {
       const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];
       const currentUnlockedCount = currentUnlocked.length;
       if (currentUnlockedCount > prevUnlockedDevCount.current) {
-        if (progressionManager.purchasedCities.length > 1) {
+        if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
           const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
           const newOnes = currentUnlocked.slice(prevUnlockedDevCount.current);
           setDevRevealQueue(q => [...q, ...newOnes]);
@@ -279,9 +283,16 @@ function App() {
       if (progressionManager.purchasedUpgrades.length > prevUpgradesCount.current) {
         const newUpgrades = progressionManager.purchasedUpgrades.slice(prevUpgradesCount.current);
         newUpgrades.forEach(upgrade => {
-          if (upgrade.effectType) setRevealedUpgrade(upgrade);
+          if (upgrade.effectType) setRevealedUpgradeQueue(q => [...q, upgrade]);
         });
         prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
+      }
+
+      // Detect all 335 non-secret cities connected
+      const nonSecretPurchased = progressionManager.purchasedCities.filter(c => c.continent !== 'Antarctica');
+      if (nonSecretPurchased.length === 335 && !secretCityTriggered.current) {
+        secretCityTriggered.current = true;
+        setShowSecretCityModal(true);
       }
 
       // Inject newly connected cities into today's departure schedule
@@ -549,7 +560,7 @@ function App() {
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           economyManager={economyManager}
           onSave={triggerSave}
-          onUpgradeBuilt={(upgrade) => setRevealedUpgrade(upgrade)}
+          onUpgradeBuilt={(upgrade) => setRevealedUpgradeQueue(q => [...q, upgrade])}
           onUpgrade={(development) => {
             const success = progressionManager.upgradeDevelopment(development);
             if (success) triggerSave();
@@ -624,10 +635,11 @@ function App() {
         />
       )}
 
-      {revealedUpgrade && (
+      {revealedUpgradeQueue.length > 0 && (
         <UpgradeRevealModal
-          upgrade={revealedUpgrade}
-          onContinue={() => setRevealedUpgrade(null)}
+          key={revealedUpgradeQueue[0].name}
+          upgrade={revealedUpgradeQueue[0]}
+          onContinue={() => setRevealedUpgradeQueue(q => q.slice(1))}
         />
       )}
 
@@ -692,7 +704,7 @@ function App() {
         />
       )}
       {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
-        <RankUpModal rank={rankSet} onClaim={() => {
+        <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
     const minTier = economyManager.getMinCityTierOnRankUp();
     let newCity = progressionManager.getRandomUnlockedCity(allCities);
     if (minTier > 1 && newCity && newCity.tier < minTier) {
@@ -705,8 +717,9 @@ function App() {
     }
     if (newCity) {
         progressionManager.unlockCity(newCity);
-        setClaimedCity(newCity);
+        claimedCityRef.current = newCity;
         prevUnlockedDevCount.current = progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length;
+        setTimeout(() => setClaimedCity(newCity), 300);
     }
     if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
@@ -716,6 +729,7 @@ function App() {
       )}
       {devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
         <DevelopmentRevealModal
+          key={devRevealQueue[0].name}
           development={devRevealQueue[0]}
           onContinue={() => {
             const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
@@ -727,13 +741,17 @@ function App() {
       )}
       {!showOfflineModal && claimedCity && (
         <CityRevealModal
+          key={claimedCity.name}
           city={claimedCity}
           reputation={reputation}
           onClose={() => {
-            const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
-            const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
-            const unshown = allUnlocked.filter(d => !shown.includes(d.name))
-            if (unshown.length > 0) setDevRevealQueue(unshown)
+            if (progressionManager.purchasedCities.length > 1) {
+              const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+              const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
+              const unshown = allUnlocked.filter(d => !shown.includes(d.name))
+              if (unshown.length > 0) setDevRevealQueue(unshown)
+            }
+            claimedCityRef.current = null;
             setClaimedCity(null)
           }}
           onReroll={() => {
@@ -746,10 +764,20 @@ function App() {
             if (newCity) {
               progressionManager.unlockCity(newCity);
               setClaimedCity(null);
-              setTimeout(() => setClaimedCity(newCity), 0);
+              setTimeout(() => setClaimedCity(newCity), 300);
             }
           }}
         />
+      )}
+      {showSecretCityModal && (
+        <SecretCityModal onContinue={() => {
+          setShowSecretCityModal(false);
+          const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');
+          if (antarcticCity) {
+            progressionManager.unlockCity(antarcticCity);
+            setClaimedCity(antarcticCity);
+          }
+        }} />
       )}
       {showMobileWarning && (
         <div style={{

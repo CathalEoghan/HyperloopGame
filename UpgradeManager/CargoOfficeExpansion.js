@@ -6,6 +6,6 @@ export const cargoOfficeExpansion = new Upgrade(
     "Cargo Office Expansion",
     123000,
     "Infrastructure",
-    "placeholder",
-    1
+    "connectionBoost",
+    0.1
 );

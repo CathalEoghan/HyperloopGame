@@ -6,6 +6,6 @@ export const experimentalTechnology = new Upgrade(
     "Experimental Technology",
     2000000,
     "Enterprise",
-    "placeholder",
+    "connectionBoost",
     1
 );

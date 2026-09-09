@@ -51,7 +51,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         return 'unknown'
     }
 
-    const sortedCountries = [...new Set(allCities.map(c => c.country))].sort()
+    const sortedCountries = [...new Set(allCities.filter(c => c.continent !== 'Antarctica' || purchasedCities.some(p => p.name === c.name)).map(c => c.country))].sort()
     const purchasedCountries = new Set(purchasedCities.map(c => c.country))
     const unlockedCountriesSet = new Set((unlockedCities || []).map(c => c.country))
 

@@ -6,6 +6,6 @@ export const arrivalsHallRenovation = new Upgrade(
     "Arrivals Hall Renovation",
     78900,
     "Infrastructure",
-    "placeholder",
+    "connectionBoost",
     0.1
 )

@@ -6,6 +6,6 @@ export const personalImageBranding = new Upgrade(
     "Personal Image Branding",
     74500,
     "Enterprise",
-    "placeholder",
-    5
+    "personalImageBranding",
+    0.1
 );

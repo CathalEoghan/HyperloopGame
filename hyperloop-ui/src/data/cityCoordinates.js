@@ -325,6 +325,15 @@ const cityCoordinates = {
     "Thimphu": { lat: 27.4728, lng: 89.6393 },
     "Pittsburgh": { lat: 40.4406, lng: -79.9959 },
     "Bergen": { lat: 60.3913, lng: 5.3221 },
+    "Guayaquil":          {"lat": -2.1700,  "lng": -79.9224},
+    "Salt Lake City":     {"lat": 40.7608,  "lng": -111.8910},
+    "Niamey":             {"lat": 13.5137,  "lng": 2.1098},
+    "San Juan":           {"lat": 18.4655,  "lng": -66.1057},
+    "Conakry":            {"lat": 9.6412,   "lng": -13.5784},
+    "N'Djamena":          {"lat": 12.1348,  "lng": 15.0557},
+    "Skopje":             {"lat": 41.9973,  "lng": 21.4280},
+    "Córdoba":            {"lat": -31.4201, "lng": -64.1888},
+    "Antarctic Peninsula":{"lat": -67.5,    "lng": -68.0},
 
 
 

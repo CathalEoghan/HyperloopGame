@@ -6,6 +6,6 @@ export const currencyExchangeCentre = new Upgrade(
     "Currency Exchange Centre",
     120100,
     "Service",
-    "placeholder",
-    5
+    "developmentBoost",
+    0.1
 );
