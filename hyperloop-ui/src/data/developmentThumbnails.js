@@ -328,6 +328,12 @@ import TangoBar from '../assets/developments-thumb/TangoBar.jpg'
 import NewYearsCelebrations from '../assets/developments-thumb/NewYearsCelebrations.jpg'
 import EasterWeekendDeals from '../assets/developments-thumb/EasterWeekendDeals.jpg'
 import FourthOfJulyShows from '../assets/developments-thumb/FourthOfJulyShows.jpg'
+import CargoOfficeExpansion from '../assets/developments-thumb/CargoOfficeExpansion.jpg'
+import TrafficManagementStrategy from '../assets/developments-thumb/TrafficManagementStrategy.jpg'
+import WorkersSolidarityFund from '../assets/developments-thumb/WorkersSolidarityFund.jpg'
+import CurrencyExchangeCentre from '../assets/developments-thumb/CurrencyExchangeCentre.jpg'
+import ComplementaryOnboardCoffee from '../assets/developments-thumb/ComplementaryOnboardCoffee.jpg'
+import JulyTicketDeals from '../assets/developments-thumb/JulyTicketDeals.jpg'
 
 
 const developmentImages = {
@@ -659,7 +665,13 @@ const developmentImages = {
     "Fourth of July Shows": FourthOfJulyShows,
     "Antiques Store": AntiquesStore,
     "New Year's Celebrations": NewYearsCelebrations,
-    "Easter Weekend Deals": EasterWeekendDeals
+    "Easter Weekend Deals": EasterWeekendDeals,
+    "Cargo Office Expansion": CargoOfficeExpansion,
+    "Workers Solidarity Fund": WorkersSolidarityFund,
+    "Currency Exchange Centre": CurrencyExchangeCentre,
+    "Traffic Management Strategy": TrafficManagementStrategy,
+    "Complementary Onboard Coffee": ComplementaryOnboardCoffee,
+    "July Ticket Deals": JulyTicketDeals,
 
 
 

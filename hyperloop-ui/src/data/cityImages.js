@@ -326,7 +326,14 @@ const cityImages = {
     "Managua": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Managua.jpg",
     "Khartoum": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Khartoum.jpg",
     "Kuching": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Kuching.jpg",
-    
+    "Guayaquil": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Conakry.jpg",
+    "Conakry": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Guayaquil.jpg",
+    "N'Djamena": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NDjamena.jpg",
+    "Skopje": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Skopje.jpg",
+    "Salt Lake City": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SaltLakeCity.jpg",
+    "Niamey": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Niamey.jpg",
+    "San Juan": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanJuan.jpg",
+
 
 
 

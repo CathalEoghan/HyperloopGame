@@ -148,6 +148,12 @@ import { luxuryJewelImports } from './LuxuryJewelImports.js'
 import { easterWeekendDeals } from './EasterWeekendDeals.js'
 import { newYearsCelebrations } from './NewYearsCelebrations.js'
 import { fourthOfJulyShows } from './FourthOfJulyShows.js'
+import { cargoOfficeExpansion } from './CargoOfficeExpansion.js'
+import { workersSolidarityFund } from './WorkersSolidarityFund.js'
+import { currencyExchangeCentre } from './CurrencyExchangeCentre.js'
+import { trafficManagementStrategy } from './TrafficManagementStrategy.js'
+import { complementaryOnboardCoffee } from './ComplementaryOnboardCoffee.js'
+import { julyTicketDeals } from './JulyTicketDeals.js'
 
 
 
@@ -303,6 +309,12 @@ export const allUpgrades = [
     easterWeekendDeals,
     newYearsCelebrations,
     fourthOfJulyShows,
+    cargoOfficeExpansion,
+    workersSolidarityFund,
+    currencyExchangeCentre,
+    trafficManagementStrategy,
+    complementaryOnboardCoffee,
+    julyTicketDeals,
 
     
 

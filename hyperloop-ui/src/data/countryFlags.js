@@ -147,6 +147,12 @@ const countryFlags = {
     "Sudan": "sd",
     "Nicaragua": "ni",
     "Bhutan": "bt",
+    "Chad": "td",
+    "North Macedonia": "mk",
+    "Niger": "ne",
+    "Puerto Rico": "pr",
+    "Guinea": "gn"
+    
 
 
 

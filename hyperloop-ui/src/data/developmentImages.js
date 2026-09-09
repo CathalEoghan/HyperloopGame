@@ -328,6 +328,13 @@ const developmentImages = {
     "Antiques Store": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AntiquesStore.jpg",
     "New Year's Celebrations": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NewYearsCelebrations.jpg",
     "Easter Weekend Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/EasterWeekendDeals.jpg",
+    "Traffic Management Strategy": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TrafficManagementStrategy.jpg",
+    "Workers' Solidarity Fund": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/WorkersSolidarityFund.jpg",
+    "Currency Exchange Centre": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CurrencyExchangeCentre.jpg",
+    "Complementary Onboard Coffee": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ComplementaryOnboardCoffee.jpg",
+    "July Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/JulyTicketDeals.jpg",
+    "Cargo Office Expansion": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CargoOfficeExpansion.jpg",
+
 
 
 

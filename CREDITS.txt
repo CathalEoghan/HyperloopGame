@@ -303,7 +303,6 @@ QuebecCity.jpg - Photo by Quintin Soloviev via Wikimedia Commons
 Zhengzhou.jpg - Photo by Windmemories via Wikimedia Commons
 Pittsburgh.jpg - Photo by Nicolas DeSarno via Pexels
 Kuching.jpg - Photo by Kevin T via Pexels
-CórdobaSpain.jpg - Photo by Daka via Pexels
 PortMoresby.jpg  - Photo by Toktok No Maski Productions via Pexels
 CebuCity.jpg - Photo by HAVI3 via Pexels
 Lusaka.jpg - Photo by Mondoka via Large Norwegian Encyclopedia
@@ -331,7 +330,11 @@ CórdobaArgentina.jpg - Photo by Juan Coronel via Pexels
 Faro.jpg - Photo by Micheile Henderson via Pexels
 N'Djamena.jpg - Photo by Ken Doerr via Wikimedia Commons
 Conkary.jpg - Photo by World Bank Photo Collection via Flickr
-
+Skopje.jpg - Photo by Necip Duman via Pexels
+SaltLakeCity.jpg - Photo by Lukas Kloeppel via Pexels
+Niamey.jpg - Photo by Sakou Gado via Wikimedia Commons
+SanJuan.jpg - Photo by Diego F. Parra via Pexels
+Guayaquil.jpg - Photo by Viajante Dibujero via Pexels
 
 
 
@@ -659,6 +662,12 @@ LuxuryJewelImports.jpg - Photo by Naresh Babu via Pexels
 TropicalJuiceBar.jpg - Photo by Ann H via Pexels
 BusinessLoungeRenovations.jpg - Photo by BOOM 💥 Photography via Pexels
 AdvertisingCampaignPortugal.jpg - Photo by Jean-Paul Colemonts via Pexels
+JulyTicketDeals.jpg - Photo by Said Hawwa via Pexels
+ComplementaryOnboardCoffee.jpg - Photo by Gül Işık via Pexels
+WorkersSolidarityFund.jpg - Photo by Özkan Öztaş via Pexels
+CurrencyExchangeCentre.jpg - Photo by Audy of Course via Pexels
+CargoOfficeExpansion.jpg - Photo by Tima Miroshnichenko via Pexels
+TrafficManagementStrategy.jpg - Photo by Mr Whittington via Pexels
 
 SOUNDS
 

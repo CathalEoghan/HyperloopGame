@@ -325,6 +325,14 @@ import Managua from '../assets/cities-thumb/Managua.jpg'
 import Khartoum from '../assets/cities-thumb/Khartoum.jpg'
 import Thimphu from '../assets/cities-thumb/Thimphu.jpg'
 import Pittsburgh from '../assets/cities-thumb/Pittsburgh.jpg'
+import SanJuan from '../assets/cities-thumb/SanJuan.jpg'
+import NDjamena from '../assets/cities-thumb/NDjamena.jpg'
+import Guayaquil from '../assets/cities-thumb/Guayaquil.jpg'
+import Skopje from '../assets/cities-thumb/Skopje.jpg'
+import SaltLakeCity from '../assets/cities-thumb/SaltLakeCity.jpg'
+import Niamey from '../assets/cities-thumb/Niamey.jpg'
+import Conakry from '../assets/cities-thumb/Conakry.jpg'
+
 
 
 
@@ -658,6 +666,13 @@ const cityImages = {
     Khartoum: Khartoum,
     Managua: Managua,
     Thimphu: Thimphu,
+    Guayaquil: Guayaquil,
+    Conakry: Conakry,
+    NDjamena: NDjamena,
+    Skopje: Skopje,
+    "Salt Lake City": SaltLakeCity,
+    Niamey: Niamey,
+    "San Juan": SanJuan,
     
 
 

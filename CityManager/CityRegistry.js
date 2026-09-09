@@ -326,6 +326,13 @@ import { Pittsburgh } from './Pittsburgh.js'
 import { Managua } from './Managua.js'
 import { Khartoum } from './Khartoum.js'
 import { Thimphu } from './Thimphu.js'
+import { Niamey } from './Niamey.js'
+import { NDjamena } from './NDjamena.js'
+import { Conakry } from './Conakry.js'
+import { Guayaquil } from './Guayaquil.js'
+import { SaltLakeCity } from './SaltLakeCity.js'
+import { Skopje } from './Skopje.js'
+import { SanJuan } from './SanJuan.js'
 
 
 export const allCities = [
@@ -656,6 +663,14 @@ export const allCities = [
     Managua,
     Khartoum,
     Thimphu,
+    SanJuan,
+    Niamey,
+    Conakry,
+    Guayaquil,
+    Skopje,
+    SaltLakeCity,
+    NDjamena,
+
 
 
 
