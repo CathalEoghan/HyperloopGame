@@ -7,5 +7,5 @@ export const workersSolidarityFund = new Upgrade(
     71000,
     "Enterprise",
     "serviceDevBoost", 
-    0.01
+    0.025
 )

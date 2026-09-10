@@ -6,5 +6,5 @@ export const businessClassCabins = new Upgrade(
     155000,
     "Service",
     "businessWeekBoost",
-    0.1
+    0.25
 )

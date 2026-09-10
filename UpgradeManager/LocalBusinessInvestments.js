@@ -7,5 +7,5 @@ export const localBusinessInvestments = new Upgrade(
     102500,
     "Enterprise",
     "enterpriseDevBoost",
-    0.01
+    0.025
 );
