@@ -6,6 +6,6 @@ export const nighttimePayIncentives = new Upgrade(
     "Nighttime Pay Incentives",
     91000,
     "Enterprise",
-    "continentBoost",
-    0.25
+    "nightBoost",
+    0.15
 );

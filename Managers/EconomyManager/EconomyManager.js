@@ -52,6 +52,11 @@ export class EconomyManager {
         return day >= 1 && day <= 5;
     }
 
+    isWeekend() {
+        const day = new Date().getDay();
+        return day === 0 || day === 6;
+    }
+
     getSpecialDayMultiplier() {
         const now = new Date();
         const month = now.getMonth();
@@ -140,7 +145,16 @@ export class EconomyManager {
             income *= (1 + this.getUpgradeSum('businessWeekBoost'));
         }
 
+        if (this.hasUpgrade('weekendBoost') && this.isWeekend()) {
+            income *= (1 + this.getUpgradeSum('weekendBoost'));
+        }
+
+        if (city.population < 100000 && this.hasUpgrade('smallCityBoost')) {
+            income *= (1 + this.getUpgradeSum('smallCityBoost'));
+        }
+
         income *= this.getSpecialDayMultiplier();
+        income *= this.getTimeOfDayMultiplier();
 
         return income;
     }
@@ -221,6 +235,21 @@ export class EconomyManager {
     getMinCityTierOnRankUp() {
         if (this.hasUpgrade('skilledNegotiationTeams')) return 2;
         return 1;
+    }
+
+
+    getTimeOfDayMultiplier() {
+        const hour = new Date().getHours();
+        let multiplier = 1.0;
+        if (hour >= 6 && hour < 12 && this.hasUpgrade('morningBoost'))
+            multiplier *= (1 + this.getUpgradeSum('morningBoost'));
+        if (hour >= 12 && hour < 18 && this.hasUpgrade('afternoonBoost'))
+            multiplier *= (1 + this.getUpgradeSum('afternoonBoost'));
+        if (hour >= 18 && hour < 22 && this.hasUpgrade('eveningBoost'))
+            multiplier *= (1 + this.getUpgradeSum('eveningBoost'));
+        if ((hour >= 22 || hour < 6) && this.hasUpgrade('nightBoost'))
+            multiplier *= (1 + this.getUpgradeSum('nightBoost'));
+        return multiplier;
     }
 
     getDailyRepBonus(rank) {

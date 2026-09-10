@@ -6,6 +6,6 @@ export const workersSolidarityFund = new Upgrade(
     "Workers' Solidarity Fund",
     71000,
     "Enterprise",
-    "negativeEventReduction", 
-    0.2
+    "serviceDevBoost", 
+    0.01
 )

@@ -7,5 +7,5 @@ export const juneTicketDeals = new Upgrade(
     65000,
     "Enterprise",
     "seasonBoost",
-    86400
+    0.25
 );

@@ -1,11 +1,9 @@
 
-// Emerging Destinatins Research
-import { Upgrade } from "./Upgrade.js";
-
+// Emerging Destinations Research
 export const emergingDestinationsResearch = new Upgrade(
     "Emerging Destinations Research",
-    125000,
+    cost,
     "Enterprise",
-    "negativeEventReduction",
-    0.2
-);
+    "smallCityBoost",
+    5.0
+)
