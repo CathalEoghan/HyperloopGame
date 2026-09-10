@@ -61,7 +61,6 @@ function App() {
     const incomePerSecond = economyManager.calculateDailyIncome(null, savedCreatedAt);
     const offlineIncome = incomePerSecond * totalSeconds * OFFLINE_RATE;
     if (offlineIncome < 1) return null;
-    progressionManager.addCash(offlineIncome);
     return { offlineSeconds: totalSeconds, offlineIncome };
   });
 
@@ -148,6 +147,18 @@ function App() {
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
   const lastModalClearedAt = useRef(Date.now() + 180000);
   const lastEventTime = useRef(Date.now());
+
+  // Mark home city rewards as shown so they never appear in dev reveal queue
+  useEffect(() => {
+    if (progressionManager.purchasedCities.length > 0) {
+      const homeCity = progressionManager.purchasedCities[0];
+      const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]');
+      homeCity.rewards.forEach(r => {
+        if (!shown.includes(r.name)) shown.push(r.name);
+      });
+      localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shown));
+    }
+  }, []);
 
   // Immediate rank detection on load (catches offline rank ups)
   useEffect(() => {
@@ -666,9 +677,7 @@ function App() {
           reputation={reputation}
           onSpendRep={(amount) => progressionManager.addReputation(-amount)}
           onCollect={(finalIncome) => {
-            if (finalIncome > offlineData.offlineIncome) {
-              progressionManager.addCash(finalIncome - offlineData.offlineIncome);
-            }
+            progressionManager.addCash(finalIncome);
             setShowOfflineModal(false);
             lastModalClearedAt.current = Date.now() + 180000;
             triggerSave();

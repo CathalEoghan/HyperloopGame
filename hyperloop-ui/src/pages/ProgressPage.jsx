@@ -41,9 +41,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         return pop.toLocaleString()
     }
 
+    const antarcticaUnlocked = purchasedCities.some(p => p.continent === 'Antarctica')
+    const visibleCities = allCities.filter(c => c.continent !== 'Antarctica' || antarcticaUnlocked)
     const purchasedNames = new Set(purchasedCities.map(c => c.name))
     const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
-    const sortedCities = [...allCities].sort((a, b) => a.name.localeCompare(b.name))
+    const sortedCities = [...visibleCities].sort((a, b) => a.name.localeCompare(b.name))
 
     const getCityState = (city) => {
         if (purchasedNames.has(city.name)) return 'connected'
@@ -51,7 +53,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         return 'unknown'
     }
 
-    const sortedCountries = [...new Set(allCities.filter(c => c.continent !== 'Antarctica' || purchasedCities.some(p => p.name === c.name)).map(c => c.country))].sort()
+    const sortedCountries = [...new Set(visibleCities.map(c => c.country))].sort()
     const purchasedCountries = new Set(purchasedCities.map(c => c.country))
     const unlockedCountriesSet = new Set((unlockedCities || []).map(c => c.country))
 
@@ -117,13 +119,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Work Click Bonus',            value: count('workClickBonus') > 0 ? <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>×{Math.pow(3, count('workClickBonus'))} (<CashValue amount={Math.floor(100 * Math.pow(3, count('workClickBonus')))} suffix="/click" />)</span> : '—' },
             { label: 'Farewell Window Extension',   value: (() => {
                 const total = 5 + count('farewellWindowExtension') * 5
-                const weeks = Math.floor(total / 10080)
-                const days = Math.floor((total % 10080) / 1440)
-                const hours = Math.floor((total % 1440) / 60)
                 const mins = total % 60
+                const hours = Math.floor(total / 60)
                 const parts = []
-                if (weeks > 0) parts.push(`${weeks} ${weeks === 1 ? 'week' : 'weeks'}`)
-                if (days > 0) parts.push(`${days} ${days === 1 ? 'day' : 'days'}`)
                 if (hours > 0) parts.push(`${hours} ${hours === 1 ? 'hour' : 'hours'}`)
                 if (mins > 0) parts.push(`${mins} ${mins === 1 ? 'minute' : 'minutes'}`)
                 return count('farewellWindowExtension') > 0 ? parts.join(' ') : '—'
@@ -145,7 +143,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     }
 
     const upgradeStats = getUpgradeStats()
-    const cityProgress = (purchasedCities.length / allCities.length) * 100
+    const cityProgress = (purchasedCities.length / visibleCities.length) * 100
     const countryProgress = (purchasedCountries.size / sortedCountries.length) * 100
 
     return (
@@ -207,7 +205,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
             <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
                 Cities collected
-                <span className="progress-fraction">{purchasedCities.length} / {allCities.length}</span>
+                <span className="progress-fraction">{purchasedCities.length} / {visibleCities.length}</span>
             </h2>
             <div className="progress-bar-container">
                 <div className="progress-bar-fill" style={{ width: `${cityProgress}%` }} />

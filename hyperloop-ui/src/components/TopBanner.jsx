@@ -35,8 +35,11 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     const [eventSecondsLeft, setEventSecondsLeft] = useState(activeEvent?.durationSeconds || 0)
     const btnRef = useRef(null)
     const [displayBalance, setDisplayBalance] = useState(balance)
-    const animationRef = useRef(null)
-    const startTimeRef = useRef(null)
+    const [displayReputation, setDisplayReputation] = useState(reputation)
+    const balanceAnimRef = useRef(null)
+    const repAnimRef = useRef(null)
+    const balanceStartRef = useRef(null)
+    const repStartRef = useRef(null)
 
     useEffect(() => {
         if (!activeEvent) return;
@@ -48,28 +51,52 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     }, [activeEvent?.id]);
 
     useEffect(() => {
-        if (animationRef.current) cancelAnimationFrame(animationRef.current)
+        if (balanceAnimRef.current) cancelAnimationFrame(balanceAnimRef.current)
         const from = displayBalance
         const to = balance
         const diff = to - from
         if (Math.abs(diff) < 1) return
         const duration = Math.min(Math.abs(diff) / 10000 * 300, 600)
-        startTimeRef.current = null
+        balanceStartRef.current = null
         const animate = (timestamp) => {
-            if (!startTimeRef.current) startTimeRef.current = timestamp
-            const elapsed = timestamp - startTimeRef.current
+            if (!balanceStartRef.current) balanceStartRef.current = timestamp
+            const elapsed = timestamp - balanceStartRef.current
             const progress = Math.min(elapsed / duration, 1)
             const eased = 1 - Math.pow(1 - progress, 3)
             setDisplayBalance(Math.floor(from + diff * eased))
             if (progress < 1) {
-                animationRef.current = requestAnimationFrame(animate)
+                balanceAnimRef.current = requestAnimationFrame(animate)
             } else {
                 setDisplayBalance(Math.floor(to))
             }
         }
-        animationRef.current = requestAnimationFrame(animate)
-        return () => { if (animationRef.current) cancelAnimationFrame(animationRef.current) }
+        balanceAnimRef.current = requestAnimationFrame(animate)
+        return () => { if (balanceAnimRef.current) cancelAnimationFrame(balanceAnimRef.current) }
     }, [balance])
+
+    useEffect(() => {
+        if (repAnimRef.current) cancelAnimationFrame(repAnimRef.current)
+        const from = displayReputation
+        const to = reputation
+        const diff = to - from
+        if (Math.abs(diff) < 1) return
+        const duration = Math.min(Math.abs(diff) * 30, 500)
+        repStartRef.current = null
+        const animate = (timestamp) => {
+            if (!repStartRef.current) repStartRef.current = timestamp
+            const elapsed = timestamp - repStartRef.current
+            const progress = Math.min(elapsed / duration, 1)
+            const eased = 1 - Math.pow(1 - progress, 3)
+            setDisplayReputation(Math.floor(from + diff * eased))
+            if (progress < 1) {
+                repAnimRef.current = requestAnimationFrame(animate)
+            } else {
+                setDisplayReputation(Math.floor(to))
+            }
+        }
+        repAnimRef.current = requestAnimationFrame(animate)
+        return () => { if (repAnimRef.current) cancelAnimationFrame(repAnimRef.current) }
+    }, [reputation])
 
     const handleWork = () => {
         onWork(() => {
@@ -121,7 +148,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <img src={cashIcon} alt="balance" /> £{displayBalance.toLocaleString()}
                 </div>
                 <div className="reputation">
-                    <img src={reputationIcon} alt="reputation" /> {reputation}
+                    <img src={reputationIcon} alt="reputation" /> {displayReputation}
                 </div>
             </div>
             <button
