@@ -71,11 +71,27 @@ export class EconomyManager {
 
     calculateDevelopmentIncome() {
         const devBoostMultiplier = 1 + this.getUpgradeSum('developmentBoost');
+
+        const uniqueContinents = new Set(this.progressionManager.purchasedCities.map(c => c.continent)).size;
+        const devContinentBoost = 1 + (this.getUpgradeSum('devContinentBoost') * uniqueContinents);
+
+        const infraCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Infrastructure').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Infrastructure').length;
+        const infraBoost = 1 + (this.getUpgradeSum('infrastructureDevBoost') * infraCount);
+
+        const enterpriseCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Enterprise').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Enterprise').length;
+        const enterpriseBoost = 1 + (this.getUpgradeSum('enterpriseDevBoost') * enterpriseCount);
+
+        const serviceCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Service').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Service').length;
+        const serviceBoost = 1 + (this.getUpgradeSum('serviceDevBoost') * serviceCount);
+
         let developmentIncome = 0;
         this.progressionManager.purchasedDevelopments.forEach(development => {
             const base = this.getEffectiveDevRevenue(development);
             const categoryMultiplier = this.getCategoryMultiplier(development.category);
-            developmentIncome += base * categoryMultiplier * devBoostMultiplier;
+            developmentIncome += base * categoryMultiplier * devBoostMultiplier * devContinentBoost * infraBoost * enterpriseBoost * serviceBoost;
         });
         return developmentIncome;
     }
@@ -164,12 +180,13 @@ export class EconomyManager {
             .reduce((sum, city) => sum + this.calculateCityIncome(city, coordinates), 0);
     }
 
-    calculateDailyIncome(coordinates = null) {
+    calculateDailyIncome(coordinates = null, createdAt = null) {
         const base = (this.calculateDevelopmentIncome() + this.calculatePopulationIncome(coordinates)) / SECONDS_IN_A_DAY;
+        const foundersMultiplier = this.getFoundersHallMultiplier(createdAt);
         if (this.activeEvent?.effectType === 'passiveBoost' || this.activeEvent?.effectType === 'passivePenalty') {
-            return base * this.activeEvent.effect.multiplier;
+            return base * foundersMultiplier * this.activeEvent.effect.multiplier;
         }
-        return base;
+        return base * foundersMultiplier;
     }
 
     calculateDiscountedBuildCost(baseCost) {
@@ -237,6 +254,13 @@ export class EconomyManager {
         return 1;
     }
 
+
+    getFoundersHallMultiplier(createdAt) {
+        if (!this.hasUpgradeByName("Founders' Hall") || !createdAt) return 1.0;
+        const daysActive = Math.floor((Date.now() - createdAt) / 86400000);
+        const boostPct = Math.floor(daysActive / 10) * 0.01;
+        return 1 + boostPct;
+    }
 
     getTimeOfDayMultiplier() {
         const hour = new Date().getHours();

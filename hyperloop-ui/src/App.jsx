@@ -57,7 +57,8 @@ function App() {
     if (!hiddenAt) return null;
     const totalSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
     if (totalSeconds < 60) return null;
-    const incomePerSecond = economyManager.calculateDailyIncome();
+    const savedCreatedAt = savedData?.createdAt || Date.now();
+    const incomePerSecond = economyManager.calculateDailyIncome(null, savedCreatedAt);
     const offlineIncome = incomePerSecond * totalSeconds * OFFLINE_RATE;
     if (offlineIncome < 1) return null;
     progressionManager.addCash(offlineIncome);
@@ -169,7 +170,7 @@ function App() {
     const hasCommemorativeDisplays = progressionManager.purchasedDevelopments.some(d => d.name === 'Commemorative Displays');
     const hasPassengerLoyalty = progressionManager.purchasedUpgrades.some(u => u.name === 'Passenger Loyalty Scheme');
     const hasDailyRepDoubled = progressionManager.purchasedUpgrades.some(u => u.effectType === 'dailyRepDoubled');
-    const dailyIncome = economyManager.calculateDailyIncome() * 86400;
+    const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
     const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
     let repBonus = hasPassengerLoyalty ? 5 : 0;
     if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
@@ -255,7 +256,8 @@ function App() {
       const now2 = Date.now();
       const elapsed = Math.min((now2 - lastTickTimeRef.current) / 1000, 10);
       lastTickTimeRef.current = now2;
-      const incomePerSecond = economyManager.calculateDailyIncome();
+      const savedCreatedAt = savedData?.createdAt || Date.now();
+    const incomePerSecond = economyManager.calculateDailyIncome(null, savedCreatedAt);
       progressionManager.addCash(incomePerSecond * elapsed);
       rankManager.convertCashToXP(progressionManager.totalCashEarned);
       const previousRank = rankManager.rank;
@@ -404,7 +406,7 @@ function App() {
         const durationSeconds = Math.floor(event.duration() * bonusExtension);
 
         if (event.effectType === 'instantCash') {
-          const bonus = Math.floor(economyManager.calculateDailyIncome() * SECONDS_IN_A_DAY * 0.1);
+          const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1);
           progressionManager.addCash(bonus);
           const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
           activeEventRef.current = fullEvent;
@@ -413,7 +415,7 @@ function App() {
           setActiveEvent(fullEvent);
           setTimeout(() => { activeEventRef.current = null; setActiveEvent(null); localStorage.removeItem('hyperloop_active_event'); }, 8000);
         } else if (event.effectType === 'instantCashLoss') {
-          const loss = Math.floor(economyManager.calculateDailyIncome() * SECONDS_IN_A_DAY * 0.1);
+          const loss = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1);
           progressionManager.addCash(-loss);
           const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
           activeEventRef.current = fullEvent;
