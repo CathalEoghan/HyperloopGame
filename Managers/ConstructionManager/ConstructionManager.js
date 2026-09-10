@@ -1,4 +1,4 @@
-import { FIVE_SECONDS, TEN_SECONDS, TWENTY_SECONDS, FORTY_FIVE_SECONDS, TWO_MINUTES } from '../TimeManager/TimeManager.js'
+import { FIVE_SECONDS, TEN_SECONDS, TWENTY_SECONDS, FORTY_FIVE_SECONDS, TWO_MINUTES, FIVE_MINUTES } from '../TimeManager/TimeManager.js'
 
 export class ConstructionManager {
     constructor(progressionManager, timeManager) {
@@ -7,11 +7,12 @@ export class ConstructionManager {
     }
 
     calculateTierTime(city) {
-    if (city.tier === 1) return TWENTY_SECONDS;
-    if (city.tier === 2) return FORTY_FIVE_SECONDS;
-    if (city.tier === 3) return TWO_MINUTES;
-    throw new Error(`Unknown city tier: ${city.tier}`)
-}
+        if (city.tier === 0) return FIVE_MINUTES;
+        if (city.tier === 1) return TWENTY_SECONDS;
+        if (city.tier === 2) return FORTY_FIVE_SECONDS;
+        if (city.tier === 3) return TWO_MINUTES;
+        throw new Error(`Unknown city tier: ${city.tier}`)
+    }
 
     update() {
         this.progressionManager.citiesUnderConstruction.forEach(city => {
@@ -37,7 +38,7 @@ export class ConstructionManager {
     }
 
     startStationConstruction(city) {
-const connectionCost = this.calculateTierConnectionCost(city);
+        const connectionCost = this.calculateTierConnectionCost(city);
         const canAfford = this.progressionManager.spendCash(connectionCost);
         if (!canAfford) return;
 
@@ -61,9 +62,10 @@ const connectionCost = this.calculateTierConnectionCost(city);
 
     calculateTierConnectionCost(city) {
         switch (city.tier) {
-            case 3: return 1000000;
-            case 2: return 250000;
+            case 0: return 2500000;
             case 1: return 50000;
+            case 2: return 250000;
+            case 3: return 1000000;
             default: throw new Error("Error: tier not recognised.")
         }
     }

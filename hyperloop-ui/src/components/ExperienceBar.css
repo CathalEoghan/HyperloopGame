@@ -24,3 +24,7 @@
     font-weight: bold;
     pointer-events: none;
 }
+
+.fill {
+    transition: width 0.8s ease-out;
+}

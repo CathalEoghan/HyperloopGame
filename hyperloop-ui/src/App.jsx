@@ -30,7 +30,7 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
@@ -147,6 +147,8 @@ function App() {
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
   const lastModalClearedAt = useRef(Date.now() + 180000);
   const lastEventTime = useRef(Date.now());
+  const rankSetRef = useRef(rankManager.rank);
+  const departureBoardAudioRef = useRef(null);
 
   // Mark home city rewards as shown so they never appear in dev reveal queue
   useEffect(() => {
@@ -403,7 +405,7 @@ function App() {
       // Random event trigger — rank 3+ only, guaranteed every 5 minutes
       const timeSinceLastEvent = Date.now() - lastEventTime.current;
       const forceEvent = timeSinceLastEvent > 300000;
-      if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSet >= 3 && Date.now() > lastModalClearedAt.current) {
+      if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= 3 && Date.now() > lastModalClearedAt.current) {
         lastEventTime.current = Date.now();
         const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
         const event = getRandomEvent(positiveOnly);
@@ -454,6 +456,7 @@ function App() {
       setWorkEarnings(economyManager.calculateWorkClickEarnings(100));
       setBalance(progressionManager.balance);
       setRankSet(rankManager.rank);
+      rankSetRef.current = rankManager.rank;
       setTotalCashEarned(progressionManager.totalCashEarned);
       setReputation(progressionManager.reputation);
       setPurchasedCitiesCount(progressionManager.purchasedCities.length);
@@ -513,7 +516,17 @@ function App() {
         balance={balance}
         rank={rankSet}
         activeTab={activeTab}
-        onSelect={setActiveTab}
+        onSelect={(tab) => {
+                if (departureBoardAudioRef.current) {
+                  departureBoardAudioRef.current.pause();
+                  departureBoardAudioRef.current.currentTime = 0;
+                  departureBoardAudioRef.current = null;
+                }
+                if (tab === "DepartureBoard") {
+                  departureBoardAudioRef.current = playDepartureBoardSound();
+                }
+                setActiveTab(tab);
+              }}
         reputation={reputation}
         hasFarewellPending={!!activeDeparture}
         activeEvent={activeEvent}
@@ -614,7 +627,17 @@ function App() {
         />
       )}
       <TickerBar terminalName={terminalName} />
-      <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
+      <BottomNav activeTab={activeTab} onSelect={(tab) => {
+                if (departureBoardAudioRef.current) {
+                  departureBoardAudioRef.current.pause();
+                  departureBoardAudioRef.current.currentTime = 0;
+                  departureBoardAudioRef.current = null;
+                }
+                if (tab === "DepartureBoard") {
+                  departureBoardAudioRef.current = playDepartureBoardSound();
+                }
+                setActiveTab(tab);
+              }} />
 
       {showSaved && (
         <div style={{
@@ -784,12 +807,13 @@ function App() {
           }}
         />
       )}
-      {!dailyLoginData && !showOfflineModal && showSecretCityModal && (
+      {!dailyLoginData && !showOfflineModal && showSecretCityModal && devRevealQueue.length === 0 && (
         <SecretCityModal onContinue={() => {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');
           if (antarcticCity) {
-            progressionManager.unlockCity(antarcticCity);
+            constructionManager.startStationConstruction(antarcticCity);
+            triggerSave();
             setClaimedCity(antarcticCity);
           }
         }} />
