@@ -147,6 +147,7 @@ function App() {
   const lastTickTimeRef = useRef(Date.now());
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
   const lastModalClearedAt = useRef(Date.now() + 180000);
+  const lastEventTime = useRef(Date.now());
 
   // Immediate rank detection on load (catches offline rank ups)
   useEffect(() => {
@@ -388,8 +389,11 @@ function App() {
       // Sync active event to EconomyManager
       economyManager.activeEvent = activeEventRef.current;
 
-      // Random event trigger — rank 3+ only
-      if (Math.random() < 0.002 && !activeEventRef.current && rankSet >= 3 && Date.now() > lastModalClearedAt.current) {
+      // Random event trigger — rank 3+ only, guaranteed every 5 minutes
+      const timeSinceLastEvent = Date.now() - lastEventTime.current;
+      const forceEvent = timeSinceLastEvent > 300000;
+      if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSet >= 3 && Date.now() > lastModalClearedAt.current) {
+        lastEventTime.current = Date.now();
         const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
         const event = getRandomEvent(positiveOnly);
 
@@ -629,7 +633,7 @@ function App() {
         />
       )}
 
-      {activeEvent && (
+      {!dailyLoginData && !showOfflineModal && activeEvent && (
         <EventModal
           event={activeEvent}
           terminalName={terminalName}
@@ -637,7 +641,7 @@ function App() {
         />
       )}
 
-      {revealedUpgradeQueue.length > 0 && (
+      {!dailyLoginData && !showOfflineModal && revealedUpgradeQueue.length > 0 && (
         <UpgradeRevealModal
           key={revealedUpgradeQueue[0].name}
           upgrade={revealedUpgradeQueue[0]}
@@ -655,7 +659,7 @@ function App() {
         />
       )}
 
-      {showOfflineModal && offlineData && (
+      {!dailyLoginData && showOfflineModal && offlineData && (
         <OfflineModal
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
@@ -672,7 +676,7 @@ function App() {
         />
       )}
 
-      {!showOfflineModal && activeDelay && (
+      {!dailyLoginData && !showOfflineModal && activeDelay && (
         <DelayModal
           delay={activeDelay}
           economyManager={economyManager}
@@ -681,7 +685,7 @@ function App() {
           onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); }}
         />
       )}
-      {!showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
         <FarewellModal
           departure={activeDeparture}
           economyManager={economyManager}
@@ -705,7 +709,7 @@ function App() {
           onMiss={() => { localStorage.removeItem('hyperloop_active_departure'); setActiveDeparture(null); }}
         />
       )}
-      {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
         <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
     const minTier = economyManager.getMinCityTierOnRankUp();
     let newCity = progressionManager.getRandomUnlockedCity(allCities);
@@ -729,7 +733,7 @@ function App() {
     setPendingRankUps(prev => prev - 1);
         }} />
       )}
-      {devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
+      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
         <DevelopmentRevealModal
           key={devRevealQueue[0].name}
           development={devRevealQueue[0]}
@@ -741,7 +745,7 @@ function App() {
           }}
         />
       )}
-      {!showOfflineModal && claimedCity && (
+      {!dailyLoginData && !showOfflineModal && claimedCity && (
         <CityRevealModal
           key={claimedCity.name}
           city={claimedCity}
@@ -771,7 +775,7 @@ function App() {
           }}
         />
       )}
-      {showSecretCityModal && (
+      {!dailyLoginData && !showOfflineModal && showSecretCityModal && (
         <SecretCityModal onContinue={() => {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');

@@ -84,7 +84,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
 
         const globeRadius = 1
         const textureLoader = new THREE.TextureLoader()
-        const quality = localStorage.getItem('globeQuality') || '2k'
+        const quality = localStorage.getItem('globeQuality') || '8k'
         let dayUrl, nightUrl
         try {
             dayUrl = new URL(`../assets/misc/${quality}_earth_daymap.jpg`, import.meta.url).href

@@ -63,7 +63,7 @@ function LoadingScreen({ onComplete }) {
     const done = useRef(false)
 
     useEffect(() => {
-        const quality = localStorage.getItem('globeQuality') || '2k'
+        const quality = localStorage.getItem('globeQuality') || '8k'
         const globeTextures = quality === '8k'
             ? [earthDay8k, earthNight8k]
             : [earthDay2k, earthNight2k]
