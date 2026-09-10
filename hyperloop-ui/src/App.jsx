@@ -633,7 +633,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && activeEvent && (
+      {activeEvent && (
         <EventModal
           event={activeEvent}
           terminalName={terminalName}
@@ -641,7 +641,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && revealedUpgradeQueue.length > 0 && (
+      {revealedUpgradeQueue.length > 0 && (
         <UpgradeRevealModal
           key={revealedUpgradeQueue[0].name}
           upgrade={revealedUpgradeQueue[0]}
@@ -659,7 +659,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && showOfflineModal && offlineData && (
+      {showOfflineModal && offlineData && (
         <OfflineModal
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
@@ -676,7 +676,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && activeDelay && (
+      {!showOfflineModal && activeDelay && (
         <DelayModal
           delay={activeDelay}
           economyManager={economyManager}
@@ -685,7 +685,7 @@ function App() {
           onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); }}
         />
       )}
-      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
+      {!showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
         <FarewellModal
           departure={activeDeparture}
           economyManager={economyManager}
@@ -709,7 +709,7 @@ function App() {
           onMiss={() => { localStorage.removeItem('hyperloop_active_departure'); setActiveDeparture(null); }}
         />
       )}
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
+      {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
         <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
     const minTier = economyManager.getMinCityTierOnRankUp();
     let newCity = progressionManager.getRandomUnlockedCity(allCities);
@@ -733,7 +733,7 @@ function App() {
     setPendingRankUps(prev => prev - 1);
         }} />
       )}
-      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
+      {devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
         <DevelopmentRevealModal
           key={devRevealQueue[0].name}
           development={devRevealQueue[0]}
@@ -745,7 +745,7 @@ function App() {
           }}
         />
       )}
-      {!dailyLoginData && !showOfflineModal && claimedCity && (
+      {!showOfflineModal && claimedCity && (
         <CityRevealModal
           key={claimedCity.name}
           city={claimedCity}
@@ -775,7 +775,7 @@ function App() {
           }}
         />
       )}
-      {!dailyLoginData && !showOfflineModal && showSecretCityModal && (
+      {showSecretCityModal && (
         <SecretCityModal onContinue={() => {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');
