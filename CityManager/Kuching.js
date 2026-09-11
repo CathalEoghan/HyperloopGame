@@ -4,7 +4,7 @@ import { City } from "./City.js";
 import { kennel } from "../DevelopmentManager/Kennel.js";
 
 export const Kuching = new City(
-    "Kennel",
+    "Kuching",
     674000,
     [kennel],
     "Malaysia",

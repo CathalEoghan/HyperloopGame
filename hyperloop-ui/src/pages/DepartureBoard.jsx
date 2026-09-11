@@ -92,7 +92,6 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         if (saved) {
             const parsed = JSON.parse(saved)
             if (parsed.length > 0 && parsed[0].gate !== undefined) {
-                // Filter to only currently connected cities
                 const filtered = parsed.filter(e => currentCityNames.has(e.name))
                 if (filtered.length > 0) {
                     setSchedule(filtered)
@@ -103,7 +102,6 @@ function DepartureBoard({ purchasedCities, homeCity }) {
 
         let generated = generateSchedule(purchasedCities)
 
-        // Inject any pending cities that were connected before the schedule was generated
         const pending = JSON.parse(localStorage.getItem('hyperloop_pending_injections') || '[]')
         if (pending.length > 0) {
             const now = new Date()
@@ -150,12 +148,11 @@ function DepartureBoard({ purchasedCities, homeCity }) {
             if (saved) {
                 const parsed = JSON.parse(saved)
                 if (parsed.length > 0) {
-                    // Always filter to current cities on reload
                     const filtered = parsed.filter(e => currentCityNames.has(e.name))
                     setSchedule(filtered)
                 }
             }
-        }, 30000)
+        }, 10000)
         return () => clearInterval(interval)
     }, [purchasedCities])
 
@@ -177,13 +174,23 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         const showGate = status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
         return (
             <>
-                <td style={{ opacity: isGone ? 0.4 : 1 }}><FlapText text={entry.name.toUpperCase()} /></td>
-                <td style={{ opacity: isGone ? 0.4 : 1 }}><FlapText text={entry.time} /></td>
-                <td style={{ opacity: isGone ? 0.4 : 1 }}><FlapText text={showGate ? String(entry.gate) : '--'} /></td>
+                <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>
+                    <div className="flip-card" key={entry.delayed ? 'delayed' : 'normal'}>
+                        <FlapText text={entry.name.toUpperCase()} />
+                    </div>
+                </td>
+                <td style={{ opacity: isGone ? 0.4 : 1 }}>
+                    <FlapText text={entry.time} />
+                </td>
+                <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>
+                    <div className="flip-card" key={showGate ? `gate-${entry.gate}` : 'gate-hidden'}>
+                        <FlapText text={showGate ? String(entry.gate) : '--'} />
+                    </div>
+                </td>
                 <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>
                     <div className="flip-card" key={status.label}>
                         <FlapText text={status.label} />
-                    </div>
+                        </div>
                 </td>
             </>
         )
@@ -193,14 +200,14 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         <div className="departure-board">
             <h2 className="board-title">Departures {today}</h2>
             {schedule.length === 0 ? (
-    purchasedCities.length <= 1 ? (
-        <p style={{ color: '#f5a623', fontFamily: 'Courier New', marginTop: '24px' }}>
-            Connect more cities to unlock departures!
-        </p>
-    ) : (
-        <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>Loading departures...</p>
-    )
-) : (
+                purchasedCities.length <= 1 ? (
+                    <p style={{ color: '#f5a623', fontFamily: 'Courier New', marginTop: '24px' }}>
+                        Connect more cities to unlock departures!
+                    </p>
+                ) : (
+                    <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>Loading departures...</p>
+                )
+            ) : (
                 <table className="board-table">
                     <thead>
                         <tr>

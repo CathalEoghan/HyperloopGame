@@ -8,47 +8,68 @@ import reputationIcon from '../assets/misc/reputation.png'
 import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } from '../utils/sound.js'
 
 const WORK_PHRASES = [
-    'Processed passenger',
-    'Attended meeting',
-    'Worked security',
-    'Shop inspection',
-    'Advertising campaign shoot',
-    'Hired new employee',
-    'Dealt with complaint',
-    'Called engineering team',
-    'Updated timetable',
-    'Briefed ground crew',
-    'Reviewed safety report',
-    'Assisted lost traveller',
-    'Found lost luggage',
-    'Met with union leaders',
-    'Posted to social media',
-    'Delivered speech to workers',
-    'Planned new development',
-    'Assembled financial advisors'
+    'Processed passenger', 'Attended meeting', 'Worked security', 'Shop inspection',
+    'Advertising campaign shoot', 'Hired new employee', 'Dealt with complaint',
+    'Called engineering team', 'Updated timetable', 'Briefed ground crew',
+    'Reviewed safety report', 'Assisted lost traveller', 'Found lost luggage',
+    'Met with union leaders', 'Posted to social media', 'Delivered speech to workers',
+    'Planned new development', 'Assembled financial advisors'
 ]
 
 let floatId = 0
 
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workEarnings, hasFarewellPending, activeEvent }) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workEarnings, hasFarewellPending, activeEvent, onEventExpire }) {
     const [floats, setFloats] = useState([])
     const [eventSecondsLeft, setEventSecondsLeft] = useState(activeEvent?.durationSeconds || 0)
     const btnRef = useRef(null)
     const [displayBalance, setDisplayBalance] = useState(balance)
     const [displayReputation, setDisplayReputation] = useState(reputation)
+    const [balanceFlash, setBalanceFlash] = useState(null)
+    const [repFlash, setRepFlash] = useState(null)
+    const [balanceFloat, setBalanceFloat] = useState(null)
     const balanceAnimRef = useRef(null)
     const repAnimRef = useRef(null)
     const balanceStartRef = useRef(null)
     const repStartRef = useRef(null)
+    const prevBalanceRef = useRef(balance)
+    const prevRepRef = useRef(reputation)
 
     useEffect(() => {
-        if (!activeEvent) return;
+        if (!activeEvent || activeEvent.durationSeconds === 0) return;
         setEventSecondsLeft(activeEvent.durationSeconds);
         const timer = setInterval(() => {
-            setEventSecondsLeft(prev => Math.max(0, prev - 1));
+            setEventSecondsLeft(prev => {
+                if (prev <= 1) {
+                    clearInterval(timer);
+                    onEventExpire?.();
+                    return 0;
+                }
+                return prev - 1;
+            });
         }, 1000);
         return () => clearInterval(timer);
     }, [activeEvent?.id]);
+
+    useEffect(() => {
+        const diff = balance - prevBalanceRef.current
+        if (diff < 0) {
+            setBalanceFlash('down')
+            setTimeout(() => setBalanceFlash(null), 400)
+        }
+        if (Math.abs(diff) >= 100) {
+            setBalanceFloat({ value: prevBalanceRef.current, id: Date.now(), dir: diff >= 0 ? 'up' : 'down' })
+            setTimeout(() => setBalanceFloat(null), 600)
+        }
+        prevBalanceRef.current = balance
+    }, [balance])
+
+    useEffect(() => {
+        if (reputation < prevRepRef.current) {
+            setRepFlash('down')
+            setTimeout(() => setRepFlash(null), 400)
+        }
+        prevRepRef.current = reputation
+    }, [reputation])
 
     useEffect(() => {
         if (balanceAnimRef.current) cancelAnimationFrame(balanceAnimRef.current)
@@ -56,7 +77,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const to = balance
         const diff = to - from
         if (Math.abs(diff) < 1) return
-        const duration = Math.min(Math.abs(diff) / 10000 * 300, 600)
+        const duration = Math.abs(diff) < 100 ? 0 : Math.max(250, Math.min(Math.abs(diff) / 10000 * 300, 400))
+        if (duration === 0) { setDisplayBalance(Math.floor(to)); return }
         balanceStartRef.current = null
         const animate = (timestamp) => {
             if (!balanceStartRef.current) balanceStartRef.current = timestamp
@@ -80,7 +102,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const to = reputation
         const diff = to - from
         if (Math.abs(diff) < 1) return
-        const duration = Math.min(Math.abs(diff) * 30, 500)
+        const duration = Math.abs(diff) < 5 ? 0 : Math.min(Math.abs(diff) * 30, 500)
+        if (duration === 0) { setDisplayReputation(Math.floor(to)); return }
         repStartRef.current = null
         const animate = (timestamp) => {
             if (!repStartRef.current) repStartRef.current = timestamp
@@ -99,18 +122,15 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     }, [reputation])
 
     const handleWork = () => {
-        onWork(() => {
-            const id = floatId++
-            const rect = btnRef.current.getBoundingClientRect()
-            setFloats(prev => [...prev, { id, isRep: true, x: rect.left + rect.width / 2, y: rect.top }])
-            setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
-        })
-        playWorkClickSound()
-        const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
         const id = floatId++
         const rect = btnRef.current.getBoundingClientRect()
-        setFloats(prev => [...prev, { id, phrase, isRep: false, x: rect.left + rect.width / 2, y: rect.top }])
+        const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
+        setFloats(prev => [...prev, { id, phrase, hasRep: false, x: rect.left + rect.width / 2, y: rect.top }])
         setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
+        onWork(() => {
+            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: true } : f))
+        })
+        playWorkClickSound()
     }
 
     const getEventIndicatorText = () => {
@@ -118,14 +138,16 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const { effectType, title, instantCashAmount } = activeEvent
         if (effectType === 'instantCash') return `${title} — +£${instantCashAmount?.toLocaleString()}`
         if (effectType === 'instantCashLoss') return `${title} — -£${Math.abs(instantCashAmount)?.toLocaleString()}`
-        if (effectType === 'passiveBoost') return `${title} — +50% passive income`
+        if (effectType === 'passiveBoost') return `${title} — +100% passive income`
         if (effectType === 'passivePenalty') return `${title} — -50% passive income`
         if (effectType === 'workBoost') return `${title} — +50% work earnings`
         if (effectType === 'workPenalty') return `${title} — -50% work earnings`
         return title
     }
 
-    const isInstantEvent = activeEvent?.effectType === 'instantCash' || activeEvent?.effectType === 'instantCashLoss'
+    const isInstantEvent = activeEvent?.durationSeconds === 0
+    const balanceColor = balanceFlash === 'down' ? '#e74c3c' : '#333'
+    const repColor = repFlash === 'down' ? '#e74c3c' : '#333'
 
     return (
         <>
@@ -144,10 +166,22 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                 <div className="rank">
                     <img src={starIcon} alt="rank" /> Rank {rank}
                 </div>
-                <div className="balance">
+                <div className="balance" style={{ color: balanceColor, transition: 'color 0.3s ease', position: 'relative' }}>
                     <img src={cashIcon} alt="balance" /> £{displayBalance.toLocaleString()}
+                    {balanceFloat && (
+                        <span key={balanceFloat.id} style={{
+                            position: 'absolute', left: 0, top: 0, width: '100%',
+                            color: balanceFloat.dir === 'down' ? '#e74c3c' : '#888',
+                            animation: 'stat-float-up 0.6s ease-out forwards',
+                            pointerEvents: 'none', whiteSpace: 'nowrap',
+                            display: 'flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <img src={cashIcon} alt="£" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                            £{Math.floor(balanceFloat.value).toLocaleString()}
+                        </span>
+                    )}
                 </div>
-                <div className="reputation">
+                <div className="reputation" style={{ color: repColor, transition: 'color 0.3s ease' }}>
                     <img src={reputationIcon} alt="reputation" /> {displayReputation}
                 </div>
             </div>
@@ -155,36 +189,23 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                 className="MysterySpot"
                 onMouseEnter={() => playHoverSound()}
                 onClick={() => {
-                    if (activeTab === "DepartureBoard") {
-                        playClickSound3();
-                    } else {
-                        playClickSound2();
-                    }
+                    if (activeTab === "DepartureBoard") { playClickSound3(); } else { playClickSound2(); }
                     onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard");
                 }}
-                style={{
-                    backgroundImage: `url(${departureBoardImg})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                }}
+                style={{ backgroundImage: `url(${departureBoardImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
             >
                 <span className="MysterySpotLabel">DEPARTURE BOARD</span>
                 {hasFarewellPending && <span className="departure-badge" />}
             </button>
             {floats.map(f => (
                 <div key={f.id} className="work-float" style={{ left: f.x, top: f.y }}>
-                    {f.isRep ? (
-                        <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                            +<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />5 Reputation
-                        </span>
-                    ) : (
-                        <>
-                            <span className="work-float-phrase">{f.phrase}</span>
-                            <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '0' }}>
-                                +<img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline-block' }} />{workEarnings.toLocaleString()}
-                            </span>
-                        </>
-                    )}
+                    <span className="work-float-phrase">{f.phrase}</span>
+                    <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                        +<img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{workEarnings.toLocaleString()}
+                        {f.hasRep && (
+                            <>&nbsp;+<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />5</>
+                        )}
+                    </span>
                 </div>
             ))}
         </div>

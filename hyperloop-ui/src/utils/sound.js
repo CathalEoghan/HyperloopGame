@@ -55,4 +55,9 @@ export function playOpeningAudio()              { play(openingAudio) }
 export function playDevelopmentUnlockedSound()  { play(developmentUnlocked) }
 export function playDailyLoginSound()           { play(dailyLoginSound) }
 export function playNotEnoughFundsSound()       { play(notEnoughFundsSound) }
-export function playDepartureBoardSound()       { play(departureBoardSound) }
+export function playDepartureBoardSound() {
+    if (!canPlay()) return null
+    const audio = new Audio(departureBoardSound)
+    audio.play().catch(() => {})
+    return audio
+}

@@ -334,6 +334,7 @@ const cityCoordinates = {
     "Skopje":             {"lat": 41.9973,  "lng": 21.4280},
     "Córdoba":            {"lat": -31.4201, "lng": -64.1888},
     "Antarctic Peninsula":{"lat": -67.5,    "lng": -68.0},
+    "Kuching": { lat: 1.5497, lng: 110.3592 },
 
 
 

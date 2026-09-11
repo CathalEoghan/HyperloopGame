@@ -56,9 +56,10 @@ function LegalModal({ onClose }) {
 }
 
 function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave }) {
-    const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '2k')
+    const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '8k')
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
+    const [eventTint, setEventTint] = useState(localStorage.getItem('hyperloop_event_tint') !== 'false')
     const [nameInput, setNameInput] = useState(terminalName)
     const [nameSaved, setNameSaved] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
@@ -85,6 +86,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleSoundToggle = (enabled) => {
         setSoundEnabled(enabled)
         localStorage.setItem('soundEnabled', enabled)
+    }
+
+    const handleEventTintToggle = (enabled) => {
+        setEventTint(enabled)
+        localStorage.setItem('hyperloop_event_tint', enabled)
     }
 
     const handleNameSave = () => {
@@ -186,6 +192,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <div className="settings-options">
                         <OptionBtn active={globeNightMode} onClick={() => handleNightModeChange(true)}>On</OptionBtn>
                         <OptionBtn active={!globeNightMode} onClick={() => handleNightModeChange(false)}>Off</OptionBtn>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Event Screen Tint</span>
+                        <span className="settings-label-desc">Subtle gold or red tint when a positive or negative event is active.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={eventTint} onClick={() => handleEventTintToggle(true)}>On</OptionBtn>
+                        <OptionBtn active={!eventTint} onClick={() => handleEventTintToggle(false)}>Off</OptionBtn>
                     </div>
                 </div>
             </div>
