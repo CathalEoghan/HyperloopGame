@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { playHoverSound, playClickSound2 } from '../utils/sound.js'
+import { playHoverSound, playClickSound2, playFarewellAcceptSound } from '../utils/sound.js'
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
 import './SettingsPage.css'
@@ -151,9 +151,9 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                             onChange={e => { setNameInput(e.target.value); setNameSaved(false) }}
                             onKeyDown={e => e.key === 'Enter' && handleNameSave()}
                         />
-                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={handleNameSave}>
-                            {nameSaved ? '✓ Saved' : 'Save'}
-                        </button>
+                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playFarewellAcceptSound(); handleManualSave(); }}>
+    {manualSaved ? '✓ Saved' : 'Save now'}
+</button>
                     </div>
                 </div>
             </div>

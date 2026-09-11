@@ -317,7 +317,7 @@ const developmentImages = {
     "Swanky Hotel": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SwankyHotel.jpg",
     "Star Architect Recruitment": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/StarArchitectRecruitment.jpg",
     "Advertising Campaign: Norway": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignNorway.jpg",
-    "Advertising Campaign: Portugal": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignPortugal.jpg",
+    "Advertising Campaign: Portugal": "https://res.cloudinary.com/s25xbw85/image/upload/v1788969640/AdvertisingCampaignPortugal.jpg",
     "Tropical Juice Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TropicalJuiceBar.jpg",
     "Salsa Bar": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SalsaBar.jpg",
     "Luxury Jewel Imports": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LuxuryJewelImports.jpg",
