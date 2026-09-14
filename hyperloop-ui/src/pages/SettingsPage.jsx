@@ -4,6 +4,23 @@ import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
 import './SettingsPage.css'
 
+const VERSION_LOG = [
+    {
+        version: 'v1.0',
+        label: 'Initial Release',
+        date: 'September 2026',
+        notes: [
+            '335 cities across 150 countries to collect',
+            'Real-time economy with 181 developments and 157 upgrades',
+            'Departure board with farewell mechanic',
+            'Rank progression and city unlock system',
+            'Random events system',
+            'Offline earnings and full save/export support',
+            'Secret city 👀',
+        ]
+    }
+]
+
 const OptionBtn = ({ active, onClick, children }) => {
     const [hovered, setHovered] = useState(false)
     const bg = active
@@ -151,9 +168,9 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                             onChange={e => { setNameInput(e.target.value); setNameSaved(false) }}
                             onKeyDown={e => e.key === 'Enter' && handleNameSave()}
                         />
-                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playFarewellAcceptSound(); handleManualSave(); }}>
-    {manualSaved ? '✓ Saved' : 'Save now'}
-</button>
+                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={handleNameSave}>
+                            {nameSaved ? '✓ Saved' : 'Save'}
+                        </button>
                     </div>
                 </div>
             </div>
@@ -213,7 +230,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <span className="settings-label-title">Last Saved</span>
                         <span className="settings-label-desc">{formatLastSaved()}</span>
                     </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={handleManualSave}>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playFarewellAcceptSound(); handleManualSave(); }}>
                         {manualSaved ? '✓ Saved' : 'Save now'}
                     </button>
                 </div>
@@ -304,6 +321,24 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => window.open('https://github.com/CathalEoghan/HyperloopGame/issues/new', '_blank')}>Report</button>
                 </div>
             </div>
+
+            <div className="settings-section">
+    <h2 className="settings-section-title">Version Log</h2>
+    {VERSION_LOG.map(entry => (
+        <div key={entry.version} className="version-log-entry">
+            <div className="version-log-header">
+                <span className="version-log-tag">{entry.version}</span>
+                <span className="version-log-label">{entry.label}</span>
+                <span className="version-log-date">{entry.date}</span>
+            </div>
+            <ul className="version-log-notes">
+                {entry.notes.map((note, i) => (
+                    <li key={i}>{note}</li>
+                ))}
+            </ul>
+        </div>
+    ))}
+</div>
         </div>
     )
 }

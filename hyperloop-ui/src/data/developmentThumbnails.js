@@ -225,8 +225,7 @@ import SuperiorCoffeeImports from '../assets/developments-thumb/SuperiorCoffeeIm
 import QualityTropicalFruitImports from '../assets/developments-thumb/QualityTropicalFruitImports.jpg'
 import WinterEscapePackages from '../assets/developments-thumb/WinterEscapePackages.jpg'
 import CaviarBar from '../assets/developments-thumb/CaviarBar.jpg'
-import CrimePreventionCampaign from '../assets/developments-thumb/CarpetEmporium.jpg'
-import CarpetEmporium from '../assets/developments-thumb/QualityTropicalFruitImports.jpg'
+import CarpetEmporium from '../assets/developments-thumb/CarpetEmporium.jpg'
 import ItalianDeli from '../assets/developments-thumb/ItalianDeli.jpg'
 import AntiLitteringCampaign from '../assets/developments-thumb/AntiLitteringCampaign.jpg'
 import CostumeStore from '../assets/developments-thumb/CostumeStore.jpg'
@@ -337,6 +336,7 @@ import JulyTicketDeals from '../assets/developments-thumb/JulyTicketDeals.jpg'
 import ExperimentalTechnology from '../assets/developments-thumb/ExperimentalTechnology.jpg'
 import FoundersHall from '../assets/developments-thumb/FoundersHall.jpg'
 import CommemorativeDisplays from '../assets/developments-thumb/CommemorativeDisplays.jpg'
+import CrimePreventionCampaign from '../assets/developments-thumb/CrimePreventionCampaign.jpg'
 
 
 const developmentImages = {

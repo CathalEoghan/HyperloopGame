@@ -136,3 +136,70 @@
 .settings-save-btn-danger:hover {
     background: #a93226;
 }
+
+/* Version Log */
+.version-log-entry {
+    padding: 20px 20px 16px;
+    border-top: 1px solid #e8d8c8;
+}
+
+.version-log-entry:first-child {
+    border-top: none;
+}
+
+.version-log-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.version-log-tag {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
+    border: 1px solid rgba(245, 166, 35, 0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+}
+
+.version-log-label {
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #222;
+}
+
+.version-log-date {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    color: #999;
+    margin-left: auto;
+}
+
+.version-log-notes {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.version-log-notes li {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #555;
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.5;
+}
+
+.version-log-notes li::before {
+    content: '•';
+    position: absolute;
+    left: 0;
+    color: #f5a623;
+}

@@ -57,16 +57,140 @@ export class EconomyManager {
         return day === 0 || day === 6;
     }
 
-    getSpecialDayMultiplier() {
+    getSpecialDayBonus() {
         const now = new Date();
         const month = now.getMonth();
         const date = now.getDate();
-        if (month === 9 && date === 31 && this.hasUpgradeByName('Halloween Fair')) return 2.0;
-        if (month === 6 && date === 4 && this.hasUpgradeByName('Fourth of July Show')) return 2.0;
-        if (month === 0 && date === 1 && this.hasUpgradeByName("New Year's Celebrations Event")) return 2.0;
-        if (month === 11 && date === 25 && this.hasUpgradeByName('Christmas Day Festival')) return 2.0;
-        if (month === 1 && date === 14 && this.hasUpgradeByName("Valentine's Weekend Sales")) return 2.0;
-        return 1.0;
+        if (month === 9  && date === 31 && this.hasUpgradeByName('Halloween Fair')) return 1.0;
+        if (month === 6  && date === 4  && this.hasUpgradeByName('Fourth of July Show')) return 1.0;
+        if (month === 0  && date === 1  && this.hasUpgradeByName("New Year's Celebrations Event")) return 1.0;
+        if (month === 11 && date === 25 && this.hasUpgradeByName('Christmas Day Festival')) return 1.0;
+        if (month === 1  && date === 14 && this.hasUpgradeByName("Valentine's Weekend Sales")) return 1.0;
+        return 0;
+    }
+
+    getSpecialDayMultiplier() {
+        return 1 + this.getSpecialDayBonus();
+    }
+
+    getTimeOfDayBonus() {
+        const hour = new Date().getHours();
+        let bonus = 0;
+        if (hour >= 6  && hour < 12 && this.hasUpgrade('morningBoost'))   bonus += this.getUpgradeSum('morningBoost');
+        if (hour >= 12 && hour < 18 && this.hasUpgrade('afternoonBoost')) bonus += this.getUpgradeSum('afternoonBoost');
+        if (hour >= 18 && hour < 22 && this.hasUpgrade('eveningBoost'))   bonus += this.getUpgradeSum('eveningBoost');
+        if ((hour >= 22 || hour < 6) && this.hasUpgrade('nightBoost'))    bonus += this.getUpgradeSum('nightBoost');
+        return bonus;
+    }
+
+    getTimeOfDayMultiplier() {
+        return 1 + this.getTimeOfDayBonus();
+    }
+
+    getCurrentSeasonUpgrade() {
+        const month = new Date().getMonth();
+        const seasons = { Spring: [2,3,4], Summer: [5,6,7], Autumn: [8,9,10], Winter: [11,0,1] };
+        const currentSeason = Object.entries(seasons).find(([, months]) => months.includes(month))?.[0];
+        if (!currentSeason) return null;
+        return this.progressionManager.purchasedUpgrades.find(u =>
+            u.effectType === 'seasonBoost' &&
+            u.name.toLowerCase().includes(currentSeason.toLowerCase()) &&
+            !['january','february','march','april','may','june','july','august','september','october','november','december']
+                .some(m => u.name.toLowerCase().includes(m))
+        ) || null;
+    }
+
+    getCurrentMonthUpgrade() {
+        const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const currentMonth = monthNames[new Date().getMonth()];
+        return this.progressionManager.purchasedUpgrades.find(u =>
+            u.effectType === 'seasonBoost' && u.name.includes(currentMonth)
+        ) || null;
+    }
+
+    getCityBoostBreakdown(city, coordinates = null) {
+        const lines = [];
+        let totalBoost = 0;
+
+        const connBoost = this.getUpgradeSum('connectionBoost');
+        if (connBoost > 0) { lines.push(`Connection bonus: +${Math.round(connBoost * 100)}%`); totalBoost += connBoost; }
+
+        const continentUpgrade = this.progressionManager.purchasedUpgrades.find(u =>
+            u.effectType === 'continentBoost' &&
+            u.name.toLowerCase().includes(city.continent?.toLowerCase().split(' ')[0])
+        );
+        if (continentUpgrade) { lines.push(`${continentUpgrade.name}: +${Math.round(continentUpgrade.effectValue * 100)}%`); totalBoost += continentUpgrade.effectValue; }
+
+        const countryAdBoost = this.progressionManager.purchasedUpgrades
+            .filter(u => u.effectType === 'countryAdvertisingBoost' && u.country === city.country)
+            .reduce((sum, u) => sum + u.effectValue, 0);
+        if (countryAdBoost > 0) { lines.push(`Advertising campaign: +${Math.round(countryAdBoost * 100)}%`); totalBoost += countryAdBoost; }
+
+        const homeCity = this.progressionManager.purchasedCities[0];
+        if (homeCity && city.country === homeCity.country) {
+            const localBoost = this.getUpgradeSum('localCountryBoost');
+            if (localBoost > 0) { lines.push(`Local country bonus: +${Math.round(localBoost * 100)}%`); totalBoost += localBoost; }
+        }
+
+        if (city.isSouthern && this.hasUpgrade('southernHemisphereBoost')) {
+            const b = this.getUpgradeSum('southernHemisphereBoost');
+            lines.push(`Southern hemisphere: +${Math.round(b * 100)}%`); totalBoost += b;
+        }
+
+        if (coordinates && coordinates[city.name]) {
+            const lat = coordinates[city.name].lat;
+            if (lat > 60 && this.hasUpgrade('arcticBoost')) {
+                const b = this.getUpgradeSum('arcticBoost');
+                lines.push(`Arctic bonus: +${Math.round(b * 100)}%`); totalBoost += b;
+            }
+            if (Math.abs(lat) <= 23 && this.hasUpgrade('equatorBoost')) {
+                const b = this.getUpgradeSum('equatorBoost');
+                lines.push(`Equator bonus: +${Math.round(b * 100)}%`); totalBoost += b;
+            }
+        }
+
+        const continentExpansionBoost = this.getUpgradeSum('continentExpansionBoost');
+        if (continentExpansionBoost > 0) {
+            const uniqueContinents = new Set(this.progressionManager.purchasedCities.map(c => c.continent)).size;
+            const b = continentExpansionBoost * uniqueContinents;
+            lines.push(`Continent expansion: +${Math.round(b * 100)}%`); totalBoost += b;
+        }
+
+        const countryExpansionBoost = this.getUpgradeSum('countryExpansionBoost');
+        if (countryExpansionBoost > 0) {
+            const uniqueCountries = new Set(this.progressionManager.purchasedCities.map(c => c.country)).size;
+            const b = countryExpansionBoost * uniqueCountries;
+            lines.push(`Country expansion: +${Math.round(b * 100)}%`); totalBoost += b;
+        }
+
+        const seasonUpgrade = this.getCurrentSeasonUpgrade();
+        if (seasonUpgrade) { lines.push(`${seasonUpgrade.name}: +${Math.round(seasonUpgrade.effectValue * 100)}%`); totalBoost += seasonUpgrade.effectValue; }
+
+        const monthUpgrade = this.getCurrentMonthUpgrade();
+        if (monthUpgrade) { lines.push(`${monthUpgrade.name}: +${Math.round(monthUpgrade.effectValue * 100)}%`); totalBoost += monthUpgrade.effectValue; }
+
+        if (city.population < 100000 && this.hasUpgrade('smallCityBoost')) {
+            const b = this.getUpgradeSum('smallCityBoost');
+            lines.push(`Emerging destination: +${Math.round(b * 100)}%`); totalBoost += b;
+        }
+
+        if (this.hasUpgrade('businessWeekBoost') && this.isBusinessWeek()) {
+            const b = this.getUpgradeSum('businessWeekBoost');
+            lines.push(`Business week: +${Math.round(b * 100)}%`); totalBoost += b;
+        }
+
+        if (this.hasUpgrade('weekendBoost') && this.isWeekend()) {
+            const b = this.getUpgradeSum('weekendBoost');
+            lines.push(`Weekend bonus: +${Math.round(b * 100)}%`); totalBoost += b;
+        }
+
+        const specialDayBonus = this.getSpecialDayBonus();
+        if (specialDayBonus > 0) { lines.push(`Special day: +${Math.round(specialDayBonus * 100)}%`); totalBoost += specialDayBonus; }
+
+        const timeBonus = this.getTimeOfDayBonus();
+        if (timeBonus > 0) { lines.push(`Time of day: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
+
+        return { lines, totalBoost };
     }
 
     calculateDevelopmentIncome() {
@@ -101,76 +225,70 @@ export class EconomyManager {
         const popBonus = city.population * POPULATION_INCOME_MODIFIER;
         let income = tierBase + popBonus;
 
-        income *= (1 + this.getUpgradeSum('connectionBoost'));
+        let totalBoost = 0;
+
+        totalBoost += this.getUpgradeSum('connectionBoost');
 
         const continentUpgrade = this.progressionManager.purchasedUpgrades.find(u =>
             u.effectType === 'continentBoost' &&
             u.name.toLowerCase().includes(city.continent?.toLowerCase().split(' ')[0])
         );
-        if (continentUpgrade) income *= (1 + continentUpgrade.effectValue);
+        if (continentUpgrade) totalBoost += continentUpgrade.effectValue;
 
         const countryAdBoost = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'countryAdvertisingBoost' && u.country === city.country)
             .reduce((sum, u) => sum + u.effectValue, 0);
-        if (countryAdBoost > 0) income *= (1 + countryAdBoost);
+        totalBoost += countryAdBoost;
 
         const homeCity = this.progressionManager.purchasedCities[0];
-        if (homeCity && city.country === homeCity.country && homeCity.localCountryBoostValue > 0) {
-            const localBoostCount = this.progressionManager.purchasedUpgrades
-                .filter(u => u.effectType === 'localCountryBoost').length;
-            income *= (1 + homeCity.localCountryBoostValue * localBoostCount);
+        if (homeCity && city.country === homeCity.country) {
+            totalBoost += this.getUpgradeSum('localCountryBoost');
         }
 
         if (city.isSouthern && this.hasUpgrade('southernHemisphereBoost')) {
-            income *= (1 + this.getUpgradeSum('southernHemisphereBoost'));
+            totalBoost += this.getUpgradeSum('southernHemisphereBoost');
         }
 
         if (coordinates && coordinates[city.name]) {
             const lat = coordinates[city.name].lat;
-            if (lat > 60 && this.hasUpgrade('arcticBoost')) {
-                income *= (1 + this.getUpgradeSum('arcticBoost'));
-            }
-            if (Math.abs(lat) <= 23 && this.hasUpgrade('equatorBoost')) {
-                income *= (1 + this.getUpgradeSum('equatorBoost'));
-            }
+            if (lat > 60 && this.hasUpgrade('arcticBoost')) totalBoost += this.getUpgradeSum('arcticBoost');
+            if (Math.abs(lat) <= 23 && this.hasUpgrade('equatorBoost')) totalBoost += this.getUpgradeSum('equatorBoost');
         }
 
         const continentExpansionBoost = this.getUpgradeSum('continentExpansionBoost');
         if (continentExpansionBoost > 0) {
             const uniqueContinents = new Set(this.progressionManager.purchasedCities.map(c => c.continent)).size;
-            income *= (1 + continentExpansionBoost * uniqueContinents);
+            totalBoost += continentExpansionBoost * uniqueContinents;
         }
 
         const countryExpansionBoost = this.getUpgradeSum('countryExpansionBoost');
         if (countryExpansionBoost > 0) {
             const uniqueCountries = new Set(this.progressionManager.purchasedCities.map(c => c.country)).size;
-            income *= (1 + countryExpansionBoost * uniqueCountries);
+            totalBoost += countryExpansionBoost * uniqueCountries;
         }
 
-        if (this.hasUpgrade('seasonBoost')) {
-            const month = new Date().getMonth();
-            const seasons = { Spring: [2,3,4], Summer: [5,6,7], Autumn: [8,9,10], Winter: [11,0,1] };
-            const currentSeason = Object.entries(seasons).find(([, months]) => months.includes(month))?.[0];
-            const seasonUpgrade = this.progressionManager.purchasedUpgrades.find(u =>
-                u.effectType === 'seasonBoost' && u.name.toLowerCase().includes(currentSeason?.toLowerCase())
-            );
-            if (seasonUpgrade) income *= (1 + seasonUpgrade.effectValue);
+        const seasonUpgrade = this.getCurrentSeasonUpgrade();
+        if (seasonUpgrade) totalBoost += seasonUpgrade.effectValue;
+
+        const monthUpgrade = this.getCurrentMonthUpgrade();
+        if (monthUpgrade) totalBoost += monthUpgrade.effectValue;
+
+        if (city.population < 100000 && this.hasUpgrade('smallCityBoost')) {
+            totalBoost += this.getUpgradeSum('smallCityBoost');
         }
 
         if (this.hasUpgrade('businessWeekBoost') && this.isBusinessWeek()) {
-            income *= (1 + this.getUpgradeSum('businessWeekBoost'));
+            totalBoost += this.getUpgradeSum('businessWeekBoost');
         }
 
         if (this.hasUpgrade('weekendBoost') && this.isWeekend()) {
-            income *= (1 + this.getUpgradeSum('weekendBoost'));
+            totalBoost += this.getUpgradeSum('weekendBoost');
         }
 
-        if (city.population < 100000 && this.hasUpgrade('smallCityBoost')) {
-            income *= (1 + this.getUpgradeSum('smallCityBoost'));
-        }
+        totalBoost += this.getSpecialDayBonus();
+        totalBoost += this.getTimeOfDayBonus();
 
-        income *= this.getSpecialDayMultiplier();
-        income *= this.getTimeOfDayMultiplier();
+        income *= (1 + totalBoost);
 
         return income;
     }
@@ -254,26 +372,11 @@ export class EconomyManager {
         return 1;
     }
 
-
     getFoundersHallMultiplier(createdAt) {
         if (!this.hasUpgradeByName("Founders' Hall") || !createdAt) return 1.0;
         const daysActive = Math.floor((Date.now() - createdAt) / 86400000);
         const boostPct = Math.floor(daysActive / 10) * 0.01;
         return 1 + boostPct;
-    }
-
-    getTimeOfDayMultiplier() {
-        const hour = new Date().getHours();
-        let multiplier = 1.0;
-        if (hour >= 6 && hour < 12 && this.hasUpgrade('morningBoost'))
-            multiplier *= (1 + this.getUpgradeSum('morningBoost'));
-        if (hour >= 12 && hour < 18 && this.hasUpgrade('afternoonBoost'))
-            multiplier *= (1 + this.getUpgradeSum('afternoonBoost'));
-        if (hour >= 18 && hour < 22 && this.hasUpgrade('eveningBoost'))
-            multiplier *= (1 + this.getUpgradeSum('eveningBoost'));
-        if ((hour >= 22 || hour < 6) && this.hasUpgrade('nightBoost'))
-            multiplier *= (1 + this.getUpgradeSum('nightBoost'));
-        return multiplier;
     }
 
     getDailyRepBonus(rank) {
