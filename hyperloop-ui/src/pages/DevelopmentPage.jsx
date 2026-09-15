@@ -274,7 +274,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     continentBoost: (v) => `+${Math.round(v * 100)}% income from cities on this continent`,
                                                     countryAdvertisingBoost: (v) => `+${Math.round(v * 100)}% income from cities in this country`,
                                                     localCountryBoost: () => `Bonus income from cities in your home country`,
-                                                    seasonBoost: (v) => `+${Math.round(v * 100)}% income during this season`,
+                                                    seasonBoost: (v, upgrade) => { const months = ['January','February','March','April','May','June','July','August','September','October','November','December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${Math.round(v * 100)}% income during this ${isMonthly ? 'month' : 'season'}`; },
                                                     rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll cities`,
                                                     freeRerollOnRankUp: () => `One free city re-roll each time you rank up`,
                                                     positiveEventBoost: (v) => `+${Math.round(v * 100)}% chance of positive events`,
@@ -303,7 +303,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     personalImageBranding: (v) => `Earn ${Math.round(v * 100)}% of a city's daily income when giving a farewell`,
                                                 }
                                                 const fn = effects[selectedDevelopment.effectType]
-                                                return fn ? fn(selectedDevelopment.effectValue) : 'Special effect'
+                                                return fn ? fn(selectedDevelopment.effectValue, selectedDevelopment) : 'Special effect'
                                             })()}
                                         </p>
                                     )}

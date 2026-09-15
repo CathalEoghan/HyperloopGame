@@ -375,3 +375,5 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         </div>
     )
 }
+
+export default CitiesPage;

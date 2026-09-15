@@ -164,10 +164,18 @@ export class EconomyManager {
         }
 
         const seasonUpgrade = this.getCurrentSeasonUpgrade();
-        if (seasonUpgrade) { lines.push(`${seasonUpgrade.name}: +${Math.round(seasonUpgrade.effectValue * 100)}%`); totalBoost += seasonUpgrade.effectValue; }
+        if (seasonUpgrade) {
+            const month = new Date().getMonth();
+            const sn = month >= 2 && month <= 4 ? 'Spring' : month >= 5 && month <= 7 ? 'Summer' : month >= 8 && month <= 10 ? 'Autumn' : 'Winter';
+            lines.push(`${sn} boost: +${Math.round(seasonUpgrade.effectValue * 100)}%`); totalBoost += seasonUpgrade.effectValue;
+        }
 
         const monthUpgrade = this.getCurrentMonthUpgrade();
-        if (monthUpgrade) { lines.push(`${monthUpgrade.name}: +${Math.round(monthUpgrade.effectValue * 100)}%`); totalBoost += monthUpgrade.effectValue; }
+        if (monthUpgrade) {
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const mn = monthNames[new Date().getMonth()];
+            lines.push(`${mn} boost: +${Math.round(monthUpgrade.effectValue * 100)}%`); totalBoost += monthUpgrade.effectValue;
+        }
 
         if (city.population < 100000 && this.hasUpgrade('smallCityBoost')) {
             const b = this.getUpgradeSum('smallCityBoost');
@@ -187,35 +195,55 @@ export class EconomyManager {
         const specialDayBonus = this.getSpecialDayBonus();
         if (specialDayBonus > 0) { lines.push(`Special day: +${Math.round(specialDayBonus * 100)}%`); totalBoost += specialDayBonus; }
 
+        const hour = new Date().getHours();
+        const timePeriod = hour >= 6 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : hour >= 18 && hour < 22 ? 'Evening' : 'Night';
         const timeBonus = this.getTimeOfDayBonus();
-        if (timeBonus > 0) { lines.push(`Time of day: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
+        if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
 
         return { lines, totalBoost };
     }
 
     calculateDevelopmentIncome() {
-        const devBoostMultiplier = 1 + this.getUpgradeSum('developmentBoost');
+        const devBoost = this.getUpgradeSum('developmentBoost');
 
         const uniqueContinents = new Set(this.progressionManager.purchasedCities.map(c => c.continent)).size;
-        const devContinentBoost = 1 + (this.getUpgradeSum('devContinentBoost') * uniqueContinents);
+        const devContinentBoost = this.getUpgradeSum('devContinentBoost') * uniqueContinents;
 
         const infraCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Infrastructure').length
             + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Infrastructure').length;
-        const infraBoost = 1 + (this.getUpgradeSum('infrastructureDevBoost') * infraCount);
+        const infraBoost = this.getUpgradeSum('infrastructureDevBoost') * infraCount;
 
         const enterpriseCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Enterprise').length
             + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Enterprise').length;
-        const enterpriseBoost = 1 + (this.getUpgradeSum('enterpriseDevBoost') * enterpriseCount);
+        const enterpriseBoost = this.getUpgradeSum('enterpriseDevBoost') * enterpriseCount;
 
         const serviceCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Service').length
             + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Service').length;
-        const serviceBoost = 1 + (this.getUpgradeSum('serviceDevBoost') * serviceCount);
+        const serviceBoost = this.getUpgradeSum('serviceDevBoost') * serviceCount;
+
+        const categoryEffectMap = {
+            'Food': 'foodIncome',
+            'Recreation': 'recreationIncome',
+            'Shopping': 'shoppingIncome',
+            'Service': 'serviceIncome'
+        };
+
+        const seasonUpgrade = this.getCurrentSeasonUpgrade();
+        const seasonBoost = seasonUpgrade ? seasonUpgrade.effectValue : 0;
+        const monthUpgrade = this.getCurrentMonthUpgrade();
+        const monthBoost = monthUpgrade ? monthUpgrade.effectValue : 0;
+        const bizBoost = this.hasUpgrade('businessWeekBoost') && this.isBusinessWeek() ? this.getUpgradeSum('businessWeekBoost') : 0;
+        const wkndBoost = this.hasUpgrade('weekendBoost') && this.isWeekend() ? this.getUpgradeSum('weekendBoost') : 0;
+        const specialBoost = this.getSpecialDayBonus();
+        const timeBoost = this.getTimeOfDayBonus();
 
         let developmentIncome = 0;
         this.progressionManager.purchasedDevelopments.forEach(development => {
             const base = this.getEffectiveDevRevenue(development);
-            const categoryMultiplier = this.getCategoryMultiplier(development.category);
-            developmentIncome += base * categoryMultiplier * devBoostMultiplier * devContinentBoost * infraBoost * enterpriseBoost * serviceBoost;
+            const categoryEffectType = categoryEffectMap[development.category];
+            const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
+            const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost;
+            developmentIncome += base * (1 + totalBoost);
         });
         return developmentIncome;
     }
