@@ -55,7 +55,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const sortedAvailable = filterAndSort([...available])
 
     const totalRevenue = useMemo(() =>
-        purchased.filter(d => d.revenue).reduce((sum, d) => sum + economyManager.getEffectiveDevRevenue(d), 0),
+        purchased.filter(d => d.revenue).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0),
         [purchased]
     )
 
@@ -194,12 +194,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     {selectedDevelopment.revenue ? (
                                         <div style={{ width: '100%', margin: '8px 0' }}>
                                             {(() => {
-                                                const catBoost = economyManager.getCategoryMultiplier(selectedDevelopment.category) - 1
-                                                const devBoost = economyManager.getUpgradeSum('developmentBoost')
-                                                const totalBoostPct = Math.round(((1 + catBoost) * (1 + devBoost) - 1) * 100)
-                                                const tooltipLines = []
-                                                if (catBoost > 0) tooltipLines.push(`${selectedDevelopment.category} bonus: +${Math.round(catBoost * 100)}%`)
-                                                if (devBoost > 0) tooltipLines.push(`Development boost: +${Math.round(devBoost * 100)}%`)
+                                                const { lines: tooltipLines, totalBoost } = economyManager.getDevBoostBreakdown(selectedDevelopment)
+                                                const totalBoostPct = Math.round(totalBoost * 100)
                                                 return (
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #eee', position: 'relative' }}>
                                                         <span style={{ fontSize: '0.85rem', color: '#888' }}>Base Revenue</span>
@@ -236,7 +232,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgraded Revenue</span>
                                                     <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 'bold' }}>
                                                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                                        <span>{economyManager.getEffectiveDevRevenue(selectedDevelopment).toLocaleString()}/day</span>
+                                                        <span>{economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment).toLocaleString()}/day</span>
                                                         <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0,15,50,100][getLevel(selectedDevelopment)]}%)</span>
                                                     </span>
                                                 </div>
@@ -362,7 +358,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             {!isUnderConstruction && (
                                                 <div className="dev-revenue-strip">
                                                     {development.revenue
-                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.getEffectiveDevRevenue(development).toLocaleString()}/day</>
+                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.getEffectiveDevIncomeWithBoosts(development).toLocaleString()}/day</>
                                                         : 'UPGRADE'}
                                                 </div>
                                             )}

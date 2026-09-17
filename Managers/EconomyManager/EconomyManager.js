@@ -66,6 +66,17 @@ export class EconomyManager {
         if (month === 0  && date === 1  && this.hasUpgradeByName("New Year's Celebrations Event")) return 1.0;
         if (month === 11 && date === 25 && this.hasUpgradeByName('Christmas Day Festival')) return 1.0;
         if (month === 1  && date === 14 && this.hasUpgradeByName("Valentine's Weekend Sales")) return 1.0;
+        if (this.hasUpgrade('easterBoost')) {
+            const y = now.getFullYear();
+            const a = y % 19, b = Math.floor(y/100), c = y % 100;
+            const d = Math.floor(b/4), e = b % 4, f = Math.floor((b+8)/25);
+            const g = Math.floor((b-f+1)/3), h = (19*a+b-d-g+15) % 30;
+            const i = Math.floor(c/4), k = c % 4, l = (32+2*e+2*i-h-k) % 7;
+            const m = Math.floor((a+11*h+22*l)/451);
+            const easterMonth = Math.floor((h+l-7*m+114)/31) - 1;
+            const easterDay = ((h+l-7*m+114) % 31) + 1;
+            if (month === easterMonth && date === easterDay) return 1.0;
+        }
         return 0;
     }
 
@@ -106,6 +117,121 @@ export class EconomyManager {
         return this.progressionManager.purchasedUpgrades.find(u =>
             u.effectType === 'seasonBoost' && u.name.includes(currentMonth)
         ) || null;
+    }
+
+
+    getEffectiveDevIncomeWithBoosts(development) {
+        const base = this.getEffectiveDevRevenue(development);
+        if (!base) return 0;
+
+        const categoryEffectMap = {
+            'Food': 'foodIncome',
+            'Recreation': 'recreationIncome',
+            'Shopping': 'shoppingIncome',
+            'Service': 'serviceIncome'
+        };
+
+        const categoryEffectType = categoryEffectMap[development.category];
+        const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
+        const devBoost = this.getUpgradeSum('developmentBoost');
+
+        const uniqueContinents = new Set(this.progressionManager.purchasedCities.map(c => c.continent)).size;
+        const devContinentBoost = this.getUpgradeSum('devContinentBoost') * uniqueContinents;
+
+        const infraCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Infrastructure').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Infrastructure').length;
+        const infraBoost = this.getUpgradeSum('infrastructureDevBoost') * infraCount;
+
+        const enterpriseCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Enterprise').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Enterprise').length;
+        const enterpriseBoost = this.getUpgradeSum('enterpriseDevBoost') * enterpriseCount;
+
+        const serviceCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Service').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Service').length;
+        const serviceBoost = this.getUpgradeSum('serviceDevBoost') * serviceCount;
+
+        const seasonUpgrade = this.getCurrentSeasonUpgrade();
+        const seasonBoost = seasonUpgrade ? seasonUpgrade.effectValue : 0;
+        const monthUpgrade = this.getCurrentMonthUpgrade();
+        const monthBoost = monthUpgrade ? monthUpgrade.effectValue : 0;
+        const bizBoost = this.hasUpgrade('businessWeekBoost') && this.isBusinessWeek() ? this.getUpgradeSum('businessWeekBoost') : 0;
+        const wkndBoost = this.hasUpgrade('weekendBoost') && this.isWeekend() ? this.getUpgradeSum('weekendBoost') : 0;
+        const specialBoost = this.getSpecialDayBonus();
+        const timeBoost = this.getTimeOfDayBonus();
+
+        const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost;
+        return Math.floor(base * (1 + totalBoost));
+    }
+
+
+    getDevBoostBreakdown(development) {
+        const lines = [];
+        let totalBoost = 0;
+
+        const categoryEffectMap = {
+            'Food': 'foodIncome',
+            'Recreation': 'recreationIncome',
+            'Shopping': 'shoppingIncome',
+            'Service': 'serviceIncome'
+        };
+        const categoryEffectType = categoryEffectMap[development.category];
+        const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
+        if (categoryBoost > 0) { lines.push(`${development.category} bonus: +${Math.round(categoryBoost * 100)}%`); totalBoost += categoryBoost; }
+
+        const devBoost = this.getUpgradeSum('developmentBoost');
+        if (devBoost > 0) { lines.push(`Development boost: +${Math.round(devBoost * 100)}%`); totalBoost += devBoost; }
+
+        const uniqueContinents = new Set(this.progressionManager.purchasedCities.map(c => c.continent)).size;
+        const devContinentBoost = this.getUpgradeSum('devContinentBoost') * uniqueContinents;
+        if (devContinentBoost > 0) { lines.push(`Continent connections: +${Math.round(devContinentBoost * 100)}%`); totalBoost += devContinentBoost; }
+
+        const infraCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Infrastructure').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Infrastructure').length;
+        const infraBoost = this.getUpgradeSum('infrastructureDevBoost') * infraCount;
+        if (infraBoost > 0) { lines.push(`Infrastructure count: +${Math.round(infraBoost * 100)}%`); totalBoost += infraBoost; }
+
+        const enterpriseCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Enterprise').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Enterprise').length;
+        const enterpriseBoost = this.getUpgradeSum('enterpriseDevBoost') * enterpriseCount;
+        if (enterpriseBoost > 0) { lines.push(`Enterprise count: +${Math.round(enterpriseBoost * 100)}%`); totalBoost += enterpriseBoost; }
+
+        const serviceCount = this.progressionManager.purchasedDevelopments.filter(d => d.category === 'Service').length
+            + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Service').length;
+        const serviceBoost = this.getUpgradeSum('serviceDevBoost') * serviceCount;
+        if (serviceBoost > 0) { lines.push(`Service count: +${Math.round(serviceBoost * 100)}%`); totalBoost += serviceBoost; }
+
+        const seasonUpgrade = this.getCurrentSeasonUpgrade();
+        if (seasonUpgrade) {
+            const month = new Date().getMonth();
+            const sn = month >= 2 && month <= 4 ? 'Spring' : month >= 5 && month <= 7 ? 'Summer' : month >= 8 && month <= 10 ? 'Autumn' : 'Winter';
+            lines.push(`${sn} boost: +${Math.round(seasonUpgrade.effectValue * 100)}%`); totalBoost += seasonUpgrade.effectValue;
+        }
+
+        const monthUpgrade = this.getCurrentMonthUpgrade();
+        if (monthUpgrade) {
+            const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+            const mn = monthNames[new Date().getMonth()];
+            lines.push(`${mn} boost: +${Math.round(monthUpgrade.effectValue * 100)}%`); totalBoost += monthUpgrade.effectValue;
+        }
+
+        if (this.hasUpgrade('businessWeekBoost') && this.isBusinessWeek()) {
+            const b = this.getUpgradeSum('businessWeekBoost');
+            lines.push(`Business week: +${Math.round(b * 100)}%`); totalBoost += b;
+        }
+        if (this.hasUpgrade('weekendBoost') && this.isWeekend()) {
+            const b = this.getUpgradeSum('weekendBoost');
+            lines.push(`Weekend bonus: +${Math.round(b * 100)}%`); totalBoost += b;
+        }
+
+        const specialBonus = this.getSpecialDayBonus();
+        if (specialBonus > 0) { lines.push(`Special day: +${Math.round(specialBonus * 100)}%`); totalBoost += specialBonus; }
+
+        const hour = new Date().getHours();
+        const timePeriod = hour >= 6 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : hour >= 18 && hour < 22 ? 'Evening' : 'Night';
+        const timeBonus = this.getTimeOfDayBonus();
+        if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
+
+        return { lines, totalBoost };
     }
 
     getCityBoostBreakdown(city, coordinates = null) {

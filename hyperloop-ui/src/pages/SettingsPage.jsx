@@ -6,6 +6,26 @@ import './SettingsPage.css'
 
 const VERSION_LOG = [
     {
+        version: 'v1.1',
+        label: 'Economy & Polish',
+        date: 'September 2026',
+        notes: [
+            'Linear economy system — all bonuses now stack additively',
+            'Seasonal and monthly boosts now apply correctly to the current season/month only',
+            'Time of day, business week and weekend boosts now apply to developments',
+            'Easter bonus now calculated algorithmically',
+            'City and development income tooltips showing full boost breakdown',
+            'Progress page overhauled with full active bonus tracking',
+            'Events system fully wired up — tint, indicator and modal now in sync',
+            'Departure board now generates on startup, not just when opened',
+            'Home city developments no longer appear in the reveal queue',
+            'Farewell countdown now uses actual remaining time',
+            'Accent-insensitive city and country search',
+            'Balance and reputation flash red on decrease',
+            'Version log added to settings',
+        ]
+    },
+    {
         version: 'v1.0',
         label: 'Initial Release',
         date: 'September 2026',
@@ -34,7 +54,7 @@ const OptionBtn = ({ active, onClick, children }) => {
             onMouseEnter={() => { playHoverSound(); setHovered(true) }}
             onMouseLeave={() => setHovered(false)}
             style={{ background: bg || undefined, color: color || undefined, borderColor: border || undefined }}
-            onClick={onClick}
+            onClick={() => { playClickSound2(); onClick(); }}
         >
             {children}
         </button>
@@ -168,7 +188,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                             onChange={e => { setNameInput(e.target.value); setNameSaved(false) }}
                             onKeyDown={e => e.key === 'Enter' && handleNameSave()}
                         />
-                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={handleNameSave}>
+                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); handleNameSave(); }}>
                             {nameSaved ? '✓ Saved' : 'Save'}
                         </button>
                     </div>
@@ -239,7 +259,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <span className="settings-label-title">Export Save</span>
                         <span className="settings-label-desc">Download your save as a JSON file to back it up or move to another device.</span>
                     </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={onExportSave}>Export</button>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onExportSave(); }}>Export</button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
@@ -248,7 +268,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         {importError && <span className="settings-label-desc" style={{ color: '#c0392b' }}>{importError}</span>}
                     </div>
                     <input type="file" accept=".json" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImport} />
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => fileInputRef.current.click()}>Import</button>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); fileInputRef.current.click(); }}>Import</button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
@@ -262,7 +282,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                                 onMouseEnter={() => { playHoverSound(); setConfirmDeleteHover(true) }}
                                 onMouseLeave={() => setConfirmDeleteHover(false)}
                                 style={{ background: confirmDeleteHover ? '#a93226' : '#c0392b' }}
-                                onClick={onDeleteSave}
+                                onClick={() => { playClickSound2(); onDeleteSave(); }}
                             >
                                 Confirm Delete
                             </button>
@@ -271,7 +291,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                                 onMouseEnter={() => { playHoverSound(); setCancelHover(true) }}
                                 onMouseLeave={() => setCancelHover(false)}
                                 style={{ background: cancelHover ? '#666' : '#888' }}
-                                onClick={() => setConfirmDelete(false)}
+                                onClick={() => { playClickSound2(); setConfirmDelete(false); }}
                             >
                                 Cancel
                             </button>
@@ -282,7 +302,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                             onMouseEnter={() => { playHoverSound(); setDeleteHover(true) }}
                             onMouseLeave={() => setDeleteHover(false)}
                             style={{ background: deleteHover ? '#a93226' : '#c0392b' }}
-                            onClick={() => setConfirmDelete(true)}
+                            onClick={() => { playClickSound2(); setConfirmDelete(true); }}
                         >
                             Delete
                         </button>
@@ -297,48 +317,48 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <span className="settings-label-title">Game Guide</span>
                         <span className="settings-label-desc">Learn how to play Hyperloop Empire.</span>
                     </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => setShowGuide(true)}>Guide</button>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowGuide(true); }}>Guide</button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Credits</span>
                         <span className="settings-label-desc">Photo and sound attribution.</span>
                     </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => setShowCredits(true)}>Credits</button>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowCredits(true); }}>Credits</button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Legal & Privacy</span>
                         <span className="settings-label-desc">Data storage, content licencing and disclaimer.</span>
                     </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => setShowLegal(true)}>View</button>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowLegal(true); }}>View</button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Report a Bug</span>
                         <span className="settings-label-desc">Found something broken? Let us know.</span>
                     </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => window.open('https://github.com/CathalEoghan/HyperloopGame/issues/new', '_blank')}>Report</button>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); window.open('https://github.com/CathalEoghan/HyperloopGame/issues/new', '_blank'); }}>Report</button>
                 </div>
             </div>
 
             <div className="settings-section">
-    <h2 className="settings-section-title">Version Log</h2>
-    {VERSION_LOG.map(entry => (
-        <div key={entry.version} className="version-log-entry">
-            <div className="version-log-header">
-                <span className="version-log-tag">{entry.version}</span>
-                <span className="version-log-label">{entry.label}</span>
-                <span className="version-log-date">{entry.date}</span>
-            </div>
-            <ul className="version-log-notes">
-                {entry.notes.map((note, i) => (
-                    <li key={i}>{note}</li>
+                <h2 className="settings-section-title">Version Log</h2>
+                {VERSION_LOG.map(entry => (
+                    <div key={entry.version} className="version-log-entry">
+                        <div className="version-log-header">
+                            <span className="version-log-tag">{entry.version}</span>
+                            <span className="version-log-label">{entry.label}</span>
+                            <span className="version-log-date">{entry.date}</span>
+                        </div>
+                        <ul className="version-log-notes">
+                            {entry.notes.map((note, i) => (
+                                <li key={i}>{note}</li>
+                            ))}
+                        </ul>
+                    </div>
                 ))}
-            </ul>
-        </div>
-    ))}
-</div>
+            </div>
         </div>
     )
 }

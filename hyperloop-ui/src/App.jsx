@@ -99,6 +99,15 @@ function App() {
   });
   const [activeDelay, setActiveDelay] = useState(null);
   const [devRevealQueue, setDevRevealQueue] = useState(() => {
+    // Mark home city rewards as shown BEFORE building the queue
+    if (progressionManager.purchasedCities.length > 0) {
+      const homeCity = progressionManager.purchasedCities[0];
+      const shownEarly = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]');
+      homeCity.rewards.forEach(r => {
+        if (!shownEarly.includes(r.name)) shownEarly.push(r.name);
+      });
+      localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shownEarly));
+    }
     const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
     const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
     if (progressionManager.purchasedCities.length <= 1) return []
@@ -156,16 +165,49 @@ function App() {
   const departureBoardAudioRef = useRef(null);
   const gameStartTime = useRef(Date.now());
 
-  // Mark home city rewards as shown so they never appear in dev reveal queue
+
+  // Generate departure schedule on startup if it doesn't exist yet
   useEffect(() => {
-    if (progressionManager.purchasedCities.length > 0) {
-      const homeCity = progressionManager.purchasedCities[0];
-      const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]');
-      homeCity.rewards.forEach(r => {
-        if (!shown.includes(r.name)) shown.push(r.name);
-      });
-      localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shown));
-    }
+    const today = new Date().toDateString();
+    const key = `departures_${today}`;
+    if (localStorage.getItem(key) || progressionManager.purchasedCities.length <= 1) return;
+    const homeCity = progressionManager.purchasedCities[0];
+    const departureCities = progressionManager.purchasedCities.filter(c => !homeCity || c.name !== homeCity.name);
+    const shuffled = [...departureCities].sort(() => Math.random() - 0.5).slice(0, Math.min(100, departureCities.length));
+    const totalMinutes = 24 * 60;
+    const slotSize = Math.floor(totalMinutes / shuffled.length);
+    const numGates = 30;
+    const gateLastUsed = new Array(numGates + 1).fill(-Infinity);
+    const departures = [];
+    shuffled.forEach((city, i) => {
+      const slotStart = i * slotSize;
+      const slotEnd = Math.min(slotStart + slotSize, totalMinutes - 1);
+      let minuteOfDay = Math.floor((slotStart + Math.floor(Math.random() * (slotEnd - slotStart))) / 5) * 5;
+      if (departures.length > 0) {
+        const lastTime = departures[departures.length - 1].minuteOfDay;
+        if (minuteOfDay - lastTime < 10) minuteOfDay = Math.ceil((lastTime + 10) / 5) * 5;
+      }
+      const availableGates = [];
+      for (let g = 1; g <= numGates; g++) {
+        if (minuteOfDay - gateLastUsed[g] >= 30) availableGates.push(g);
+      }
+      let gate;
+      if (availableGates.length > 0) {
+        gate = availableGates[Math.floor(Math.random() * availableGates.length)];
+      } else {
+        let earliest = Infinity;
+        for (let g = 1; g <= numGates; g++) {
+          if (gateLastUsed[g] < earliest) { earliest = gateLastUsed[g]; gate = g; }
+        }
+      }
+      gateLastUsed[gate] = minuteOfDay;
+      const hour = Math.floor(minuteOfDay / 60);
+      const minute = minuteOfDay % 60;
+      const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      departures.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay, gate });
+    });
+    departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay);
+    if (departures.length > 0) localStorage.setItem(key, JSON.stringify(departures));
   }, []);
 
   // Immediate rank detection on load (catches offline rank ups)
@@ -188,11 +230,10 @@ function App() {
     if (lastLogin === today) return;
     localStorage.setItem('hyperloop_last_login', today);
     const hasCommemorativeDisplays = progressionManager.purchasedDevelopments.some(d => d.name === 'Commemorative Displays');
-    const hasPassengerLoyalty = progressionManager.purchasedUpgrades.some(u => u.name === 'Passenger Loyalty Scheme');
     const hasDailyRepDoubled = progressionManager.purchasedUpgrades.some(u => u.effectType === 'dailyRepDoubled');
     const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
     const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
-    let repBonus = hasPassengerLoyalty ? 5 : 0;
+    let repBonus = economyManager.getUpgradeSum('dailyLoginRep');
     if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
     setDailyLoginData({ cashBonus, repBonus });
   }, []);

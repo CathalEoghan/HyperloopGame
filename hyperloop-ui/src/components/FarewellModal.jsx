@@ -6,6 +6,7 @@ import './FarewellModal.css'
 
 function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const [secondsLeft, setSecondsLeft] = useState(() => {
+        if (departure.expiresAt) return Math.max(30, Math.floor((departure.expiresAt - Date.now()) / 1000));
         if (departure.secondsRemaining) return departure.secondsRemaining;
         const extensionCount = economyManager?.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'farewellWindowExtension').length || 0
