@@ -8,5 +8,5 @@ export const advertisingCampaignJapan = new Upgrade(
     "Enterprise",
     "countryAdvertisingBoost",
     0.25,
-    "Poland"
+    "Japan"
 );

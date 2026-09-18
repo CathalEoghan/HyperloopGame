@@ -4,7 +4,7 @@ import { allUpgrades } from '../UpgradeManager/UpgradeRegistry.js'
 
 const SAVE_KEY = 'hyperloop_save'
 const MAX_BALANCE = 999_000_000_000
-const MAX_RANK = 100
+const MAX_RANK = 335
 
 // Simple checksum — hash key fields into a reproducible string
 function computeChecksum(save) {

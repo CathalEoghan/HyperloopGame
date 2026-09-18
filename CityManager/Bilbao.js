@@ -1,12 +1,12 @@
 
 // Bilbao
 import { City } from "./City.js";
-import { muralCommissions } from "../UpgradeManager/MuralCommissions.js";
+import { advertisingCampaignSpain } from "../UpgradeManager/AdvertisingCampaignSpain.js";
 
 export const Bilbao = new City(
     "Bilbao",
     1030000,
-    [muralCommissions],
+    [advertisingCampaignSpain],
     "Spain",
     "Europe",
     2,
