@@ -4,6 +4,7 @@ import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
+import cityCoordinates from '../data/cityCoordinates.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import { playClickSound2, playConstructionSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
@@ -19,6 +20,9 @@ const CONTINENT_COLOURS = {
     'Oceania': '#16a085',
     'All': '#444'
 }
+
+const normalise = (str) =>
+    str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, homeCity, onSave }) {
     const [selectedCity, setSelectedCity] = useState(null)
@@ -54,7 +58,10 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const applyFilters = (cities) => {
         let result = cities
         if (activeContinent !== 'All') result = result.filter(c => c.continent === activeContinent)
-        if (search.trim()) result = result.filter(c => c.name.toLowerCase().includes(search.toLowerCase()))
+        if (search.trim()) result = result.filter(c =>
+            normalise(c.name).includes(normalise(search)) ||
+            normalise(c.country).includes(normalise(search))
+        )
         return sortCities(result)
     }
 
@@ -155,7 +162,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     <input
                         className="city-search"
                         type="text"
-                        placeholder="Search cities..."
+                        placeholder="Search cities or countries..."
                         value={search}
                         onChange={e => setSearch(e.target.value)}
                     />
@@ -222,41 +229,11 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <p><strong>Country</strong>: {selectedCity.country}</p>
                                     <p><strong>Population</strong>: {selectedCity.population.toLocaleString()}</p>
                                     {(() => {
-                                        const TIER_INCOME = { 1: 10000, 2: 50000, 3: 100000 }
-                                        const baseIncome = (TIER_INCOME[selectedCity.tier] || 0) + selectedCity.population * 0.0001
-                                        const effectiveIncome = economyManager.calculateCityIncome(selectedCity)
-                                        const boostPct = Math.round(((effectiveIncome / baseIncome) - 1) * 100)
-                                        const lines = []
-                                        const connBoost = economyManager.getUpgradeSum('connectionBoost')
-                                        if (connBoost > 0) lines.push(`Connection bonus: +${Math.round(connBoost * 100)}%`)
-                                        const contExp = economyManager.getUpgradeSum('continentExpansionBoost')
-                                        if (contExp > 0) {
-                                            const uniqueCont = new Set(economyManager.progressionManager.purchasedCities.map(c => c.continent)).size
-                                            lines.push(`Continent expansion: +${Math.round(contExp * uniqueCont * 100)}%`)
-                                        }
-                                        const countryExp = economyManager.getUpgradeSum('countryExpansionBoost')
-                                        if (countryExp > 0) {
-                                            const uniqueCountries = new Set(economyManager.progressionManager.purchasedCities.map(c => c.country)).size
-                                            lines.push(`Country expansion: +${Math.round(countryExp * uniqueCountries * 100)}%`)
-                                        }
-                                        const seasonBoost = economyManager.getUpgradeSum('seasonBoost')
-                                        if (seasonBoost > 0) lines.push(`Seasonal bonus: +${Math.round(seasonBoost * 100)}%`)
-                                        const bizBoost = economyManager.getUpgradeSum('businessWeekBoost')
-                                        if (bizBoost > 0 && economyManager.isBusinessWeek()) lines.push(`Business week: +${Math.round(bizBoost * 100)}%`)
-                                        const countryAdBoost = economyManager.getUpgradeSum('countryAdvertisingBoost')
-                                        if (countryAdBoost > 0) {
-                                            const hasAdForCountry = economyManager.progressionManager.purchasedUpgrades.some(
-                                                u => u.effectType === 'countryAdvertisingBoost' && u.name.includes(selectedCity.country)
-                                            )
-                                            if (hasAdForCountry) lines.push(`Advertising campaign: +${Math.round(countryAdBoost * 100)}%`)
-                                        }
-                                        const arcticBoost = economyManager.getUpgradeSum('arcticBoost')
-                                        if (arcticBoost > 0 && selectedCity.lat && selectedCity.lat > 60) lines.push(`Arctic bonus: +${Math.round(arcticBoost * 100)}%`)
-                                        const equatorBoost = economyManager.getUpgradeSum('equatorBoost')
-                                        if (equatorBoost > 0 && selectedCity.lat && Math.abs(selectedCity.lat) < 23.5) lines.push(`Equator bonus: +${Math.round(equatorBoost * 100)}%`)
-                                        const localBoost = economyManager.getUpgradeSum('localCountryBoost')
-                                        const homeCity = economyManager.progressionManager.purchasedCities[0]
-                                        if (localBoost > 0 && homeCity && selectedCity.country === homeCity.country) lines.push(`Local country bonus: +${Math.round(localBoost * 100)}%`)
+                                        const coords = cityCoordinates[selectedCity.name]
+                                        const coordsMap = coords ? { [selectedCity.name]: coords } : null
+                                        const effectiveIncome = economyManager.calculateCityIncome(selectedCity, coordsMap)
+                                        const { lines, totalBoost } = economyManager.getCityBoostBreakdown(selectedCity, coordsMap)
+                                        const boostPct = Math.round(totalBoost * 100)
                                         return (
                                             <p>
                                                 Earning{' '}
@@ -399,4 +376,4 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     )
 }
 
-export default CitiesPage
+export default CitiesPage;

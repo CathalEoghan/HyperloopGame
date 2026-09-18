@@ -3,10 +3,10 @@
     color: #f5a623;
     font-family: 'Courier New', Courier, monospace;
     padding: 24px;
-    min-height: 100vh;
+    min-height: calc(100vh - 116px);
     padding-bottom: 116px;
-    /* Force the dark background to fill everything */
     position: relative;
+    overflow: hidden;
 }
 
 .board-title {

@@ -6,6 +6,6 @@ export const complementaryAfternoonStaffMeals = new Upgrade(
     "Complementary Afternoon Staff Meals",
     71000,
     "Enterprise",
-    "offlineCapExtension",
-    86400
+    "afternoonBoost",
+    0.15
 )

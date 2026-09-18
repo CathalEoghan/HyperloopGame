@@ -6,6 +6,6 @@ export const businessLoungeExpansions = new Upgrade(
     "Business Lounge Expansions",
     100300,
     "Infrastructure",
-    "connectionBoost",
-    0.1
+    "infrastructureDevBoost",
+    0.025
 );

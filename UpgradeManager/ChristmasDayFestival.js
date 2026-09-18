@@ -6,6 +6,6 @@ export const christmasDayFestival = new Upgrade(
     "Christmas Day Festival",
     105000,
     "Recreation",
-    "farewellWindowExtension",
-    5
+    "christmasBoost",
+    1.0
 );

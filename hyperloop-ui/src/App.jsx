@@ -30,7 +30,7 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
@@ -57,10 +57,13 @@ function App() {
     if (!hiddenAt) return null;
     const totalSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
     if (totalSeconds < 60) return null;
-    const incomePerSecond = economyManager.calculateDailyIncome();
+    const savedCreatedAt = savedData?.createdAt || Date.now();
+    const savedEvent = economyManager.activeEvent;
+    economyManager.activeEvent = null;
+    const incomePerSecond = economyManager.calculateDailyIncome(null, savedCreatedAt);
+    economyManager.activeEvent = savedEvent;
     const offlineIncome = incomePerSecond * totalSeconds * OFFLINE_RATE;
     if (offlineIncome < 1) return null;
-    progressionManager.addCash(offlineIncome);
     return { offlineSeconds: totalSeconds, offlineIncome };
   });
 
@@ -96,6 +99,15 @@ function App() {
   });
   const [activeDelay, setActiveDelay] = useState(null);
   const [devRevealQueue, setDevRevealQueue] = useState(() => {
+    // Mark home city rewards as shown BEFORE building the queue
+    if (progressionManager.purchasedCities.length > 0) {
+      const homeCity = progressionManager.purchasedCities[0];
+      const shownEarly = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]');
+      homeCity.rewards.forEach(r => {
+        if (!shownEarly.includes(r.name)) shownEarly.push(r.name);
+      });
+      localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shownEarly));
+    }
     const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
     const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
     if (progressionManager.purchasedCities.length <= 1) return []
@@ -117,13 +129,14 @@ function App() {
       return { ...event, durationSeconds: Math.floor((event.expiresAt - Date.now()) / 1000) }
     } catch { return null }
   });
+  const [showEventModal, setShowEventModal] = useState(false);
   const [dailyLoginData, setDailyLoginData] = useState(null);
   const [showMobileWarning, setShowMobileWarning] = useState(() => window.innerWidth < 900);
   const [showSecretCityModal, setShowSecretCityModal] = useState(false);
   const secretCityTriggered = useRef(false);
   const claimedCityRef = useRef(null);
 
-  const activeEventRef = useRef(() => {
+  const activeEventRef = useRef((() => {
     const saved = localStorage.getItem('hyperloop_active_event')
     if (!saved) return null
     try {
@@ -131,7 +144,8 @@ function App() {
       if (Date.now() > event.expiresAt) return null
       return event
     } catch { return null }
-  });
+  })());
+
   const prevUnlockedDevCount = useRef(progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length);
   const triggeredDepartures = useRef(new Set(
     JSON.parse(localStorage.getItem('hyperloop_triggered_departures') || '[]')
@@ -146,6 +160,55 @@ function App() {
   const lastTickTimeRef = useRef(Date.now());
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
   const lastModalClearedAt = useRef(Date.now() + 180000);
+  const lastEventTime = useRef(Date.now());
+  const rankSetRef = useRef(rankManager.rank);
+  const departureBoardAudioRef = useRef(null);
+  const gameStartTime = useRef(Date.now());
+
+
+  // Generate departure schedule on startup if it doesn't exist yet
+  useEffect(() => {
+    const today = new Date().toDateString();
+    const key = `departures_${today}`;
+    if (localStorage.getItem(key) || progressionManager.purchasedCities.length <= 1) return;
+    const homeCity = progressionManager.purchasedCities[0];
+    const departureCities = progressionManager.purchasedCities.filter(c => !homeCity || c.name !== homeCity.name);
+    const shuffled = [...departureCities].sort(() => Math.random() - 0.5).slice(0, Math.min(100, departureCities.length));
+    const totalMinutes = 24 * 60;
+    const slotSize = Math.floor(totalMinutes / shuffled.length);
+    const numGates = 30;
+    const gateLastUsed = new Array(numGates + 1).fill(-Infinity);
+    const departures = [];
+    shuffled.forEach((city, i) => {
+      const slotStart = i * slotSize;
+      const slotEnd = Math.min(slotStart + slotSize, totalMinutes - 1);
+      let minuteOfDay = Math.floor((slotStart + Math.floor(Math.random() * (slotEnd - slotStart))) / 5) * 5;
+      if (departures.length > 0) {
+        const lastTime = departures[departures.length - 1].minuteOfDay;
+        if (minuteOfDay - lastTime < 10) minuteOfDay = Math.ceil((lastTime + 10) / 5) * 5;
+      }
+      const availableGates = [];
+      for (let g = 1; g <= numGates; g++) {
+        if (minuteOfDay - gateLastUsed[g] >= 30) availableGates.push(g);
+      }
+      let gate;
+      if (availableGates.length > 0) {
+        gate = availableGates[Math.floor(Math.random() * availableGates.length)];
+      } else {
+        let earliest = Infinity;
+        for (let g = 1; g <= numGates; g++) {
+          if (gateLastUsed[g] < earliest) { earliest = gateLastUsed[g]; gate = g; }
+        }
+      }
+      gateLastUsed[gate] = minuteOfDay;
+      const hour = Math.floor(minuteOfDay / 60);
+      const minute = minuteOfDay % 60;
+      const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+      departures.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay, gate });
+    });
+    departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay);
+    if (departures.length > 0) localStorage.setItem(key, JSON.stringify(departures));
+  }, []);
 
   // Immediate rank detection on load (catches offline rank ups)
   useEffect(() => {
@@ -167,11 +230,10 @@ function App() {
     if (lastLogin === today) return;
     localStorage.setItem('hyperloop_last_login', today);
     const hasCommemorativeDisplays = progressionManager.purchasedDevelopments.some(d => d.name === 'Commemorative Displays');
-    const hasPassengerLoyalty = progressionManager.purchasedUpgrades.some(u => u.name === 'Passenger Loyalty Scheme');
     const hasDailyRepDoubled = progressionManager.purchasedUpgrades.some(u => u.effectType === 'dailyRepDoubled');
-    const dailyIncome = economyManager.calculateDailyIncome() * 86400;
+    const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
     const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
-    let repBonus = hasPassengerLoyalty ? 5 : 0;
+    let repBonus = economyManager.getUpgradeSum('dailyLoginRep');
     if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
     setDailyLoginData({ cashBonus, repBonus });
   }, []);
@@ -193,12 +255,9 @@ function App() {
     }
   });
 
-
   const injectCityIntoSchedule = (city) => {
     const todayKey = new Date().toDateString();
     const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
-
-    // No schedule yet — store as pending for DepartureBoard to pick up
     if (schedule.length === 0) {
       const pending = JSON.parse(localStorage.getItem('hyperloop_pending_injections') || '[]');
       if (!pending.includes(city.name)) {
@@ -207,18 +266,12 @@ function App() {
       }
       return;
     }
-
-    // Don't add if already in schedule
     if (schedule.some(e => e.name === city.name)) return;
-
     const now = new Date();
     const currentMins = now.getHours() * 60 + now.getMinutes();
     const minFutureMins = currentMins + 30;
     const maxMins = 23 * 60 + 30;
-
-    if (minFutureMins >= maxMins) return; // too late in the day
-
-    // Find a slot at least 30 mins from now with 10 min gap from other departures
+    if (minFutureMins >= maxMins) return;
     let newMinutes = Math.ceil((minFutureMins + Math.floor(Math.random() * 30)) / 5) * 5;
     let attempts = 0;
     while (attempts < 24) {
@@ -228,18 +281,14 @@ function App() {
       attempts++;
     }
     if (newMinutes > maxMins) return;
-
-    // Find an available gate
     const usedGates = new Set(schedule.map(e => e.gate));
     let gate = Math.floor(Math.random() * 30) + 1;
     for (let g = 1; g <= 30; g++) {
       if (!usedGates.has(g)) { gate = g; break; }
     }
-
     const hour = Math.floor(newMinutes / 60);
     const minute = newMinutes % 60;
     const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-
     const newEntry = { name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay: newMinutes, gate };
     const updated = [...schedule, newEntry].sort((a, b) => a.minuteOfDay - b.minuteOfDay);
     localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
@@ -255,7 +304,8 @@ function App() {
       const now2 = Date.now();
       const elapsed = Math.min((now2 - lastTickTimeRef.current) / 1000, 10);
       lastTickTimeRef.current = now2;
-      const incomePerSecond = economyManager.calculateDailyIncome();
+      const savedCreatedAt = savedData?.createdAt || Date.now();
+      const incomePerSecond = economyManager.calculateDailyIncome(null, savedCreatedAt);
       progressionManager.addCash(incomePerSecond * elapsed);
       rankManager.convertCashToXP(progressionManager.totalCashEarned);
       const previousRank = rankManager.rank;
@@ -271,15 +321,12 @@ function App() {
       const currentUnlockedCount = currentUnlocked.length;
       if (currentUnlockedCount > prevUnlockedDevCount.current) {
         if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
-          const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
           const newOnes = currentUnlocked.slice(prevUnlockedDevCount.current);
           setDevRevealQueue(q => [...q, ...newOnes]);
-          // Don't pre-mark as shown — they'll be marked when dismissed
         }
         prevUnlockedDevCount.current = currentUnlockedCount;
       }
 
-      // Detect newly completed upgrades and show reveal modal
       if (progressionManager.purchasedUpgrades.length > prevUpgradesCount.current) {
         const newUpgrades = progressionManager.purchasedUpgrades.slice(prevUpgradesCount.current);
         newUpgrades.forEach(upgrade => {
@@ -288,14 +335,12 @@ function App() {
         prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
       }
 
-      // Detect all 335 non-secret cities connected
       const nonSecretPurchased = progressionManager.purchasedCities.filter(c => c.continent !== 'Antarctica');
       if (nonSecretPurchased.length === 335 && !secretCityTriggered.current) {
         secretCityTriggered.current = true;
         setShowSecretCityModal(true);
       }
 
-      // Inject newly connected cities into today's departure schedule
       if (progressionManager.purchasedCities.length > prevPurchasedCount.current) {
         const newCities = progressionManager.purchasedCities.slice(prevPurchasedCount.current);
         const homeCity = progressionManager.purchasedCities[0];
@@ -386,57 +431,61 @@ function App() {
       // Sync active event to EconomyManager
       economyManager.activeEvent = activeEventRef.current;
 
-      // Random event trigger — rank 3+ only
-      if (Math.random() < 0.002 && !activeEventRef.current && rankSet >= 3 && Date.now() > lastModalClearedAt.current) {
+      // Event trigger — rank 2+, 1 min into game, 3 min after modals, guaranteed every 5 min
+      const timeSinceLastEvent = Date.now() - lastEventTime.current;
+      const forceEvent = timeSinceLastEvent > 300000;
+      if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= 2 && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
+        lastEventTime.current = Date.now();
         const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
         const event = getRandomEvent(positiveOnly);
 
-        // Skip negative events based on negativeEventReduction
-        if (event.type === 'negative') {
-          const reduction = economyManager.getUpgradeSum('negativeEventReduction');
-          if (Math.random() < reduction) return;
-        }
+        const skipEvent = event.type === 'negative' && Math.random() < economyManager.getUpgradeSum('negativeEventReduction');
+        if (!skipEvent) {
+          const bonusExtension = event.type === 'positive'
+            ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
+            : 1;
+          const durationSeconds = Math.floor(event.duration() * bonusExtension);
 
-        // bonusDurationExtension only applies to positive events
-        const bonusExtension = event.type === 'positive'
-          ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
-          : 1;
-        const durationSeconds = Math.floor(event.duration() * bonusExtension);
-
-        if (event.effectType === 'instantCash') {
-          const bonus = Math.floor(economyManager.calculateDailyIncome() * SECONDS_IN_A_DAY * 0.1);
-          progressionManager.addCash(bonus);
-          const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
-          activeEventRef.current = fullEvent;
-          localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
-          playEventSound();
-          setActiveEvent(fullEvent);
-          setTimeout(() => { activeEventRef.current = null; setActiveEvent(null); localStorage.removeItem('hyperloop_active_event'); }, 8000);
-        } else if (event.effectType === 'instantCashLoss') {
-          const loss = Math.floor(economyManager.calculateDailyIncome() * SECONDS_IN_A_DAY * 0.1);
-          progressionManager.addCash(-loss);
-          const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
-          activeEventRef.current = fullEvent;
-          playEventSound();
-          setActiveEvent(fullEvent);
-          setTimeout(() => { activeEventRef.current = null; setActiveEvent(null); }, 8000);
-        } else {
-          const fullEvent = { ...event, durationSeconds, expiresAt: Date.now() + durationSeconds * 1000 };
-          activeEventRef.current = fullEvent;
-          localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
-          playEventSound();
-          setActiveEvent(fullEvent);
-          setTimeout(() => {
-            activeEventRef.current = null;
-            setActiveEvent(null);
-            localStorage.removeItem('hyperloop_active_event');
-          }, durationSeconds * 1000);
+          if (event.effectType === 'instantCash') {
+            const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1);
+            progressionManager.addCash(bonus);
+            const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
+            activeEventRef.current = fullEvent;
+            localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+            playEventSound();
+            setActiveEvent(fullEvent);
+            setShowEventModal(true);
+            setTimeout(() => { activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event'); }, 8000);
+          } else if (event.effectType === 'instantCashLoss') {
+            const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
+            progressionManager.addCash(-loss);
+            const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
+            activeEventRef.current = fullEvent;
+            playEventSound();
+            setActiveEvent(fullEvent);
+            setShowEventModal(true);
+            setTimeout(() => { activeEventRef.current = null; }, 8000);
+          } else {
+            const fullEvent = { ...event, durationSeconds, expiresAt: Date.now() + durationSeconds * 1000 };
+            activeEventRef.current = fullEvent;
+            localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+            playEventSound();
+            setActiveEvent(fullEvent);
+            setShowEventModal(true);
+            setTimeout(() => {
+              activeEventRef.current = null;
+              setActiveEvent(null);
+              setShowEventModal(false);
+              localStorage.removeItem('hyperloop_active_event');
+            }, durationSeconds * 1000);
+          }
         }
       }
 
       setWorkEarnings(economyManager.calculateWorkClickEarnings(100));
       setBalance(progressionManager.balance);
       setRankSet(rankManager.rank);
+      rankSetRef.current = rankManager.rank;
       setTotalCashEarned(progressionManager.totalCashEarned);
       setReputation(progressionManager.reputation);
       setPurchasedCitiesCount(progressionManager.purchasedCities.length);
@@ -496,14 +545,32 @@ function App() {
         balance={balance}
         rank={rankSet}
         activeTab={activeTab}
-        onSelect={setActiveTab}
+        onSelect={(tab) => {
+          if (departureBoardAudioRef.current) {
+            departureBoardAudioRef.current.pause();
+            departureBoardAudioRef.current.currentTime = 0;
+            departureBoardAudioRef.current = null;
+          }
+          if (tab === "DepartureBoard") {
+            departureBoardAudioRef.current = playDepartureBoardSound();
+          }
+          setActiveTab(tab);
+        }}
         reputation={reputation}
         hasFarewellPending={!!activeDeparture}
         activeEvent={activeEvent}
+        onEventExpire={() => {
+          activeEventRef.current = null;
+          setActiveEvent(null);
+          setShowEventModal(false);
+          localStorage.removeItem('hyperloop_active_event');
+        }}
         onWork={(onRepGain) => {
           progressionManager.addCash(workEarnings);
+          setBalance(progressionManager.balance);
           if (Math.random() < economyManager.getWorkRepChance()) {
             progressionManager.addReputation(5);
+            setReputation(progressionManager.reputation);
             playReputationWorkBonusSound();
             onRepGain?.();
           }
@@ -597,7 +664,17 @@ function App() {
         />
       )}
       <TickerBar terminalName={terminalName} />
-      <BottomNav activeTab={activeTab} onSelect={setActiveTab} />
+      <BottomNav activeTab={activeTab} onSelect={(tab) => {
+        if (departureBoardAudioRef.current) {
+          departureBoardAudioRef.current.pause();
+          departureBoardAudioRef.current.currentTime = 0;
+          departureBoardAudioRef.current = null;
+        }
+        if (tab === "DepartureBoard") {
+          departureBoardAudioRef.current = playDepartureBoardSound();
+        }
+        setActiveTab(tab);
+      }} />
 
       {showSaved && (
         <div style={{
@@ -627,15 +704,18 @@ function App() {
         />
       )}
 
-      {activeEvent && (
+      {!dailyLoginData && !showOfflineModal && showEventModal && activeEvent && devRevealQueue.length === 0 && !claimedCity && (
         <EventModal
           event={activeEvent}
           terminalName={terminalName}
-          onContinue={() => setActiveEvent(null)}
+          onContinue={() => {
+            setShowEventModal(false);
+            if (activeEvent?.durationSeconds === 0) setActiveEvent(null);
+          }}
         />
       )}
 
-      {revealedUpgradeQueue.length > 0 && (
+      {!dailyLoginData && !showOfflineModal && revealedUpgradeQueue.length > 0 && (
         <UpgradeRevealModal
           key={revealedUpgradeQueue[0].name}
           upgrade={revealedUpgradeQueue[0]}
@@ -653,16 +733,14 @@ function App() {
         />
       )}
 
-      {showOfflineModal && offlineData && (
+      {!dailyLoginData && showOfflineModal && offlineData && (
         <OfflineModal
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
           reputation={reputation}
           onSpendRep={(amount) => progressionManager.addReputation(-amount)}
           onCollect={(finalIncome) => {
-            if (finalIncome > offlineData.offlineIncome) {
-              progressionManager.addCash(finalIncome - offlineData.offlineIncome);
-            }
+            progressionManager.addCash(finalIncome);
             setShowOfflineModal(false);
             lastModalClearedAt.current = Date.now() + 180000;
             triggerSave();
@@ -670,7 +748,7 @@ function App() {
         />
       )}
 
-      {!showOfflineModal && activeDelay && (
+      {!dailyLoginData && !showOfflineModal && activeDelay && (
         <DelayModal
           delay={activeDelay}
           economyManager={economyManager}
@@ -679,7 +757,8 @@ function App() {
           onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); }}
         />
       )}
-      {!showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
+
+      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
         <FarewellModal
           departure={activeDeparture}
           economyManager={economyManager}
@@ -703,31 +782,33 @@ function App() {
           onMiss={() => { localStorage.removeItem('hyperloop_active_departure'); setActiveDeparture(null); }}
         />
       )}
-      {!showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
+
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
         <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
-    const minTier = economyManager.getMinCityTierOnRankUp();
-    let newCity = progressionManager.getRandomUnlockedCity(allCities);
-    if (minTier > 1 && newCity && newCity.tier < minTier) {
-        const betterCity = allCities.filter(c =>
-            c.tier >= minTier &&
-            !progressionManager.purchasedCities.includes(c) &&
-            !progressionManager.unlockedCities.includes(c)
-        )[0];
-        if (betterCity) newCity = betterCity;
-    }
-    if (newCity) {
-        progressionManager.unlockCity(newCity);
-        claimedCityRef.current = newCity;
-        prevUnlockedDevCount.current = progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length;
-        setTimeout(() => setClaimedCity(newCity), 300);
-    }
-    if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
-    const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
-    if (freeRep > 0) progressionManager.addReputation(freeRep);
-    setPendingRankUps(prev => prev - 1);
+          const minTier = economyManager.getMinCityTierOnRankUp();
+          let newCity = progressionManager.getRandomUnlockedCity(allCities);
+          if (minTier > 1 && newCity && newCity.tier < minTier) {
+            const betterCity = allCities.filter(c =>
+              c.tier >= minTier &&
+              !progressionManager.purchasedCities.includes(c) &&
+              !progressionManager.unlockedCities.includes(c)
+            )[0];
+            if (betterCity) newCity = betterCity;
+          }
+          if (newCity) {
+            progressionManager.unlockCity(newCity);
+            claimedCityRef.current = newCity;
+            prevUnlockedDevCount.current = progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length;
+            setTimeout(() => setClaimedCity(newCity), 300);
+          }
+          if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
+          const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
+          if (freeRep > 0) progressionManager.addReputation(freeRep);
+          setPendingRankUps(prev => prev - 1);
         }} />
       )}
-      {devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
+
+      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
         <DevelopmentRevealModal
           key={devRevealQueue[0].name}
           development={devRevealQueue[0]}
@@ -739,7 +820,8 @@ function App() {
           }}
         />
       )}
-      {!showOfflineModal && claimedCity && (
+
+      {!dailyLoginData && !showOfflineModal && claimedCity && (
         <CityRevealModal
           key={claimedCity.name}
           city={claimedCity}
@@ -749,7 +831,11 @@ function App() {
               const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
               const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
               const unshown = allUnlocked.filter(d => !shown.includes(d.name))
-              if (unshown.length > 0) setDevRevealQueue(unshown)
+              setDevRevealQueue(prev => {
+                const prevNames = new Set(prev.map(p => p.name))
+                const newItems = unshown.filter(d => !prevNames.has(d.name))
+                return newItems.length > 0 ? [...prev, ...newItems] : prev
+              })
             }
             claimedCityRef.current = null;
             setClaimedCity(null)
@@ -769,16 +855,27 @@ function App() {
           }}
         />
       )}
-      {showSecretCityModal && (
+
+      {!dailyLoginData && !showOfflineModal && showSecretCityModal && devRevealQueue.length === 0 && (
         <SecretCityModal onContinue={() => {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');
           if (antarcticCity) {
-            progressionManager.unlockCity(antarcticCity);
+            constructionManager.startStationConstruction(antarcticCity);
+            triggerSave();
             setClaimedCity(antarcticCity);
           }
         }} />
       )}
+
+      {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (
+        <div style={{
+          position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1,
+          background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.06)' : 'rgba(192,57,43,0.06)',
+          transition: 'background 0.5s ease',
+        }} />
+      )}
+
       {showMobileWarning && (
         <div style={{
           position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',

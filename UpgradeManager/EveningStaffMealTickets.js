@@ -6,6 +6,6 @@ export const eveningStaffMealTickets = new Upgrade(
     "Evening Staff Meal Tickets",
     78000,
     "Enterprise",
-    "continentBoost",
-    0.10
+    "eveningBoost",
+    0.15
 );

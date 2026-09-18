@@ -55,7 +55,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const sortedAvailable = filterAndSort([...available])
 
     const totalRevenue = useMemo(() =>
-        purchased.filter(d => d.revenue).reduce((sum, d) => sum + economyManager.getEffectiveDevRevenue(d), 0),
+        purchased.filter(d => d.revenue).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0),
         [purchased]
     )
 
@@ -194,12 +194,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     {selectedDevelopment.revenue ? (
                                         <div style={{ width: '100%', margin: '8px 0' }}>
                                             {(() => {
-                                                const catBoost = economyManager.getCategoryMultiplier(selectedDevelopment.category) - 1
-                                                const devBoost = economyManager.getUpgradeSum('developmentBoost')
-                                                const totalBoostPct = Math.round(((1 + catBoost) * (1 + devBoost) - 1) * 100)
-                                                const tooltipLines = []
-                                                if (catBoost > 0) tooltipLines.push(`${selectedDevelopment.category} bonus: +${Math.round(catBoost * 100)}%`)
-                                                if (devBoost > 0) tooltipLines.push(`Development boost: +${Math.round(devBoost * 100)}%`)
+                                                const { lines: tooltipLines, totalBoost } = economyManager.getDevBoostBreakdown(selectedDevelopment)
+                                                const totalBoostPct = Math.round(totalBoost * 100)
                                                 return (
                                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #eee', position: 'relative' }}>
                                                         <span style={{ fontSize: '0.85rem', color: '#888' }}>Base Revenue</span>
@@ -236,7 +232,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgraded Revenue</span>
                                                     <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 'bold' }}>
                                                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                                        <span>{economyManager.getEffectiveDevRevenue(selectedDevelopment).toLocaleString()}/day</span>
+                                                        <span>{economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment).toLocaleString()}/day</span>
                                                         <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0,15,50,100][getLevel(selectedDevelopment)]}%)</span>
                                                     </span>
                                                 </div>
@@ -274,7 +270,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     continentBoost: (v) => `+${Math.round(v * 100)}% income from cities on this continent`,
                                                     countryAdvertisingBoost: (v) => `+${Math.round(v * 100)}% income from cities in this country`,
                                                     localCountryBoost: () => `Bonus income from cities in your home country`,
-                                                    seasonBoost: (v) => `+${Math.round(v * 100)}% income during this season`,
+                                                    seasonBoost: (v, upgrade) => { const months = ['January','February','March','April','May','June','July','August','September','October','November','December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${Math.round(v * 100)}% income during this ${isMonthly ? 'month' : 'season'}`; },
                                                     rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll cities`,
                                                     freeRerollOnRankUp: () => `One free city re-roll each time you rank up`,
                                                     positiveEventBoost: (v) => `+${Math.round(v * 100)}% chance of positive events`,
@@ -283,9 +279,27 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     businessWeekBoost: (v) => `+${Math.round(v * 100)}% earnings Monday to Friday`,
                                                     dailyRepDoubled: () => `Daily Reputation doubled`,
                                                     equatorBoost: (v) => `+${Math.round(v * 100)}% income from cities near the equator`,
+                                                    infrastructureDevBoost: (v) => `+${Math.round(v * 100)}% income per Infrastructure development owned`,
+                                                    enterpriseDevBoost: (v) => `+${Math.round(v * 100)}% income per Enterprise development owned`,
+                                                    serviceDevBoost: (v) => `+${Math.round(v * 100)}% income per Service development owned`,
+                                                    devContinentBoost: (v) => `+${Math.round(v * 100)}% development income per unique continent connected`,
+                                                    morningBoost: (v) => `+${Math.round(v * 100)}% earnings between 6am and 12pm`,
+                                                    afternoonBoost: (v) => `+${Math.round(v * 100)}% earnings between 12pm and 6pm`,
+                                                    eveningBoost: (v) => `+${Math.round(v * 100)}% earnings between 6pm and 10pm`,
+                                                    nightBoost: (v) => `+${Math.round(v * 100)}% earnings between 10pm and 6am`,
+                                                    weekendBoost: (v) => `+${Math.round(v * 100)}% earnings on weekends`,
+                                                    smallCityBoost: (v) => `+${Math.round(v * 100)}% income from cities under 100,000 population`,
+                                                    christmasBoost: () => `+100% all earnings on Christmas Day`,
+                                                    valentinesBoost: () => `+100% all earnings on Valentine's Day`,
+                                                    halloweenBoost: () => `+100% all earnings on Halloween`,
+                                                    fourthOfJulyBoost: () => `+100% all earnings on 4th of July`,
+                                                    easterBoost: () => `+100% all earnings on Easter Sunday`,
+                                                    newYearsBoost: () => `+100% all earnings on New Year's Day`,
+                                                    skilledNegotiationTeams: () => `Guaranteed at least Tier 2 city on each rank up`,
+                                                    personalImageBranding: (v) => `Earn ${Math.round(v * 100)}% of a city's daily income when giving a farewell`,
                                                 }
                                                 const fn = effects[selectedDevelopment.effectType]
-                                                return fn ? fn(selectedDevelopment.effectValue) : 'Special effect'
+                                                return fn ? fn(selectedDevelopment.effectValue, selectedDevelopment) : 'Special effect'
                                             })()}
                                         </p>
                                     )}
@@ -344,7 +358,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             {!isUnderConstruction && (
                                                 <div className="dev-revenue-strip">
                                                     {development.revenue
-                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.getEffectiveDevRevenue(development).toLocaleString()}/day</>
+                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.getEffectiveDevIncomeWithBoosts(development).toLocaleString()}/day</>
                                                         : 'UPGRADE'}
                                                 </div>
                                             )}

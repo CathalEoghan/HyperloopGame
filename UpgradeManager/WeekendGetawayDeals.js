@@ -6,6 +6,6 @@ export const weekendGetawayDeals = new Upgrade(
     "Weekend Getaway Deals",
     150000,
     "Enterprise",
-    "continentExpansionBoost", 
-    0.05
+    "weekendBoost", 
+    0.10
 )

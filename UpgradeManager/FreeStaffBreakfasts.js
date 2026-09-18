@@ -6,6 +6,6 @@ export const freeStaffBreakfasts = new Upgrade(
     "Free Staff Breakfasts",
     71800,
     "Enterprise",
-    "bonusDurationExtension",
+    "morningBoost",
     0.15
 );
