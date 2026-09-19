@@ -109,21 +109,21 @@ export class ProgressionManager {
         return this.developmentUpgradeLevels[development.name] || 0;
     }
 
-    getDevelopmentUpgradeCostInfo(development) {
+    getDevelopmentUpgradeCostInfo(development, upgradeDiscountMultiplier = 1.0) {
         const currentLevel = this.getDevelopmentUpgradeLevel(development);
         const nextLevel = currentLevel + 1;
         if (nextLevel > 3) return null;
         return {
             nextLevel,
-            cashCost: Math.floor(development.cost * UPGRADE_CASH_PCTS[nextLevel]),
+            cashCost: Math.floor(development.cost * UPGRADE_CASH_PCTS[nextLevel] * upgradeDiscountMultiplier),
             repCost: UPGRADE_REP_COSTS[nextLevel],
             boostPct: UPGRADE_BOOST_PCTS[nextLevel],
             totalPct: UPGRADE_TOTAL_PCTS[nextLevel],
         };
     }
 
-    upgradeDevelopment(development) {
-        const info = this.getDevelopmentUpgradeCostInfo(development);
+    upgradeDevelopment(development, upgradeDiscountMultiplier = 1.0) {
+        const info = this.getDevelopmentUpgradeCostInfo(development, upgradeDiscountMultiplier);
         if (!info) return false;
         if (this.balance < info.cashCost || this.reputation < info.repCost) return false;
         this.spendCash(info.cashCost);
