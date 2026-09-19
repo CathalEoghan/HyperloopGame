@@ -26,7 +26,7 @@ export const EVENTS = [
         duration: () => 0,
     },
 
-    // POSITIVE — Passive income boost (50% for 30s-3min)
+    // POSITIVE — Passive income boost (100% for 30s-3min)
     {
         id: 'profits_surge',
         type: 'positive',

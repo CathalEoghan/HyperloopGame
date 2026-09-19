@@ -9,7 +9,7 @@ export const Christchurch = new City(
     [advertisingCampaignNewZealand],
     "New Zealand",
     "Oceania",
-    3,
+    1,
     "Archaeological evidence shows the area was first settled around 1250 by Māori tribes who hunted the giant, flightless moa.",
     true
 );

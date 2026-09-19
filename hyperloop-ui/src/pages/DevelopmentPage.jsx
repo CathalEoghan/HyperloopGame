@@ -59,7 +59,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         [purchased]
     )
 
-    const getUpgradeInfo = (dev) => progressionManager.getDevelopmentUpgradeCostInfo(dev)
+    const getUpgradeInfo = (dev) => progressionManager.getDevelopmentUpgradeCostInfo(dev, 1.0 - economyManager.getUpgradeSum('developmentUpgradeDiscount'))
     const getLevel = (dev) => progressionManager.getDevelopmentUpgradeLevel(dev)
     const closeModal = () => { setSelectedDevelopment(null); setShowUpgradeModal(false) }
 
@@ -125,7 +125,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
                                         if (!canAfford) { playNotEnoughFundsSound(); return; }
                                         playClickSound2();
-                                        onUpgrade(selectedDevelopment);
+                                        onUpgrade(selectedDevelopment, 1.0 - economyManager.getUpgradeSum('developmentUpgradeDiscount'));
                                         setShowUpgradeModal(false);
                                     }}>
                                         Upgrade
@@ -164,7 +164,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         else {
                                             playClickSound2();
                                             playConstructionSound();
-                                            constructionManager.startDevelopmentConstruction(selectedDevelopment);
+                                            constructionManager.startDevelopmentConstruction(selectedDevelopment, economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost));
                                             onSave();
                                             closeModal();
                                         }

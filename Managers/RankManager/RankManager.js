@@ -5,7 +5,7 @@ export class RankManager {
     }
 
     // XP needed to reach the NEXT rank from the given rank
-    // Formula: 500 * rank^2.5 — scales from ~2,828 at rank 2 to ~6.1B at rank 335
+   // Formula: 500 * rank^2.5 — scales from ~2,828 at rank 2 to ~1.02B at rank 334 (~97.8B cumulative to reach 335)
     calculateNextRankXP(rank) {
         if (rank >= 335) return Infinity;
         return Math.floor(500 * Math.pow(rank, 2.5));

@@ -656,8 +656,8 @@ function App() {
           economyManager={economyManager}
           onSave={triggerSave}
           onUpgradeBuilt={(upgrade) => setRevealedUpgradeQueue(q => [...q, upgrade])}
-          onUpgrade={(development) => {
-            const success = progressionManager.upgradeDevelopment(development);
+         onUpgrade={(development, discountMultiplier = 1.0) => {
+    const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
             if (success) triggerSave();
             return success;
           }}
@@ -818,12 +818,15 @@ function App() {
           const minTier = economyManager.getMinCityTierOnRankUp();
           let newCity = progressionManager.getRandomUnlockedCity(allCities);
           if (minTier > 1 && newCity && newCity.tier < minTier) {
-            const betterCity = allCities.filter(c =>
-              c.tier >= minTier &&
-              !progressionManager.purchasedCities.includes(c) &&
-              !progressionManager.unlockedCities.includes(c)
-            )[0];
-            if (betterCity) newCity = betterCity;
+            const betterCities = allCities.filter(c =>
+  c.tier >= minTier &&
+  !progressionManager.purchasedCities.includes(c) &&
+  !progressionManager.unlockedCities.includes(c)
+);
+const betterCity = betterCities.length > 0
+  ? betterCities[Math.floor(Math.random() * betterCities.length)]
+  : null;
+if (betterCity) newCity = betterCity;
           }
           if (newCity) {
             progressionManager.unlockCity(newCity);

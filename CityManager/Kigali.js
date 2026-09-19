@@ -11,5 +11,5 @@ export const Kigali = new City(
     "Africa",
     2,
     "Kigali has banned non-biodegradable plastic bags and packaging since 2008, making it widely recognized as one of the cleanest cities in Africa.",
-    false
+    true
 );

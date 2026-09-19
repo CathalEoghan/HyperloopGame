@@ -70,8 +70,9 @@ export class ConstructionManager {
         }
     }
 
-    startDevelopmentConstruction(development) {
-        if (!this.progressionManager.spendCash(development.cost)) return;
+    startDevelopmentConstruction(development, discountedCost) {
+        const cost = discountedCost ?? development.cost;
+        if (!this.progressionManager.spendCash(cost)) return;
         const duration = TWENTY_SECONDS;
         development.finishTime = this.timeManager.getFinishTime(duration);
         development.underConstruction = true;
