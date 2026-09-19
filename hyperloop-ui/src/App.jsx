@@ -873,7 +873,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && pendingRankUps === 0 && (
+      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !claimedCityRef.current && pendingRankUps === 0 && (
         <MilestoneModal
           milestone={milestoneQueue[0]}
           onContinue={() => {
@@ -881,6 +881,7 @@ function App() {
             const upgrade = allUpgrades.find(u => u.name === milestone.upgradeName);
             if (upgrade) {
               progressionManager.purchasedUpgrades.push(upgrade);
+              prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
               setDevRevealQueue(prev => [...prev, upgrade]);
             }
             claimedMilestones.current.add(`rank_${milestone.rank}`);
