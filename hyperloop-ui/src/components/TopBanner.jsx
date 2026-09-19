@@ -5,6 +5,8 @@ import clockIcon from '../assets/misc/clock.png'
 import cashIcon from '../assets/misc/cash.png'
 import starIcon from '../assets/misc/star.png'
 import reputationIcon from '../assets/misc/reputation.png'
+import pinIcon from '../assets/misc/pin.png'
+import countryFlags from '../data/countryFlags.js'
 import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } from '../utils/sound.js'
 
 const WORK_PHRASES = [
@@ -18,7 +20,7 @@ const WORK_PHRASES = [
 
 let floatId = 0
 
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workEarnings, hasFarewellPending, activeEvent, onEventExpire }) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workEarnings, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
     const [floats, setFloats] = useState([])
     const [eventSecondsLeft, setEventSecondsLeft] = useState(activeEvent?.durationSeconds || 0)
     const btnRef = useRef(null)
@@ -152,7 +154,16 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     return (
         <>
         <div className="TopBanner">
-            <h1 className="TerminalName">{terminalName}</h1>
+            <div className="TerminalNameBlock">
+                <h1 className="TerminalName">{terminalName}</h1>
+                {homeCity && (
+                    <div className="HomeCity">
+                        <img src={pinIcon} alt="pin" style={{ width: '10px', height: '10px', border: 'none', borderRadius: '0', opacity: 0.6 }} />
+                        <img src={`https://flagcdn.com/w40/${countryFlags[homeCity.country]}.png`} alt={homeCity.country} style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '1px' }} />
+                        <span>{homeCity.name}, {homeCity.country}</span>
+                    </div>
+                )}
+            </div>
             <button ref={btnRef} className="work-banner-btn" onClick={handleWork} onMouseEnter={() => playHoverSound()}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                     Work (+<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{workEarnings.toLocaleString()})

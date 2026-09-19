@@ -1,4 +1,3 @@
-
 // Founders' Hall
 import { Upgrade } from "./Upgrade.js";
 
@@ -7,4 +6,5 @@ export const foundersHall = new Upgrade(
     250000,
     "Recreation",
     "terminalAgeBoost",
+    0.01
 );

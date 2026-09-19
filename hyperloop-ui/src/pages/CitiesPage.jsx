@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import './CitiesPage.css'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
@@ -24,8 +24,8 @@ const CONTINENT_COLOURS = {
 const normalise = (str) =>
     str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
-function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, homeCity, onSave }) {
-    const [selectedCity, setSelectedCity] = useState(null)
+function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled }) {
+    const [selectedCity, setSelectedCity] = useState(() => preSelectedCity || null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [search, setSearch] = useState('')
     const [activeContinent, setActiveContinent] = useState('All')
@@ -34,6 +34,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)
     const [showCityBoostTip, setShowCityBoostTip] = useState(false)
+
+    useEffect(() => {
+        if (preSelectedCity) {
+            onPreSelectedCityHandled?.()
+        }
+    }, [preSelectedCity])
 
     const underConstruction = allCities.filter(city =>
         constructionManager.progressionManager.citiesUnderConstruction.some(c => c.name === city.name)

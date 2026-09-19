@@ -12,6 +12,7 @@
     flex-direction: column;
     align-items: center;
     gap: 12px;
+    animation: milestone-fadein 0.3s ease-out;
 }
 
 .milestone-rank-label {
@@ -68,4 +69,9 @@
     font-size: 1.1rem;
     font-weight: bold;
     color: #111;
+}
+
+@keyframes milestone-fadein {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
 }

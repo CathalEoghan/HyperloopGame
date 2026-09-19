@@ -220,3 +220,19 @@
     0%   { opacity: 1; transform: translateY(0); }
     100% { opacity: 0; transform: translateY(-16px); }
 }
+
+.TerminalNameBlock {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.HomeCity {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.7rem;
+    color: #999;
+    letter-spacing: 0.3px;
+}

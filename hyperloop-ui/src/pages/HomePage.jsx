@@ -4,8 +4,9 @@ import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
-import { playHoverSound } from '../utils/sound.js'
+import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
+import cashIcon from '../assets/misc/cash.png'
 import './HomePage.css'
 
 function latLngToVector3(lat, lng, radius) {
@@ -35,11 +36,12 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager }) {
     const mountRef = useRef(null)
     const [hoveredCity, setHoveredCity] = useState(null)
     const [showOwned, setShowOwned] = useState(true)
     const [globeReady, setGlobeReady] = useState(false)
+    const [selectedGlobeCity, setSelectedGlobeCity] = useState(null)
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
     const showOwnedRef = useRef(true)
@@ -217,7 +219,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         let isDragging = false
         let prev = { x: 0, y: 0 }
 
-        const onMouseDown = (e) => { isDragging = true; prev = { x: e.clientX, y: e.clientY } }
+        let mouseDownPos = { x: 0, y: 0 }
+        const onMouseDown = (e) => { isDragging = true; prev = { x: e.clientX, y: e.clientY }; mouseDownPos = { x: e.clientX, y: e.clientY } }
         const onMouseMove = (e) => {
             if (disabledRef.current) return
             const rect = mount.getBoundingClientRect()
@@ -238,7 +241,22 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             prev = { x: e.clientX, y: e.clientY }
             updateCamera()
         }
-        const onMouseUp = () => { isDragging = false }
+        const onMouseUp = (e) => {
+            isDragging = false
+            const dx = e.clientX - mouseDownPos.x
+            const dy = e.clientY - mouseDownPos.y
+            if (Math.sqrt(dx*dx + dy*dy) > 5) return // was a drag
+            const rect = mount.getBoundingClientRect()
+            const mx = ((e.clientX - rect.left) / rect.width) * 2 - 1
+            const my = -((e.clientY - rect.top) / rect.height) * 2 + 1
+            raycaster.setFromCamera(new THREE.Vector2(mx, my), camera)
+            const visibleSprites = sprites.filter(s => s.visible)
+            const hits = raycaster.intersectObjects(visibleSprites)
+            if (hits.length > 0) {
+                const { city, isPurchased } = hits[0].object.userData
+                if (isPurchased) setSelectedGlobeCity(city)
+            }
+        }
         const onWheel = (e) => {
             e.preventDefault()
             camDist = Math.max(1.5, Math.min(5, camDist + e.deltaY * 0.003))
@@ -309,6 +327,35 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 </div>
             )}
             <div ref={mountRef} className="globe-container" />
+            {selectedGlobeCity && (
+                <div className="modal-overlay" onClick={() => setSelectedGlobeCity(null)}>
+                    <div className="modal" onClick={e => e.stopPropagation()}>
+                        <img src={`https://flagcdn.com/w40/${countryFlags[selectedGlobeCity.country]}.png`} alt={selectedGlobeCity.country} />
+                        <h3>{selectedGlobeCity.name}</h3>
+                        <hr />
+                        <p><strong>Country</strong>: {selectedGlobeCity.country}</p>
+                        <p><strong>Population</strong>: {selectedGlobeCity.population.toLocaleString()}</p>
+                        {economyManager && (() => {
+                            const coords = cityCoordinates[selectedGlobeCity.name]
+                            const coordsMap = coords ? { [selectedGlobeCity.name]: coords } : null
+                            const income = economyManager.calculateCityIncome(selectedGlobeCity, coordsMap)
+                            return (
+                                <p>Earning <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                    <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />
+                                    {income.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                </strong> per day</p>
+                            )
+                        })()}
+                        <p><em>{selectedGlobeCity.fact}</em></p>
+                        <img
+                            src={cityImages[selectedGlobeCity.name]}
+                            alt={selectedGlobeCity.name}
+                            style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', marginTop: '8px' }}
+                        />
+                        <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setSelectedGlobeCity(null) }}>Close</button>
+                    </div>
+                </div>
+            )}
             {hoveredCity && (
                 <div className="city-hover-panel">
                     <img

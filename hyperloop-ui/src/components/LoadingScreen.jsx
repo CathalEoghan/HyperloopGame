@@ -121,7 +121,7 @@ function LoadingScreen({ onComplete }) {
 
     const handleEnter = () => {
         if (!ready) return
-        new Audio(openingAudio).play().catch(() => {})
+        if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => {})
         setFading(true)
         setTimeout(onComplete, 600)
     }

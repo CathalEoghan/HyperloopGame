@@ -135,6 +135,7 @@ function App() {
   const [dailyLoginData, setDailyLoginData] = useState(null);
   const [showMobileWarning, setShowMobileWarning] = useState(() => window.innerWidth < 900);
   const [showSecretCityModal, setShowSecretCityModal] = useState(false);
+  const [preSelectedCity, setPreSelectedCity] = useState(null);
   const [milestoneQueue, setMilestoneQueue] = useState([]);
   const secretCityTriggered = useRef(false);
   const claimedMilestones = useRef(new Set(
@@ -229,6 +230,12 @@ function App() {
     if (rankUpsGained > 0) {
       playRankUpSound();
       setPendingRankUps(rankUpsGained);
+      for (let r = startRank + 1; r <= rankManager.rank; r++) {
+        const milestone = MILESTONES.find(m => m.rank === r);
+        if (milestone && !claimedMilestones.current.has(`rank_${r}`)) {
+          setMilestoneQueue(prev => [...prev, milestone]);
+        }
+      }
     }
   }, []);
 
@@ -239,7 +246,7 @@ function App() {
     const lastLogin = localStorage.getItem('hyperloop_last_login');
     if (lastLogin === today) return;
     localStorage.setItem('hyperloop_last_login', today);
-    const hasCommemorativeDisplays = progressionManager.purchasedDevelopments.some(d => d.name === 'Commemorative Displays');
+    const hasCommemorativeDisplays = progressionManager.purchasedUpgrades.some(u => u.name === 'Commemorative Displays');
     const hasDailyRepDoubled = progressionManager.purchasedUpgrades.some(u => u.effectType === 'dailyRepDoubled');
     const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
     const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
@@ -548,7 +555,7 @@ function App() {
       city={pickedCity}
       isComplete={progressionManager.purchasedCities.length > 0}
       onEnter={() => {
-        new Audio(openingAudio).play().catch(() => {})
+        if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => {})
         setConstructionReady(true)
         if (!savedData) setShowOnboarding(true)
       }}
@@ -561,6 +568,7 @@ function App() {
         terminalName={terminalName}
         balance={balance}
         rank={rankSet}
+        homeCity={progressionManager.purchasedCities[0]}
         activeTab={activeTab}
         onSelect={(tab) => {
           if (departureBoardAudioRef.current) {
@@ -605,6 +613,7 @@ function App() {
           unlockedCities={progressionManager.unlockedCities}
           purchasedCitiesCount={purchasedCitiesCount}
           disabled={showOnboarding}
+          economyManager={economyManager}
         />
       )}
       {activeTab === "Cities" && (
@@ -617,6 +626,8 @@ function App() {
           economyManager={economyManager}
           reputation={reputation}
           homeCity={progressionManager.purchasedCities[0]}
+          preSelectedCity={preSelectedCity}
+          onPreSelectedCityHandled={() => setPreSelectedCity(null)}
           onSave={triggerSave}
           onDisconnect={(city) => {
             const disconnectCost = constructionManager.calculateTierConnectionCost(city) / 2;
@@ -667,6 +678,8 @@ function App() {
         <DepartureBoard
           purchasedCities={progressionManager.purchasedCities}
           homeCity={progressionManager.purchasedCities[0]}
+          preSelectedCity={preSelectedCity}
+          onPreSelectedCityHandled={() => setPreSelectedCity(null)}
         />
       )}
       {activeTab === "Settings" && (

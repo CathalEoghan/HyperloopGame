@@ -233,7 +233,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 'bold' }}>
                                                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
                                                         <span>{economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment).toLocaleString()}/day</span>
-                                                        <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0,15,50,100][getLevel(selectedDevelopment)]}%)</span>
+                                                        <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0, 15, 50, 100][getLevel(selectedDevelopment)]}%)</span>
                                                     </span>
                                                 </div>
                                             )}
@@ -270,7 +270,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     continentBoost: (v) => `+${Math.round(v * 100)}% income from cities on this continent`,
                                                     countryAdvertisingBoost: (v) => `+${Math.round(v * 100)}% income from cities in this country`,
                                                     localCountryBoost: () => `Bonus income from cities in your home country`,
-                                                    seasonBoost: (v, upgrade) => { const months = ['January','February','March','April','May','June','July','August','September','October','November','December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${Math.round(v * 100)}% income during this ${isMonthly ? 'month' : 'season'}`; },
+                                                    dailyLoginMultiplier: () => 'Doubles your daily login cash bonus',
+                                                    terminalAgeBoost: () => '+1% to all income per 10 days active; grows the longer you play',
+                                                    seasonBoost: (v, upgrade) => { const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${Math.round(v * 100)}% income during this ${isMonthly ? 'month' : 'season'}`; },
                                                     rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll cities`,
                                                     freeRerollOnRankUp: () => `One free city re-roll each time you rank up`,
                                                     positiveEventBoost: (v) => `+${Math.round(v * 100)}% chance of positive events`,
