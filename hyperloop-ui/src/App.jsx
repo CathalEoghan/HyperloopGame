@@ -24,6 +24,7 @@ import EventModal from "./components/EventModal"
 import DailyLoginModal from "./components/DailyLoginModal"
 import OnboardingModal from "./components/OnboardingModal"
 import SecretCityModal from "./components/SecretCityModal"
+import MilestoneModal from "./components/MilestoneModal"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -33,6 +34,7 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
+import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
 import "./App.css";
 
@@ -133,7 +135,15 @@ function App() {
   const [dailyLoginData, setDailyLoginData] = useState(null);
   const [showMobileWarning, setShowMobileWarning] = useState(() => window.innerWidth < 900);
   const [showSecretCityModal, setShowSecretCityModal] = useState(false);
+  const [milestoneQueue, setMilestoneQueue] = useState([]);
   const secretCityTriggered = useRef(false);
+  const claimedMilestones = useRef(new Set(
+    JSON.parse(localStorage.getItem('hyperloop_claimed_milestones') || '[]')
+  ));
+  const MILESTONES = [
+    { rank: 10, upgradeName: 'Commemorative Displays' },
+    { rank: 50, upgradeName: "Founders' Hall" },
+  ];
   const claimedCityRef = useRef(null);
 
   const activeEventRef = useRef((() => {
@@ -314,6 +324,13 @@ function App() {
         playRankUpSound();
         const gained = rankManager.rank - previousRank;
         setPendingRankUps(prev => prev + gained);
+        // Check for milestone ranks
+        for (let r = previousRank + 1; r <= rankManager.rank; r++) {
+          const milestone = MILESTONES.find(m => m.rank === r);
+          if (milestone && !claimedMilestones.current.has(`rank_${r}`)) {
+            setMilestoneQueue(prev => [...prev, milestone]);
+          }
+        }
       }
       constructionManager.update();
 
@@ -852,6 +869,24 @@ function App() {
               setClaimedCity(null);
               setTimeout(() => setClaimedCity(newCity), 300);
             }
+          }}
+        />
+      )}
+
+      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && pendingRankUps === 0 && (
+        <MilestoneModal
+          milestone={milestoneQueue[0]}
+          onContinue={() => {
+            const milestone = milestoneQueue[0];
+            const upgrade = allUpgrades.find(u => u.name === milestone.upgradeName);
+            if (upgrade) {
+              progressionManager.purchasedUpgrades.push(upgrade);
+              setDevRevealQueue(prev => [...prev, upgrade]);
+            }
+            claimedMilestones.current.add(`rank_${milestone.rank}`);
+            localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
+            setMilestoneQueue(prev => prev.slice(1));
+            triggerSave();
           }}
         />
       )}

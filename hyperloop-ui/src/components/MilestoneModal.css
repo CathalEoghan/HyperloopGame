@@ -1,0 +1,71 @@
+.milestone-modal {
+    background: rgb(255, 246, 239);
+    border: 2px solid black;
+    border-radius: 16px;
+    padding: 36px 32px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+.milestone-rank-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: #f5a623;
+    font-weight: bold;
+    margin: 0;
+}
+
+.milestone-trophy {
+    font-size: 3rem;
+    line-height: 1;
+}
+
+.milestone-heading {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #111;
+    margin: 0;
+}
+
+.milestone-message {
+    font-size: 0.9rem;
+    color: #555;
+    line-height: 1.6;
+    margin: 0;
+    max-width: 320px;
+}
+
+.milestone-reward-box {
+    background: white;
+    border: 2px solid #f5a623;
+    border-radius: 10px;
+    padding: 12px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.milestone-reward-label {
+    font-size: 0.7rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #f5a623;
+    font-weight: bold;
+}
+
+.milestone-reward-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #111;
+}
