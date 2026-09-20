@@ -144,8 +144,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
         setFloats(prev => [...prev, { id, phrase, hasRep: false, x: rect.left + rect.width / 2, y: rect.top }])
         setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
-        onWork((earned) => {
-            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: true, earned } : f))
+        onWork((earned, gotRep) => {
+            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: gotRep, earned } : f))
         })
         playWorkClickSound()
     }
@@ -168,80 +168,80 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
 
     return (
         <>
-            <div className="TopBanner">
-                <div className="TerminalNameBlock">
-                    <h1 className="TerminalName">{terminalName}</h1>
-                    {homeCity && (
-                        <div className="HomeCity">
-                            <img src={pinIcon} alt="pin" style={{ width: '10px', height: '10px', border: 'none', borderRadius: '0', opacity: 0.6 }} />
-                            <img src={`https://flagcdn.com/w40/${countryFlags[homeCity.country]}.png`} alt={homeCity.country} style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '1px' }} />
-                            <span>{homeCity.name}, {homeCity.country}</span>
-                        </div>
+        <div className="TopBanner">
+            <div className="TerminalNameBlock">
+                <h1 className="TerminalName">{terminalName}</h1>
+                {homeCity && (
+                    <div className="HomeCity">
+                        <img src={pinIcon} alt="pin" style={{ width: '10px', height: '10px', border: 'none', borderRadius: '0', opacity: 0.6 }} />
+                        <img src={`https://flagcdn.com/w40/${countryFlags[homeCity.country]}.png`} alt={homeCity.country} style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '1px' }} />
+                        <span>{homeCity.name}, {homeCity.country}</span>
+                    </div>
+                )}
+            </div>
+            <button ref={btnRef} className="work-banner-btn" onClick={handleWork} onMouseEnter={() => playHoverSound()}>
+                <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                    Work (+<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(((workRange?.low || 0) + (workRange?.high || 0)) / 2, true)})
+                </span>
+            </button>
+            <div className="work-divider" />
+            <div className="rightSideDetails">
+                <div className="time">
+                    <img src={clockIcon} alt="time" /> {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                </div>
+                <div className="rank">
+                    <img src={starIcon} alt="rank" /> Rank {rank}
+                </div>
+                <div className="balance" style={{ color: balanceColor, transition: 'color 0.3s ease', position: 'relative' }}>
+                    <img src={cashIcon} alt="balance" /> £{displayBalance.toLocaleString()}
+                    {balanceFloat && (
+                        <span key={balanceFloat.id} style={{
+                            position: 'absolute', left: 0, top: 0, width: '100%',
+                            color: balanceFloat.dir === 'down' ? '#e74c3c' : '#888',
+                            animation: 'stat-float-up 0.6s ease-out forwards',
+                            pointerEvents: 'none', whiteSpace: 'nowrap',
+                            display: 'flex', alignItems: 'center', gap: '6px'
+                        }}>
+                            <img src={cashIcon} alt="£" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
+                            £{Math.floor(balanceFloat.value).toLocaleString()}
+                        </span>
                     )}
                 </div>
-                <button ref={btnRef} className="work-banner-btn" onClick={handleWork} onMouseEnter={() => playHoverSound()}>
-                    <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                        Work (+£{formatWorkAmount(((workRange?.low || 0) + (workRange?.high || 0)) / 2, true)})
-                    </span>
-                </button>
-                <div className="work-divider" />
-                <div className="rightSideDetails">
-                    <div className="time">
-                        <img src={clockIcon} alt="time" /> {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                    </div>
-                    <div className="rank">
-                        <img src={starIcon} alt="rank" /> Rank {rank}
-                    </div>
-                    <div className="balance" style={{ color: balanceColor, transition: 'color 0.3s ease', position: 'relative' }}>
-                        <img src={cashIcon} alt="balance" /> £{displayBalance.toLocaleString()}
-                        {balanceFloat && (
-                            <span key={balanceFloat.id} style={{
-                                position: 'absolute', left: 0, top: 0, width: '100%',
-                                color: balanceFloat.dir === 'down' ? '#e74c3c' : '#888',
-                                animation: 'stat-float-up 0.6s ease-out forwards',
-                                pointerEvents: 'none', whiteSpace: 'nowrap',
-                                display: 'flex', alignItems: 'center', gap: '6px'
-                            }}>
-                                <img src={cashIcon} alt="£" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
-                                £{Math.floor(balanceFloat.value).toLocaleString()}
-                            </span>
-                        )}
-                    </div>
-                    <div className="reputation" style={{ color: repColor, transition: 'color 0.3s ease' }}>
-                        <img src={reputationIcon} alt="reputation" /> {displayReputation}
-                    </div>
+                <div className="reputation" style={{ color: repColor, transition: 'color 0.3s ease' }}>
+                    <img src={reputationIcon} alt="reputation" /> {displayReputation}
                 </div>
-                <button
-                    className="MysterySpot"
-                    onMouseEnter={() => playHoverSound()}
-                    onClick={() => {
-                        if (activeTab === "DepartureBoard") { playClickSound3(); } else { playClickSound2(); }
-                        onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard");
-                    }}
-                    style={{ backgroundImage: `url(${departureBoardImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
-                >
-                    <span className="MysterySpotLabel">DEPARTURE BOARD</span>
-                    {hasFarewellPending && <span className="departure-badge" />}
-                </button>
-                {floats.map(f => (
-                    <div key={f.id} className="work-float" style={{ left: f.x, top: f.y }}>
-                        <span className="work-float-phrase">{f.phrase}</span>
-                        <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                            +£{formatWorkAmount(f.earned || (workRange?.low || 0))}
-                            {f.hasRep && (
-                                <>&nbsp;+<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />5</>
-                            )}
-                        </span>
-                    </div>
-                ))}
             </div>
-            {activeEvent && (
-                <div className={`event-indicator ${activeEvent.type === 'positive' ? 'event-indicator-positive' : 'event-indicator-negative'}`}>
-                    <span className="event-indicator-icon">{activeEvent.type === 'positive' ? '▲' : '▼'}</span>
-                    <span className="event-indicator-text">{getEventIndicatorText()}</span>
-                    {!isInstantEvent && <span className="event-indicator-timer">{eventSecondsLeft}s remaining</span>}
+            <button
+                className="MysterySpot"
+                onMouseEnter={() => playHoverSound()}
+                onClick={() => {
+                    if (activeTab === "DepartureBoard") { playClickSound3(); } else { playClickSound2(); }
+                    onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard");
+                }}
+                style={{ backgroundImage: `url(${departureBoardImg})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+            >
+                <span className="MysterySpotLabel">DEPARTURE BOARD</span>
+                {hasFarewellPending && <span className="departure-badge" />}
+            </button>
+            {floats.map(f => (
+                <div key={f.id} className="work-float" style={{ left: f.x, top: f.y }}>
+                    <span className="work-float-phrase">{f.phrase}</span>
+                    <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                        +<img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(f.earned || (workRange?.low || 0))}
+                        {f.hasRep && (
+                            <>&nbsp;+<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />5</>
+                        )}
+                    </span>
                 </div>
-            )}
+            ))}
+        </div>
+        {activeEvent && (
+            <div className={`event-indicator ${activeEvent.type === 'positive' ? 'event-indicator-positive' : 'event-indicator-negative'}`}>
+                <span className="event-indicator-icon">{activeEvent.type === 'positive' ? '▲' : '▼'}</span>
+                <span className="event-indicator-text">{getEventIndicatorText()}</span>
+                {!isInstantEvent && <span className="event-indicator-timer">{eventSecondsLeft}s remaining</span>}
+            </div>
+        )}
         </>
     )
 }

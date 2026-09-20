@@ -521,7 +521,7 @@ export class EconomyManager {
     }
 
     getWorkRepChance() {
-        let chance = 0.001;
+        let chance = 0.05;
         if (this.hasUpgrade('workRepChanceDouble')) chance *= 2;
         if (this.hasUpgrade('workRepChanceTriple')) chance *= 3;
         return chance;

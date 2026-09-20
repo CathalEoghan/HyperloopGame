@@ -594,18 +594,17 @@ function App() {
           localStorage.removeItem('hyperloop_active_event');
         }}
         onWork={(onRepGain) => {
-          const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
-          progressionManager.addCash(earned);
-          setBalance(progressionManager.balance);
-          if (Math.random() < economyManager.getWorkRepChance()) {
-            progressionManager.addReputation(5);
-            setReputation(progressionManager.reputation);
-            playReputationWorkBonusSound();
-            onRepGain?.(earned);
-          } else {
-            onRepGain?.(earned);
-          }
-        }}
+    const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
+    progressionManager.addCash(earned);
+    setBalance(progressionManager.balance);
+    const gotRep = Math.random() < economyManager.getWorkRepChance();
+    if (gotRep) {
+        progressionManager.addReputation(5);
+        setReputation(progressionManager.reputation);
+        playReputationWorkBonusSound();
+    }
+    onRepGain?.(earned, gotRep);
+}}
         workRange={workRange}
       />
       <ExperienceBar
@@ -942,8 +941,8 @@ function App() {
 
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (
         <div style={{
-          position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 1,
-          background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.06)' : 'rgba(192,57,43,0.06)',
+          position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 15,
+         background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.18)' : 'rgba(192,57,43,0.18)',
           transition: 'background 0.5s ease',
         }} />
       )}
