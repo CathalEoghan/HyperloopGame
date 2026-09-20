@@ -476,25 +476,27 @@ export class EconomyManager {
         return Math.round(value / 100) * 100;
     }
 
-    calculateWorkClickEarnings(dailyIncome) {
+    calculateWorkClickEarnings(rank) {
         const count = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length;
         const multiplier = 1 + (count * 0.45);
+        const xpRequired = Math.floor(500 * Math.pow(rank, 2.5));
         const roll = (Math.random() + Math.random()) / 2;
-        const percentage = 0.00005 + roll * 0.00005;
-        let total = dailyIncome * percentage * multiplier + 250;
+        const percentage = 0.001 + roll * 0.004;
+        let total = Math.max(250, xpRequired * percentage) * multiplier;
         if (this.activeEvent?.effectType === 'workBoost' || this.activeEvent?.effectType === 'workPenalty') {
             total *= this.activeEvent.effect.multiplier;
         }
         return this.roundWorkValue(total);
     }
 
-    calculateWorkClickRange(dailyIncome) {
+    calculateWorkClickRange(rank) {
         const count = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length;
         const multiplier = 1 + (count * 0.45);
-        let low = dailyIncome * 0.00005 * multiplier + 250;
-        let high = dailyIncome * 0.0001 * multiplier + 250;
+        const xpRequired = Math.floor(500 * Math.pow(rank, 2.5));
+        let low = Math.max(250, xpRequired * 0.001) * multiplier;
+        let high = Math.max(250, xpRequired * 0.005) * multiplier;
         if (this.activeEvent?.effectType === 'workBoost' || this.activeEvent?.effectType === 'workPenalty') {
             low *= this.activeEvent.effect.multiplier;
             high *= this.activeEvent.effect.multiplier;
