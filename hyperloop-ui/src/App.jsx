@@ -674,6 +674,17 @@ function App() {
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           farewellsGiven={farewellsGiven}
           createdAt={createdAt}
+          onCollectReward={(reward) => {
+            if (reward.type === 'cash') {
+              progressionManager.addCash(reward.amount);
+              setBalance(progressionManager.balance);
+              setTotalCashEarned(progressionManager.totalCashEarned);
+            } else {
+              progressionManager.addReputation(reward.amount);
+              setReputation(progressionManager.reputation);
+            }
+            triggerSave();
+          }}
         />
       )}
       {activeTab === "DepartureBoard" && (

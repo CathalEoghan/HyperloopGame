@@ -1,10 +1,11 @@
-import { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
 import countryFlags from '../data/countryFlags.js'
 import cashIcon from '../assets/misc/cash.png'
-import { playHoverSound } from '../utils/sound.js'
+import { playHoverSound, playFarewellAcceptSound, playReputationWorkBonusSound } from '../utils/sound.js'
+import reputationIcon from '../assets/misc/reputation.png'
 import './ProgressPage.css'
 
 const CashValue = ({ amount, suffix = '' }) => (
@@ -14,7 +15,7 @@ const CashValue = ({ amount, suffix = '' }) => (
     </span>
 )
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, createdAt }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, createdAt, onCollectReward }) {
     const [, setTick] = useState(0)
     useEffect(() => {
         const interval = setInterval(() => setTick(t => t + 1), 1000)
@@ -39,6 +40,49 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
         if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
         return pop.toLocaleString()
+    }
+
+    const [claimed, setClaimed] = useState(() => new Set(
+        JSON.parse(localStorage.getItem('hyperloop_progress_rewards') || '[]')
+    ))
+    const claimedRef = React.useRef(new Set(
+        JSON.parse(localStorage.getItem('hyperloop_progress_rewards') || '[]')
+    ))
+    const [floats, setFloats] = useState([])
+    const [fading, setFading] = useState(new Set())
+
+   const getRandomReward = () => {
+    const roll = Math.random() * 100
+    if (roll < 25) return { type: 'cash', amount: 2500 }
+    if (roll < 47) return { type: 'cash', amount: 5000 }
+    if (roll < 65) return { type: 'cash', amount: 10000 }
+    if (roll < 75) return { type: 'cash', amount: 25000 }
+    if (roll < 80) return { type: 'cash', amount: 50000 }
+    if (roll < 92) return { type: 'rep', amount: 5 }
+    if (roll < 98) return { type: 'rep', amount: 10 }
+    return { type: 'rep', amount: 20 }
+}
+    const handleCardClick = (e, key) => {
+        if (claimedRef.current.has(key)) return
+        claimedRef.current.add(key)
+        const reward = getRandomReward()
+        const rect = e.currentTarget.getBoundingClientRect()
+        const id = Date.now() + Math.random()
+        setFloats(prev => [...prev, { id, reward, x: rect.left + rect.width / 2, y: rect.top }])
+        setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
+        setFading(prev => new Set([...prev, key]))
+        if (reward.type === 'rep') playReputationWorkBonusSound()
+else playFarewellAcceptSound()
+onCollectReward(reward)
+        onCollectReward(reward)
+        setTimeout(() => {
+            setClaimed(prev => {
+                const newClaimed = new Set([...prev, key])
+                localStorage.setItem('hyperloop_progress_rewards', JSON.stringify([...newClaimed]))
+                return newClaimed
+            })
+            setFading(prev => { const s = new Set(prev); s.delete(key); return s; })
+        }, 500)
     }
 
     const antarcticaUnlocked = purchasedCities.some(p => p.continent === 'Antarctica')
@@ -181,6 +225,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const countryProgress = (purchasedCountries.size / sortedCountries.length) * 100
 
     return (
+        <>
         <div className="progress-page">
             <div className="progress-content">
             <h2 className="progress-section-header">General Stats</h2>
@@ -220,7 +265,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     const state = getCountryState(country)
                     const flagCode = countryFlags[country]
                     return (
-                        <div key={country} className={`progress-country-card progress-country-${state}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()}>
+                        <div key={country} className={`progress-country-card progress-country-${state}${state === 'connected' && !claimed.has('country:' + country) && !fading.has('country:' + country) ? ' progress-card-unclaimed' : ''}${fading.has('country:' + country) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimed.has('country:' + country) && handleCardClick(e, 'country:' + country)}>
                             {state === 'unknown' ? (
                                 <>
                                     <div className="progress-flag-unknown">?</div>
@@ -254,7 +299,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     const state = getCityState(city)
                     const flagCode = countryFlags[city.country]
                     return (
-                        <div key={city.name} className={`progress-city-card progress-city-${state}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()}>
+                        <div key={city.name} className={`progress-city-card progress-city-${state}${state === 'connected' && !claimed.has('city:' + city.name) && !fading.has('city:' + city.name) ? ' progress-card-unclaimed' : ''}${fading.has('city:' + city.name) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimed.has('city:' + city.name) && handleCardClick(e, 'city:' + city.name)}>
                             {state === 'unknown' ? (
                                 <>
                                     <div className="progress-city-image-unknown">?</div>
@@ -278,6 +323,25 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             </div>
             </div>
         </div>
+        {floats.map(f => (
+            <div key={f.id} style={{
+                position: 'fixed', left: f.x, top: f.y,
+                transform: 'translateX(-50%)',
+                pointerEvents: 'none', zIndex: 999,
+                animation: 'progress-float-up 1.5s ease-out forwards',
+                display: 'flex', alignItems: 'center', gap: '4px',
+                fontFamily: 'Courier New, monospace', fontWeight: 'bold',
+                fontSize: '1rem', color: f.reward.type === 'cash' ? '#f5a623' : '#e74c3c',
+                background: 'rgba(0,0,0,0.75)', borderRadius: '20px', padding: '4px 12px',
+                whiteSpace: 'nowrap',
+            }}>
+                {f.reward.type === 'cash'
+                    ? <><img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount.toLocaleString()}</>
+                    : <><img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount}</>
+                }
+            </div>
+        ))}
+    </>
     )
 }
 

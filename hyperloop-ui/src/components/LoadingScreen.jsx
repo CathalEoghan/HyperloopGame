@@ -41,16 +41,18 @@ const TIPS = [
     "Rank up to unlock new cities to connect.",
     "Build developments to boost your revenue beyond city income.",
     "Re-roll an unlocked city for 15 reputation if it doesn't suit you.",
-    "Give personal farewells at the departure board to earn reputation.",
+    "When a departure is announced, give a personal farewell to earn reputation.",
     "Upgrade your developments up to 3 times for a 100% income boost.",
     "Disconnecting a city costs half the connection fee and 20 reputation.",
-    "Your terminal earns a small income while you're away.",
-    "Tier 2 and 3 cities earn significantly more than Tier 1 cities.",
+    "Your terminal earns income while you're away.",
+    "Tier 2 and 3 cities earn significantly more than Tier 1 cities, but cost more to connect.",
     "Work your terminal manually to earn extra cash.",
-    "Accepting a flight delay costs money but keeps your reputation intact.",
+    "Compensating passengers after a flight delay costs money but keeps your reputation intact.",
     "Developments unlocked by a city stay built even if you disconnect it.",
     "Export your save in Settings to back up your progress.",
-    "Your reputation can never go below zero.",
+    "Your reputation or treasury can never go below zero.",
+    "Farewell windows open 5 minutes before each departure - extend them with upgrades to give yourself more time.",
+    "Check the Progress page — newly connected cities and countries glow gold and reward you with cash or reputation.",
 ]
 
 function LoadingScreen({ onComplete }) {
