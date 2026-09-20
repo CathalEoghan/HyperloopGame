@@ -26,7 +26,16 @@ const WORK_PHRASES = [
 
 let floatId = 0
 
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workEarnings, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
+const formatWorkAmount = (value, tilde = false) => {
+    const t = tilde ? '~' : ''
+    if (value >= 1_000_000_000_000) return `${(value / 1_000_000_000_000).toFixed(1)}t${t}`
+    if (value >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(1)}b${t}`
+    if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}m${t}`
+    if (value >= 1_000) return `${(value / 1_000).toFixed(1)}k${t}`
+    return `${Math.round(value)}${t}`
+}
+
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
     const [floats, setFloats] = useState([])
     const [eventSecondsLeft, setEventSecondsLeft] = useState(activeEvent?.durationSeconds || 0)
     const btnRef = useRef(null)
@@ -135,8 +144,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
         setFloats(prev => [...prev, { id, phrase, hasRep: false, x: rect.left + rect.width / 2, y: rect.top }])
         setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
-        onWork(() => {
-            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: true } : f))
+        onWork((earned) => {
+            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: true, earned } : f))
         })
         playWorkClickSound()
     }
@@ -172,7 +181,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                 </div>
                 <button ref={btnRef} className="work-banner-btn" onClick={handleWork} onMouseEnter={() => playHoverSound()}>
                     <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                        Work (+<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{workEarnings.toLocaleString()})
+                        Work (+£{formatWorkAmount(((workRange?.low || 0) + (workRange?.high || 0)) / 2, true)})
                     </span>
                 </button>
                 <div className="work-divider" />
@@ -218,7 +227,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <div key={f.id} className="work-float" style={{ left: f.x, top: f.y }}>
                         <span className="work-float-phrase">{f.phrase}</span>
                         <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                            +<img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{workEarnings.toLocaleString()}
+                            +£{formatWorkAmount(f.earned || (workRange?.low || 0))}
                             {f.hasRep && (
                                 <>&nbsp;+<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />5</>
                             )}

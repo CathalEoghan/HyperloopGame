@@ -138,6 +138,7 @@ function App() {
   const [showSecretCityModal, setShowSecretCityModal] = useState(false);
   const [preSelectedCity, setPreSelectedCity] = useState(null);
   const [milestoneQueue, setMilestoneQueue] = useState([]);
+  const [cityClaimPending, setCityClaimPending] = useState(false);
   const secretCityTriggered = useRef(false);
   const claimedMilestones = useRef(new Set(
     JSON.parse(localStorage.getItem('hyperloop_claimed_milestones') || '[]')
@@ -256,7 +257,7 @@ function App() {
     setDailyLoginData({ cashBonus, repBonus });
   }, []);
 
-  const [workEarnings, setWorkEarnings] = useState(() => economyManager.calculateWorkClickEarnings(100));
+  const [workRange, setWorkRange] = useState(() => economyManager.calculateWorkClickRange(rankManager.rank));
 
   const triggerSave = (farewells) => {
     saveGame(progressionManager, rankManager, terminalName, farewells ?? farewellsRef.current);
@@ -508,7 +509,7 @@ function App() {
         }
       }
 
-      setWorkEarnings(economyManager.calculateWorkClickEarnings(100));
+      setWorkRange(economyManager.calculateWorkClickRange(rankManager.rank));
       setBalance(progressionManager.balance);
       setRankSet(rankManager.rank);
       rankSetRef.current = rankManager.rank;
@@ -593,16 +594,19 @@ function App() {
           localStorage.removeItem('hyperloop_active_event');
         }}
         onWork={(onRepGain) => {
-          progressionManager.addCash(workEarnings);
+          const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
+          progressionManager.addCash(earned);
           setBalance(progressionManager.balance);
           if (Math.random() < economyManager.getWorkRepChance()) {
             progressionManager.addReputation(5);
             setReputation(progressionManager.reputation);
             playReputationWorkBonusSound();
-            onRepGain?.();
+            onRepGain?.(earned);
+          } else {
+            onRepGain?.(earned);
           }
         }}
-        workEarnings={workEarnings}
+        workRange={workRange}
       />
       <ExperienceBar
         current={totalCashEarned - rankManager.getCumulativeXP(rankSet - 1)}
@@ -844,6 +848,7 @@ function App() {
           if (newCity) {
             progressionManager.unlockCity(newCity);
             claimedCityRef.current = newCity;
+            setCityClaimPending(true);
             prevUnlockedDevCount.current = progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length;
             setTimeout(() => setClaimedCity(newCity), 300);
           }
@@ -885,6 +890,7 @@ function App() {
               })
             }
             claimedCityRef.current = null;
+            setCityClaimPending(false);
             setClaimedCity(null)
           }}
           onReroll={() => {
@@ -903,7 +909,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !claimedCityRef.current && pendingRankUps === 0 && (
+      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !cityClaimPending && pendingRankUps === 0 && (
         <MilestoneModal
           milestone={milestoneQueue[0]}
           onContinue={() => {

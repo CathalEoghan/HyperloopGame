@@ -471,14 +471,35 @@ export class EconomyManager {
         return Math.floor(baseCost * (1 - discount));
     }
 
-    calculateWorkClickEarnings(baseEarnings) {
+    roundWorkValue(value) {
+        if (value < 1000) return Math.round(value / 10) * 10;
+        return Math.round(value / 100) * 100;
+    }
+
+    calculateWorkClickEarnings(dailyIncome) {
         const count = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length;
-        const total = baseEarnings * Math.pow(3, count);
+        const multiplier = 1 + (count * 0.45);
+        const roll = (Math.random() + Math.random()) / 2;
+        const percentage = 0.00005 + roll * 0.00005;
+        let total = dailyIncome * percentage * multiplier + 250;
         if (this.activeEvent?.effectType === 'workBoost' || this.activeEvent?.effectType === 'workPenalty') {
-            return Math.floor(total * this.activeEvent.effect.multiplier);
+            total *= this.activeEvent.effect.multiplier;
         }
-        return Math.floor(total);
+        return this.roundWorkValue(total);
+    }
+
+    calculateWorkClickRange(dailyIncome) {
+        const count = this.progressionManager.purchasedUpgrades
+            .filter(u => u.effectType === 'workClickBonus').length;
+        const multiplier = 1 + (count * 0.45);
+        let low = dailyIncome * 0.00005 * multiplier + 250;
+        let high = dailyIncome * 0.0001 * multiplier + 250;
+        if (this.activeEvent?.effectType === 'workBoost' || this.activeEvent?.effectType === 'workPenalty') {
+            low *= this.activeEvent.effect.multiplier;
+            high *= this.activeEvent.effect.multiplier;
+        }
+        return { low: this.roundWorkValue(low), high: this.roundWorkValue(high) };
     }
 
     calculateOfflineCap() {
