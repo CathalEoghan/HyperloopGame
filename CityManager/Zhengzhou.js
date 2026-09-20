@@ -9,7 +9,7 @@ export const Zhengzhou = new City(
     [escapeRoom],
     "China",
     "Asia",
-    2,
+    3,
     "Zhengzhou contains the exceptionally well-preserved ruins of an ancient Shang Dynasty capital that is more than 3,600 years old.",
     false
 );

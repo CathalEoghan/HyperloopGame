@@ -9,7 +9,7 @@ export const Marseille = new City(
     [soapStore],
     "France",
     "Europe",
-    1,
+    2,
     "Marseille is home to France's largest and the world's longest bench, the Banc de la Corniche. It stretches for nearly 3 kilometers (nearly 2 miles) along the Mediterranean coast.",
     false
 );

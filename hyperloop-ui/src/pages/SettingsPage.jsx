@@ -6,6 +6,25 @@ import './SettingsPage.css'
 
 const VERSION_LOG = [
     {
+        version: 'v1.2',
+        label: 'Bug Fixes & Polish',
+        date: 'September 2026',
+        notes: [
+            'Development build-cost discounts now correctly applied at point of purchase',
+            'Development upgrade-cost discounts now correctly applied at point of upgrade',
+            'Guaranteed-tier city reroll now picks randomly from all eligible cities',
+            'Home city displayed beneath terminal name in top banner',
+            'Clicking owned city flags on globe opens city info modal',
+            'Rank/Level terminology unified to Rank throughout',
+            'Upgrade confirmation now plays distinct sound',
+            'Farewell modal background matches departure board styling',
+            'isSouthern flag corrected for Astana, Nairobi and Kigali',
+            'Christchurch re-tiered to match its population',
+            'City tiers standardised: Tier 1 under 1M, Tier 2 1M–10M, Tier 3 over 10M',
+            'Intro audio now respects sound settings',
+        ]
+    },
+    {
         version: 'v1.1',
         label: 'Economy & Polish',
         date: 'September 2026',

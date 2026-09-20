@@ -9,7 +9,7 @@ export const Tehran = new City(
     [kebabShop],
     "Iran",
     "Asia",
-    2,
+    3,
     "The area of Tehran dates back to the Elamite kingdom of the 4th millennium BC – the oldest civilization known in the region.",
     false
 );

@@ -9,7 +9,7 @@ export const Bordeaux = new City(
     [premierWineImports],
     "France",
     "Europe",
-    1,
+    2,
     "Bordeaux’s signature pastry, the canelé, was invented by nuns using leftover egg yolks. Historically, local winemakers used only egg whites to clarify their wine (fining), leaving behind massive amounts of yolks which were donated to convents to make these small, rum-and-vanilla-flavored cakes.",
     false
 );

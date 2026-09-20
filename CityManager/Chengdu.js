@@ -9,7 +9,7 @@ export const Chengdu = new City(
     [noodleBar],
     "China",
     "Asia",
-    2,
+    3,
     "Chengdu is the global epicenter for the conservation of giant pandas. The Chengdu Research Base of Giant Panda Breeding is the world's largest facility dedicated to protecting and breeding them.",
     false
 );

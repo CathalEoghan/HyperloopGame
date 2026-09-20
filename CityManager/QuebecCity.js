@@ -9,7 +9,7 @@ export const QuebecCity = new City(
     [pancakeHouse],
     "Canada",
     "North America",
-    2,
+    1,
     "Quebec City is the only remaining fortified, walled city in North America north of Mexico.",
     false
 );

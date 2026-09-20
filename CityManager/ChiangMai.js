@@ -9,7 +9,7 @@ export const ChiangMai = new City(
     [florist],
     "Thailand",
     "Asia",
-    1,
+    2,
     "Chiang Mai is globally famous for its Yi Peng Festival, where thousands of illuminated paper lanterns are released into the night sky.",
     false
 );

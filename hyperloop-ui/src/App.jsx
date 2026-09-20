@@ -113,7 +113,8 @@ function App() {
     const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
     const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
     if (progressionManager.purchasedCities.length <= 1) return []
-    return allUnlocked.filter(d => !shown.includes(d.name))
+    const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
+    return allUnlocked.filter(d => !shown.includes(d.name) && !homeCityRewardNames.has(d.name))
   });
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [hasFreeReroll, setHasFreeReroll] = useState(false);
@@ -345,7 +346,8 @@ function App() {
       const currentUnlockedCount = currentUnlocked.length;
       if (currentUnlockedCount > prevUnlockedDevCount.current) {
         if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
-          const newOnes = currentUnlocked.slice(prevUnlockedDevCount.current);
+          const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
+          const newOnes = currentUnlocked.slice(prevUnlockedDevCount.current).filter(d => !homeCityRewardNames.has(d.name));
           setDevRevealQueue(q => [...q, ...newOnes]);
         }
         prevUnlockedDevCount.current = currentUnlockedCount;
@@ -656,8 +658,8 @@ function App() {
           economyManager={economyManager}
           onSave={triggerSave}
           onUpgradeBuilt={(upgrade) => setRevealedUpgradeQueue(q => [...q, upgrade])}
-         onUpgrade={(development, discountMultiplier = 1.0) => {
-    const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
+          onUpgrade={(development, discountMultiplier = 1.0) => {
+            const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
             if (success) triggerSave();
             return success;
           }}
@@ -819,14 +821,14 @@ function App() {
           let newCity = progressionManager.getRandomUnlockedCity(allCities);
           if (minTier > 1 && newCity && newCity.tier < minTier) {
             const betterCities = allCities.filter(c =>
-  c.tier >= minTier &&
-  !progressionManager.purchasedCities.includes(c) &&
-  !progressionManager.unlockedCities.includes(c)
-);
-const betterCity = betterCities.length > 0
-  ? betterCities[Math.floor(Math.random() * betterCities.length)]
-  : null;
-if (betterCity) newCity = betterCity;
+              c.tier >= minTier &&
+              !progressionManager.purchasedCities.includes(c) &&
+              !progressionManager.unlockedCities.includes(c)
+            );
+            const betterCity = betterCities.length > 0
+              ? betterCities[Math.floor(Math.random() * betterCities.length)]
+              : null;
+            if (betterCity) newCity = betterCity;
           }
           if (newCity) {
             progressionManager.unlockCity(newCity);
@@ -863,7 +865,8 @@ if (betterCity) newCity = betterCity;
             if (progressionManager.purchasedCities.length > 1) {
               const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
               const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
-              const unshown = allUnlocked.filter(d => !shown.includes(d.name))
+              const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
+              const unshown = allUnlocked.filter(d => !shown.includes(d.name) && !homeCityRewardNames.has(d.name))
               setDevRevealQueue(prev => {
                 const prevNames = new Set(prev.map(p => p.name))
                 const newItems = unshown.filter(d => !prevNames.has(d.name))

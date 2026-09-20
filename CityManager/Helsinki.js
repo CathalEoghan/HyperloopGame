@@ -9,7 +9,7 @@ export const Helsinki = new City(
     [metalBar],
     "Finland",
     "Europe",
-    1,
+    2,
     "To combat hazardous ice during long winters, some areas of the city pump warm water under the granite cobblestones.",
     false
 );

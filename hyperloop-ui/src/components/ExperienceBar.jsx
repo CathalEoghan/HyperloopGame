@@ -1,4 +1,3 @@
-
 import './ExperienceBar.css'
 
 function ExperienceBar({current, max, nextRank}) {
@@ -12,7 +11,7 @@ return (
 
     <div className="fill" style={{ width: `${percent}%` }}></div>
     <div className="text">
-        {xpRemaining.toFixed(0)} XP to Level {nextRank}
+        {xpRemaining.toFixed(0)} XP to Rank {nextRank}
     </div>
 
     </div>

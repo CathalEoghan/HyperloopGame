@@ -9,7 +9,7 @@ export const Tijuana = new City(
     [saladBar],
     "Mexico",
     "North America",
-    1,
+    2,
     "The traditional Caesar salad was invented in Tijuana in 1924 by Italian-American restaurateur Caesar Cardini at his restaurant, Caesar’s.",
     false
 );

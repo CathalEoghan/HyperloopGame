@@ -9,7 +9,7 @@ export const Brussels = new City(
     [waffleHouse],
     "Belgium",
     "Europe",
-    1,
+    2,
     "Brussels literally translates from Old Dutch as a 'settlement in the marsh.'",
     false
 );

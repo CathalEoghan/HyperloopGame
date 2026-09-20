@@ -9,7 +9,7 @@ export const Honolulu = new City(
     [surfShop],
     "United States of America",
     "Oceania",
-    1,
+    2,
     "Honolulu is the only U.S. city home to a royal palace. 'Iolani Palace had electricity and flush toilets years before the White House did, and - thanks to its legal jurisdiction encompassing miles of surrounding ocean - the city is technically the largest in the world by area.",
     false
 );
