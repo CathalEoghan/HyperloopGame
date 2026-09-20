@@ -72,8 +72,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
         setFading(prev => new Set([...prev, key]))
         if (reward.type === 'rep') playReputationWorkBonusSound()
-else playFarewellAcceptSound()
-onCollectReward(reward)
+        else playFarewellAcceptSound()
         onCollectReward(reward)
         setTimeout(() => {
             setClaimed(prev => {
