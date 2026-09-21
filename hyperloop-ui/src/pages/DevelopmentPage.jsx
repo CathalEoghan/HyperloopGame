@@ -7,7 +7,9 @@ import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
+import poorIcon from '../assets/misc/poor.png'
 import reputationIcon from '../assets/misc/reputation.png'
+import constructionIcon from '../assets/misc/construction.png'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
@@ -143,7 +145,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
                             {underConstruction.some(d => d.name === selectedDevelopment.name) ? (
                                 <>
-                                    <h3>🚧 {selectedDevelopment.name}</h3>
+                                    <h3><img src={constructionIcon} alt="construction" style={{ width: '20px', height: '20px', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '0' }} />{selectedDevelopment.name}</h3>
                                     <p>Under construction!</p>
                                     <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedDevelopment.finishTime))}</strong></p>
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
@@ -271,6 +273,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     countryAdvertisingBoost: (v) => `+${Math.round(v * 100)}% income from cities in this country`,
                                                     localCountryBoost: () => `Bonus income from cities in your home country`,
                                                     dailyLoginMultiplier: () => 'Doubles your daily login cash bonus',
+                                                    progressRewardBoost: () => 'Doubles cash rewards from city and country discoveries on the Progress page',
                                                     terminalAgeBoost: () => '+1% to all income per 10 days active; grows the longer you play',
                                                     seasonBoost: (v, upgrade) => { const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${Math.round(v * 100)}% income during this ${isMonthly ? 'month' : 'season'}`; },
                                                     rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll cities`,
@@ -322,7 +325,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 {showNoFunds && (
                     <div className="modal-overlay" onClick={() => setShowNoFunds(false)}>
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
-                            <h3>💸 Not enough funds!</h3>
+                            <h3><img src={poorIcon} alt="not enough funds" style={{ width: '20px', height: '20px', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '0' }} />Not enough funds!</h3>
                             <p>You need more money to build this development.</p>
                             <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowNoFunds(false) }}>Close</button>
                         </div>

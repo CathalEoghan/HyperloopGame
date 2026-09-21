@@ -706,3 +706,8 @@ hello.png - Photo by Magnific via flaticon.com
 pin.jpg - Photo by Vitaly Gorbachev via flaticon.com
 crane.png - Photo by Magnific via flaticon.com
 monitor.png - Photo by xnimrodx via flaticon.com
+warning.png - Photo by Gregor Cresnar via flaticon.com
+fireworks.png - Photo by Icon Mela via flaticon.com
+poor.png - Photo by Puckung via flaticon.com
+monitor.png - Photo by xnimrodx via flaticon.com
+warning.png - Photo by Gregor Cresnar via flaticon.com

@@ -1,7 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=B612+Mono:wght@400;700&display=swap');
+
 .departure-board {
     background-color: #0a0a0a;
     color: #f5a623;
-    font-family: 'Courier New', Courier, monospace;
+    font-family: 'B612 Mono', 'Courier New', monospace;
     padding: 24px;
     min-height: calc(100vh - 116px);
     padding-bottom: 116px;
@@ -32,7 +34,6 @@
     font-size: 0.75rem;
     letter-spacing: 2px;
     white-space: nowrap;
-    /* Force thead row background to match board */
     background-color: #0a0a0a;
 }
 
@@ -52,14 +53,12 @@
     background-color: #111;
 }
 
-/* Divider between the two halves */
 .board-col-divider {
     padding: 0 !important;
     width: 32px;
     border-left: 1px solid #333 !important;
 }
 
-/* Flap tile characters */
 .flap-text {
     display: inline-flex;
     gap: 1px;
@@ -73,12 +72,12 @@
     width: 18px;
     height: 26px;
     border-radius: 2px;
-    font-family: 'Courier New', monospace;
+    font-family: 'B612 Mono', 'Courier New', monospace;
     font-size: 1rem;
     position: relative;
 }
 
-.flap-char::after {
+.flap-char::before {
     content: '';
     position: absolute;
     left: 0;
@@ -86,6 +85,24 @@
     top: 50%;
     height: 1px;
     background: #000;
+}
+
+.flap-char::after {
+    content: attr(data-char);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: charFlipIn 0.5s ease-out both;
+    animation-delay: var(--delay, 0ms);
+    transform-origin: center top;
+}
+
+@keyframes charFlipIn {
+    0%   { transform: perspective(300px) rotateX(-90deg); opacity: 0; }
+    60%  { transform: perspective(300px) rotateX(8deg);   opacity: 1; }
+    100% { transform: perspective(300px) rotateX(0deg);   opacity: 1; }
 }
 
 .flap-space {
@@ -99,26 +116,20 @@
 }
 
 .flip-card {
-    animation: flipIn 0.4s ease-out;
     padding: 12px 16px;
 }
 
-@keyframes flipIn {
-    0%   { transform: rotateX(-90deg); opacity: 0; }
-    100% { transform: rotateX(0deg);   opacity: 1; }
-}
-
 .board-table td:nth-child(1), 
-.board-table td:nth-child(6) { min-width: 200px; } /* DESTINATION */
+.board-table td:nth-child(6) { min-width: 200px; }
 
 .board-table td:nth-child(2),
-.board-table td:nth-child(7) { min-width: 80px; }  /* DEPARTS */
+.board-table td:nth-child(7) { min-width: 80px; }
 
 .board-table td:nth-child(3),
-.board-table td:nth-child(8) { min-width: 60px; }  /* GATE */
+.board-table td:nth-child(8) { min-width: 60px; }
 
 .board-table td:nth-child(4),
-.board-table td:nth-child(9) { min-width: 130px; } /* STATUS */
+.board-table td:nth-child(9) { min-width: 130px; }
 
 .board-table td:nth-child(3),
 .board-table td:nth-child(4),

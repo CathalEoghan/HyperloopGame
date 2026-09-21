@@ -27,6 +27,7 @@ const TIPS = [
     "Seasonal packages boost your income during their respective season.",
     "City advertising campaigns boost all income from cities in that country.",
     "Check the Settings page to manually save, export, or back up your progress.",
+    "Work earnings scale with your terminal's income - the more you earn, the more each click is worth.",
 ]
 
 function TipsBar() {

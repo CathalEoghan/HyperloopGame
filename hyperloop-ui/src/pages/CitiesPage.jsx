@@ -7,6 +7,8 @@ import countryFlags from '../data/countryFlags.js'
 import cityCoordinates from '../data/cityCoordinates.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
+import constructionIcon from '../assets/misc/construction.png'
+import poorIcon from '../assets/misc/poor.png'
 import { playClickSound2, playConstructionSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 
@@ -207,7 +209,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
                             {underConstruction.some(c => c.name === selectedCity.name) ? (
                                 <>
-                                    <h3>🚧 {selectedCity.name}</h3>
+                                    <h3><img src={constructionIcon} alt="construction" style={{ width: '20px', height: '20px', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '0' }} />{selectedCity.name}</h3>
                                     <p>Under construction!</p>
                                     <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedCity.finishTime))}</strong></p>
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
@@ -328,7 +330,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 {showNoFunds && (
                     <div className="modal-overlay" onClick={() => setShowNoFunds(false)}>
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
-                            <h3>💸 Not enough funds!</h3>
+                            <h3><img src={poorIcon} alt="not enough funds" style={{ width: '20px', height: '20px', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '0' }} />Not enough funds!</h3>
                             <p>You need more money to connect this city.</p>
                             <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowNoFunds(false) }}>Close</button>
                         </div>

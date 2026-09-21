@@ -31,11 +31,12 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
+import monitorIcon from './assets/misc/monitor.png'
 import "./App.css";
 
 const OFFLINE_RATE = 1.0;
@@ -611,6 +612,7 @@ function App() {
         current={totalCashEarned - rankManager.getCumulativeXP(rankSet - 1)}
         max={rankManager.calculateNextRankXP(rankSet)}
         nextRank={rankSet + 1}
+        activeEvent={activeEvent}
       />
       {activeTab === "Home" && (
         <HomePage
@@ -942,7 +944,7 @@ function App() {
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 15,
-         background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.18)' : 'rgba(192,57,43,0.18)',
+         background: activeEvent.type === 'positive' ? 'rgba(39,174,96,0.18)' : 'rgba(192,57,43,0.18)',
           transition: 'background 0.5s ease',
         }} />
       )}
@@ -960,7 +962,7 @@ function App() {
             textAlign: 'center', fontFamily: 'Inter, sans-serif',
             boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
           }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>🖥️</div>
+            <img src={monitorIcon} alt="monitor" style={{ width: '48px', height: '48px', marginBottom: '12px', border: 'none', borderRadius: '0' }} />
             <h2 style={{ fontFamily: 'Courier New, monospace', color: '#f5a623', margin: '0 0 12px' }}>
               Desktop Recommended
             </h2>
@@ -968,12 +970,9 @@ function App() {
               Hyperloop Empire is designed for desktop browsers. On smaller screens some features may not display correctly.
             </p>
             <button
-              style={{
-                background: '#222', color: 'white', border: 'none',
-                borderRadius: '8px', padding: '10px 24px', cursor: 'pointer',
-                fontFamily: 'Inter, sans-serif', fontWeight: 'bold', fontSize: '0.9rem'
-              }}
-              onClick={() => setShowMobileWarning(false)}
+              className="closeButton"
+              onMouseEnter={() => playHoverSound()}
+              onClick={() => { playClickSound2(); setShowMobileWarning(false); }}
             >
               Continue anyway
             </button>

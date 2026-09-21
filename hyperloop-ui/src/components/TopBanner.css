@@ -176,7 +176,12 @@ font-size: 1rem;
     font-size: 0.72rem;
     font-weight: bold;
     letter-spacing: 0.5px;
-    animation: event-slide-in 0.3s ease;
+    animation: event-slide-in 0.3s ease, event-indicator-pulse 3s ease-in-out 0.3s infinite;
+}
+
+@keyframes event-indicator-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
 }
 
 .event-indicator-positive {

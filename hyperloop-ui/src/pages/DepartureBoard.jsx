@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import './DepartureBoard.css'
 
 function getOrdinal(n) {
@@ -8,12 +8,16 @@ function getOrdinal(n) {
 }
 
 function FlapText({ text }) {
+    const delaysRef = React.useRef(null)
+    if (!delaysRef.current || delaysRef.current.length !== text.length) {
+        delaysRef.current = text.split('').map(() => Math.floor(Math.random() * 1700))
+    }
     return (
         <span className="flap-text">
             {text.split('').map((char, i) =>
                 char === ' '
                     ? <span key={i} className="flap-space"> </span>
-                    : <span key={i} className="flap-char">{char}</span>
+                    : <span key={i} className="flap-char" data-char={char} style={{ '--delay': `${delaysRef.current[i]}ms` }} />
             )}
         </span>
     )
@@ -22,6 +26,7 @@ function FlapText({ text }) {
 function DepartureBoard({ purchasedCities, homeCity }) {
     const [schedule, setSchedule] = useState([])
     const [, setTick] = useState(0)
+    const lagMapRef = React.useRef({})
 
     function generateSchedule(cities) {
         const departureCities = cities.filter(c => !homeCity || c.name !== homeCity.name)
@@ -67,9 +72,9 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         return departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay)
     }
 
-    function getStatus(hour, minute, delayed) {
-        const now = new Date()
-        const currentMinutes = now.getHours() * 60 + now.getMinutes()
+    function getStatus(hour, minute, delayed, lag = 0) {
+        const laggedNow = new Date(Date.now() - lag * 1000)
+        const currentMinutes = laggedNow.getHours() * 60 + laggedNow.getMinutes()
         const diff = (hour * 60 + minute) - currentMinutes
         if (diff <= 0)  return { label: 'DEPARTED',    color: '#666' }
         if (diff <= 5)  return { label: 'GATE CLOSED', color: '#e74c3c' }
@@ -81,6 +86,16 @@ function DepartureBoard({ purchasedCities, homeCity }) {
     }
 
     const currentCityNames = new Set(purchasedCities.map(c => c.name))
+
+    useEffect(() => {
+        if (schedule.length === 0) return
+        const lags = schedule.map(() => 2 + Math.random() * 3.9)
+        const maxIdx = Math.floor(Math.random() * schedule.length)
+        lags[maxIdx] = 6
+        const newMap = {}
+        schedule.forEach((entry, i) => { newMap[entry.name] = lags[i] })
+        lagMapRef.current = newMap
+    }, [schedule.length])
 
     useEffect(() => {
         if (!purchasedCities || purchasedCities.length === 0) return
@@ -152,7 +167,7 @@ function DepartureBoard({ purchasedCities, homeCity }) {
                     setSchedule(filtered)
                 }
             }
-        }, 10000)
+        }, 1000)
         return () => clearInterval(interval)
     }, [purchasedCities])
 
@@ -169,7 +184,8 @@ function DepartureBoard({ purchasedCities, homeCity }) {
 
     const renderCells = (entry) => {
         if (!entry) return <><td/><td/><td/><td/></>
-        const status = getStatus(entry.hour, entry.minute, entry.delayed)
+        const lag = lagMapRef.current[entry.name] || 0
+        const status = getStatus(entry.hour, entry.minute, entry.delayed, lag)
         const isGone = status.label === 'DEPARTED'
         const showGate = status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
         return (

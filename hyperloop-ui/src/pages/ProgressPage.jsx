@@ -65,7 +65,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const handleCardClick = (e, key) => {
         if (claimedRef.current.has(key)) return
         claimedRef.current.add(key)
+        const hasBoost = (purchasedUpgrades || []).some(u => u.effectType === 'progressRewardBoost')
         const reward = getRandomReward()
+        if (hasBoost) reward.amount *= 2
         const rect = e.currentTarget.getBoundingClientRect()
         const id = Date.now() + Math.random()
         setFloats(prev => [...prev, { id, reward, x: rect.left + rect.width / 2, y: rect.top }])
