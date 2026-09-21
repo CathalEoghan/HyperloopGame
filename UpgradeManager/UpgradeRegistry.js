@@ -157,6 +157,7 @@ import { julyTicketDeals } from './JulyTicketDeals.js'
 import { foundersHall } from './FoundersHall.js'
 import { experimentalTechnology } from './ExperimentalTechnology.js'
 import { commemorativeDisplays } from './CommemorativeDisplays.js'
+import { expandedDutyFree } from './ExpandedDutyFree.js'
 
 
 
@@ -321,6 +322,7 @@ export const allUpgrades = [
     foundersHall,
     commemorativeDisplays,
     experimentalTechnology,
+    expandedDutyFree,
 
     
 

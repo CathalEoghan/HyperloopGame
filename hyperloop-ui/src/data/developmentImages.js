@@ -337,6 +337,11 @@ const developmentImages = {
     "Founders' Hall": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FoundersHall.jpg",
     "Commemorative Displays": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CommemorativeDisplays.jpg",
     "Experimental Technology": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ExperimentalTechnology.jpg",
+    "Sleeping Pods": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SleepingPods.jpg",
+    "Car Rental": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CarRental.jpg",
+    "Luggage Storage": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Luggage Storage.jpg",
+    "Expanded Duty-Free": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ExpandedDutyFree.jpg",
+    "Sim Card Services": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SimCardServices.jpg",
 
 
 

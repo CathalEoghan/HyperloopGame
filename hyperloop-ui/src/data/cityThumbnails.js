@@ -333,6 +333,11 @@ import SaltLakeCity from '../assets/cities-thumb/SaltLakeCity.jpg'
 import Niamey from '../assets/cities-thumb/Niamey.jpg'
 import Conakry from '../assets/cities-thumb/Conakry.jpg'
 import AntarcticPeninsula from '../assets/cities-thumb/AntarcticPeninsula.jpg'
+import JejuCity from '../assets/cities-thumb/JejuCity.jpg'
+import Memphis from '../assets/cities-thumb/Memphis.jpg'
+import Jeddah from '../assets/cities-thumb/Jeddah.jpg'
+import Rhodes from '../assets/cities-thumb/Rhodes.jpg'
+import Ibiza from '../assets/cities-thumb/Ibiza.jpg'
 
 
 
@@ -674,7 +679,13 @@ const cityImages = {
     "Salt Lake City": SaltLakeCity,
     Niamey: Niamey,
     "San Juan": SanJuan,
-    "Antarctic Peninsula": AntarcticPeninsula
+    "Antarctic Peninsula": AntarcticPeninsula,
+    Ibiza: Ibiza,
+    "Jeju City": JejuCity,
+    Memphis: Memphis,
+    Jeddah: Jeddah,
+    Rhodes: Rhodes,
+
     
 
 

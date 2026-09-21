@@ -335,6 +335,11 @@ import { Skopje } from './Skopje.js'
 import { SanJuan } from './SanJuan.js'
 import { Córdoba } from './Córdoba.js'
 import { AntarcticPeninsula } from './AntarcticPeninsula.js'
+import { Memphis } from './Memphis.js'
+import { Rhodes } from './Rhodes.js'
+import { Jeddah } from './Jeddah.js'
+import { JejuCity } from './JejuCity.js'
+import { Ibiza } from './Ibiza.js'
 
 
 export const allCities = [
@@ -673,7 +678,12 @@ export const allCities = [
     SaltLakeCity,
     NDjamena,
     Córdoba,
-    AntarcticPeninsula
+    AntarcticPeninsula,
+    Ibiza,
+    JejuCity,
+    Memphis,
+    Jeddah,
+    Rhodes,
 
 
 

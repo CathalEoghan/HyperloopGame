@@ -180,6 +180,10 @@ import { tangoBar } from './TangoBar.js'
 import { salsaBar } from './SalsaBar.js'
 import { tropicalJuiceBar } from './TropicalJuiceBar.js'
 import { kennel } from './Kennel.js'
+import { simCardServices } from './SimCardServices.js'
+import { sleepingPods } from './SleepingPods.js'
+import { carRental } from './CarRental.js'
+import { luggageStorage } from './LuggageStorage.js'
 
 
 
@@ -365,6 +369,10 @@ export const allDevelopments = [
     tropicalJuiceBar,
     tangoBar,
     kennel,
+    luggageStorage,
+    sleepingPods,
+    simCardServices,
+    carRental,
 
 
 ]

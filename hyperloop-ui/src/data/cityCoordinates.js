@@ -335,6 +335,11 @@ const cityCoordinates = {
     "Córdoba":            {"lat": -31.4201, "lng": -64.1888},
     "Antarctic Peninsula":{"lat": -67.5,    "lng": -68.0},
     "Kuching": { lat: 1.5497, lng: 110.3592 },
+    "Jeddah":   { lat: 21.5428, lng:  39.1980 },
+"Rhodes":   { lat: 36.4333, lng:  28.2167 },
+"Memphis":  { lat: 35.1495, lng: -90.0490 },
+"Jeju City":{ lat: 33.5097, lng: 126.5220 },
+"Ibiza":    { lat: 38.9490, lng:   1.3930 },
 
 
 

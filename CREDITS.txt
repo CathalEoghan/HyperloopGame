@@ -336,7 +336,11 @@ Niamey.jpg - Photo by Sakou Gado via Wikimedia Commons
 SanJuan.jpg - Photo by Diego F. Parra via Pexels
 Guayaquil.jpg - Photo by Viajante Dibujero via Pexels
 AntarcticPeninsula.jpg - Photo by Hugo Sykes via Pexels
-
+Ibiza.jpg - Photo by Raymond Petrik via Pexels
+Rhodes.jpg - Photo by George Alex via Pexels
+Jeddah.jpg - Photo by dalya Al via Pexels
+JejuCity.jpg - Photo by J. Patrick Fischer via Pexels
+Memphis.jpg - Photo by Gavin Young via Pexels
 
 
 
@@ -672,6 +676,11 @@ TrafficManagementStrategy.jpg - Photo by Mr Whittington via Pexels
 ExperimentalTechnology.jpg - Photo by Greyson Miguel via Pexels
 FoundersHall.jpg - Photo by Michael D Beckwith via Pexels
 CommemorativeDisplays.jpg - Photo by Robert So via Pexels
+LuggageStorage.jpg - Photo by Jan van der Wolf via Pexels
+ExpandedDutyFree.jpg - Photo by Travelling Tourist via Pexels
+SleepingPods.jpg - Photo by cottonbro studio via Pexels
+CarRental.jpg - Photo by Negative Space via Pexels
+SimCardServices.jpg - Photo by Jacob via Pexels
 
 SOUNDS
 
@@ -695,3 +704,5 @@ ReputationIcon.png - <a href="https://www.flaticon.com/free-icons/clean" title="
 globeIcon.png - Photo by pngtree via pngtree
 hello.png - Photo by Magnific via flaticon.com
 pin.jpg - Photo by Vitaly Gorbachev via flaticon.com
+crane.png - Photo by Magnific via flaticon.com
+monitor.png - Photo by xnimrodx via flaticon.com

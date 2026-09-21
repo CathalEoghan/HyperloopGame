@@ -335,6 +335,11 @@ const cityImages = {
     "San Juan": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanJuan.jpg",
     "Antarctic Peninsula": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AntarcticPeninsula.jpg",
     "Córdoba": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Córdoba.jpg",
+    "Jeju City": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/JejuCity.jpg",
+    "Rhodes": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Rhodes.jpg",
+    "Ibiza": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ibiza.jpg",
+    "Memphis": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Memphis.jpg",
+    "Jeddah": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Jeddah.jpg",
 
 
 

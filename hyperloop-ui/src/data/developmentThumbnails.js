@@ -337,6 +337,11 @@ import ExperimentalTechnology from '../assets/developments-thumb/ExperimentalTec
 import FoundersHall from '../assets/developments-thumb/FoundersHall.jpg'
 import CommemorativeDisplays from '../assets/developments-thumb/CommemorativeDisplays.jpg'
 import CrimePreventionCampaign from '../assets/developments-thumb/CrimePreventionCampaign.jpg'
+import SleepingPods from '../assets/developments-thumb/SleepingPods.jpg'
+import ExpandedDutyFree from '../assets/developments-thumb/ExpandedDutyFree.jpg'
+import CarRental from '../assets/developments-thumb/CarRental.jpg'
+import LuggageStorage from '../assets/developments-thumb/LuggageStorage.jpg'
+import SimCardServices from '../assets/developments-thumb/SimCardServices.jpg'
 
 
 const developmentImages = {
@@ -678,6 +683,11 @@ const developmentImages = {
     "Experimental Technology": ExperimentalTechnology,
     "Commemorative Displays": CommemorativeDisplays,
     "Founders' Hall": FoundersHall,
+    "Sim Card Services": SimCardServices,
+    "Sleeping Pods": SleepingPods,
+    "Expanded Duty-Free": ExpandedDutyFree,
+    "Car Rental": CarRental,
+    "Luggage Storage": LuggageStorage,
 
 
 
