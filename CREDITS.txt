@@ -696,6 +696,7 @@ eventSound.mp3 - Sound by DRAGON-STUDIO via Pixabay
 dailyLogin.wav - Sound by rhodesmas via Freesound
 notEnoughFunds.wav - Sound by rhodesmas via Freesound
 DepartureBoard.mp3 - Sound by tilllt via Freesound
+phoneNotification.mp3 - Sound by nevak36 via Freesound
 
 MISC IMAGES
 
@@ -711,3 +712,4 @@ fireworks.png - Photo by Icon Mela via flaticon.com
 poor.png - Photo by Puckung via flaticon.com
 monitor.png - Photo by xnimrodx via flaticon.com
 warning.png - Photo by Gregor Cresnar via flaticon.com
+phone.png - Photo by Magnific via flaticon.com

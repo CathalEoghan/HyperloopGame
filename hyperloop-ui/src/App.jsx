@@ -944,7 +944,7 @@ function App() {
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 15,
-         background: activeEvent.type === 'positive' ? 'rgba(39,174,96,0.18)' : 'rgba(192,57,43,0.18)',
+         background: activeEvent.type === 'positive' ? 'rgba(39,174,96,0.08)' : 'rgba(192,57,43,0.18)',
           transition: 'background 0.5s ease',
         }} />
       )}

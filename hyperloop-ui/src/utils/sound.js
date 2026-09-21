@@ -16,6 +16,8 @@ import diceRollSound from '../assets/sounds/diceRoll.mp3'
 import dailyLoginSound from '../assets/sounds/dailyLogin.wav'
 import notEnoughFundsSound from '../assets/sounds/notEnoughFunds.wav'
 import departureBoardSound from '../assets/sounds/departureBoard.mp3'
+import splitFlapLong from '../assets/sounds/splitFlapLong.wav'
+import splitFlapShort from '../assets/sounds/splitFlapShort.wav'
 
 let audioUnlocked = false
 
@@ -55,6 +57,8 @@ export function playOpeningAudio()              { play(openingAudio) }
 export function playDevelopmentUnlockedSound()  { play(developmentUnlocked) }
 export function playDailyLoginSound()           { play(dailyLoginSound) }
 export function playNotEnoughFundsSound()       { play(notEnoughFundsSound) }
+export function playSplitFlapLong()  { play(splitFlapLong) }
+export function playSplitFlapShort() { play(splitFlapShort) }
 export function playDepartureBoardSound() {
     if (!canPlay()) return null
     const audio = new Audio(departureBoardSound)
