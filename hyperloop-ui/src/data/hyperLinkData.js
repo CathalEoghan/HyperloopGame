@@ -32,6 +32,7 @@ export const FIRST_NAMES_MALE = [
     'Nico', 'Ivan', 'Felix', 'Adrian', 'Julian', 'Xavier',
     'Javier', 'Morgan', 'Tony', 'Matt', 'Matthew', 'Matty',
     'Davie', 'Glen', 'Glenn', 'Mark', 'Marc', 'Chase',
+    'Jared', 'Gerard', 'Jerry', 'Micah',
 ]
 
 export const FIRST_NAMES_FEMALE = [
@@ -86,7 +87,9 @@ export const FIRST_NAMES_FEMALE = [
     'Rhonda', 'Marigold', 'Nellie', 'Lulu', 'Ursula', 'Genevieve', 'Ginny',
     'Shona', 'Ona', 'Tess', 'Liz', 'Lizzie', 'Lizzy', 'Regina', 'Gina',
     'Tara', 'Brita', 'Reeta', 'Katie', 'Katy', 'Kat', 'Kathleen', 'Lena',
-    'Alexa', 'Xandra', 'Zara', 'Zahra', 'Greta',
+    'Alexa', 'Xandra', 'Zara', 'Zahra', 'Greta', 'Kim', 'Kimberly', 'Kimberlee',
+    'Brianna', 'Breannah', 'Eloise', 'Elise', 'Eliza', 'Liza', 'Theresa', 'Therese',
+    'Blanca', 'Floritza', 'Stacey', 'Bessie', 
 ]
 
 export const SURNAMES = [
@@ -125,7 +128,8 @@ export const SURNAMES = [
     'Mitchell', 'Anderson', 'Phillips', 'Campbell', 'Stewart',
     'Murphy', "O'Brien", 'Ryan', 'Kelly', 'Sullivan', 'Brennan',
     'Carlisle', 'Carlton', 'Roach', 'Paulson', 'Daniels', 'Stevens',
-    'Carpenter',
+    'Carpenter', 'Wolfe', 'Parker', 'Park', 'Creighton', 'Windsor',
+    'De Santos', 
 ]
 
 export const POSTS = {
