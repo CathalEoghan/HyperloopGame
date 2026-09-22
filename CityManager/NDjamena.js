@@ -1,12 +1,12 @@
 
 // N'Djamena
 import { City } from "./City.js";
-import { businessLoungeExpansions } from "../UpgradeManager/BusinessLoungeRenovations.js";
+import { businessLoungeRenovations } from "../UpgradeManager/BusinessLoungeRenovations.js";
 
 export const NDjamena = new City(
     "N'Djamena",
     1794000,
-    [businessLoungeExpansions],
+    [businessLoungeRenovations],
     "Chad",
     "Africa",
     2,

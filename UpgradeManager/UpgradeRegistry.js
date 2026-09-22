@@ -143,7 +143,7 @@ import { localBusinessInvestments } from './LocalBusinessInvestments.js'
 import { starArchitectRecruitment } from './StarArchitectRecruitment.js'
 import { advertisingCampaignNorway } from './AdvertisingCampaignNorway.js'
 import { advertisingCampaignPortugal } from './AdvertisingCampaignPortugal.js'
-import { businessLoungeExpansions } from './BusinessLoungeRenovations.js'
+import { businessLoungeRenovations } from './BusinessLoungeRenovations.js'
 import { luxuryJewelImports } from './LuxuryJewelImports.js'
 import { easterWeekendDeals } from './EasterWeekendDeals.js'
 import { newYearsCelebrations } from './NewYearsCelebrations.js'
@@ -308,7 +308,7 @@ export const allUpgrades = [
     starArchitectRecruitment,
     advertisingCampaignNorway,
     advertisingCampaignPortugal,
-    businessLoungeExpansions,
+    businessLoungeRenovations,
     luxuryJewelImports,
     easterWeekendDeals,
     newYearsCelebrations,
