@@ -144,6 +144,7 @@ function App() {
   const [preSelectedCity, setPreSelectedCity] = useState(null);
   const [milestoneQueue, setMilestoneQueue] = useState([]);
   const [cityClaimPending, setCityClaimPending] = useState(false);
+  const [showDepartureBoard, setShowDepartureBoard] = useState(false)
   const [hyperLinkFeed, setHyperLinkFeed] = useState(() => {
     try { return JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]') } catch { return [] }
   })
@@ -667,15 +668,24 @@ function App() {
         homeCity={progressionManager.purchasedCities[0]}
         activeTab={activeTab}
         onSelect={(tab) => {
-          if (departureBoardAudioRef.current) {
-            departureBoardAudioRef.current.pause();
-            departureBoardAudioRef.current.currentTime = 0;
-            departureBoardAudioRef.current = null;
-          }
           if (tab === "DepartureBoard") {
-            departureBoardAudioRef.current = playDepartureBoardSound();
+            if (!showDepartureBoard && departureBoardAudioRef.current === null) {
+              departureBoardAudioRef.current = playDepartureBoardSound();
+            } else if (showDepartureBoard && departureBoardAudioRef.current) {
+              departureBoardAudioRef.current.pause();
+              departureBoardAudioRef.current.currentTime = 0;
+              departureBoardAudioRef.current = null;
+            }
+            setShowDepartureBoard(prev => !prev);
+          } else {
+            if (departureBoardAudioRef.current) {
+              departureBoardAudioRef.current.pause();
+              departureBoardAudioRef.current.currentTime = 0;
+              departureBoardAudioRef.current = null;
+            }
+            setShowDepartureBoard(false);
+            setActiveTab(tab);
           }
-          setActiveTab(tab);
         }}
         reputation={reputation}
         hasFarewellPending={!!activeDeparture}
@@ -784,13 +794,27 @@ function App() {
           }}
         />
       )}
-      {activeTab === "DepartureBoard" && (
-        <DepartureBoard
-          purchasedCities={progressionManager.purchasedCities}
-          homeCity={progressionManager.purchasedCities[0]}
-          preSelectedCity={preSelectedCity}
-          onPreSelectedCityHandled={() => setPreSelectedCity(null)}
-        />
+      {showDepartureBoard && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 250,
+          background: '#0a0a0a', overflowY: 'auto',
+          display: 'flex', flexDirection: 'column',
+        }}>
+          <DepartureBoard
+            purchasedCities={progressionManager.purchasedCities}
+            homeCity={progressionManager.purchasedCities[0]}
+            preSelectedCity={preSelectedCity}
+            onPreSelectedCityHandled={() => setPreSelectedCity(null)}
+            onClose={() => {
+              if (departureBoardAudioRef.current) {
+                departureBoardAudioRef.current.pause();
+                departureBoardAudioRef.current.currentTime = 0;
+                departureBoardAudioRef.current = null;
+              }
+              setShowDepartureBoard(false);
+            }}
+          />
+        </div>
       )}
       {activeTab === "Settings" && (
         <SettingsPage
@@ -810,9 +834,7 @@ function App() {
           departureBoardAudioRef.current.currentTime = 0;
           departureBoardAudioRef.current = null;
         }
-        if (tab === "DepartureBoard") {
-          departureBoardAudioRef.current = playDepartureBoardSound();
-        }
+        setShowDepartureBoard(false);
         setActiveTab(tab);
       }} />
 
@@ -1058,7 +1080,7 @@ function App() {
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 15,
-         background: activeEvent.type === 'positive' ? 'rgba(39,174,96,0.08)' : 'rgba(192,57,43,0.18)',
+         background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.1)' : 'rgba(192,57,43,0.18)',
           transition: 'background 0.5s ease',
         }} />
       )}

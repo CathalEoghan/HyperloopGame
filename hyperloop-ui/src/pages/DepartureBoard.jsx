@@ -60,7 +60,7 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
     )
 })
 
-function DepartureBoard({ purchasedCities, homeCity }) {
+function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     const [schedule, setSchedule] = useState([])
     const [renderTick, setRenderTick] = useState(0)
     const [lagMap, setLagMap] = useState({})
@@ -257,7 +257,20 @@ function DepartureBoard({ purchasedCities, homeCity }) {
 
     return (
         <div className="departure-board">
-            <h2 className="board-title">Departures {today}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                <h2 className="board-title" style={{ margin: 0 }}>Departures {today}</h2>
+                {onClose && (
+                    <button onClick={onClose} style={{
+                        background: 'none', border: '1px solid #444', color: '#888',
+                        fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
+                        padding: '4px 12px', borderRadius: '4px', cursor: 'pointer',
+                        letterSpacing: '1px', transition: 'color 0.2s, border-color 0.2s'
+                    }}
+                    onMouseEnter={e => { e.target.style.color = '#f5a623'; e.target.style.borderColor = '#f5a623' }}
+                    onMouseLeave={e => { e.target.style.color = '#888'; e.target.style.borderColor = '#444' }}
+                    >✕ CLOSE</button>
+                )}
+            </div>
             {schedule.length === 0 ? (
                 purchasedCities.length <= 1 ? (
                     <p style={{ color: '#f5a623', fontFamily: 'Courier New', marginTop: '24px' }}>

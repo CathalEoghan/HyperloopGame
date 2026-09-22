@@ -200,6 +200,8 @@ export const POSTS = {
         'The check-in desk was actually ok considering it\'s around noon',
         'Good afternoon everyone',
         'Halfway through the day guys!! Let\'s keep going #GoodAfternoon',
+        'whats good for lunch??',
+        'WHY oh why did i pick the afternoon loop #busy'
     ],
 
     evening: [
@@ -209,6 +211,7 @@ export const POSTS = {
         'Happy eve 🌇',
         'Ready for this day to be over',
         'The sunset looks so beautiful 😻',
+        'Another day almost over... #timeflies'
     ],
 
     night: [
@@ -265,14 +268,14 @@ export const POSTS = {
     saturday: [
         'Weekend is finally here! 🎉',
         'Nothing better than a saturday trip',
-        'Saturday loops go hard ngl',
-        'Woke up choosing chaos. Taking a hyperloop somewhere random #saturday',
+        'saturday loops go hard ngl',
+        'woke up choosing chaos. Taking a hyperloop somewhere random #saturday',
         'Best day of the week and no one can convince me otherwise',
     ],
 
     sunday: [
         'Sunday is the day of rest… unless ur catching a hyperloop apparently',
-        'Sunday scaries hitting HARD rn',
+        'sunday scaries hitting HARD rn',
         'Last day of the weekend 😔 make it count',
         'Sunday morning and already thinking about monday. send help',
         'Sundays are for self care. And hyperloops apparently 🙃',
@@ -324,8 +327,9 @@ export const POSTS = {
         'Any tips on staying sane for this long ass hyperloop journey to {boardingCity}?',
         'Some idiot just bunked the boarding queue…',
         'Absolute KAREN arguing with the boarding staff keeping everyone behind smh #MOVE 😑',
-        'Heart is in my chest so spooked getting on this loop #aaaa',
+        'Heart is in my chest so spooked getting on this loop #aah',
         'First time boarding a hyperloop ! 💺',
+        'anyone else check their passport constantly when boarding lol #paranoid #{boardingCity}'
     ],
 
     finalCall: [
@@ -616,7 +620,7 @@ indoorGarden: [
         'the indoor garden is so lovely - defo helps me destress 🌻',
     ],
 
-    officialGeneral: [
+   officialGeneral: [
     'Welcome to {terminalName}! We hope you enjoy your journey 🚄',
     'Reminder: please keep the terminal tidy. Bins are located throughout the building 🗑️',
     'Thank you to everyone who travels with us. We\'re grateful for your support ❤️',
@@ -627,6 +631,20 @@ indoorGarden: [
     'Safe travels to all our passengers today 🌟',
     'Thank you for choosing {terminalName} — we\'re glad you\'re here 🙏',
     'We hope your journey with us today is a smooth one ✈️',
+    'A warm welcome to all passengers travelling through {terminalName} today 👋',
+    'Reminder: all lost property should be handed in at the information desk near Gate 1 🎒',
+    'We\'re committed to making every journey through {terminalName} a great one 💛',
+    'Whether you\'re coming or going, we\'re glad you chose {terminalName} ✨',
+    'Our team is here to help — don\'t hesitate to ask any member of staff 😊',
+    'Travelling with little ones today? Our family facilities are located on Level 2 👨‍👩‍👧',
+    'We\'re proud to connect {cityCount} cities and counting 🌍 Thank you for being part of the journey',
+    'Need assistance? Our information desk is open around the clock 🕐',
+    'Accessibility support is available at all times — please speak to any staff member ♿',
+    'Wishing everyone a smooth and enjoyable journey from all of us at {terminalName} 🚄',
+    'Good to see so many familiar faces today. Thank you for travelling with us again 🙏',
+    'Every journey starts here. We\'re honoured to be part of yours ❤️',
+    'The {terminalName} team wishes you a wonderful trip wherever you\'re headed ✈️',
+    'Reminder: please have your travel documents ready before boarding 📋',
 ],
 
 officialDelay: [

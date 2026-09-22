@@ -4,6 +4,9 @@ import defaultPfp from '../assets/misc/defaultAccountIcon.png'
 import officialPfp from '../assets/misc/officialAccountIcon.png'
 import phoneIcon from '../assets/misc/phone.png'
 import { playHoverSound } from '../utils/sound.js'
+import wifiIcon from '../assets/misc/wifi.png'
+import batteryIcon from '../assets/misc/battery.png'
+import signalIcon from '../assets/misc/signal.png'
 
 const malePfpModules = import.meta.glob('../assets/male-profile-pics/*.jpg', { eager: true })
 const femalePfpModules = import.meta.glob('../assets/female-profile-pics/*.jpg', { eager: true })
@@ -88,13 +91,13 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
                         <div className="hyperlink-notch-pill" />
                     </div>
                     <div className="hyperlink-status-bar">
-                        <span style={{ fontWeight: 700 }}>{timeStr}</span>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <span className="hyperlink-status-signal">▲▲▲▲</span>
-                            <span className="hyperlink-status-wifi">⠿</span>
-                            <span className="hyperlink-status-battery">87% ▮</span>
-                        </div>
-                    </div>
+    <span style={{ fontWeight: 700 }}>{timeStr}</span>
+    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <img src={signalIcon} alt="signal" style={{ width: '14px', height: '14px', border: 'none', borderRadius: 0 }} />
+        <img src={wifiIcon} alt="wifi" style={{ width: '14px', height: '14px', border: 'none', borderRadius: 0 }} />
+        <img src={batteryIcon} alt="battery" style={{ width: '20px', height: '14px', border: 'none', borderRadius: 0 }} />
+    </div>
+</div>
                     <div className="hyperlink-header">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <img src={phoneIcon} alt="" style={{ width: '18px', height: '18px', border: 'none', borderRadius: '0', opacity: 0.9 }} />

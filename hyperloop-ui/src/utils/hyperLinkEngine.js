@@ -63,7 +63,7 @@ function buildEligibleCategories(gameState) {
 
     // Always
     add('general', 2)
-    add('officialGeneral', 2)
+    add('officialGeneral', 5)
     add(getTimeCategory(), 3)
     add(getDayCategory(), 2)
 
@@ -156,7 +156,7 @@ function generateUser(gender, usedPfps, userPfpMap, handle) {
     // Check if this handle already has a pfp assigned
     if (userPfpMap[handle]) return userPfpMap[handle]
 
-    const useReal = Math.random() < 0.6
+    const useReal = Math.random() < 0.85
     if (!useReal) return { pfp: null, pfpId: 'default' }
 
     const pool = gender === 'male' ? MALE_PFPS : FEMALE_PFPS

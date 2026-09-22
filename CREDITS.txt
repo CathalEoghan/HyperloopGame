@@ -723,3 +723,6 @@ poor.png - Photo by Puckung via flaticon.com
 monitor.png - Photo by xnimrodx via flaticon.com
 warning.png - Photo by Gregor Cresnar via flaticon.com
 phone.png - Photo by Magnific via flaticon.com
+battery.png - Photo by Stockio via flaticon.com
+signal.png - Photo by Andrejs Kirma via flaticon.com
+wifi.png - Photo by Prosymbols Premium via flaticon.com
