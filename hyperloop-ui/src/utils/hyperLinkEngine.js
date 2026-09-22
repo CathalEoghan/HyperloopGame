@@ -52,7 +52,7 @@ function buildEligibleCategories(gameState) {
     const add = (category, weight, data = {}) => cats.push({ category, weight, data })
 
     // Always
-    add('general', 5)
+    add('general', 2)
     add(getTimeCategory(), 3)
     add(getDayCategory(), 2)
 
@@ -168,7 +168,7 @@ export function generateHyperLinkPost(gameState) {
     } = gameState
 
     // Occasionally generate official post
-    const isOfficial = Math.random() < 0.15
+    const isOfficial = Math.random() < 0.20
 
     if (isOfficial) {
         const officialPosts = POSTS.official || []

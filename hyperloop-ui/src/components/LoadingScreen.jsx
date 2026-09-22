@@ -52,6 +52,7 @@ const TIPS = [
     "Export your save in Settings to back up your progress.",
     "Your reputation or treasury can never go below zero.",
     "Farewell windows open 5 minutes before each departure - extend them with upgrades to give yourself more time.",
+    "Check Hyper-Link — the phone icon on the home screen — to see what passengers are saying about your terminal.",
     "Check the Progress page — newly connected cities and countries glow gold and reward you with cash or reputation.",
 ]
 

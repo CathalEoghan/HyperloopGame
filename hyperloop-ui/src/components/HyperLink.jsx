@@ -3,7 +3,7 @@ import './HyperLink.css'
 import defaultPfp from '../assets/misc/defaultAccountIcon.png'
 import officialPfp from '../assets/misc/officialAccountIcon.png'
 import phoneIcon from '../assets/misc/phone.png'
-import { playHoverSound, playClickSound2 } from '../utils/sound.js'
+import { playHoverSound } from '../utils/sound.js'
 
 const malePfpModules = import.meta.glob('../assets/male-profile-pics/*.jpg', { eager: true })
 const femalePfpModules = import.meta.glob('../assets/female-profile-pics/*.jpg', { eager: true })
@@ -18,6 +18,12 @@ export const FEMALE_PFPS = Object.entries(femalePfpModules)
 
 export { defaultPfp, officialPfp }
 
+function hashNum(str, mod, offset = 0) {
+    let h = 0
+    for (let i = 0; i < str.length; i++) h = Math.imul(31, h) + str.charCodeAt(i) | 0
+    return (Math.abs(h) % mod) + offset
+}
+
 function formatTimestamp(ts) {
     const diff = Date.now() - ts
     const mins = Math.floor(diff / 60000)
@@ -29,7 +35,7 @@ function formatTimestamp(ts) {
     return `${days}d`
 }
 
-function HyperLinkModal({ feed, onClose }) {
+function HyperLinkModal({ feed, onClose, terminalName }) {
     const now = new Date()
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     return (
@@ -61,12 +67,26 @@ function HyperLinkModal({ feed, onClose }) {
                                     />
                                     <div className="hyperlink-post-body">
                                         <div className="hyperlink-post-header">
-                                            <span className="hyperlink-display-name">{post.displayName}</span>
-                                            {post.isOfficial && <span className="hyperlink-official-badge">OFFICIAL</span>}
-                                            <span className="hyperlink-handle">{post.handle}</span>
-                                            <span className="hyperlink-timestamp">{formatTimestamp(post.timestamp)}</span>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <span className="hyperlink-display-name">
+                                                    {post.isOfficial && terminalName ? terminalName : post.displayName}
+                                                </span>
+                                                {post.isOfficial && <span className="hyperlink-official-badge">OFFICIAL</span>}
+                                            </div>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                                <span className="hyperlink-handle">
+                                                    {post.isOfficial && terminalName
+                                                        ? `@${terminalName.toLowerCase().replace(/\s+/g, '')}official`
+                                                        : post.handle}
+                                                </span>
+                                                <span className="hyperlink-timestamp">{formatTimestamp(post.timestamp)}</span>
+                                            </div>
                                         </div>
                                         <div className="hyperlink-post-text">{post.isItalic ? <em>{post.text}</em> : post.text}</div>
+                                        <div className="hyperlink-engagement">
+                                            <span className="hyperlink-likes">❤ {hashNum(post.id, 847, 3)}</span>
+                                            <span className="hyperlink-replies">💬 {hashNum(post.id + 'r', 47)}</span>
+                                        </div>
                                     </div>
                                 </div>
                             ))

@@ -173,8 +173,8 @@
     transition: background 0.15s;
 }
 
-.hyperlink-post:hover {
-    background: #fafafa;
+.hyperlink-post:active {
+    background: #f0f0f0;
 }
 
 .hyperlink-post-official {
@@ -182,8 +182,8 @@
     border-left: 3px solid #f5a623;
 }
 
-.hyperlink-post-official:hover {
-    background: #fff8e6;
+.hyperlink-post-official:active {
+    background: #fff0cc;
 }
 
 .hyperlink-pfp {
@@ -337,4 +337,17 @@
 @keyframes bubble-out {
     from { opacity: 1; transform: translateY(0); }
     to   { opacity: 0; transform: translateY(-6px); }
+}
+.hyperlink-engagement {
+    display: flex;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.hyperlink-likes,
+.hyperlink-replies {
+    font-size: 0.75rem;
+    color: #aaa;
+    cursor: default;
+    user-select: none;
 }

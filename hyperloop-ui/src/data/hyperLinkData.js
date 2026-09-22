@@ -32,7 +32,17 @@ export const FIRST_NAMES_MALE = [
     'Nico', 'Ivan', 'Felix', 'Adrian', 'Julian', 'Xavier',
     'Javier', 'Morgan', 'Tony', 'Matt', 'Matthew', 'Matty',
     'Davie', 'Glen', 'Glenn', 'Mark', 'Marc', 'Chase',
-    'Jared', 'Gerard', 'Jerry', 'Micah',
+    'Jared', 'Gerard', 'Jerry', 'Micah', 'Buster', 'Eric', 'Joshua',
+    'Troy', 'Kev', 'Walter', 'Walt', 'Hank', 'Jamie', 'Herbert',
+    'Celeste', 'Remy', 'Bryan', 'Brian', 'Lars', 'Adam', 'Nicholas',
+    'Mitch', 'Kevin', 'Keith', 'Adrian', 'Alan', 'Albert', 'Alex',
+    'Zachary', 'Zack', 'Zach', 'Zac', 'Edwin', 'Eliot', 'Elliott',
+    'Elliot', 'Anthony', 'Ant', 'Declan', 'Callum', 'Kal', 'Cal',
+    'Lewis', 'Jordan', 'Louis', 'Mason', 'Matthew', 'Luke', 'Marcus',
+    'Terry', 'Wayne', 'Wesley', 'Wes', 'Hugh', 'Owen', 'Oliver', 'Olliver',
+    'Olly', 'Ollie', 'Johnny', 'John', 'Jon', 'Phillip', 'Joseph', 'Nathaniel',
+    'Nathan', 'Nate', 'Benny', 'Jonathan', 'Luc', 'Ray', 'Rhys', 'Spencer'
+
 ]
 
 export const FIRST_NAMES_FEMALE = [
@@ -50,6 +60,7 @@ export const FIRST_NAMES_FEMALE = [
     'Bianca', 'Flora', 'Jacinta', 'Casey', 'Chrissie',
     'Christina', 'Christine', 'Una', 'Marjorie', 'Jana',
     'Nia', 'India', 'Amy', 'Aimee', 'Elena', 'Rosie',
+    'Fiona', 'Natalie', 'Natalia', 'Nathalie', 'Harriet',
     'Rose', 'Enya', 'Violet', 'Lucia', 'Brooklyn',
     'Star', 'Georgina', 'Carol', 'Carole', 'Joy',
     'Mercy', 'Sabrina', 'Sabina', 'Willa', 'Dana',
@@ -64,19 +75,19 @@ export const FIRST_NAMES_FEMALE = [
     'Brenda', 'Belinda', 'Mari', 'Sunday', 'Tania',
     'Shreya', 'Mira', 'Shelly', 'Shelley', 'Linda',
     'Billie', 'Chandra', 'Cassandra', 'Juno',
-    'Priya', 'Ananya', 'Divya', 'Meera',
+    'Priya', 'Ananya', 'Divya', 'Meera', 'Kay',
     'Fatima', 'Zara', 'Nadia', 'Yasmin', 'Layla',
     'Aisha', 'Sana', 'Riya', 'Pooja', 'Kavya',
-    'Mei', 'Yuki', 'Sakura', 'Lin',
+    'Mei', 'Yuki', 'Sakura', 'Lin', 'Daria',
     'Jing', 'Xiao', 'Yuna', 'Suki', 'Rin',
     'Amara', 'Zuri', 'Imani', 'Adaeze', 'Ngozi',
     'Sade', 'Kemi', 'Aaliyah', 'Simone',
-    'Sofia', 'Valentina', 'Chiara',
+    'Sofia', 'Valentina', 'Chiara', 'Maura',
     'Ingrid', 'Astrid', 'Katarina', 'Ines', 'Camille',
-    'Brigitte', 'Lara',
+    'Brigitte', 'Lara', 'Hope', 'Trish', 'Patricia',
     'Emma', 'Hannah', 'Lucy', 'Zoe', 'Ruby',
     'Gabriela', 'Catalina', 'Daniela', 'Renata',
-    'Sara', 'Leila', 'Nour', 'Rania',
+    'Sara', 'Leila', 'Nour', 'Rania', 'Moira',
     'Mila', 'Nina', 'Vera', 'Lena', 'Chelsea', 'Joyce',
     'Tabitha', 'Serena', 'Jackie',
     'Alison', 'Ally', 'Allison', 'Sonia', 'Josephine', 'Agatha',
@@ -89,7 +100,12 @@ export const FIRST_NAMES_FEMALE = [
     'Tara', 'Brita', 'Reeta', 'Katie', 'Katy', 'Kat', 'Kathleen', 'Lena',
     'Alexa', 'Xandra', 'Zara', 'Zahra', 'Greta', 'Kim', 'Kimberly', 'Kimberlee',
     'Brianna', 'Breannah', 'Eloise', 'Elise', 'Eliza', 'Liza', 'Theresa', 'Therese',
-    'Blanca', 'Floritza', 'Stacey', 'Bessie', 
+    'Blanca', 'Floritza', 'Stacey', 'Bessie', 'Annette', 'Muriel', 'Sandi', 'Morgana',
+    'Lilly', 'Lillian', 'Juliane', 'Nora', 'Carlotta', 'Vanessa', 'Ira', 'Shanti',
+    'Frances', 'Francesca', 'Francine', 'Darlene', 'Misti', 'Misty', 'Jasmine',
+    'Evie', 'Evelyn', 'Cora', 'Julia', 'Julianne', 'Mary-Kate', 'Mary-Anne', 'Mariana',
+    'Marina', 'Catherine', 'Kathy', 'Tresa', 'Rosalie', 'Eithne', 'Etienne', 'Elsa',
+    'Ashlee', 'Ashley', 'Whitney', 'Queenie', 'Erica', 'Rain', 'Brigid', 'Sunny',
 ]
 
 export const SURNAMES = [
@@ -129,7 +145,7 @@ export const SURNAMES = [
     'Murphy', "O'Brien", 'Ryan', 'Kelly', 'Sullivan', 'Brennan',
     'Carlisle', 'Carlton', 'Roach', 'Paulson', 'Daniels', 'Stevens',
     'Carpenter', 'Wolfe', 'Parker', 'Park', 'Creighton', 'Windsor',
-    'De Santos', 
+    'De Santos', 'Andersen',
 ]
 
 export const POSTS = {

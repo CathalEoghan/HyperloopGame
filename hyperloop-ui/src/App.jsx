@@ -151,8 +151,13 @@ function App() {
   })
   const [hyperLinkOpen, setHyperLinkOpen] = useState(false)
   const [hyperLinkBubble, setHyperLinkBubble] = useState(false)
+
+  // Keep ref in sync so tick loop can check without stale closure
+  useEffect(() => { hyperLinkOpenRef.current = hyperLinkOpen }, [hyperLinkOpen])
   const [hyperLinkTrigger, setHyperLinkTrigger] = useState(null)
   const hyperLinkTriggerRef = useRef(null)
+  const hyperLinkOpenRef = useRef(false)
+  const nextPostTick = useRef(180 + Math.floor(Math.random() * 120))
   const secretCityTriggered = useRef(false);
   const claimedMilestones = useRef(new Set(
     JSON.parse(localStorage.getItem('hyperloop_claimed_milestones') || '[]')
@@ -407,8 +412,8 @@ function App() {
         localStorage.setItem('hyperloop_heartbeat_at', Date.now());
       }
 
-      // Hyper-Link post generation every 10 minutes (600 ticks)
-      if (tickCount.current % 600 === 0 && tickCount.current > 0 && progressionManager.purchasedCities.length > 1) {
+      // Hyper-Link post generation every 3-5 minutes
+      if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 1) {
         const usedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]')
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]')
         const userPfpMap = JSON.parse(localStorage.getItem('hyperloop_hyperlink_user_pfps') || '{}')
@@ -443,15 +448,18 @@ function App() {
           }
           hyperLinkTriggerRef.current = null
           setHyperLinkTrigger(null)
+          nextPostTick.current = tickCount.current + 180 + Math.floor(Math.random() * 120)
           setHyperLinkFeed(newFeed)
-          setHyperLinkUnread(prev => {
-            const newCount = prev + 1
-            localStorage.setItem('hyperloop_hyperlink_unread', newCount)
-            return newCount
-          })
-          playPhoneNotificationSound()
-          setHyperLinkBubble(true)
-          setTimeout(() => setHyperLinkBubble(false), 3000)
+          if (!hyperLinkOpenRef.current) {
+            setHyperLinkUnread(prev => {
+              const newCount = prev + 1
+              localStorage.setItem('hyperloop_hyperlink_unread', newCount)
+              return newCount
+            })
+            playPhoneNotificationSound()
+            setHyperLinkBubble(true)
+            setTimeout(() => setHyperLinkBubble(false), 3000)
+          }
         }
       }
 
