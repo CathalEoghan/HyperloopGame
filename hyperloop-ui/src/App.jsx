@@ -25,6 +25,9 @@ import DailyLoginModal from "./components/DailyLoginModal"
 import OnboardingModal from "./components/OnboardingModal"
 import SecretCityModal from "./components/SecretCityModal"
 import MilestoneModal from "./components/MilestoneModal"
+import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
+import { generateHyperLinkPost } from "./utils/hyperLinkEngine.js"
+import { playPhoneNotificationSound } from "./utils/sound.js"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -140,6 +143,16 @@ function App() {
   const [preSelectedCity, setPreSelectedCity] = useState(null);
   const [milestoneQueue, setMilestoneQueue] = useState([]);
   const [cityClaimPending, setCityClaimPending] = useState(false);
+  const [hyperLinkFeed, setHyperLinkFeed] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]') } catch { return [] }
+  })
+  const [hyperLinkUnread, setHyperLinkUnread] = useState(() => {
+    return parseInt(localStorage.getItem('hyperloop_hyperlink_unread') || '0')
+  })
+  const [hyperLinkOpen, setHyperLinkOpen] = useState(false)
+  const [hyperLinkBubble, setHyperLinkBubble] = useState(false)
+  const [hyperLinkTrigger, setHyperLinkTrigger] = useState(null)
+  const hyperLinkTriggerRef = useRef(null)
   const secretCityTriggered = useRef(false);
   const claimedMilestones = useRef(new Set(
     JSON.parse(localStorage.getItem('hyperloop_claimed_milestones') || '[]')
@@ -394,6 +407,54 @@ function App() {
         localStorage.setItem('hyperloop_heartbeat_at', Date.now());
       }
 
+      // Hyper-Link post generation every 10 minutes (600 ticks)
+      if (tickCount.current % 600 === 0 && tickCount.current > 0 && progressionManager.purchasedCities.length > 1) {
+        const usedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]')
+        const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]')
+        const userPfpMap = JSON.parse(localStorage.getItem('hyperloop_hyperlink_user_pfps') || '{}')
+        const todayKey = new Date().toDateString()
+        const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
+        const post = generateHyperLinkPost({
+          terminalName,
+          homeCity: progressionManager.purchasedCities[0],
+          purchasedCities: progressionManager.purchasedCities,
+          purchasedDevelopments: progressionManager.purchasedDevelopments,
+          purchasedUpgrades: progressionManager.purchasedUpgrades,
+          activeEvent: activeEventRef.current,
+          rankSet: rankManager.rank,
+          schedule: sched,
+          usedPostIds,
+          usedPfps,
+          userPfpMap,
+          trigger: hyperLinkTriggerRef.current,
+        })
+        if (post) {
+          const newFeed = [...JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]'), post]
+          localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
+          usedPostIds.push(post.usedPostId)
+          localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(usedPostIds))
+          if (post.usedPfpId && post.usedPfpId !== 'default' && post.usedPfpId !== 'official') {
+            usedPfps.push(post.usedPfpId)
+            localStorage.setItem('hyperloop_hyperlink_used_pfps', JSON.stringify(usedPfps))
+          }
+          if (post.handle && post.pfp) {
+            userPfpMap[post.handle] = { pfp: post.pfp, pfpId: post.usedPfpId }
+            localStorage.setItem('hyperloop_hyperlink_user_pfps', JSON.stringify(userPfpMap))
+          }
+          hyperLinkTriggerRef.current = null
+          setHyperLinkTrigger(null)
+          setHyperLinkFeed(newFeed)
+          setHyperLinkUnread(prev => {
+            const newCount = prev + 1
+            localStorage.setItem('hyperloop_hyperlink_unread', newCount)
+            return newCount
+          })
+          playPhoneNotificationSound()
+          setHyperLinkBubble(true)
+          setTimeout(() => setHyperLinkBubble(false), 3000)
+        }
+      }
+
       const now = new Date();
       const currentHour = now.getHours();
       const currentMinute = now.getMinutes();
@@ -619,7 +680,7 @@ function App() {
           purchasedCities={progressionManager.purchasedCities}
           unlockedCities={progressionManager.unlockedCities}
           purchasedCitiesCount={purchasedCitiesCount}
-          disabled={showOnboarding}
+          disabled={showOnboarding || hyperLinkOpen}
           economyManager={economyManager}
         />
       )}
@@ -801,8 +862,8 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { progressionManager.addCash(-cost); setActiveDelay(null); }}
-          onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); }}
+          onCompensate={(cost) => { progressionManager.addCash(-cost); setActiveDelay(null); hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); }}
+          onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); }}
         />
       )}
 
@@ -826,8 +887,10 @@ function App() {
             triggerSave(newCount);
             localStorage.removeItem('hyperloop_active_departure');
             setActiveDeparture(null);
+            hyperLinkTriggerRef.current = { type: 'farewellGiven', data: { city: activeDeparture?.name } };
+            setHyperLinkTrigger({ type: 'farewellGiven', data: { city: activeDeparture?.name } });
           }}
-          onMiss={() => { localStorage.removeItem('hyperloop_active_departure'); setActiveDeparture(null); }}
+          onMiss={() => { localStorage.removeItem('hyperloop_active_departure'); setActiveDeparture(null); hyperLinkTriggerRef.current = { type: 'farewellMissed' }; setHyperLinkTrigger({ type: 'farewellMissed' }); }}
         />
       )}
 
@@ -939,6 +1002,25 @@ function App() {
             setClaimedCity(antarcticCity);
           }
         }} />
+      )}
+
+      {activeTab === "Home" && (
+  <HyperLinkButton
+    unread={hyperLinkUnread}
+    showBubble={hyperLinkBubble}
+    onClick={() => {
+      setHyperLinkOpen(true)
+      setHyperLinkUnread(0)
+      localStorage.setItem('hyperloop_hyperlink_unread', '0')
+    }}
+  />
+)}
+
+      {hyperLinkOpen && (
+        <HyperLinkModal
+          feed={hyperLinkFeed}
+          onClose={() => setHyperLinkOpen(false)}
+        />
       )}
 
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (

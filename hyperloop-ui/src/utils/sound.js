@@ -16,6 +16,7 @@ import diceRollSound from '../assets/sounds/diceRoll.mp3'
 import dailyLoginSound from '../assets/sounds/dailyLogin.wav'
 import notEnoughFundsSound from '../assets/sounds/notEnoughFunds.wav'
 import departureBoardSound from '../assets/sounds/departureBoard.mp3'
+import phoneNotificationSound from '../assets/sounds/phoneNotification.mp3'
 import splitFlapLong from '../assets/sounds/splitFlapLong.wav'
 import splitFlapShort from '../assets/sounds/splitFlapShort.wav'
 
@@ -59,6 +60,7 @@ export function playDailyLoginSound()           { play(dailyLoginSound) }
 export function playNotEnoughFundsSound()       { play(notEnoughFundsSound) }
 export function playSplitFlapLong()  { play(splitFlapLong) }
 export function playSplitFlapShort() { play(splitFlapShort) }
+export function playPhoneNotificationSound() { play(phoneNotificationSound) }
 export function playDepartureBoardSound() {
     if (!canPlay()) return null
     const audio = new Audio(departureBoardSound)

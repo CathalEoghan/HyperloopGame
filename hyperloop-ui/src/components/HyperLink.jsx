@@ -1,0 +1,102 @@
+import { useState, useEffect } from 'react'
+import './HyperLink.css'
+import defaultPfp from '../assets/misc/defaultAccountIcon.png'
+import officialPfp from '../assets/misc/officialAccountIcon.png'
+import phoneIcon from '../assets/misc/phone.png'
+import { playHoverSound, playClickSound2 } from '../utils/sound.js'
+
+const malePfpModules = import.meta.glob('../assets/male-profile-pics/*.jpg', { eager: true })
+const femalePfpModules = import.meta.glob('../assets/female-profile-pics/*.jpg', { eager: true })
+
+export const MALE_PFPS = Object.entries(malePfpModules)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, m]) => m.default)
+
+export const FEMALE_PFPS = Object.entries(femalePfpModules)
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([, m]) => m.default)
+
+export { defaultPfp, officialPfp }
+
+function formatTimestamp(ts) {
+    const diff = Date.now() - ts
+    const mins = Math.floor(diff / 60000)
+    const hours = Math.floor(diff / 3600000)
+    const days = Math.floor(diff / 86400000)
+    if (mins < 1) return 'just now'
+    if (mins < 60) return `${mins}m`
+    if (hours < 24) return `${hours}h`
+    return `${days}d`
+}
+
+function HyperLinkModal({ feed, onClose }) {
+    const now = new Date()
+    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    return (
+        <div className="hyperlink-overlay" onClick={onClose}>
+            <div className="hyperlink-phone-shell" onClick={e => e.stopPropagation()}>
+                <div className="hyperlink-modal">
+                    <div className="hyperlink-notch">
+                        <div className="hyperlink-notch-pill" />
+                    </div>
+                    <div className="hyperlink-status-bar">
+                        <span>{timeStr}</span>
+                        <span>●●●●○ WiFi</span>
+                    </div>
+                    <div className="hyperlink-header">
+                        <div className="hyperlink-logo">Hyper<span>-</span>Link</div>
+                        <button className="hyperlink-close" onClick={onClose}>✕</button>
+                    </div>
+                    <div className="hyperlink-feed">
+                        {feed.length === 0 ? (
+                            <div className="hyperlink-empty">No posts yet. Check back soon!</div>
+                        ) : (
+                            [...feed].reverse().map(post => (
+                                <div key={post.id} className={`hyperlink-post${post.isOfficial ? ' hyperlink-post-official' : ''}`}>
+                                    <img
+                                        src={post.pfp || defaultPfp}
+                                        alt="pfp"
+                                        className={post.pfp ? 'hyperlink-pfp' : 'hyperlink-pfp-default'}
+                                        onError={e => { e.target.src = defaultPfp }}
+                                    />
+                                    <div className="hyperlink-post-body">
+                                        <div className="hyperlink-post-header">
+                                            <span className="hyperlink-display-name">{post.displayName}</span>
+                                            {post.isOfficial && <span className="hyperlink-official-badge">OFFICIAL</span>}
+                                            <span className="hyperlink-handle">{post.handle}</span>
+                                            <span className="hyperlink-timestamp">{formatTimestamp(post.timestamp)}</span>
+                                        </div>
+                                        <div className="hyperlink-post-text">{post.isItalic ? <em>{post.text}</em> : post.text}</div>
+                                    </div>
+                                </div>
+                            ))
+                        )}
+                    </div>
+                    <div className="hyperlink-home-bar">
+                        <div className="hyperlink-home-bar-pill" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export function HyperLinkButton({ unread, onClick, showBubble }) {
+    return (
+        <div style={{ position: 'fixed', bottom: 112.5, left: 24, zIndex: 150 }}>
+            {showBubble && (
+                <div className="hyperlink-notification-bubble">New notification!</div>
+            )}
+            <button
+                className={`hyperlink-phone-btn${unread > 0 ? ' hyperlink-phone-btn-pulse' : ''}`}
+                onClick={onClick}
+                onMouseEnter={() => playHoverSound()}
+            >
+                <img src={phoneIcon} alt="Hyper-Link" />
+                {unread > 0 && <span className="hyperlink-badge">{unread > 9 ? '9+' : unread}</span>}
+            </button>
+        </div>
+    )
+}
+
+export default HyperLinkModal

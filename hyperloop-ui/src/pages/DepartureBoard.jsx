@@ -230,7 +230,7 @@ function DepartureBoard({ purchasedCities, homeCity }) {
         const status = getStatus(entry.hour, entry.minute, entry.delayed, lag)
         const isGone = status.label === 'DEPARTED'
         const showGate = status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
-        const gateText = padText(showGate ? `-${entry.gate}` : '---', GATE_WIDTH)
+       const gateText = padText(showGate ? `-${String(entry.gate).padStart(2, '0')}` : '---', GATE_WIDTH)
         return (
             <>
                 <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>
