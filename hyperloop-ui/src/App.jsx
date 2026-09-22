@@ -1026,9 +1026,10 @@ function App() {
 
       {hyperLinkOpen && (
         <HyperLinkModal
-          feed={hyperLinkFeed}
-          onClose={() => setHyperLinkOpen(false)}
-        />
+  feed={hyperLinkFeed}
+  terminalName={terminalName}
+  onClose={() => setHyperLinkOpen(false)}
+/>
       )}
 
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (

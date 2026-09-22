@@ -83,15 +83,32 @@
 }
 
 .hyperlink-status-bar {
-    background: #f5a623;
+    background: linear-gradient(135deg, #f5a623, #e8941a);
     padding: 6px 16px 2px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 700;
     color: white;
     flex-shrink: 0;
+    letter-spacing: 0.3px;
+}
+
+.hyperlink-status-signal {
+    font-size: 0.45rem;
+    letter-spacing: -1px;
+    opacity: 0.9;
+}
+
+.hyperlink-status-wifi {
+    font-size: 0.7rem;
+    opacity: 0.9;
+}
+
+.hyperlink-status-battery {
+    font-size: 0.6rem;
+    opacity: 0.9;
 }
 
 .hyperlink-header {
@@ -261,8 +278,8 @@
     position: relative;
     bottom: auto;
     left: auto;
-    width: 58px;
-    height: 58px;
+    width: 78px;
+    height: 78px;
     background: rgba(10,10,10,0.75);
     border: 2px solid #f5a623;
     border-radius: 12px;
@@ -280,8 +297,8 @@
 }
 
 .hyperlink-phone-btn img {
-    width: 34px;
-    height: 34px;
+    width: 48px;
+    height: 48px;
     border: none;
     border-radius: 0;
 }
@@ -350,4 +367,26 @@
     color: #aaa;
     cursor: default;
     user-select: none;
+}
+
+.hyperlink-like-animation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.5rem;
+    pointer-events: none;
+    z-index: 10;
+    animation: like-float 0.8s ease-out forwards;
+}
+
+@keyframes like-float {
+    0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+    40%  { opacity: 1; transform: translate(-50%, -80%) scale(1.6); }
+    100% { opacity: 0; transform: translate(-50%, -120%) scale(1); }
+}
+
+.hyperlink-likes-active {
+    color: #e74c3c !important;
+    font-weight: 700;
 }

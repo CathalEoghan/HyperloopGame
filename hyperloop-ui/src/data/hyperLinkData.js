@@ -572,16 +572,142 @@ export const POSTS = {
         'just bought a skeleton mask at the new #CostumeStore. Time to scare ✌️',
     ],
 
-    official: [
-        'All loops are running on time today ✅ #ServiceUpdate',
-        'Welcome to {terminalName}! We hope you enjoy your journey 🚄',
-        'Reminder: please keep the terminal tidy. Bins are located throughout the building 🗑️',
-        'We\'re thrilled to announce our new connection to {city}! Welcome aboard 🎉',
-        'Thank you to everyone who travels with us. We\'re grateful for your support ❤️',
-        'Service update: all gates are now open. Have a great journey! ✈️',
-        'Did you know? {terminalName} has connected over {cityCount} cities worldwide 🌍',
-        'We\'re always looking to improve. Leave your feedback at the information desk 📝',
-        'Reminder: the quiet room is available for those who need a moment of peace 🤫',
-        'Happy travelling everyone! Stay safe out there 🙏',
+    hyperloopMuseum: [
+        'If you have some time today, have a look around the new #HyperloopMuseum - very interesting history on display!',
+        'so bored im walking around the new hyperloop museum … IN the hyperloop terminal lol',
     ],
+bakery: [
+        'mm! fresh breads and bagels at the bakery 🥯',
+        'day going well so far. arrived early, checked in, security was ok - sitting now with a baguette from the bakery #chill',
+    ],
+beerTent: [
+        'think i lost my passport at the beer tent has anyone seen it??',
+        'Prost! 🍻 #beertent',
+    ],
+pharmacy: [
+        'some rude ass just bunked me at the pharmacy !',
+        'forgot my prescription but its ok theres a pharmacy #happydays',
+    ],
+yogaStudio: [
+        'id try yoga but i feel like id fart mid pose or something lol',
+        'So rested after a group yoga session at the #(terminalName) yoga studio 🧘',
+    ],
+
+pettingZoo: [
+        'no one asked for a petting zoo … but also no one complained',
+        'the baby llamas at the petting zoo are literally the cutest thing ive seen omg 🥺',
+    ],
+
+southernHemisphereTradeAgreements: [
+'The new southern hemisphere trade agreements are brilliant. The world is more than just Asia, Europe and the Americas #GlobalSouth', 
+'Do the new agreements mean it’s cheaper to loop to australia now ?',
+],
+
+streetFoodFair: [
+'Anyone tried the dan dan noodles at the street food fair? Acc insane 🍜',
+'bought a proper new york hotdog at the street food fair. delish 🌭',
+],
+staffCafeteriaRenovations: [
+        'the new staff cafeteria renovations is one of the reasons why i love working here. #thankYOU',
+        'the new staff cafeteria is gorgeous. seriously - good job 👍',
+    ],
+indoorGarden: [
+        'took a stroll around the beautiful indoor garden 🌳 #nature',
+        'the indoor garden is so lovely - defo helps me destress 🌻',
+    ],
+
+    officiaGeneral: [
+    'Welcome to {terminalName}! We hope you enjoy your journey 🚄',
+    'Reminder: please keep the terminal tidy. Bins are located throughout the building 🗑️',
+    'Thank you to everyone who travels with us. We\'re grateful for your support ❤️',
+    'Did you know? {terminalName} has connected over {cityCount} cities worldwide 🌍',
+    'We\'re always looking to improve. Leave your feedback at the information desk 📝',
+    'Happy travelling everyone! Stay safe out there 🙏',
+    'Travelling with us today? We\'d love to hear your feedback 💬',
+    'Safe travels to all our passengers today 🌟',
+    'Thank you for choosing {terminalName} — we\'re glad you\'re here 🙏',
+    'We hope your journey with us today is a smooth one ✈️',
+],
+
+officialDelay: [
+    'We apologise for the delay to the {delayedCity} service. Thank you for your patience 🙏',
+    'Update: the {delayedCity} loop is experiencing a delay. We are working to resolve this ⚠️',
+],
+
+officialDelayCompensated: [
+    'Passengers affected by the {delayedCity} delay have been compensated. We are sorry for the inconvenience 💛',
+    'Compensation has been issued for the {delayedCity} delay. Thank you for your understanding 🙏',
+],
+
+officialEvent: {
+    // Positive - instant cash
+    award_won: [
+        '🏆 We are honoured to announce that {terminalName} has been named Terminal of the Year by the Global Transit Authority!',
+        'Incredible news — {terminalName} has won a Prestigious Award from the Global Transit Authority. Thank you to our passengers and team 🏆',
+    ],
+    government_grant: [
+        '{terminalName} has been awarded a Government Transport Innovation Grant. We will continue to invest in your experience 🙏',
+        'We are pleased to announce {terminalName} has received a government grant to support continued growth and development ✅',
+    ],
+
+    // Positive - passive boost
+    viral_coverage: [
+        'We\'ve seen the video going around — welcome to all our new visitors! We hope {terminalName} lives up to the hype 😄',
+        'Overwhelmed by the response online! Thank you to everyone sharing their love for {terminalName} 🙏',
+    ],
+    celebrity_visit: [
+        'We can\'t say who, but {terminalName} may have had a very special passenger today 👀 Thank you for visiting!',
+        'What a day at {terminalName}! We love welcoming all our passengers, famous or otherwise 😊',
+    ],
+    tourism_surge: [
+        'Welcome to all visitors travelling through {terminalName} for the event this week! We\'re delighted to have you 🌍',
+        'Huge numbers travelling through {terminalName} today — welcome to everyone joining us for the international event nearby! ✈️',
+    ],
+    record_day: [
+        'Today is shaping up to be a record-breaking day at {terminalName}! Thank you to every single passenger 🎉',
+        'We\'re on track to break passenger records today at {terminalName}. Thank you for travelling with us 🚄',
+    ],
+    staff_motivated: [
+        'Shoutout to the incredible team at {terminalName} today — you\'re the reason we keep getting better 💛',
+        'Our staff are going above and beyond today. {terminalName} is in great hands 🙌',
+    ],
+    efficiency_drive: [
+        'Our new productivity initiative is live at {terminalName} today. Expect an even smoother experience 💪',
+    ],
+
+    // Negative - passive penalty
+    sickness_outbreak: [
+        'We are aware of a sickness affecting some staff today. Services are running but may be slower than usual. We apologise for any inconvenience 🙏',
+        'Health advisory: a bug is circulating in the terminal. Please wash hands regularly and stay safe 🤧',
+    ],
+    bad_press: [
+        'We are aware of recent media coverage and take all feedback seriously. We remain committed to delivering the best experience possible 🙏',
+        'In response to recent reports — we are listening, and we are working hard to address concerns at {terminalName} 💛',
+    ],
+    bad_weather: [
+        'Weather advisory: severe conditions may affect some services today. Please allow extra time and check your loop status ⛈️',
+        'Disruption warning: extreme weather is affecting the {terminalName} network. We are doing everything we can to keep you moving ⚠️',
+    ],
+    security_incident: [
+        'Security notice: we are currently managing an incident at {terminalName}. Please follow staff instructions and allow extra time 🔒',
+        'We are working with authorities to resolve an ongoing security situation. Thank you for your cooperation and patience 🙏',
+    ],
+    staff_walkout: [
+        'Service notice: some operations at {terminalName} are running at reduced capacity today. We apologise for any disruption 🙏',
+        'We are aware of industrial action affecting {terminalName} and are doing our best to minimise disruption to passengers ⚠️',
+    ],
+
+    // Negative - equipment/systems
+    equipment_damage: [
+        'Emergency maintenance is underway at {terminalName}. Some services may be affected. We apologise for the inconvenience 🔧',
+        'Maintenance notice: urgent repair works are taking place. Thank you for your patience while we get things back to normal 🛠️',
+    ],
+    system_issues: [
+        'We are currently experiencing technical difficulties with some systems at {terminalName}. Our team is working on a fix ⚠️',
+        'Technical notice: some management systems are offline. Manual operations are in place. We apologise for any delays 🔧',
+    ],
+    regulatory_fine: [
+        'Following a recent inspection, we are implementing improvements across {terminalName} to meet regulatory standards. Thank you for your patience 🙏',
+    ],
+}
 }
