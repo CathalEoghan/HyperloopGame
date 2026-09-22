@@ -590,7 +590,7 @@ pharmacy: [
     ],
 yogaStudio: [
         'id try yoga but i feel like id fart mid pose or something lol',
-        'So rested after a group yoga session at the #(terminalName) yoga studio 🧘',
+        'So rested after a group yoga session at the {terminalName} yoga studio 🧘',
     ],
 
 pettingZoo: [
@@ -616,7 +616,7 @@ indoorGarden: [
         'the indoor garden is so lovely - defo helps me destress 🌻',
     ],
 
-    officiaGeneral: [
+    officialGeneral: [
     'Welcome to {terminalName}! We hope you enjoy your journey 🚄',
     'Reminder: please keep the terminal tidy. Bins are located throughout the building 🗑️',
     'Thank you to everyone who travels with us. We\'re grateful for your support ❤️',

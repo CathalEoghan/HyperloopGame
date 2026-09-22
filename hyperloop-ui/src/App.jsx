@@ -26,7 +26,8 @@ import OnboardingModal from "./components/OnboardingModal"
 import SecretCityModal from "./components/SecretCityModal"
 import MilestoneModal from "./components/MilestoneModal"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
-import { generateHyperLinkPost } from "./utils/hyperLinkEngine.js"
+import { generateHyperLinkPost, generateOfficialEventPost } from "./utils/hyperLinkEngine.js"
+import { POSTS } from "./data/hyperLinkData.js"
 import { playPhoneNotificationSound } from "./utils/sound.js"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
@@ -157,7 +158,7 @@ function App() {
   const [hyperLinkTrigger, setHyperLinkTrigger] = useState(null)
   const hyperLinkTriggerRef = useRef(null)
   const hyperLinkOpenRef = useRef(false)
-  const nextPostTick = useRef(180 + Math.floor(Math.random() * 120))
+  const nextPostTick = useRef(60 + Math.floor(Math.random() * 120))
   const secretCityTriggered = useRef(false);
   const claimedMilestones = useRef(new Set(
     JSON.parse(localStorage.getItem('hyperloop_claimed_milestones') || '[]')
@@ -448,7 +449,7 @@ function App() {
           }
           hyperLinkTriggerRef.current = null
           setHyperLinkTrigger(null)
-          nextPostTick.current = tickCount.current + 180 + Math.floor(Math.random() * 120)
+          nextPostTick.current = tickCount.current + 60 + Math.floor(Math.random() * 120)
           setHyperLinkFeed(newFeed)
           if (!hyperLinkOpenRef.current) {
             setHyperLinkUnread(prev => {
@@ -552,6 +553,7 @@ function App() {
             playEventSound();
             setActiveEvent(fullEvent);
             setShowEventModal(true);
+            if (POSTS.officialEvent?.[event.id]) fireOfficialHyperLinkPost({ type: 'officialEvent', data: { eventId: event.id } });
             setTimeout(() => { activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event'); }, 8000);
           } else if (event.effectType === 'instantCashLoss') {
             const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
@@ -569,6 +571,7 @@ function App() {
             playEventSound();
             setActiveEvent(fullEvent);
             setShowEventModal(true);
+            if (POSTS.officialEvent?.[event.id]) fireOfficialHyperLinkPost({ type: 'officialEvent', data: { eventId: event.id } });
             setTimeout(() => {
               activeEventRef.current = null;
               setActiveEvent(null);
@@ -633,6 +636,26 @@ function App() {
         if (!savedData) setShowOnboarding(true)
       }}
     />;
+  }
+
+  const fireOfficialHyperLinkPost = (trigger) => {
+    const post = generateOfficialEventPost({
+      terminalName,
+      homeCity: progressionManager.purchasedCities[0],
+      purchasedCities: progressionManager.purchasedCities,
+      trigger,
+    })
+    if (post) {
+      const newFeed = [...JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]'), post]
+      localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
+      setHyperLinkFeed(newFeed)
+      if (!hyperLinkOpenRef.current) {
+        setHyperLinkUnread(prev => { const n = prev + 1; localStorage.setItem('hyperloop_hyperlink_unread', n); return n })
+        playPhoneNotificationSound()
+        setHyperLinkBubble(true)
+        setTimeout(() => setHyperLinkBubble(false), 3000)
+      }
+    }
   }
 
   return (
@@ -870,8 +893,8 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { progressionManager.addCash(-cost); setActiveDelay(null); hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); }}
-          onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); }}
+          onCompensate={(cost) => { progressionManager.addCash(-cost); setActiveDelay(null); hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
+          onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
         />
       )}
 

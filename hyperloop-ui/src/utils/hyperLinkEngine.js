@@ -21,12 +21,22 @@ const DEV_KEY_MAP = {
     'Post Office': 'postOffice',
     'Bank': 'bank',
     'Event Hall': 'eventHall',
+    'Bakery': 'bakery',
+    'Beer Tent': 'beerTent',
+    'Pharmacy': 'pharmacy',
+    'Yoga Studio': 'yogaStudio',
+    'Petting Zoo': 'pettingZoo',
+    'Street Food Fair': 'streetFoodFair',
+    'Staff Cafeteria Renovations': 'staffCafeteriaRenovations',
+    'Indoor Garden': 'indoorGarden',
+    'Hyperloop Museum': 'hyperloopMuseum',
 }
 
 const UPGRADE_KEY_MAP = {
     'Personal Styling Retinue': 'personalStylingRetinue',
     'Local Airport Links': 'localAirportLinks',
     'Billboard Design Overhauls': 'billboardDesignOverhauls',
+    'Southern Hemisphere Trade Agreements': 'southernHemisphereTradeAgreements',
 }
 
 function getTimeCategory() {
@@ -53,6 +63,7 @@ function buildEligibleCategories(gameState) {
 
     // Always
     add('general', 2)
+    add('officialGeneral', 2)
     add(getTimeCategory(), 3)
     add(getDayCategory(), 2)
 
@@ -196,6 +207,28 @@ export function generateHyperLinkPost(gameState) {
     if (cats.length === 0) return null
 
     const selected = pickCategory(cats)
+    // Official general posts
+    if (selected.category === 'officialGeneral') {
+        const pool = POSTS.officialGeneral || []
+        const available = pool.map((text, i) => ({ id: `officialGeneral_${i}`, text }))
+            .filter(p => !usedPostIds.includes(p.id))
+        if (available.length === 0) return null
+        const chosen = available[Math.floor(Math.random() * available.length)]
+        const { terminalName } = gameState
+        return {
+            id: `post_${Date.now()}_${Math.random()}`,
+            text: substituteText(chosen.text, {}, gameState),
+            displayName: terminalName,
+            handle: `@${terminalName.toLowerCase().replace(/\s+/g, '')}official`,
+            pfp: officialPfp,
+            isOfficial: true,
+            isItalic: false,
+            timestamp: Date.now(),
+            usedPostId: chosen.id,
+            usedPfpId: 'official',
+        }
+    }
+
     const categoryPosts = POSTS[selected.category]
     if (!categoryPosts?.length) return null
 
@@ -233,5 +266,39 @@ export function generateHyperLinkPost(gameState) {
         usedPostId: chosenPost.id,
         usedPfpId: pfpId,
         gender,
+    }
+}
+export function generateOfficialEventPost(gameState) {
+    const { trigger, terminalName } = gameState
+    if (!trigger) return null
+
+    let pool = null
+    if (trigger.type === 'officialDelay') {
+        pool = POSTS.officialDelay
+    } else if (trigger.type === 'officialDelayCompensated') {
+        pool = POSTS.officialDelayCompensated
+    } else if (trigger.type === 'officialEvent') {
+        const eventId = trigger.data?.eventId
+        pool = eventId ? POSTS.officialEvent?.[eventId] : null
+    }
+
+    if (!pool?.length) return null
+    const text = pool[Math.floor(Math.random() * pool.length)]
+    const substituted = text
+        .replace(/\{terminalName\}/g, terminalName)
+        .replace(/\{delayedCity\}/g, trigger.data?.delayedCity || '')
+        .replace(/\{cityCount\}/g, gameState.purchasedCities?.length || 0)
+
+    return {
+        id: `post_${Date.now()}_${Math.random()}`,
+        text: substituted,
+        displayName: terminalName,
+        handle: `@${terminalName.toLowerCase().replace(/\s+/g, '')}official`,
+        pfp: officialPfp,
+        isOfficial: true,
+        isItalic: false,
+        timestamp: Date.now(),
+        usedPostId: null,
+        usedPfpId: 'official',
     }
 }
