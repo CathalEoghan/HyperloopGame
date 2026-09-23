@@ -1,5 +1,6 @@
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import globeIcon from '/public/globeIcon.png'
+import mePhoto from '../assets/misc/me.jpg'
 import './CreditsModal.css'
 
 const CREDITS_TEXT = `CITY IMAGES
@@ -22,7 +23,7 @@ Clean icons created by Smashicons — Flaticon
 GLOBE TEXTURES
 NASA Visible Earth
 GAME DESIGN & DEVELOPMENT
-Cathal Eoghan
+Cathal Eoghan, the sole developer
 Built with React, Three.js and a lot of Monster energy drinks.`
 
 function CreditsModal({ onClose }) {
@@ -36,6 +37,23 @@ function CreditsModal({ onClose }) {
                             {line || '\u00A0'}
                         </p>
                     ))}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '24px 0 12px' }}>
+                    <img
+                        src={mePhoto}
+                        alt="Cathal Eoghan"
+                        style={{
+                            width: '140px',
+                            height: '140px',
+                            objectFit: 'cover',
+                            border: '3px solid #f5a623',
+                            borderRadius: '4px',
+                            marginBottom: '10px',
+                            boxShadow: '0 0 12px rgba(245,166,35,0.4)',
+                        }}
+                    />
+                    <p style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#111', margin: '0 0 4px' }}>Cathal Eoghan</p>
+                    <p style={{ fontStyle: 'italic', color: '#888', fontSize: '0.85rem', margin: 0 }}>Thanks for playing!</p>
                 </div>
                 <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>Close</button>
             </div>
