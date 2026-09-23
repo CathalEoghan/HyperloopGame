@@ -22,6 +22,10 @@ const DEV_KEY_MAP = {
     'Petting Zoo': 'pettingZoo',
     'Street Food Fair': 'streetFoodFair',
     'Hyperloop Museum': 'hyperloopMuseum',
+    'Sim Card Services': 'simCardServices',
+    'Watch Store': 'watchStore',
+    'Candy Store': 'candyStore',
+    'Bookstore': 'bookstore',
 }
 
 const UPGRADE_KEY_MAP = {
@@ -37,6 +41,7 @@ const UPGRADE_KEY_MAP = {
     'Staff Cafeteria Renovations': 'staffCafeteriaRenovations',
     'Indoor Garden': 'indoorGarden',
     'Postal Office': 'postOffice',
+    'Business Lounge Renovations': 'businessLoungeRenovations',
 }
 
 function getTimeCategory() {
@@ -83,6 +88,8 @@ function buildEligibleCategories(gameState) {
 
     if (activeEvent?.type === 'positive') add('positiveEvent', 4)
     if (activeEvent?.type === 'negative') add('negativeEvent', 4)
+    if (gameState.reputation < 40) add('lowReputation', 3)
+    if (gameState.reputation > 200) add('highReputation', 3)
 
     const foodCount = purchasedDevelopments.filter(d => d.category === 'Food').length
     if (foodCount === 0) add('noFood', 3)

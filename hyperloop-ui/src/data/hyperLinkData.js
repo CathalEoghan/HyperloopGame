@@ -26,11 +26,11 @@ export const FIRST_NAMES_MALE = [
     'Malik', 'Idris', 'Seun', 'Femi', 'Jaden',
     'Luca', 'Marco', 'Sebastian', 'Matteo', 'Lucas',
     'Rafael', 'Andrei', 'Dimitri', 'Henrik', 'Lars',
-    'Ethan', 'Logan', 'Mason', 'Elijah', 'Alexander',
+    'Ethan', 'Logan', 'Elijah', 'Alexander',
     'Carlos', 'Diego', 'Miguel', 'Santiago', 'Mateo', 'Felipe',
     'Omar', 'Hassan', 'Youssef', 'Khalid', 'Samir',
     'Nico', 'Ivan', 'Felix', 'Adrian', 'Julian', 'Xavier',
-    'Javier', 'Morgan', 'Tony', 'Matt', 'Matthew', 'Matty',
+    'Javier', 'Morgan', 'Tony', 'Matt', 'Matheu', 'Matty',
     'Davie', 'Glen', 'Glenn', 'Mark', 'Marc', 'Chase',
     'Jared', 'Gerard', 'Jerry', 'Micah', 'Buster', 'Eric', 'Joshua',
     'Troy', 'Kev', 'Walter', 'Walt', 'Hank', 'Jamie', 'Herbert',
@@ -43,9 +43,9 @@ export const FIRST_NAMES_MALE = [
     'Olly', 'Ollie', 'Johnny', 'John', 'Jon', 'Phillip', 'Joseph', 'Nathaniel',
     'Nathan', 'Nate', 'Benny', 'Jonathan', 'Luc', 'Ray', 'Rhys', 'Spencer',
     'Gerald', 'Art', 'Cooper', 'Davinder', 'Orville', 'Ernesto', 'Aidan',
-    'Aiden', 'Leo', 'Jake', 'Alfred', 'Cole', 'Steve', 'Stevie', 'Vlad',
+    'Aiden', 'Jake', 'Alfred', 'Cole', 'Steve', 'Stevie', 'Vlad',
     'Lee', 'Brendan', 'Brendy', 'Chaz', 'Kurt', 'Brandon', 'Landon', 'Perry',
-    'Bart', 'Pierre', 'Herman', 'Theodore', 'Randy', 'Jai', 'Ivan', 'Quentin',
+    'Bart', 'Pierre', 'Herman', 'Theodore', 'Randy', 'Jai', 'Quentin',
 
 ]
 
@@ -62,7 +62,7 @@ export const FIRST_NAMES_FEMALE = [
     'Meg', 'Lauren', 'Erin', 'Danielle', 'Shirley',
     'Heather', 'Honey', 'Susan', 'Sierra', 'Tanya',
     'Bianca', 'Flora', 'Jacinta', 'Casey', 'Chrissie',
-    'Christina', 'Christine', 'Una', 'Marjorie', 'Jana',
+    'Christina', 'Christine', 'Una', 'Marjorie',
     'Nia', 'India', 'Amy', 'Aimee', 'Elena', 'Rosie',
     'Fiona', 'Natalie', 'Natalia', 'Nathalie', 'Harriet',
     'Rose', 'Enya', 'Violet', 'Lucia', 'Brooklyn',
@@ -80,7 +80,7 @@ export const FIRST_NAMES_FEMALE = [
     'Shreya', 'Mira', 'Shelly', 'Shelley', 'Linda',
     'Billie', 'Chandra', 'Cassandra', 'Juno', 'Theodora',
     'Priya', 'Ananya', 'Divya', 'Meera', 'Kay',
-    'Fatima', 'Zara', 'Nadia', 'Yasmin', 'Layla',
+    'Fatima', 'Zara', 'Nadia', 'Yasmin',
     'Aisha', 'Sana', 'Riya', 'Pooja', 'Kavya', 'Onya', 'Yui',
     'Mei', 'Yuki', 'Sakura', 'Lin', 'Daria', 'Sally', 'Sheila',
     'Jing', 'Xiao', 'Yuna', 'Suki', 'Rin', 'Miranda',
@@ -91,14 +91,14 @@ export const FIRST_NAMES_FEMALE = [
     'Brigitte', 'Lara', 'Hope', 'Trish', 'Patricia',
     'Emma', 'Hannah', 'Lucy', 'Zoe', 'Ruby', 'Victoria', 'Angie', 'Angela', 'Angel',
     'Gabriela', 'Catalina', 'Daniela', 'Renata', 'Summer',
-    'Sara', 'Leila', 'Nour', 'Rania', 'Moira', 'Amelie', 'Asha',
+    'Sara', 'Nour', 'Rania', 'Moira', 'Amelie', 'Asha',
     'Mila', 'Nina', 'Vera', 'Lena', 'Chelsea', 'Joyce',
     'Tabitha', 'Serena', 'Jackie', 'Vicki', 'Vicky', 'Viv', 'Vivian',
     'Alison', 'Ally', 'Allison', 'Sonia', 'Josephine', 'Agatha',
     'Jacqueline', 'Emilia', 'Samira', 'Rochelle', 'Charlene',
     'Dominique', 'Quinta', 'Leanne', 'Leanna', 'Alina', 'Marianne',
     'Anne', 'Annie', 'Annabel', 'Annabelle', 'Belle', 'Bella', 'Jordan',
-    'Morgan', 'Misty', 'Amanda', 'Mandi', 'Coral', 'Mandi', 'Ciara', 'Kiara',
+    'Morgan', 'Misty', 'Amanda', 'Coral', 'Mandi', 'Ciara', 'Kiara',
     'Rhonda', 'Marigold', 'Nellie', 'Lulu', 'Ursula', 'Genevieve', 'Ginny',
     'Shona', 'Ona', 'Tess', 'Liz', 'Lizzie', 'Lizzy', 'Regina', 'Gina',
     'Tara', 'Brita', 'Reeta', 'Katie', 'Katy', 'Kat', 'Kathleen', 'Lena',
@@ -186,6 +186,8 @@ export const POSTS = {
         'any good grub in this place',
         'the crew is so lovely 🥰',
         'Just walked into the wrong bathroom 🫣',
+        'another day working here! #bestjob',
+        'first day working at {terminalName}! wish me luck!!',
         'So bored',
         'what is everyone up to',
         'whats up guys',
@@ -394,7 +396,7 @@ export const POSTS = {
         'smooth journey so far! #{departedCity}',
         'what language do they speak in {departedCity}? no im serious',
         'just met the loveliest man in the loop to {departedCity}!',
-        'yep just realised i left my hair curlers on at home. guess im staying in {city} for now lol',
+        'yep just realised i left my hair curlers on at home. guess im staying in {departedCity} for now lol',
         'First #loop ever to #{departedCity}. Smooth and enjoyable so far!',
     ],
 
@@ -433,23 +435,27 @@ export const POSTS = {
     farewellMissed: [
         'Damn was excited to see the manager oh well',
         'Lowkey wish the manager said bye to us #sad',
+        'kind of wanted to be in one of those viral manager farewell videos but whatever lol',
     ],
 
     positiveEvent: [
         'Everything just feeling right today #StayPositive',
         'Good vibes all across the terminal #Peace',
         'Love and peace guys ❤️',
+        'Maybe things will work out after all',
     ],
 
     negativeEvent: [
         'Why is everyone in such a bad mood today! 😡',
         'Feeling like crap today tbh #ugh',
         'The air just feels so negative right now',
+        'you can feel the vibe is off today',
     ],
 
     milestone10: [
         'This terminal just keeps getting better. Glad they got a chance to celebrate',
         'What a commemoration 🎇🎆',
+        'did anyone see the fireworks?? so good'
     ],
 
     milestone50: [
@@ -464,6 +470,7 @@ export const POSTS = {
         'one big improvement id like to see is more travel destinations',
         'MANAGER. CONNECT MORE CITIES. THIS PLACE IS A GHOST TOWN.', 
         'wish they would add more connections. the pickings rn are slim',
+        'the choices for destinations here are actually terrible 😂'
     ],
 
     noFood: [
@@ -668,6 +675,43 @@ staffCafeteriaRenovations: [
 indoorGarden: [
         'took a stroll around the beautiful indoor garden 🌳 #nature',
         'the indoor garden is so lovely - defo helps me destress 🌻',
+    ],
+
+    simCardServices: [
+        'thank god for the sim card service - would literally be SIM-less rn without it',
+        'Want to shout out to the worker at the sim card services!! she was genuinely so helpful in helping me find the right travel sim #goodservice',
+    ],
+
+    businessLoungeRenovations: [
+        'i snuck into the business lounge to see the renovations - looks great!!',
+        'The new business lounge renovations are genuinely excellent. #businesstravel',
+    ],
+
+    watchStore: [
+        'picked up a new watch for my boyfriend at the watch store - cant wait to see his face when he opens it 😊',
+        'yeah i cant afford a new watch so what',
+    ],
+
+     candyStore: [
+        'can we literally ban kids from the candy store omg',
+        'anyone tried the sherbert at the candy store??? CRAZY good',
+    ],
+
+    bookstore: [
+        'If you\'re looking for a cozy reading nook, go to the bookstore - it\'s honestly a vibe',
+        'books and quiet at the bookstore 📖 #needed',
+    ],
+
+    lowReputation: [
+        'This terminal\'s reputation is down the toilet. #dobetter',
+        'The manager will have to work hard to restore their reputation #travel',
+        'when my friends said that we\'re using THIS place i was like... ugh. it has a bad #reputation for a reason.',
+    ],
+
+    highReputation: [
+        'This terminal truly deserves its high reputation. ✨',
+        'everyone knows this is the best terminal #goodreputation',
+        'who doesn\'t love the manager? and this terminal?',
     ],
 
    officialGeneral: [

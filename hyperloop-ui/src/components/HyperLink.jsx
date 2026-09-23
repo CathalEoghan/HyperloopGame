@@ -44,6 +44,14 @@ function formatTimestamp(ts) {
     return `${days}d`
 }
 
+function formatPostText(text) {
+    return text.split(/(#\S+)/g).map((part, i) =>
+        part.startsWith('#')
+            ? <span key={i} style={{ color: '#f5a623', fontWeight: 600 }}>{part}</span>
+            : part
+    )
+}
+
 function HyperLinkModal({ feed, onClose, terminalName }) {
     const now = new Date()
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -150,7 +158,7 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
                                                     <span className="hyperlink-timestamp">{formatTimestamp(post.timestamp)}</span>
                                                 </div>
                                             </div>
-                                            <div className="hyperlink-post-text">{post.isItalic ? <em>{post.text}</em> : post.text}</div>
+                                            <div className="hyperlink-post-text">{post.isItalic ? <em>{formatPostText(post.text)}</em> : formatPostText(post.text)}</div>
                                             <div className="hyperlink-engagement">
                                                 <span
                                                     className={`hyperlink-likes${isLiked ? ' hyperlink-likes-active' : ''}`}

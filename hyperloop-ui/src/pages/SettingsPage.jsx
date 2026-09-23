@@ -5,6 +5,27 @@ import GuideModal from '../components/GuideModal.jsx'
 import './SettingsPage.css'
 
 const VERSION_LOG = [
+
+    {
+    version: 'v2.0',
+    label: 'Hyper-Link Social Media',
+    major: true,
+    date: 'September 2026',
+    notes: [
+        'Introduced Hyper-Link — a fully simulated in-game social media platform',
+        'Posts generate dynamically every 1–3 minutes based on game context',
+        'Over 300 unique posts across 50+ categories including time of day, day of week, departures, delays, developments, events and more',
+        'Official terminal account posts announcements, event responses and delay updates in real time',
+        'Double-tap or click ❤ to like posts — counts grow dynamically over time',
+        'Profile pictures drawn from a pool of 170 real photographs',
+        'Departure board converted to a floating modal above the globe',
+        'Split-flap animation and sound can now be toggled in Settings',
+        'Development and city page scrollbars fixed — no longer overlap the ticker bar',
+        'Cloudinary images now preloaded before reveal modals open',
+        'Hyper-Link feed auto-cleans posts older than 2 days',
+        '5 new cities: Ibiza, Jeddah, Jeju City, Memphis, Rhodes',
+    ]
+},
     {
         version: 'v1.2',
         label: 'Bug Fixes & Polish',
@@ -47,6 +68,7 @@ const VERSION_LOG = [
     {
         version: 'v1.0',
         label: 'Initial Release',
+        major: true,
         date: 'September 2026',
         notes: [
             '335 cities across 150 countries to collect',
@@ -382,10 +404,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 {VERSION_LOG.map(entry => (
                     <div key={entry.version} className="version-log-entry">
                         <div className="version-log-header">
-                            <span className="version-log-tag">{entry.version}</span>
-                            <span className="version-log-label">{entry.label}</span>
-                            <span className="version-log-date">{entry.date}</span>
-                        </div>
+    <span className="version-log-tag">{entry.version}</span>
+    {entry.major && <span className="version-log-major-badge">MAJOR UPDATE</span>}
+    <span className="version-log-label">{entry.label}</span>
+    <span className="version-log-date">{entry.date}</span>
+</div>
                         <ul className="version-log-notes">
                             {entry.notes.map((note, i) => (
                                 <li key={i}>{note}</li>

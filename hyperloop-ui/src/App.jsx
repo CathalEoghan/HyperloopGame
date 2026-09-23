@@ -443,6 +443,7 @@ function App() {
           purchasedUpgrades: progressionManager.purchasedUpgrades,
           activeEvent: activeEventRef.current,
           rankSet: rankManager.rank,
+          reputation: progressionManager.reputation,
           schedule: sched,
           usedPostIds,
           usedPfps,
