@@ -145,7 +145,7 @@ export const SURNAMES = [
     'Murphy', "O'Brien", 'Ryan', 'Kelly', 'Sullivan', 'Brennan',
     'Carlisle', 'Carlton', 'Roach', 'Paulson', 'Daniels', 'Stevens',
     'Carpenter', 'Wolfe', 'Parker', 'Park', 'Creighton', 'Windsor',
-    'De Santos', 'Andersen',
+    'De Santos', 'Andersen', 'Bloomington', 'Vanders', 'Griffin',
 ]
 
 export const POSTS = {
@@ -180,6 +180,18 @@ export const POSTS = {
         'ahh this place is so pretty',
         'What\'s up guys',
         'what language does everyone speak as their primary',
+        'whos that clown who keeps scaring people by the elevator is it for socials or something lol',
+        'making funny faces in the bathroom mirror #dontjudge',
+        'Anyone see my granddad',
+        'Being dragged on this family vacation. Would rather just be at home',
+        'do you guys think he\'ll turn up and say it was a mistake to break up with me before i get on this loop? like they do in films?',
+        'If youre bored come find us in arrivals we\'re playing cards and need a third person',
+        'lol went on a few dating apps in here and now my dms are exploding in multilignualism',
+        'how to make a complaint',
+        'the person below me needs to touch grass',
+        'am i dressed too fancy for this lol',
+        'the man coughing his lungs out.. bro.. go home #SuperSpreader',
+        'try not to encounter an obnoxious influencer challenge !',
     ],
 
     morning: [
@@ -202,8 +214,8 @@ export const POSTS = {
         'Good afternoon everyone',
         'Halfway through the day guys!! Let\'s keep going #GoodAfternoon',
         'whats good for lunch??',
-        'WHY oh why did i pick the afternoon loop #busy'
-        'Afternoon guys. Just checking if anyone saw my passport 🛂'
+        'WHY oh why did i pick the afternoon loop #busy',
+        'Afternoon guys. Just checking if anyone saw my passport 🛂',
     ],
 
     evening: [
@@ -225,6 +237,11 @@ export const POSTS = {
         'Good night 😴',
         'Au clair de la lune 🌙',
         'Someone fell asleep on me! wth 😑',
+        'NIGHT GUYS. this bench is my bed for the next few hours #DoNotDisturb',
+        'Terminal is so calm at night!',
+        'whoever is talking really loud in departures. SHUT UP!! ITS THE MIDDLE OF THE NIGHT SELFISH',
+        'i dreamt i forgot my passport thank god it was a dream lmao',
+        'Still awake? Us too. come have a drink with us at the seats just past security #partytime',
     ],
 
     monday: [
@@ -361,7 +378,10 @@ export const POSTS = {
         'If you see me in {departedCity} in a few hours dont tell my manager #sickleave',
         'the loop to {departedCity} hasnt crashed yet at least',
         'smooth journey so far! #{departedCity}',
-        'what language do they speak in {city}? no im serious',
+        'what language do they speak in {departedCity}? no im serious',
+        'just met the loveliest man in the loop to {departedCity}!',
+        'yep just realised i left my hair curlers on at home. guess im staying in {city} for now lol',
+        'First #loop ever to #{departedCity}. Smooth and enjoyable so far!',
     ],
 
     delayCompensated: [
