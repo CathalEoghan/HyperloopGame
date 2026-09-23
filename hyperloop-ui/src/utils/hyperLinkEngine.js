@@ -6,29 +6,21 @@ const DEV_KEY_MAP = {
     'Escape Room': 'escapeRoom',
     'Car Museum': 'carMuseum',
     'Hostel': 'hostel',
-    'Terminal Radio': 'terminalRadio',
     'Convenience Store': 'convenienceStore',
     'Kennel': 'kennel',
-    'Train Station': 'trainStation',
     'Gym': 'gym',
     'Skincare Store': 'skincareStore',
     'Cinema': 'cinema',
     'Swimwear Store': 'swimwearStore',
     'Smoothie Shop': 'smoothieShop',
-    'Quiet Room': 'quietRoom',
     'Spa': 'spa',
     'Costume Store': 'costumeStore',
-    'Post Office': 'postOffice',
-    'Bank': 'bank',
-    'Event Hall': 'eventHall',
     'Bakery': 'bakery',
     'Beer Tent': 'beerTent',
     'Pharmacy': 'pharmacy',
     'Yoga Studio': 'yogaStudio',
     'Petting Zoo': 'pettingZoo',
     'Street Food Fair': 'streetFoodFair',
-    'Staff Cafeteria Renovations': 'staffCafeteriaRenovations',
-    'Indoor Garden': 'indoorGarden',
     'Hyperloop Museum': 'hyperloopMuseum',
 }
 
@@ -37,6 +29,14 @@ const UPGRADE_KEY_MAP = {
     'Local Airport Links': 'localAirportLinks',
     'Billboard Design Overhauls': 'billboardDesignOverhauls',
     'Southern Hemisphere Trade Agreements': 'southernHemisphereTradeAgreements',
+    'Terminal Radio': 'terminalRadio',
+    'Train Station': 'trainStation',
+    'Quiet Room': 'quietRoom',
+    'Bank': 'bank',
+    'Event Hall': 'eventHall',
+    'Staff Cafeteria Renovations': 'staffCafeteriaRenovations',
+    'Indoor Garden': 'indoorGarden',
+    'Postal Office': 'postOffice',
 }
 
 function getTimeCategory() {
@@ -61,16 +61,13 @@ function buildEligibleCategories(gameState) {
     const cats = []
     const add = (category, weight, data = {}) => cats.push({ category, weight, data })
 
-    // Always
     add('general', 2)
     add('officialGeneral', 5)
     add(getTimeCategory(), 3)
     add(getDayCategory(), 2)
 
-    // Priority trigger (new city, new dev, delay, farewell, etc.)
     if (trigger) add(trigger.type, 25, trigger.data || {})
 
-    // Conditional game state
     const now = new Date()
     const currentMins = now.getHours() * 60 + now.getMinutes()
 
@@ -153,7 +150,6 @@ function substituteText(text, data, gameState) {
 }
 
 function generateUser(gender, usedPfps, userPfpMap, handle) {
-    // Check if this handle already has a pfp assigned
     if (userPfpMap[handle]) return userPfpMap[handle]
 
     const useReal = Math.random() < 0.85
@@ -174,47 +170,19 @@ function generateUser(gender, usedPfps, userPfpMap, handle) {
 }
 
 export function generateHyperLinkPost(gameState) {
-    const {
-        terminalName, usedPostIds, usedPfps, userPfpMap, trigger
-    } = gameState
-
-    // Occasionally generate official post
-    const isOfficial = Math.random() < 0.20
-
-    if (isOfficial) {
-        const officialPosts = POSTS.official || []
-        const available = officialPosts
-            .map((text, i) => ({ id: `official_${i}`, text }))
-            .filter(p => !usedPostIds.includes(p.id))
-        if (available.length === 0) return null
-
-        const post = available[Math.floor(Math.random() * available.length)]
-        return {
-            id: `post_${Date.now()}_${Math.random()}`,
-            text: substituteText(post.text, {}, gameState),
-            displayName: `${terminalName}`,
-            handle: `@${terminalName.toLowerCase().replace(/\s+/g, '')}official`,
-            pfp: officialPfp,
-            isOfficial: true,
-            isItalic: false,
-            timestamp: Date.now(),
-            usedPostId: post.id,
-            usedPfpId: 'official',
-        }
-    }
+    const { terminalName, usedPostIds, usedPfps, userPfpMap, trigger } = gameState
 
     const cats = buildEligibleCategories(gameState)
     if (cats.length === 0) return null
 
     const selected = pickCategory(cats)
-    // Official general posts
+
     if (selected.category === 'officialGeneral') {
         const pool = POSTS.officialGeneral || []
         const available = pool.map((text, i) => ({ id: `officialGeneral_${i}`, text }))
             .filter(p => !usedPostIds.includes(p.id))
         if (available.length === 0) return null
         const chosen = available[Math.floor(Math.random() * available.length)]
-        const { terminalName } = gameState
         return {
             id: `post_${Date.now()}_${Math.random()}`,
             text: substituteText(chosen.text, {}, gameState),
@@ -250,9 +218,7 @@ export function generateHyperLinkPost(gameState) {
     const { pfp, pfpId } = generateUser(gender, usedPfps, userPfpMap, handle)
 
     const isItalic = chosenPost.text.startsWith('*(') && chosenPost.text.endsWith(')*')
-    const cleanText = isItalic
-        ? chosenPost.text.slice(2, -2)
-        : chosenPost.text
+    const cleanText = isItalic ? chosenPost.text.slice(2, -2) : chosenPost.text
 
     return {
         id: `post_${Date.now()}_${Math.random()}`,
@@ -268,6 +234,7 @@ export function generateHyperLinkPost(gameState) {
         gender,
     }
 }
+
 export function generateOfficialEventPost(gameState) {
     const { trigger, terminalName } = gameState
     if (!trigger) return null
