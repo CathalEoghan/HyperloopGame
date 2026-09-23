@@ -116,6 +116,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
     const [eventTint, setEventTint] = useState(localStorage.getItem('hyperloop_event_tint') !== 'false')
+    const [splitFlap, setSplitFlap] = useState(localStorage.getItem('splitFlap') !== 'false')
     const [nameInput, setNameInput] = useState(terminalName)
     const [nameSaved, setNameSaved] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
@@ -147,6 +148,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleEventTintToggle = (enabled) => {
         setEventTint(enabled)
         localStorage.setItem('hyperloop_event_tint', enabled)
+    }
+
+    const handleSplitFlapToggle = (enabled) => {
+        setSplitFlap(enabled)
+        localStorage.setItem('splitFlap', enabled)
     }
 
     const handleNameSave = () => {
@@ -258,6 +264,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <div className="settings-options">
                         <OptionBtn active={eventTint} onClick={() => handleEventTintToggle(true)}>On</OptionBtn>
                         <OptionBtn active={!eventTint} onClick={() => handleEventTintToggle(false)}>Off</OptionBtn>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Split-Flap Animation</span>
+                        <span className="settings-label-desc">Animated flip tiles and mechanical sound on the departure board.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={splitFlap} onClick={() => handleSplitFlapToggle(true)}>On</OptionBtn>
+                        <OptionBtn active={!splitFlap} onClick={() => handleSplitFlapToggle(false)}>Off</OptionBtn>
                     </div>
                 </div>
             </div>

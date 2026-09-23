@@ -26,7 +26,7 @@ const CONTINENT_COLOURS = {
 const normalise = (str) =>
     str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
-function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled }) {
+function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, topOffset = 113 }) {
     const [selectedCity, setSelectedCity] = useState(() => preSelectedCity || null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [search, setSearch] = useState('')
@@ -164,7 +164,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     }
 
     return (
-        <div className="background">
+        <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
             <div className="cities-toolbar-strip">
                 <div className="city-toolbar">
                     <input

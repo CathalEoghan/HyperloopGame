@@ -13,7 +13,7 @@ import constructionIcon from '../assets/misc/construction.png'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
-function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onUpgradeBuilt }) {
+function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onUpgradeBuilt, topOffset = 113 }) {
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [activeCategory, setActiveCategory] = useState('All')
@@ -66,7 +66,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const closeModal = () => { setSelectedDevelopment(null); setShowUpgradeModal(false) }
 
     return (
-        <div className="background">
+        <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
             <div className="dev-toolbar-strip">
                 <div className="dev-toolbar">
                     <input className="dev-search" type="text" placeholder="Search developments..." value={search} onChange={e => setSearch(e.target.value)} />

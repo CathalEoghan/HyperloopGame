@@ -28,7 +28,6 @@ function getStatus(hour, minute, delayed, lag = 0) {
     return              { label: 'SCHEDULED',    color: '#aaa' }
 }
 
-// Static tile row — no animation, just renders chars as tiles instantly
 const StaticText = React.memo(function StaticText({ text }) {
     return (
         <span className="flap-text">
@@ -43,7 +42,6 @@ const StaticText = React.memo(function StaticText({ text }) {
     )
 })
 
-// Animated tile row — only used for status and gate (things that change)
 const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
     const [delays] = useState(() => text.split('').map(() => Math.floor(Math.random() * maxDelay)))
     return (
@@ -68,6 +66,8 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     const hasPlayedLongRef = useRef(false)
     const lagMapRef = useRef({})
     const [boardInitialized, setBoardInitialized] = useState(false)
+
+    const splitFlapEnabled = () => localStorage.getItem('splitFlap') !== 'false'
 
     function generateSchedule(cities) {
         const departureCities = cities.filter(c => !homeCity || c.name !== homeCity.name)
@@ -127,7 +127,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     useEffect(() => {
         if (schedule.length > 0 && !hasPlayedLongRef.current) {
             hasPlayedLongRef.current = true
-            playSplitFlapLong()
+            if (splitFlapEnabled()) playSplitFlapLong()
             setTimeout(() => setBoardInitialized(true), 6500)
         }
     }, [schedule.length])
@@ -192,7 +192,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                 const prevStatus = prevStatusRef.current[entry.name]
                 if (prevStatus !== undefined && prevStatus !== currentStatus) {
                     anyChanged = true
-                    playSplitFlapShort()
+                    if (splitFlapEnabled()) playSplitFlapShort()
                 }
                 prevStatusRef.current[entry.name] = currentStatus
             })
@@ -218,6 +218,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     }, [schedule, renderTick])
 
     const renderCells = (entry) => {
+        const enabled = splitFlapEnabled()
         if (!entry) return (
             <>
                 <td className="flip-cell"><div className="flip-card"><StaticText text={'-'.repeat(destWidth)} /></div></td>
@@ -230,7 +231,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
         const status = getStatus(entry.hour, entry.minute, entry.delayed, lag)
         const isGone = status.label === 'DEPARTED'
         const showGate = status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
-       const gateText = padText(showGate ? `-${String(entry.gate).padStart(2, '0')}` : '---', GATE_WIDTH)
+        const gateText = padText(showGate ? `-${String(entry.gate).padStart(2, '0')}` : '---', GATE_WIDTH)
         return (
             <>
                 <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>
@@ -243,12 +244,16 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                 </td>
                 <td className="flip-cell board-col-inner" style={{ opacity: isGone ? 0.4 : 1 }}>
                     <div className="flip-card" key={showGate ? `gate-${entry.gate}` : 'gate-hidden'}>
-                        <FlapText text={gateText} maxDelay={boardInitialized ? 800 : 5500} />
+                        {enabled
+                            ? <FlapText text={gateText} maxDelay={boardInitialized ? 800 : 5500} />
+                            : <StaticText text={gateText} />}
                     </div>
                 </td>
                 <td className="flip-cell board-col-inner" style={{ opacity: isGone ? 0.4 : 1 }}>
                     <div className="flip-card" key={status.label}>
-                        <FlapText text={padText(status.label, STATUS_WIDTH)} maxDelay={boardInitialized ? 800 : 5500} />
+                        {enabled
+                            ? <FlapText text={padText(status.label, STATUS_WIDTH)} maxDelay={boardInitialized ? 800 : 5500} />
+                            : <StaticText text={padText(status.label, STATUS_WIDTH)} />}
                     </div>
                 </td>
             </>

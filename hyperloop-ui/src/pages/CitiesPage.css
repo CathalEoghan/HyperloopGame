@@ -4,7 +4,7 @@
     font-family: 'Inter', sans-serif;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 180px);
+    height: calc(100vh - 254px);
     overflow: hidden;
 }
 
@@ -194,8 +194,9 @@
 /* Scrollable content */
 .cities-content {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
-    padding-bottom: 80px;
+    padding-bottom: 104px;
     padding-right: 4px;
 }
 
@@ -392,4 +393,3 @@
     display: inline-block;
     margin: 0 1px;
 }
-

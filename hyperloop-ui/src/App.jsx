@@ -38,6 +38,7 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
+import developmentImages from "./data/developmentImages.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
 import monitorIcon from './assets/misc/monitor.png'
@@ -370,6 +371,10 @@ function App() {
         if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
           const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
           const newOnes = currentUnlocked.slice(prevUnlockedDevCount.current).filter(d => !homeCityRewardNames.has(d.name));
+          newOnes.forEach(d => {
+            const src = developmentImages[d.name]
+            if (src) { const img = new Image(); img.src = src }
+          })
           setDevRevealQueue(q => [...q, ...newOnes]);
         }
         prevUnlockedDevCount.current = currentUnlockedCount;
@@ -797,23 +802,47 @@ function App() {
       {showDepartureBoard && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 250,
-          background: '#0a0a0a', overflowY: 'auto',
-          display: 'flex', flexDirection: 'column',
-        }}>
-          <DepartureBoard
-            purchasedCities={progressionManager.purchasedCities}
-            homeCity={progressionManager.purchasedCities[0]}
-            preSelectedCity={preSelectedCity}
-            onPreSelectedCityHandled={() => setPreSelectedCity(null)}
-            onClose={() => {
-              if (departureBoardAudioRef.current) {
-                departureBoardAudioRef.current.pause();
-                departureBoardAudioRef.current.currentTime = 0;
-                departureBoardAudioRef.current = null;
-              }
-              setShowDepartureBoard(false);
-            }}
-          />
+          background: 'rgba(0,0,0,0.82)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          padding: '16px',
+        }}
+          onClick={() => {
+            if (departureBoardAudioRef.current) {
+              departureBoardAudioRef.current.pause();
+              departureBoardAudioRef.current.currentTime = 0;
+              departureBoardAudioRef.current = null;
+            }
+            setShowDepartureBoard(false);
+          }}
+        >
+          <div style={{
+            background: '#0a0a0a',
+            border: '2px solid #f5a623',
+            borderRadius: '12px',
+            width: '100%',
+            maxWidth: '1100px',
+            maxHeight: '85vh',
+            overflowY: 'auto',
+            boxShadow: '0 0 60px rgba(245,166,35,0.15), 0 24px 80px rgba(0,0,0,0.9)',
+            animation: 'boardModalIn 0.25s ease-out',
+          }}
+            onClick={e => e.stopPropagation()}
+          >
+            <DepartureBoard
+              purchasedCities={progressionManager.purchasedCities}
+              homeCity={progressionManager.purchasedCities[0]}
+              preSelectedCity={preSelectedCity}
+              onPreSelectedCityHandled={() => setPreSelectedCity(null)}
+              onClose={() => {
+                if (departureBoardAudioRef.current) {
+                  departureBoardAudioRef.current.pause();
+                  departureBoardAudioRef.current.currentTime = 0;
+                  departureBoardAudioRef.current = null;
+                }
+                setShowDepartureBoard(false);
+              }}
+            />
+          </div>
         </div>
       )}
       {activeTab === "Settings" && (
@@ -1003,6 +1032,10 @@ function App() {
               setDevRevealQueue(prev => {
                 const prevNames = new Set(prev.map(p => p.name))
                 const newItems = unshown.filter(d => !prevNames.has(d.name))
+                newItems.forEach(d => {
+                  const src = developmentImages[d.name]
+                  if (src) { const img = new Image(); img.src = src }
+                })
                 return newItems.length > 0 ? [...prev, ...newItems] : prev
               })
             }

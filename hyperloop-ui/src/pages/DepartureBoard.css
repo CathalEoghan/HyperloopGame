@@ -6,7 +6,7 @@
     font-family: 'B612 Mono', 'Courier New', monospace;
     padding: 16px;
     min-height: calc(100vh - 116px);
-    padding-bottom: 116px;
+    padding-bottom: 24px;
     position: relative;
     overflow-x: auto;
 }
