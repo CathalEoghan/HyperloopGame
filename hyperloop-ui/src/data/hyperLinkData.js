@@ -193,6 +193,7 @@ export const POSTS = {
         'still so tired this morning',
         'Full day ahead everyone!! #GoodMorning ☀️',
         'What a lovely morning',
+        "Yawn! Another day at {terminalName}. Have a good one folks"
     ],
 
     afternoon: [
@@ -202,6 +203,7 @@ export const POSTS = {
         'Halfway through the day guys!! Let\'s keep going #GoodAfternoon',
         'whats good for lunch??',
         'WHY oh why did i pick the afternoon loop #busy'
+        'Afternoon guys. Just checking if anyone saw my passport 🛂'
     ],
 
     evening: [
@@ -229,6 +231,7 @@ export const POSTS = {
         'Happy Monday guys! Keep those #MondayBlues at bay',
         'Another monday zzzzzz',
         'go away Monday no one likes u',
+        'trying to stay positive on this monday. but its hard. friday so far away',
     ],
 
     tuesday: [
@@ -236,6 +239,8 @@ export const POSTS = {
         'Anyone else celebrate taco tuesday by bringing tacos from home #No #Ok',
         'tuesday is that annoying co worker who makes bad jokes and wears obnoxious ties',
         'Happy tuesday everyone!! Getting there slowly but surely!!',
+        'whats everyone up to on a tuesday',
+
     ],
 
     wednesday: [
@@ -263,6 +268,7 @@ export const POSTS = {
         'I was feeling bad then i remembered its friday',
         'Whats everyones fave day and why is it friday',
         'Weekend is hereeee',
+        'how is it friday already? this week flew by',
     ],
 
     saturday: [
@@ -288,6 +294,7 @@ export const POSTS = {
         'Ohhh {city}. Now thats a place i want to go ❤️',
         'Finally! This new connection to {city} will do wonders for business and tourism #Yay',
         'So excited that {terminalName} just added {city} to their network #woo',
+        'brb booking my ticket to {city} which is now connected to the loop 😊'
     ],
 
     newCityTier1: [
@@ -304,6 +311,7 @@ export const POSTS = {
         'lost my grandma in the new {store} 😭 if u see her tell her to get her ass to the entrance',
         'ok hear me out the cashier in the new {store} 😍',
         'The new {store} is everything i could shop in there for days',
+        'the queue outside the new {store}... man...',
     ],
 
     newDevelopmentRecreation: [
@@ -353,6 +361,7 @@ export const POSTS = {
         'If you see me in {departedCity} in a few hours dont tell my manager #sickleave',
         'the loop to {departedCity} hasnt crashed yet at least',
         'smooth journey so far! #{departedCity}',
+        'what language do they speak in {city}? no im serious',
     ],
 
     delayCompensated: [
@@ -419,27 +428,33 @@ export const POSTS = {
         'This place desperately needs more options to travel to. Sick of the limited choice',
         'Can we get some more destinations plz?',
         'one big improvement id like to see is more travel destinations',
+        'MANAGER. CONNECT MORE CITIES. THIS PLACE IS A GHOST TOWN.', 
+        'wish they would add more connections. the pickings rn are slim',
     ],
 
     noFood: [
         'What?? No restaurants or ANYTHING? What am i supposed to eat lmao',
         'OMG just open a food place give us something',
+        'no its not an earthquake or a tsunami or an atom bomb its my damn stomach rumbling. wish there was an ACTUAL food place here.',
     ],
 
     noShopping: [
         'The shopping choices here are like, non-existent',
         'where can i even shop here',
         'i didnt buy any souvenirs and this crappy terminal literally has no shops 🙄',
+        'yo this terminal is so bare?? where are the shops?? 😂',
     ],
 
     noRecreation: [
         'This terminal is so boring yall lmao nothing fun to do 😭',
         'maybe like a recreational thing would be good manager !! bored out of my mind',
+        'some fun stuff to do while we wait would be cool manager. just saying. 👍',
     ],
 
     noService: [
         'this terminal barely has any services #suboptimal',
         'this place is so inconvenient lmao',
+        'whats with the lack of services?',
     ],
 
     noEnterprise: [
@@ -452,6 +467,7 @@ export const POSTS = {
         'my fave thing about this place: so many good food choices',
         'Yay i love food and this terminal has so much of it #yum',
         'There\'s so much food choice here! 5 ⭐️',
+        'one thing about this place i love: we are spoiled for food choices👍',
     ],
 
     advertisingCampaign: [
