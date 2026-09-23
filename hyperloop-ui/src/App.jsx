@@ -820,7 +820,7 @@ function App() {
             border: '2px solid #f5a623',
             borderRadius: '12px',
             width: '100%',
-            maxWidth: '1100px',
+            maxWidth: '98vw',
             maxHeight: '85vh',
             overflowY: 'auto',
             boxShadow: '0 0 60px rgba(245,166,35,0.15), 0 24px 80px rgba(0,0,0,0.9)',
@@ -1151,4 +1151,4 @@ function App() {
     </div>
   );
 }
-export default App;
+export default App;11
