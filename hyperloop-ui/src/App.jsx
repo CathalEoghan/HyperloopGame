@@ -146,6 +146,7 @@ function App() {
   const [milestoneQueue, setMilestoneQueue] = useState([]);
   const [cityClaimPending, setCityClaimPending] = useState(false);
   const [showDepartureBoard, setShowDepartureBoard] = useState(false)
+  const topOffset = activeEvent ? 145 : 113
   const [hyperLinkFeed, setHyperLinkFeed] = useState(() => {
     try { return JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]') } catch { return [] }
   })
@@ -421,7 +422,15 @@ function App() {
 
       // Hyper-Link post generation every 3-5 minutes
       if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 1) {
-        const usedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]')
+        // Clean up posts older than 2 days
+        const twoDaysAgo = Date.now() - 172800000
+        const cleanFeed = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]').filter(p => p.timestamp > twoDaysAgo)
+        localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(cleanFeed))
+        const validPostIds = new Set(cleanFeed.map(p => p.usedPostId).filter(Boolean))
+        const cleanedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]').filter(id => validPostIds.has(id))
+        localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(cleanedPostIds))
+
+        const usedPostIds = cleanedPostIds
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]')
         const userPfpMap = JSON.parse(localStorage.getItem('hyperloop_hyperlink_user_pfps') || '{}')
         const todayKey = new Date().toDateString()
@@ -441,7 +450,7 @@ function App() {
           trigger: hyperLinkTriggerRef.current,
         })
         if (post) {
-          const newFeed = [...JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]'), post]
+          const newFeed = [...cleanFeed, post]
           localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
           usedPostIds.push(post.usedPostId)
           localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(usedPostIds))
@@ -732,6 +741,7 @@ function App() {
       )}
       {activeTab === "Cities" && (
         <CitiesPage
+          topOffset={topOffset}
           purchasedCities={progressionManager.purchasedCities}
           constructionManager={constructionManager}
           unlockedCities={progressionManager.unlockedCities}
@@ -758,6 +768,7 @@ function App() {
       )}
       {activeTab === "Development" && (
         <DevelopmentPage
+          topOffset={topOffset}
           purchasedDevelopments={progressionManager.purchasedDevelopments}
           unlockedDevelopments={progressionManager.unlockedDevelopments}
           unlockedUpgrades={progressionManager.unlockedUpgrades}
@@ -779,6 +790,7 @@ function App() {
       )}
       {activeTab === "Progress" && (
         <ProgressPage
+          topOffset={topOffset}
           purchasedCities={progressionManager.purchasedCities}
           unlockedCities={progressionManager.unlockedCities}
           economyManager={economyManager}
@@ -847,6 +859,7 @@ function App() {
       )}
       {activeTab === "Settings" && (
         <SettingsPage
+          topOffset={topOffset}
           terminalName={terminalName}
           onTerminalNameChange={setTerminalName}
           lastSaved={lastSaved}
@@ -1151,4 +1164,4 @@ function App() {
     </div>
   );
 }
-export default App;11
+export default App;

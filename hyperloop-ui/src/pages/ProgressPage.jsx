@@ -15,7 +15,7 @@ const CashValue = ({ amount, suffix = '' }) => (
     </span>
 )
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, createdAt, onCollectReward }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, createdAt, onCollectReward, topOffset = 113 }) {
     const [, setTick] = useState(0)
     useEffect(() => {
         const interval = setInterval(() => setTick(t => t + 1), 1000)
@@ -227,7 +227,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     return (
         <>
-        <div className="progress-page">
+        <div className="progress-page" style={{ height: `calc(100vh - ${topOffset + 141}px)` }}>
             <div className="progress-content">
             <h2 className="progress-section-header">General Stats</h2>
             <div className="progress-stats">
