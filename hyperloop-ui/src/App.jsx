@@ -107,6 +107,7 @@ function App() {
   });
   const [activeDelay, setActiveDelay] = useState(null);
   const [devRevealQueue, setDevRevealQueue] = useState(() => {
+    // Mark home city rewards as shown BEFORE building the queue
     if (progressionManager.purchasedCities.length > 0) {
       const homeCity = progressionManager.purchasedCities[0];
       const shownEarly = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]');
@@ -155,6 +156,7 @@ function App() {
   const [hyperLinkOpen, setHyperLinkOpen] = useState(false)
   const [hyperLinkBubble, setHyperLinkBubble] = useState(false)
 
+  // Keep ref in sync so tick loop can check without stale closure
   useEffect(() => { hyperLinkOpenRef.current = hyperLinkOpen }, [hyperLinkOpen])
   const [hyperLinkTrigger, setHyperLinkTrigger] = useState(null)
   const hyperLinkTriggerRef = useRef(null)
@@ -199,6 +201,8 @@ function App() {
   const departureBoardAudioRef = useRef(null);
   const gameStartTime = useRef(Date.now());
 
+
+  // Generate departure schedule on startup if it doesn't exist yet
   useEffect(() => {
     const today = new Date().toDateString();
     const key = `departures_${today}`;
@@ -242,6 +246,7 @@ function App() {
     if (departures.length > 0) localStorage.setItem(key, JSON.stringify(departures));
   }, []);
 
+  // Immediate rank detection on load (catches offline rank ups)
   useEffect(() => {
     rankManager.convertCashToXP(progressionManager.totalCashEarned);
     const startRank = rankManager.rank;
@@ -259,6 +264,7 @@ function App() {
     }
   }, []);
 
+  // Daily login check
   useEffect(() => {
     if (!hasSave() || progressionManager.purchasedCities.length === 0) return;
     const today = new Date().toDateString();
@@ -350,6 +356,7 @@ function App() {
         playRankUpSound();
         const gained = rankManager.rank - previousRank;
         setPendingRankUps(prev => prev + gained);
+        // Check for milestone ranks
         for (let r = previousRank + 1; r <= rankManager.rank; r++) {
           const milestone = MILESTONES.find(m => m.rank === r);
           if (milestone && !claimedMilestones.current.has(`rank_${r}`)) {
@@ -414,7 +421,9 @@ function App() {
         localStorage.setItem('hyperloop_heartbeat_at', Date.now());
       }
 
+      // Hyper-Link post generation every 3-5 minutes
       if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 1) {
+        // Clean up posts older than 2 days
         const twoDaysAgo = Date.now() - 172800000
         const cleanFeed = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]').filter(p => p.timestamp > twoDaysAgo)
         localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(cleanFeed))
@@ -540,8 +549,10 @@ function App() {
         }
       }
 
+      // Sync active event to EconomyManager
       economyManager.activeEvent = activeEventRef.current;
 
+      // Event trigger — rank 2+, 1 min into game, 3 min after modals, guaranteed every 5 min
       const timeSinceLastEvent = Date.now() - lastEventTime.current;
       const forceEvent = timeSinceLastEvent > 300000;
       if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= 2 && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
@@ -708,17 +719,17 @@ function App() {
           localStorage.removeItem('hyperloop_active_event');
         }}
         onWork={(onRepGain) => {
-          const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
-          progressionManager.addCash(earned);
-          setBalance(progressionManager.balance);
-          const gotRep = Math.random() < economyManager.getWorkRepChance();
-          if (gotRep) {
-            progressionManager.addReputation(5);
-            setReputation(progressionManager.reputation);
-            playReputationWorkBonusSound();
-          }
-          onRepGain?.(earned, gotRep);
-        }}
+    const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
+    progressionManager.addCash(earned);
+    setBalance(progressionManager.balance);
+    const gotRep = Math.random() < economyManager.getWorkRepChance();
+    if (gotRep) {
+        progressionManager.addReputation(5);
+        setReputation(progressionManager.reputation);
+        playReputationWorkBonusSound();
+    }
+    onRepGain?.(earned, gotRep);
+}}
         workRange={workRange}
       />
       <ExperienceBar
@@ -1130,29 +1141,29 @@ function App() {
       )}
 
       {activeTab === "Home" && (
-        <HyperLinkButton
-          unread={hyperLinkUnread}
-          showBubble={hyperLinkBubble}
-          onClick={() => {
-            setHyperLinkOpen(true)
-            setHyperLinkUnread(0)
-            localStorage.setItem('hyperloop_hyperlink_unread', '0')
-          }}
-        />
-      )}
+  <HyperLinkButton
+    unread={hyperLinkUnread}
+    showBubble={hyperLinkBubble}
+    onClick={() => {
+      setHyperLinkOpen(true)
+      setHyperLinkUnread(0)
+      localStorage.setItem('hyperloop_hyperlink_unread', '0')
+    }}
+  />
+)}
 
       {hyperLinkOpen && (
         <HyperLinkModal
-          feed={hyperLinkFeed}
-          terminalName={terminalName}
-          onClose={() => setHyperLinkOpen(false)}
-        />
+  feed={hyperLinkFeed}
+  terminalName={terminalName}
+  onClose={() => setHyperLinkOpen(false)}
+/>
       )}
 
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 15,
-          background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.1)' : 'rgba(192,57,43,0.18)',
+         background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.1)' : 'rgba(192,57,43,0.18)',
           transition: 'background 0.5s ease',
         }} />
       )}
