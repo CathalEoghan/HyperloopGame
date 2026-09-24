@@ -54,6 +54,7 @@ const TIPS = [
     "Farewell windows open 5 minutes before each departure - extend them with upgrades to give yourself more time.",
     "Check Hyper-Link — the phone icon on the home screen — to see what passengers are saying about your terminal.",
     "Check the Progress page — newly connected cities and countries glow gold and reward you with cash or reputation.",
+    "Check the credits modal in Settings for asset accreditations and a surprise!",
 ]
 
 function LoadingScreen({ onComplete }) {

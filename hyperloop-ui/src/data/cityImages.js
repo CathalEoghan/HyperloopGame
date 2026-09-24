@@ -334,7 +334,7 @@ const cityImages = {
     "Niamey": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Niamey.jpg",
     "San Juan": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanJuan.jpg",
     "Antarctic Peninsula": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AntarcticPeninsula.jpg",
-    "Córdoba": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Córdoba.jpg",
+    "Córdoba": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/C%C3%B3rdoba.jpg",
     "Jeju City": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/JejuCity.jpg",
     "Rhodes": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Rhodes.jpg",
     "Ibiza": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ibiza.jpg",

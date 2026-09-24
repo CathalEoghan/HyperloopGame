@@ -133,7 +133,7 @@ function LegalModal({ onClose }) {
     )
 }
 
-function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave, topOffset = 113 }) {
+function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave, onReputationBonus, topOffset = 113 }) {
     const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '8k')
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
@@ -213,7 +213,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
 
     return (
         <div className="settings-page" style={{ height: `calc(100vh - ${topOffset + 141}px)`, overflowY: "auto" }}>
-            {showCredits && <CreditsModal onClose={() => setShowCredits(false)} />}
+            {showCredits && <CreditsModal onClose={() => setShowCredits(false)} onReputationBonus={onReputationBonus} />}
             {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
             {showLegal && <LegalModal onClose={() => setShowLegal(false)} />}
 
@@ -404,11 +404,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 {VERSION_LOG.map(entry => (
                     <div key={entry.version} className="version-log-entry">
                         <div className="version-log-header">
-    <span className="version-log-tag">{entry.version}</span>
-    {entry.major && <span className="version-log-major-badge">MAJOR UPDATE</span>}
-    <span className="version-log-label">{entry.label}</span>
-    <span className="version-log-date">{entry.date}</span>
-</div>
+                            <span className="version-log-tag">{entry.version}</span>
+                            {entry.major && <span className="version-log-major-badge">MAJOR UPDATE</span>}
+                            <span className="version-log-label">{entry.label}</span>
+                            <span className="version-log-date">{entry.date}</span>
+                        </div>
                         <ul className="version-log-notes">
                             {entry.notes.map((note, i) => (
                                 <li key={i}>{note}</li>

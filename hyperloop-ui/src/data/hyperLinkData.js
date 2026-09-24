@@ -19,7 +19,7 @@ export const FIRST_NAMES_MALE = [
     'Andrew', 'Drew', 'Ultan', 'Pete', 'Errol', 'Ross', 'Kenny', 'Lenny',
     'Muhammad', 'Arjun', 'Ravi', 'Vikram', 'Rohan',
     'Amir', 'Tariq', 'Bilal', 'Hamza', 'Zain',
-    'Karan', 'Nikhil', 'Siddharth', 'Dev', 
+    'Karan', 'Nikhil', 'Siddharth', 'Dev',
     'Wei', 'Jian', 'Hiroshi', 'Kenji', 'Takeshi',
     'Min', 'Jun', 'Hao', 'Ryu', 'Yuki',
     'Kwame', 'Kofi', 'Emeka', 'Chidi',
@@ -45,16 +45,16 @@ export const FIRST_NAMES_MALE = [
     'Gerald', 'Art', 'Cooper', 'Davinder', 'Orville', 'Ernesto', 'Aidan',
     'Aiden', 'Jake', 'Alfred', 'Cole', 'Steve', 'Stevie', 'Vlad',
     'Lee', 'Brendan', 'Brendy', 'Chaz', 'Kurt', 'Brandon', 'Landon', 'Perry',
-    'Bart', 'Pierre', 'Herman', 'Theodore', 'Randy', 'Jai', 'Quentin',
+    'Bart', 'Pierre', 'Herman', 'Theodore', 'Randy', 'Jai', 'Quentin', 'Ned',
 
 ]
 
 export const FIRST_NAMES_FEMALE = [
     'Olivia', 'Amelia', 'Isla', 'Ava', 'Mia', 'Jen', 'Jenny',
     'Isabella', 'Sophia', 'Grace', 'Lily', 'Freya', 'Jana',
-    'Emily', 'Poppy', 'Ella', 'Evie', 'Sienna', 'Coco',
+    'Emily', 'Poppy', 'Ella', 'Evie', 'Sienna', 'Coco', 'Libby',
     'Charlotte', 'Sophie', 'Chloe', 'Alice', 'Florence',
-    'Penny', 'Meghan', 'Jessica', 'Samantha', 'Iris',
+    'Penny', 'Meghan', 'Jessica', 'Samantha', 'Iris', 'Gabby',
     'Daisy', 'Sarah', 'Anna', 'Margaret', 'Clara', 'Nevada',
     'Gracie', 'Kara', 'Nella', 'Madison', 'Rita', 'Roxy',
     'Laura', 'Kelly', 'Natania', 'Mary', 'Bridget',
@@ -76,7 +76,7 @@ export const FIRST_NAMES_FEMALE = [
     'Suzanne', 'June', 'May', 'April', 'Friday',
     'Tamara', 'Selena', 'Salina', 'Lori', 'Andrea',
     'Rosetta', 'Ana', 'Maria', 'Mariah', 'Gigi',
-    'Brenda', 'Belinda', 'Mari', 'Sunday', 'Tania',
+    'Brenda', 'Belinda', 'Mari', 'Sunday', 'Tania', 'Louise', 'Louisa', 'Luisa',
     'Shreya', 'Mira', 'Shelly', 'Shelley', 'Linda',
     'Billie', 'Chandra', 'Cassandra', 'Juno', 'Theodora',
     'Priya', 'Ananya', 'Divya', 'Meera', 'Kay',
@@ -112,7 +112,7 @@ export const FIRST_NAMES_FEMALE = [
     'Ashlee', 'Ashley', 'Whitney', 'Queenie', 'Erica', 'Rain', 'Brigid', 'Sunny',
     'Emerald', 'Sapphire', 'Diamond', 'Ginger', 'Geri', 'Kayla', 'Laila',
     'Layla', 'Leila', 'Leela', 'Eva', 'Indira', 'Siobhan', 'Tiffany', 'Tiffani',
-    'Savannah', 'Betty', 'Hilda', 'Molly', 
+    'Savannah', 'Betty', 'Hilda', 'Molly', 'Edna', 'Tina',
 ]
 
 export const SURNAMES = [
@@ -159,6 +159,8 @@ export const SURNAMES = [
     'Ghai', 'Masood', 'Walton', 'Fletcher', 'Sarandon', 'Kowalski',
     'Winter', 'Good', 'O\'Hare', 'O\'Hara', 'Kinney', 'Snow', 'Wu', 'St. Clair',
     'St. John', 'Cassidy', 'Sherman', 'Doyle', 'Catney', 'Rogers', 'Livingstone',
+    'Hawkins', 'Harker', 'Berne', 'Sink', 'Burns', 'Marsh', 'Cotter', 'Hudson',
+    'Day', 'O\'Day', 'Charles', 'Monroe', 'Amari', 'Crest',
 ]
 
 export const POSTS = {

@@ -49,3 +49,41 @@
     background: #f5a623 !important;
     color: white !important;
 }
+
+@keyframes devPortraitPulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(245,166,35,0.4); }
+    50% { box-shadow: 0 0 28px rgba(245,166,35,0.9), 0 0 8px rgba(245,166,35,0.6); }
+}
+
+.dev-portrait-clickable {
+    animation: devPortraitPulse 2s ease-in-out infinite;
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.dev-portrait-clickable:hover {
+    transform: scale(1.05);
+}
+
+.dev-portrait-claimed {
+    box-shadow: 0 0 12px rgba(245,166,35,0.2) !important;
+    cursor: default;
+}
+
+.dev-bonus-toast {
+    background: #f5a623;
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    margin-top: 8px;
+    animation: toastFadeIn 0.3s ease;
+}
+
+@keyframes toastFadeIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
