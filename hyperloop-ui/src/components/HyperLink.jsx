@@ -1,25 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
 import './HyperLink.css'
-import defaultPfp from '../assets/misc/defaultAccountIcon.png'
-import officialPfp from '../assets/misc/officialAccountIcon.png'
 import phoneIcon from '../assets/misc/phone.png'
 import { playHoverSound } from '../utils/sound.js'
 import wifiIcon from '../assets/misc/wifi.png'
 import batteryIcon from '../assets/misc/battery.png'
 import signalIcon from '../assets/misc/signal.png'
-
-const malePfpModules = import.meta.glob('../assets/male-profile-pics/*.jpg', { eager: true })
-const femalePfpModules = import.meta.glob('../assets/female-profile-pics/*.jpg', { eager: true })
-
-export const MALE_PFPS = Object.entries(malePfpModules)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([, m]) => m.default)
-
-export const FEMALE_PFPS = Object.entries(femalePfpModules)
-    .sort(([a], [b]) => a.localeCompare(b))
-    .map(([, m]) => m.default)
-
-export { defaultPfp, officialPfp }
+import { defaultPfp } from '../assets/hyperLinkAssets.js'
+export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
 
 function hashNum(str, mod, offset = 0) {
     let h = 0

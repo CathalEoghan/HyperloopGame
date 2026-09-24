@@ -433,6 +433,7 @@ function App() {
         const usedPostIds = cleanedPostIds
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]')
         const userPfpMap = JSON.parse(localStorage.getItem('hyperloop_hyperlink_user_pfps') || '{}')
+        const firedDevCategories = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
         const todayKey = new Date().toDateString()
         const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
         const post = generateHyperLinkPost({
@@ -448,6 +449,7 @@ function App() {
           usedPostIds,
           usedPfps,
           userPfpMap,
+          firedDevCategories,
           trigger: hyperLinkTriggerRef.current,
         })
         if (post) {
@@ -462,6 +464,10 @@ function App() {
           if (post.handle && post.pfp) {
             userPfpMap[post.handle] = { pfp: post.pfp, pfpId: post.usedPfpId }
             localStorage.setItem('hyperloop_hyperlink_user_pfps', JSON.stringify(userPfpMap))
+          }
+          if (post.firedDevCategory && !firedDevCategories.includes(post.firedDevCategory)) {
+            firedDevCategories.push(post.firedDevCategory)
+            localStorage.setItem('hyperloop_hyperlink_fired_devposts', JSON.stringify(firedDevCategories))
           }
           hyperLinkTriggerRef.current = null
           setHyperLinkTrigger(null)
@@ -738,6 +744,9 @@ function App() {
           purchasedCitiesCount={purchasedCitiesCount}
           disabled={showOnboarding || hyperLinkOpen}
           economyManager={economyManager}
+          balance={balance}
+          constructionManager={constructionManager}
+          onConnectCity={triggerSave}
         />
       )}
       {activeTab === "Cities" && (

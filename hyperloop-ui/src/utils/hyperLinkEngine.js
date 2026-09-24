@@ -1,5 +1,5 @@
 import { POSTS, FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/hyperLinkData.js'
-import { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../components/HyperLink.jsx'
+import { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
 
 const DEV_KEY_MAP = {
     'Irish Bar': 'irishBar',
@@ -57,10 +57,16 @@ function getDayCategory() {
     return days[new Date().getDay()]
 }
 
+const DEV_CATEGORIES = new Set([
+    ...Object.values(DEV_KEY_MAP),
+    ...Object.values(UPGRADE_KEY_MAP),
+])
+
 function buildEligibleCategories(gameState) {
     const {
         purchasedCities, purchasedDevelopments, purchasedUpgrades,
-        activeEvent, schedule, trigger, rankSet
+        activeEvent, schedule, trigger, rankSet,
+        firedDevCategories = [],
     } = gameState
 
     const cats = []
@@ -113,12 +119,12 @@ function buildEligibleCategories(gameState) {
 
     purchasedDevelopments.forEach(dev => {
         const key = DEV_KEY_MAP[dev.name]
-        if (key && POSTS[key]) add(key, 2)
+        if (key && POSTS[key] && !firedDevCategories.includes(key)) add(key, 2)
     })
 
     purchasedUpgrades.forEach(upg => {
         const key = UPGRADE_KEY_MAP[upg.name]
-        if (key && POSTS[key]) add(key, 2)
+        if (key && POSTS[key] && !firedDevCategories.includes(key)) add(key, 2)
     })
 
     return cats
@@ -239,6 +245,7 @@ export function generateHyperLinkPost(gameState) {
         usedPostId: chosenPost.id,
         usedPfpId: pfpId,
         gender,
+        firedDevCategory: DEV_CATEGORIES.has(selected.category) ? selected.category : null,
     }
 }
 

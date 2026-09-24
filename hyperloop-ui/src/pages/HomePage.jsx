@@ -4,7 +4,8 @@ import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
-import { playHoverSound, playClickSound2 } from '../utils/sound.js'
+import { playHoverSound, playClickSound2, playConstructionSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { formatTime } from '../utils/time.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import cashIcon from '../assets/misc/cash.png'
 import './HomePage.css'
@@ -26,6 +27,22 @@ function formatPopulation(pop) {
     return pop.toLocaleString()
 }
 
+function loadGrayscaleTexture(url, onLoad) {
+    const img = new Image()
+    img.crossOrigin = 'anonymous'
+    img.onload = () => {
+        const canvas = document.createElement('canvas')
+        canvas.width = img.naturalWidth || 40
+        canvas.height = img.naturalHeight || 28
+        const ctx = canvas.getContext('2d')
+        ctx.filter = 'grayscale(100%)'
+        ctx.drawImage(img, 0, 0)
+        onLoad(new THREE.CanvasTexture(canvas))
+    }
+    img.onerror = () => onLoad(null)
+    img.src = url
+}
+
 function getSunWorldPosition() {
     const now = new Date()
     const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600
@@ -36,12 +53,13 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity }) {
     const mountRef = useRef(null)
     const [hoveredCity, setHoveredCity] = useState(null)
     const [showOwned, setShowOwned] = useState(true)
     const [globeReady, setGlobeReady] = useState(false)
     const [selectedGlobeCity, setSelectedGlobeCity] = useState(null)
+    const [selectedUnlockedCity, setSelectedUnlockedCity] = useState(null)
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
     const showOwnedRef = useRef(true)
@@ -195,14 +213,17 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             const isUnlocked = unlockedNames.has(city.name)
             const spritePos = latLngToVector3(coords.lat, coords.lng, globeRadius + 0.035)
             const surfaceNormal = latLngToVector3(coords.lat, coords.lng, 1)
-            const flagTexture = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
+            const flagUrl = `https://flagcdn.com/w40/${flagCode}.png`
             const spriteMat = new THREE.SpriteMaterial({
-                map: flagTexture, transparent: true, depthTest: true, depthWrite: false,
+                map: (isPurchased || isUnlocked) ? textureLoader.load(flagUrl) : null,
+                transparent: true, depthTest: true, depthWrite: false,
             })
             if (!isPurchased && !isUnlocked) {
-                spriteMat.color = new THREE.Color(0.12, 0.12, 0.12)
+                loadGrayscaleTexture(flagUrl, (greyTex) => {
+                    if (greyTex) { spriteMat.map = greyTex; spriteMat.needsUpdate = true }
+                })
             } else if (!isPurchased && isUnlocked) {
-                spriteMat.color = new THREE.Color(0.5, 0.5, 0.5)
+                spriteMat.color = new THREE.Color(0.1, 0.1, 0.1)
             }
             const sprite = new THREE.Sprite(spriteMat)
             sprite.position.copy(spritePos)
@@ -253,8 +274,12 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             const visibleSprites = sprites.filter(s => s.visible)
             const hits = raycaster.intersectObjects(visibleSprites)
             if (hits.length > 0) {
-                const { city, isPurchased } = hits[0].object.userData
-                if (isPurchased) setSelectedGlobeCity(city)
+                const { city, isPurchased, isUnlocked } = hits[0].object.userData
+                if (isPurchased) {
+                    setSelectedGlobeCity(city)
+                } else if (isUnlocked) {
+                    setSelectedUnlockedCity(city)
+                }
             }
         }
         const onWheel = (e) => {
@@ -353,6 +378,60 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                             style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', marginTop: '8px' }}
                         />
                         <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setSelectedGlobeCity(null) }}>Close</button>
+                    </div>
+                </div>
+            )}
+            {selectedUnlockedCity && (
+                <div className="modal-overlay" onClick={() => setSelectedUnlockedCity(null)}>
+                    <div className="modal" onClick={e => e.stopPropagation()}>
+                        {constructionManager?.progressionManager?.citiesUnderConstruction?.some(c => c.name === selectedUnlockedCity.name) ? (
+                            <>
+                                <img src={`https://flagcdn.com/w40/${countryFlags[selectedUnlockedCity.country]}.png`} alt={selectedUnlockedCity.country} />
+                                <h3>{selectedUnlockedCity.name}</h3>
+                                <hr />
+                                <p>Under construction!</p>
+                                {(() => {
+                                    const uc = constructionManager.progressionManager.citiesUnderConstruction.find(c => c.name === selectedUnlockedCity.name)
+                                    return uc ? <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(uc.finishTime))}</strong> remaining</p> : null
+                                })()}
+                                <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setSelectedUnlockedCity(null) }}>Close</button>
+                            </>
+                        ) : (
+                            <>
+                                <img src={`https://flagcdn.com/w40/${countryFlags[selectedUnlockedCity.country]}.png`} alt={selectedUnlockedCity.country} />
+                                <h3>Connect {selectedUnlockedCity.name}?</h3>
+                                <hr />
+                                <p><strong>Country</strong>: {selectedUnlockedCity.country}</p>
+                                <p><strong>Population</strong>: {selectedUnlockedCity.population.toLocaleString()}</p>
+                                {constructionManager && (() => {
+                                    const cost = constructionManager.calculateTierConnectionCost(selectedUnlockedCity)
+                                    const canAfford = balance >= cost
+                                    return (
+                                        <>
+                                            <button
+                                                className="constructionButton"
+                                                style={!canAfford ? { opacity: 0.5 } : {}}
+                                                onMouseEnter={() => playHoverSound()}
+                                                onClick={() => {
+                                                    playClickSound2()
+                                                    if (!canAfford) { playNotEnoughFundsSound(); return }
+                                                    constructionManager.startStationConstruction(selectedUnlockedCity)
+                                                    playConstructionSound()
+                                                    onConnectCity?.()
+                                                    setSelectedUnlockedCity(null)
+                                                }}
+                                            >
+                                                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                                    Connect (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{cost.toLocaleString()})
+                                                </span>
+                                                {!canAfford && <span style={{ fontSize: '0.75rem', color: '#c00', fontWeight: 'normal' }}>Not enough funds</span>}
+                                            </button>
+                                        </>
+                                    )
+                                })()}
+                                <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setSelectedUnlockedCity(null) }}>Close</button>
+                            </>
+                        )}
                     </div>
                 </div>
             )}
