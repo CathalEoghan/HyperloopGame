@@ -10,6 +10,7 @@ const AUX_KEYS = [
     'hyperloop_shown_reveals',
     'hyperloop_claimed_milestones',
     'hyperloop_progress_rewards',
+    'hyperloop_dev_portrait_bonus',
     'hyperloop_hyperlink_feed',
     'hyperloop_hyperlink_unread',
     'hyperloop_hyperlink_used_posts',
