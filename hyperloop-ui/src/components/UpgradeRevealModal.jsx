@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import developmentImages from '../data/developmentImages.js'
 import { playClickSound2, playDevelopmentUnlockedSound, playHoverSound } from '../utils/sound.js'
+import developmentThumbnails from '../data/developmentThumbnails.js'
 import './UpgradeRevealModal.css'
 
 const EFFECT_DESCRIPTIONS = {
@@ -55,7 +56,7 @@ function UpgradeRevealModal({ upgrade, onContinue }) {
                 <p className="upgrade-reveal-heading">You've unlocked a bonus!</p>
                 <img
                     className="upgrade-reveal-image"
-                    src={developmentImages[upgrade.name]}
+                     src={developmentThumbnails[upgrade.name] || developmentImages[upgrade.name]}
                     alt={upgrade.name}
                 />
                 <p className="upgrade-reveal-category">{upgrade.category}</p>
