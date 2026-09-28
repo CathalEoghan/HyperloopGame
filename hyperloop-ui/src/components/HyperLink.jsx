@@ -139,7 +139,7 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                                                     <span className="hyperlink-handle">
                                                         {post.isOfficial && terminalName
-                                                            ? `@${terminalName.toLowerCase().replace(/\s+/g, '')}official`
+                                                            ? `@${terminalName.toLowerCase().replace(/[^a-z0-9]/g, '')}official`
                                                             : post.handle}
                                                     </span>
                                                     <span className="hyperlink-timestamp">{formatTimestamp(post.timestamp)}</span>

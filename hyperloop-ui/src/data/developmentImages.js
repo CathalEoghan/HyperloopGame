@@ -264,7 +264,7 @@ const developmentImages = {
     "Plush Terminal Seating": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PlushTerminalSeating.jpg",
     "Free Staff Breakfasts": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FreeStaffBreakfasts.jpg",
     "February Ticket Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FebruaryTicketDeals.jpg",
-    "Weekend Getaway Packages": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/WeekendGetawayPackages.jpg",
+    "Weekend Getaway Deals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/WeekendGetawayDeals.jpg",
     "Advertising Campaign: New Zealand": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignNewZealand.jpg",
     "Complementary Afternoon Staff Meals": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ComplementaryAfternoonStaffMeals.jpg",
     "Advertising Campaign: Germany": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AdvertisingCampaignGermany.jpg",
@@ -339,7 +339,7 @@ const developmentImages = {
     "Experimental Technology": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ExperimentalTechnology.jpg",
     "Sleeping Pods": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SleepingPods.jpg",
     "Car Rental": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CarRental.jpg",
-    "Luggage Storage": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Luggage Storage.jpg",
+    "Luggage Storage": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LuggageStorage.jpg",
     "Expanded Duty-Free": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ExpandedDutyFree.jpg",
     "Sim Card Services": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SimCardServices.jpg",
 

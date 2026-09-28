@@ -263,6 +263,7 @@ import MarchTicketDeals from '../assets/developments-reveal/MarchTicketDeals.jpg
 import PlushTerminalSeating from '../assets/developments-reveal/PlushTerminalSeating.jpg'
 import FreeStaffBreakfasts from '../assets/developments-reveal/FreeStaffBreakfasts.jpg'
 import FebruaryTicketDeals from '../assets/developments-reveal/FebruaryTicketDeals.jpg'
+import WeekendGetawayDeals from '../assets/developments-reveal/WeekendGetawayDeals.jpg'
 import AdvertisingCampaignNewZealand from '../assets/developments-reveal/AdvertisingCampaignNewZealand.jpg'
 import ComplementaryAfternoonStaffMeals from '../assets/developments-reveal/ComplementaryAfternoonStaffMeals.jpg'
 import AdvertisingCampaignGermany from '../assets/developments-reveal/AdvertisingCampaignGermany.jpg'
@@ -337,6 +338,7 @@ import CommemorativeDisplays from '../assets/developments-reveal/CommemorativeDi
 import ExperimentalTechnology from '../assets/developments-reveal/ExperimentalTechnology.jpg'
 import SleepingPods from '../assets/developments-reveal/SleepingPods.jpg'
 import CarRental from '../assets/developments-reveal/CarRental.jpg'
+import LuggageStorage from '../assets/developments-reveal/LuggageStorage.jpg'
 import ExpandedDutyFree from '../assets/developments-reveal/ExpandedDutyFree.jpg'
 import SimCardServices from '../assets/developments-reveal/SimCardServices.jpg'
 
@@ -607,6 +609,7 @@ const developmentRevealImages = {
     "Plush Terminal Seating": PlushTerminalSeating,
     "Free Staff Breakfasts": FreeStaffBreakfasts,
     "February Ticket Deals": FebruaryTicketDeals,
+    "Weekend Getaway Deals": WeekendGetawayDeals,
     "Advertising Campaign: New Zealand": AdvertisingCampaignNewZealand,
     "Complementary Afternoon Staff Meals": ComplementaryAfternoonStaffMeals,
     "Advertising Campaign: Germany": AdvertisingCampaignGermany,
@@ -681,6 +684,7 @@ const developmentRevealImages = {
     "Experimental Technology": ExperimentalTechnology,
     "Sleeping Pods": SleepingPods,
     "Car Rental": CarRental,
+    "Luggage Storage": LuggageStorage,
     "Expanded Duty-Free": ExpandedDutyFree,
     "Sim Card Services": SimCardServices,
 }
