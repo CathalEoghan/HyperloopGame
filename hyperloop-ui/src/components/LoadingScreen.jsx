@@ -27,6 +27,7 @@ import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import cityImages from '../data/cityImages.js'
 import developmentImages from '../data/developmentImages.js'
+import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
 import globeIcon from '/public/globeIcon.png'
 import './LoadingScreen.css'
 
@@ -75,9 +76,10 @@ function LoadingScreen({ onComplete }) {
             ? [earthDay8k, earthNight8k]
             : [earthDay2k, earthNight2k]
 
-        const imageSrcs = [
+               const imageSrcs = [
             ...Object.values(cityThumbnails),
             ...Object.values(developmentThumbnails),
+            ...Object.values(developmentRevealThumbnails),
             ...globeTextures,
             ...MALE_PFPS,
             ...FEMALE_PFPS,
