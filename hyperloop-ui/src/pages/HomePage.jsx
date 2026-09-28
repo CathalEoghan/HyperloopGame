@@ -76,6 +76,39 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         disabledRef.current = disabled
     }, [disabled])
 
+    // HomePage.jsx — add this useEffect after the disabledRef sync effect (around line 79)
+
+useEffect(() => {
+    const sprites = spritesRef.current
+    if (!sprites.length) return
+    const purchasedNames = new Set(purchasedCities.map(c => c.name))
+    const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
+    const textureLoader = new THREE.TextureLoader()
+
+    sprites.forEach(sprite => {
+        const { city } = sprite.userData
+        const nowPurchased = purchasedNames.has(city.name)
+        const nowUnlocked = unlockedNames.has(city.name)
+
+        if (nowPurchased && !sprite.userData.isPurchased) {
+            // Was unlocked/dimmed → full colour
+            const flagCode = countryFlags[city.country]
+            sprite.material.map = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
+            sprite.material.color.set(1, 1, 1)
+            sprite.material.needsUpdate = true
+            sprite.userData.isPurchased = true
+            sprite.userData.isUnlocked = true
+        } else if (nowUnlocked && !sprite.userData.isUnlocked) {
+            // Was grayscale → dimmed colour
+            const flagCode = countryFlags[city.country]
+            sprite.material.map = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
+            sprite.material.color.set(0.1, 0.1, 0.1)
+            sprite.material.needsUpdate = true
+            sprite.userData.isUnlocked = true
+        }
+    })
+}, [purchasedCities, unlockedCities])
+
     useEffect(() => {
         const mount = mountRef.current
         const width = mount.clientWidth

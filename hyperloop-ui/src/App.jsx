@@ -26,7 +26,7 @@ import OnboardingModal from "./components/OnboardingModal"
 import SecretCityModal from "./components/SecretCityModal"
 import MilestoneModal from "./components/MilestoneModal"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
-import { generateHyperLinkPost, generateOfficialEventPost } from "./utils/hyperLinkEngine.js"
+import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
 import { POSTS } from "./data/hyperLinkData.js"
 import { playPhoneNotificationSound } from "./utils/sound.js"
 import { RankManager } from "Managers/RankManager/RankManager.js";
@@ -158,6 +158,7 @@ function App() {
 
   // Keep ref in sync so tick loop can check without stale closure
   useEffect(() => { hyperLinkOpenRef.current = hyperLinkOpen }, [hyperLinkOpen])
+  useEffect(() => { terminalNameRef.current = terminalName }, [terminalName])
   const [hyperLinkTrigger, setHyperLinkTrigger] = useState(null)
   const hyperLinkTriggerRef = useRef(null)
   const hyperLinkOpenRef = useRef(false)
@@ -198,6 +199,7 @@ function App() {
   const lastModalClearedAt = useRef(Date.now() + 180000);
   const lastEventTime = useRef(Date.now());
   const rankSetRef = useRef(rankManager.rank);
+  const terminalNameRef = useRef(terminalName);
   const departureBoardAudioRef = useRef(null);
   const gameStartTime = useRef(Date.now());
 
@@ -400,9 +402,11 @@ function App() {
         const newCities = progressionManager.purchasedCities.slice(prevPurchasedCount.current);
         const homeCity = progressionManager.purchasedCities[0];
         newCities.forEach(city => {
-          if (homeCity && city.name === homeCity.name) return;
-          injectCityIntoSchedule(city);
-        });
+    if (homeCity && city.name === homeCity.name) return;
+    injectCityIntoSchedule(city);
+    hyperLinkTriggerRef.current = { type: 'newCity', data: { city: city.name } }
+    setHyperLinkTrigger({ type: 'newCity', data: { city: city.name } })
+});
       }
 
       const citiesChanged = progressionManager.purchasedCities.length !== prevPurchasedCount.current;
@@ -410,11 +414,21 @@ function App() {
       const rankChanged = rankManager.rank !== prevRank.current;
 
       if (citiesChanged || devsChanged || rankChanged) {
-        prevPurchasedCount.current = progressionManager.purchasedCities.length;
-        prevDevCount.current = progressionManager.purchasedDevelopments.length;
-        prevRank.current = rankManager.rank;
-        triggerSave();
-      }
+    if (devsChanged) {
+        const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService' }
+        progressionManager.purchasedDevelopments.slice(prevDevCount.current).forEach(dev => {
+            const key = devCatMap[dev.category]
+            if (key) {
+                hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } }
+                setHyperLinkTrigger({ type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } })
+            }
+        })
+    }
+    prevPurchasedCount.current = progressionManager.purchasedCities.length;
+    prevDevCount.current = progressionManager.purchasedDevelopments.length;
+    prevRank.current = rankManager.rank;
+    triggerSave();
+}
 
       if (tickCount.current % 30 === 0) {
         triggerSave();
@@ -438,7 +452,7 @@ function App() {
         const todayKey = new Date().toDateString()
         const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
         const post = generateHyperLinkPost({
-          terminalName,
+          terminalName: terminalNameRef.current,
           homeCity: progressionManager.purchasedCities[0],
           purchasedCities: progressionManager.purchasedCities,
           purchasedDevelopments: progressionManager.purchasedDevelopments,
@@ -663,7 +677,7 @@ function App() {
 
   const fireOfficialHyperLinkPost = (trigger) => {
     const post = generateOfficialEventPost({
-      terminalName,
+      terminalName: terminalNameRef.current,
       homeCity: progressionManager.purchasedCities[0],
       purchasedCities: progressionManager.purchasedCities,
       trigger,
@@ -791,7 +805,14 @@ function App() {
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           economyManager={economyManager}
           onSave={triggerSave}
-          onUpgradeBuilt={(upgrade) => setRevealedUpgradeQueue(q => [...q, upgrade])}
+          onUpgradeBuilt={(upgrade) => {
+    setRevealedUpgradeQueue(q => [...q, upgrade])
+    const key = UPGRADE_KEY_MAP[upgrade.name]
+    if (key) {
+        hyperLinkTriggerRef.current = { type: key }
+        setHyperLinkTrigger({ type: key })
+    }
+}}
           onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
             if (success) triggerSave();

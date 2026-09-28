@@ -339,19 +339,19 @@ export const POSTS = {
     ],
 
     saturday: [
-        'Weekend is finally here! 🎉',
-        'Nothing better than a saturday trip',
-        'saturday loops go hard ngl',
-        'woke up choosing chaos. Taking a hyperloop somewhere random #saturday',
-        'Best day of the week and no one can convince me otherwise',
+        'Weekend is finally here 🎉',
+        'nothing better than a saturday trip',
+        'saturday loops are so busy lol',
+        'taking a hyperloop somewhere random #saturday',
+        'Best day of the week 😊 #saturday',
     ],
 
     sunday: [
-        'Sunday is the day of rest… unless ur catching a hyperloop apparently',
-        'sunday scaries hitting HARD rn',
-        'Last day of the weekend 😔 make it count',
-        'Sunday morning and already thinking about monday. send help',
-        'Sundays are for self care. And hyperloops apparently 🙃',
+        'Sunday is the day of rest… unless ur catching a hyperloop',
+        'i hate sunday',
+        'Last day of the weekend 😔',
+        'already thinking about monday lol',
+        'happy sunday yall',
     ],
 
     newCity: [
@@ -464,6 +464,7 @@ export const POSTS = {
         'the manager literally just appeared out of nowhere and said goodbye to us lol',
         'damn wish i got a selfie with the manager theyre so 😎',
         'my dad didnt believe me that the MANAGER just said bye to us lmao',
+        'So thoughtful of the manager to say goodbye to us! #ThankYou',
     ],
 
     farewellMissed: [
@@ -477,6 +478,8 @@ export const POSTS = {
         'Good vibes all across the terminal #Peace',
         'Love and peace guys ❤️',
         'Maybe things will work out after all',
+        'Feeling hopeful today - everything is going well so far',
+        'happy happy happy',
     ],
 
     negativeEvent: [
@@ -484,6 +487,8 @@ export const POSTS = {
         'Feeling like crap today tbh #ugh',
         'The air just feels so negative right now',
         'you can feel the vibe is off today',
+        'What happened? Why is everyone in a bad mood',
+        'negative vibes only i guess',
     ],
 
     milestone10: [
@@ -518,18 +523,25 @@ export const POSTS = {
         'where can i even shop here',
         'i didnt buy any souvenirs and this crappy terminal literally has no shops 🙄',
         'yo this terminal is so bare?? where are the shops?? 😂',
+        'build more shops!!',
+        'where are all the shops?',
+        'this place is terrible for shopping',
     ],
 
     noRecreation: [
         'This terminal is so boring yall lmao nothing fun to do 😭',
         'maybe like a recreational thing would be good manager !! bored out of my mind',
         'some fun stuff to do while we wait would be cool manager. just saying. 👍',
+        'bored out of my mind nothing fun at all here to do',
+        'This place would really benefit having something fun to do while waiting',
+        'Been waiting around for idk how long. Time would pass by faster if they built something fun'
     ],
 
     noService: [
         'this terminal barely has any services #suboptimal',
         'this place is so inconvenient lmao',
         'whats with the lack of services?',
+        'where are all the service things',
     ],
 
     noEnterprise: [

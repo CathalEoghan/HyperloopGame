@@ -28,7 +28,7 @@ const DEV_KEY_MAP = {
     'Bookstore': 'bookstore',
 }
 
-const UPGRADE_KEY_MAP = {
+export const UPGRADE_KEY_MAP = {
     'Personal Styling Retinue': 'personalStylingRetinue',
     'Local Airport Links': 'localAirportLinks',
     'Billboard Design Overhauls': 'billboardDesignOverhauls',
