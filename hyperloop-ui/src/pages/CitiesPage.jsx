@@ -98,26 +98,44 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
 
     const getDisconnectCost = (city) => Math.floor(constructionManager.calculateTierConnectionCost(city) / 2)
 
-    const toggleCountry = (country) => {
+        // Connected/Available are two independent sections, so collapse state is keyed
+    // by "section:country" — otherwise collapsing a country in one section collapses
+    // it in the other too, and each section's own Collapse/Expand all would stomp on
+    // the other section's state instead of only touching its own countries.
+    const toggleCountry = (section, country) => {
+        const key = `${section}:${country}`
         setCollapsedCountries(prev => {
             const next = new Set(prev)
-            if (next.has(country)) next.delete(country)
-            else next.add(country)
+            if (next.has(key)) next.delete(key)
+            else next.add(key)
             return next
         })
     }
 
-    const collapseAll = (countries) => setCollapsedCountries(new Set(countries))
-    const expandAll = () => setCollapsedCountries(new Set())
+    const collapseAll = (section, countries) => {
+        setCollapsedCountries(prev => {
+            const next = new Set(prev)
+            countries.forEach(country => next.add(`${section}:${country}`))
+            return next
+        })
+    }
+    const expandAll = (section, countries) => {
+        setCollapsedCountries(prev => {
+            const next = new Set(prev)
+            countries.forEach(country => next.delete(`${section}:${country}`))
+            return next
+        })
+    }
     const closeModal = () => { setSelectedCity(null); setConfirmDisconnect(false) }
 
     const renderCountrySection = (country, cities, isAvailable = false) => {
         const continent = cities[0]?.continent
         const borderColour = CONTINENT_COLOURS[continent] || '#888'
-        const isCollapsed = collapsedCountries.has(country)
+        const section = isAvailable ? 'available' : 'purchased'
+        const isCollapsed = collapsedCountries.has(`${section}:${country}`)
         return (
             <div key={country}>
-                <h2 className="country" style={{ borderLeftColor: borderColour }} onClick={() => toggleCountry(country)}>
+                <h2 className="country" style={{ borderLeftColor: borderColour }} onClick={() => toggleCountry(section, country)}>
                     {country}
                     <img src={`https://flagcdn.com/w40/${countryFlags[country]}.png`} width="20" alt={country} />
                     <span className="country-city-count">{cities.length}</span>
@@ -345,9 +363,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <span className="city-count-badge">{filteredPurchased.length}</span>
                                 <span className="city-count-badge" style={{ background: '#555' }}>{sortedPurchasedCountries.length} countries</span>
                             </h1>
-                            <div className="collapse-controls">
-                                <button className="collapse-btn" onClick={() => collapseAll(sortedPurchasedCountries)}>Collapse all</button>
-                                <button className="collapse-btn" onClick={expandAll}>Expand all</button>
+                                                       <div className="collapse-controls">
+                                <button className="collapse-btn" onClick={() => collapseAll('purchased', sortedPurchasedCountries)}>Collapse all</button>
+                                <button className="collapse-btn" onClick={() => expandAll('purchased', sortedPurchasedCountries)}>Expand all</button>
                             </div>
                         </div>
                         <div className="city-stats-row">
@@ -372,8 +390,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <span className="city-count-badge">{filteredAvailable.length}</span>
                             </h1>
                             <div className="collapse-controls">
-                                <button className="collapse-btn" onClick={() => collapseAll(sortedAvailableCountries)}>Collapse all</button>
-                                <button className="collapse-btn" onClick={expandAll}>Expand all</button>
+                                                                <button className="collapse-btn" onClick={() => collapseAll('available', sortedAvailableCountries)}>Collapse all</button>
+                                <button className="collapse-btn" onClick={() => expandAll('available', sortedAvailableCountries)}>Expand all</button>
                             </div>
                         </div>
                         {sortedAvailableCountries.map(country => renderCountrySection(country, groupedAvailable[country], true))}
