@@ -17,7 +17,7 @@ export const FIRST_NAMES_MALE = [
     'Richard', 'Rich', 'Shane', 'Rick', 'Dale', 'Chris', 'Christopher',
     'Scott', 'Scotty', 'Eugene', 'Josh', 'Steven', 'Dillon', 'Dylan',
     'Andrew', 'Drew', 'Ultan', 'Pete', 'Errol', 'Ross', 'Kenny', 'Lenny',
-    'Muhammad', 'Arjun', 'Ravi', 'Vikram', 'Rohan',
+    'Muhammad', 'Arjun', 'Ravi', 'Vikram', 'Rohan', 'Roman', 'Ryley', 'Ryder',
     'Amir', 'Tariq', 'Bilal', 'Hamza', 'Zain',
     'Karan', 'Nikhil', 'Siddharth', 'Dev', 'Leon',
     'Wei', 'Jian', 'Hiroshi', 'Kenji', 'Takeshi',
@@ -56,7 +56,7 @@ export const FIRST_NAMES_MALE = [
     'Brayden', 'Darius', 'Daniel', 'Danny', 'Frankie', 'Frank', 'Jesse', 'Jasper',
     'Hayden', 'Enzo', 'Evan', 'Fraser', 'Everett', 'Griff', 'Dean', 'Edmund',
     'Fabian', 'Felix', 'Fabio', 'Isaiah', 'Rex', 'Reed', 'Reid', 'Gray', 'Grey',
-    'Cecil', 'Ralph', 'Raphael', 'Raph', ''
+    'Cecil', 'Ralph', 'Raphael', 'Raph', 'Don', 'Duncan', 'Vitaly'
 ]
 
 export const FIRST_NAMES_FEMALE = [
@@ -123,15 +123,16 @@ export const FIRST_NAMES_FEMALE = [
     'Emerald', 'Sapphire', 'Diamond', 'Ginger', 'Geri', 'Kayla', 'Laila',
     'Layla', 'Leila', 'Leela', 'Eva', 'Indira', 'Siobhan', 'Tiffany', 'Tiffani',
     'Savannah', 'Betty', 'Hilda', 'Molly', 'Edna', 'Tina', 'Hazel', 'Lynn', 'Doris',
+    'Kateryna', 'Nadine', 'Nadin',
 ]
 
 export const SURNAMES = [
     'Smith', 'Jones', 'Williams', 'Taylor', 'Brown',
-    'Davies', 'Evans', 'Wilson', 'Thomas', 'Roberts',
+    'Davies', 'Evans', 'Wilson', 'Thomas', 'Roberts', 'Romanova',
     'Johnson', 'Lewis', 'Walker', 'Robinson', 'Wood',
     'Thompson', 'White', 'Watson', 'Jackson', 'Harris',
     'Martin', 'Clarke', 'Turner', 'Hill', 'Scott',
-    'Moore', 'Cooper', 'Ward', 'Morris', 'King',
+    'Moore', 'Cooper', 'Ward', 'Morris', 'King', 'Lake', 'Carver',
     'Wright', 'Green', 'Baker', 'Hall', 'Young', 'Slater', 'Suarez',
     'Owens', 'Marsden', 'Simons', 'George', 'Black', 'Forbes',
     'Nelson', 'Henry', 'McDonnell', 'McAdams', 'Adams',
