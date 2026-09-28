@@ -402,10 +402,10 @@ function App() {
         const newCities = progressionManager.purchasedCities.slice(prevPurchasedCount.current);
         const homeCity = progressionManager.purchasedCities[0];
         newCities.forEach(city => {
-    if (homeCity && city.name === homeCity.name) return;
-    injectCityIntoSchedule(city);
-    hyperLinkTriggerRef.current = { type: 'newCity', data: { city: city.name } }
-    setHyperLinkTrigger({ type: 'newCity', data: { city: city.name } })
+  if (homeCity && city.name === homeCity.name) return;
+  injectCityIntoSchedule(city);
+  hyperLinkTriggerRef.current = { type: 'newCity', data: { city: city.name } }
+  setHyperLinkTrigger({ type: 'newCity', data: { city: city.name } })
 });
       }
 
@@ -414,20 +414,20 @@ function App() {
       const rankChanged = rankManager.rank !== prevRank.current;
 
       if (citiesChanged || devsChanged || rankChanged) {
-    if (devsChanged) {
-        const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService' }
-        progressionManager.purchasedDevelopments.slice(prevDevCount.current).forEach(dev => {
-            const key = devCatMap[dev.category]
-            if (key) {
-                hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } }
-                setHyperLinkTrigger({ type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } })
-            }
-        })
-    }
-    prevPurchasedCount.current = progressionManager.purchasedCities.length;
-    prevDevCount.current = progressionManager.purchasedDevelopments.length;
-    prevRank.current = rankManager.rank;
-    triggerSave();
+  if (devsChanged) {
+    const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService' }
+    progressionManager.purchasedDevelopments.slice(prevDevCount.current).forEach(dev => {
+      const key = devCatMap[dev.category]
+      if (key) {
+        hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } }
+        setHyperLinkTrigger({ type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } })
+      }
+    })
+  }
+  prevPurchasedCount.current = progressionManager.purchasedCities.length;
+  prevDevCount.current = progressionManager.purchasedDevelopments.length;
+  prevRank.current = rankManager.rank;
+  triggerSave();
 }
 
       if (tickCount.current % 30 === 0) {
@@ -898,24 +898,26 @@ function App() {
           onDeleteSave={() => {
             deleteSave();
             [
-              'hyperloop_shown_reveals',
-              'hyperloop_hyperlink_feed',
-              'hyperloop_hyperlink_unread',
-              'hyperloop_hyperlink_used_posts',
-              'hyperloop_hyperlink_used_pfps',
-              'hyperloop_hyperlink_user_pfps',
-              'hyperloop_hyperlink_fired_devposts',
-              'hyperloop_hyperlink_liked',
-              'hyperloop_dev_portrait_bonus',
-              'hyperloop_claimed_milestones',
-              'hyperloop_last_login',
-              'hyperloop_last_farewell_date',
-              'hyperloop_active_departure',
-              'hyperloop_active_event',
-              'hyperloop_triggered_departures',
-              'hyperloop_departures_date',
-              'hyperloop_pending_injections',
-            ].forEach(k => localStorage.removeItem(k));
+  'hyperloop_shown_reveals',
+  'hyperloop_claimed_milestones',
+  'hyperloop_progress_rewards',
+  'hyperloop_hyperlink_feed',
+  'hyperloop_hyperlink_unread',
+  'hyperloop_hyperlink_used_posts',
+  'hyperloop_hyperlink_used_pfps',
+  'hyperloop_hyperlink_user_pfps',
+  'hyperloop_hyperlink_fired_devposts',
+  'hyperloop_hyperlink_liked',
+  'hyperloop_event_tint',
+  'hyperloop_dev_portrait_bonus',
+  'hyperloop_last_login',
+  'hyperloop_last_farewell_date',
+  'hyperloop_active_departure',
+  'hyperloop_active_event',
+  'hyperloop_triggered_departures',
+  'hyperloop_departures_date',
+  'hyperloop_pending_injections',
+].forEach(k => localStorage.removeItem(k));
             Object.keys(localStorage).forEach(k => {
               if (k.startsWith('departures_')) localStorage.removeItem(k);
             });

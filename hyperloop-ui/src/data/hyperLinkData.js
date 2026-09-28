@@ -21,7 +21,7 @@ export const FIRST_NAMES_MALE = [
     'Amir', 'Tariq', 'Bilal', 'Hamza', 'Zain',
     'Karan', 'Nikhil', 'Siddharth', 'Dev', 'Leon',
     'Wei', 'Jian', 'Hiroshi', 'Kenji', 'Takeshi',
-    'Min', 'Jun', 'Hao', 'Ryu', 'Yuki',
+    'Min', 'Jun', 'Hao', 'Ryu', 'Yuki', 'Jay', 'Malachy',
     'Kwame', 'Kofi', 'Emeka', 'Chidi', 'Ashton', 'Ash',
     'Malik', 'Idris', 'Seun', 'Femi', 'Jaden',
     'Luca', 'Marco', 'Sebastian', 'Matteo', 'Lucas',
@@ -56,7 +56,8 @@ export const FIRST_NAMES_MALE = [
     'Brayden', 'Darius', 'Daniel', 'Danny', 'Frankie', 'Frank', 'Jesse', 'Jasper',
     'Hayden', 'Enzo', 'Evan', 'Fraser', 'Everett', 'Griff', 'Dean', 'Edmund',
     'Fabian', 'Felix', 'Fabio', 'Isaiah', 'Rex', 'Reed', 'Reid', 'Gray', 'Grey',
-    'Cecil', 'Ralph', 'Raphael', 'Raph', 'Don', 'Duncan', 'Vitaly'
+    'Cecil', 'Ralph', 'Raphael', 'Raph', 'Don', 'Duncan', 'Vitaly', 'Kurt', 'Bruce', 
+    'Brucie', 'Davood', 'Oran'
 ]
 
 export const FIRST_NAMES_FEMALE = [
@@ -243,6 +244,25 @@ export const POSTS = {
         'the man coughing his lungs out.. bro.. go home #SuperSpreader',
         'try not to encounter an obnoxious influencer challenge !',
         'where is everyone travelling to today?',
+        'i wish i was a fish',
+        'Some woman in departures just starts singing and everyone is like sshh so we can all listen to her. GET OVER URSELF!!',
+        'can i buy a travel pillow here',
+        'Anyone recommend any good books to read for the loop?',
+        'travel calories dont count',
+        'children should be banned from loops',
+        'i hate kids',
+        'why does no one know how to dress',
+        'DONT MESS WITH ME TODAY',
+        'i just miss him so badly',
+        'do you think she still thinks about me',
+        'what is everyones fave size of shoe',
+        'seagull or shrew',
+        'whats with the #TROLLS? manager sort it',
+        'terrible traffic this morning in the city',
+        'ahh a huge spider in departures',
+        'Someone remind the crying baby this is a public space and respect is non-negotiable!',
+        'whoever scraped the suitcase over my foot ... count ur days ...'
+
     ],
 
     morning: [
@@ -300,6 +320,7 @@ export const POSTS = {
         'Another monday zzzzzz',
         'go away Monday no one likes u',
         'trying to stay positive on this monday. but its hard. friday so far away',
+        'good monday to everybody who celebrates it',
     ],
 
     tuesday: [
@@ -354,6 +375,55 @@ export const POSTS = {
         'already thinking about monday lol',
         'happy sunday yall',
     ],
+
+    january: [
+        'whats everyones new years resolutions?',
+        'feeling hopeful for the new year',
+        'yeah january is defo the worst month but at least my birthday is in it',
+        'sure janUARY',
+        'was going to go to europe for january trip but its so cold lol',
+    ],
+
+    february: [
+        'wheres warm in february #sunchaser',
+        'wishing a freezing skin piercing february to my northern hemisphere friends',
+        'feel like moving to the southern hemisphere when february hits. so so cold',
+        'happy february cant wait for next month #MarchVacation'
+    ],
+
+    march: [
+        'who named march after a parade',
+        'thank god for #moderntravel. Cant take this freezing cold any more #followthesun #march 🌅',
+        'lets just skip to april',
+        'march is an anagram of charm. may is an anagram of yam. #observations',
+        'march is so underrated #spring 🍀'
+    ],
+
+    april: [
+        'the stretch from january - march always feels a decade long. Grateful for April 🌸',
+        'Happy April!! Spent the morning yesterday snifing flowers #notweird',
+        'Books, bulbs and birdsong. #April #Bliss 📖🌷🎶',
+        'April my beloved #spring'
+    ],
+
+    may: [
+        'is may an anagram of anything like what does it stand for',
+        'may is my fave month its just perfect not too warm not too cold hbu guys',
+        'summer is calling guys #may',
+        'mays the best time to book those loops btw. so much cheaper than june or july #smart 😎',
+        'hi may',
+    ],
+
+    june: [
+        'summer has arrived #june',
+        'halfway through the year guys. how is everyones resolutions coming along?',
+        'So when does summer start? Cus rn its dreary and grey like every day 🙄',
+        'where can i go for summer vacation time is running out TELL ME NOW',
+    ],
+
+    
+
+
 
     newCity: [
         'Thank god the new connection to {city} opened. I didn\'t want to walk there #NoWay',
@@ -422,8 +492,11 @@ export const POSTS = {
         'GO GO GO GO to ur gate',
         'Finally can go to the gate #{goToGateCity}',
         'The gate is OPEN #gate{gateNumber} #{goToGateCity}',
+        'ee gate is open! trip to {goToGateCity} is finally beginning to feel real 🥹',
+        'what gate number is it guys again i forgot and couldnt be bothered going back to the departure board lol',
+        'go to the gate! its gate {gateNumber}. which is my lucky number coincidentally',
+        'omg i literally guessed that gate number #{gateNumber}'
     ],
-
     departed: [
         'On this loop to {departedCity}. anyone been there before? 😊',
         'If you see me in {departedCity} in a few hours dont tell my manager #sickleave',
