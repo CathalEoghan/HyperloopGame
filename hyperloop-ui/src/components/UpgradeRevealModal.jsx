@@ -1,7 +1,9 @@
 import { useEffect } from 'react'
 import developmentImages from '../data/developmentImages.js'
-import { playClickSound2, playDevelopmentUnlockedSound, playHoverSound } from '../utils/sound.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
+import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
+import { cloudinaryResize } from '../utils/cloudinaryImage.js'
+import { playClickSound2, playDevelopmentUnlockedSound, playHoverSound } from '../utils/sound.js'
 import './UpgradeRevealModal.css'
 
 const EFFECT_DESCRIPTIONS = {
@@ -56,7 +58,7 @@ function UpgradeRevealModal({ upgrade, onContinue }) {
                 <p className="upgrade-reveal-heading">You've unlocked a bonus!</p>
                 <img
                     className="upgrade-reveal-image"
-                     src={developmentThumbnails[upgrade.name] || developmentImages[upgrade.name]}
+                    src={developmentRevealThumbnails[upgrade.name] || cloudinaryResize(developmentImages[upgrade.name], 600) || developmentThumbnails[upgrade.name]}
                     alt={upgrade.name}
                 />
                 <p className="upgrade-reveal-category">{upgrade.category}</p>
