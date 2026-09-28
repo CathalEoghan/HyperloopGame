@@ -76,7 +76,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
                         >
                            <img
     className="starter-city-image"
-    src={cityThumbnails[city.name] || cityImages[city.name]}
+    src={cityThumbnails[city.name]}
     alt={city.name}
 />
                             <div className="starter-city-info">
