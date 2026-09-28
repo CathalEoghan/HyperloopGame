@@ -295,8 +295,9 @@ useEffect(() => {
             prev = { x: e.clientX, y: e.clientY }
             updateCamera()
         }
-        const onMouseUp = (e) => {
+            const onMouseUp = (e) => {
             isDragging = false
+            if (disabledRef.current) return // don't let a click reach the globe while an overlay/modal has it disabled
             const dx = e.clientX - mouseDownPos.x
             const dy = e.clientY - mouseDownPos.y
             if (Math.sqrt(dx*dx + dy*dy) > 5) return // was a drag
