@@ -510,9 +510,12 @@ export class EconomyManager {
         return 172800 + (extensions * 86400);
     }
 
-    calculateDelayCompensation(baseCompensation) {
+        calculateDelayCompensation(baseCompensation) {
         const reduction = this.getUpgradeSum('delayCompensationReduction');
-        return Math.floor(baseCompensation * (1 - reduction));
+        // Clamp both ends: reduction is capped at 100% so compensation can never go
+        // negative (paying the player instead of costing them), and the result can
+        // never go below 0 even if baseCompensation itself is somehow 0 or negative.
+        return Math.max(0, Math.floor(baseCompensation * (1 - Math.min(reduction, 1))));
     }
 
     calculateDelayRepCost(baseRepCost) {

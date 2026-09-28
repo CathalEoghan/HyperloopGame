@@ -552,9 +552,14 @@ function App() {
       });
 
       if (Math.random() < 0.0002) {
-        const eligible = schedule.filter(entry => {
+                const eligible = schedule.filter(entry => {
           const diff = (entry.hour * 60 + entry.minute) - (currentHour * 60 + currentMinute);
-          return diff > 60 && diff <= 120 && !triggeredDelays.current.has(entry.time) && !entry.delayed;
+          const maxDelay = (23 * 60 + 55) - (entry.hour * 60 + entry.minute);
+          // Require at least 10 minutes of headroom before the 23:55 cutoff — the
+          // random delay below is always at least 10 minutes, so a departure with
+          // less room than that would otherwise get its delay silently capped down
+          // to 0 minutes (and £0 compensation) while still popping the delay modal.
+          return diff > 60 && diff <= 120 && maxDelay >= 10 && !triggeredDelays.current.has(entry.time) && !entry.delayed;
         });
         if (eligible.length > 0) {
           const entry = eligible[Math.floor(Math.random() * eligible.length)];
