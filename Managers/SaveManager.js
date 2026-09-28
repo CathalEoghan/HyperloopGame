@@ -6,6 +6,36 @@ const SAVE_KEY = 'hyperloop_save'
 const MAX_BALANCE = 999_000_000_000
 const MAX_RANK = 335
 
+const AUX_KEYS = [
+    'hyperloop_shown_reveals',
+    'hyperloop_claimed_milestones',
+    'hyperloop_progress_rewards',
+    'hyperloop_hyperlink_feed',
+    'hyperloop_hyperlink_unread',
+    'hyperloop_hyperlink_used_posts',
+    'hyperloop_hyperlink_used_pfps',
+    'hyperloop_hyperlink_user_pfps',
+    'hyperloop_hyperlink_fired_devposts',
+    'hyperloop_hyperlink_liked',
+    'hyperloop_event_tint',
+]
+
+function bundleAuxState() {
+    const state = {}
+    AUX_KEYS.forEach(key => {
+        const val = localStorage.getItem(key)
+        if (val !== null) state[key] = val
+    })
+    return state
+}
+
+function restoreAuxState(state) {
+    if (!state || typeof state !== 'object') return
+    AUX_KEYS.forEach(key => {
+        if (state[key] !== undefined) localStorage.setItem(key, state[key])
+    })
+}
+
 // Simple checksum — hash key fields into a reproducible string
 function computeChecksum(save) {
     const str = [
@@ -184,7 +214,9 @@ export function deleteSave() {
 export function exportSave() {
     const raw = localStorage.getItem(SAVE_KEY)
     if (!raw) return
-    const blob = new Blob([raw], { type: 'application/json' })
+    const save = JSON.parse(raw)
+    const bundle = { ...save, _aux: bundleAuxState() }
+    const blob = new Blob([JSON.stringify(bundle)], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
@@ -198,7 +230,12 @@ export function importSave(file) {
         const reader = new FileReader()
         reader.onload = (e) => {
             try {
-                const data = JSON.parse(e.target.result)
+                const bundle = JSON.parse(e.target.result)
+
+                // Extract and strip aux state before validation
+                const auxState = bundle._aux || null
+                const data = { ...bundle }
+                delete data._aux
 
                 // Validate structure
                 if (!validateSave(data)) throw new Error('Invalid save file')
@@ -215,6 +252,10 @@ export function importSave(file) {
                 }
 
                 localStorage.setItem(SAVE_KEY, JSON.stringify(data))
+
+                // Restore HyperLink and other aux state
+                if (auxState) restoreAuxState(auxState)
+
                 resolve()
             } catch {
                 reject(new Error('Invalid save file'))

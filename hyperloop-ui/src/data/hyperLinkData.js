@@ -21,7 +21,7 @@ export const FIRST_NAMES_MALE = [
     'Amir', 'Tariq', 'Bilal', 'Hamza', 'Zain',
     'Karan', 'Nikhil', 'Siddharth', 'Dev', 'Leon',
     'Wei', 'Jian', 'Hiroshi', 'Kenji', 'Takeshi',
-    'Min', 'Jun', 'Hao', 'Ryu', 'Yuki',
+    'Min', 'Jun', 'Hao', 'Ryu', 'Yuki', 'Jay', 'Malachy',
     'Kwame', 'Kofi', 'Emeka', 'Chidi', 'Ashton', 'Ash',
     'Malik', 'Idris', 'Seun', 'Femi', 'Jaden',
     'Luca', 'Marco', 'Sebastian', 'Matteo', 'Lucas',
