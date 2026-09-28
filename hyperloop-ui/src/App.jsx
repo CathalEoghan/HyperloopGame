@@ -183,7 +183,17 @@ function App() {
     } catch { return null }
   })());
 
-  const prevUnlockedDevCount = useRef(progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length);
+  // Tracks which unlocked development/upgrade names have already been queued
+  // for a reveal popup (whether or not the player has dismissed it yet).
+  // Name-based, not count-based, because unlockedDevelopments/unlockedUpgrades
+  // can shrink (e.g. disconnectCity removes unbuilt rewards) as well as grow —
+  // a length/slice comparison desyncs the moment that happens and silently
+  // drops later reveals. Seeded from the queue the component already computed
+  // above so nothing already pending gets re-added.
+  const queuedRevealNames = useRef(null);
+  if (queuedRevealNames.current === null) {
+    queuedRevealNames.current = new Set(devRevealQueue.map(d => d.name));
+ }
   const triggeredDepartures = useRef(new Set(
     JSON.parse(localStorage.getItem('hyperloop_triggered_departures') || '[]')
   ));
@@ -370,19 +380,23 @@ function App() {
 
       const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];
       const currentUnlockedCount = currentUnlocked.length;
-      if (currentUnlockedCount > prevUnlockedDevCount.current) {
-        if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
-          const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
-          const alreadyShown = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
-          const newOnes = currentUnlocked.slice(prevUnlockedDevCount.current).filter(d => !homeCityRewardNames.has(d.name) && !alreadyShown.has(d.name));
+      if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
+      const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
+       const alreadyShown = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
+       const newOnes = currentUnlocked.filter(d =>
+       !homeCityRewardNames.has(d.name) &&
+          !alreadyShown.has(d.name) &&
+          !queuedRevealNames.current.has(d.name)
+        );
+        if (newOnes.length > 0) {
           newOnes.forEach(d => {
-            const src = developmentImages[d.name]
-            if (src) { const img = new Image(); img.src = src }
-          })
-          setDevRevealQueue(q => [...q, ...newOnes]);
-        }
-        prevUnlockedDevCount.current = currentUnlockedCount;
-      }
+            queuedRevealNames.current.add(d.name)
+          const src = developmentImages[d.name]
+           if (src) { const img = new Image(); img.src = src }
+         })
+         setDevRevealQueue(q => [...q, ...newOnes]);
+       }
+    }
 
       if (progressionManager.purchasedUpgrades.length > prevUpgradesCount.current) {
         const newUpgrades = progressionManager.purchasedUpgrades.slice(prevUpgradesCount.current);
@@ -1068,7 +1082,6 @@ function App() {
             progressionManager.unlockCity(newCity);
             claimedCityRef.current = newCity;
             setCityClaimPending(true);
-            prevUnlockedDevCount.current = progressionManager.unlockedDevelopments.length + progressionManager.unlockedUpgrades.length;
             setTimeout(() => setClaimedCity(newCity), 300);
           }
           if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
@@ -1106,6 +1119,7 @@ function App() {
                 const prevNames = new Set(prev.map(p => p.name))
                 const newItems = unshown.filter(d => !prevNames.has(d.name))
                 newItems.forEach(d => {
+                  queuedRevealNames.current.add(d.name)
                   const src = developmentImages[d.name]
                   if (src) { const img = new Image(); img.src = src }
                 })
