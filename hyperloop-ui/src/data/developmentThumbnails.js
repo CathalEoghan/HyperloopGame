@@ -237,10 +237,10 @@ import AdvertisingCampaignSpain from '../assets/developments-thumb/AdvertisingCa
 import AdvertisingCampaignBrazil from '../assets/developments-thumb/AdvertisingCampaignBrazil.jpg'
 import AdvertisingCampaignEngland from '../assets/developments-thumb/AdvertisingCampaignEngland.jpg'
 import MariachiBar from '../assets/developments-thumb/MariachiBar.jpg'
-import PassengerLoyaltyScheme from '../assets/developments-thumb/MariachiBar.jpg'
-import UniformRedesign from '../assets/developments-thumb/MariachiBar.jpg'
-import FineWhiskyImports from '../assets/developments-thumb/MariachiBar.jpg'
-import CheaperFuelImports from '../assets/developments-thumb/MariachiBar.jpg'
+import PassengerLoyaltyScheme from '../assets/developments-thumb/PassengerLoyaltyScheme.jpg'
+import UniformRedesign from '../assets/developments-thumb/UniformRedesign.jpg'
+import FineWhiskyImports from '../assets/developments-thumb/FineWhiskyImports.jpg'
+import CheaperFuelImports from '../assets/developments-thumb/CheaperFuelImports.jpg'
 import ImprovedCyclingInfrastructure from '../assets/developments-thumb/ImprovedCyclingInfrastructure.jpg'
 import NighttimePayIncentives from '../assets/developments-thumb/NighttimePayIncentives.jpg'
 import AdvertisingCampaignSouthKorea from '../assets/developments-thumb/AdvertisingCampaignSouthKorea.jpg'
@@ -586,7 +586,7 @@ const developmentImages = {
     "Free Phone Charging Stations": FreePhoneChargingStations,
     "Passenger Loyalty Scheme": PassengerLoyaltyScheme,
     "Improved Cycling Infrastructure": ImprovedCyclingInfrastructure,
-    "UniformRedesign": UniformRedesign,
+    "Uniform Redesign": UniformRedesign,
     "Fine Whisky Imports": FineWhiskyImports,
     "Cheaper Fuel Imports": CheaperFuelImports,
     "Advertising Campaign: South Korea": AdvertisingCampaignSouthKorea,
