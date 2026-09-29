@@ -295,7 +295,7 @@ function App() {
   const [workRange, setWorkRange] = useState(() => economyManager.calculateWorkClickRange(rankManager.rank));
 
   const triggerSave = (farewells) => {
-    saveGame(progressionManager, rankManager, terminalName, farewells ?? farewellsRef.current);
+    saveGame(progressionManager, rankManager, terminalNameRef.current, farewells ?? farewellsRef.current);
     setLastSaved(Date.now());
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 2000);
