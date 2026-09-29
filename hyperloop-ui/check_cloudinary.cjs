@@ -3,9 +3,14 @@ const fs = require('fs');
 
 cloudinary.config({
     cloud_name: 's25xbw85',
-    api_key: '211434693264273',
-    api_secret: 'oUYA038gpEcW6d-YERDa5hJlbuc'
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+if (!process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+    console.error('Missing Cloudinary credentials. Run: node --env-file=.env check_cloudinary.cjs');
+    process.exit(1);
+}
 
 const cityImagesContent = fs.readFileSync('./src/data/cityImages.js', 'utf8');
 const cityNames = [...cityImagesContent.matchAll(/"(.+?)":\s*"https/g)].map(m => m[1]);
@@ -33,4 +38,4 @@ getAllResources().then(uploaded => {
     const missing = cityNames.filter(name => !uploadedNorm.includes(normalize(name)));
     console.log(`\nMissing from Cloudinary (${missing.length}):`);
     missing.forEach(m => console.log(`  ❌ ${m}`));
-}).catch(err => console.error('Error:', err.message));
+}).catch(err => console.error('Error:', err?.error?.message || err?.message || err));
