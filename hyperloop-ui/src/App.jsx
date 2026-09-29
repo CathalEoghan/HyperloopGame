@@ -95,6 +95,21 @@ function App() {
 
   const [offlineData] = useState(() => {
     if (blockedByOtherTab) return null;
+    // Offline earnings are kept in storage until the player presses Collect, so closing
+    // or reloading the page before then doesn't lose them (bug #84).
+    let pending = null;
+    try { pending = JSON.parse(localStorage.getItem('hyperloop_pending_offline')); } catch { pending = null; }
+    const fresh = calculateFreshOffline();
+    if (!pending && !fresh) return null;
+    const combined = {
+      offlineSeconds: (pending?.offlineSeconds || 0) + (fresh?.offlineSeconds || 0),
+      offlineIncome: (pending?.offlineIncome || 0) + (fresh?.offlineIncome || 0),
+    };
+    localStorage.setItem('hyperloop_pending_offline', JSON.stringify(combined));
+    return combined;
+  });
+
+  function calculateFreshOffline() {
     // Use the most recent sign of life: a stale hidden_at left by another tab must not
     // override a newer heartbeat.
     const hiddenAt = Math.max(
@@ -115,7 +130,7 @@ function App() {
     const offlineIncome = incomePerSecond * totalSeconds * OFFLINE_RATE;
     if (offlineIncome < 1) return null;
     return { offlineSeconds: totalSeconds, offlineIncome };
-  });
+  }
 
   const [isLoading, setIsLoading] = useState(() => hasSave() && progressionManager.purchasedCities.length > 0);
   const [constructionReady, setConstructionReady] = useState(false);
@@ -325,6 +340,10 @@ function App() {
   // Daily login check
   useEffect(() => {
     if (blockedRef.current || !hasSave() || progressionManager.purchasedCities.length === 0) return;
+    // A bonus offered on an earlier load but never collected is still owed (bug #84).
+    let pendingDaily = null;
+    try { pendingDaily = JSON.parse(localStorage.getItem('hyperloop_pending_daily')); } catch { pendingDaily = null; }
+    if (pendingDaily) { setDailyLoginData(pendingDaily); return; }
     const today = new Date().toDateString();
     const lastLogin = localStorage.getItem('hyperloop_last_login');
     if (lastLogin === today) return;
@@ -335,8 +354,14 @@ function App() {
     const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
     let repBonus = economyManager.getUpgradeSum('dailyLoginRep');
     if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
+    localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus }));
     setDailyLoginData({ cashBonus, repBonus });
   }, []);
+
+  // Reputation spent on "Double" is only taken when the reward is collected, so it can't be
+  // lost if the page closes first.
+  const dailyDoubleRep = useRef(0);
+  const offlineDoubleRep = useRef(0);
 
   const [workRange, setWorkRange] = useState(() => economyManager.calculateWorkClickRange(rankManager.rank));
 
@@ -1059,6 +1084,8 @@ function App() {
               'hyperloop_departures_date',
               'hyperloop_pending_injections',
               'hyperloop_pending_rankups',
+              'hyperloop_pending_offline',
+              'hyperloop_pending_daily',
             ].forEach(k => localStorage.removeItem(k));
             Object.keys(localStorage).forEach(k => {
               if (k.startsWith('departures_')) localStorage.removeItem(k);
@@ -1103,8 +1130,11 @@ function App() {
           cashBonus={dailyLoginData.cashBonus}
           repBonus={dailyLoginData.repBonus}
           reputation={reputation}
-          onSpendRep={(amount) => progressionManager.addReputation(-amount)}
+          onSpendRep={(amount) => { dailyDoubleRep.current += amount; }}
           onCollect={(finalBonus) => {
+            progressionManager.addReputation(-dailyDoubleRep.current);
+            dailyDoubleRep.current = 0;
+            localStorage.removeItem('hyperloop_pending_daily');
             progressionManager.addCash(finalBonus);
             if (dailyLoginData.repBonus > 0) progressionManager.addReputation(dailyLoginData.repBonus);
             setDailyLoginData(null);
@@ -1148,8 +1178,11 @@ function App() {
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
           reputation={reputation}
-          onSpendRep={(amount) => progressionManager.addReputation(-amount)}
+          onSpendRep={(amount) => { offlineDoubleRep.current += amount; }}
           onCollect={(finalIncome) => {
+            progressionManager.addReputation(-offlineDoubleRep.current);
+            offlineDoubleRep.current = 0;
+            localStorage.removeItem('hyperloop_pending_offline');
             progressionManager.addCash(finalIncome);
             setShowOfflineModal(false);
             lastModalClearedAt.current = Date.now() + 180000;
