@@ -459,7 +459,15 @@ function App() {
         const cleanedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]').filter(id => validPostIds.has(id))
         localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(cleanedPostIds))
 
-        const usedPostIds = cleanedPostIds
+                const usedPostIds = cleanedPostIds
+        // Month posts (see hyperLinkEngine.js) stay "used" for the whole calendar year instead of
+        // just the 2-day feed window, so the small monthly pools don't repeat constantly. Storage
+        // holds {id, year} entries; only keep ones from the current year, so it naturally clears
+        // itself out and each post becomes eligible again once that month comes back around.
+        const currentYear = new Date().getFullYear()
+        const usedMonthPostRecords = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_month_posts') || '[]')
+            .filter(e => e.year === currentYear)
+        const usedMonthPostIds = usedMonthPostRecords.map(e => e.id)
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]')
         const userPfpMap = JSON.parse(localStorage.getItem('hyperloop_hyperlink_user_pfps') || '{}')
         const firedDevCategories = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
@@ -476,6 +484,7 @@ function App() {
           reputation: progressionManager.reputation,
           schedule: sched,
           usedPostIds,
+          usedMonthPostIds,
           usedPfps,
           userPfpMap,
           firedDevCategories,
@@ -494,9 +503,13 @@ function App() {
             userPfpMap[post.handle] = { pfp: post.pfp, pfpId: post.usedPfpId }
             localStorage.setItem('hyperloop_hyperlink_user_pfps', JSON.stringify(userPfpMap))
           }
-          if (post.firedDevCategory && !firedDevCategories.includes(post.firedDevCategory)) {
+                    if (post.firedDevCategory && !firedDevCategories.includes(post.firedDevCategory)) {
             firedDevCategories.push(post.firedDevCategory)
             localStorage.setItem('hyperloop_hyperlink_fired_devposts', JSON.stringify(firedDevCategories))
+          }
+          if (post.monthPostId) {
+            usedMonthPostRecords.push({ id: post.monthPostId, year: currentYear })
+            localStorage.setItem('hyperloop_hyperlink_used_month_posts', JSON.stringify(usedMonthPostRecords))
           }
           hyperLinkTriggerRef.current = null
           setHyperLinkTrigger(null)

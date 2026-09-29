@@ -247,7 +247,7 @@ export const POSTS = {
         'i wish i was a fish',
         'Some woman in departures just starts singing and everyone is like sshh so we can all listen to her. GET OVER URSELF!!',
         'can i buy a travel pillow here',
-        'Anyone recommend any good books to read for the loop?',
+        'Anyone recommend any good books to read for the loop? 📚',
         'travel calories dont count',
         'children should be banned from loops',
         'i hate kids',
@@ -261,7 +261,8 @@ export const POSTS = {
         'terrible traffic this morning in the city',
         'ahh a huge spider in departures',
         'Someone remind the crying baby this is a public space and respect is non-negotiable!',
-        'whoever scraped the suitcase over my foot ... count ur days ...'
+        'whoever scraped the suitcase over my foot ... count ur days ...',
+        'Knock knock. Who\'s there? I forget the rest.'
 
     ],
 

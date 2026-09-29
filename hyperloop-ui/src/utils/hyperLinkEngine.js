@@ -57,12 +57,13 @@ function getDayCategory() {
     return days[new Date().getDay()]
 }
 
+const MONTH_NAMES = [
+    'january', 'february', 'march', 'april', 'may', 'june',
+    'july', 'august', 'september', 'october', 'november', 'december',
+]
+
 function getMonthCategory() {
-    const months = [
-        'january', 'february', 'march', 'april', 'may', 'june',
-        'july', 'august', 'september', 'october', 'november', 'december',
-    ]
-    return months[new Date().getMonth()]
+    return MONTH_NAMES[new Date().getMonth()]
 }
 
 const DEV_CATEGORIES = new Set([
@@ -195,7 +196,7 @@ function generateUser(gender, usedPfps, userPfpMap, handle) {
 }
 
 export function generateHyperLinkPost(gameState) {
-    const { terminalName, usedPostIds, usedPfps, userPfpMap, trigger } = gameState
+    const { terminalName, usedPostIds, usedMonthPostIds = [], usedPfps, userPfpMap, trigger } = gameState
 
     const cats = buildEligibleCategories(gameState)
     if (cats.length === 0) return null
@@ -222,12 +223,17 @@ export function generateHyperLinkPost(gameState) {
         }
     }
 
-    const categoryPosts = POSTS[selected.category]
+        const categoryPosts = POSTS[selected.category]
     if (!categoryPosts?.length) return null
 
+    const isMonthPost = MONTH_NAMES.includes(selected.category)
     const available = categoryPosts
         .map((text, i) => ({ id: `${selected.category}_${i}`, text }))
-        .filter(p => !usedPostIds.includes(p.id))
+        // Month posts have tiny pools (4-5 templates) that stay eligible for a whole month, so on
+        // top of the normal "already in the last-2-days feed" check, also exclude anything already
+        // shown this calendar year. Otherwise the same handful of posts would cycle every couple of
+        // days for the entire month instead of each firing once before next year's version of it.
+        .filter(p => !usedPostIds.includes(p.id) && !(isMonthPost && usedMonthPostIds.includes(p.id)))
 
     if (available.length === 0) return null
 
@@ -258,6 +264,7 @@ export function generateHyperLinkPost(gameState) {
         usedPfpId: pfpId,
         gender,
         firedDevCategory: DEV_CATEGORIES.has(selected.category) ? selected.category : null,
+        monthPostId: isMonthPost ? chosenPost.id : null,
     }
 }
 
