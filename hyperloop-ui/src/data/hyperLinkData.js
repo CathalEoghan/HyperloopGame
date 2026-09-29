@@ -386,17 +386,17 @@ export const POSTS = {
 
     february: [
         'wheres warm in february #sunchaser',
-        'wishing a freezing skin piercing february to my northern hemisphere friends',
+        'Wishing a freezing skin-piercing february to my northern hemisphere friends',
         'feel like moving to the southern hemisphere when february hits. so so cold',
         'happy february cant wait for next month #MarchVacation'
     ],
 
     march: [
         'who named march after a parade',
-        'thank god for #moderntravel. Cant take this freezing cold any more #followthesun #march 🌅',
+        'Thank god for #moderntravel. Can\'t take this freezing cold any more ! #followthesun #march 🌅',
         'lets just skip to april',
         'march is an anagram of charm. may is an anagram of yam. #observations',
-        'march is so underrated #spring 🍀'
+        'March is so underrated #spring 🍀'
     ],
 
     april: [
@@ -408,18 +408,61 @@ export const POSTS = {
 
     may: [
         'is may an anagram of anything like what does it stand for',
-        'may is my fave month its just perfect not too warm not too cold hbu guys',
-        'summer is calling guys #may',
+        'May is my fave month its just perfect not too warm not too cold hbu guys',
+        'summer is calling eeeee #may',
         'mays the best time to book those loops btw. so much cheaper than june or july #smart 😎',
         'hi may',
     ],
 
     june: [
         'summer has arrived #june',
-        'halfway through the year guys. how is everyones resolutions coming along?',
+        'Halfway through the year guys. How is everyone\'s resolutions coming along?',
         'So when does summer start? Cus rn its dreary and grey like every day 🙄',
         'where can i go for summer vacation time is running out TELL ME NOW',
     ],
+
+    july: [
+        'Beaches, cocktails, sun. Is there anything better? #july ☀️🍸',
+        'Can\'t wait to be poolside #july',
+        'Nah i hate july actually 😂 Get me a ticket to Australia ASAP',
+        'MELTING IN THIS HEAT #july',
+    ],
+
+     august: [
+        'On a last minute summer\'s trip for #August 🧳',
+        'It\'s definitely getting a lil colder recently but i like it #august',
+        'omg guys its two showers to go until its christmas!!!',
+        'Already mourning the end of summer 😔',
+    ],
+
+    september: [
+        'Thank god I\'m an adult and I don\'t have to go back to school #SeptemberTravels',
+        'whats that song its like september something #stumped',
+        'September is the best time to travel... a little cooler... and no BRAT children on the plane #blissful',
+        'Hope everyones having a blessed september 🍃',
+    ],
+
+      october: [
+        'spooky season 🎃',
+        'anywhere in this place that sells pumpkin spice lattes',
+        'whats everyones halloween costumes this year??',
+        'Pure autumn joy at the terminal #October 🍂',
+    ],
+
+    november: [
+        'ohh i love the dark nights #november',
+        'Off for a quick winter city break!😊',
+        'Did some early Christmas shopping earlier, feels good to get it out of the way!',
+        'A warm coffee and a quiet November day. #atpeace',
+    ],
+
+    december: [
+        'The most wonderful time of the year ❄️',
+        'so many beautiful lights around the terminal! #festive',
+        'Winter vacation time 🎿',
+        'anywhere i can get a gingerbread latte here',
+    ],
+
 
     
 

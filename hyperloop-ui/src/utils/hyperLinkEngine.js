@@ -57,6 +57,14 @@ function getDayCategory() {
     return days[new Date().getDay()]
 }
 
+function getMonthCategory() {
+    const months = [
+        'january', 'february', 'march', 'april', 'may', 'june',
+        'july', 'august', 'september', 'october', 'november', 'december',
+    ]
+    return months[new Date().getMonth()]
+}
+
 const DEV_CATEGORIES = new Set([
     ...Object.values(DEV_KEY_MAP),
     ...Object.values(UPGRADE_KEY_MAP),
@@ -74,8 +82,12 @@ function buildEligibleCategories(gameState) {
 
     add('general', 2)
     add('officialGeneral', 5)
-    add(getTimeCategory(), 3)
+       add(getTimeCategory(), 3)
     add(getDayCategory(), 2)
+    // Only 6 of 12 months have written posts today (see hyperLinkData.js) — guard on
+    // POSTS having content so the other 6 months don't burn a weighted draw on nothing.
+    const monthCategory = getMonthCategory()
+    if (POSTS[monthCategory]?.length) add(monthCategory, 2)
 
     if (trigger) add(trigger.type, 25, trigger.data || {})
 
