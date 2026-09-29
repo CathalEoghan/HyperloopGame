@@ -10,6 +10,6 @@ export const Hobart = new City(
     "Australia",
     "Oceania",
     1,
-    "Hobart is Australia's second-oldest capital city, founded in 1804 as a British penal colony just a year after Sydney.",
+    "Hobart is Australia's second-oldest capital city, founded in 1804 as a British penal colony 16 years after Sydney.",
     true
 );

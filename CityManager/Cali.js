@@ -10,6 +10,6 @@ export const Cali = new City(
     "Colombia",
     "South America",
     2,
-    "Cali is known as the 'Capital of Salsa' and hides the word 'Nietzsche' inside the metal trumpets of the famous Jairo Varela Plazoleta monument.",
+    "Cali is known as the 'Capital of Salsa' and hides the word 'NICHE' inside the metal trumpets of the famous Jairo Varela Plazoleta monument.",
     false
 );

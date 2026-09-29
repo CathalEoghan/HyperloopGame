@@ -10,6 +10,6 @@ export const Dublin = new City(
     "Ireland",
     "Europe",
     2,
-    "Dublin's famous Guinness brewery at St. James's Gate originally signed an unbelievable 9,000-year lease for the land back in 1759, and it still costs them just £45 per year to rent the site.",
+    "Dublin's famous Guinness brewery at St. James's Gate originally signed an unbelievable 9,000-year lease in 1759. The lease was £45 a year; the company later bought the land outright, so the lease no longer applies.",
     false
     );

@@ -10,6 +10,6 @@ export const Freetown = new City(
     "Sierra Leone",
     "Africa",
     2,
-    "A historic, giant cotton tree in the center of the city is traditionally said to be the spot where freed settlers prayed upon arrival in 1792.",
+    "A historic, giant cotton tree in the center of the city is traditionally said to be the spot where freed settlers prayed upon arrival in 1792. The cotton tree stood for centuries until a storm brought it down in 2023.",
     false
     );

@@ -10,6 +10,6 @@ export const Lyon = new City(
     "France",
     "Europe",
     2,
-    "Lyon is home to a mysterious underground labyrinth of tunnels known as the 'arêtes de poisson' (fish bones), stretching for over 30 kilometers beneath the city with an unknown purpose.",
+    "Lyon is home to a mysterious underground labyrinth of tunnels known as the 'arêtes de poisson' (fish bones), stretching around 1.4km beneath the city with an unknown purpose.",
     false
     );

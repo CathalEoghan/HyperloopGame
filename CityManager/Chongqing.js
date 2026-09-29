@@ -10,6 +10,6 @@ export const Chongqing = new City(
     "China",
     "Asia",
     3,
-    "Chongqing, with over 100 days of fog per year, is known as the 'Fog City' (Chinese: 雾都); this is because in the spring and fall, a thick layer of fog enshrouds it for 68 days per year.",
+    "Chongqing, with over 100 days of fog per year, is known as the 'Fog City' (Chinese: 雾都). This fog appears mostly in spring and in fall.",
     false
 );

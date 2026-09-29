@@ -10,6 +10,6 @@ export const Pittsburgh = new City(
     "United States of America",
     "North America",
     2,
-    "Pittsburgh has 446 bridges, which is more than any other city in the world - even surpassing Venice, Italy.",
+    "Pittsburgh has 446 bridges, earning it the nickname 'City of Bridges', and even surpasses Venice, Italy with its number of bridges.",
     false
 );

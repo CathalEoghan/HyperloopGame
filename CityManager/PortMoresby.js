@@ -10,6 +10,6 @@ export const PortMoresby = new City(
     "Papua New Guinea",
     "Oceania",
     1,
-    "Port Moresby was named after an admiral's son who 'discovered' the harbor in 1873.",
+    "Port Moresby was named by Captain John Moresby, who 'discovered' the harbor in 1873, after his father, Admiral Fairfax Moresby.",
     true
 );

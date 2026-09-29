@@ -10,6 +10,6 @@ export const Windhoek = new City(
     "Namibia",
     "Africa",
     1,
-    "Windhoek's name means 'windy corner' in Afrikaans. However, the local Nama people originally called it Otjomuise, which translates to 'place of hot springs'.",
+    "Windhoek's name means 'windy corner' in Afrikaans. However, the Herero called it Otjomuise, 'place of steam', and the Nama called it Ai-Gams, 'hot water', after its hot springs.",
     true
 );
