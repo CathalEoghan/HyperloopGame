@@ -54,10 +54,19 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     )
     const connectedAndBuilding = [...purchased, ...underConstruction]
 
+    // Each city's income is worked out once per render and reused. Sorting by income used to
+    // recalculate it inside every comparison, which froze the page every second in a late
+    // game (bug #90).
+    const incomeCache = new Map()
+    const cityIncome = (city) => {
+        if (!incomeCache.has(city)) incomeCache.set(city, economyManager.calculateCityIncome(city))
+        return incomeCache.get(city)
+    }
+
     const sortCities = (cities) => {
         const result = [...cities]
-        if (sortBy === 'income-high') return result.sort((a, b) => economyManager.calculateCityIncome(b) - economyManager.calculateCityIncome(a))
-        if (sortBy === 'income-low') return result.sort((a, b) => economyManager.calculateCityIncome(a) - economyManager.calculateCityIncome(b))
+        if (sortBy === 'income-high') return result.sort((a, b) => cityIncome(b) - cityIncome(a))
+        if (sortBy === 'income-low') return result.sort((a, b) => cityIncome(a) - cityIncome(b))
         if (sortBy === 'population-high') return result.sort((a, b) => b.population - a.population)
         if (sortBy === 'tier') return result.sort((a, b) => b.tier - a.tier)
         return result.sort((a, b) => a.name.localeCompare(b.name))
@@ -88,7 +97,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
 
     const totalPopulation = useMemo(() => filteredPurchased.reduce((sum, c) => sum + c.population, 0), [filteredPurchased])
-    const totalIncome = useMemo(() => filteredPurchased.reduce((sum, c) => sum + economyManager.calculateCityIncome(c), 0), [filteredPurchased])
+    const totalIncome = useMemo(() => filteredPurchased.reduce((sum, c) => sum + cityIncome(c), 0), [filteredPurchased])
 
     const formatPopulation = (pop) => {
         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
@@ -144,7 +153,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     <div className="city-row">
                         {cities.map(city => {
                             const isUnderConstruction = underConstruction.some(c => c.name === city.name)
-                            const dailyIncome = economyManager.calculateCityIncome(city)
+                            const dailyIncome = cityIncome(city)
                             return (
                                 <button
                                     className="city"
