@@ -122,6 +122,9 @@ function App() {
     if (!hiddenAt) return null;
     const totalSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
     if (totalSeconds < 60) return null;
+    // Finish any builds that completed while the player was away, so they count towards
+    // offline income instead of being treated as unbuilt for the whole absence (bug #85).
+    constructionManager.update();
     const savedCreatedAt = savedData?.createdAt || Date.now();
     const savedEvent = economyManager.activeEvent;
     economyManager.activeEvent = null;
