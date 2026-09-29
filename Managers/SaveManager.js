@@ -43,10 +43,28 @@ function bundleAuxState() {
     return state
 }
 
+// What each extra value must hold once parsed. Anything else in an imported file is skipped,
+// because the game reads these on startup and a wrong type crashed it on every load (bug #88).
+// Keys not listed here hold a list.
+const AUX_SHAPES = {
+    hyperloop_hyperlink_user_pfps: v => v !== null && typeof v === 'object' && !Array.isArray(v),
+    hyperloop_hyperlink_unread: v => Number.isFinite(v),
+    hyperloop_pending_rankups: v => Number.isFinite(v),
+    hyperloop_event_tint: v => typeof v === 'boolean',
+    hyperloop_dev_portrait_bonus: v => v === 1,
+}
+
+function auxValueOk(key, value) {
+    if (typeof value !== 'string') return false
+    let parsed
+    try { parsed = JSON.parse(value) } catch { return false }
+    return (AUX_SHAPES[key] ?? Array.isArray)(parsed)
+}
+
 function restoreAuxState(state) {
     if (!state || typeof state !== 'object') return
     AUX_KEYS.forEach(key => {
-        if (state[key] !== undefined) localStorage.setItem(key, state[key])
+        if (state[key] !== undefined && auxValueOk(key, state[key])) localStorage.setItem(key, state[key])
     })
 }
 
@@ -71,8 +89,18 @@ function computeChecksum(save) {
     return Math.abs(hash).toString(36)
 }
 
+const SAVE_NAME_LISTS = ['purchasedCities', 'unlockedCities', 'purchasedDevelopments', 'purchasedUpgrades', 'unlockedDevelopments', 'unlockedUpgrades']
+const SAVE_BUILD_LISTS = ['citiesUnderConstruction', 'developmentsUnderConstruction']
+const SAVE_NUMBERS = ['balance', 'reputation', 'rank', 'totalCashEarned']
+
 function validateSave(save) {
+    if (!save || typeof save !== 'object') return false
     if (!save.version || !save.purchasedCities) return false
+    // Every value must have the right type, or the game can crash when it loads.
+    if (SAVE_NUMBERS.some(key => !Number.isFinite(save[key]))) return false
+    if (SAVE_NAME_LISTS.some(key => save[key] !== undefined && !(Array.isArray(save[key]) && save[key].every(n => typeof n === 'string')))) return false
+    if (SAVE_BUILD_LISTS.some(key => save[key] !== undefined && !(Array.isArray(save[key]) && save[key].every(item => item && typeof item.name === 'string' && Number.isFinite(item.finishTime))))) return false
+    if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
     if (save.balance < 0 || save.balance > MAX_BALANCE) return false
     if (save.reputation < 0 || save.reputation > 100000) return false
     if (save.rank < 1 || save.rank > MAX_RANK) return false
