@@ -36,7 +36,7 @@ import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
-import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
+import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
@@ -1082,38 +1082,10 @@ function App() {
           terminalName={terminalName}
           onTerminalNameChange={setTerminalName}
           lastSaved={lastSaved}
-          onDeleteSave={() => {
+                    onDeleteSave={() => {
             stopTick();
             deleteSave();
-            [
-              'hyperloop_shown_reveals',
-              'hyperloop_claimed_milestones',
-              'hyperloop_progress_rewards',
-              'hyperloop_hyperlink_feed',
-              'hyperloop_hyperlink_unread',
-              'hyperloop_hyperlink_used_posts',
-              'hyperloop_hyperlink_used_pfps',
-              'hyperloop_hyperlink_user_pfps',
-              'hyperloop_hyperlink_fired_devposts',
-              'hyperloop_hyperlink_liked',
-              'hyperloop_event_tint',
-              'hyperloop_hyperlink_used_month_posts',
-              'hyperloop_dev_portrait_bonus',
-              'hyperloop_last_login',
-              'hyperloop_last_farewell_date',
-              'hyperloop_active_departure',
-              'hyperloop_active_event',
-              'hyperloop_triggered_departures',
-              'hyperloop_departures_date',
-              'hyperloop_pending_injections',
-              'hyperloop_pending_rankups',
-              'hyperloop_pending_offline',
-              'hyperloop_pending_daily',
-              'hyperloop_onboarding_pending',
-            ].forEach(k => localStorage.removeItem(k));
-            Object.keys(localStorage).forEach(k => {
-              if (k.startsWith('departures_')) localStorage.removeItem(k);
-            });
+            clearGameState();
             window.location.reload();
           }}
           onExportSave={exportSave}

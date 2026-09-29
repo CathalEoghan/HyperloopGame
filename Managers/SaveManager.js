@@ -32,7 +32,41 @@ const AUX_KEYS = [
     'hyperloop_event_tint',
     'hyperloop_hyperlink_used_month_posts',
     'hyperloop_pending_rankups',
+    // Kept with the save so a backup can't re-offer today's daily bonus, and an uncollected
+    // reward travels with the balance it belongs to (bug #67).
+    'hyperloop_last_login',
+    'hyperloop_last_farewell_date',
+    'hyperloop_pending_daily',
+    'hyperloop_pending_offline',
 ]
+
+// Today's live state for the current game. Never exported: an imported or new game starts
+// without it and builds its own (bug #92).
+const DAY_STATE_KEYS = [
+    'hyperloop_active_departure',
+    'hyperloop_active_event',
+    'hyperloop_triggered_departures',
+    'hyperloop_departures_date',
+    'hyperloop_pending_injections',
+    'hyperloop_onboarding_pending',
+]
+
+function removeKeys(keys) {
+    keys.forEach(key => localStorage.removeItem(key))
+}
+
+function clearDayState() {
+    removeKeys(DAY_STATE_KEYS)
+    Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('departures_')) localStorage.removeItem(key)
+    })
+}
+
+// Everything that belongs to the current game apart from the save itself. Used by Delete Save.
+export function clearGameState() {
+    removeKeys(AUX_KEYS)
+    clearDayState()
+}
 
 function bundleAuxState() {
     const state = {}
@@ -52,10 +86,15 @@ const AUX_SHAPES = {
     hyperloop_pending_rankups: v => Number.isFinite(v),
     hyperloop_event_tint: v => typeof v === 'boolean',
     hyperloop_dev_portrait_bonus: v => v === 1,
+    hyperloop_pending_daily: v => v !== null && typeof v === 'object' && Number.isFinite(v.cashBonus) && Number.isFinite(v.repBonus),
+    hyperloop_pending_offline: v => v !== null && typeof v === 'object' && Number.isFinite(v.offlineSeconds) && Number.isFinite(v.offlineIncome),
 }
+// These two hold a plain date string ("Tue Sep 29 2026"), not JSON.
+const AUX_DATE_KEYS = ['hyperloop_last_login', 'hyperloop_last_farewell_date']
 
 function auxValueOk(key, value) {
     if (typeof value !== 'string') return false
+    if (AUX_DATE_KEYS.includes(key)) return !Number.isNaN(Date.parse(value))
     let parsed
     try { parsed = JSON.parse(value) } catch { return false }
     return (AUX_SHAPES[key] ?? Array.isArray)(parsed)
@@ -323,8 +362,14 @@ export function importSave(file) {
 
                 localStorage.setItem(SAVE_KEY, JSON.stringify(data))
 
-                // Restore HyperLink and other aux state
-                if (auxState) restoreAuxState(auxState)
+                // The previous game's departures, event and so on don't carry over (bug #92).
+                clearDayState()
+                // The file's extras replace the current ones rather than merging with them (bug #67).
+                // A file from before extras were exported leaves the current ones alone.
+                if (auxState) {
+                    removeKeys(AUX_KEYS)
+                    restoreAuxState(auxState)
+                }
 
                 resolve()
             } catch {
