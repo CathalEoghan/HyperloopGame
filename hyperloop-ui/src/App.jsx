@@ -90,7 +90,9 @@ function App() {
   const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
-  const [pendingRankUps, setPendingRankUps] = useState(0);
+    const [pendingRankUps, setPendingRankUps] = useState(() => parseInt(localStorage.getItem('hyperloop_pending_rankups') || '0') || 0);
+  // Persist unclaimed rank-ups so a reload before pressing Claim doesn't lose them.
+  useEffect(() => { localStorage.setItem('hyperloop_pending_rankups', pendingRankUps) }, [pendingRankUps]);
   const [claimedCity, setClaimedCity] = useState(null);
   const [activeDeparture, setActiveDeparture] = useState(() => {
     const saved = localStorage.getItem('hyperloop_active_departure');
@@ -264,16 +266,17 @@ function App() {
     const startRank = rankManager.rank;
     rankManager.verifyRank();
     const rankUpsGained = rankManager.rank - startRank;
-    if (rankUpsGained > 0) {
+        if (rankUpsGained > 0) {
       playRankUpSound();
-      setPendingRankUps(rankUpsGained);
-      for (let r = startRank + 1; r <= rankManager.rank; r++) {
-        const milestone = MILESTONES.find(m => m.rank === r);
-        if (milestone && !claimedMilestones.current.has(`rank_${r}`)) {
-          setMilestoneQueue(prev => [...prev, milestone]);
-        }
-      }
+      setPendingRankUps(prev => prev + rankUpsGained);
     }
+    // Queue every milestone at or below the current rank that hasn't been claimed yet —
+    // not just ones reached since the last save — so a reload can't lose one.
+    MILESTONES.forEach(milestone => {
+      if (milestone.rank <= rankManager.rank && !claimedMilestones.current.has(`rank_${milestone.rank}`)) {
+        setMilestoneQueue(prev => [...prev, milestone]);
+      }
+    });
   }, []);
 
   // Daily login check
@@ -956,6 +959,7 @@ function App() {
               'hyperloop_triggered_departures',
               'hyperloop_departures_date',
               'hyperloop_pending_injections',
+              'hyperloop_pending_rankups',
             ].forEach(k => localStorage.removeItem(k));
             Object.keys(localStorage).forEach(k => {
               if (k.startsWith('departures_')) localStorage.removeItem(k);
