@@ -30,7 +30,10 @@ export class ConstructionManager {
         });
     }
 
-    startTutorialConstruction(city) {
+        startTutorialConstruction(city) {
+        // Only one starter city can ever be under construction.
+        this.progressionManager.citiesUnderConstruction.forEach(c => { c.underConstruction = false; });
+        this.progressionManager.citiesUnderConstruction.length = 0;
         const duration = TEN_SECONDS;
         city.finishTime = this.timeManager.getFinishTime(duration);
         city.underConstruction = true;

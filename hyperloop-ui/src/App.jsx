@@ -184,7 +184,10 @@ function App() {
     const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
     return allUnlocked.filter(d => !shown.includes(d.name) && !homeCityRewardNames.has(d.name))
   });
-  const [showOnboarding, setShowOnboarding] = useState(false);
+    // A new game is marked "onboarding pending" as soon as the home city is picked, so a reload
+  // at any point before the welcome popup is closed still shows it.
+  const [showOnboarding, setShowOnboarding] = useState(() =>
+    localStorage.getItem('hyperloop_onboarding_pending') === '1' && progressionManager.purchasedCities.length > 0);
   const [hasFreeReroll, setHasFreeReroll] = useState(false);
   const [showNotEnoughRep, setShowNotEnoughRep] = useState(false);
   const [revealedUpgradeQueue, setRevealedUpgradeQueue] = useState([]);
@@ -384,11 +387,13 @@ function App() {
     const timer = setTimeout(() => {
       const trigger = pendingEventPostRef.current;
       pendingEventPostRef.current = null;
-      if (trigger) fireOfficialHyperLinkPost(trigger);
+      // Skip it if the event has already ended, e.g. the popup stayed open, or hidden behind
+      // another popup, for the whole event.
+      if (trigger && (!trigger.until || activeEventRef.current?.expiresAt === trigger.until)) fireOfficialHyperLinkPost(trigger);
     }, 2500);
     return () => clearTimeout(timer);
   }, [showEventModal]);
-  
+
   const fireOfficialHyperLinkPost = (trigger) => {
     const post = generateOfficialEventPost({
       terminalName: terminalNameRef.current,
@@ -763,7 +768,7 @@ function App() {
             playEventSound();
             setActiveEvent(fullEvent);
             setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id } };
+            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id }, until: fullEvent.expiresAt };
             setTimeout(() => {
               activeEventRef.current = null;
               setActiveEvent(null);
@@ -855,8 +860,11 @@ function App() {
 
   if (isLoading) return <LoadingScreen onComplete={() => setIsLoading(false)} />;
 
-  if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
-    return <OpeningPage constructionManager={constructionManager} setPickedCity={setPickedCity} setTerminalName={setTerminalName} />;
+    if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
+    return <OpeningPage constructionManager={constructionManager} setPickedCity={city => {
+      localStorage.setItem('hyperloop_onboarding_pending', '1');
+      setPickedCity(city);
+    }} setTerminalName={setTerminalName} />;
   }
 
   if (pickedCity !== null && !constructionReady) {
@@ -866,7 +874,7 @@ function App() {
       onEnter={() => {
         if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => { })
         setConstructionReady(true)
-        if (!savedData) setShowOnboarding(true)
+        setShowOnboarding(true)
       }}
     />;
   }
@@ -1102,6 +1110,7 @@ function App() {
               'hyperloop_pending_rankups',
               'hyperloop_pending_offline',
               'hyperloop_pending_daily',
+              'hyperloop_onboarding_pending',
             ].forEach(k => localStorage.removeItem(k));
             Object.keys(localStorage).forEach(k => {
               if (k.startsWith('departures_')) localStorage.removeItem(k);
@@ -1185,7 +1194,10 @@ function App() {
 
       {showOnboarding && (
         <OnboardingModal
-          onDismiss={() => setShowOnboarding(false)}
+                    onDismiss={() => {
+            localStorage.removeItem('hyperloop_onboarding_pending');
+            setShowOnboarding(false);
+          }}
         />
       )}
 

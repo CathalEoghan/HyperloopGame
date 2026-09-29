@@ -93,6 +93,10 @@ function validateSave(save) {
 }
 
 export function saveGame(progressionManager, rankManager, terminalName, farewellsGiven) {
+    // Nothing is saved until the home city exists. A save written during the naming screen
+    // or the tutorial build made a reload skip onboarding, or let the player pick a second
+    // free starter city (bug #87).
+    if (progressionManager.purchasedCities.length === 0) return
     const existing = getSaveRaw()
     const createdAt = existing?.createdAt ?? Date.now()
 
