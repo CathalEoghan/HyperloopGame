@@ -6,6 +6,17 @@ const SAVE_KEY = 'hyperloop_save'
 const MAX_BALANCE = 999_000_000_000
 const MAX_RANK = 335
 
+// Names that changed after saving was added (old name → current name). Saves store names,
+// so without this an item that was renamed silently disappears on load (bug #86).
+const RENAMES = {
+    'Lounge Renovations': 'Credit Card Lounges',
+    'Business Lounge Expansions': 'Business Lounge Renovations',
+    'Dar Es Salaam': 'Dar es Salaam',
+    'Quebec City': 'Québec City',
+    'PortOfSpain': 'Port of Spain',
+}
+const currentName = name => RENAMES[name] ?? name
+
 const AUX_KEYS = [
     'hyperloop_shown_reveals',
     'hyperloop_claimed_milestones',
@@ -123,6 +134,17 @@ export function loadGame(progressionManager, rankManager) {
     try {
         const save = JSON.parse(raw)
 
+        // Bring old names up to date before looking anything up.
+        ;['purchasedCities', 'unlockedCities', 'purchasedDevelopments', 'purchasedUpgrades', 'unlockedDevelopments', 'unlockedUpgrades']
+            .forEach(key => { save[key] = (save[key] || []).map(currentName) })
+        ;['citiesUnderConstruction', 'developmentsUnderConstruction']
+            .forEach(key => { save[key] = (save[key] || []).map(item => ({ ...item, name: currentName(item.name) })) })
+        if (save.developmentUpgradeLevels) {
+            save.developmentUpgradeLevels = Object.fromEntries(
+                Object.entries(save.developmentUpgradeLevels).map(([name, level]) => [currentName(name), level])
+            )
+        }
+
         progressionManager.balance = save.balance ?? 1000000
         progressionManager.reputation = save.reputation ?? 50
         progressionManager.totalCashEarned = save.totalCashEarned ?? 0
@@ -192,6 +214,17 @@ export function loadGame(progressionManager, rankManager) {
         })
 
         progressionManager.developmentUpgradeLevels = save.developmentUpgradeLevels || {}
+
+        // Unlock any reward of a connected city that isn't built, unlocked or being built —
+        // e.g. when a city's reward has changed since the player connected it (bug #86).
+        const owned = new Set([
+            ...progressionManager.purchasedDevelopments,
+            ...progressionManager.purchasedUpgrades,
+            ...progressionManager.developmentsUnderConstruction,
+        ])
+        progressionManager.purchasedCities.forEach(city => {
+            city.rewards.forEach(reward => { if (!owned.has(reward)) progressionManager.unlockReward(reward) })
+        })
 
         return {
             terminalName: save.terminalName || 'Hyperloop Central',
