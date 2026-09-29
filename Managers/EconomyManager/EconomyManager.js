@@ -12,7 +12,10 @@ const UPGRADE_MULTIPLIERS = [1.0, 1.15, 1.50, 2.00];
 export class EconomyManager {
     constructor(progressionManager) {
         this.progressionManager = progressionManager;
-        this.activeEvent = null;
+                this.activeEvent = null;
+        // City name → { lat, lng }. Set once by the UI so every income calculation
+        // (not just the ones that pass coordinates) applies the Arctic/Equator upgrades.
+        this.coordinates = null;
     }
 
     getUpgradeSum(effectType) {
@@ -234,7 +237,8 @@ export class EconomyManager {
         return { lines, totalBoost };
     }
 
-    getCityBoostBreakdown(city, coordinates = null) {
+        getCityBoostBreakdown(city, coordinates = null) {
+        coordinates = coordinates ?? this.coordinates;
         const lines = [];
         let totalBoost = 0;
 
@@ -374,7 +378,8 @@ export class EconomyManager {
         return developmentIncome;
     }
 
-    calculateCityIncome(city, coordinates = null) {
+        calculateCityIncome(city, coordinates = null) {
+        coordinates = coordinates ?? this.coordinates;
         const tierBase = TIER_INCOME[city.tier] || 0;
         const popBonus = city.population * POPULATION_INCOME_MODIFIER;
         let income = tierBase + popBonus;

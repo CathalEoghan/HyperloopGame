@@ -39,6 +39,7 @@ import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepa
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import developmentImages from "./data/developmentImages.js"
+import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
 import monitorIcon from './assets/misc/monitor.png'
@@ -50,7 +51,11 @@ const SECONDS_IN_A_DAY = 86400;
 function App() {
   const [rankManager] = useState(() => new RankManager());
   const [progressionManager] = useState(() => new ProgressionManager(rankManager));
-  const [economyManager] = useState(() => new EconomyManager(progressionManager));
+    const [economyManager] = useState(() => {
+    const em = new EconomyManager(progressionManager);
+    em.coordinates = cityCoordinates;
+    return em;
+  });
   const [timeManager] = useState(() => new TimeManager());
   const [constructionManager] = useState(() => new ConstructionManager(progressionManager, timeManager));
 
