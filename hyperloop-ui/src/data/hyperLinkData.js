@@ -504,11 +504,19 @@ export const POSTS = {
         'Mum dragging me to the new {recreation} like plzzz',
     ],
 
-    newDevelopmentService: [
+        newDevelopmentService: [
         'Life is a little more convenient with the new {service} built here #{terminalName}',
         'Has anyone used the new {service}? what do you think?',
         'Good thing the new {service} is open - would genuinely be lost without it',
         'Anyone have directions to the new {service}?',
+    ],
+
+    developmentUpgraded: [
+        'the {development} here got a proper upgrade, looking way better now 😎',
+        'not the {development} getting renovated right in front of me 😵',
+        'The new improved {development} is actually really nice!',
+        'they spent some money on the {development} lol it defo shows',
+        'anyone seen the new {development} since it stopped renovations? is it actually better now?',
     ],
 
     boarding: [

@@ -845,9 +845,13 @@ function App() {
         setHyperLinkTrigger({ type: key })
     }
 }}
-          onUpgrade={(development, discountMultiplier = 1.0) => {
+                   onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
-            if (success) triggerSave();
+            if (success) {
+              triggerSave();
+              hyperLinkTriggerRef.current = { type: 'developmentUpgraded', data: { development: development.name } }
+              setHyperLinkTrigger({ type: 'developmentUpgraded', data: { development: development.name } })
+            }
             return success;
           }}
         />

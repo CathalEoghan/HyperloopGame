@@ -171,6 +171,7 @@ function substituteText(text, data, gameState) {
         .replace(/\{store\}/g, data.store || 'new store')
         .replace(/\{recreation\}/g, data.recreation || 'new attraction')
         .replace(/\{service\}/g, data.service || 'new service')
+        .replace(/\{development\}/g, data.development || 'the development')
         .replace(/\{currentTime\}/g, now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
         .replace(/\{cityCount\}/g, purchasedCities.length)
 }
