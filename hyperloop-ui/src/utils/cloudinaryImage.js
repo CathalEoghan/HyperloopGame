@@ -9,7 +9,9 @@
 // Falls back to the original URL untouched if it isn't a Cloudinary
 // "/upload/" URL, so it's always safe to call.
 export function cloudinaryResize(url, width) {
-    if (!url || !url.includes('/upload/')) return url
+        if (!url || !url.includes('/upload/')) return url
+    // Replace any width already in the URL, so resizing an already-resized URL is safe.
+    url = url.replace(/w_\d+,c_limit,/, '')
     // Almost every entry already carries an "f_auto,q_auto/" transform segment —
     // fold the width into that one instead of chaining a second transform step.
     if (url.includes('f_auto,q_auto/')) {

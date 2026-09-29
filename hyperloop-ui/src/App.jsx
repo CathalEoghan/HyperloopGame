@@ -38,7 +38,6 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
-import developmentImages from "./data/developmentImages.js"
 import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
 import openingAudio from './assets/sounds/openingAudio.mp3'
@@ -519,8 +518,6 @@ function App() {
         if (newOnes.length > 0) {
           newOnes.forEach(d => {
             queuedRevealNames.current.add(d.name)
-            const src = developmentImages[d.name]
-            if (src) { const img = new Image(); img.src = src }
           })
           setDevRevealQueue(q => [...q, ...newOnes]);
         }
@@ -1321,10 +1318,8 @@ function App() {
               setDevRevealQueue(prev => {
                 const prevNames = new Set(prev.map(p => p.name))
                 const newItems = unshown.filter(d => !prevNames.has(d.name))
-                newItems.forEach(d => {
+                                newItems.forEach(d => {
                   queuedRevealNames.current.add(d.name)
-                  const src = developmentImages[d.name]
-                  if (src) { const img = new Image(); img.src = src }
                 })
                 return newItems.length > 0 ? [...prev, ...newItems] : prev
               })

@@ -25,8 +25,6 @@ import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
 import openingAudio from '../assets/sounds/openingAudio.mp3'
 import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
-import cityImages from '../data/cityImages.js'
-import developmentImages from '../data/developmentImages.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
 import globeIcon from '/public/globeIcon.png'
 import './LoadingScreen.css'
@@ -89,12 +87,9 @@ function LoadingScreen({ onComplete }) {
         const flagSrcs = Object.values(countryFlags)
             .map(code => `https://flagcdn.com/w40/${code}.png`)
 
-        const cloudinarySrcs = [
-            ...Object.values(cityImages),
-            ...Object.values(developmentImages),
-        ]
-
-        preloadImages([...imageSrcs, ...flagSrcs, ...cloudinarySrcs])
+        // Only what's shown straight away: the lists and reveals use the local thumbnails above.
+        // The Cloudinary photos (city and development details) load when first opened.
+        preloadImages([...imageSrcs, ...flagSrcs])
 
         SOUNDS.forEach(src => {
             const audio = new Audio(src)

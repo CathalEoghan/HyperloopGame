@@ -1,3 +1,5 @@
+import { cloudinaryResize } from '../utils/cloudinaryImage.js'
+
 const developmentImages = {
     "Cupcake Store": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CupcakeStore.jpg",
     "Seafood Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SeafoodRestaurant.jpg",
@@ -354,4 +356,7 @@ const developmentImages = {
 
 }
 
-export default developmentImages
+// The originals average 12 MP (up to 50 MP), but the game never shows a photo wider than
+// 500 px, so ask Cloudinary for a copy at most 1000 px wide, which stays sharp on high-DPI
+// screens (bug #89).
+export default Object.fromEntries(Object.entries(developmentImages).map(([name, url]) => [name, cloudinaryResize(url, 1000)]))
