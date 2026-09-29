@@ -58,7 +58,7 @@ function App() {
 
   const [offlineData] = useState(() => {
     const hiddenAt = localStorage.getItem('hyperloop_hidden_at')
-        || localStorage.getItem('hyperloop_heartbeat_at');
+      || localStorage.getItem('hyperloop_heartbeat_at');
     localStorage.removeItem('hyperloop_hidden_at');
     localStorage.removeItem('hyperloop_heartbeat_at');
     localStorage.removeItem('hyperloop_accumulated_offline');
@@ -193,7 +193,7 @@ function App() {
   const queuedRevealNames = useRef(null);
   if (queuedRevealNames.current === null) {
     queuedRevealNames.current = new Set(devRevealQueue.map(d => d.name));
- }
+  }
   const triggeredDepartures = useRef(new Set(
     JSON.parse(localStorage.getItem('hyperloop_triggered_departures') || '[]')
   ));
@@ -301,6 +301,26 @@ function App() {
     setTimeout(() => setShowSaved(false), 2000);
   };
 
+  const fireOfficialHyperLinkPost = (trigger) => {
+    const post = generateOfficialEventPost({
+      terminalName: terminalNameRef.current,
+      homeCity: progressionManager.purchasedCities[0],
+      purchasedCities: progressionManager.purchasedCities,
+      trigger,
+    })
+    if (post) {
+      const newFeed = [...JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]'), post]
+      localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
+      setHyperLinkFeed(newFeed)
+      if (!hyperLinkOpenRef.current) {
+        setHyperLinkUnread(prev => { const n = prev + 1; localStorage.setItem('hyperloop_hyperlink_unread', n); return n })
+        playPhoneNotificationSound()
+        setHyperLinkBubble(true)
+        setTimeout(() => setHyperLinkBubble(false), 3000)
+      }
+    }
+  }
+
   useState(() => {
     if (!savedData) {
       Object.keys(localStorage).forEach(key => {
@@ -381,22 +401,22 @@ function App() {
       const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];
       const currentUnlockedCount = currentUnlocked.length;
       if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
-      const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
-       const alreadyShown = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
-       const newOnes = currentUnlocked.filter(d =>
-       !homeCityRewardNames.has(d.name) &&
+        const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
+        const alreadyShown = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
+        const newOnes = currentUnlocked.filter(d =>
+          !homeCityRewardNames.has(d.name) &&
           !alreadyShown.has(d.name) &&
           !queuedRevealNames.current.has(d.name)
         );
         if (newOnes.length > 0) {
           newOnes.forEach(d => {
             queuedRevealNames.current.add(d.name)
-          const src = developmentImages[d.name]
-           if (src) { const img = new Image(); img.src = src }
-         })
-         setDevRevealQueue(q => [...q, ...newOnes]);
-       }
-    }
+            const src = developmentImages[d.name]
+            if (src) { const img = new Image(); img.src = src }
+          })
+          setDevRevealQueue(q => [...q, ...newOnes]);
+        }
+      }
 
       if (progressionManager.purchasedUpgrades.length > prevUpgradesCount.current) {
         const newUpgrades = progressionManager.purchasedUpgrades.slice(prevUpgradesCount.current);
@@ -416,11 +436,11 @@ function App() {
         const newCities = progressionManager.purchasedCities.slice(prevPurchasedCount.current);
         const homeCity = progressionManager.purchasedCities[0];
         newCities.forEach(city => {
-  if (homeCity && city.name === homeCity.name) return;
-  injectCityIntoSchedule(city);
-  hyperLinkTriggerRef.current = { type: 'newCity', data: { city: city.name } }
-  setHyperLinkTrigger({ type: 'newCity', data: { city: city.name } })
-});
+          if (homeCity && city.name === homeCity.name) return;
+          injectCityIntoSchedule(city);
+          hyperLinkTriggerRef.current = { type: 'newCity', data: { city: city.name } }
+          setHyperLinkTrigger({ type: 'newCity', data: { city: city.name } })
+        });
       }
 
       const citiesChanged = progressionManager.purchasedCities.length !== prevPurchasedCount.current;
@@ -428,21 +448,21 @@ function App() {
       const rankChanged = rankManager.rank !== prevRank.current;
 
       if (citiesChanged || devsChanged || rankChanged) {
-  if (devsChanged) {
-    const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService' }
-    progressionManager.purchasedDevelopments.slice(prevDevCount.current).forEach(dev => {
-      const key = devCatMap[dev.category]
-      if (key) {
-        hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } }
-        setHyperLinkTrigger({ type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } })
+        if (devsChanged) {
+          const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService' }
+          progressionManager.purchasedDevelopments.slice(prevDevCount.current).forEach(dev => {
+            const key = devCatMap[dev.category]
+            if (key) {
+              hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } }
+              setHyperLinkTrigger({ type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } })
+            }
+          })
+        }
+        prevPurchasedCount.current = progressionManager.purchasedCities.length;
+        prevDevCount.current = progressionManager.purchasedDevelopments.length;
+        prevRank.current = rankManager.rank;
+        triggerSave();
       }
-    })
-  }
-  prevPurchasedCount.current = progressionManager.purchasedCities.length;
-  prevDevCount.current = progressionManager.purchasedDevelopments.length;
-  prevRank.current = rankManager.rank;
-  triggerSave();
-}
 
       if (tickCount.current % 30 === 0) {
         triggerSave();
@@ -459,14 +479,14 @@ function App() {
         const cleanedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]').filter(id => validPostIds.has(id))
         localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(cleanedPostIds))
 
-                const usedPostIds = cleanedPostIds
+        const usedPostIds = cleanedPostIds
         // Month posts (see hyperLinkEngine.js) stay "used" for the whole calendar year instead of
         // just the 2-day feed window, so the small monthly pools don't repeat constantly. Storage
         // holds {id, year} entries; only keep ones from the current year, so it naturally clears
         // itself out and each post becomes eligible again once that month comes back around.
         const currentYear = new Date().getFullYear()
         const usedMonthPostRecords = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_month_posts') || '[]')
-            .filter(e => e.year === currentYear)
+          .filter(e => e.year === currentYear)
         const usedMonthPostIds = usedMonthPostRecords.map(e => e.id)
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]')
         const userPfpMap = JSON.parse(localStorage.getItem('hyperloop_hyperlink_user_pfps') || '{}')
@@ -503,7 +523,7 @@ function App() {
             userPfpMap[post.handle] = { pfp: post.pfp, pfpId: post.usedPfpId }
             localStorage.setItem('hyperloop_hyperlink_user_pfps', JSON.stringify(userPfpMap))
           }
-                    if (post.firedDevCategory && !firedDevCategories.includes(post.firedDevCategory)) {
+          if (post.firedDevCategory && !firedDevCategories.includes(post.firedDevCategory)) {
             firedDevCategories.push(post.firedDevCategory)
             localStorage.setItem('hyperloop_hyperlink_fired_devposts', JSON.stringify(firedDevCategories))
           }
@@ -565,7 +585,7 @@ function App() {
       });
 
       if (Math.random() < 0.0002) {
-                const eligible = schedule.filter(entry => {
+        const eligible = schedule.filter(entry => {
           const diff = (entry.hour * 60 + entry.minute) - (currentHour * 60 + currentMinute);
           const maxDelay = (23 * 60 + 55) - (entry.hour * 60 + entry.minute);
           // Require at least 10 minutes of headroom before the 23:55 cutoff — the
@@ -700,31 +720,11 @@ function App() {
       city={pickedCity}
       isComplete={progressionManager.purchasedCities.length > 0}
       onEnter={() => {
-        if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => {})
+        if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => { })
         setConstructionReady(true)
         if (!savedData) setShowOnboarding(true)
       }}
     />;
-  }
-
-  const fireOfficialHyperLinkPost = (trigger) => {
-    const post = generateOfficialEventPost({
-      terminalName: terminalNameRef.current,
-      homeCity: progressionManager.purchasedCities[0],
-      purchasedCities: progressionManager.purchasedCities,
-      trigger,
-    })
-    if (post) {
-      const newFeed = [...JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]'), post]
-      localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
-      setHyperLinkFeed(newFeed)
-      if (!hyperLinkOpenRef.current) {
-        setHyperLinkUnread(prev => { const n = prev + 1; localStorage.setItem('hyperloop_hyperlink_unread', n); return n })
-        playPhoneNotificationSound()
-        setHyperLinkBubble(true)
-        setTimeout(() => setHyperLinkBubble(false), 3000)
-      }
-    }
   }
 
   return (
@@ -765,17 +765,17 @@ function App() {
           localStorage.removeItem('hyperloop_active_event');
         }}
         onWork={(onRepGain) => {
-    const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
-    progressionManager.addCash(earned);
-    setBalance(progressionManager.balance);
-    const gotRep = Math.random() < economyManager.getWorkRepChance();
-    if (gotRep) {
-        progressionManager.addReputation(5);
-        setReputation(progressionManager.reputation);
-        playReputationWorkBonusSound();
-    }
-    onRepGain?.(earned, gotRep);
-}}
+          const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
+          progressionManager.addCash(earned);
+          setBalance(progressionManager.balance);
+          const gotRep = Math.random() < economyManager.getWorkRepChance();
+          if (gotRep) {
+            progressionManager.addReputation(5);
+            setReputation(progressionManager.reputation);
+            playReputationWorkBonusSound();
+          }
+          onRepGain?.(earned, gotRep);
+        }}
         workRange={workRange}
       />
       <ExperienceBar
@@ -838,14 +838,14 @@ function App() {
           economyManager={economyManager}
           onSave={triggerSave}
           onUpgradeBuilt={(upgrade) => {
-    setRevealedUpgradeQueue(q => [...q, upgrade])
-    const key = UPGRADE_KEY_MAP[upgrade.name]
-    if (key) {
-        hyperLinkTriggerRef.current = { type: key }
-        setHyperLinkTrigger({ type: key })
-    }
-}}
-                   onUpgrade={(development, discountMultiplier = 1.0) => {
+            setRevealedUpgradeQueue(q => [...q, upgrade])
+            const key = UPGRADE_KEY_MAP[upgrade.name]
+            if (key) {
+              hyperLinkTriggerRef.current = { type: key }
+              setHyperLinkTrigger({ type: key })
+            }
+          }}
+          onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
             if (success) {
               triggerSave();
@@ -934,27 +934,27 @@ function App() {
           onDeleteSave={() => {
             deleteSave();
             [
-  'hyperloop_shown_reveals',
-  'hyperloop_claimed_milestones',
-  'hyperloop_progress_rewards',
-  'hyperloop_hyperlink_feed',
-  'hyperloop_hyperlink_unread',
-  'hyperloop_hyperlink_used_posts',
-  'hyperloop_hyperlink_used_pfps',
-  'hyperloop_hyperlink_user_pfps',
-  'hyperloop_hyperlink_fired_devposts',
-  'hyperloop_hyperlink_liked',
-  'hyperloop_event_tint',
-  'hyperloop_hyperlink_used_month_posts',
-  'hyperloop_dev_portrait_bonus',
-  'hyperloop_last_login',
-  'hyperloop_last_farewell_date',
-  'hyperloop_active_departure',
-  'hyperloop_active_event',
-  'hyperloop_triggered_departures',
-  'hyperloop_departures_date',
-  'hyperloop_pending_injections',
-].forEach(k => localStorage.removeItem(k));
+              'hyperloop_shown_reveals',
+              'hyperloop_claimed_milestones',
+              'hyperloop_progress_rewards',
+              'hyperloop_hyperlink_feed',
+              'hyperloop_hyperlink_unread',
+              'hyperloop_hyperlink_used_posts',
+              'hyperloop_hyperlink_used_pfps',
+              'hyperloop_hyperlink_user_pfps',
+              'hyperloop_hyperlink_fired_devposts',
+              'hyperloop_hyperlink_liked',
+              'hyperloop_event_tint',
+              'hyperloop_hyperlink_used_month_posts',
+              'hyperloop_dev_portrait_bonus',
+              'hyperloop_last_login',
+              'hyperloop_last_farewell_date',
+              'hyperloop_active_departure',
+              'hyperloop_active_event',
+              'hyperloop_triggered_departures',
+              'hyperloop_departures_date',
+              'hyperloop_pending_injections',
+            ].forEach(k => localStorage.removeItem(k));
             Object.keys(localStorage).forEach(k => {
               if (k.startsWith('departures_')) localStorage.removeItem(k);
             });
@@ -1201,29 +1201,29 @@ function App() {
       )}
 
       {activeTab === "Home" && (
-  <HyperLinkButton
-    unread={hyperLinkUnread}
-    showBubble={hyperLinkBubble}
-    onClick={() => {
-      setHyperLinkOpen(true)
-      setHyperLinkUnread(0)
-      localStorage.setItem('hyperloop_hyperlink_unread', '0')
-    }}
-  />
-)}
+        <HyperLinkButton
+          unread={hyperLinkUnread}
+          showBubble={hyperLinkBubble}
+          onClick={() => {
+            setHyperLinkOpen(true)
+            setHyperLinkUnread(0)
+            localStorage.setItem('hyperloop_hyperlink_unread', '0')
+          }}
+        />
+      )}
 
       {hyperLinkOpen && (
         <HyperLinkModal
-  feed={hyperLinkFeed}
-  terminalName={terminalName}
-  onClose={() => setHyperLinkOpen(false)}
-/>
+          feed={hyperLinkFeed}
+          terminalName={terminalName}
+          onClose={() => setHyperLinkOpen(false)}
+        />
       )}
 
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 15,
-         background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.1)' : 'rgba(192,57,43,0.18)',
+          background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.1)' : 'rgba(192,57,43,0.18)',
           transition: 'background 0.5s ease',
         }} />
       )}
