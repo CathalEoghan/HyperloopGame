@@ -19,7 +19,7 @@ const AUX_KEYS = [
     'hyperloop_hyperlink_fired_devposts',
     'hyperloop_hyperlink_liked',
     'hyperloop_event_tint',
-    'hyperloop_hyperlink_used_months_posts'
+    'hyperloop_hyperlink_used_month_posts'
 ]
 
 function bundleAuxState() {
