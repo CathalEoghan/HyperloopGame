@@ -20,10 +20,10 @@ export const FIRST_NAMES_MALE = [
     'Muhammad', 'Arjun', 'Ravi', 'Vikram', 'Rohan', 'Roman', 'Ryley', 'Ryder',
     'Amir', 'Tariq', 'Bilal', 'Hamza', 'Zain',
     'Karan', 'Nikhil', 'Siddharth', 'Dev', 'Leon',
-    'Wei', 'Jian', 'Hiroshi', 'Kenji', 'Takeshi',
+    'Wei', 'Jian', 'Hiroshi', 'Kenji', 'Takeshi', 'Raj',
     'Min', 'Jun', 'Hao', 'Ryu', 'Yuki', 'Jay', 'Malachy',
     'Kwame', 'Kofi', 'Emeka', 'Chidi', 'Ashton', 'Ash',
-    'Malik', 'Idris', 'Seun', 'Femi', 'Jaden',
+    'Malik', 'Idris', 'Seun', 'Femi', 'Jaden', 'Vikesh',
     'Luca', 'Marco', 'Sebastian', 'Matteo', 'Lucas',
     'Rafael', 'Andrei', 'Dimitri', 'Henrik',
     'Ethan', 'Logan', 'Elijah', 'Alexander',
@@ -57,7 +57,7 @@ export const FIRST_NAMES_MALE = [
     'Hayden', 'Enzo', 'Evan', 'Fraser', 'Everett', 'Griff', 'Dean', 'Edmund',
     'Fabian', 'Felix', 'Fabio', 'Isaiah', 'Rex', 'Reed', 'Reid', 'Gray', 'Grey',
     'Cecil', 'Ralph', 'Raphael', 'Raph', 'Don', 'Duncan', 'Vitaly', 'Kurt', 'Bruce', 
-    'Brucie', 'Davood', 'Oran'
+    'Brucie', 'Davood', 'Oran', 'Ibrahim', 'Matheus',
 ]
 
 export const FIRST_NAMES_FEMALE = [

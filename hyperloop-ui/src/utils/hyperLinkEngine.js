@@ -85,8 +85,6 @@ function buildEligibleCategories(gameState) {
     add('officialGeneral', 5)
        add(getTimeCategory(), 3)
     add(getDayCategory(), 2)
-    // Only 6 of 12 months have written posts today (see hyperLinkData.js) — guard on
-    // POSTS having content so the other 6 months don't burn a weighted draw on nothing.
     const monthCategory = getMonthCategory()
     if (POSTS[monthCategory]?.length) add(monthCategory, 2)
 

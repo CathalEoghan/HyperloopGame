@@ -945,6 +945,7 @@ function App() {
   'hyperloop_hyperlink_fired_devposts',
   'hyperloop_hyperlink_liked',
   'hyperloop_event_tint',
+  'hyperloop_hyperlink_used_months_posts',
   'hyperloop_dev_portrait_bonus',
   'hyperloop_last_login',
   'hyperloop_last_farewell_date',
