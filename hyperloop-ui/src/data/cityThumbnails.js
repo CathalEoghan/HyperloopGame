@@ -327,6 +327,7 @@ import Thimphu from '../assets/cities-thumb/Thimphu.jpg'
 import Pittsburgh from '../assets/cities-thumb/Pittsburgh.jpg'
 import SanJuan from '../assets/cities-thumb/SanJuan.jpg'
 import NDjamena from '../assets/cities-thumb/NDjamena.jpg'
+import Córdoba from '../assets/cities-thumb/Córdoba.jpg'
 import Guayaquil from '../assets/cities-thumb/Guayaquil.jpg'
 import Skopje from '../assets/cities-thumb/Skopje.jpg'
 import SaltLakeCity from '../assets/cities-thumb/SaltLakeCity.jpg'
@@ -674,7 +675,8 @@ const cityImages = {
     Thimphu: Thimphu,
     Guayaquil: Guayaquil,
     Conakry: Conakry,
-    NDjamena: NDjamena,
+    "N'Djamena": NDjamena,
+    "Córdoba": Córdoba,
     Skopje: Skopje,
     "Salt Lake City": SaltLakeCity,
     Niamey: Niamey,
