@@ -74,7 +74,9 @@ function takeOverAndReload() {
 }
 
 function App() {
-  const [tabId] = useState(() => Math.random().toString(36).slice(2) + Date.now().toString(36));
+    // One id per page. It's kept on window rather than in state, so a hot reload while developing
+  // (which restarts App with fresh state in the same page) isn't mistaken for a second tab.
+  const [tabId] = useState(() => (window.__hyperloopTabId ??= Math.random().toString(36).slice(2) + Date.now().toString(36)));
   const [blockedByOtherTab, setBlockedByOtherTab] = useState(() => {
     const takeover = sessionStorage.getItem('hyperloop_takeover') === '1';
     sessionStorage.removeItem('hyperloop_takeover');
