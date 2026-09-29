@@ -51,7 +51,7 @@ const SECONDS_IN_A_DAY = 86400;
 function App() {
   const [rankManager] = useState(() => new RankManager());
   const [progressionManager] = useState(() => new ProgressionManager(rankManager));
-    const [economyManager] = useState(() => {
+  const [economyManager] = useState(() => {
     const em = new EconomyManager(progressionManager);
     em.coordinates = cityCoordinates;
     return em;
@@ -95,7 +95,7 @@ function App() {
   const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
-    const [pendingRankUps, setPendingRankUps] = useState(() => parseInt(localStorage.getItem('hyperloop_pending_rankups') || '0') || 0);
+  const [pendingRankUps, setPendingRankUps] = useState(() => parseInt(localStorage.getItem('hyperloop_pending_rankups') || '0') || 0);
   // Persist unclaimed rank-ups so a reload before pressing Claim doesn't lose them.
   useEffect(() => { localStorage.setItem('hyperloop_pending_rankups', pendingRankUps) }, [pendingRankUps]);
   const [claimedCity, setClaimedCity] = useState(null);
@@ -271,7 +271,7 @@ function App() {
     const startRank = rankManager.rank;
     rankManager.verifyRank();
     const rankUpsGained = rankManager.rank - startRank;
-        if (rankUpsGained > 0) {
+    if (rankUpsGained > 0) {
       playRankUpSound();
       setPendingRankUps(prev => prev + rankUpsGained);
     }
@@ -435,7 +435,7 @@ function App() {
       }
 
       const nonSecretPurchased = progressionManager.purchasedCities.filter(c => c.continent !== 'Antarctica');
-           const secretCityOwned = progressionManager.purchasedCities.some(c => c.continent === 'Antarctica') ||
+      const secretCityOwned = progressionManager.purchasedCities.some(c => c.continent === 'Antarctica') ||
         progressionManager.citiesUnderConstruction.some(c => c.continent === 'Antarctica');
       if (nonSecretPurchased.length === 335 && !secretCityOwned && !secretCityTriggered.current) {
         secretCityTriggered.current = true;
@@ -1084,6 +1084,13 @@ function App() {
               localStorage.setItem('hyperloop_last_farewell_date', today);
             }
             progressionManager.addReputation(finalRep);
+            // Personal Image Branding: +10% of the departing city's daily income per farewell.
+            const farewellCity = allCities.find(c => c.name === activeDeparture?.name);
+            const farewellCash = farewellCity ? economyManager.getFarewellCityIncomeBonus(farewellCity) : 0;
+            if (farewellCash > 0) {
+              progressionManager.addCash(farewellCash);
+              setBalance(progressionManager.balance);
+            }
             const newCount = farewellsRef.current + 1;
             farewellsRef.current = newCount;
             setFarewellsGiven(newCount);
