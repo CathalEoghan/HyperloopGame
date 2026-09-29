@@ -427,7 +427,9 @@ function App() {
       }
 
       const nonSecretPurchased = progressionManager.purchasedCities.filter(c => c.continent !== 'Antarctica');
-      if (nonSecretPurchased.length === 335 && !secretCityTriggered.current) {
+           const secretCityOwned = progressionManager.purchasedCities.some(c => c.continent === 'Antarctica') ||
+        progressionManager.citiesUnderConstruction.some(c => c.continent === 'Antarctica');
+      if (nonSecretPurchased.length === 335 && !secretCityOwned && !secretCityTriggered.current) {
         secretCityTriggered.current = true;
         setShowSecretCityModal(true);
       }
@@ -1093,6 +1095,7 @@ function App() {
           if (minTier > 1 && newCity && newCity.tier < minTier) {
             const betterCities = allCities.filter(c =>
               c.tier >= minTier &&
+              c.continent !== 'Antarctica' &&
               !progressionManager.purchasedCities.includes(c) &&
               !progressionManager.unlockedCities.includes(c)
             );

@@ -80,7 +80,9 @@ export class ProgressionManager {
     }
 
     getRandomUnlockedCity(allCities) {
+                // Antarctic Peninsula is the secret finale city — never hand it out as a normal unlock.
         const eligible = allCities.filter(city =>
+            city.continent !== 'Antarctica' &&
             !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city)
         );
         if (eligible.length === 0) return null;
