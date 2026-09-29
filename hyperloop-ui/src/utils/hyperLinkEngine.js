@@ -151,10 +151,25 @@ function pickCategory(cats) {
     return cats[0]
 }
 
+// A hashtag can't contain spaces or punctuation: "#{city}" with "Monte Carlo" must become
+// "#MonteCarlo", not "#Monte Carlo". Letters (including accented ones) and digits are kept.
+const toHashtag = value => String(value ?? '').replace(/[^\p{L}\p{N}]/gu, '')
+
 function substituteText(text, data, gameState) {
     const { terminalName, homeCity, purchasedCities } = gameState
     const now = new Date()
+    const hashtagValues = {
+        terminalName,
+        city: data.city,
+        boardingCity: data.boardingCity,
+        finalCallCity: data.finalCallCity,
+        goToGateCity: data.goToGateCity,
+        departedCity: data.departedCity,
+        delayedCity: data.delayedCity,
+        gateNumber: data.gateNumber,
+    }
     return text
+        .replace(/#\{(\w+)\}/g, (match, key) => key in hashtagValues ? '#' + toHashtag(hashtagValues[key]) : match)
         .replace(/\{terminalName\}/g, terminalName)
         .replace(/\{homeCity\}/g, homeCity?.name || terminalName)
         .replace(/\{city\}/g, data.city || purchasedCities[purchasedCities.length - 1]?.name || 'the new city')
