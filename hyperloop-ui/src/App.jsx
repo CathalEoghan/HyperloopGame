@@ -376,6 +376,19 @@ function App() {
     setTimeout(() => setShowSaved(false), 2000);
   };
 
+    // The official post about an event waits until the event popup has closed, then arrives a
+  // moment later, so its notification sound doesn't play on top of the event sound.
+  const pendingEventPostRef = useRef(null);
+  useEffect(() => {
+    if (showEventModal || !pendingEventPostRef.current) return;
+    const timer = setTimeout(() => {
+      const trigger = pendingEventPostRef.current;
+      pendingEventPostRef.current = null;
+      if (trigger) fireOfficialHyperLinkPost(trigger);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [showEventModal]);
+  
   const fireOfficialHyperLinkPost = (trigger) => {
     const post = generateOfficialEventPost({
       terminalName: terminalNameRef.current,
@@ -732,7 +745,7 @@ function App() {
             playEventSound();
             setActiveEvent(fullEvent);
             setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) fireOfficialHyperLinkPost({ type: 'officialEvent', data: { eventId: event.id } });
+          if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id } };
             setTimeout(() => { activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event'); }, 8000);
           } else if (event.effectType === 'instantCashLoss') {
             const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
@@ -750,7 +763,7 @@ function App() {
             playEventSound();
             setActiveEvent(fullEvent);
             setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) fireOfficialHyperLinkPost({ type: 'officialEvent', data: { eventId: event.id } });
+            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id } };
             setTimeout(() => {
               activeEventRef.current = null;
               setActiveEvent(null);
