@@ -61,11 +61,11 @@ export class EconomyManager {
         const now = new Date();
         const month = now.getMonth();
         const date = now.getDate();
-        if (month === 9  && date === 31 && this.hasUpgradeByName('Halloween Fair')) return 1.0;
-        if (month === 6  && date === 4  && this.hasUpgradeByName('Fourth of July Show')) return 1.0;
-        if (month === 0  && date === 1  && this.hasUpgradeByName("New Year's Celebrations Event")) return 1.0;
-        if (month === 11 && date === 25 && this.hasUpgradeByName('Christmas Day Festival')) return 1.0;
-        if (month === 1  && date === 14 && this.hasUpgradeByName("Valentine's Weekend Sales")) return 1.0;
+        if (month === 9  && date === 31 && this.hasUpgrade('halloweenBoost')) return 1.0;
+        if (month === 6  && date === 4  && this.hasUpgrade('fourthOfJulyBoost')) return 1.0;
+        if (month === 0  && date === 1  && this.hasUpgrade('newYearsBoost')) return 1.0;
+        if (month === 11 && date === 25 && this.hasUpgrade('christmasBoost')) return 1.0;
+        if (month === 1  && date === 14 && this.hasUpgrade('valentinesBoost')) return 1.0;
         if (this.hasUpgrade('easterBoost')) {
             const y = now.getFullYear();
             const a = y % 19, b = Math.floor(y/100), c = y % 100;
