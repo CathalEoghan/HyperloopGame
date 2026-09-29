@@ -91,6 +91,10 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         return result
     }, {})
 
+    // A–Z groups cities by country. Every other sort shows one flat list, so "Income: High to
+    // Low" really does put the best earner first instead of only sorting within each country (bug #91).
+    const flatList = sortBy !== 'alphabetical'
+
     const groupedPurchased = groupByCountry(filteredPurchased)
     const groupedAvailable = groupByCountry(filteredAvailable)
     const sortedPurchasedCountries = Object.keys(groupedPurchased).sort()
@@ -137,6 +141,48 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     }
     const closeModal = () => { setSelectedCity(null); setConfirmDisconnect(false) }
 
+    // One city card. In the flat list (any sort except A–Z) there's no country heading above
+    // it, so the card shows the country's flag itself.
+    const renderCityCard = (city, isAvailable = false, showFlag = false) => {
+        const isUnderConstruction = underConstruction.some(c => c.name === city.name)
+        const dailyIncome = cityIncome(city)
+        return (
+            <button
+                className="city"
+                key={city.name}
+                onClick={() => setSelectedCity(city)}
+                onMouseEnter={() => playHoverSound()}
+            >
+                <div className="city-image-wrapper">
+                    <img
+                        className={isUnderConstruction ? "unavailable" : "city-image"}
+                        src={cityThumbnails[city.name] || cityImages[city.name]}
+                        style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', filter: isAvailable ? 'grayscale(100%)' : 'none' }}
+                    />
+                    {isUnderConstruction && (
+                        <div className="construction-overlay">
+                            <p>UNDER CONSTRUCTION</p>
+                            <p>{formatTime(constructionManager.timeManager.getTimeRemaining(city.finishTime))}</p>
+                        </div>
+                    )}
+                    {!isUnderConstruction && !isAvailable && (
+                        <div className="city-income-strip">
+                            <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle', marginBottom: '1px' }} />{dailyIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
+                        </div>
+                    )}
+                </div>
+                <div>
+                    {showFlag && (
+                        <img src={`https://flagcdn.com/w40/${countryFlags[city.country]}.png`} alt={city.country} title={city.country}
+                            style={{ width: '18px', height: 'auto', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '2px' }} />
+                    )}
+                    {city.name}
+                </div>
+                <div className="tierAndPopulation">Tier {city.tier} | {city.population.toLocaleString()}</div>
+            </button>
+        )
+    }
+
     const renderCountrySection = (country, cities, isAvailable = false) => {
         const continent = cities[0]?.continent
         const borderColour = CONTINENT_COLOURS[continent] || '#888'
@@ -151,39 +197,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 </h2>
                 {!isCollapsed && (
                     <div className="city-row">
-                        {cities.map(city => {
-                            const isUnderConstruction = underConstruction.some(c => c.name === city.name)
-                            const dailyIncome = cityIncome(city)
-                            return (
-                                <button
-                                    className="city"
-                                    key={city.name}
-                                    onClick={() => setSelectedCity(city)}
-                                    onMouseEnter={() => playHoverSound()}
-                                >
-                                    <div className="city-image-wrapper">
-                                        <img
-                                            className={isUnderConstruction ? "unavailable" : "city-image"}
-                                            src={cityThumbnails[city.name] || cityImages[city.name]}
-                                            style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', filter: isAvailable ? 'grayscale(100%)' : 'none' }}
-                                        />
-                                        {isUnderConstruction && (
-                                            <div className="construction-overlay">
-                                                <p>UNDER CONSTRUCTION</p>
-                                                <p>{formatTime(constructionManager.timeManager.getTimeRemaining(city.finishTime))}</p>
-                                            </div>
-                                        )}
-                                        {!isUnderConstruction && !isAvailable && (
-                                            <div className="city-income-strip">
-                                                <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle', marginBottom: '1px' }} />{dailyIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div>{city.name}</div>
-                                    <div className="tierAndPopulation">Tier {city.tier} | {city.population.toLocaleString()}</div>
-                                </button>
-                            )
-                        })}
+                        {cities.map(city => renderCityCard(city, isAvailable))}
                     </div>
                 )}
             </div>
@@ -372,10 +386,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <span className="city-count-badge">{filteredPurchased.length}</span>
                                 <span className="city-count-badge" style={{ background: '#555' }}>{sortedPurchasedCountries.length} countries</span>
                             </h1>
-                                                       <div className="collapse-controls">
-                                <button className="collapse-btn" onClick={() => collapseAll('purchased', sortedPurchasedCountries)}>Collapse all</button>
-                                <button className="collapse-btn" onClick={() => expandAll('purchased', sortedPurchasedCountries)}>Expand all</button>
-                            </div>
+                            {!flatList && (
+                                <div className="collapse-controls">
+                                    <button className="collapse-btn" onClick={() => collapseAll('purchased', sortedPurchasedCountries)}>Collapse all</button>
+                                    <button className="collapse-btn" onClick={() => expandAll('purchased', sortedPurchasedCountries)}>Expand all</button>
+                                </div>
+                            )}
                         </div>
                         <div className="city-stats-row">
                             <div className="city-stat-box">
@@ -387,7 +403,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <strong><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />{totalIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</strong>
                             </div>
                         </div>
-                        {sortedPurchasedCountries.map(country => renderCountrySection(country, groupedPurchased[country]))}
+                        {flatList
+                            ? <div className="city-row">{filteredPurchased.map(city => renderCityCard(city, false, true))}</div>
+                            : sortedPurchasedCountries.map(country => renderCountrySection(country, groupedPurchased[country]))}
                     </div>
                 )}
 
@@ -398,12 +416,16 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 Cities available to connect
                                 <span className="city-count-badge">{filteredAvailable.length}</span>
                             </h1>
-                            <div className="collapse-controls">
-                                                                <button className="collapse-btn" onClick={() => collapseAll('available', sortedAvailableCountries)}>Collapse all</button>
-                                <button className="collapse-btn" onClick={() => expandAll('available', sortedAvailableCountries)}>Expand all</button>
-                            </div>
+                            {!flatList && (
+                                <div className="collapse-controls">
+                                    <button className="collapse-btn" onClick={() => collapseAll('available', sortedAvailableCountries)}>Collapse all</button>
+                                    <button className="collapse-btn" onClick={() => expandAll('available', sortedAvailableCountries)}>Expand all</button>
+                                </div>
+                            )}
                         </div>
-                        {sortedAvailableCountries.map(country => renderCountrySection(country, groupedAvailable[country], true))}
+                        {flatList
+                            ? <div className="city-row">{filteredAvailable.map(city => renderCityCard(city, true, true))}</div>
+                            : sortedAvailableCountries.map(country => renderCountrySection(country, groupedAvailable[country], true))}
                     </div>
                 )}
             </div>
