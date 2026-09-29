@@ -37,7 +37,10 @@ export class ConstructionManager {
         this.progressionManager.citiesUnderConstruction.push(city);
     }
 
-    startStationConstruction(city) {
+        startStationConstruction(city) {
+        // Never charge for a city that's already connected or already being built.
+        const pm = this.progressionManager;
+        if (pm.purchasedCities.includes(city) || pm.citiesUnderConstruction.includes(city)) return false;
         const connectionCost = this.calculateTierConnectionCost(city);
         const canAfford = this.progressionManager.spendCash(connectionCost);
         if (!canAfford) return;

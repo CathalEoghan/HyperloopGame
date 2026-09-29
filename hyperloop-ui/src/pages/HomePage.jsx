@@ -415,7 +415,7 @@ useEffect(() => {
                     </div>
                 </div>
             )}
-            {selectedUnlockedCity && (
+                        {selectedUnlockedCity && !purchasedCities.some(c => c.name === selectedUnlockedCity.name) && (
                 <div className="modal-overlay" onClick={() => setSelectedUnlockedCity(null)}>
                     <div className="modal" onClick={e => e.stopPropagation()}>
                         {constructionManager?.progressionManager?.citiesUnderConstruction?.some(c => c.name === selectedUnlockedCity.name) ? (
