@@ -48,7 +48,39 @@ import "./App.css";
 const OFFLINE_RATE = 1.0;
 const SECONDS_IN_A_DAY = 86400;
 
+// ---- Single active tab (bug #83) ----
+// Only one tab may run the game. Any other tab shows a notice and never ticks or saves,
+// otherwise each tab's autosave overwrites the other's progress.
+const TAB_LOCK_KEY = 'hyperloop_active_tab';
+const TAKEOVER_REQUEST_KEY = 'hyperloop_takeover_request';
+// Hidden tabs can be throttled to about one tick a minute, so a lock only counts as
+// abandoned after 90 seconds without a heartbeat.
+const TAB_LOCK_STALE_MS = 90000;
+
+function readTabLock() {
+  try { return JSON.parse(localStorage.getItem(TAB_LOCK_KEY)); } catch { return null; }
+}
+
+function claimTabLock(id, force = false) {
+  const lock = readTabLock();
+  if (!force && lock && lock.id !== id && Date.now() - lock.at < TAB_LOCK_STALE_MS) return false;
+  localStorage.setItem(TAB_LOCK_KEY, JSON.stringify({ id, at: Date.now() }));
+  return true;
+}
+
+function takeOverAndReload() {
+  sessionStorage.setItem('hyperloop_takeover', '1');
+  window.location.reload();
+}
+
 function App() {
+  const [tabId] = useState(() => Math.random().toString(36).slice(2) + Date.now().toString(36));
+  const [blockedByOtherTab, setBlockedByOtherTab] = useState(() => {
+    const takeover = sessionStorage.getItem('hyperloop_takeover') === '1';
+    sessionStorage.removeItem('hyperloop_takeover');
+    return !claimTabLock(tabId, takeover);
+  });
+  const blockedRef = useRef(blockedByOtherTab);
   const [rankManager] = useState(() => new RankManager());
   const [progressionManager] = useState(() => new ProgressionManager(rankManager));
   const [economyManager] = useState(() => {
@@ -62,8 +94,13 @@ function App() {
   const [savedData] = useState(() => hasSave() ? loadGame(progressionManager, rankManager) : null);
 
   const [offlineData] = useState(() => {
-    const hiddenAt = localStorage.getItem('hyperloop_hidden_at')
-      || localStorage.getItem('hyperloop_heartbeat_at');
+    if (blockedByOtherTab) return null;
+    // Use the most recent sign of life: a stale hidden_at left by another tab must not
+    // override a newer heartbeat.
+    const hiddenAt = Math.max(
+      parseInt(localStorage.getItem('hyperloop_hidden_at') || '0') || 0,
+      parseInt(localStorage.getItem('hyperloop_heartbeat_at') || '0') || 0
+    ) || null;
     localStorage.removeItem('hyperloop_hidden_at');
     localStorage.removeItem('hyperloop_heartbeat_at');
     localStorage.removeItem('hyperloop_accumulated_offline');
@@ -97,7 +134,7 @@ function App() {
   const [pickedCity, setPickedCity] = useState(null);
   const [pendingRankUps, setPendingRankUps] = useState(() => parseInt(localStorage.getItem('hyperloop_pending_rankups') || '0') || 0);
   // Persist unclaimed rank-ups so a reload before pressing Claim doesn't lose them.
-  useEffect(() => { localStorage.setItem('hyperloop_pending_rankups', pendingRankUps) }, [pendingRankUps]);
+  useEffect(() => { if (!blockedRef.current) localStorage.setItem('hyperloop_pending_rankups', pendingRankUps) }, [pendingRankUps]);
   const [claimedCity, setClaimedCity] = useState(null);
   const [activeDeparture, setActiveDeparture] = useState(() => {
     const saved = localStorage.getItem('hyperloop_active_departure');
@@ -267,6 +304,7 @@ function App() {
 
   // Immediate rank detection on load (catches offline rank ups)
   useEffect(() => {
+    if (blockedRef.current) return;
     rankManager.convertCashToXP(progressionManager.totalCashEarned);
     const startRank = rankManager.rank;
     rankManager.verifyRank();
@@ -286,7 +324,7 @@ function App() {
 
   // Daily login check
   useEffect(() => {
-    if (!hasSave() || progressionManager.purchasedCities.length === 0) return;
+    if (blockedRef.current || !hasSave() || progressionManager.purchasedCities.length === 0) return;
     const today = new Date().toDateString();
     const lastLogin = localStorage.getItem('hyperloop_last_login');
     if (lastLogin === today) return;
@@ -303,6 +341,7 @@ function App() {
   const [workRange, setWorkRange] = useState(() => economyManager.calculateWorkClickRange(rankManager.rank));
 
   const triggerSave = (farewells) => {
+    if (blockedRef.current) return;
     saveGame(progressionManager, rankManager, terminalNameRef.current, farewells ?? farewellsRef.current);
     setLastSaved(Date.now());
     setShowSaved(true);
@@ -381,6 +420,19 @@ function App() {
   const startTick = () => {
     if (tickIntervalRef.current) return;
     tickIntervalRef.current = setInterval(() => {
+      const lock = readTabLock();
+      if (blockedRef.current) {
+        // Waiting tab: take over automatically once the active tab has gone away.
+        if (!lock || Date.now() - lock.at > TAB_LOCK_STALE_MS) takeOverAndReload();
+        return;
+      }
+      if (lock && lock.id !== tabId) {
+        // Another tab has taken over: stop touching the save.
+        blockedRef.current = true;
+        setBlockedByOtherTab(true);
+        return;
+      }
+      localStorage.setItem(TAB_LOCK_KEY, JSON.stringify({ id: tabId, at: Date.now() }));
       tickCount.current += 1;
 
       const now2 = Date.now();
@@ -709,15 +761,56 @@ function App() {
 
   useEffect(() => {
     const handleUnload = () => {
+      if (blockedRef.current) return;
       localStorage.setItem('hyperloop_hidden_at', Date.now());
+      if (readTabLock()?.id === tabId) localStorage.removeItem(TAB_LOCK_KEY);
+    };
+    // Another tab asked to take over: save everything now, then step aside.
+    const handleStorage = (e) => {
+      if (e.key !== TAKEOVER_REQUEST_KEY || !e.newValue || e.newValue === tabId || blockedRef.current) return;
+      saveGame(progressionManager, rankManager, terminalNameRef.current, farewellsRef.current);
+      localStorage.setItem('hyperloop_heartbeat_at', Date.now());
+      blockedRef.current = true;
+      stopTick();
+      localStorage.removeItem(TAB_LOCK_KEY);
+      setBlockedByOtherTab(true);
     };
     window.addEventListener('beforeunload', handleUnload);
     window.addEventListener('pagehide', handleUnload);
+    window.addEventListener('storage', handleStorage);
     return () => {
       window.removeEventListener('beforeunload', handleUnload);
       window.removeEventListener('pagehide', handleUnload);
+      window.removeEventListener('storage', handleStorage);
     };
   }, []);
+
+  if (blockedByOtherTab) {
+    return (
+      <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
+        <div style={{ background: 'rgb(255, 239, 224)', border: '2px solid black', borderRadius: '12px', padding: '32px 24px', maxWidth: '380px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
+          <h2 style={{ fontFamily: 'Courier New, monospace', color: '#f5a623', margin: '0 0 12px' }}>Open in another tab</h2>
+          <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
+            Hyperloop Empire is already running in another tab. Only one tab can play at a time, so your progress isn&#39;t overwritten.
+          </p>
+          <button className="closeButton" onClick={() => {
+            // Ask the active tab to save and step aside; take over anyway if it doesn't answer.
+            localStorage.setItem(TAKEOVER_REQUEST_KEY, tabId);
+            const started = Date.now();
+            const wait = setInterval(() => {
+              if (!readTabLock() || Date.now() - started > 3000) {
+                clearInterval(wait);
+                localStorage.removeItem(TAKEOVER_REQUEST_KEY);
+                takeOverAndReload();
+              }
+            }, 200);
+          }}>
+            Play here instead
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) return <LoadingScreen onComplete={() => setIsLoading(false)} />;
 
@@ -942,6 +1035,7 @@ function App() {
           onTerminalNameChange={setTerminalName}
           lastSaved={lastSaved}
           onDeleteSave={() => {
+            stopTick();
             deleteSave();
             [
               'hyperloop_shown_reveals',
@@ -972,7 +1066,11 @@ function App() {
             window.location.reload();
           }}
           onExportSave={exportSave}
-          onImportSave={async (file) => { await importSave(file); window.location.reload(); }}
+          onImportSave={async (file) => {
+            stopTick();
+            try { await importSave(file); } catch (err) { startTick(); throw err; }
+            window.location.reload();
+          }}
           onManualSave={triggerSave}
           onReputationBonus={(amount) => { progressionManager.addReputation(amount); setReputation(progressionManager.reputation); }}
         />
