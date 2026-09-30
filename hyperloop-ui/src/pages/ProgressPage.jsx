@@ -181,7 +181,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Service Count Boost',             value: sum('serviceDevBoost') > 0 ? `+${Math.round(sum('serviceDevBoost') * serviceCount * 100)}% (${serviceCount} items)` : '—' },
             { label: 'Continent Expansion Bonus',       value: sum('continentExpansionBoost') > 0 ? `+${Math.round(sum('continentExpansionBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
             { label: 'Country Expansion Bonus',         value: sum('countryExpansionBoost') > 0 ? `+${(sum('countryExpansionBoost') * uniqueCountries * 100).toFixed(1)}% (${uniqueCountries} countries)` : '—' },
-            { label: 'Local Country Bonus',             value: sum('localCountryBoost') > 0 ? `+${Math.round(sum('localCountryBoost') * 100)}%` : '—' },
+            { label: 'Local Country Bonus',             value: economyManager.getLocalCountryBoost() > 0 ? `+${Math.round(economyManager.getLocalCountryBoost() * 100)}%` : '—' },
             { label: 'Small City Bonus',                value: sum('smallCityBoost') > 0 ? `+${Math.round(sum('smallCityBoost') * 100)}%` : '—' },
             { label: 'Arctic City Bonus',               value: sum('arcticBoost') > 0 ? `+${Math.round(sum('arcticBoost') * 100)}%` : '—' },
             { label: 'Equator City Bonus',              value: sum('equatorBoost') > 0 ? `+${Math.round(sum('equatorBoost') * 100)}%` : '—' },

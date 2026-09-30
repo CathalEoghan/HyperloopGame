@@ -24,6 +24,16 @@ export class EconomyManager {
             .reduce((sum, u) => sum + u.effectValue, 0);
     }
 
+    // Home-country bonus from the local-transport upgrades. Each one adds the home city's own
+    // localCountryBoostValue, which is smaller for countries with more cities (New York 3%,
+    // London 12%, Dubai 20%), so no starting city gets a far bigger bonus than another (bug #60).
+    getLocalCountryBoost() {
+        const homeCity = this.progressionManager.purchasedCities[0];
+        if (!homeCity) return 0;
+        const count = this.progressionManager.purchasedUpgrades.filter(u => u.effectType === 'localCountryBoost').length;
+        return (homeCity.localCountryBoostValue || 0) * count;
+    }
+
     hasUpgrade(effectType) {
         return this.progressionManager.purchasedUpgrades.some(u => u.effectType === effectType);
     }
@@ -258,7 +268,7 @@ export class EconomyManager {
 
         const homeCity = this.progressionManager.purchasedCities[0];
         if (homeCity && city.country === homeCity.country) {
-            const localBoost = this.getUpgradeSum('localCountryBoost');
+            const localBoost = this.getLocalCountryBoost();
             if (localBoost > 0) { lines.push(`Local country bonus: +${Math.round(localBoost * 100)}%`); totalBoost += localBoost; }
         }
 
@@ -401,7 +411,7 @@ export class EconomyManager {
 
         const homeCity = this.progressionManager.purchasedCities[0];
         if (homeCity && city.country === homeCity.country) {
-            totalBoost += this.getUpgradeSum('localCountryBoost');
+            totalBoost += this.getLocalCountryBoost();
         }
 
         if (city.isSouthern && this.hasUpgrade('southernHemisphereBoost')) {
