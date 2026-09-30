@@ -122,7 +122,7 @@ function buildEligibleCategories(gameState) {
     const adCampaigns = purchasedUpgrades.filter(u => u.effectType === 'countryAdvertisingBoost')
     if (adCampaigns.length > 0) {
         const campaign = adCampaigns[Math.floor(Math.random() * adCampaigns.length)]
-        add('advertisingCampaign', 2, { campaignCountry: campaign.effectTarget })
+        add('advertisingCampaign', 2, { campaignCountry: campaign.country })
     }
 
     if (rankSet >= 10) add('milestone10', 1)

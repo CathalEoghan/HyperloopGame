@@ -577,8 +577,14 @@ function App() {
 
       if (progressionManager.purchasedUpgrades.length > prevUpgradesCount.current) {
         const newUpgrades = progressionManager.purchasedUpgrades.slice(prevUpgradesCount.current);
-        newUpgrades.forEach(upgrade => {
+                newUpgrades.forEach(upgrade => {
           if (upgrade.effectType) setRevealedUpgradeQueue(q => [...q, upgrade]);
+          // Upgrades with their own Hyper-Link posts get one as the next post (bug #70).
+          const key = UPGRADE_KEY_MAP[upgrade.name];
+          if (key) {
+            hyperLinkTriggerRef.current = { type: key };
+            setHyperLinkTrigger({ type: key });
+          }
         });
         prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
       }
@@ -1052,14 +1058,6 @@ function App() {
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           economyManager={economyManager}
           onSave={triggerSave}
-          onUpgradeBuilt={(upgrade) => {
-            setRevealedUpgradeQueue(q => [...q, upgrade])
-            const key = UPGRADE_KEY_MAP[upgrade.name]
-            if (key) {
-              hyperLinkTriggerRef.current = { type: key }
-              setHyperLinkTrigger({ type: key })
-            }
-          }}
           onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
             if (success) {
