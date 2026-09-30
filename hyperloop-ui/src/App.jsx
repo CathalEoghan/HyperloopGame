@@ -46,6 +46,9 @@ import "./App.css";
 
 const OFFLINE_RATE = 1.0;
 const SECONDS_IN_A_DAY = 86400;
+// A gap between ticks longer than this (laptop asleep, tab frozen) is treated as offline time.
+// Shorter gaps are normal for background tabs, which browsers slow to about one tick a minute.
+const LONG_GAP_SECONDS = 120;
 
 // ---- Single active tab (bug #83) ----
 // Only one tab may run the game. Any other tab shows a notice and never ticks or saves,
@@ -94,7 +97,7 @@ function App() {
 
   const [savedData] = useState(() => hasSave() ? loadGame(progressionManager, rankManager) : null);
 
-  const [offlineData] = useState(() => {
+  const [offlineData, setOfflineData] = useState(() => {
     if (blockedByOtherTab) return null;
     // Offline earnings are kept in storage until the player presses Collect, so closing
     // or reloading the page before then doesn't lose them (bug #84).
@@ -482,10 +485,34 @@ function App() {
       localStorage.setItem(TAB_LOCK_KEY, JSON.stringify({ id: tabId, at: Date.now() }));
       tickCount.current += 1;
 
-      const now2 = Date.now();
-      const elapsed = Math.min((now2 - lastTickTimeRef.current) / 1000, 10);
+            const now2 = Date.now();
+      const gap = Math.max(0, (now2 - lastTickTimeRef.current) / 1000);
       lastTickTimeRef.current = now2;
       const savedCreatedAt = savedData?.createdAt || Date.now();
+      // Credit the real time since the last tick, so a background tab earns in full. A long gap
+      // is offline time instead: it's paid through the offline popup, capped like offline
+      // income, and added to any offline reward that's still waiting (bug #57).
+      let elapsed = gap;
+      if (gap > LONG_GAP_SECONDS) {
+        elapsed = 0;
+        constructionManager.update();
+        const offlineSeconds = Math.min(gap, economyManager.calculateOfflineCap());
+        const savedEvent = economyManager.activeEvent;
+        economyManager.activeEvent = null;
+        const offlineIncome = economyManager.calculateDailyIncome(null, savedCreatedAt) * offlineSeconds * OFFLINE_RATE;
+        economyManager.activeEvent = savedEvent;
+        if (offlineIncome >= 1) {
+          let pending = null;
+          try { pending = JSON.parse(localStorage.getItem('hyperloop_pending_offline')); } catch { pending = null; }
+          const combined = {
+            offlineSeconds: (pending?.offlineSeconds || 0) + offlineSeconds,
+            offlineIncome: (pending?.offlineIncome || 0) + offlineIncome,
+          };
+          localStorage.setItem('hyperloop_pending_offline', JSON.stringify(combined));
+          setOfflineData(combined);
+          setShowOfflineModal(true);
+        }
+      }
       const incomePerSecond = economyManager.calculateDailyIncome(null, savedCreatedAt);
       progressionManager.addCash(incomePerSecond * elapsed);
       rankManager.convertCashToXP(progressionManager.totalCashEarned);
