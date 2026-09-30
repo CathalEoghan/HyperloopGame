@@ -1308,6 +1308,7 @@ function App() {
           key={claimedCity.name}
           city={claimedCity}
           reputation={reputation}
+          rerollCost={hasFreeReroll ? 0 : economyManager.getRerollRepCost(15)}
           onClose={() => {
             if (progressionManager.purchasedCities.length > 1) {
               const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')

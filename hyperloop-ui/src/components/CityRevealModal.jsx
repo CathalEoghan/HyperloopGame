@@ -4,8 +4,10 @@ import reputationIcon from '../assets/misc/reputation.png'
 import { playClickSound2, playHoverSound, playDiceRollSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import './CityRevealModal.css'
 
-function CityRevealModal({ city, onClose, onReroll, reputation }) {
-    const canReroll = reputation >= 15
+// rerollCost is what the game will actually charge: 0 with a free re-roll, less with the
+// re-roll discount (bug #64).
+function CityRevealModal({ city, onClose, onReroll, reputation, rerollCost = 15 }) {
+    const canReroll = reputation >= rerollCost
     const isSecret = city.name === 'Antarctic Peninsula'
 
     return (
@@ -32,9 +34,11 @@ function CityRevealModal({ city, onClose, onReroll, reputation }) {
                         }}
                         style={{ opacity: canReroll ? 1 : 0.5, cursor: canReroll ? 'pointer' : 'not-allowed' }}
                     >
-                        {canReroll
-                            ? <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0' }}>Re-roll (15<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', margin: '0 0 1px 3px' }} />)</span>
-                            : <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0' }}>Need 15<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', margin: '0 0 1px 3px' }} /> to re-roll (you have {reputation})</span>
+                                                {rerollCost === 0
+                            ? <span>Free re-roll</span>
+                            : canReroll
+                            ? <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0' }}>Re-roll ({rerollCost}<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', margin: '0 0 1px 3px' }} />)</span>
+                            : <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0' }}>Need {rerollCost}<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', margin: '0 0 1px 3px' }} /> to re-roll (you have {reputation})</span>
                         }
                     </button>
                 )}
