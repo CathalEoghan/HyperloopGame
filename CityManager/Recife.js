@@ -10,6 +10,6 @@ export const Recife = new City(
     "Brazil",
     "South America",
     2,
-    "Quito sits high in the Andes at 2,850 meters (9,350 feet) above sea level, making it the highest official capital city in the world.",
+        "Recife takes its name from the coral reefs that line its coast ('recife' means 'reef' in Portuguese), and it's home to Kahal Zur Israel, built around 1636 under Dutch rule and the oldest synagogue in the Americas.",
     true
 );

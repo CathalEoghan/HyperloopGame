@@ -8,7 +8,7 @@ export const Managua = new City(
     1400000,
     [newYearsCelebrations],
     "Nicaragua",
-    "South America",
+    "North America",
     2,
     "A massive earthquake in 1972 destroyed most of Managua's downtown core, leading the city to expand outward rather than rebuild the old center.",
     false
