@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
+import { matchesSearch } from '../utils/search.js'
 import './DevelopmentPage.css'
 import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
@@ -44,7 +45,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         let result = [...items]
         if (activeCategory === 'Upgrades') result = result.filter(d => !d.revenue)
         else if (activeCategory !== 'All') result = result.filter(d => d.category === activeCategory)
-        if (search.trim()) result = result.filter(d => d.name.toLowerCase().includes(search.toLowerCase()))
+        if (search.trim()) result = result.filter(d => matchesSearch(d.name, search))
         if (sortBy === 'revenue-high') result.sort((a, b) => (b.revenue || 0) - (a.revenue || 0))
         else if (sortBy === 'revenue-low') result.sort((a, b) => (a.revenue || 0) - (b.revenue || 0))
         else if (sortBy === 'category') result.sort((a, b) => a.category.localeCompare(b.category))

@@ -4,6 +4,7 @@ import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
+import { matchesSearch } from '../utils/search.js'
 import cityCoordinates from '../data/cityCoordinates.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
@@ -22,9 +23,6 @@ const CONTINENT_COLOURS = {
     'Oceania': '#16a085',
     'All': '#444'
 }
-
-const normalise = (str) =>
-    str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
 
 function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, topOffset = 113 }) {
     const [selectedCity, setSelectedCity] = useState(() => preSelectedCity || null)
@@ -76,8 +74,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         let result = cities
         if (activeContinent !== 'All') result = result.filter(c => c.continent === activeContinent)
         if (search.trim()) result = result.filter(c =>
-            normalise(c.name).includes(normalise(search)) ||
-            normalise(c.country).includes(normalise(search))
+            matchesSearch(c.name, search) || matchesSearch(c.country, search)
         )
         return sortCities(result)
     }
