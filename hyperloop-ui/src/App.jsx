@@ -70,6 +70,18 @@ function claimTabLock(id, force = false) {
   return true;
 }
 
+// ---- Farewell queue (bug #65) ----
+// Departures whose farewell window is open wait in a queue, so one opening while another is on
+// screen waits its turn instead of replacing it. Stored under the old key (as a list).
+const DEPARTURE_KEY = 'hyperloop_active_departure';
+const departureId = dep => `${dep.time}_${dep.name}`;
+// A departure that waited its turn still gets at least 30 seconds on screen.
+const withMinimumWindow = dep => ({ ...dep, expiresAt: Math.max(dep.expiresAt || 0, Date.now() + 30000) });
+function saveDepartureQueue(queue) {
+  if (queue.length > 0) localStorage.setItem(DEPARTURE_KEY, JSON.stringify(queue));
+  else localStorage.removeItem(DEPARTURE_KEY);
+}
+
 function takeOverAndReload() {
   sessionStorage.setItem('hyperloop_takeover', '1');
   window.location.reload();
@@ -158,18 +170,24 @@ function App() {
   // Persist unclaimed rank-ups so a reload before pressing Claim doesn't lose them.
   useEffect(() => { if (!blockedRef.current) localStorage.setItem('hyperloop_pending_rankups', pendingRankUps) }, [pendingRankUps]);
   const [claimedCity, setClaimedCity] = useState(null);
-  const [activeDeparture, setActiveDeparture] = useState(() => {
-    const saved = localStorage.getItem('hyperloop_active_departure');
-    if (!saved) return null;
+  const [departureQueue, setDepartureQueue] = useState(() => {
+    let queue;
     try {
-      const dep = JSON.parse(saved);
-      if (dep.expiresAt && Date.now() > dep.expiresAt) {
-        localStorage.removeItem('hyperloop_active_departure');
-        return null;
-      }
-      const secondsRemaining = Math.max(30, Math.floor((dep.expiresAt - Date.now()) / 1000));
-      return { ...dep, secondsRemaining };
-    } catch { return null; }
+      const saved = JSON.parse(localStorage.getItem(DEPARTURE_KEY));
+      queue = Array.isArray(saved) ? saved : saved ? [saved] : [];   // older saves stored just one
+    } catch { queue = []; }
+    // The farewell that was on screen ran out while the game was closed.
+    if (queue[0]?.expiresAt && Date.now() > queue[0].expiresAt) queue = queue.slice(1);
+    if (queue[0]) queue[0] = withMinimumWindow(queue[0]);
+    return queue;
+  });
+  const activeDeparture = departureQueue[0] || null;
+  // Removes this particular departure (not just "the first one"), so running twice is harmless.
+  const finishDeparture = (dep) => setDepartureQueue(queue => {
+    const next = queue.filter(d => departureId(d) !== departureId(dep));
+    if (next[0] && departureId(next[0]) !== departureId(queue[0])) next[0] = withMinimumWindow(next[0]);
+    saveDepartureQueue(next);
+    return next;
   });
   const [activeDelay, setActiveDelay] = useState(null);
   const [devRevealQueue, setDevRevealQueue] = useState(() => {
@@ -700,7 +718,8 @@ function App() {
       const windowMinutes = 5 + (farewellExtensions * 5);
 
       schedule.forEach(entry => {
-        const key = `${todayKey}_${entry.time}`;
+        // The city is part of the key, so two departures at the same minute both get a farewell.
+        const key = `${todayKey}_${entry.time}_${entry.name}`;
         const depMins = entry.hour * 60 + entry.minute;
         const windowStart = depMins - windowMinutes;
         const currentMins = currentHour * 60 + currentMinute;
@@ -713,8 +732,12 @@ function App() {
           const secondsRemaining = Math.max(30, windowMinutes * 60 - secondsElapsed);
           const expiresAt = Date.now() + secondsRemaining * 1000;
           const depEntry = { ...entry, secondsRemaining, expiresAt };
-          localStorage.setItem('hyperloop_active_departure', JSON.stringify(depEntry));
-          setActiveDeparture(depEntry);
+          setDepartureQueue(queue => {
+            if (queue.some(d => departureId(d) === departureId(depEntry))) return queue;
+            const next = [...queue, depEntry];
+            saveDepartureQueue(next);
+            return next;
+          });
         }
       });
 
@@ -1229,6 +1252,7 @@ function App() {
 
       {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
         <FarewellModal
+          key={departureId(activeDeparture)}
           departure={activeDeparture}
           economyManager={economyManager}
           onFarewell={(repGain) => {
@@ -1252,12 +1276,11 @@ function App() {
             farewellsRef.current = newCount;
             setFarewellsGiven(newCount);
             triggerSave(newCount);
-            localStorage.removeItem('hyperloop_active_departure');
-            setActiveDeparture(null);
+            finishDeparture(activeDeparture);
             hyperLinkTriggerRef.current = { type: 'farewellGiven', data: { city: activeDeparture?.name } };
             setHyperLinkTrigger({ type: 'farewellGiven', data: { city: activeDeparture?.name } });
           }}
-          onMiss={() => { localStorage.removeItem('hyperloop_active_departure'); setActiveDeparture(null); hyperLinkTriggerRef.current = { type: 'farewellMissed' }; setHyperLinkTrigger({ type: 'farewellMissed' }); }}
+          onMiss={() => { finishDeparture(activeDeparture); hyperLinkTriggerRef.current = { type: 'farewellMissed' }; setHyperLinkTrigger({ type: 'farewellMissed' }); }}
         />
       )}
 
