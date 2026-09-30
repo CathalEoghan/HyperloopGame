@@ -301,8 +301,10 @@ function App() {
   const gameStartTime = useRef(Date.now());
 
 
-  // Generate departure schedule on startup if it doesn't exist yet
-  useEffect(() => {
+   // Generate today's departure schedule if it doesn't exist yet. Runs on load and again when the
+  // date changes while the game is open (bug #66).
+  function ensureTodaySchedule() {
+    if (blockedRef.current) return;
     const today = new Date().toDateString();
     const key = `departures_${today}`;
     if (localStorage.getItem(key) || progressionManager.purchasedCities.length <= 1) return;
@@ -341,9 +343,10 @@ function App() {
       const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
       departures.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay, gate });
     });
-    departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay);
+        departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay);
     if (departures.length > 0) localStorage.setItem(key, JSON.stringify(departures));
-  }, []);
+  }
+  useEffect(() => { ensureTodaySchedule(); }, []);
 
   // Immediate rank detection on load (catches offline rank ups)
   useEffect(() => {
@@ -365,8 +368,8 @@ function App() {
     });
   }, []);
 
-  // Daily login check
-  useEffect(() => {
+   // Daily login check. Runs on load and again when the date changes while the game is open (bug #66).
+  function checkDailyLogin() {
     if (blockedRef.current || !hasSave() || progressionManager.purchasedCities.length === 0) return;
     // A bonus offered on an earlier load but never collected is still owed (bug #84).
     let pendingDaily = null;
@@ -382,9 +385,10 @@ function App() {
     const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
     let repBonus = economyManager.getUpgradeSum('dailyLoginRep');
     if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
-    localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus }));
+        localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus }));
     setDailyLoginData({ cashBonus, repBonus });
-  }, []);
+  }
+  useEffect(() => { checkDailyLogin(); }, []);
 
   // Reputation spent on "Double" is only taken when the reward is collected, so it can't be
   // lost if the page closes first.
@@ -706,10 +710,17 @@ function App() {
       const currentSecond = now.getSeconds();
       const todayKey = now.toDateString();
       const storedDeparturesDate = localStorage.getItem('hyperloop_departures_date');
-      if (storedDeparturesDate !== todayKey) {
+            if (storedDeparturesDate !== todayKey) {
         localStorage.setItem('hyperloop_departures_date', todayKey);
         localStorage.removeItem('hyperloop_triggered_departures');
         triggeredDepartures.current = new Set();
+        // A new day while the game is open: build its schedule and offer the daily bonus (bug #66),
+        // and drop earlier days' schedules so they don't pile up in storage (bug #78).
+        Object.keys(localStorage).forEach(key => {
+          if (key.startsWith('departures_') && key !== `departures_${todayKey}`) localStorage.removeItem(key);
+        });
+        ensureTodaySchedule();
+        checkDailyLogin();
       }
       const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
 
