@@ -108,14 +108,20 @@ function buildEligibleCategories(gameState) {
     if (gameState.reputation < 40) add('lowReputation', 3)
     if (gameState.reputation > 200) add('highReputation', 3)
 
-    const foodCount = purchasedDevelopments.filter(d => d.category === 'Food').length
+       // Upgrades count as well as developments: every Enterprise item and most Service items are
+    // upgrades, so counting only developments meant the "grow the company" and "lack of services"
+    // posts never stopped (bug #111).
+    const built = [...purchasedDevelopments, ...(purchasedUpgrades || [])]
+    const builtIn = category => built.filter(d => d.category === category).length
+
+    const foodCount = builtIn('Food')
     if (foodCount === 0) add('noFood', 3)
     else if (foodCount > 10) add('manyFood', 2)
 
-    if (purchasedDevelopments.filter(d => d.category === 'Shopping').length === 0) add('noShopping', 2)
-    if (purchasedDevelopments.filter(d => d.category === 'Recreation').length === 0) add('noRecreation', 2)
-    if (purchasedDevelopments.filter(d => d.category === 'Service').length === 0) add('noService', 2)
-    if (purchasedDevelopments.filter(d => d.category === 'Enterprise').length === 0) add('noEnterprise', 2)
+    if (builtIn('Shopping') === 0) add('noShopping', 2)
+    if (builtIn('Recreation') === 0) add('noRecreation', 2)
+    if (builtIn('Service') === 0) add('noService', 2)
+    if (builtIn('Enterprise') === 0) add('noEnterprise', 2)
 
     if (purchasedCities.length < 10) add('fewCities', 2)
 
