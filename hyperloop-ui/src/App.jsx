@@ -1365,15 +1365,16 @@ function App() {
           onReroll={() => {
             const rerollCost = hasFreeReroll ? 0 : economyManager.getRerollRepCost(15);
             if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
+            // Pick the replacement first, never the city being re-rolled away, and only then charge
+            // and swap, so a re-roll can't return the same city or cost reputation for nothing (bug #106).
+            const newCity = progressionManager.getRandomUnlockedCity(allCities, claimedCity);
+            if (!newCity) return;
             progressionManager.addReputation(-rerollCost);
             setHasFreeReroll(false);
             progressionManager.removeUnlockedCity(claimedCity);
-            const newCity = progressionManager.getRandomUnlockedCity(allCities);
-            if (newCity) {
-              progressionManager.unlockCity(newCity);
-              setClaimedCity(null);
-              setTimeout(() => setClaimedCity(newCity), 300);
-            }
+            progressionManager.unlockCity(newCity);
+            setClaimedCity(null);
+            setTimeout(() => setClaimedCity(newCity), 300);
           }}
         />
       )}

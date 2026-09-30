@@ -79,11 +79,13 @@ export class ProgressionManager {
         this.unlockedRewards = this.unlockedRewards.filter(r => r !== development);
     }
 
-    getRandomUnlockedCity(allCities) {
+        // exclude: a city that must not come back, e.g. the one being re-rolled away (bug #106).
+    getRandomUnlockedCity(allCities, exclude = null) {
                 // Antarctic Peninsula is the secret finale city — never hand it out as a normal unlock.
         const eligible = allCities.filter(city =>
             city.continent !== 'Antarctica' &&
-            !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city)
+            !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city) &&
+            city !== exclude
         );
         if (eligible.length === 0) return null;
         return eligible[Math.floor(Math.random() * eligible.length)];
