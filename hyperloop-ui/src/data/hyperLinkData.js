@@ -75,9 +75,9 @@ export const FIRST_NAMES_FEMALE = [
     'Bianca', 'Flora', 'Jacinta', 'Casey', 'Chrissie', 'Talia', 'Millie',
     'Christina', 'Christine', 'Una', 'Marjorie', 'Melissa', 'Mel',
     'Nia', 'India', 'Amy', 'Aimee', 'Elena', 'Rosie',
-    'Fiona', 'Natalie', 'Natalia', 'Nathalie', 'Harriet',
+    'Fiona', 'Natalie', 'Natalia', 'Nathalie', 'Harriet', 'Ada',
     'Rose', 'Enya', 'Violet', 'Lucia', 'Brooklyn', 'Georgie', 'Gemma',
-    'Star', 'Georgina', 'Carol', 'Carole', 'Joy',
+    'Star', 'Georgina', 'Carol', 'Carole', 'Joy', 'Alina', 'Irina', 'Ida',
     'Mercy', 'Sabrina', 'Sabina', 'Willa', 'Dana', 'Abbie', 'Martha', 'Marta',
     'Diana', 'Urma', 'Rachel', 'Rachael', 'Aoife', 'Lola', 'Abi', 'Abigail',
     'Áine', 'Caoimhe', 'Marilyn', 'Tiana', 'Sasha', 'Blaire', 'Delia', 'Della',
@@ -212,12 +212,13 @@ export const POSTS = {
         'Do these bathrooms even get cleaned',
         'the manager is so nice',
         'Honestly the manager is a bit of a jerk 😑',
+        'How is everyone doing today? 😊',
         'So hungry',
         'lol',
         'whats that noise? oh its my stomach #hungry',
         'romantic weekend with my man😍 #solucky',
         'romantic weekend with my girl😘 #getaway',
-        'so nervous travelling',
+        'so nervous travelling 😰',
         'how do u use this',
         'any good grub in this place',
         'the crew is so lovely 🥰',
@@ -226,7 +227,7 @@ export const POSTS = {
         'first day working at {terminalName}! wish me luck!!',
         'So bored',
         'what is everyone up to',
-        'whats up guys',
+        'whats up',
         'Taking selfies in the {terminalName} bathroom!!',
         'ahh this place is so pretty',
         'What\'s up guys',
@@ -241,7 +242,7 @@ export const POSTS = {
         'how to make a complaint',
         'the person below me needs to touch grass',
         'am i dressed too fancy for this lol',
-        'the man coughing his lungs out.. bro.. go home #SuperSpreader',
+        'The man coughing his lungs out.. bro.. go home #SuperSpreader',
         'try not to encounter an obnoxious influencer challenge !',
         'where is everyone travelling to today?',
         'i wish i was a fish',
@@ -288,6 +289,7 @@ export const POSTS = {
         'whats good for lunch??',
         'WHY oh why did i pick the afternoon loop #busy',
         'Afternoon guys. Just checking if anyone saw my passport 🛂',
+        ''
     ],
 
     evening: [
@@ -307,6 +309,9 @@ export const POSTS = {
         'Thank god everything is still open this place is insane',
         'someone wake me in time for my loop lol',
         'Good night 😴',
+        'Good night! My shift is over and I\'m going home! 😁',
+        'Someone bring me a nightcap plz',
+        'Anyone got a spare pillow?',
         'Au clair de la lune 🌙',
         'Someone fell asleep on me! wth 😑',
         'NIGHT GUYS. this bench is my bed for the next few hours #DoNotDisturb',
@@ -314,6 +319,10 @@ export const POSTS = {
         'whoever is talking really loud in departures. SHUT UP!! ITS THE MIDDLE OF THE NIGHT SELFISH',
         'i dreamt i forgot my passport thank god it was a dream lmao',
         'Still awake? Us too. come have a drink with us at the seats just past security #partytime',
+        'Anyone any good ghost stories? 👻',
+        'What\'s a good way to spend the night??',
+        'Does anyone have a spare pillow',
+
     ],
 
     monday: [
@@ -322,10 +331,12 @@ export const POSTS = {
         'go away Monday no one likes u',
         'trying to stay positive on this monday. but its hard. friday so far away',
         'good monday to everybody who celebrates it',
+        'How do you guys keep upbeat on Mondays? Absolutely hate these days',
     ],
 
     tuesday: [
         'Tuesday is literally a nothing burger of a day 🍔🚫',
+        'Travelling on Tuesday is great... so much quieter!',
         'Anyone else celebrate taco tuesday by bringing tacos from home #No #Ok',
         'tuesday is that annoying co worker who makes bad jokes and wears obnoxious ties',
         'Happy tuesday everyone!! Getting there slowly but surely!!',
@@ -464,11 +475,6 @@ export const POSTS = {
         'anywhere i can get a gingerbread latte here',
     ],
 
-
-    
-
-
-
     newCity: [
         'Thank god the new connection to {city} opened. I didn\'t want to walk there #NoWay',
         '{city}? anyone been there before',
@@ -527,7 +533,8 @@ export const POSTS = {
         'Absolute KAREN arguing with the boarding staff keeping everyone behind smh #MOVE 😑',
         'Heart is in my chest so spooked getting on this loop #aah',
         'First time boarding a hyperloop ! 💺',
-        'anyone else check their passport constantly when boarding lol #paranoid #{boardingCity}'
+        'anyone else check their passport constantly when boarding lol #paranoid #{boardingCity}',
+        'WHY do people all rush to queue up when boarding is announced? Like sit down we\'re all getting on the plane regardless! #{boardingCity}',
     ],
 
     finalCall: [
@@ -537,6 +544,9 @@ export const POSTS = {
         'Hurry up everyone if ur going to {finalCallCity}',
         'Literally sprinted to get to the gate to {finalCallCity} in time i left my shopping lol',
         'Gate {gateNumber} everyone go go go',
+        'Rushed to get to the gate to {finalCallCity} in time... hopefully I didnt leave anything important behind #mess',
+        'Yeah, I know it\'s final call to {finalCallCity}, but I\'ve literally got this latte to finish first #priorities',
+        'so hyped now #{finalCallCity}',
     ],
 
     goToGate: [
@@ -549,6 +559,7 @@ export const POSTS = {
         'go to the gate! its gate {gateNumber}. which is my lucky number coincidentally',
         'omg i literally guessed that gate number #{gateNumber}'
     ],
+
     departed: [
         'On this loop to {departedCity}. anyone been there before? 😊',
         'If you see me in {departedCity} in a few hours dont tell my manager #sickleave',
