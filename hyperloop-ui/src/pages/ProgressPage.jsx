@@ -65,6 +65,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const handleCardClick = (e, key) => {
         if (claimedRef.current.has(key)) return
         claimedRef.current.add(key)
+        // Save the claim at the same moment the reward is paid, so leaving the page or reloading
+        // during the fade-out can't make the card claimable again (bug #59).
+        localStorage.setItem('hyperloop_progress_rewards', JSON.stringify([...claimedRef.current]))
         const hasBoost = (purchasedUpgrades || []).some(u => u.effectType === 'progressRewardBoost')
         const reward = getRandomReward()
         if (hasBoost) reward.amount *= 2
@@ -77,11 +80,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         else playFarewellAcceptSound()
         onCollectReward(reward)
         setTimeout(() => {
-            setClaimed(prev => {
-                const newClaimed = new Set([...prev, key])
-                localStorage.setItem('hyperloop_progress_rewards', JSON.stringify([...newClaimed]))
-                return newClaimed
-            })
+                        setClaimed(prev => new Set([...prev, key]))
             setFading(prev => { const s = new Set(prev); s.delete(key); return s; })
         }, 500)
     }
