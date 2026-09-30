@@ -170,8 +170,10 @@ function substituteText(text, data, gameState) {
     }
     return text
         .replace(/#\{(\w+)\}/g, (match, key) => key in hashtagValues ? '#' + toHashtag(hashtagValues[key]) : match)
-        .replace(/\{terminalName\}/g, terminalName)
-        .replace(/\{homeCity\}/g, homeCity?.name || terminalName)
+        // The terminal name is typed by the player, so it's inserted with a function: as a plain
+        // replacement string, '$&' or '$1' in the name would be read as a pattern.
+        .replace(/\{terminalName\}/g, () => terminalName)
+        .replace(/\{homeCity\}/g, () => homeCity?.name || terminalName)
         .replace(/\{city\}/g, data.city || purchasedCities[purchasedCities.length - 1]?.name || 'the new city')
         .replace(/\{CITY\}/g, (data.city || '').toUpperCase())
         .replace(/\{boardingCity\}/g, data.boardingCity || '')
@@ -299,7 +301,7 @@ export function generateOfficialEventPost(gameState) {
     if (!pool?.length) return null
     const text = pool[Math.floor(Math.random() * pool.length)]
     const substituted = text
-        .replace(/\{terminalName\}/g, terminalName)
+        .replace(/\{terminalName\}/g, () => terminalName)
         .replace(/\{delayedCity\}/g, trigger.data?.delayedCity || '')
         .replace(/\{cityCount\}/g, gameState.purchasedCities?.length || 0)
 
