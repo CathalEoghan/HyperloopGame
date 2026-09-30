@@ -46,6 +46,9 @@ import "./App.css";
 
 const OFFLINE_RATE = 1.0;
 const SECONDS_IN_A_DAY = 86400;
+// The Antarctic finale unlocks once every regular city is connected (bug #115).
+const REGULAR_CITY_COUNT = allCities.filter(c => c.continent !== 'Antarctica').length;
+
 // A gap between ticks longer than this (laptop asleep, tab frozen) is treated as offline time.
 // Shorter gaps are normal for background tabs, which browsers slow to about one tick a minute.
 const LONG_GAP_SECONDS = 120;
@@ -583,7 +586,7 @@ function App() {
       const nonSecretPurchased = progressionManager.purchasedCities.filter(c => c.continent !== 'Antarctica');
       const secretCityOwned = progressionManager.purchasedCities.some(c => c.continent === 'Antarctica') ||
         progressionManager.citiesUnderConstruction.some(c => c.continent === 'Antarctica');
-      if (nonSecretPurchased.length === 335 && !secretCityOwned && !secretCityTriggered.current) {
+      if (nonSecretPurchased.length === REGULAR_CITY_COUNT && !secretCityOwned && !secretCityTriggered.current) {
         secretCityTriggered.current = true;
         setShowSecretCityModal(true);
       }
@@ -1362,7 +1365,8 @@ function App() {
             setCityClaimPending(false);
             setClaimedCity(null)
           }}
-          onReroll={() => {
+                    // No re-roll button when the offered city is the only one left to unlock.
+          onReroll={!progressionManager.getRandomUnlockedCity(allCities, claimedCity) ? undefined : () => {
             const rerollCost = hasFreeReroll ? 0 : economyManager.getRerollRepCost(15);
             if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
             // Pick the replacement first, never the city being re-rolled away, and only then charge

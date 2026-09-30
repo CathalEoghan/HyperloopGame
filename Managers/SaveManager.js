@@ -1,10 +1,10 @@
 import { allCities } from '../CityManager/CityRegistry.js'
 import { allDevelopments } from '../DevelopmentManager/DevelopmentRegistry.js'
 import { allUpgrades } from '../UpgradeManager/UpgradeRegistry.js'
+import { MAX_RANK } from './RankManager/RankManager.js'
 
 const SAVE_KEY = 'hyperloop_save'
 const MAX_BALANCE = 999_000_000_000
-const MAX_RANK = 335
 
 // Names that changed after saving was added (old name → current name). Saves store names,
 // so without this an item that was renamed silently disappears on load (bug #86).

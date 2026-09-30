@@ -1,13 +1,18 @@
+import { allCities } from '../../CityManager/CityRegistry.js';
+
+// One rank-up unlocks one city, and you start with your home city, so the top rank equals the
+// number of regular cities (all except the secret Antarctic Peninsula). At 335 there were five
+// more cities than rank-ups, so "Cities collected" could never reach 100% (bug #115).
+export const MAX_RANK = allCities.filter(c => c.continent !== 'Antarctica').length;
+
 export class RankManager {
     constructor() {
         this.rank = 1;
         this.xp = 0;
     }
 
-    // XP needed to reach the NEXT rank from the given rank
-   // Formula: 500 * rank^2.5 — scales from ~2,828 at rank 2 to ~1.02B at rank 334 (~97.8B cumulative to reach 335)
     calculateNextRankXP(rank) {
-        if (rank >= 335) return Infinity;
+        if (rank >= MAX_RANK) return Infinity;
         return Math.floor(500 * Math.pow(rank, 2.5));
     }
 
@@ -22,8 +27,8 @@ export class RankManager {
 
     // Check if player has earned enough XP to rank up
     verifyRank() {
-        if (this.rank >= 335) return;
-        while (this.rank < 335 && this.xp >= this.getCumulativeXP(this.rank)) {
+        if (this.rank >= MAX_RANK) return;
+        while (this.rank < MAX_RANK && this.xp >= this.getCumulativeXP(this.rank)) {
             this.rank++;
         }
     }
