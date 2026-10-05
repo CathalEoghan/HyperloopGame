@@ -319,7 +319,7 @@ export const POSTS = {
         'whoever is talking really loud in departures. SHUT UP!! ITS THE MIDDLE OF THE NIGHT SELFISH',
         'i dreamt i forgot my passport thank god it was a dream lmao',
         'Still awake? Us too. come have a drink with us at the seats just past security #partytime',
-        'Anyone any good ghost stories? 👻',
+        'Anyone any good ghost stories? Not sleeping anyway 👻',
         'What\'s a good way to spend the night??',
         'Does anyone have a spare pillow',
 
@@ -554,7 +554,7 @@ export const POSTS = {
         'GO GO GO GO to ur gate',
         'Finally can go to the gate #{goToGateCity}',
         'The gate is OPEN #gate{gateNumber} #{goToGateCity}',
-        'ee gate is open! trip to {goToGateCity} is finally beginning to feel real 🥹',
+        'eeeee gate is open! trip to {goToGateCity} is finally beginning to feel real 🥹',
         'what gate number is it guys again i forgot and couldnt be bothered going back to the departure board lol',
         'go to the gate! its gate {gateNumber}. which is my lucky number coincidentally',
         'omg i literally guessed that gate number #{gateNumber}'

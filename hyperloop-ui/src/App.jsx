@@ -78,6 +78,8 @@ function claimTabLock(id, force = false) {
 // screen waits its turn instead of replacing it. Stored under the old key (as a list).
 const DEPARTURE_KEY = 'hyperloop_active_departure';
 const departureId = dep => `${dep.time}_${dep.name}`;
+// A farewell whose window closed more than a minute ago is dropped, however it got left behind.
+const stillOpen = dep => !dep.expiresAt || Date.now() < dep.expiresAt + 60000;
 // A departure that waited its turn still gets at least 30 seconds on screen.
 const withMinimumWindow = dep => ({ ...dep, expiresAt: Math.max(dep.expiresAt || 0, Date.now() + 30000) });
 function saveDepartureQueue(queue) {
@@ -180,7 +182,7 @@ function App() {
       queue = Array.isArray(saved) ? saved : saved ? [saved] : [];   // older saves stored just one
     } catch { queue = []; }
     // The farewell that was on screen ran out while the game was closed.
-    if (queue[0]?.expiresAt && Date.now() > queue[0].expiresAt) queue = queue.slice(1);
+    queue = queue.filter(stillOpen);
     if (queue[0]) queue[0] = withMinimumWindow(queue[0]);
     return queue;
   });
@@ -737,6 +739,13 @@ function App() {
         .filter(u => u.effectType === 'farewellWindowExtension').length;
       const windowMinutes = 5 + (farewellExtensions * 5);
 
+        setDepartureQueue(queue => {
+        if (queue.every(stillOpen)) return queue;
+        const next = queue.filter(stillOpen);
+        saveDepartureQueue(next);
+        return next;
+      });
+
       schedule.forEach(entry => {
         // The city is part of the key, so two departures at the same minute both get a farewell.
         const key = `${todayKey}_${entry.time}_${entry.name}`;
@@ -1150,7 +1159,7 @@ function App() {
             clearGameState();
             window.location.reload();
           }}
-          onExportSave={exportSave}
+          onExportSave={() => {triggerSave(); exportSave(); }}
           onImportSave={async (file) => {
             stopTick();
             try { await importSave(file); } catch (err) { startTick(); throw err; }
@@ -1322,6 +1331,7 @@ function App() {
           const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
           if (freeRep > 0) progressionManager.addReputation(freeRep);
           setPendingRankUps(prev => prev - 1);
+          triggerSave();
         }} />
       )}
 
@@ -1375,6 +1385,7 @@ function App() {
             setHasFreeReroll(false);
             progressionManager.removeUnlockedCity(claimedCity);
             progressionManager.unlockCity(newCity);
+            triggerSave();
             setClaimedCity(null);
             setTimeout(() => setClaimedCity(newCity), 300);
           }}
