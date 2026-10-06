@@ -5,6 +5,6 @@ import { Development } from "./Development.js";
 export const sushiRestaurant = new Development(
     "Sushi Restaurant",
     245000,
-    "Shopping",
+    "Food",
     5560
 );

@@ -5,6 +5,6 @@ import { Development } from '../DevelopmentManager/Development.js'
 export const mateTeaShop = new Development(
     "Mate Tea Shop",
     205000,
-    "Service",
+    "Food",
     5200
 )
