@@ -289,7 +289,6 @@ export const POSTS = {
         'whats good for lunch??',
         'WHY oh why did i pick the afternoon loop #busy',
         'Afternoon guys. Just checking if anyone saw my passport 🛂',
-        ''
     ],
 
     evening: [

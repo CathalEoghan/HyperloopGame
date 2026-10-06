@@ -10,6 +10,6 @@ export const Lublin = new City(
     "Poland",
     "Europe",
     1,
-    "Lublin features a public interactive portal in Litewski Square that connects people in real-time with distant cities like New York and Dublin.",
+    "Lublin features a public interactive portal in Litewski Square that connects people in real-time with a faraway city. It was one of the first two portals in the world, linked with Vilnius when it opened in 2021.",
     false
 );

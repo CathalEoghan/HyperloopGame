@@ -10,6 +10,6 @@ export const Brazzaville = new City(
     "Republic of the Congo",
     "Africa",
     2,
-    "Brazzaville and Kinshasa sit directly across the Congo River from each other, making them the two closest capital cities in the entire world at just about 4 kilometers apart.",
+    "Brazzaville and Kinshasa sit directly across the Congo River from each other, making them the two closest capital cities in the world, apart from Rome and Vatican City, at just about 4 kilometers apart.",
     true
 );
