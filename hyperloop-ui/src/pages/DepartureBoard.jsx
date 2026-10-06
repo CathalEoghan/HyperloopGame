@@ -196,6 +196,12 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                 }
                 prevStatusRef.current[entry.name] = currentStatus
             })
+            // A delay made while the board is open changes the stored schedule; show it straight away
+            setSchedule(prev => {
+                const byName = new Map(filtered.map(e => [e.name, e]))
+                const differs = e => { const n = byName.get(e.name); return n && (n.time !== e.time || n.hour !== e.hour || n.minute !== e.minute || !!n.delayed !== !!e.delayed) }
+                return prev.some(differs) ? prev.map(e => differs(e) ? byName.get(e.name) : e) : prev
+            })
             if (anyChanged) setRenderTick(t => t + 1)
         }, 1000)
         return () => clearInterval(interval)
