@@ -793,9 +793,10 @@ function App() {
           const newTime = `${String(newHour).padStart(2, '0')}:${String(newMinute).padStart(2, '0')}`;
           const compensation = Math.round(delayMinutes * 50);
           triggeredDelays.current.add(entry.time);
+                    // The delayed departure takes its new place in the day's order (bug #103).
           const updated = schedule.map(e => e.time === entry.time
-            ? { ...e, hour: newHour, minute: newMinute, time: newTime, delayed: true }
-            : e);
+            ? { ...e, hour: newHour, minute: newMinute, time: newTime, minuteOfDay: newTotalMins, delayed: true }
+            : e).sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute));
           localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
           setActiveDelay({ name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation });
         }
