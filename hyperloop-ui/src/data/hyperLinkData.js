@@ -107,7 +107,7 @@ export const FIRST_NAMES_FEMALE = [
     'Tabitha', 'Serena', 'Jackie', 'Vicki', 'Vicky', 'Viv', 'Vivian',
     'Alison', 'Ally', 'Allison', 'Sonia', 'Josephine', 'Agatha',
     'Jacqueline', 'Emilia', 'Samira', 'Rochelle', 'Charlene',
-    'Dominique', 'Quinta', 'Leanne', 'Leanna', 'Alina', 'Marianne',
+    'Dominique', 'Quinta', 'Leanne', 'Leanna', 'Lex', 'Marianne',
     'Anne', 'Annie', 'Annabel', 'Annabelle', 'Belle', 'Bella', 'Jordan',
     'Morgan', 'Misty', 'Amanda', 'Coral', 'Mandi', 'Ciara', 'Kiara',
     'Rhonda', 'Marigold', 'Nellie', 'Lulu', 'Ursula', 'Genevieve', 'Ginny',
@@ -320,7 +320,7 @@ export const POSTS = {
         'Still awake? Us too. come have a drink with us at the seats just past security #partytime',
         'Anyone any good ghost stories? Not sleeping anyway 👻',
         'What\'s a good way to spend the night??',
-        'Does anyone have a spare pillow',
+        'Does anyone have a spare blanket #snooze',
 
     ],
 
@@ -533,7 +533,7 @@ export const POSTS = {
         'Heart is in my chest so spooked getting on this loop #aah',
         'First time boarding a hyperloop ! 💺',
         'anyone else check their passport constantly when boarding lol #paranoid #{boardingCity}',
-        'WHY do people all rush to queue up when boarding is announced? Like sit down we\'re all getting on the plane regardless! #{boardingCity}',
+        'WHY do people all rush to queue up when boarding is announced? Like sit down we\'re all getting on the loop regardless! #{boardingCity}',
     ],
 
     finalCall: [
