@@ -81,6 +81,10 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     }
 
     const filteredPurchased = applyFilters(connectedAndBuilding)
+    // Cards show cities still being built, but the totals count only finished ones.
+    const builtNames = new Set(purchased.map(c => c.name))
+    const filteredBuilt = filteredPurchased.filter(c => builtNames.has(c.name))
+    const builtCountryCount = new Set(filteredBuilt.map(c => c.country)).size
     const filteredAvailable = applyFilters(available)
 
     const groupByCountry = (cities) => cities.reduce((result, city) => {
@@ -98,8 +102,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const sortedPurchasedCountries = Object.keys(groupedPurchased).sort()
     const sortedAvailableCountries = Object.keys(groupedAvailable).sort()
 
-    const totalPopulation = useMemo(() => filteredPurchased.reduce((sum, c) => sum + c.population, 0), [filteredPurchased])
-    const totalIncome = useMemo(() => filteredPurchased.reduce((sum, c) => sum + cityIncome(c), 0), [filteredPurchased])
+    const totalPopulation = useMemo(() => filteredBuilt.reduce((sum, c) => sum + c.population, 0), [filteredBuilt])
+    const totalIncome = useMemo(() => filteredBuilt.reduce((sum, c) => sum + cityIncome(c), 0), [filteredBuilt])
 
     const formatPopulation = (pop) => {
         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
@@ -381,8 +385,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         <div className="section-header-row">
                             <h1 className="purchasedCitiesHeader">
                                 Connected {purchasedCities.length === 1 ? 'city' : 'cities'}
-                                <span className="city-count-badge">{filteredPurchased.length}</span>
-                                <span className="city-count-badge" style={{ background: '#555' }}>{sortedPurchasedCountries.length} {sortedPurchasedCountries.length === 1 ? 'country' : 'countries'}</span>
+                                <span className="city-count-badge">{filteredBuilt.length}</span>
+                                <span className="city-count-badge" style={{ background: '#555' }}>{builtCountryCount} {builtCountryCount === 1 ? 'country' : 'countries'}</span>
                             </h1>
                             {!flatList && (
                                 <div className="collapse-controls">
