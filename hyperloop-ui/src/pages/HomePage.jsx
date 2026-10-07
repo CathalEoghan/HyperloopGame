@@ -72,7 +72,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     useEffect(() => {
         purchasedCitiesRef.current = purchasedCities
         unlockedCitiesRef.current = unlockedCities
-    }, [purchasedCities, unlockedCities])
+    }, [purchasedCities, unlockedCities, purchasedCities.length, unlockedCities?.length])
 
     useEffect(() => {
         disabledRef.current = disabled
@@ -109,7 +109,7 @@ useEffect(() => {
             sprite.userData.isUnlocked = true
         }
     })
-}, [purchasedCities, unlockedCities])
+}, [purchasedCities, unlockedCities, purchasedCities.length, unlockedCities?.length])
 
     useEffect(() => {
         const mount = mountRef.current
