@@ -3,7 +3,7 @@ import reputationIcon from '../assets/misc/reputation.png'
 
 function NotEnoughRepModal({ onClose }) {
     return (
-        <div className="modal-overlay" onClick={onClose}>
+            <div className="modal-overlay" style={{ zIndex: 200 }} onClick={onClose}>
             <div className="modal" onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                 <img src={reputationIcon} alt="reputation" style={{ width: '48px', height: '48px', margin: '0 auto 12px', display: 'block' }} />
                 <h3 style={{ margin: '0 0 12px', fontFamily: 'Inter, sans-serif' }}>Not enough Reputation!</h3>
