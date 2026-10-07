@@ -813,7 +813,7 @@ function App() {
         const positiveOnly = Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
         const event = getRandomEvent(positiveOnly);
 
-        Math.random() < Math.min(1, economyManager.getUpgradeSum('negativeEventReduction'));
+        const skipEvent = event.type === 'negative' && Math.random() < Math.min(1, economyManager.getUpgradeSum('negativeEventReduction'));
         if (!skipEvent) {
           const bonusExtension = event.type === 'positive'
             ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
@@ -1309,7 +1309,6 @@ function App() {
       {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
         <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
          const newCity = progressionManager.getRandomUnlockedCity(allCities, null, economyManager.getMinCityTierOnRankUp());
-            const betterCity = betterCities.length > 0
           if (newCity) {
             progressionManager.unlockCity(newCity);
             claimedCityRef.current = newCity;
