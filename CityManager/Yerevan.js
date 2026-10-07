@@ -8,7 +8,7 @@ export const Yerevan = new City(
     1100000,
     [eveningStaffMealTickets],
     "Armenia",
-    "Europe",
+    "Asia",
     2,
     "At the center of Yerevan's Republic Square, a large stone mosaic is laid out so that, when viewed from above, it mirrors the geometric patterns of a traditional Armenian rug.",
     false

@@ -8,7 +8,7 @@ export const İzmir = new City(
     4500000,
     [advertisingCampaignTurkey],
     "Turkey",
-    "Europe",
+    "Asia",
     2,
     "İzmir was home to the legendary ancient Greek poet Homer, who is widely believed to have been born in the city when it was known as Smyrna.",
     false
