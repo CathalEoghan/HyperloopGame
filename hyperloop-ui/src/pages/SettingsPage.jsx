@@ -196,7 +196,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         const diff = Math.floor((Date.now() - lastSaved) / 1000)
         if (diff < 10) return 'Just now'
         if (diff < 60) return `${diff} seconds ago`
-        if (diff < 3600) return `${Math.floor(diff / 60)} minutes ago`
+        if (diff < 3600) { const mins = Math.floor(diff / 60); return `${mins} ${mins === 1 ? 'minute' : 'minutes'} ago` }
         return new Date(lastSaved).toLocaleTimeString()
     }
 

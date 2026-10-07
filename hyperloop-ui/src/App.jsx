@@ -1248,6 +1248,7 @@ function App() {
         <OfflineModal
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
+          capHours={Math.round(economyManager.calculateOfflineCap() / 3600)}
           reputation={reputation}
           onSpendRep={(amount) => { offlineDoubleRep.current += amount; }}
           onCollect={(finalIncome) => {

@@ -382,7 +382,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             <h1 className="purchasedCitiesHeader">
                                 Connected {purchasedCities.length === 1 ? 'city' : 'cities'}
                                 <span className="city-count-badge">{filteredPurchased.length}</span>
-                                <span className="city-count-badge" style={{ background: '#555' }}>{sortedPurchasedCountries.length} countries</span>
+                                <span className="city-count-badge" style={{ background: '#555' }}>{sortedPurchasedCountries.length} {sortedPurchasedCountries.length === 1 ? 'country' : 'countries'}</span>
                             </h1>
                             {!flatList && (
                                 <div className="collapse-controls">

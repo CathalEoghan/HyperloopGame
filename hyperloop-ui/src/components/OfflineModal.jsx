@@ -11,11 +11,11 @@ function formatDuration(seconds) {
     const m = Math.floor((seconds % 3600) / 60)
     if (d > 0) return `${d}d ${h}h ${m}m`
     if (h > 0) return `${h}h ${m}m`
-    if (m > 0) return `${m} minutes`
+    if (m > 0) return `${m} ${m === 1 ? 'minute' : 'minutes'}`
     return 'a moment'
 }
 
-function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, onSpendRep }) {
+function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, onSpendRep, capHours = 48 }) {
     const [doubled, setDoubled] = useState(false)
     const [doubleHovered, setDoubleHovered] = useState(false)
     const canDouble = reputation >= 20 && !doubled
@@ -36,7 +36,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                         {displayIncome.toLocaleString()}
                         {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold' }}>×2</span>}
                     </span>
-                    <span className="offline-earnings-note">Capped at 48 hours</span>
+                    <span className="offline-earnings-note">Capped at {capHours} hours</span>
                 </div>
                 {!doubled && (
                     <button
