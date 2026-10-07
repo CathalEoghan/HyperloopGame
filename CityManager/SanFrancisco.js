@@ -10,6 +10,6 @@ export const SanFrancisco = new City(
     "United States of America",
     "North America",
     2,
-    "San Francisco's omnipresent fog is officially named 'Karl,' inspired by the giant from the movie Big Fish. Karl even has a massive social media presence with hundreds of thousands of followers tracking his movements.",
+    "San Francisco's omnipresent fog is affectionately nicknamed 'Karl,' after the giant from the movie Big Fish. Karl even has a huge social media following, with a popular account tracking his movements.",
     false
 );

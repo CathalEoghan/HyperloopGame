@@ -10,6 +10,6 @@ export const Antwerp = new City(
     "Belgium",
     "Europe",
     2,
-    "Antwerp is home to the world's oldest printing press, located at the Plantin-Moretus Museum. It is the only museum in the world designated as a UNESCO World Heritage site.",
+    "Antwerp is home to the world's oldest printing press, located at the Plantin-Moretus Museum. It is one of the very few museums in the world to be a UNESCO World Heritage site in its own right.",
     false
     );

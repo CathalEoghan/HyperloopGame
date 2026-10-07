@@ -10,6 +10,6 @@ export const George_Town = new City(
     "Malaysia",
     "Asia",
     2,
-    "George Town was the very first British settlement in Southeast Asia, founded by Francis Light in 1786.",
+    "George Town was one of the first British settlements in Southeast Asia, founded by Francis Light in 1786.",
     false
     );

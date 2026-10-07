@@ -10,6 +10,6 @@ export const Sanaa = new City(
     "Yemen",
     "Asia",
     2,
-    "Sana'a is often called the world's first 'skyscraper city' because of its ancient multi-story tower houses that rise up to nine stories high.",
+    "Sana'a's Old City is famous for its ancient multi-story tower houses that rise up to nine stories high, an early form of the skyscraper city.",
     false
 );

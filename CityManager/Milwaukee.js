@@ -10,6 +10,6 @@ export const Milwaukee = new City(
     "United States of America",
     "North America",
     2,
-    "The first practical typewriter was invented in Milwaukee in 1869, which is where the familiar QWERTY keyboard layout was perfected by C. Latham Sholes.",
+    "The first practical typewriter was invented in Milwaukee and patented in 1868 by C. Latham Sholes, who also perfected the familiar QWERTY keyboard layout there.",
     false
 );

@@ -10,6 +10,6 @@ export const Valletta = new City(
     "Malta",
     "Europe",
     1,
-    "Valletta covers an area of just 0.8 square kilometers (about 0.3 square miles).",
+    "Valletta covers an area of just 0.61 square kilometers (about 0.24 square miles).",
     false
 );

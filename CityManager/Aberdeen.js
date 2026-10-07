@@ -10,6 +10,6 @@ export const Aberdeen = new City(
     "Scotland",
     "Europe",
     1,
-    "Aberdeen is home to the world's first-ever commercial MRI scanner, developed in the city in the 1980s and used to take the first clinical scan of a patient's internal organs.",
+    "Aberdeen is home to the world's first full-body MRI scanner, a research prototype built by University of Aberdeen scientists in the late 1970s and used for the first clinical scan of a patient in 1980.",
     false
 );

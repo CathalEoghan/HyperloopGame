@@ -10,6 +10,6 @@ export const Bucharest = new City(
     "Romania",
     "Europe",
     2,
-    "Bucharest was the first city in the entire world to use kerosene for public street lighting in 1857, utilizing local oil production from nearby Ploieșt.",
+    "Bucharest was the first city in the entire world to use kerosene for public street lighting in 1857, utilizing local oil production from nearby Ploiești.",
     false
 );

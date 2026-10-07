@@ -10,6 +10,6 @@ export const Tehran = new City(
     "Iran",
     "Asia",
     3,
-    "The area of Tehran dates back to the Elamite kingdom of the 4th millennium BC – the oldest civilization known in the region.",
+    "The Tehran area has been settled for thousands of years, and the ancient city of Ray, now part of greater Tehran, is among the oldest known settlements in the region.",
     false
 );

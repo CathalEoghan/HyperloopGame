@@ -10,6 +10,6 @@ export const Hamburg = new City(
     "Germany",
     "Europe",
     2,
-    "Hamburg has around 2,500 bridges, giving it more bridges than Venice, Amsterdam, and London combined - earning it the nickname the 'Venice of the North'.",
+    "Hamburg has around 2,500 bridges, giving it more bridges than Venice, Amsterdam, and London combined.",
     false
     );

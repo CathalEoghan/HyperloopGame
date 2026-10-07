@@ -10,6 +10,6 @@ export const Bangalore = new City(
     "India",
     "Asia",
     3,
-    "Bengaluru (Bangalore) was the first city in Asia to have electric streetlights, turned on in August 1905. This earned the 'Silicon Valley of India' its early nickname.",
+    "Bengaluru (Bangalore) was one of the first cities in Asia to have electric streetlights, turned on in August 1905. That early appetite for technology foreshadowed its later nickname, the 'Silicon Valley of India'.",
     false
 );

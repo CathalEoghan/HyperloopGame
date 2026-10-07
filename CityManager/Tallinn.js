@@ -10,6 +10,6 @@ export const Tallinn = new City(
     "Estonia",
     "Europe",
     1,
-    "Tallinn's name comes from Taani linn, which means 'Danish town', because the city was founded as a Danish fortress in the 13th century after a major battle..",
+    "Tallinn's name comes from Taani linn, which means 'Danish town', because the city was founded as a Danish fortress in the 13th century after a major battle.",
     false
 );

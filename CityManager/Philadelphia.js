@@ -10,6 +10,6 @@ export const Philadelphia = new City(
     "United States of America",
     "North America",
     2,
-    "Philadelphia's Walnut Street Theatre is the oldest continuously operating theatre in the English-speaking world, having opened its doors in 1809.",
+    "Philadelphia's Walnut Street Theatre is the oldest continuously operating theatre in the United States, having opened its doors in 1809.",
     false
 );

@@ -10,6 +10,6 @@ export const Hanoi = new City(
     "Vietnam",
     "Asia",
     2,
-    "Hanoi translates to 'City inside rivers' or 'City of Lakes'. The historic Old Quarter features uniquely narrow houses built to avoid French colonial property taxes, which were once calculated by the width of the building's street-facing facade.",
+    "Hanoi translates to 'City inside rivers' or 'City of Lakes'. The historic Old Quarter's narrow streets were each named after the trade guild that once worked there, which is why so many are still called after goods such as silk, silver and paper.",
     false
 );

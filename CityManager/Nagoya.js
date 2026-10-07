@@ -10,6 +10,6 @@ export const Nagoya = new City(
     "Japan",
     "Asia",
     2,
-    "Nagoya features the Nagoya City Science Museum, which held the Guinness World Record for the world's largest planetarium dome until 2017.",
+    "Nagoya features the Nagoya City Science Museum, which Guinness World Records lists as having the world's largest planetarium dome.",
     false
 );

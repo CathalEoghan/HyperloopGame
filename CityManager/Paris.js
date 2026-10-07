@@ -10,6 +10,6 @@ export const Paris = new City(
     "France",
     "Europe",
     3,
-    "The Louvre, in Paris, is the world's largest art museum. To see every single piece of art for just 30 seconds straight, you would be exploring for 35 days without sleeping.",
+    "The Louvre, in Paris, is the world's largest art museum. To see each of its roughly 35,000 works on display for just 30 seconds, you would need about 12 days of non-stop looking.",
     false
 );
