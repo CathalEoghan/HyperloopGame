@@ -80,7 +80,7 @@ export class ProgressionManager {
     }
 
         // exclude: a city that must not come back, e.g. the one being re-rolled away (bug #106).
-    getRandomUnlockedCity(allCities, exclude = null) {
+        getRandomUnlockedCity(allCities, exclude = null, minTier = 1) {
                 // Antarctic Peninsula is the secret finale city — never hand it out as a normal unlock.
         const eligible = allCities.filter(city =>
             city.continent !== 'Antarctica' &&
@@ -88,7 +88,10 @@ export class ProgressionManager {
             city !== exclude
         );
         if (eligible.length === 0) return null;
-        return eligible[Math.floor(Math.random() * eligible.length)];
+        // Skilled Negotiation Teams: prefer cities of at least minTier, fall back to any city if none are left.
+        const preferred = minTier > 1 ? eligible.filter(city => city.tier >= minTier) : eligible;
+        const pool = preferred.length > 0 ? preferred : eligible;
+        return pool[Math.floor(Math.random() * pool.length)];
     }
 
     removeUnlockedCity(city) {

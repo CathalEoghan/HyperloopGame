@@ -810,10 +810,10 @@ function App() {
       const forceEvent = timeSinceLastEvent > 300000;
       if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= 2 && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
         lastEventTime.current = Date.now();
-        const positiveOnly = progressionManager.purchasedUpgrades.some(u => u.effectType === 'positiveEventBoost') && Math.random() < 0.5;
+        const positiveOnly = Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
         const event = getRandomEvent(positiveOnly);
 
-        const skipEvent = event.type === 'negative' && Math.random() < economyManager.getUpgradeSum('negativeEventReduction');
+        Math.random() < Math.min(1, economyManager.getUpgradeSum('negativeEventReduction'));
         if (!skipEvent) {
           const bonusExtension = event.type === 'positive'
             ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
@@ -1308,20 +1308,8 @@ function App() {
 
       {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
         <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
-          const minTier = economyManager.getMinCityTierOnRankUp();
-          let newCity = progressionManager.getRandomUnlockedCity(allCities);
-          if (minTier > 1 && newCity && newCity.tier < minTier) {
-            const betterCities = allCities.filter(c =>
-              c.tier >= minTier &&
-              c.continent !== 'Antarctica' &&
-              !progressionManager.purchasedCities.includes(c) &&
-              !progressionManager.unlockedCities.includes(c)
-            );
+         const newCity = progressionManager.getRandomUnlockedCity(allCities, null, economyManager.getMinCityTierOnRankUp());
             const betterCity = betterCities.length > 0
-              ? betterCities[Math.floor(Math.random() * betterCities.length)]
-              : null;
-            if (betterCity) newCity = betterCity;
-          }
           if (newCity) {
             progressionManager.unlockCity(newCity);
             claimedCityRef.current = newCity;
@@ -1380,7 +1368,7 @@ function App() {
             if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
             // Pick the replacement first, never the city being re-rolled away, and only then charge
             // and swap, so a re-roll can't return the same city or cost reputation for nothing (bug #106).
-            const newCity = progressionManager.getRandomUnlockedCity(allCities, claimedCity);
+            const newCity = progressionManager.getRandomUnlockedCity(allCities, claimedCity, economyManager.getMinCityTierOnRankUp());
             if (!newCity) return;
             progressionManager.addReputation(-rerollCost);
             setHasFreeReroll(false);

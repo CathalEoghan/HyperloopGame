@@ -6,6 +6,7 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
+import { EFFECT_DESCRIPTIONS } from '../utils/effectDescriptions.js'
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
@@ -250,62 +251,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     ) : (
                                         <p style={{ fontSize: '0.88rem', color: '#555', margin: '8px 0' }}>
                                             <strong>Effect:</strong> {(() => {
-                                                const effects = {
-                                                    foodIncome: (v) => `+${Math.round(v * 100)}% income from Food developments`,
-                                                    recreationIncome: (v) => `+${Math.round(v * 100)}% income from Recreation developments`,
-                                                    shoppingIncome: (v) => `+${Math.round(v * 100)}% income from Shopping developments`,
-                                                    serviceIncome: (v) => `+${Math.round(v * 100)}% income from Service developments`,
-                                                    developmentBoost: (v) => `+${Math.round(v * 100)}% income from all developments`,
-                                                    connectionBoost: (v) => `+${Math.round(v * 100)}% income from all city connections`,
-                                                    workClickBonus: () => `Work click earnings tripled`,
-                                                    offlineCapExtension: () => `+24 hours offline earnings cap`,
-                                                    developmentDiscount: (v) => `-${Math.round(v * 100)}% development construction cost`,
-                                                    delayCompensationReduction: (v) => `-${Math.round(v * 100)}% delay compensation cost`,
-                                                    delayRepCostReduction: (v) => `-${v} Reputation when ignoring delays`,
-                                                    bonusDurationExtension: (v) => `Bonus events last ${Math.round(v * 100)}% longer`,
-                                                    farewellWindowExtension: (v) => `+${v} minutes farewell window`,
-                                                    farewellRepDoubled: () => `Reputation from farewells doubled`,
-                                                    negativeEventReduction: (v) => `Negative events ${Math.round(v * 100)}% less likely`,
-                                                    workRepChanceDouble: () => `Double chance of Reputation from Work`,
-                                                    workRepChanceTriple: () => `Triple chance of Reputation from Work`,
-                                                    continentExpansionBoost: (v) => `+${Math.round(v * 100)}% earnings per unique continent`,
-                                                    countryExpansionBoost: (v) => `+${v * 100}% earnings per unique country`,
-                                                    southernHemisphereBoost: (v) => `+${Math.round(v * 100)}% from southern hemisphere cities`,
-                                                    arcticBoost: (v) => `+${Math.round(v * 100)}% income from Arctic cities`,
-                                                    continentBoost: (v) => `+${Math.round(v * 100)}% income from cities on this continent`,
-                                                    countryAdvertisingBoost: (v) => `+${Math.round(v * 100)}% income from cities in this country`,
-                                                    localCountryBoost: () => `Bonus income from cities in your home country`,
-                                                    dailyLoginMultiplier: () => 'Doubles your daily login cash bonus',
-                                                    progressRewardBoost: () => 'Doubles cash rewards from city and country discoveries on the Progress page',
-                                                    terminalAgeBoost: () => '+1% to all income per 10 days active; grows the longer you play',
-                                                    seasonBoost: (v, upgrade) => { const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${Math.round(v * 100)}% income during this ${isMonthly ? 'month' : 'season'}`; },
-                                                    rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll cities`,
-                                                    freeRerollOnRankUp: () => `One free city re-roll each time you rank up`,
-                                                    positiveEventBoost: (v) => `+${Math.round(v * 100)}% chance of positive events`,
-                                                    dailyLoginRep: (v) => `+${v} Reputation every day you log in`,
-                                                    freeRepOnRankUp: (v) => `+${v} Reputation each time you rank up`,
-                                                    businessWeekBoost: (v) => `+${Math.round(v * 100)}% earnings Monday to Friday`,
-                                                    dailyRepDoubled: () => `Daily Reputation doubled`,
-                                                    equatorBoost: (v) => `+${Math.round(v * 100)}% income from cities near the equator`,
-                                                    infrastructureDevBoost: (v) => `+${Math.round(v * 100)}% income per Infrastructure development owned`,
-                                                    enterpriseDevBoost: (v) => `+${Math.round(v * 100)}% income per Enterprise development owned`,
-                                                    serviceDevBoost: (v) => `+${Math.round(v * 100)}% income per Service development owned`,
-                                                    devContinentBoost: (v) => `+${Math.round(v * 100)}% development income per unique continent connected`,
-                                                    morningBoost: (v) => `+${Math.round(v * 100)}% earnings between 6am and 12pm`,
-                                                    afternoonBoost: (v) => `+${Math.round(v * 100)}% earnings between 12pm and 6pm`,
-                                                    eveningBoost: (v) => `+${Math.round(v * 100)}% earnings between 6pm and 10pm`,
-                                                    nightBoost: (v) => `+${Math.round(v * 100)}% earnings between 10pm and 6am`,
-                                                    weekendBoost: (v) => `+${Math.round(v * 100)}% earnings on weekends`,
-                                                    smallCityBoost: (v) => `+${Math.round(v * 100)}% income from cities under 100,000 population`,
-                                                    christmasBoost: () => `+100% all earnings on Christmas Day`,
-                                                    valentinesBoost: () => `+100% all earnings on Valentine's Day`,
-                                                    halloweenBoost: () => `+100% all earnings on Halloween`,
-                                                    fourthOfJulyBoost: () => `+100% all earnings on 4th of July`,
-                                                    easterBoost: () => `+100% all earnings on Easter Sunday`,
-                                                    newYearsBoost: () => `+100% all earnings on New Year's Day`,
-                                                    skilledNegotiationTeams: () => `Guaranteed at least Tier 2 city on each rank up`,
-                                                    personalImageBranding: (v) => `Earn ${Math.round(v * 100)}% of a city's daily income when giving a farewell`,
-                                                }
+                                                const effects = EFFECT_DESCRIPTIONS
                                                 const fn = effects[selectedDevelopment.effectType]
                                                 return fn ? fn(selectedDevelopment.effectValue, selectedDevelopment) : 'Special effect'
                                             })()}
