@@ -260,6 +260,16 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             ) : available.includes(selectedCity) ? (
                                 <>
                                     <h3>Connect {selectedCity.name}?</h3>
+                                    {(() => {
+                                        const reward = selectedCity.rewards[0]
+                                        if (!reward) return null
+                                        const article = /^[AEIOU]/i.test(reward.category) ? 'an' : 'a'
+                                        return (
+                                            <p style={{ fontSize: '0.88rem', color: '#555', margin: '8px 0' }}>
+                                                <em>Unlocks {article} <strong>{reward.category}</strong> {reward.revenue ? 'development' : 'upgrade'} once connected</em>
+                                            </p>
+                                        )
+                                    })()}
                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
                                         playClickSound2();
                                         const cost = constructionManager.calculateTierConnectionCost(selectedCity);

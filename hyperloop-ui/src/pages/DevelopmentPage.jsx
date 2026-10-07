@@ -164,6 +164,11 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         const sourceCity = purchasedCities.find(city => city.rewards.some(r => r.name === selectedDevelopment.name))
                                         return sourceCity ? <p><em>Unlocked with: <strong>{sourceCity.name}</strong></em></p> : null
                                     })()}
+                                                                       {!selectedDevelopment.revenue && EFFECT_DESCRIPTIONS[selectedDevelopment.effectType] && (
+                                        <p style={{ fontSize: '0.88rem', color: '#555', margin: '8px 0' }}>
+                                            <strong>Effect:</strong> {EFFECT_DESCRIPTIONS[selectedDevelopment.effectType](selectedDevelopment.effectValue, selectedDevelopment)}
+                                        </p>
+                                    )}
                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
                                         const cost = economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost)
                                         if (balance < cost) { playClickSound2(); playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
