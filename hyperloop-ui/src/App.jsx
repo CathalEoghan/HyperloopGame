@@ -605,8 +605,9 @@ function App() {
         newCities.forEach(city => {
           if (homeCity && city.name === homeCity.name) return;
           injectCityIntoSchedule(city);
-          hyperLinkTriggerRef.current = { type: 'newCity', data: { city: city.name } }
-          setHyperLinkTrigger({ type: 'newCity', data: { city: city.name } })
+          const newCityTrigger = { type: city.tier === 1 ? 'newCityTier1' : 'newCity', data: { city: city.name } }
+          hyperLinkTriggerRef.current = newCityTrigger
+          setHyperLinkTrigger(newCityTrigger)
         });
       }
 
@@ -830,7 +831,8 @@ function App() {
             setActiveEvent(fullEvent);
             setShowEventModal(true);
           if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id } };
-            setTimeout(() => { activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event'); }, 8000);
+            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id } };
+            setTimeout(() => { activeEventRef.current = null; }, 8000);
           } else if (event.effectType === 'instantCashLoss') {
             const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
             progressionManager.addCash(-loss);
