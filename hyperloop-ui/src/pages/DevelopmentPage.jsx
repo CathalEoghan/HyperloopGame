@@ -8,6 +8,7 @@ import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
+import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import poorIcon from '../assets/misc/poor.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
@@ -17,8 +18,8 @@ const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Servic
 function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onUpgradeBuilt, topOffset = 113 }) {
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
-    const [activeCategory, setActiveCategory] = useState('All')
-    const [sortBy, setSortBy] = useState('alphabetical')
+    const [activeCategory, setActiveCategory] = usePersistedChoice('developmentsCategory', CATEGORIES, 'All')
+    const [sortBy, setSortBy] = usePersistedChoice('developmentsSort', ['alphabetical', 'revenue-high', 'revenue-low', 'category', 'upgrades-first'], 'alphabetical')
     const [search, setSearch] = useState('')
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [showUpgradeModal, setShowUpgradeModal] = useState(false)
@@ -41,20 +42,21 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         !developmentsUnderConstruction.some(d => d.name === item.name)
     )
 
-    const filterAndSort = (items) => {
+        // incomeOf: the number each card shows, so the Revenue sort matches what is on screen
+    const filterAndSort = (items, incomeOf = d => d.revenue || 0) => {
         let result = [...items]
         if (activeCategory === 'Upgrades') result = result.filter(d => !d.revenue)
         else if (activeCategory !== 'All') result = result.filter(d => d.category === activeCategory)
         if (search.trim()) result = result.filter(d => matchesSearch(d.name, search))
-        if (sortBy === 'revenue-high') result.sort((a, b) => (b.revenue || 0) - (a.revenue || 0))
-        else if (sortBy === 'revenue-low') result.sort((a, b) => (a.revenue || 0) - (b.revenue || 0))
+        if (sortBy === 'revenue-high') result.sort((a, b) => incomeOf(b) - incomeOf(a))
+        else if (sortBy === 'revenue-low') result.sort((a, b) => incomeOf(a) - incomeOf(b))
         else if (sortBy === 'category') result.sort((a, b) => a.category.localeCompare(b.category))
         else if (sortBy === 'upgrades-first') result.sort((a, b) => (a.revenue ? 1 : 0) - (b.revenue ? 1 : 0))
         else result.sort((a, b) => a.name.localeCompare(b.name))
         return result
     }
 
-    const sortedPurchased = filterAndSort([...purchased, ...underConstruction])
+    const sortedPurchased = filterAndSort([...purchased, ...underConstruction], d => economyManager.getEffectiveDevIncomeWithBoosts(d))
     const sortedAvailable = filterAndSort([...available])
 
     const totalRevenue = useMemo(() =>

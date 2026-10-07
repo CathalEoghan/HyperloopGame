@@ -10,6 +10,7 @@ import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import poorIcon from '../assets/misc/poor.png'
+import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { playClickSound2, playConstructionSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 
@@ -28,8 +29,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [selectedCity, setSelectedCity] = useState(() => preSelectedCity || null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [search, setSearch] = useState('')
-    const [activeContinent, setActiveContinent] = useState('All')
-    const [sortBy, setSortBy] = useState('alphabetical')
+    const [activeContinent, setActiveContinent] = usePersistedChoice('citiesContinent', CONTINENTS, 'All')
+    const [sortBy, setSortBy] = usePersistedChoice('citiesSort', ['alphabetical', 'income-high', 'income-low', 'population-high', 'tier'], 'alphabetical')
     const [collapsedCountries, setCollapsedCountries] = useState(new Set())
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)

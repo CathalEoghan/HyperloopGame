@@ -56,13 +56,15 @@ function getSunWorldPosition() {
 function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity }) {
     const mountRef = useRef(null)
     const [hoveredCity, setHoveredCity] = useState(null)
-    const [showOwned, setShowOwned] = useState(true)
+        const [showOwned, setShowOwned] = useState(() => {
+        try { return localStorage.getItem('globeShowOwned') !== 'false' } catch { return true }
+    })
     const [globeReady, setGlobeReady] = useState(false)
     const [selectedGlobeCity, setSelectedGlobeCity] = useState(null)
     const [selectedUnlockedCity, setSelectedUnlockedCity] = useState(null)
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
-    const showOwnedRef = useRef(true)
+     const showOwnedRef = useRef(showOwned)
     const purchasedCitiesRef = useRef(purchasedCities)
     const unlockedCitiesRef = useRef(unlockedCities)
     const disabledRef = useRef(disabled)
@@ -374,6 +376,7 @@ useEffect(() => {
                 onClick={() => {
                     setShowOwned(prev => {
                         showOwnedRef.current = !prev
+                        try { localStorage.setItem('globeShowOwned', String(!prev)) } catch { /* storage blocked, ignore */ }
                         return !prev
                     })
                 }}
