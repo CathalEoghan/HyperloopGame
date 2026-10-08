@@ -112,7 +112,12 @@ export class EconomyManager {
     }
 
     getCurrentSeasonUpgrade() {
-        const month = new Date().getMonth();
+        // The seasons follow the home city's hemisphere: when it is summer in London it is
+        // winter in Sydney, so a southern home city's calendar is shifted by six months.
+        const homeCity = this.progressionManager.purchasedCities[0];
+        const homeLat = homeCity ? this.coordinates?.[homeCity.name]?.lat : undefined;
+        const southern = typeof homeLat === 'number' && homeLat < 0;
+        const month = (new Date().getMonth() + (southern ? 6 : 0)) % 12;
         const seasons = { Spring: [2,3,4], Summer: [5,6,7], Autumn: [8,9,10], Winter: [11,0,1] };
         const currentSeason = Object.entries(seasons).find(([, months]) => months.includes(month))?.[0];
         if (!currentSeason) return null;
