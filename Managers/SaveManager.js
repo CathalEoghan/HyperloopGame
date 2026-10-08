@@ -78,7 +78,7 @@ function bundleAuxState() {
 }
 
 // What each extra value must hold once parsed. Anything else in an imported file is skipped,
-// because the game reads these on startup and a wrong type crashed it on every load (bug #88).
+// because the game reads these on startup and a wrong type crashed it on every load.
 // Keys not listed here hold a list.
 const AUX_SHAPES = {
     hyperloop_hyperlink_user_pfps: v => v !== null && typeof v === 'object' && !Array.isArray(v),
@@ -103,7 +103,9 @@ function auxValueOk(key, value) {
 function restoreAuxState(state) {
     if (!state || typeof state !== 'object') return
     AUX_KEYS.forEach(key => {
-        if (state[key] !== undefined && auxValueOk(key, state[key])) localStorage.setItem(key, state[key])
+        if (state[key] === undefined || !auxValueOk(key, state[key])) return
+        // One extra failing (storage full, say) must not undo an import that has already been written
+        try { localStorage.setItem(key, state[key]) } catch { /* skip this extra */ }
     })
 }
 
@@ -376,6 +378,7 @@ export function importSave(file) {
                 reject(new Error('Invalid save file'))
             }
         }
+        reader.onerror = () => reject(new Error('Could not read file'))
         reader.readAsText(file)
     })
 }

@@ -206,11 +206,14 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         try {
             setImportError(null)
             await onImportSave(file)
-        } catch {
-            setImportError('Invalid save file. Please choose a valid Hyperloop save.')
+            } catch (err) {
+            setImportError(err?.message === 'Could not read file'
+                ? 'Could not read that file. Please try again.'
+                : 'Invalid save file. Please choose a valid Hyperloop save.')
+        } finally {
+            e.target.value = ''
         }
     }
-
     return (
         <div className="settings-page" style={{ height: `calc(100vh - ${topOffset + 141}px)`, overflowY: "auto" }}>
             {showCredits && <CreditsModal onClose={() => setShowCredits(false)} onReputationBonus={onReputationBonus} />}
