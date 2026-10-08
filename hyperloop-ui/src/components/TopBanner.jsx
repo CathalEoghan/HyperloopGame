@@ -199,7 +199,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <img src={starIcon} alt="rank" /> Rank {rank}
                 </div>
                 <div className="balance" style={{ color: balanceColor, transition: 'color 0.3s ease', position: 'relative' }}>
-                    <img src={cashIcon} alt="balance" /> £{displayBalance.toLocaleString()}
+                    <img src={cashIcon} alt="balance" /> £{formatBalance(displayBalance)}
                     {balanceFloat && (
                         <span key={balanceFloat.id} style={{
                             position: 'absolute', left: 0, top: 0, width: '100%',
@@ -209,7 +209,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                             display: 'flex', alignItems: 'center', gap: '6px'
                         }}>
                             <img src={cashIcon} alt="£" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
-                            £{Math.floor(balanceFloat.value).toLocaleString()}
+                            £{formatBalance(balanceFloat.value)}
                         </span>
                     )}
                 </div>
