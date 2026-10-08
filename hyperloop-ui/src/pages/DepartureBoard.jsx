@@ -144,8 +144,9 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                 if (filtered.length > 0) { setSchedule(filtered); return }
             }
         }
-        let generated = generateSchedule(purchasedCities)
         const pending = JSON.parse(localStorage.getItem('hyperloop_pending_injections') || '[]')
+        // Cities waiting for a slot are left out of the random day, then placed 30+ minutes ahead below
+        let generated = generateSchedule(purchasedCities.filter(c => !pending.includes(c.name)))
         if (pending.length > 0) {
             const now = new Date()
             const currentMins = now.getHours() * 60 + now.getMinutes()
