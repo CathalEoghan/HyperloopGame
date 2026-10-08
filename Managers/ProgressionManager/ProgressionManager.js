@@ -102,8 +102,10 @@ export class ProgressionManager {
         this.purchasedCities = this.purchasedCities.filter(c => c !== city);
         if (!this.unlockedCities.includes(city)) this.unlockedCities.push(city);
         city.rewards.forEach(reward => {
+            // A reward that is already built, or being built right now, stays (otherwise its build would be lost)
             const isBuilt = this.purchasedDevelopments.some(d => d.name === reward.name) ||
-                            this.purchasedUpgrades.some(u => u.name === reward.name);
+                            this.purchasedUpgrades.some(u => u.name === reward.name) ||
+                            this.developmentsUnderConstruction.some(d => d.name === reward.name);
             if (!isBuilt) {
                 this.unlockedDevelopments = this.unlockedDevelopments.filter(d => d.name !== reward.name);
                 this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u.name !== reward.name);
