@@ -5,8 +5,11 @@ import { playHoverSound } from '../utils/sound.js'
 import wifiIcon from '../assets/misc/wifi.png'
 import batteryIcon from '../assets/misc/battery.png'
 import signalIcon from '../assets/misc/signal.png'
-import { defaultPfp } from '../assets/hyperLinkAssets.js'
+import { defaultPfp, MALE_PFPS, FEMALE_PFPS, officialPfp } from '../assets/hyperLinkAssets.js'
 export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
+
+// Only bundled pictures may be shown; anything else in an imported save is ignored
+const ALLOWED_PFPS = new Set([...MALE_PFPS, ...FEMALE_PFPS, officialPfp])
 
 function hashNum(str, mod, offset = 0) {
     let h = 0
@@ -123,9 +126,9 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
                                             <div className="hyperlink-like-animation">❤</div>
                                         )}
                                         <img
-                                            src={post.pfp || defaultPfp}
+                                            src={ALLOWED_PFPS.has(post.pfp) ? post.pfp : defaultPfp}
                                             alt="pfp"
-                                            className={post.pfp ? 'hyperlink-pfp' : 'hyperlink-pfp-default'}
+                                            className={ALLOWED_PFPS.has(post.pfp) ? 'hyperlink-pfp' : 'hyperlink-pfp-default'}
                                             onError={e => { e.target.src = defaultPfp }}
                                         />
                                         <div className="hyperlink-post-body">
