@@ -41,10 +41,20 @@ const formatWorkAmount = (value, tilde = false) => {
     return `${scaled.toFixed(1)}${WORK_SUFFIXES[tier - 1]}${t}`
 }
 
-// Full digits up to a trillion; short form beyond that so it fits the banner
-const formatBalance = (value) => value < 1_000_000_000_000
-    ? Math.floor(value).toLocaleString()
-    : formatWorkAmount(value)
+const BALANCE_NAMES = ['billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion', 'decillion']
+
+// Full digits below a billion; then "3.72 billion", "1.05 quadrillion" and so on
+// (scientific notation past decillions)
+const formatBalance = (value) => {
+    if (!Number.isFinite(value)) return '0'
+    if (value < 1_000_000_000) return Math.floor(value).toLocaleString()
+    let tier = Math.floor(Math.log10(value) / 3)
+    if (tier > 2 + BALANCE_NAMES.length) return value.toExponential(2).replace('e+', 'e')
+    let scaled = value / Math.pow(1000, tier)
+    // 999.996 billion rounds to "1000.00 billion", so step up to the next name instead
+    if (Number(scaled.toFixed(2)) >= 1000 && tier < 2 + BALANCE_NAMES.length) { tier += 1; scaled = value / Math.pow(1000, tier) }
+    return `${scaled.toFixed(2)} ${BALANCE_NAMES[tier - 3]}`
+}
 
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
     const [floats, setFloats] = useState([])
