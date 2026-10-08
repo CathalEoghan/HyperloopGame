@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { playLeavingSound, playFarewellAcceptSound, playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
+import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
 
@@ -43,6 +44,8 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const isUrgent = secondsLeft <= 60
 
     const flagCode = countryFlags[departure.country]
+    // The board shows GATE CLOSED for the last 5 minutes, so the announcement matches it
+    const gateClosed = minutesUntilDeparture(departure) <= 5
     const repGain = economyManager ? economyManager.getFarewellRepGain(5) : 5
 
     return (
@@ -61,7 +64,9 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                     <span className="farewell-city-name">{departure.name}</span>
                 </div>
                 <p className="farewell-message">
-                    Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Gate <strong>{departure.gate}</strong>.
+                                       {gateClosed
+                        ? <>Gate <strong>{departure.gate}</strong> is now closed for <strong>{departure.name}</strong>. There is still time to give passengers a personal farewell.</>
+                        : <>Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Gate <strong>{departure.gate}</strong>.</>}
                 </p>
                 <p className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}>
                     {timeDisplay}

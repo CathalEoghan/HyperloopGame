@@ -94,8 +94,8 @@ function buildEligibleCategories(gameState) {
     if (schedule?.length) {
         schedule.forEach(entry => {
             const diff = minutesUntilDeparture(entry)
-            if (diff > 0 && diff <= 30) add('boarding', 4, { boardingCity: entry.name, gateNumber: entry.gate })
-            if (diff > 0 && diff <= 10) add('finalCall', 6, { finalCallCity: entry.name, gateNumber: entry.gate })
+            if (diff > 10 && diff <= 30) add('boarding', 4, { boardingCity: entry.name, gateNumber: entry.gate })
+            if (diff > 5 && diff <= 10) add('finalCall', 6, { finalCallCity: entry.name, gateNumber: entry.gate })
             if (diff > 0 && diff <= 45 && diff > 30) add('goToGate', 3, { goToGateCity: entry.name, gateNumber: entry.gate })
             if (diff < 0 && diff > -60) add('departed', 3, { departedCity: entry.name })
         })
