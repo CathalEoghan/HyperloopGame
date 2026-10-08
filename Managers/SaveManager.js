@@ -147,7 +147,9 @@ function validateSave(save) {
     if (save.rank < 1 || save.rank > MAX_RANK) return false
     // Every game starts with £1,000,000 and £0 earned, so the balance can be up to that much
     // above the total earned (bug #56).
-    if (save.balance > save.totalCashEarned + 1_000_000) return false
+    
+    // The two totals round differently, so allow a pound of slack
+    if (save.balance > save.totalCashEarned + 1_000_001) return false
     if (save.purchasedCities.length > allCities.length) return false
     if (save.purchasedDevelopments.length > allDevelopments.length) return false
     if (save.purchasedUpgrades.length > allUpgrades.length) return false
