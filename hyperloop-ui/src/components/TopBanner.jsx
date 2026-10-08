@@ -41,6 +41,11 @@ const formatWorkAmount = (value, tilde = false) => {
     return `${scaled.toFixed(1)}${WORK_SUFFIXES[tier - 1]}${t}`
 }
 
+// Full digits up to a trillion; short form beyond that so it fits the banner
+const formatBalance = (value) => value < 1_000_000_000_000
+    ? Math.floor(value).toLocaleString()
+    : formatWorkAmount(value)
+
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
     const [floats, setFloats] = useState([])
     const [eventSecondsLeft, setEventSecondsLeft] = useState(activeEvent?.durationSeconds || 0)
