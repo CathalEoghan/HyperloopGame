@@ -501,6 +501,7 @@ function App() {
   };
 
   const tickIntervalRef = useRef(null);
+  const lastWaitCheckRef = useRef(Date.now());
 
   const startTick = () => {
     if (tickIntervalRef.current) return;
@@ -508,7 +509,13 @@ function App() {
       const lock = readTabLock();
       if (blockedRef.current) {
         // Waiting tab: take over automatically once the active tab has gone away.
-        if (!lock || Date.now() - lock.at > TAB_LOCK_STALE_MS) takeOverAndReload();
+        const checkedAt = Date.now();
+        const sinceLastCheck = checkedAt - lastWaitCheckRef.current;
+        lastWaitCheckRef.current = checkedAt;
+        // If this tab itself was asleep, the lock only looks old because of that; give the playing tab
+        // a moment to refresh it before deciding it has gone away.
+        if (sinceLastCheck > TAB_LOCK_STALE_MS) return;
+        if (!lock || checkedAt - lock.at > TAB_LOCK_STALE_MS) takeOverAndReload();
         return;
       }
       if (lock && lock.id !== tabId) {
