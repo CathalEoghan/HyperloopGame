@@ -51,17 +51,17 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const [floats, setFloats] = useState([])
     const [fading, setFading] = useState(new Set())
 
-   const getRandomReward = () => {
-    const roll = Math.random() * 100
-    if (roll < 25) return { type: 'cash', amount: 2500 }
-    if (roll < 47) return { type: 'cash', amount: 5000 }
-    if (roll < 65) return { type: 'cash', amount: 10000 }
-    if (roll < 75) return { type: 'cash', amount: 25000 }
-    if (roll < 80) return { type: 'cash', amount: 50000 }
-    if (roll < 92) return { type: 'rep', amount: 5 }
-    if (roll < 98) return { type: 'rep', amount: 10 }
-    return { type: 'rep', amount: 20 }
-}
+    const getRandomReward = () => {
+        const roll = Math.random() * 100
+        if (roll < 25) return { type: 'cash', amount: 2500 }
+        if (roll < 47) return { type: 'cash', amount: 5000 }
+        if (roll < 65) return { type: 'cash', amount: 10000 }
+        if (roll < 75) return { type: 'cash', amount: 25000 }
+        if (roll < 80) return { type: 'cash', amount: 50000 }
+        if (roll < 92) return { type: 'rep', amount: 5 }
+        if (roll < 98) return { type: 'rep', amount: 10 }
+        return { type: 'rep', amount: 20 }
+    }
     const handleCardClick = (e, key) => {
         if (claimedRef.current.has(key)) return
         claimedRef.current.add(key)
@@ -80,7 +80,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         else playFarewellAcceptSound()
         onCollectReward(reward)
         setTimeout(() => {
-                        setClaimed(prev => new Set([...prev, key]))
+            setClaimed(prev => new Set([...prev, key]))
             setFading(prev => { const s = new Set(prev); s.delete(key); return s; })
         }, 500)
     }
@@ -169,52 +169,80 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             + upgrades.filter(u => u.category === 'Service').length
 
         const stats = [
-            { label: 'Connection Earnings Bonus',       value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
-            { label: 'Food Category Bonus',             value: sum('foodIncome') > 0 ? `+${Math.round(sum('foodIncome') * 100)}%` : '—' },
-            { label: 'Recreation Category Bonus',       value: sum('recreationIncome') > 0 ? `+${Math.round(sum('recreationIncome') * 100)}%` : '—' },
-            { label: 'Shopping Category Bonus',         value: sum('shoppingIncome') > 0 ? `+${Math.round(sum('shoppingIncome') * 100)}%` : '—' },
-            { label: 'Service Category Bonus',          value: sum('serviceIncome') > 0 ? `+${Math.round(sum('serviceIncome') * 100)}%` : '—' },
-            { label: 'All Developments Bonus',          value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
-            { label: 'Dev Continent Connections',       value: sum('devContinentBoost') > 0 ? `+${Math.round(sum('devContinentBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
-            { label: 'Infrastructure Count Boost',      value: sum('infrastructureDevBoost') > 0 ? `+${Math.round(sum('infrastructureDevBoost') * infraCount * 100)}% (${infraCount} items)` : '—' },
-            { label: 'Enterprise Count Boost',          value: sum('enterpriseDevBoost') > 0 ? `+${Math.round(sum('enterpriseDevBoost') * enterpriseCount * 100)}% (${enterpriseCount} items)` : '—' },
-            { label: 'Service Count Boost',             value: sum('serviceDevBoost') > 0 ? `+${Math.round(sum('serviceDevBoost') * serviceCount * 100)}% (${serviceCount} items)` : '—' },
-            { label: 'Continent Expansion Bonus',       value: sum('continentExpansionBoost') > 0 ? `+${Math.round(sum('continentExpansionBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
-            { label: 'Country Expansion Bonus',         value: sum('countryExpansionBoost') > 0 ? `+${(sum('countryExpansionBoost') * uniqueCountries * 100).toFixed(1)}% (${uniqueCountries} countries)` : '—' },
-            { label: 'Local Country Bonus',             value: economyManager.getLocalCountryBoost() > 0 ? `+${Math.round(economyManager.getLocalCountryBoost() * 100)}%` : '—' },
-            { label: 'Small City Bonus',                value: sum('smallCityBoost') > 0 ? `+${Math.round(sum('smallCityBoost') * 100)}%` : '—' },
-            { label: 'Arctic City Bonus',               value: sum('arcticBoost') > 0 ? `+${Math.round(sum('arcticBoost') * 100)}%` : '—' },
-            { label: 'Equator City Bonus',              value: sum('equatorBoost') > 0 ? `+${Math.round(sum('equatorBoost') * 100)}%` : '—' },
-            { label: 'Southern Hemisphere Bonus',       value: sum('southernHemisphereBoost') > 0 ? `+${Math.round(sum('southernHemisphereBoost') * 100)}%` : '—' },
-            { label: 'Terminal Age Bonus',              value: has('terminalAgeBoost') ? `${Math.round(economyManager.getFoundersHallMultiplier(createdAt) * 100 - 100)}% (grows over time)` : '—' },
-            { label: 'Current Season Boost',            value: seasonUpgrade ? `+${Math.round(seasonUpgrade.effectValue * 100)}% (${seasonUpgrade.name})` : '—' },
-            { label: 'Current Month Boost',             value: monthUpgrade ? `+${Math.round(monthUpgrade.effectValue * 100)}% (${monthUpgrade.name})` : '—' },
-            { label: 'Business Week Bonus',             value: sum('businessWeekBoost') > 0 ? `+${Math.round(sum('businessWeekBoost') * 100)}%${isBusinessWeek ? ' ✓ active' : ''}` : '—' },
-            { label: 'Weekend Bonus',                   value: sum('weekendBoost') > 0 ? `+${Math.round(sum('weekendBoost') * 100)}%${isWeekend ? ' ✓ active' : ''}` : '—' },
+            { label: 'Connection Earnings Bonus', value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
+            { label: 'Food Category Bonus', value: sum('foodIncome') > 0 ? `+${Math.round(sum('foodIncome') * 100)}%` : '—' },
+            { label: 'Recreation Category Bonus', value: sum('recreationIncome') > 0 ? `+${Math.round(sum('recreationIncome') * 100)}%` : '—' },
+            { label: 'Shopping Category Bonus', value: sum('shoppingIncome') > 0 ? `+${Math.round(sum('shoppingIncome') * 100)}%` : '—' },
+            { label: 'Service Category Bonus', value: sum('serviceIncome') > 0 ? `+${Math.round(sum('serviceIncome') * 100)}%` : '—' },
+            { label: 'All Developments Bonus', value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
+            { label: 'Dev Continent Connections', value: sum('devContinentBoost') > 0 ? `+${Math.round(sum('devContinentBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
+            { label: 'Infrastructure Count Boost', value: sum('infrastructureDevBoost') > 0 ? `+${Math.round(sum('infrastructureDevBoost') * infraCount * 100)}% (${infraCount} items)` : '—' },
+            { label: 'Enterprise Count Boost', value: sum('enterpriseDevBoost') > 0 ? `+${Math.round(sum('enterpriseDevBoost') * enterpriseCount * 100)}% (${enterpriseCount} items)` : '—' },
+            { label: 'Service Count Boost', value: sum('serviceDevBoost') > 0 ? `+${Math.round(sum('serviceDevBoost') * serviceCount * 100)}% (${serviceCount} items)` : '—' },
+            { label: 'Continent Expansion Bonus', value: sum('continentExpansionBoost') > 0 ? `+${Math.round(sum('continentExpansionBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
+            { label: 'Country Expansion Bonus', value: sum('countryExpansionBoost') > 0 ? `+${(sum('countryExpansionBoost') * uniqueCountries * 100).toFixed(1)}% (${uniqueCountries} countries)` : '—' },
+            { label: 'Local Country Bonus', value: economyManager.getLocalCountryBoost() > 0 ? `+${Math.round(economyManager.getLocalCountryBoost() * 100)}%` : '—' },
+            { label: 'Small City Bonus', value: sum('smallCityBoost') > 0 ? `+${Math.round(sum('smallCityBoost') * 100)}%` : '—' },
+            { label: 'Arctic City Bonus', value: sum('arcticBoost') > 0 ? `+${Math.round(sum('arcticBoost') * 100)}%` : '—' },
+            { label: 'Equator City Bonus', value: sum('equatorBoost') > 0 ? `+${Math.round(sum('equatorBoost') * 100)}%` : '—' },
+            { label: 'Southern Hemisphere Bonus', value: sum('southernHemisphereBoost') > 0 ? `+${Math.round(sum('southernHemisphereBoost') * 100)}%` : '—' },
+            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `${Math.round(economyManager.getFoundersHallMultiplier(createdAt) * 100 - 100)}% (grows over time)` : '—' },
+            { label: 'Current Season Boost', value: seasonUpgrade ? `+${Math.round(seasonUpgrade.effectValue * 100)}% (${seasonUpgrade.name})` : '—' },
+            { label: 'Current Month Boost', value: monthUpgrade ? `+${Math.round(monthUpgrade.effectValue * 100)}% (${monthUpgrade.name})` : '—' },
+            { label: 'Business Week Bonus', value: sum('businessWeekBoost') > 0 ? `+${Math.round(sum('businessWeekBoost') * 100)}%${isBusinessWeek ? ' ✓ active' : ''}` : '—' },
+            { label: 'Weekend Bonus', value: sum('weekendBoost') > 0 ? `+${Math.round(sum('weekendBoost') * 100)}%${isWeekend ? ' ✓ active' : ''}` : '—' },
             ...(has('morningBoost') ? [{ label: 'Morning Bonus', value: `+${Math.round(economyManager.getUpgradeSum('morningBoost') * 100)}%${hour >= 6 && hour < 12 ? ' (Active)' : ' (Inactive)'}` }] : []),
             ...(has('afternoonBoost') ? [{ label: 'Afternoon Bonus', value: `+${Math.round(economyManager.getUpgradeSum('afternoonBoost') * 100)}%${hour >= 12 && hour < 18 ? ' (Active)' : ' (Inactive)'}` }] : []),
             ...(has('eveningBoost') ? [{ label: 'Evening Bonus', value: `+${Math.round(economyManager.getUpgradeSum('eveningBoost') * 100)}%${hour >= 18 && hour < 22 ? ' (Active)' : ' (Inactive)'}` }] : []),
             ...(has('nightBoost') ? [{ label: 'Night Bonus', value: `+${Math.round(economyManager.getUpgradeSum('nightBoost') * 100)}%${(hour >= 22 || hour < 6) ? ' (Active)' : ' (Inactive)'}` }] : []),
-           { label: 'Work Click Bonus', value: count('workClickBonus') > 0 ? `×${(1 + count('workClickBonus') * 0.45).toFixed(2)} to click earnings` : '—' },
-            { label: 'Farewell Window',                 value: count('farewellWindowExtension') > 0 ? `${5 + count('farewellWindowExtension') * 5} minutes` : '—' },
-            { label: 'Farewell Rep Bonus',              value: has('farewellRepDoubled') ? '×2 per farewell' : '—' },
-            { label: 'Offline Earnings Cap',            value: (() => {
-                const hours = 48 + count('offlineCapExtension') * 24
-                if (hours >= 168) return '1 week'
-                return `${Math.round(hours / 24)} days`
-            })() },
-            { label: 'Dev Build Discount',              value: sum('developmentDiscount') > 0 ? `-${Math.round(sum('developmentDiscount') * 100)}%` : '—' },
-            { label: 'Dev Upgrade Discount',            value: sum('developmentUpgradeDiscount') > 0 ? `-${Math.round(sum('developmentUpgradeDiscount') * 100)}%` : '—' },
-            { label: 'Negative Event Reduction',        value: sum('negativeEventReduction') > 0 ? `${Math.round(sum('negativeEventReduction') * 100)}% chance to skip` : '—' },
-            { label: 'Event Duration Extension',        value: sum('bonusDurationExtension') > 0 ? `+${Math.round(sum('bonusDurationExtension') * 100)}% longer` : '—' },
-            { label: 'Delay Compensation Cut',          value: sum('delayCompensationReduction') > 0 ? `-${Math.round(sum('delayCompensationReduction') * 100)}%` : '—' },
-            { label: 'Delay Rep Cost Reduction',        value: sum('delayRepCostReduction') > 0 ? `-${sum('delayRepCostReduction')} rep` : '—' },
-            { label: 'City Reroll Discount',            value: sum('rerollRepDiscount') > 0 ? `-${sum('rerollRepDiscount')} rep` : '—' },
-            { label: 'Daily Login Rep Bonus',           value: sum('dailyLoginRep') > 0 ? `+${sum('dailyLoginRep')} rep/day` : '—' },
-            { label: 'Free Reroll on Rank Up',          value: has('freeRerollOnRankUp') ? 'Active' : '—' },
-            { label: 'Free Rep on Rank Up',             value: sum('freeRepOnRankUp') > 0 ? `+${sum('freeRepOnRankUp')} rep` : '—' },
-            { label: 'Positive Event Preference',       value: has('positiveEventBoost') ? 'Active' : '—' },
-            { label: 'Skilled Negotiation Teams',       value: has('skilledNegotiationTeams') ? 'Active' : '—' },
+            { label: 'Work Click Bonus', value: count('workClickBonus') > 0 ? `×${(1 + count('workClickBonus') * 0.45).toFixed(2)} to click earnings` : '—' },
+            { label: 'Farewell Window', value: count('farewellWindowExtension') > 0 ? `${5 + count('farewellWindowExtension') * 5} minutes` : '—' },
+            { label: 'Farewell Rep Bonus', value: has('farewellRepDoubled') ? '×2 per farewell' : '—' },
+            {
+                label: 'Offline Earnings Cap', value: count('offlineCapExtension') === 0 ? '—' : (() => {
+                    const hours = 48 + count('offlineCapExtension') * 24
+                    if (hours >= 168) return '1 week'
+                    return `${Math.round(hours / 24)} days`
+                })()
+            },
+            { label: 'Dev Build Discount', value: sum('developmentDiscount') > 0 ? `-${Math.round(sum('developmentDiscount') * 100)}%` : '—' },
+            { label: 'Dev Upgrade Discount', value: sum('developmentUpgradeDiscount') > 0 ? `-${Math.round(sum('developmentUpgradeDiscount') * 100)}%` : '—' },
+            { label: 'Negative Event Reduction', value: sum('negativeEventReduction') > 0 ? `${Math.round(sum('negativeEventReduction') * 100)}% chance to skip` : '—' },
+            { label: 'Event Duration Extension', value: sum('bonusDurationExtension') > 0 ? `+${Math.round(sum('bonusDurationExtension') * 100)}% longer` : '—' },
+            { label: 'Delay Compensation Cut', value: sum('delayCompensationReduction') > 0 ? `-${Math.round(sum('delayCompensationReduction') * 100)}%` : '—' },
+            { label: 'Delay Rep Cost Reduction', value: sum('delayRepCostReduction') > 0 ? `-${sum('delayRepCostReduction')} rep` : '—' },
+            { label: 'City Reroll Discount', value: sum('rerollRepDiscount') > 0 ? `-${sum('rerollRepDiscount')} rep` : '—' },
+            { label: 'Daily Login Rep Bonus', value: sum('dailyLoginRep') > 0 ? `+${sum('dailyLoginRep')} rep/day` : '—' },
+            { label: 'Free Reroll on Rank Up', value: has('freeRerollOnRankUp') ? 'Active' : '—' },
+            { label: 'Free Rep on Rank Up', value: sum('freeRepOnRankUp') > 0 ? `+${sum('freeRepOnRankUp')} rep` : '—' },
+            { label: 'Positive Event Preference', value: has('positiveEventBoost') ? 'Active' : '—' },
+            { label: 'Skilled Negotiation Teams', value: has('skilledNegotiationTeams') ? 'Active' : '—' },
+            {
+                label: 'Special Day Bonus', value: (() => {
+                    const days = { christmasBoost: 'Christmas Day', valentinesBoost: "Valentine's Day", halloweenBoost: 'Halloween', fourthOfJulyBoost: '4th of July', easterBoost: 'Easter Sunday', newYearsBoost: "New Year's Day" }
+                    const owned = Object.keys(days).filter(k => has(k)).map(k => days[k])
+                    if (owned.length === 0) return '—'
+                    return `+100% on ${owned.join(', ')}${economyManager.getSpecialDayBonus() > 0 ? ' ✓ active' : ''}`
+                })()
+            },
+            {
+                label: 'Continent Travel Packages', value: (() => {
+                    const owned = upgrades.filter(u => u.effectType === 'continentBoost')
+                    return owned.length ? owned.map(u => `${u.name.replace(' Travel Packages', '')} +${Math.round(u.effectValue * 100)}%`).join(', ') : '—'
+                })()
+            },
+            {
+                label: 'Country Advertising Campaigns', value: (() => {
+                    const owned = upgrades.filter(u => u.effectType === 'countryAdvertisingBoost')
+                    if (owned.length === 0) return '—'
+                    const same = owned.every(u => u.effectValue === owned[0].effectValue)
+                    return `${owned.length} ${owned.length === 1 ? 'country' : 'countries'}${same ? `, +${Math.round(owned[0].effectValue * 100)}% each` : ''}`
+                })()
+            },
+            { label: 'Daily Login Cash', value: has('dailyLoginMultiplier') ? '×2 (50% of a day\'s income)' : '—' },
+            { label: 'Daily Login Rep Doubling', value: has('dailyRepDoubled') ? '×2' : '—' },
+            { label: 'Work Reputation Chance', value: economyManager.getWorkRepChance() > 0.005 ? `${(economyManager.getWorkRepChance() * 100).toFixed(1)}% per click` : '—' },
+            { label: 'Farewell Cash Bonus', value: has('personalImageBranding') ? "10% of the city's daily income" : '—' },
         ]
 
         return stats.filter(s => s.value !== '—')
@@ -226,122 +254,122 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     return (
         <>
-        <div className="progress-page" style={{ height: `calc(100vh - ${topOffset + 141}px)` }}>
-            <div className="progress-content">
-            <h2 className="progress-section-header">General Stats</h2>
-            <div className="progress-stats">
-                {generalStats.map(({ label, value }) => (
-                    <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
-                        <span className="stat-label">{label}</span>
-                        <span className="stat-value">{value}</span>
+            <div className="progress-page" style={{ height: `calc(100vh - ${topOffset + 141}px)` }}>
+                <div className="progress-content">
+                    <h2 className="progress-section-header">General Stats</h2>
+                    <div className="progress-stats">
+                        {generalStats.map(({ label, value }) => (
+                            <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
+                                <span className="stat-label">{label}</span>
+                                <span className="stat-value">{value}</span>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
 
-            <h2 className="progress-section-header" style={{ marginTop: '24px' }}>Active Bonuses</h2>
-            {upgradeStats.length === 0 ? (
-                <p style={{ color: '#888', fontFamily: 'Inter, sans-serif', fontSize: '0.9rem', marginTop: '8px' }}>No upgrades purchased yet.</p>
-            ) : (
-                <div className="progress-stats">
-                    {upgradeStats.map(({ label, value }) => (
-                        <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
-                            <span className="stat-label">{label}</span>
-                            <span className="stat-value">{value}</span>
+                    <h2 className="progress-section-header" style={{ marginTop: '24px' }}>Active Bonuses</h2>
+                    {upgradeStats.length === 0 ? (
+                        <p style={{ color: '#888', fontFamily: 'Inter, sans-serif', fontSize: '0.9rem', marginTop: '8px' }}>No upgrades purchased yet.</p>
+                    ) : (
+                        <div className="progress-stats">
+                            {upgradeStats.map(({ label, value }) => (
+                                <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
+                                    <span className="stat-label">{label}</span>
+                                    <span className="stat-value">{value}</span>
+                                </div>
+                            ))}
                         </div>
-                    ))}
+                    )}
+
+                    <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
+                        Countries collected
+                        <span className="progress-fraction">{purchasedCountries.size} / {sortedCountries.length}</span>
+                    </h2>
+                    <div className="progress-bar-container">
+                        <div className="progress-bar-fill" style={{ width: `${countryProgress}%` }} />
+                        <span className="progress-bar-label">{Math.round(countryProgress)}%</span>
+                    </div>
+                    <div className="progress-country-grid">
+                        {sortedCountries.map(country => {
+                            const state = getCountryState(country)
+                            const flagCode = countryFlags[country]
+                            return (
+                                <div key={country} className={`progress-country-card progress-country-${state}${state === 'connected' && !claimed.has('country:' + country) && !fading.has('country:' + country) ? ' progress-card-unclaimed' : ''}${fading.has('country:' + country) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimed.has('country:' + country) && handleCardClick(e, 'country:' + country)}>
+                                    {state === 'unknown' ? (
+                                        <>
+                                            <div className="progress-flag-unknown">?</div>
+                                            <div className="progress-country-name unknown-name">Unknown</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            {flagCode ? (
+                                                <img className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={`https://flagcdn.com/w80/${flagCode}.png`} alt={country} />
+                                            ) : (
+                                                <div className="progress-flag-unknown">?</div>
+                                            )}
+                                            <div className={`progress-country-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{country}</div>
+                                        </>
+                                    )}
+                                </div>
+                            )
+                        })}
+                    </div>
+
+                    <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
+                        Cities collected
+                        <span className="progress-fraction">{purchasedCities.length} / {visibleCities.length}</span>
+                    </h2>
+                    <div className="progress-bar-container">
+                        <div className="progress-bar-fill" style={{ width: `${cityProgress}%` }} />
+                        <span className="progress-bar-label">{Math.round(cityProgress)}%</span>
+                    </div>
+                    <div className="progress-city-grid">
+                        {sortedCities.map(city => {
+                            const state = getCityState(city)
+                            const flagCode = countryFlags[city.country]
+                            return (
+                                <div key={city.name} className={`progress-city-card progress-city-${state}${state === 'connected' && !claimed.has('city:' + city.name) && !fading.has('city:' + city.name) ? ' progress-card-unclaimed' : ''}${fading.has('city:' + city.name) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimed.has('city:' + city.name) && handleCardClick(e, 'city:' + city.name)}>
+                                    {state === 'unknown' ? (
+                                        <>
+                                            <div className="progress-city-image-unknown">?</div>
+                                            <div className="progress-city-name unknown-name">Unknown City</div>
+                                            <div className="progress-city-flag-unknown">?</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <img className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={cityThumbnails[city.name] || cityImages[city.name]} alt={city.name} />
+                                            <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{city.name}</div>
+                                            {flagCode ? (
+                                                <img className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={`https://flagcdn.com/w80/${flagCode}.png`} alt={city.country} />
+                                            ) : (
+                                                <div className="progress-city-flag-unknown">?</div>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            )
+                        })}
+                    </div>
                 </div>
-            )}
-
-            <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
-                Countries collected
-                <span className="progress-fraction">{purchasedCountries.size} / {sortedCountries.length}</span>
-            </h2>
-            <div className="progress-bar-container">
-                <div className="progress-bar-fill" style={{ width: `${countryProgress}%` }} />
-                <span className="progress-bar-label">{Math.round(countryProgress)}%</span>
             </div>
-            <div className="progress-country-grid">
-                {sortedCountries.map(country => {
-                    const state = getCountryState(country)
-                    const flagCode = countryFlags[country]
-                    return (
-                        <div key={country} className={`progress-country-card progress-country-${state}${state === 'connected' && !claimed.has('country:' + country) && !fading.has('country:' + country) ? ' progress-card-unclaimed' : ''}${fading.has('country:' + country) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimed.has('country:' + country) && handleCardClick(e, 'country:' + country)}>
-                            {state === 'unknown' ? (
-                                <>
-                                    <div className="progress-flag-unknown">?</div>
-                                    <div className="progress-country-name unknown-name">Unknown</div>
-                                </>
-                            ) : (
-                                <>
-                                    {flagCode ? (
-                                        <img className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={`https://flagcdn.com/w80/${flagCode}.png`} alt={country} />
-                                    ) : (
-                                        <div className="progress-flag-unknown">?</div>
-                                    )}
-                                    <div className={`progress-country-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{country}</div>
-                                </>
-                            )}
-                        </div>
-                    )
-                })}
-            </div>
-
-            <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
-                Cities collected
-                <span className="progress-fraction">{purchasedCities.length} / {visibleCities.length}</span>
-            </h2>
-            <div className="progress-bar-container">
-                <div className="progress-bar-fill" style={{ width: `${cityProgress}%` }} />
-                <span className="progress-bar-label">{Math.round(cityProgress)}%</span>
-            </div>
-            <div className="progress-city-grid">
-                {sortedCities.map(city => {
-                    const state = getCityState(city)
-                    const flagCode = countryFlags[city.country]
-                    return (
-                        <div key={city.name} className={`progress-city-card progress-city-${state}${state === 'connected' && !claimed.has('city:' + city.name) && !fading.has('city:' + city.name) ? ' progress-card-unclaimed' : ''}${fading.has('city:' + city.name) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimed.has('city:' + city.name) && handleCardClick(e, 'city:' + city.name)}>
-                            {state === 'unknown' ? (
-                                <>
-                                    <div className="progress-city-image-unknown">?</div>
-                                    <div className="progress-city-name unknown-name">Unknown City</div>
-                                    <div className="progress-city-flag-unknown">?</div>
-                                </>
-                            ) : (
-                                <>
-                                    <img className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={cityThumbnails[city.name] || cityImages[city.name]} alt={city.name} />
-                                    <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{city.name}</div>
-                                    {flagCode ? (
-                                        <img className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={`https://flagcdn.com/w80/${flagCode}.png`} alt={city.country} />
-                                    ) : (
-                                        <div className="progress-city-flag-unknown">?</div>
-                                    )}
-                                </>
-                            )}
-                        </div>
-                    )
-                })}
-            </div>
-            </div>
-        </div>
-        {floats.map(f => (
-            <div key={f.id} style={{
-                position: 'fixed', left: f.x, top: f.y,
-                transform: 'translateX(-50%)',
-                pointerEvents: 'none', zIndex: 999,
-                animation: 'progress-float-up 1.5s ease-out forwards',
-                display: 'flex', alignItems: 'center', gap: '4px',
-                fontFamily: 'Courier New, monospace', fontWeight: 'bold',
-                fontSize: '1rem', color: f.reward.type === 'cash' ? '#f5a623' : '#e74c3c',
-                background: 'rgba(0,0,0,0.75)', borderRadius: '20px', padding: '4px 12px',
-                whiteSpace: 'nowrap',
-            }}>
-                {f.reward.type === 'cash'
-                    ? <><img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount.toLocaleString()}</>
-                    : <><img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount}</>
-                }
-            </div>
-        ))}
-    </>
+            {floats.map(f => (
+                <div key={f.id} style={{
+                    position: 'fixed', left: f.x, top: f.y,
+                    transform: 'translateX(-50%)',
+                    pointerEvents: 'none', zIndex: 999,
+                    animation: 'progress-float-up 1.5s ease-out forwards',
+                    display: 'flex', alignItems: 'center', gap: '4px',
+                    fontFamily: 'Courier New, monospace', fontWeight: 'bold',
+                    fontSize: '1rem', color: f.reward.type === 'cash' ? '#f5a623' : '#e74c3c',
+                    background: 'rgba(0,0,0,0.75)', borderRadius: '20px', padding: '4px 12px',
+                    whiteSpace: 'nowrap',
+                }}>
+                    {f.reward.type === 'cash'
+                        ? <><img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount.toLocaleString()}</>
+                        : <><img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount}</>
+                    }
+                </div>
+            ))}
+        </>
     )
 }
 
