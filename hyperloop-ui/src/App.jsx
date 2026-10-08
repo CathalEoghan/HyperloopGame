@@ -121,7 +121,8 @@ function App() {
     // or reloading the page before then doesn't lose them (bug #84).
     let pending = null;
     try { pending = JSON.parse(localStorage.getItem('hyperloop_pending_offline')); } catch { pending = null; }
-    const fresh = calculateFreshOffline();
+    // The page is open from now on, so "last seen" starts now (a crash soon after loading must not lose the gap)
+    localStorage.setItem('hyperloop_heartbeat_at', Date.now());
     if (!pending && !fresh) return null;
     const combined = {
       offlineSeconds: (pending?.offlineSeconds || 0) + (fresh?.offlineSeconds || 0),
@@ -406,6 +407,8 @@ function App() {
   const triggerSave = (farewells) => {
     if (blockedRef.current) return;
     saveGame(progressionManager, rankManager, terminalNameRef.current, farewells ?? farewellsRef.current);
+    // Every save is also a sign of life, so offline time is counted from the newest save
+    localStorage.setItem('hyperloop_heartbeat_at', Date.now());
     setLastSaved(Date.now());
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 2000);
@@ -540,6 +543,8 @@ function App() {
           setOfflineData(combined);
           setShowOfflineModal(true);
         }
+        // The gap is now paid for, so move "last seen" forward; a crash soon after must not pay it again
+        triggerSave();
       }
       const incomePerSecond = economyManager.calculateDailyIncome(null, savedCreatedAt);
       progressionManager.addCash(incomePerSecond * elapsed);
@@ -635,7 +640,6 @@ function App() {
 
       if (tickCount.current % 30 === 0) {
         triggerSave();
-        localStorage.setItem('hyperloop_heartbeat_at', Date.now());
       }
 
       // Hyper-Link post generation every 3-5 minutes
