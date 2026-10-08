@@ -4,9 +4,11 @@ import reputationIcon from '../assets/misc/reputation.png'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
 
+const secondsUntil = expiresAt => Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000))
+
 function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const [secondsLeft, setSecondsLeft] = useState(() => {
-        if (departure.expiresAt) return Math.max(30, Math.floor((departure.expiresAt - Date.now()) / 1000));
+        if (departure.expiresAt) return secondsUntil(departure.expiresAt);
         if (departure.secondsRemaining) return departure.secondsRemaining;
         const extensionCount = economyManager?.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'farewellWindowExtension').length || 0
@@ -15,7 +17,14 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
 
     useEffect(() => {
         playLeavingSound()
-        const timer = setInterval(() => {
+               const timer = setInterval(() => {
+            if (departure.expiresAt) {
+                // Read the clock every second, so a sleeping laptop or a throttled tab can't stretch the window
+                const left = secondsUntil(departure.expiresAt)
+                setSecondsLeft(left)
+                if (left <= 0) { clearInterval(timer); onMiss() }
+                return
+            }
             setSecondsLeft(prev => {
                 if (prev <= 1) {
                     clearInterval(timer)
