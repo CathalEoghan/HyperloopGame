@@ -1,15 +1,14 @@
 import { useState, useEffect } from 'react'
 import './TickerBar.css'
+import { minutesUntilDeparture } from '../utils/time.js'
 
 function TickerBar({ terminalName }) {
     const [messages, setMessages] = useState([])
 
     function getActiveMessages(schedule) {
-        const now = new Date()
-        const currentMinutes = now.getHours() * 60 + now.getMinutes()
         const msgs = []
         schedule.forEach(entry => {
-            const diff = (entry.hour * 60 + entry.minute) - currentMinutes
+            const diff = minutesUntilDeparture(entry)
             if (diff > 30 && diff <= 45) {
                 msgs.push(`Attention: Passengers travelling to ${entry.name} for a ${entry.time} departure are advised to go to Gate ${entry.gate}.`)
             } else if (diff > 10 && diff <= 30) {

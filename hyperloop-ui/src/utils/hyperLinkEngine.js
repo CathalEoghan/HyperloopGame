@@ -1,5 +1,6 @@
 import { POSTS, FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/hyperLinkData.js'
 import { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
+import { minutesUntilDeparture } from './time.js'
 
 const DEV_KEY_MAP = {
     'Irish Bar': 'irishBar',
@@ -90,12 +91,9 @@ function buildEligibleCategories(gameState) {
 
     if (trigger) add(trigger.type, 25, trigger.data || {})
 
-    const now = new Date()
-    const currentMins = now.getHours() * 60 + now.getMinutes()
-
     if (schedule?.length) {
         schedule.forEach(entry => {
-            const diff = (entry.hour * 60 + entry.minute) - currentMins
+            const diff = minutesUntilDeparture(entry)
             if (diff > 0 && diff <= 30) add('boarding', 4, { boardingCity: entry.name, gateNumber: entry.gate })
             if (diff > 0 && diff <= 10) add('finalCall', 6, { finalCallCity: entry.name, gateNumber: entry.gate })
             if (diff > 0 && diff <= 45 && diff > 30) add('goToGate', 3, { goToGateCity: entry.name, gateNumber: entry.gate })

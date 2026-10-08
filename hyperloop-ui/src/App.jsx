@@ -35,6 +35,7 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { allCities } from "../../CityManager/CityRegistry.js";
+import { departureTimestamp, minutesUntilDeparture } from './utils/time.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
@@ -717,9 +718,6 @@ function App() {
       }
 
       const now = new Date();
-      const currentHour = now.getHours();
-      const currentMinute = now.getMinutes();
-      const currentSecond = now.getSeconds();
       const todayKey = now.toDateString();
       const storedDeparturesDate = localStorage.getItem('hyperloop_departures_date');
             if (storedDeparturesDate !== todayKey) {
@@ -750,15 +748,14 @@ function App() {
       schedule.forEach(entry => {
         // The city is part of the key, so two departures at the same minute both get a farewell.
         const key = `${todayKey}_${entry.time}_${entry.name}`;
-        const depMins = entry.hour * 60 + entry.minute;
-        const windowStart = depMins - windowMinutes;
-        const currentMins = currentHour * 60 + currentMinute;
-        if (currentMins >= windowStart && currentMins < depMins && !triggeredDepartures.current.has(key)) {
+        // Real moments in time, so the clocks changing can't skip or repeat a departure
+        const depTs = departureTimestamp(entry, now.getTime());
+        const windowStartTs = depTs - windowMinutes * 60000;
+        const nowMinuteTs = Math.floor(now.getTime() / 60000) * 60000;
+        if (nowMinuteTs >= windowStartTs && nowMinuteTs < depTs && !triggeredDepartures.current.has(key)) {
           triggeredDepartures.current.add(key);
           localStorage.setItem('hyperloop_triggered_departures', JSON.stringify([...triggeredDepartures.current]));
-          const currentTotalSeconds = currentHour * 3600 + currentMinute * 60 + currentSecond;
-          const windowStartSeconds = windowStart * 60;
-          const secondsElapsed = Math.max(0, currentTotalSeconds - windowStartSeconds);
+          const secondsElapsed = Math.max(0, Math.floor((now.getTime() - windowStartTs) / 1000));
           const secondsRemaining = Math.max(30, windowMinutes * 60 - secondsElapsed);
           const expiresAt = Date.now() + secondsRemaining * 1000;
           const depEntry = { ...entry, secondsRemaining, expiresAt };
@@ -773,7 +770,7 @@ function App() {
 
       if (Math.random() < 0.0002) {
         const eligible = schedule.filter(entry => {
-          const diff = (entry.hour * 60 + entry.minute) - (currentHour * 60 + currentMinute);
+          const diff = minutesUntilDeparture(entry, now.getTime());
           const maxDelay = (23 * 60 + 55) - (entry.hour * 60 + entry.minute);
           // Require at least 10 minutes of headroom before the 23:55 cutoff — the
           // random delay below is always at least 10 minutes, so a departure with

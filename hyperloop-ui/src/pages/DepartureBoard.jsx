@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import './DepartureBoard.css'
 import { playSplitFlapLong, playSplitFlapShort } from '../utils/sound.js'
+import { minutesUntilDeparture } from '../utils/time.js'
 
 function getOrdinal(n) {
     const s = ['th', 'st', 'nd', 'rd']
@@ -16,9 +17,7 @@ function padText(text, width, padChar = '-') {
 }
 
 function getStatus(hour, minute, delayed, lag = 0) {
-    const laggedNow = new Date(Date.now() - lag * 1000)
-    const currentMinutes = laggedNow.getHours() * 60 + laggedNow.getMinutes()
-    const diff = (hour * 60 + minute) - currentMinutes
+    const diff = minutesUntilDeparture({ hour, minute }, Date.now() - lag * 1000)
     if (diff <= 0)  return { label: 'DEPARTED',    color: '#666' }
     if (diff <= 5)  return { label: 'GATE CLOSED', color: '#e74c3c' }
     if (diff <= 10) return { label: 'FINAL CALL',  color: 'red' }
