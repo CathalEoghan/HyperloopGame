@@ -16,23 +16,29 @@ const WORK_PHRASES = [
     'Reviewed safety report', 'Assisted lost traveller', 'Found lost luggage',
     'Met with union leaders', 'Posted to social media', 'Delivered speech to workers',
     'Planned new development', 'Assembled financial advisors', 'Inspected pod maintenance logs',
-    'Negotiated new route contract',
-    'Greeted arriving delegation',
-    'Reviewed passenger feedback',
-    'Signed off on construction plans',
-    'Attended press briefing',
+    'Negotiated new route contract', 'Gave a promotion', 'Cleaned office', 'Took a day off',
+    'Greeted arriving delegation', 'Discussed plans', 'Inspected pods', 'Slacked off in the staffroom',
+    'Reviewed passenger feedback', 'Read a newspaper', 'Reflected on progress', 'Welcomed foreign investors',
+    'Signed off on construction plans', 'Watered office plants', 'Ate a donut', 'Chatted with secretary',
+    'Attended press briefing', 'Attended a function', 'Attended a gala', 'Attended a charity ball',
     'Conducted staff training', 'Conducted interviews', 'Made a coffee', 'Argued with lawyers'
 ]
 
 let floatId = 0
 
+const WORK_SUFFIXES = ['k', 'm', 'b', 't', 'qa', 'qi', 'sx', 'sp', 'oc', 'no', 'dc']
+
 const formatWorkAmount = (value, tilde = false) => {
     const t = tilde ? '~' : ''
-    if (value >= 1_000_000_000_000) return `${(value / 1_000_000_000_000).toFixed(1)}t${t}`
-    if (value >= 1_000_000_000) return `${(value / 1_000_000_000).toFixed(1)}b${t}`
-    if (value >= 1_000_000) return `${(value / 1_000_000).toFixed(1)}m${t}`
-    if (value >= 1_000) return `${(value / 1_000).toFixed(1)}k${t}`
-    return `${Math.round(value)}${t}`
+    if (!Number.isFinite(value)) return `0${t}`
+    if (value < 1000) return `${Math.round(value)}${t}`
+    let tier = Math.floor(Math.log10(value) / 3)
+    // Beyond the last suffix, fall back to scientific notation
+    if (tier > WORK_SUFFIXES.length) return `${value.toExponential(1).replace('e+', 'e')}${t}`
+    let scaled = value / Math.pow(1000, tier)
+    // 999.96k rounds to "1000.0k", so step up to the next suffix instead
+    if (Number(scaled.toFixed(1)) >= 1000 && tier < WORK_SUFFIXES.length) { tier += 1; scaled = value / Math.pow(1000, tier) }
+    return `${scaled.toFixed(1)}${WORK_SUFFIXES[tier - 1]}${t}`
 }
 
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {

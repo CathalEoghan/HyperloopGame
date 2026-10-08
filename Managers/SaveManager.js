@@ -4,7 +4,6 @@ import { allUpgrades } from '../UpgradeManager/UpgradeRegistry.js'
 import { MAX_RANK } from './RankManager/RankManager.js'
 
 const SAVE_KEY = 'hyperloop_save'
-const MAX_BALANCE = 999_000_000_000
 
 // Names that changed after saving was added (old name → current name). Saves store names,
 // so without this an item that was renamed silently disappears on load (bug #86).
@@ -142,8 +141,9 @@ function validateSave(save) {
     if (SAVE_NAME_LISTS.some(key => save[key] !== undefined && !(Array.isArray(save[key]) && save[key].every(n => typeof n === 'string')))) return false
     if (SAVE_BUILD_LISTS.some(key => save[key] !== undefined && !(Array.isArray(save[key]) && save[key].every(item => item && typeof item.name === 'string' && Number.isFinite(item.finishTime))))) return false
     if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
-    if (save.balance < 0 || save.balance > MAX_BALANCE) return false
-    if (save.reputation < 0 || save.reputation > 100000) return false
+    // No upper limit on balance or reputation: the game has none, so a long-running save must import (bug #114).
+    if (save.balance < 0) return false
+    if (save.reputation < 0) return false
     if (save.rank < 1 || save.rank > MAX_RANK) return false
     // Every game starts with £1,000,000 and £0 earned, so the balance can be up to that much
     // above the total earned (bug #56).
