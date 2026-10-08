@@ -121,8 +121,7 @@ function App() {
     // or reloading the page before then doesn't lose them (bug #84).
     let pending = null;
     try { pending = JSON.parse(localStorage.getItem('hyperloop_pending_offline')); } catch { pending = null; }
-    // The page is open from now on, so "last seen" starts now (a crash soon after loading must not lose the gap)
-    localStorage.setItem('hyperloop_heartbeat_at', Date.now());
+    const fresh = calculateFreshOffline();
     if (!pending && !fresh) return null;
     const combined = {
       offlineSeconds: (pending?.offlineSeconds || 0) + (fresh?.offlineSeconds || 0),
@@ -140,7 +139,8 @@ function App() {
       parseInt(localStorage.getItem('hyperloop_heartbeat_at') || '0') || 0
     ) || null;
     localStorage.removeItem('hyperloop_hidden_at');
-    localStorage.removeItem('hyperloop_heartbeat_at');
+    // The page is open from now on, so "last seen" starts now (a crash soon after loading must not lose the gap)
+    localStorage.setItem('hyperloop_heartbeat_at', Date.now());
     localStorage.removeItem('hyperloop_accumulated_offline');
     if (!hiddenAt) return null;
     const totalSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
