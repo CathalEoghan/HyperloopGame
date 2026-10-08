@@ -388,7 +388,11 @@ function App() {
     localStorage.setItem('hyperloop_last_login', today);
     const hasCommemorativeDisplays = progressionManager.purchasedUpgrades.some(u => u.name === 'Commemorative Displays');
     const hasDailyRepDoubled = progressionManager.purchasedUpgrades.some(u => u.effectType === 'dailyRepDoubled');
+    // The bonus is worked out without any running event, so an event can't double or halve it
+    const savedEvent = economyManager.activeEvent;
+    economyManager.activeEvent = null;
     const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
+    economyManager.activeEvent = savedEvent;
     const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
     let repBonus = economyManager.getUpgradeSum('dailyLoginRep');
     if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
