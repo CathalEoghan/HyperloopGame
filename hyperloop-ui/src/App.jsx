@@ -326,8 +326,10 @@ function App() {
     shuffled.forEach((city, i) => {
       const slotStart = i * slotSize;
       const slotEnd = Math.min(slotStart + slotSize, totalMinutes - 1);
+      let minuteOfDay = Math.floor((slotStart + Math.floor(Math.random() * (slotEnd - slotStart))) / 5) * 5;
       // Never exactly 00:00: its farewell window would start on the previous day, so no farewell would open
-      minuteOfDay = Math.max(5, minuteOfDay);      if (departures.length > 0) {
+      minuteOfDay = Math.max(5, minuteOfDay);
+      if (departures.length > 0) {
         const lastTime = departures[departures.length - 1].minuteOfDay;
         if (minuteOfDay - lastTime < 10) minuteOfDay = Math.ceil((lastTime + 10) / 5) * 5;
       }

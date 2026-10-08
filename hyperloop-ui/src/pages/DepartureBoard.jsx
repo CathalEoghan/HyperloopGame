@@ -83,6 +83,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
             const slotStart = i * slotSize
             const slotEnd = Math.min(slotStart + slotSize, totalMinutes - 1)
             let minuteOfDay = slotStart + Math.floor(Math.random() * (slotEnd - slotStart))
+            minuteOfDay = Math.floor(minuteOfDay / 5) * 5
             // Never exactly 00:00: its farewell window would start on the previous day, so no farewell would open
             minuteOfDay = Math.max(5, minuteOfDay)
             if (departures.length > 0) {
