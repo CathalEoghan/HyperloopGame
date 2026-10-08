@@ -15,8 +15,8 @@ function latLngToVector3(lat, lng, radius) {
     const theta = (lng + 180) * (Math.PI / 180)
     return new THREE.Vector3(
         -radius * Math.sin(phi) * Math.cos(theta),
-         radius * Math.cos(phi),
-         radius * Math.sin(phi) * Math.sin(theta)
+        radius * Math.cos(phi),
+        radius * Math.sin(phi) * Math.sin(theta)
     )
 }
 
@@ -56,7 +56,7 @@ function getSunWorldPosition() {
 function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity }) {
     const mountRef = useRef(null)
     const [hoveredCity, setHoveredCity] = useState(null)
-        const [showOwned, setShowOwned] = useState(() => {
+    const [showOwned, setShowOwned] = useState(() => {
         try { return localStorage.getItem('globeShowOwned') !== 'false' } catch { return true }
     })
     const [globeReady, setGlobeReady] = useState(false)
@@ -64,7 +64,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     const [selectedUnlockedCity, setSelectedUnlockedCity] = useState(null)
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
-     const showOwnedRef = useRef(showOwned)
+    const showOwnedRef = useRef(showOwned)
     const purchasedCitiesRef = useRef(purchasedCities)
     const unlockedCitiesRef = useRef(unlockedCities)
     const disabledRef = useRef(disabled)
@@ -80,36 +80,44 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
 
     // HomePage.jsx — add this useEffect after the disabledRef sync effect (around line 79)
 
-useEffect(() => {
-    const sprites = spritesRef.current
-    if (!sprites.length) return
-    const purchasedNames = new Set(purchasedCities.map(c => c.name))
-    const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
-    const textureLoader = new THREE.TextureLoader()
+    useEffect(() => {
+        const sprites = spritesRef.current
+        if (!sprites.length) return
+        const purchasedNames = new Set(purchasedCities.map(c => c.name))
+        const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
+        const textureLoader = new THREE.TextureLoader()
 
-    sprites.forEach(sprite => {
-        const { city } = sprite.userData
-        const nowPurchased = purchasedNames.has(city.name)
-        const nowUnlocked = unlockedNames.has(city.name)
+        sprites.forEach(sprite => {
+            const { city } = sprite.userData
+            const nowPurchased = purchasedNames.has(city.name)
+            const nowUnlocked = unlockedNames.has(city.name)
 
-        if (nowPurchased && !sprite.userData.isPurchased) {
-            // Was unlocked/dimmed → full colour
-            const flagCode = countryFlags[city.country]
-            sprite.material.map = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
-            sprite.material.color.set(1, 1, 1)
-            sprite.material.needsUpdate = true
-            sprite.userData.isPurchased = true
-            sprite.userData.isUnlocked = true
-        } else if (nowUnlocked && !sprite.userData.isUnlocked) {
-            // Was grayscale → dimmed colour
-            const flagCode = countryFlags[city.country]
-            sprite.material.map = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
-            sprite.material.color.set(0.1, 0.1, 0.1)
-            sprite.material.needsUpdate = true
-            sprite.userData.isUnlocked = true
-        }
-    })
-}, [purchasedCities, unlockedCities, purchasedCities.length, unlockedCities?.length])
+            if (nowPurchased && !sprite.userData.isPurchased) {
+                // Was unlocked/dimmed → full colour
+                const flagCode = countryFlags[city.country]
+                sprite.material.map = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
+                sprite.material.color.set(1, 1, 1)
+                sprite.material.needsUpdate = true
+                sprite.userData.isPurchased = true
+                sprite.userData.isUnlocked = true
+            } else if (nowUnlocked && !sprite.userData.isUnlocked) {
+                // Was grayscale → dimmed colour
+                const flagCode = countryFlags[city.country]
+                sprite.material.map = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
+                sprite.material.color.set(0.1, 0.1, 0.1)
+                sprite.material.needsUpdate = true
+                sprite.userData.isUnlocked = true
+            } else if (!nowPurchased && !nowUnlocked && !city.underConstruction && (sprite.userData.isUnlocked || sprite.userData.isPurchased)) {
+                // No longer on offer (for example it was re-rolled away) → back to grayscale
+                loadGrayscaleTexture(`https://flagcdn.com/w40/${countryFlags[city.country]}.png`, (greyTex) => {
+                    if (greyTex) { sprite.material.map = greyTex; sprite.material.needsUpdate = true }
+                })
+                sprite.material.color.set(1, 1, 1)
+                sprite.userData.isUnlocked = false
+                sprite.userData.isPurchased = false
+            }
+        })
+    }, [purchasedCities, unlockedCities, purchasedCities.length, unlockedCities?.length])
 
     useEffect(() => {
         const mount = mountRef.current
@@ -297,12 +305,12 @@ useEffect(() => {
             prev = { x: e.clientX, y: e.clientY }
             updateCamera()
         }
-            const onMouseUp = (e) => {
+        const onMouseUp = (e) => {
             isDragging = false
             if (disabledRef.current) return // don't let a click reach the globe while an overlay/modal has it disabled
             const dx = e.clientX - mouseDownPos.x
             const dy = e.clientY - mouseDownPos.y
-            if (Math.sqrt(dx*dx + dy*dy) > 5) return // was a drag
+            if (Math.sqrt(dx * dx + dy * dy) > 5) return // was a drag
             const rect = mount.getBoundingClientRect()
             const mx = ((e.clientX - rect.left) / rect.width) * 2 - 1
             const my = -((e.clientY - rect.top) / rect.height) * 2 + 1
@@ -418,7 +426,7 @@ useEffect(() => {
                     </div>
                 </div>
             )}
-                        {selectedUnlockedCity && !purchasedCities.some(c => c.name === selectedUnlockedCity.name) && (
+            {selectedUnlockedCity && !purchasedCities.some(c => c.name === selectedUnlockedCity.name) && (
                 <div className="modal-overlay" onClick={() => setSelectedUnlockedCity(null)}>
                     <div className="modal" onClick={e => e.stopPropagation()}>
                         {constructionManager?.progressionManager?.citiesUnderConstruction?.some(c => c.name === selectedUnlockedCity.name) ? (

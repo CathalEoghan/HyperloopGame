@@ -43,7 +43,8 @@ export class ConstructionManager {
         startStationConstruction(city) {
         // Never charge for a city that's already connected or already being built.
         const pm = this.progressionManager;
-        if (pm.purchasedCities.includes(city) || pm.citiesUnderConstruction.includes(city)) return false;
+        // Only a city you have been offered can be connected (the Antarctic Peninsula finale is the exception).
+        if (city.tier !== 0 && !pm.unlockedCities.includes(city)) return false;
         const connectionCost = this.calculateTierConnectionCost(city);
         const canAfford = this.progressionManager.spendCash(connectionCost);
         if (!canAfford) return;

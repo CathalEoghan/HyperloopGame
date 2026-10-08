@@ -18,7 +18,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
 
     useEffect(() => {
         playLeavingSound()
-               const timer = setInterval(() => {
+        const timer = setInterval(() => {
             if (departure.expiresAt) {
                 // Read the clock every second, so a sleeping laptop or a throttled tab can't stretch the window
                 const left = secondsUntil(departure.expiresAt)
@@ -64,7 +64,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                     <span className="farewell-city-name">{departure.name}</span>
                 </div>
                 <p className="farewell-message">
-                                       {gateClosed
+                    {gateClosed
                         ? <>Gate <strong>{departure.gate}</strong> is now closed for <strong>{departure.name}</strong>. There is still time to give passengers a personal farewell.</>
                         : <>Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Gate <strong>{departure.gate}</strong>.</>}
                 </p>
