@@ -19,8 +19,8 @@ function hashNum(str, mod, offset = 0) {
 
 function getGrowthFactor(ageMs) {
     const ageMinutes = ageMs / 60000
-    if (ageMinutes < 0.5) return 0.05
-    return Math.min(1 - Math.exp(-ageMinutes / 20), 1)
+    // Never below 5%: the curve itself is only 2.5% at 30 seconds, which made the counts drop (bug #135)
+    return Math.max(0.05, Math.min(1 - Math.exp(-ageMinutes / 20), 1))
 }
 
 function formatTimestamp(ts) {
@@ -58,16 +58,15 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
         return () => clearInterval(interval)
     }, [])
 
-    const toggleLike = (postId, e) => {
+    // A like is permanent: it can't be taken back, so a later reward for likes can't be farmed by
+    // liking and unliking the same post.
+    const likePost = (postId, e) => {
         if (e) e.stopPropagation()
+        if (likedPosts.has(postId)) return
         const newLiked = new Set(likedPosts)
-        if (newLiked.has(postId)) {
-            newLiked.delete(postId)
-        } else {
-            newLiked.add(postId)
-            setLikeAnimating(postId)
-            setTimeout(() => setLikeAnimating(null), 800)
-        }
+        newLiked.add(postId)
+        setLikeAnimating(postId)
+        setTimeout(() => setLikeAnimating(null), 800)
         setLikedPosts(newLiked)
         localStorage.setItem('hyperloop_hyperlink_liked', JSON.stringify([...newLiked]))
     }
@@ -76,7 +75,7 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
         const now = Date.now()
         const lastTap = lastTapRef.current[postId] || 0
         if (now - lastTap < 350) {
-            toggleLike(postId)
+            likePost(postId)
         }
         lastTapRef.current[postId] = now
     }
@@ -152,8 +151,8 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
                                             <div className="hyperlink-engagement">
                                                 <span
                                                     className={`hyperlink-likes${isLiked ? ' hyperlink-likes-active' : ''}`}
-                                                    onClick={(e) => toggleLike(post.id, e)}
-                                                    style={{ cursor: 'pointer' }}
+                                                    onClick={(e) => likePost(post.id, e)}
+                                                    style={{ cursor: isLiked ? 'default' : 'pointer' }}
                                                 >
                                                     ❤ {displayLikes}
                                                 </span>

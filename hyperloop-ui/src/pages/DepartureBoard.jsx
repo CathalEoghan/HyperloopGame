@@ -63,6 +63,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     const [lagMap, setLagMap] = useState({})
     const prevStatusRef = useRef({})
     const hasPlayedLongRef = useRef(false)
+    const longFlapRef = useRef(null)
     const lagMapRef = useRef({})
     const [boardInitialized, setBoardInitialized] = useState(false)
 
@@ -128,10 +129,18 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     useEffect(() => {
         if (schedule.length > 0 && !hasPlayedLongRef.current) {
             hasPlayedLongRef.current = true
-            if (splitFlapEnabled()) playSplitFlapLong()
+            if (splitFlapEnabled()) longFlapRef.current = playSplitFlapLong()
             setTimeout(() => setBoardInitialized(true), 6500)
         }
     }, [schedule.length])
+
+    // Closing the board stops the long flap sound, so opening it again can't layer a second one over it (bug #135)
+    useEffect(() => () => {
+        const audio = longFlapRef.current
+        if (audio) { audio.pause(); audio.currentTime = 0 }
+        longFlapRef.current = null
+        hasPlayedLongRef.current = false
+    }, [])
 
     useEffect(() => {
         if (!purchasedCities || purchasedCities.length === 0) return

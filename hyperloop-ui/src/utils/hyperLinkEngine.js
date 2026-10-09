@@ -221,7 +221,12 @@ export function generateHyperLinkPost(gameState) {
     const cats = buildEligibleCategories(gameState)
     if (cats.length === 0) return null
 
-    const selected = pickCategory(cats)
+    // A post about something that just happened always goes out when it has a template left,
+    // instead of competing with the ordinary categories (bug #135).
+    const triggerCat = trigger ? cats.find(c => c.category === trigger.type) : null
+    const triggerHasPosts = triggerCat && (POSTS[triggerCat.category] || [])
+        .some((_, i) => !usedPostIds.includes(`${triggerCat.category}_${i}`))
+    const selected = triggerHasPosts ? triggerCat : pickCategory(cats)
 
     if (selected.category === 'officialGeneral') {
         const pool = POSTS.officialGeneral || []

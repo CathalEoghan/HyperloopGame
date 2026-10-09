@@ -37,8 +37,10 @@ function canPlay() {
 }
 
 function play(src) {
-    if (!canPlay()) return
-    new Audio(src).play().catch(() => {})
+    if (!canPlay()) return null
+    const audio = new Audio(src)
+    audio.play().catch(() => {})
+    return audio
 }
 
 export const playEventSound = () => play(eventSound)
@@ -58,7 +60,7 @@ export function playOpeningAudio()              { play(openingAudio) }
 export function playDevelopmentUnlockedSound()  { play(developmentUnlocked) }
 export function playDailyLoginSound()           { play(dailyLoginSound) }
 export function playNotEnoughFundsSound()       { play(notEnoughFundsSound) }
-export function playSplitFlapLong()  { play(splitFlapLong) }
+export function playSplitFlapLong()  { return play(splitFlapLong) }
 export function playSplitFlapShort() { play(splitFlapShort) }
 export function playPhoneNotificationSound() { play(phoneNotificationSound) }
 export function playDepartureBoardSound() {

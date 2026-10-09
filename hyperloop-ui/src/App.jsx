@@ -93,6 +93,19 @@ function takeOverAndReload() {
   window.location.reload();
 }
 
+// Reads like a ref: .current is the oldest waiting trigger, assigning one queues it, assigning null
+// removes the oldest. At most 6 wait; the oldest is dropped beyond that.
+function makeTriggerQueue() {
+  const queue = []
+  return {
+    get current() { return queue[0] ?? null },
+    set current(value) {
+      if (value === null || value === undefined) queue.shift()
+      else { queue.push(value); if (queue.length > 6) queue.shift() }
+    },
+  }
+}
+
 function App() {
     // One id per page. It's kept on window rather than in state, so a hot reload while developing
   // (which restarts App with fresh state in the same page) isn't mistaken for a second tab.
@@ -250,11 +263,20 @@ function App() {
   const [cityClaimPending, setCityClaimPending] = useState(false);
   const [showDepartureBoard, setShowDepartureBoard] = useState(false)
   const topOffset = activeEvent ? 145 : 113
+  // Posts older than two days are dropped as soon as the game loads, so after days away the phone
+  // doesn't show week-old posts or an old unread count (bug #135).
   const [hyperLinkFeed, setHyperLinkFeed] = useState(() => {
-    try { return JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]') } catch { return [] }
+    try {
+      const stored = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
+      const fresh = stored.filter(p => p.timestamp > Date.now() - 172800000)
+      if (fresh.length !== stored.length) localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(fresh))
+      return fresh
+    } catch { return [] }
   })
   const [hyperLinkUnread, setHyperLinkUnread] = useState(() => {
-    return parseInt(localStorage.getItem('hyperloop_hyperlink_unread') || '0')
+    const unread = Math.min(parseInt(localStorage.getItem('hyperloop_hyperlink_unread') || '0') || 0, hyperLinkFeed.length)
+    localStorage.setItem('hyperloop_hyperlink_unread', unread)
+    return unread
   })
   const [hyperLinkOpen, setHyperLinkOpen] = useState(false)
   const [hyperLinkBubble, setHyperLinkBubble] = useState(false)
@@ -263,7 +285,8 @@ function App() {
   useEffect(() => { hyperLinkOpenRef.current = hyperLinkOpen }, [hyperLinkOpen])
   useEffect(() => { terminalNameRef.current = terminalName }, [terminalName])
   const [hyperLinkTrigger, setHyperLinkTrigger] = useState(null)
-  const hyperLinkTriggerRef = useRef(null)
+  // Triggers wait in a short queue, so two things happening close together each get their post (bug #135).
+  const [hyperLinkTriggerRef] = useState(makeTriggerQueue)
   const hyperLinkOpenRef = useRef(false)
   const nextPostTick = useRef(60 + Math.floor(Math.random() * 120))
   const secretCityTriggered = useRef(false);
