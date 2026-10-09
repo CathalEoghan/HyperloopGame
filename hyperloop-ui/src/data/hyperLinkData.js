@@ -575,6 +575,7 @@ export const POSTS = {
         'just met the loveliest man in the loop to {departedCity}!',
         'yep just realised i left my hair curlers on at home. guess im staying in {departedCity} for now lol',
         'First #loop ever to #{departedCity}. Smooth and enjoyable so far!',
+        'Bon voyage! That\'s me off to {departedCity}!',
     ],
 
     delayCompensated: [
@@ -928,6 +929,7 @@ indoorGarden: [
     'Every journey starts here. We\'re honoured to be part of yours ❤️',
     'The {terminalName} team wishes you a wonderful trip wherever you\'re headed ✈️',
     'Reminder: please have your travel documents ready before boarding 📋',
+    'Reminder: we have a zero-tolerance policy on abuse of staff.',
 ],
 
 officialDelay: [
