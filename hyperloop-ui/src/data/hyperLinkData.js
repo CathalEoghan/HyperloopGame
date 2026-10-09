@@ -580,6 +580,8 @@ export const POSTS = {
         'yep just realised i left my hair curlers on at home. guess im staying in {departedCity} for now lol',
         'First #loop ever to #{departedCity}. Smooth and enjoyable so far!',
         'Bon voyage! That\'s me off to {departedCity}!',
+        'OMG... i just remembered my ex lives in {departedCity}. HOW DO I GET OFF THIS LOOP???',
+        'Bye bye everyone!! #{departedCity}',
     ],
 
     delayCompensated: [
