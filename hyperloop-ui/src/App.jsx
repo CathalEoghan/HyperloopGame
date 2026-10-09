@@ -268,8 +268,11 @@ function App() {
   const [hyperLinkFeed, setHyperLinkFeed] = useState(() => {
     try {
       const stored = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
-      const fresh = stored.filter(p => p.timestamp > Date.now() - 172800000)
-      if (fresh.length !== stored.length) localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(fresh))
+      // Posts from older versions also carried their whole picture; drop it, the id is enough (bug #134)
+      const fresh = stored.filter(p => p.timestamp > Date.now() - 172800000).map(({ pfp, ...rest }) => rest)
+      if (fresh.length !== stored.length || stored.some(p => 'pfp' in p)) localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(fresh))
+      // The old picture table could never be read back and only grew
+      localStorage.removeItem('hyperloop_hyperlink_user_pfps')
       return fresh
     } catch { return [] }
   })
@@ -692,11 +695,14 @@ function App() {
       if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 1) {
         // Clean up posts older than 2 days
         const twoDaysAgo = Date.now() - 172800000
-        const cleanFeed = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]').filter(p => p.timestamp > twoDaysAgo)
-        localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(cleanFeed))
+        const storedFeed = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
+        const cleanFeed = storedFeed.filter(p => p.timestamp > twoDaysAgo)
+        // Only write when something was actually removed, not every second (bug #134)
+        if (cleanFeed.length !== storedFeed.length) localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(cleanFeed))
         const validPostIds = new Set(cleanFeed.map(p => p.usedPostId).filter(Boolean))
-        const cleanedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]').filter(id => validPostIds.has(id))
-        localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(cleanedPostIds))
+        const storedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]')
+        const cleanedPostIds = storedPostIds.filter(id => validPostIds.has(id))
+        if (cleanedPostIds.length !== storedPostIds.length) localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(cleanedPostIds))
 
         const usedPostIds = cleanedPostIds
         // Month posts (see hyperLinkEngine.js) stay "used" for the whole calendar year instead of
@@ -707,8 +713,9 @@ function App() {
         const usedMonthPostRecords = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_month_posts') || '[]')
           .filter(e => e.year === currentYear)
         const usedMonthPostIds = usedMonthPostRecords.map(e => e.id)
-        const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]')
-        const userPfpMap = JSON.parse(localStorage.getItem('hyperloop_hyperlink_user_pfps') || '{}')
+        // Only pictures still in the feed count as used, so they come round again instead of running out (bug #71)
+        const feedPfpIds = new Set(cleanFeed.map(p => p.usedPfpId).filter(Boolean))
+        const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]').filter(id => feedPfpIds.has(id))
         const firedDevCategories = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
         const todayKey = new Date().toDateString()
         const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
@@ -725,7 +732,6 @@ function App() {
           usedPostIds,
           usedMonthPostIds,
           usedPfps,
-          userPfpMap,
           firedDevCategories,
           trigger: hyperLinkTriggerRef.current,
         })
@@ -737,10 +743,6 @@ function App() {
           if (post.usedPfpId && post.usedPfpId !== 'default' && post.usedPfpId !== 'official') {
             usedPfps.push(post.usedPfpId)
             localStorage.setItem('hyperloop_hyperlink_used_pfps', JSON.stringify(usedPfps))
-          }
-          if (post.handle && post.pfp) {
-            userPfpMap[post.handle] = { pfp: post.pfp, pfpId: post.usedPfpId }
-            localStorage.setItem('hyperloop_hyperlink_user_pfps', JSON.stringify(userPfpMap))
           }
           if (post.firedDevCategory && !firedDevCategories.includes(post.firedDevCategory)) {
             firedDevCategories.push(post.firedDevCategory)
@@ -764,6 +766,9 @@ function App() {
             setHyperLinkBubble(true)
             setTimeout(() => setHyperLinkBubble(false), 3000)
           }
+        } else {
+          // Nothing could be generated: try again in 30 seconds, not every second (bug #71)
+          nextPostTick.current = tickCount.current + 30
         }
       }
 

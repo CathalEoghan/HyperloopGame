@@ -8,8 +8,14 @@ import signalIcon from '../assets/misc/signal.png'
 import { defaultPfp, MALE_PFPS, FEMALE_PFPS, officialPfp } from '../assets/hyperLinkAssets.js'
 export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
 
-// Only bundled pictures may be shown; anything else in an imported save is ignored
-const ALLOWED_PFPS = new Set([...MALE_PFPS, ...FEMALE_PFPS, officialPfp])
+// A post stores only its picture's id ("male_12", "official", "default"); the image comes from the
+// bundled pools when it is drawn, so an imported save can never point at an outside address.
+function pfpFor(post) {
+    if (post.isOfficial) return officialPfp
+    const match = /^(male|female)_(\d+)$/.exec(post.usedPfpId || '')
+    if (!match) return null
+    return (match[1] === 'male' ? MALE_PFPS : FEMALE_PFPS)[Number(match[2])] || null
+}
 
 function hashNum(str, mod, offset = 0) {
     let h = 0
@@ -112,6 +118,7 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
                                 const maxLikes = hashNum(post.id, 847, 3)
                                 const maxReplies = hashNum(post.id + 'r', 47)
                                 const isLiked = likedPosts.has(post.id)
+                                const pfp = pfpFor(post)
                                 const displayLikes = Math.floor(maxLikes * growth) + (isLiked ? 1 : 0)
                                 const displayReplies = Math.floor(maxReplies * growth)
                                 return (
@@ -125,9 +132,9 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
                                             <div className="hyperlink-like-animation">❤</div>
                                         )}
                                         <img
-                                            src={ALLOWED_PFPS.has(post.pfp) ? post.pfp : defaultPfp}
+                                            src={pfp || defaultPfp}
                                             alt="pfp"
-                                            className={ALLOWED_PFPS.has(post.pfp) ? 'hyperlink-pfp' : 'hyperlink-pfp-default'}
+                                            className={pfp ? 'hyperlink-pfp' : 'hyperlink-pfp-default'}
                                             onError={e => { e.target.src = defaultPfp }}
                                         />
                                         <div className="hyperlink-post-body">

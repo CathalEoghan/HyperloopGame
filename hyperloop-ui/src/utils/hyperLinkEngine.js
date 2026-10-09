@@ -1,5 +1,5 @@
 import { POSTS, FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/hyperLinkData.js'
-import { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
+import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import { minutesUntilDeparture } from './time.js'
 
 const DEV_KEY_MAP = {
@@ -195,11 +195,10 @@ function substituteText(text, data, gameState) {
         .replace(/\{cityCount\}/g, purchasedCities.length)
 }
 
-function generateUser(gender, usedPfps, userPfpMap, handle) {
-    if (userPfpMap[handle]) return userPfpMap[handle]
-
+// Returns only the picture's id (e.g. "male_12"); the phone looks the image up when it draws the post (bug #134).
+function generateUser(gender, usedPfps) {
     const useReal = Math.random() < 0.85
-    if (!useReal) return { pfp: null, pfpId: 'default' }
+    if (!useReal) return { pfpId: 'default' }
 
     const pool = gender === 'male' ? MALE_PFPS : FEMALE_PFPS
     const available = pool.filter((_, i) => {
@@ -207,16 +206,16 @@ function generateUser(gender, usedPfps, userPfpMap, handle) {
         return !usedPfps.includes(id)
     })
 
-    if (available.length === 0) return { pfp: null, pfpId: 'default' }
+    if (available.length === 0) return { pfpId: 'default' }
 
     const idx = Math.floor(Math.random() * available.length)
     const poolIdx = pool.indexOf(available[idx])
     const pfpId = `${gender}_${poolIdx}`
-    return { pfp: available[idx], pfpId }
+    return { pfpId }
 }
 
 export function generateHyperLinkPost(gameState) {
-    const { terminalName, usedPostIds, usedMonthPostIds = [], usedPfps, userPfpMap, trigger } = gameState
+    const { terminalName, usedPostIds, usedMonthPostIds = [], usedPfps, trigger } = gameState
 
     const cats = buildEligibleCategories(gameState)
     if (cats.length === 0) return null
@@ -239,7 +238,6 @@ export function generateHyperLinkPost(gameState) {
             text: substituteText(chosen.text, {}, gameState),
             displayName: terminalName,
             handle: `@${terminalName.toLowerCase().replace(/[^a-z0-9]/g, '')}official`,
-            pfp: officialPfp,
             isOfficial: true,
             isItalic: false,
             timestamp: Date.now(),
@@ -271,7 +269,7 @@ export function generateHyperLinkPost(gameState) {
     const displayName = `${firstName} ${surname}`
     const handle = `@hyper-linkuser${Math.floor(10000000 + Math.random() * 90000000)}`
 
-    const { pfp, pfpId } = generateUser(gender, usedPfps, userPfpMap, handle)
+    const { pfpId } = generateUser(gender, usedPfps)
 
     const isItalic = chosenPost.text.startsWith('*(') && chosenPost.text.endsWith(')*')
     const cleanText = isItalic ? chosenPost.text.slice(2, -2) : chosenPost.text
@@ -281,7 +279,6 @@ export function generateHyperLinkPost(gameState) {
         text: substituteText(cleanText, selected.data, gameState),
         displayName,
         handle,
-        pfp,
         isOfficial: false,
         isItalic,
         timestamp: Date.now(),
@@ -319,7 +316,6 @@ export function generateOfficialEventPost(gameState) {
         text: substituted,
         displayName: terminalName,
         handle: `@${terminalName.toLowerCase().replace(/[^a-z0-9]/g, '')}official`,
-        pfp: officialPfp,
         isOfficial: true,
         isItalic: false,
         timestamp: Date.now(),
