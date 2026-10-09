@@ -259,6 +259,7 @@ export const POSTS = {
         'travel calories dont count',
         'children should be banned from loops',
         'i hate kids',
+        'broo whos eating cheese in arrivals #what 🤢'
         'why does no one know how to dress',
         'DONT MESS WITH ME TODAY',
         'i just miss him so badly',
@@ -930,7 +931,7 @@ indoorGarden: [
     'The {terminalName} team wishes you a wonderful trip wherever you\'re headed ✈️',
     'Reminder: please have your travel documents ready before boarding 📋',
     'Reminder: we have a zero-tolerance policy on abuse of staff.',
-        'Attention passengers: please keep your belongings with you at all times 🧳',
+    'Attention passengers: please keep your belongings with you at all times 🧳',
     'Notice: unattended luggage will be removed by security staff 🚫',
     'Please stand behind the yellow line while the capsule is arriving ⚠️',
     'Reminder: please let passengers exit the capsule before boarding 🚪',
