@@ -564,7 +564,8 @@ function App() {
             const now2 = Date.now();
       const gap = Math.max(0, (now2 - lastTickTimeRef.current) / 1000);
       lastTickTimeRef.current = now2;
-      const savedCreatedAt = savedData?.createdAt || Date.now();
+      // The game's own start date, so a brand-new game counts its days from the start (bug #82)
+      const savedCreatedAt = createdAt;
       // Credit the real time since the last tick, so a background tab earns in full. A long gap
       // is offline time instead: it's paid through the offline popup, capped like offline
       // income, and added to any offline reward that's still waiting (bug #57).

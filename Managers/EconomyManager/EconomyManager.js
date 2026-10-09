@@ -56,7 +56,9 @@ export class EconomyManager {
 
     getEffectiveDevRevenue(development) {
         const base = development.revenue || 0;
-        const level = this.progressionManager.developmentUpgradeLevels[development.name] || 0;
+        // A level outside 0-3 (a hand-edited save) is treated as the nearest real level, never NaN (bug #82)
+        const rawLevel = Math.floor(Number(this.progressionManager.developmentUpgradeLevels[development.name])) || 0;
+        const level = Math.max(0, Math.min(UPGRADE_MULTIPLIERS.length - 1, rawLevel));
         return Math.floor(base * UPGRADE_MULTIPLIERS[level]);
     }
 

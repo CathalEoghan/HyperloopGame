@@ -143,6 +143,8 @@ function validateSave(save) {
     if (SAVE_BUILD_LISTS.some(key => save[key] !== undefined && !(Array.isArray(save[key]) && save[key].every(item => item && typeof item.name === 'string' && Number.isFinite(item.finishTime))))) return false
     if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
     // No upper limit on balance or reputation: the game has none, so a long-running save must import (bug #114).
+    // Every development upgrade level must be a whole number from 0 to 3 (bug #82)
+    if (save.developmentUpgradeLevels && Object.values(save.developmentUpgradeLevels).some(v => !Number.isInteger(v) || v < 0 || v > 3)) return false
     if (save.balance < 0) return false
     if (save.reputation < 0) return false
     if (save.rank < 1 || save.rank > MAX_RANK) return false
