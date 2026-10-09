@@ -224,3 +224,65 @@
     letter-spacing: 0.5px;
     white-space: nowrap;
 }
+
+/* Update history drop-down */
+.version-log-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.2s;
+}
+
+.version-log-toggle:hover {
+    background: rgba(245, 166, 35, 0.1);
+}
+
+.version-log-toggle-title {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: #222;
+}
+
+.version-log-toggle-current {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 0.8rem;
+    color: #f5a623;
+    background: rgba(245, 166, 35, 0.1);
+    border: 1px solid rgba(245, 166, 35, 0.3);
+    border-radius: 4px;
+    padding: 2px 8px;
+}
+
+.version-log-toggle-arrow {
+    margin-left: auto;
+    color: #f5a623;
+    font-size: 1.1rem;
+    transition: transform 0.25s;
+}
+
+.version-log-toggle-open .version-log-toggle-arrow {
+    transform: rotate(180deg);
+}
+
+.version-log-drop {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+}
+
+.version-log-drop-open {
+    grid-template-rows: 1fr;
+}
+
+.version-log-drop-inner {
+    overflow: hidden;
+    min-height: 0;
+}

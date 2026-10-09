@@ -7,6 +7,31 @@ import './SettingsPage.css'
 const VERSION_LOG = [
 
     {
+        version: 'v2.1',
+        label: 'Bug Fixes & UI Polish',
+        date: 'October 2026',
+        notes: [
+            'The Founders\' Hall bonus is now included in the income shown for each city and development',
+            'Fixed big number formatting, removed the treasury cap, and numbers now look the same on every screen',
+            'Corrected text that contradicted the mechanics: Duty-Free, the +2.5% upgrades, the Guide, loop delays and the construction screen',
+            'The globe now works on touchscreens: drag to spin, pinch to zoom, tap to select',
+            'The globe and the Hyper-Link phone button are now switched off while a popup is open',
+            'Double-clicking Claim City no longer skips a reveal',
+            'Connecting a city you cannot afford no longer plays the construction sound',
+            'Daily login and offline double bonuses now use your current Reputation and cannot be charged twice',
+            'Event countdowns now follow the real time left, with no more stale timers',
+            'Seasons now work correctly for every home city',
+            'Fixed the midnight departure bug, the Sleeping tab, and cities that were not unlocked appearing unlockable',
+            'Developments are no longer removed if their city disconnects while they are under construction',
+            'Import and save fixes, with safeguards around outside asset imports',
+            'Hyper-Link now has over 500 posts, new surnames and more official terminal posts, with fresher post styles and photos shown first',
+            'More Work flavour text',
+            'The Owned only button now fills gold and plays a sound on hover',
+            'The Departure Board only shows a scrollbar when the list is longer than the window',
+            'Update history added to Settings as a drop-down',
+        ]
+    },
+    {
     version: 'v2.0',
     label: 'Hyper-Link Social Media',
     major: true,
@@ -134,6 +159,7 @@ function LegalModal({ onClose }) {
 }
 
 function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave, onReputationBonus, topOffset = 113 }) {
+    const [logOpen, setLogOpen] = useState(false)
     const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '8k')
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
@@ -403,7 +429,18 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             </div>
 
             <div className="settings-section">
-                <h2 className="settings-section-title">Version Log</h2>
+                <button
+                    className={`version-log-toggle ${logOpen ? 'version-log-toggle-open' : ''}`}
+                    aria-expanded={logOpen}
+                    onMouseEnter={() => playHoverSound()}
+                    onClick={() => { playClickSound2(); setLogOpen(o => !o) }}
+                >
+                    <span className="version-log-toggle-title">Update History</span>
+                    <span className="version-log-toggle-current">{VERSION_LOG[0].version}</span>
+                    <span className="version-log-toggle-arrow">▾</span>
+                </button>
+                <div className={`version-log-drop ${logOpen ? 'version-log-drop-open' : ''}`}>
+                <div className="version-log-drop-inner">
                 {VERSION_LOG.map(entry => (
                     <div key={entry.version} className="version-log-entry">
                         <div className="version-log-header">
@@ -419,6 +456,8 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         </ul>
                     </div>
                 ))}
+                </div>
+                </div>
             </div>
         </div>
     )
