@@ -204,16 +204,6 @@
     color: #f5a623;
 }
 
-.version-log-entry:first-child .version-log-tag {
-    background: #f5a623;
-    color: white;
-}
-
-.version-log-entry:first-child .version-log-label {
-    color: #f5a623;
-    font-weight: 700;
-}
-
 .version-log-major-badge {
     background: #f5a623;
     color: white;
