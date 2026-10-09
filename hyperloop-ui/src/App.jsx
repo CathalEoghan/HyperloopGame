@@ -1099,7 +1099,10 @@ function App() {
           purchasedCities={progressionManager.purchasedCities}
           unlockedCities={progressionManager.unlockedCities}
           purchasedCitiesCount={purchasedCitiesCount}
-          disabled={showOnboarding || hyperLinkOpen}
+          disabled={showOnboarding || hyperLinkOpen || showDepartureBoard || showMobileWarning || showNotEnoughRep
+            || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
+            || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || pendingRankUps > 0
+            || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)}
           economyManager={economyManager}
           balance={balance}
           constructionManager={constructionManager}

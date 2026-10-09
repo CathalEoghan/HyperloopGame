@@ -36,6 +36,8 @@
     flex: 1;
     cursor: grab;
     min-height: 0;
+    /* Touches on the globe belong to the globe (drag and pinch), not to the browser's own scroll and zoom */
+    touch-action: none;
 }
 
 .globe-container:active {

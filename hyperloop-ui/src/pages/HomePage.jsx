@@ -76,6 +76,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
 
     useEffect(() => {
         disabledRef.current = disabled
+        // A popup opening over the globe clears the hover panel (bug #80)
+        if (disabled) { setHoveredCity(null); prevHoveredCity.current = null }
     }, [disabled])
 
     // HomePage.jsx — add this useEffect after the disabledRef sync effect (around line 79)
@@ -284,33 +286,78 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         let prev = { x: 0, y: 0 }
 
         let mouseDownPos = { x: 0, y: 0 }
-        const onMouseDown = (e) => { isDragging = true; prev = { x: e.clientX, y: e.clientY }; mouseDownPos = { x: e.clientX, y: e.clientY } }
-        const onMouseMove = (e) => {
-            if (disabledRef.current) return
-            const rect = mount.getBoundingClientRect()
-            mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
-            mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
-            raycaster.setFromCamera(mouse, camera)
-            const visibleSprites = sprites.filter(s => s.visible)
-            const hits = raycaster.intersectObjects(visibleSprites)
-            const newHovered = hits.length > 0 ? hits[0].object.userData : null
-            if (newHovered !== prevHoveredCity.current) {
-                if (newHovered) playHoverSound()
-                prevHoveredCity.current = newHovered
+        // Mouse, touch and pen all arrive as pointer events (bug #80). Every finger or button currently
+        // down is kept here so two fingers can pinch to zoom.
+        const pointers = new Map()
+        let pinchDist = 0
+        let pinching = false
+        let ignoreUntilAllUp = false // after a pinch, lifting the fingers must not count as a tap
+        const pointerDistance = () => {
+            const [a, b] = [...pointers.values()]
+            return Math.hypot(a.x - b.x, a.y - b.y)
+        }
+        const onPointerDown = (e) => {
+            if (e.pointerType === 'mouse' && e.button !== 0) return
+            pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+            if (pointers.size === 1) {
+                isDragging = true
+                prev = { x: e.clientX, y: e.clientY }
+                mouseDownPos = { x: e.clientX, y: e.clientY }
+            } else if (pointers.size === 2) {
+                isDragging = false
+                pinching = true
+                ignoreUntilAllUp = true
+                pinchDist = pointerDistance() || 1
             }
-            setHoveredCity(newHovered)
+        }
+        const onPointerMove = (e) => {
+            if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+            if (disabledRef.current) return
+            if (pinching && pointers.size >= 2) {
+                const d = pointerDistance() || 1
+                camDist = Math.max(1.5, Math.min(5, camDist * (pinchDist / d)))
+                pinchDist = d
+                updateCamera()
+                return
+            }
+            // Hover only means something with a mouse; a finger has no hover
+            if (e.pointerType === 'mouse') {
+                const rect = mount.getBoundingClientRect()
+                mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
+                mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+                raycaster.setFromCamera(mouse, camera)
+                const visibleSprites = sprites.filter(s => s.visible)
+                const hits = raycaster.intersectObjects(visibleSprites)
+                const newHovered = hits.length > 0 ? hits[0].object.userData : null
+                if (newHovered !== prevHoveredCity.current) {
+                    if (newHovered) playHoverSound()
+                    prevHoveredCity.current = newHovered
+                }
+                setHoveredCity(newHovered)
+            }
             if (!isDragging) return
             camLon -= (e.clientX - prev.x) * 0.3
             camLat = Math.max(-85, Math.min(85, camLat + (e.clientY - prev.y) * 0.3))
             prev = { x: e.clientX, y: e.clientY }
             updateCamera()
         }
-        const onMouseUp = (e) => {
+        const onPointerUp = (e) => {
+            const startedOnGlobe = isDragging
+            pointers.delete(e.pointerId)
+            if (pointers.size < 2) pinching = false
             isDragging = false
+            if (pointers.size === 0) {
+                const wasPinch = ignoreUntilAllUp
+                ignoreUntilAllUp = false
+                if (wasPinch) return
+            } else {
+                return
+            }
+            if (!startedOnGlobe) return // the press began somewhere else (a button or popup), not on the globe
             if (disabledRef.current) return // don't let a click reach the globe while an overlay/modal has it disabled
             const dx = e.clientX - mouseDownPos.x
             const dy = e.clientY - mouseDownPos.y
-            if (Math.sqrt(dx * dx + dy * dy) > 5) return // was a drag
+            if (Math.sqrt(dx * dx + dy * dy) > (e.pointerType === 'mouse' ? 5 : 12)) return // was a drag
             const rect = mount.getBoundingClientRect()
             const mx = ((e.clientX - rect.left) / rect.width) * 2 - 1
             const my = -((e.clientY - rect.top) / rect.height) * 2 + 1
@@ -326,15 +373,21 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 }
             }
         }
+        const onPointerCancel = (e) => {
+            pointers.delete(e.pointerId)
+            if (pointers.size < 2) pinching = false
+            if (pointers.size === 0) { isDragging = false; ignoreUntilAllUp = false }
+        }
         const onWheel = (e) => {
             e.preventDefault()
             camDist = Math.max(1.5, Math.min(5, camDist + e.deltaY * 0.003))
             updateCamera()
         }
 
-        mount.addEventListener('mousedown', onMouseDown)
-        window.addEventListener('mousemove', onMouseMove)
-        window.addEventListener('mouseup', onMouseUp)
+        mount.addEventListener('pointerdown', onPointerDown)
+        window.addEventListener('pointermove', onPointerMove)
+        window.addEventListener('pointerup', onPointerUp)
+        window.addEventListener('pointercancel', onPointerCancel)
         mount.addEventListener('wheel', onWheel, { passive: false })
 
         const camPos = new THREE.Vector3()
@@ -362,9 +415,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         return () => {
             cancelAnimationFrame(animFrameId)
             clearInterval(sunInterval)
-            mount.removeEventListener('mousedown', onMouseDown)
-            window.removeEventListener('mousemove', onMouseMove)
-            window.removeEventListener('mouseup', onMouseUp)
+            mount.removeEventListener('pointerdown', onPointerDown)
+            window.removeEventListener('pointermove', onPointerMove)
+            window.removeEventListener('pointerup', onPointerUp)
+            window.removeEventListener('pointercancel', onPointerCancel)
             mount.removeEventListener('wheel', onWheel)
             window.removeEventListener('resize', onResize)
             if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement)
