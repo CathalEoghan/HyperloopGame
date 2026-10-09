@@ -33,7 +33,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                     <span className="offline-earnings-label">Offline earnings</span>
                     <span className="offline-earnings-amount" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '22px', height: '22px', border: 'none', borderRadius: '0', objectFit: 'contain', marginTop: '3px' }} />
-                        {displayIncome.toLocaleString()}
+                        {displayIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                         {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold' }}>×2</span>}
                     </span>
                     <span className="offline-earnings-note">Capped at {capHours} hours</span>

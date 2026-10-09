@@ -47,7 +47,7 @@ const BALANCE_NAMES = ['billion', 'trillion', 'quadrillion', 'quintillion', 'sex
 // (scientific notation past decillions)
 const formatBalance = (value) => {
     if (!Number.isFinite(value)) return '0'
-    if (value < 1_000_000_000) return Math.floor(value).toLocaleString()
+    if (value < 1_000_000_000) return Math.floor(value).toLocaleString('en-GB', { maximumFractionDigits: 0 })
     let tier = Math.floor(Math.log10(value) / 3)
     if (tier > 2 + BALANCE_NAMES.length) return value.toExponential(2).replace('e+', 'e')
     let scaled = value / Math.pow(1000, tier)
@@ -58,7 +58,9 @@ const formatBalance = (value) => {
 
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
     const [floats, setFloats] = useState([])
-    const [eventSecondsLeft, setEventSecondsLeft] = useState(activeEvent?.durationSeconds || 0)
+    // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
+    const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
+    const [eventSecondsLeft, setEventSecondsLeft] = useState(() => eventRemaining(activeEvent))
     const btnRef = useRef(null)
     const [displayBalance, setDisplayBalance] = useState(balance)
     const [displayReputation, setDisplayReputation] = useState(reputation)
@@ -74,15 +76,17 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
 
     useEffect(() => {
         if (!activeEvent || activeEvent.durationSeconds === 0) return;
-        setEventSecondsLeft(activeEvent.durationSeconds);
+        setEventSecondsLeft(eventRemaining(activeEvent));
         const timer = setInterval(() => {
+            const next = activeEvent.expiresAt ? eventRemaining(activeEvent) : null;
             setEventSecondsLeft(prev => {
-                if (prev <= 1) {
+                const value = next !== null ? next : prev - 1;
+                if (value <= 0) {
                     clearInterval(timer);
                     onEventExpire?.();
                     return 0;
                 }
-                return prev - 1;
+                return value;
             });
         }, 1000);
         return () => clearInterval(timer);
@@ -174,8 +178,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     const getEventIndicatorText = () => {
         if (!activeEvent) return ''
         const { effectType, title, instantCashAmount } = activeEvent
-        if (effectType === 'instantCash') return `${title} — +£${instantCashAmount?.toLocaleString()}`
-        if (effectType === 'instantCashLoss') return `${title} — -£${Math.abs(instantCashAmount)?.toLocaleString()}`
+        if (effectType === 'instantCash') return `${title} — +£${instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`
+        if (effectType === 'instantCashLoss') return `${title} — -£${Math.abs(instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`
         if (effectType === 'passiveBoost') return `${title} — +100% passive income`
         if (effectType === 'passivePenalty') return `${title} — -50% passive income`
         if (effectType === 'workBoost') return `${title} — +50% work earnings`

@@ -39,7 +39,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const formatPopulation = (pop) => {
         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
         if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
-        return pop.toLocaleString()
+        return pop.toLocaleString('en-GB', { maximumFractionDigits: 0 })
     }
 
     const [claimed, setClaimed] = useState(() => new Set(
@@ -364,7 +364,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     whiteSpace: 'nowrap',
                 }}>
                     {f.reward.type === 'cash'
-                        ? <><img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount.toLocaleString()}</>
+                        ? <><img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>
                         : <><img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount}</>
                     }
                 </div>

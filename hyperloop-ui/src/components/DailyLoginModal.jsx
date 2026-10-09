@@ -25,7 +25,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                     <div className="daily-login-reward-row">
                         <img src={cashIcon} alt="cash" className="daily-login-icon" />
                         <span className="daily-login-reward-text">
-                            £{displayBonus.toLocaleString()}
+                            £{displayBonus.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                             {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×2</span>}
                         </span>
                     </div>

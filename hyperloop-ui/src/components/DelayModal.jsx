@@ -43,7 +43,7 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
                             onCompensate(adjustedCompensation);
                         }}>
                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                            Issue compensation (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedCompensation.toLocaleString()})
+                            Issue compensation (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedCompensation.toLocaleString('en-GB', { maximumFractionDigits: 0 })})
                         </span>
                     </button>
                     <button className="delay-btn-dismiss"

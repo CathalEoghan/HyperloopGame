@@ -100,7 +100,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                             <span>Total development income:</span>
                             <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                 <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                {totalRevenue.toLocaleString()}/day
+                                {totalRevenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
                             </strong>
                         </div>
                     </div>
@@ -125,7 +125,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
                                     {info.totalPct === 100 && ' 🎉 Maximum reached!'}
                                 </p>
-                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString()}</span></strong> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></p>
+                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
@@ -181,7 +181,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         }
                                     }}>
                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                            Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString()}
+                                            Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                                             {(() => {
                                                 const discount = economyManager.getUpgradeSum('developmentDiscount')
                                                 return discount > 0 ? <span style={{ color: '#f5a623', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
@@ -212,7 +212,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                         <span style={{ fontSize: '0.85rem', color: '#888' }}>Base Revenue</span>
                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
                                                             <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                                            {selectedDevelopment.revenue.toLocaleString()}/day
+                                                            {selectedDevelopment.revenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
                                                             {totalBoostPct > 0 && (
                                                                 <span
                                                                     style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
@@ -243,7 +243,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgraded Revenue</span>
                                                     <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 'bold' }}>
                                                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                                        <span>{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment)).toLocaleString()}/day</span>
+                                                        <span>{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment)).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</span>
                                                         <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0, 15, 50, 100][getLevel(selectedDevelopment)]}%)</span>
                                                     </span>
                                                 </div>
@@ -317,7 +317,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             {!isUnderConstruction && (
                                                 <div className="dev-revenue-strip">
                                                     {development.revenue
-                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)).toLocaleString()}/day</>
+                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</>
                                                         : 'UPGRADE'}
                                                 </div>
                                             )}
@@ -345,7 +345,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     style={{ width: '100%', height: '180px' }}
                                 />
                                 <div className="dev-revenue-strip" style={{ color: '#aaa' }}>
-                                    {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.revenue.toLocaleString()}/day</> : 'UPGRADE'}
+                                    {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.revenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</> : 'UPGRADE'}
                                 </div>
                             </div>
                             <div>{development.name}</div>

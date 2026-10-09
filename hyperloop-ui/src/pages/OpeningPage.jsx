@@ -2,13 +2,14 @@ import starterCities from "../data/starterCities"
 import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from "../data/countryFlags"
 import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import globeIcon from '/public/globeIcon.png'
 import './OpeningPage.css'
 
 function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
     const [step, setStep] = useState(1)
     const [localName, setLocalName] = useState("")
+    const pickedRef = useRef(false) // a double-click on a city must not start it twice or play the sounds twice (bug #122)
 
     const handleConfirm = () => {
         if (!localName.trim()) return
@@ -68,6 +69,8 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
     key={city.name}
     onMouseEnter={() => playHoverSound()}
   onClick={() => {
+    if (pickedRef.current) return
+    pickedRef.current = true
     playClickSound2()
     playConstructionSound()
     constructionManager.startTutorialConstruction(city)
@@ -89,7 +92,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
                                     <span className="starter-city-name">{city.name}</span>
                                 </div>
                                 <span className="starter-city-country">{city.country}</span>
-                                <span className="starter-city-pop">{city.population.toLocaleString()} population</span>
+                                <span className="starter-city-pop">{city.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })} population</span>
                                 <span className="starter-city-tier">Tier {city.tier} city</span>
                             </div>
                         </div>

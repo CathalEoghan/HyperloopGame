@@ -1037,6 +1037,12 @@ function App() {
     />;
   }
 
+  // True while any popup is, or is about to be, on screen. The globe and the Hyper-Link phone button ignore input then (bugs #80, #122).
+  const popupOpen = showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep
+    || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
+    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || pendingRankUps > 0
+    || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)
+
   return (
     <div className="App">
       <TopBanner
@@ -1099,10 +1105,7 @@ function App() {
           purchasedCities={progressionManager.purchasedCities}
           unlockedCities={progressionManager.unlockedCities}
           purchasedCitiesCount={purchasedCitiesCount}
-          disabled={showOnboarding || hyperLinkOpen || showDepartureBoard || showMobileWarning || showNotEnoughRep
-            || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
-            || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || pendingRankUps > 0
-            || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)}
+          disabled={hyperLinkOpen || popupOpen}
           economyManager={economyManager}
           balance={balance}
           constructionManager={constructionManager}
@@ -1280,10 +1283,11 @@ function App() {
           cashBonus={dailyLoginData.cashBonus}
           repBonus={dailyLoginData.repBonus}
           reputation={reputation}
-          onSpendRep={(amount) => { dailyDoubleRep.current += amount; }}
+          onSpendRep={(amount) => { dailyDoubleRep.current = amount; }}
           onCollect={(finalBonus) => {
             progressionManager.addReputation(-dailyDoubleRep.current);
             dailyDoubleRep.current = 0;
+            setReputation(progressionManager.reputation); // so the next popup does not offer a double the player can no longer afford (bug #122)
             localStorage.removeItem('hyperloop_pending_daily');
             progressionManager.addCash(finalBonus);
             if (dailyLoginData.repBonus > 0) progressionManager.addReputation(dailyLoginData.repBonus);
@@ -1333,10 +1337,11 @@ function App() {
           offlineIncome={offlineData.offlineIncome}
           capHours={Math.round(economyManager.calculateOfflineCap() / 3600)}
           reputation={reputation}
-          onSpendRep={(amount) => { offlineDoubleRep.current += amount; }}
+          onSpendRep={(amount) => { offlineDoubleRep.current = amount; }}
           onCollect={(finalIncome) => {
             progressionManager.addReputation(-offlineDoubleRep.current);
             offlineDoubleRep.current = 0;
+            setReputation(progressionManager.reputation);
             localStorage.removeItem('hyperloop_pending_offline');
             progressionManager.addCash(finalIncome);
             setShowOfflineModal(false);
@@ -1392,6 +1397,8 @@ function App() {
 
       {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
         <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
+         // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
+         if (claimedCityRef.current) return;
          const newCity = progressionManager.getRandomUnlockedCity(allCities, null, economyManager.getMinCityTierOnRankUp());
           if (newCity) {
             progressionManager.unlockCity(newCity);
@@ -1495,7 +1502,7 @@ function App() {
         }} />
       )}
 
-      {activeTab === "Home" && (
+      {activeTab === "Home" && !popupOpen && (
         <HyperLinkButton
           unread={hyperLinkUnread}
           showBubble={hyperLinkBubble}

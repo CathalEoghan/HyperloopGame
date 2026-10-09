@@ -24,7 +24,7 @@ function formatPopulation(pop) {
     if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
     if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
     if (pop >= 1000) return Math.round(pop / 1000) + 'k'
-    return pop.toLocaleString()
+    return pop.toLocaleString('en-GB', { maximumFractionDigits: 0 })
 }
 
 function loadGrayscaleTexture(url, onLoad) {
@@ -458,7 +458,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                         <h3>{selectedGlobeCity.name}</h3>
                         <hr />
                         <p><strong>Country</strong>: {selectedGlobeCity.country}</p>
-                        <p><strong>Population</strong>: {selectedGlobeCity.population.toLocaleString()}</p>
+                        <p><strong>Population</strong>: {selectedGlobeCity.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</p>
                         {economyManager && (() => {
                             const coords = cityCoordinates[selectedGlobeCity.name]
                             const coordsMap = coords ? { [selectedGlobeCity.name]: coords } : null
@@ -501,7 +501,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                 <h3>Connect {selectedUnlockedCity.name}?</h3>
                                 <hr />
                                 <p><strong>Country</strong>: {selectedUnlockedCity.country}</p>
-                                <p><strong>Population</strong>: {selectedUnlockedCity.population.toLocaleString()}</p>
+                                <p><strong>Population</strong>: {selectedUnlockedCity.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</p>
                                 {constructionManager && (() => {
                                     const cost = constructionManager.calculateTierConnectionCost(selectedUnlockedCity)
                                     const canAfford = balance >= cost
@@ -513,15 +513,18 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                 onMouseEnter={() => playHoverSound()}
                                                 onClick={() => {
                                                     playClickSound2()
-                                                    if (!canAfford) { playNotEnoughFundsSound(); return }
+                                                    // The balance shown on screen refreshes once a second, so check the real one (bug #122)
+                                                    if (!canAfford || constructionManager.progressionManager.balance < cost) { playNotEnoughFundsSound(); return }
                                                     constructionManager.startStationConstruction(selectedUnlockedCity)
-                                                    playConstructionSound()
-                                                    onConnectCity?.()
+                                                    if (constructionManager.progressionManager.citiesUnderConstruction.includes(selectedUnlockedCity)) {
+                                                        playConstructionSound()
+                                                        onConnectCity?.()
+                                                    }
                                                     setSelectedUnlockedCity(null)
                                                 }}
                                             >
                                                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                    Connect (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{cost.toLocaleString()})
+                                                    Connect (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{cost.toLocaleString('en-GB', { maximumFractionDigits: 0 })})
                                                 </span>
                                                 {!canAfford && <span style={{ fontSize: '0.75rem', color: '#c00', fontWeight: 'normal' }}>Not enough funds</span>}
                                             </button>

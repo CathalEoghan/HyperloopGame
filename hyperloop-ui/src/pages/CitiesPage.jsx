@@ -108,7 +108,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const formatPopulation = (pop) => {
         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
         if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
-        return pop.toLocaleString()
+        return pop.toLocaleString('en-GB', { maximumFractionDigits: 0 })
     }
 
     const getDisconnectCost = (city) => Math.floor(constructionManager.calculateTierConnectionCost(city) / 2)
@@ -180,7 +180,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     )}
                     {city.name}
                 </div>
-                <div className="tierAndPopulation">Tier {city.tier} | {city.population.toLocaleString()}</div>
+                <div className="tierAndPopulation">Tier {city.tier} | {city.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</div>
             </button>
         )
     }
@@ -273,11 +273,16 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
                                         playClickSound2();
                                         const cost = constructionManager.calculateTierConnectionCost(selectedCity);
-                                        if (balance < cost) { setShowNoFunds(true); playNotEnoughFundsSound(); closeModal(); }
-                                        else { constructionManager.startStationConstruction(selectedCity); playConstructionSound(); onSave(); closeModal(); }
+                                        // The balance shown on screen refreshes once a second, so check the real one (bug #122)
+                                        if (constructionManager.progressionManager.balance < cost) { setShowNoFunds(true); playNotEnoughFundsSound(); closeModal(); }
+                                        else {
+                                            constructionManager.startStationConstruction(selectedCity);
+                                            if (constructionManager.progressionManager.citiesUnderConstruction.includes(selectedCity)) { playConstructionSound(); onSave(); }
+                                            closeModal();
+                                        }
                                     }}>
                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                            Connect (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString()})
+                                            Connect (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })})
                                         </span>
                                     </button>
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
@@ -288,7 +293,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <h3>{selectedCity.name}</h3>
                                     <hr />
                                     <p><strong>Country</strong>: {selectedCity.country}</p>
-                                    <p><strong>Population</strong>: {selectedCity.population.toLocaleString()}</p>
+                                    <p><strong>Population</strong>: {selectedCity.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</p>
                                     {(() => {
                                         const coords = cityCoordinates[selectedCity.name]
                                         const coordsMap = coords ? { [selectedCity.name]: coords } : null
@@ -356,7 +361,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     }}
                                                 >
                                                     <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                        Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString()} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)
+                                                        Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)
                                                     </span>
                                                 </button>
                                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough funds or reputation</p>}
