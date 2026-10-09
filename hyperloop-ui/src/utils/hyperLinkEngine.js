@@ -196,28 +196,39 @@ function substituteText(text, data, gameState) {
 }
 
 // Returns only the picture's id (e.g. "male_12"); the phone looks the image up when it draws the post (bug #134).
-function generateUser(gender, usedPfps) {
+// From a list of {id,...}, picks the one used longest ago (never used counts as longest), and a
+// random one among equals, so fresh content always goes first and the rest come round in order (bug #71).
+function pickLeastRecent(items, lastUsed = {}) {
+    let oldest = Infinity
+    for (const it of items) oldest = Math.min(oldest, lastUsed[it.id] || 0)
+    const tied = items.filter(it => (lastUsed[it.id] || 0) === oldest)
+    return tied[Math.floor(Math.random() * tied.length)]
+}
+
+function generateUser(gender, usedPfps, pfpLastUsed = {}) {
     const useReal = Math.random() < 0.85
     if (!useReal) return { pfpId: 'default' }
 
     const pool = gender === 'male' ? MALE_PFPS : FEMALE_PFPS
-    const available = pool.filter((_, i) => {
-        const id = `${gender}_${i}`
-        return !usedPfps.includes(id)
-    })
+    const available = pool
+        .map((_, i) => ({ id: `${gender}_${i}` }))
+        .filter(p => !usedPfps.includes(p.id))
 
     if (available.length === 0) return { pfpId: 'default' }
 
-    const idx = Math.floor(Math.random() * available.length)
-    const poolIdx = pool.indexOf(available[idx])
-    const pfpId = `${gender}_${poolIdx}`
-    return { pfpId }
+    return { pfpId: pickLeastRecent(available, pfpLastUsed).id }
 }
 
 export function generateHyperLinkPost(gameState) {
-    const { terminalName, usedPostIds, usedMonthPostIds = [], usedPfps, trigger } = gameState
+    const { terminalName, usedPostIds, usedMonthPostIds = [], usedPfps, trigger, templateLastUsed = {}, pfpLastUsed = {} } = gameState
 
-    const cats = buildEligibleCategories(gameState)
+    // Categories whose templates are all in use are left out of the draw, so a pick is never wasted
+    // on one that cannot produce a post (bug #71).
+    const hasTemplateLeft = c => (POSTS[c.category] || []).some((_, i) => {
+        const id = `${c.category}_${i}`
+        return !usedPostIds.includes(id) && !(MONTH_NAMES.includes(c.category) && usedMonthPostIds.includes(id))
+    })
+    const cats = buildEligibleCategories(gameState).filter(hasTemplateLeft)
     if (cats.length === 0) return null
 
     // A post about something that just happened always goes out when it has a template left,
@@ -232,7 +243,7 @@ export function generateHyperLinkPost(gameState) {
         const available = pool.map((text, i) => ({ id: `officialGeneral_${i}`, text }))
             .filter(p => !usedPostIds.includes(p.id))
         if (available.length === 0) return null
-        const chosen = available[Math.floor(Math.random() * available.length)]
+        const chosen = pickLeastRecent(available, templateLastUsed)
         return {
             id: `post_${Date.now()}_${Math.random()}`,
             text: substituteText(chosen.text, {}, gameState),
@@ -260,7 +271,7 @@ export function generateHyperLinkPost(gameState) {
 
     if (available.length === 0) return null
 
-    const chosenPost = available[Math.floor(Math.random() * available.length)]
+    const chosenPost = pickLeastRecent(available, templateLastUsed)
     const gender = Math.random() < 0.5 ? 'male' : 'female'
     const firstName = gender === 'male'
         ? FIRST_NAMES_MALE[Math.floor(Math.random() * FIRST_NAMES_MALE.length)]
@@ -269,7 +280,7 @@ export function generateHyperLinkPost(gameState) {
     const displayName = `${firstName} ${surname}`
     const handle = `@hyper-linkuser${Math.floor(10000000 + Math.random() * 90000000)}`
 
-    const { pfpId } = generateUser(gender, usedPfps)
+    const { pfpId } = generateUser(gender, usedPfps, pfpLastUsed)
 
     const isItalic = chosenPost.text.startsWith('*(') && chosenPost.text.endsWith(')*')
     const cleanText = isItalic ? chosenPost.text.slice(2, -2) : chosenPost.text

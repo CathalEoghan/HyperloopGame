@@ -699,7 +699,11 @@ function App() {
         const cleanFeed = storedFeed.filter(p => p.timestamp > twoDaysAgo)
         // Only write when something was actually removed, not every second (bug #134)
         if (cleanFeed.length !== storedFeed.length) localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(cleanFeed))
-        const validPostIds = new Set(cleanFeed.map(p => p.usedPostId).filter(Boolean))
+        // A template counts as used only for 3 hours, not the whole 2 days the posts stay in the feed:
+        // there are about 110 usable templates and a post goes out every 2 minutes, so a 2-day
+        // wait ran the feed dry after about 12 hours (bug #71)
+        const reuseAfter = Date.now() - 3 * 3600000
+        const validPostIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPostId).filter(Boolean))
         const storedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]')
         const cleanedPostIds = storedPostIds.filter(id => validPostIds.has(id))
         if (cleanedPostIds.length !== storedPostIds.length) localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(cleanedPostIds))
@@ -713,12 +717,18 @@ function App() {
         const usedMonthPostRecords = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_month_posts') || '[]')
           .filter(e => e.year === currentYear)
         const usedMonthPostIds = usedMonthPostRecords.map(e => e.id)
-        // Only pictures still in the feed count as used, so they come round again instead of running out (bug #71)
-        const feedPfpIds = new Set(cleanFeed.map(p => p.usedPfpId).filter(Boolean))
+        // Only pictures used in the last 3 hours count as used, so they come round again instead of running out (bug #71)
+        const feedPfpIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPfpId).filter(Boolean))
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]').filter(id => feedPfpIds.has(id))
         const firedDevCategories = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
         const todayKey = new Date().toDateString()
         const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
+        // When each template and picture was last shown, so the engine can pick the one used longest ago
+        const templateLastUsed = {}, pfpLastUsed = {}
+        cleanFeed.forEach(p => {
+          if (p.usedPostId) templateLastUsed[p.usedPostId] = Math.max(templateLastUsed[p.usedPostId] || 0, p.timestamp)
+          if (p.usedPfpId) pfpLastUsed[p.usedPfpId] = Math.max(pfpLastUsed[p.usedPfpId] || 0, p.timestamp)
+        })
         const post = generateHyperLinkPost({
           terminalName: terminalNameRef.current,
           homeCity: progressionManager.purchasedCities[0],
@@ -732,6 +742,8 @@ function App() {
           usedPostIds,
           usedMonthPostIds,
           usedPfps,
+          templateLastUsed,
+          pfpLastUsed,
           firedDevCategories,
           trigger: hyperLinkTriggerRef.current,
         })
