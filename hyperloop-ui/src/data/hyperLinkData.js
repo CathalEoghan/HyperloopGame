@@ -261,7 +261,7 @@ export const POSTS = {
         'i hate kids',
         'broo whos eating cheese in arrivals #what 🤢',
         'How do hyperloops actually work 🤔',
-        'Mental note: never let your brother pack bags #terrible',
+        'Mental note: never let your brother pack your bags #terrible',
         'whats everyone reading? 📚',
         'why does no one know how to dress',
         'DONT MESS WITH ME TODAY',
