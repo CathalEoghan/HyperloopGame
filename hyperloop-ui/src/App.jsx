@@ -1231,6 +1231,7 @@ function App() {
 
       {!dailyLoginData && !showOfflineModal && showEventModal && activeEvent && devRevealQueue.length === 0 && !claimedCity && (
         <EventModal
+          key={`${activeEvent.id}-${activeEvent.expiresAt}-${activeEvent.instantCashAmount}`}
           event={activeEvent}
           terminalName={terminalName}
           onContinue={() => {
