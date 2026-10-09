@@ -61,7 +61,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const sortedAvailable = filterAndSort([...available])
 
     const totalRevenue = useMemo(() =>
-        purchased.filter(d => d.revenue).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0),
+        economyManager.withFoundersHall(purchased.filter(d => d.revenue).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0)),
         [purchased]
     )
 
@@ -243,7 +243,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgraded Revenue</span>
                                                     <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 'bold' }}>
                                                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                                        <span>{economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment).toLocaleString()}/day</span>
+                                                        <span>{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment)).toLocaleString()}/day</span>
                                                         <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0, 15, 50, 100][getLevel(selectedDevelopment)]}%)</span>
                                                     </span>
                                                 </div>
@@ -317,7 +317,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             {!isUnderConstruction && (
                                                 <div className="dev-revenue-strip">
                                                     {development.revenue
-                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.getEffectiveDevIncomeWithBoosts(development).toLocaleString()}/day</>
+                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)).toLocaleString()}/day</>
                                                         : 'UPGRADE'}
                                                 </div>
                                             )}

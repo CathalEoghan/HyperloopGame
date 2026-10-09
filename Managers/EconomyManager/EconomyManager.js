@@ -16,6 +16,8 @@ export class EconomyManager {
         // City name → { lat, lng }. Set once by the UI so every income calculation
         // (not just the ones that pass coordinates) applies the Arctic/Equator upgrades.
         this.coordinates = null;
+        // When this save was created, set by the UI. Lets the figures shown on screen include the Founders' Hall bonus.
+        this.createdAt = null;
     }
 
     getUpgradeSum(effectType) {
@@ -251,6 +253,9 @@ export class EconomyManager {
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
 
+        const foundersLine = this.foundersHallLine();
+        if (foundersLine) lines.push(foundersLine);
+
         return { lines, totalBoost };
     }
 
@@ -346,6 +351,9 @@ export class EconomyManager {
         const timePeriod = hour >= 6 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : hour >= 18 && hour < 22 ? 'Evening' : 'Night';
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
+
+        const foundersLine = this.foundersHallLine();
+        if (foundersLine) lines.push(foundersLine);
 
         return { lines, totalBoost };
     }
@@ -574,11 +582,22 @@ export class EconomyManager {
         return 1;
     }
 
-    getFoundersHallMultiplier(createdAt) {
+    getFoundersHallMultiplier(createdAt = this.createdAt) {
         if (!this.hasUpgradeByName("Founders' Hall") || !createdAt) return 1.0;
         const daysActive = Math.floor((Date.now() - createdAt) / 86400000);
         const boostPct = Math.floor(daysActive / 10) * 0.01;
         return 1 + boostPct;
+    }
+
+    // For figures shown on screen: the per-city and per-development income, with the Founders' Hall bonus
+    // that the total passive income already includes.
+    withFoundersHall(amount) {
+        return Math.floor(amount * this.getFoundersHallMultiplier());
+    }
+
+    foundersHallLine() {
+        const pct = Math.round((this.getFoundersHallMultiplier() - 1) * 100);
+        return pct > 0 ? `Founders' Hall: +${pct}% on top` : null;
     }
 
     getDailyRepBonus(rank) {

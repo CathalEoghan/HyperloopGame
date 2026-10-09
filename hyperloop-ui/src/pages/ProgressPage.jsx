@@ -113,7 +113,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const totalRevenue = useMemo(() => {
         const cityIncome = purchasedCities.reduce((sum, c) => sum + economyManager.calculateCityIncome(c), 0)
         const devIncome = (purchasedDevelopments || []).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0)
-        return cityIncome + devIncome
+        return economyManager.withFoundersHall(cityIncome + devIncome)
     }, [purchasedCities, purchasedDevelopments, purchasedUpgrades])
 
     const mostProfitableCity = useMemo(() => {
@@ -137,10 +137,10 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
         { label: 'Total revenue', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
         { label: 'Personal farewells given', value: farewellsGiven ?? 0 },
-        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.calculateCityIncome(mostProfitableCity)} suffix="/day" /></span> : '—' },
-        { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.calculateCityIncome(leastProfitableCity)} suffix="/day" /></span> : '—' },
-        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{mostProfitableDev.name}</span><CashValue amount={economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev)} suffix="/day" /></span> : '—' },
-        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{leastProfitableDev.name}</span><CashValue amount={economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev)} suffix="/day" /></span> : '—' },
+        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(mostProfitableCity))} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(leastProfitableCity))} suffix="/day" /></span> : '—' },
+        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{mostProfitableDev.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{leastProfitableDev.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev))} suffix="/day" /></span> : '—' },
     ]
 
     const getUpgradeStats = () => {

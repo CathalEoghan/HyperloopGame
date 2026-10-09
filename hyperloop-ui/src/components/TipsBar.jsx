@@ -11,7 +11,7 @@ const TIPS = [
     "Disconnecting a city costs half the connection fee and 20 Reputation.",
     "Your terminal earns income while you're away, capped at 48 hours by default.",
     "Certain upgrades extend your offline earnings cap up to 7 days.",
-    "Accepting a flight delay costs money but keeps your Reputation intact.",
+    "Compensating passengers after a loop delay costs money but keeps your Reputation intact.",
     "Your Reputation can never go below zero.",
     "Export your save in Settings to back up your progress.",
     "Developments unlocked by a city stay built even if you disconnect it.",

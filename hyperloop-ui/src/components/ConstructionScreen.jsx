@@ -12,7 +12,7 @@ const TIPS = [
     "Give personal farewells at the departure board to earn reputation.",
     "Upgrade your developments up to 3 times for a 100% income boost.",
     "Disconnecting a city costs half the connection fee and 20 reputation.",
-    "Your terminal earns a small income while you're away.",
+    "Your terminal keeps earning while you're away.",
     "Tier 2 and 3 cities earn significantly more than Tier 1 cities.",
     "Work your terminal manually to earn extra cash.",
 ]

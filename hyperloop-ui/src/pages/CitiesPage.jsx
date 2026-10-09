@@ -58,7 +58,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     // game (bug #90).
     const incomeCache = new Map()
     const cityIncome = (city) => {
-        if (!incomeCache.has(city)) incomeCache.set(city, economyManager.calculateCityIncome(city))
+        if (!incomeCache.has(city)) incomeCache.set(city, economyManager.withFoundersHall(economyManager.calculateCityIncome(city)))
         return incomeCache.get(city)
     }
 
@@ -292,7 +292,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     {(() => {
                                         const coords = cityCoordinates[selectedCity.name]
                                         const coordsMap = coords ? { [selectedCity.name]: coords } : null
-                                        const effectiveIncome = economyManager.calculateCityIncome(selectedCity, coordsMap)
+                                        const effectiveIncome = economyManager.withFoundersHall(economyManager.calculateCityIncome(selectedCity, coordsMap))
                                         const { lines, totalBoost } = economyManager.getCityBoostBreakdown(selectedCity, coordsMap)
                                         const boostPct = Math.round(totalBoost * 100)
                                         return (

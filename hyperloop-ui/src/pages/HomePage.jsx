@@ -408,7 +408,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                         {economyManager && (() => {
                             const coords = cityCoordinates[selectedGlobeCity.name]
                             const coordsMap = coords ? { [selectedGlobeCity.name]: coords } : null
-                            const income = economyManager.calculateCityIncome(selectedGlobeCity, coordsMap)
+                            const income = economyManager.withFoundersHall(economyManager.calculateCityIncome(selectedGlobeCity, coordsMap))
                             return (
                                 <p>Earning <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                     <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />

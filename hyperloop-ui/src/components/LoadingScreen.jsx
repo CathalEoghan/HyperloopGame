@@ -49,7 +49,7 @@ const TIPS = [
     "Your terminal earns income while you're away.",
     "Tier 2 and 3 cities earn significantly more than Tier 1 cities, but cost more to connect.",
     "Work your terminal manually to earn extra cash.",
-    "Compensating passengers after a flight delay costs money but keeps your reputation intact.",
+    "Compensating passengers after a loop delay costs money but keeps your reputation intact.",
     "Developments unlocked by a city stay built even if you disconnect it.",
     "Export your save in Settings to back up your progress.",
     "Your reputation or treasury can never go below zero.",

@@ -17,7 +17,7 @@ const VERSION_LOG = [
         'Over 300 unique posts across 50+ categories including time of day, day of week, departures, delays, developments, events and more',
         'Official terminal account posts announcements, event responses and delay updates in real time',
         'Double-tap or click ❤ to like posts — counts grow dynamically over time',
-        'Profile pictures drawn from a pool of 170 real photographs',
+        'Profile pictures drawn from a pool of 300 real photographs',
         'Departure board converted to a floating modal above the globe',
         'Split-flap animation and sound can now be toggled in Settings',
         'Development and city page scrollbars fixed — no longer overlap the ticker bar',

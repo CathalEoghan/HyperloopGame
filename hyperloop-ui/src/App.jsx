@@ -176,6 +176,7 @@ function App() {
   const [showOfflineModal, setShowOfflineModal] = useState(!!offlineData);
   const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || 'Hyperloop Empire');
   const [createdAt] = useState(() => savedData?.createdAt || Date.now());
+  economyManager.createdAt = createdAt; // so the income figures on screen include the Founders' Hall bonus
   const [farewellsGiven, setFarewellsGiven] = useState(() => savedData?.farewellsGiven || 0);
   const [lastSaved, setLastSaved] = useState(() => savedData?.lastSaved || null);
   const [showSaved, setShowSaved] = useState(false);
