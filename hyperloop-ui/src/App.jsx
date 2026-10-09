@@ -229,7 +229,8 @@ function App() {
         localStorage.removeItem('hyperloop_active_event')
         return null
       }
-      return { ...event, durationSeconds: Math.floor((event.expiresAt - Date.now()) / 1000) }
+      // Round up so an event with under a second left still counts down and ends (bug #99)
+      return { ...event, durationSeconds: Math.max(1, Math.ceil((event.expiresAt - Date.now()) / 1000)) }
     } catch { return null }
   });
   const [showEventModal, setShowEventModal] = useState(false);
