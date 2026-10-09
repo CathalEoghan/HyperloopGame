@@ -196,7 +196,15 @@ function App() {
     saveDepartureQueue(next);
     return next;
   });
-  const [activeDelay, setActiveDelay] = useState(null);
+  // A delay popup that hasn't been answered survives a reload, so it can't be skipped for free (bug #94).
+  const [activeDelay, setActiveDelay] = useState(() => {
+    try {
+      const d = JSON.parse(localStorage.getItem('hyperloop_pending_delay'));
+      const ok = d && typeof d.name === 'string' && typeof d.originalTime === 'string' && typeof d.newTime === 'string'
+        && Number.isFinite(d.delayMinutes) && Number.isFinite(d.compensation);
+      return ok ? d : null;
+    } catch { return null; }
+  });
   const [devRevealQueue, setDevRevealQueue] = useState(() => {
     // Mark home city rewards as shown BEFORE building the queue
     if (progressionManager.purchasedCities.length > 0) {
@@ -814,7 +822,9 @@ function App() {
             ? { ...e, hour: newHour, minute: newMinute, time: newTime, minuteOfDay: newTotalMins, delayed: true }
             : e).sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute));
           localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
-          setActiveDelay({ name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation });
+          const delay = { name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation };
+          localStorage.setItem('hyperloop_pending_delay', JSON.stringify(delay));
+          setActiveDelay(delay);
         }
       }
 
@@ -902,8 +912,16 @@ function App() {
   }, [terminalName]);
 
   useEffect(() => {
+    // Save what happened since the last timed save, so closing or reloading the page loses nothing (bug #94).
+    const saveNow = () => {
+      if (blockedRef.current) return;
+      saveGame(progressionManager, rankManager, terminalNameRef.current, farewellsRef.current);
+      localStorage.setItem('hyperloop_heartbeat_at', Date.now());
+    };
+    const handleHidden = () => { if (document.visibilityState === 'hidden') saveNow(); };
     const handleUnload = () => {
       if (blockedRef.current) return;
+      saveNow();
       localStorage.setItem('hyperloop_hidden_at', Date.now());
       if (readTabLock()?.id === tabId) localStorage.removeItem(TAB_LOCK_KEY);
     };
@@ -918,10 +936,12 @@ function App() {
       setBlockedByOtherTab(true);
     };
     window.addEventListener('beforeunload', handleUnload);
+    document.addEventListener('visibilitychange', handleHidden);
     window.addEventListener('pagehide', handleUnload);
     window.addEventListener('storage', handleStorage);
     return () => {
       window.removeEventListener('beforeunload', handleUnload);
+      document.removeEventListener('visibilitychange', handleHidden);
       window.removeEventListener('pagehide', handleUnload);
       window.removeEventListener('storage', handleStorage);
     };
@@ -1286,8 +1306,8 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { progressionManager.addCash(-cost); setActiveDelay(null); hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
-          onDismiss={(repCost) => { progressionManager.addReputation(-repCost); setActiveDelay(null); hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
+          onCompensate={(cost) => { progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
+          onDismiss={(repCost) => { progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
         />
       )}
 

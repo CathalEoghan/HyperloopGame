@@ -44,6 +44,7 @@ const AUX_KEYS = [
 const DAY_STATE_KEYS = [
     'hyperloop_active_departure',
     'hyperloop_active_event',
+    'hyperloop_pending_delay',
     'hyperloop_triggered_departures',
     'hyperloop_departures_date',
     'hyperloop_pending_injections',
