@@ -1,0 +1,499 @@
+diff --git a/hyperloop-ui/src/App.jsx b/hyperloop-ui/src/App.jsx
+index f3df5ec..888a3c4 100644
+--- a/hyperloop-ui/src/App.jsx
++++ b/hyperloop-ui/src/App.jsx
+@@ -1037,6 +1037,12 @@ function App() {
+     />;
+   }
+ 
++  // True while any popup is, or is about to be, on screen. The globe and the Hyper-Link phone button ignore input then (bugs #80, #122).
++  const popupOpen = showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep
++    || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
++    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || pendingRankUps > 0
++    || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)
++
+   return (
+     <div className="App">
+       <TopBanner
+@@ -1099,10 +1105,7 @@ function App() {
+           purchasedCities={progressionManager.purchasedCities}
+           unlockedCities={progressionManager.unlockedCities}
+           purchasedCitiesCount={purchasedCitiesCount}
+-          disabled={showOnboarding || hyperLinkOpen || showDepartureBoard || showMobileWarning || showNotEnoughRep
+-            || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
+-            || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || pendingRankUps > 0
+-            || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)}
++          disabled={hyperLinkOpen || popupOpen}
+           economyManager={economyManager}
+           balance={balance}
+           constructionManager={constructionManager}
+@@ -1206,7 +1209,7 @@ function App() {
+             borderRadius: '12px',
+             width: '100%',
+             maxWidth: '98vw',
+-            maxHeight: '85vh',
++            maxHeight: 'calc(100vh - 100px)', // at least as tall as the board's own minimum height, so it only scrolls when the list is longer (bug #122)
+             overflowY: 'auto',
+             boxShadow: '0 0 60px rgba(245,166,35,0.15), 0 24px 80px rgba(0,0,0,0.9)',
+             animation: 'boardModalIn 0.25s ease-out',
+@@ -1280,10 +1283,11 @@ function App() {
+           cashBonus={dailyLoginData.cashBonus}
+           repBonus={dailyLoginData.repBonus}
+           reputation={reputation}
+-          onSpendRep={(amount) => { dailyDoubleRep.current += amount; }}
++          onSpendRep={(amount) => { dailyDoubleRep.current = amount; }}
+           onCollect={(finalBonus) => {
+             progressionManager.addReputation(-dailyDoubleRep.current);
+             dailyDoubleRep.current = 0;
++            setReputation(progressionManager.reputation); // so the next popup does not offer a double the player can no longer afford (bug #122)
+             localStorage.removeItem('hyperloop_pending_daily');
+             progressionManager.addCash(finalBonus);
+             if (dailyLoginData.repBonus > 0) progressionManager.addReputation(dailyLoginData.repBonus);
+@@ -1333,10 +1337,11 @@ function App() {
+           offlineIncome={offlineData.offlineIncome}
+           capHours={Math.round(economyManager.calculateOfflineCap() / 3600)}
+           reputation={reputation}
+-          onSpendRep={(amount) => { offlineDoubleRep.current += amount; }}
++          onSpendRep={(amount) => { offlineDoubleRep.current = amount; }}
+           onCollect={(finalIncome) => {
+             progressionManager.addReputation(-offlineDoubleRep.current);
+             offlineDoubleRep.current = 0;
++            setReputation(progressionManager.reputation);
+             localStorage.removeItem('hyperloop_pending_offline');
+             progressionManager.addCash(finalIncome);
+             setShowOfflineModal(false);
+@@ -1392,6 +1397,8 @@ function App() {
+ 
+       {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
+         <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
++         // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
++         if (claimedCityRef.current) return;
+          const newCity = progressionManager.getRandomUnlockedCity(allCities, null, economyManager.getMinCityTierOnRankUp());
+           if (newCity) {
+             progressionManager.unlockCity(newCity);
+@@ -1495,7 +1502,7 @@ function App() {
+         }} />
+       )}
+ 
+-      {activeTab === "Home" && (
++      {activeTab === "Home" && !popupOpen && (
+         <HyperLinkButton
+           unread={hyperLinkUnread}
+           showBubble={hyperLinkBubble}
+diff --git a/hyperloop-ui/src/components/DailyLoginModal.jsx b/hyperloop-ui/src/components/DailyLoginModal.jsx
+index 4cab14f..5e561a1 100644
+--- a/hyperloop-ui/src/components/DailyLoginModal.jsx
++++ b/hyperloop-ui/src/components/DailyLoginModal.jsx
+@@ -25,7 +25,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
+                     <div className="daily-login-reward-row">
+                         <img src={cashIcon} alt="cash" className="daily-login-icon" />
+                         <span className="daily-login-reward-text">
+-                            £{displayBonus.toLocaleString()}
++                            £{displayBonus.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                             {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×2</span>}
+                         </span>
+                     </div>
+diff --git a/hyperloop-ui/src/components/DelayModal.jsx b/hyperloop-ui/src/components/DelayModal.jsx
+index 43a051f..3a24dd2 100644
+--- a/hyperloop-ui/src/components/DelayModal.jsx
++++ b/hyperloop-ui/src/components/DelayModal.jsx
+@@ -43,7 +43,7 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
+                             onCompensate(adjustedCompensation);
+                         }}>
+                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+-                            Issue compensation (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedCompensation.toLocaleString()})
++                            Issue compensation (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedCompensation.toLocaleString('en-GB', { maximumFractionDigits: 0 })})
+                         </span>
+                     </button>
+                     <button className="delay-btn-dismiss"
+diff --git a/hyperloop-ui/src/components/EventModal.jsx b/hyperloop-ui/src/components/EventModal.jsx
+index 41fb30a..f661fd9 100644
+--- a/hyperloop-ui/src/components/EventModal.jsx
++++ b/hyperloop-ui/src/components/EventModal.jsx
+@@ -3,14 +3,18 @@ import { playClickSound2, playHoverSound } from '../utils/sound.js'
+ import './EventModal.css'
+ 
+ function EventModal({ event, onContinue, terminalName }) {
+-    const [secondsLeft, setSecondsLeft] = useState(event.durationSeconds || 0)
++    // Count down to the event's real end time, not from the full length when the popup happens to appear (bug #122)
++    const remaining = () => event.expiresAt ? Math.max(0, Math.ceil((event.expiresAt - Date.now()) / 1000)) : (event.durationSeconds || 0)
++    const [secondsLeft, setSecondsLeft] = useState(remaining)
+ 
+     useEffect(() => {
+         if (!event.durationSeconds) return
+         const timer = setInterval(() => {
++            const next = event.expiresAt ? remaining() : null
+             setSecondsLeft(prev => {
+-                if (prev <= 1) { clearInterval(timer); return 0 }
+-                return prev - 1
++                const value = next !== null ? next : prev - 1
++                if (value <= 0) { clearInterval(timer); return 0 }
++                return value
+             })
+         }, 1000)
+         return () => clearInterval(timer)
+@@ -19,8 +23,8 @@ function EventModal({ event, onContinue, terminalName }) {
+     const isPositive = event.type === 'positive'
+ 
+     const getEffectText = () => {
+-        if (event.effectType === 'instantCash') return `£${event.instantCashAmount?.toLocaleString()} has been added to your balance`
+-        if (event.effectType === 'instantCashLoss') return `£${Math.abs(event.instantCashAmount)?.toLocaleString()} has been deducted from your balance`
++        if (event.effectType === 'instantCash') return `£${event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance`
++        if (event.effectType === 'instantCashLoss') return `£${Math.abs(event.instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been deducted from your balance`
+         if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s`
+         if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s`
+         if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s`
+diff --git a/hyperloop-ui/src/components/OfflineModal.jsx b/hyperloop-ui/src/components/OfflineModal.jsx
+index d9bd9f1..cd11781 100644
+--- a/hyperloop-ui/src/components/OfflineModal.jsx
++++ b/hyperloop-ui/src/components/OfflineModal.jsx
+@@ -33,7 +33,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
+                     <span className="offline-earnings-label">Offline earnings</span>
+                     <span className="offline-earnings-amount" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '22px', height: '22px', border: 'none', borderRadius: '0', objectFit: 'contain', marginTop: '3px' }} />
+-                        {displayIncome.toLocaleString()}
++                        {displayIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                         {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold' }}>×2</span>}
+                     </span>
+                     <span className="offline-earnings-note">Capped at {capHours} hours</span>
+diff --git a/hyperloop-ui/src/components/TopBanner.jsx b/hyperloop-ui/src/components/TopBanner.jsx
+index 95f20c4..1e18d05 100644
+--- a/hyperloop-ui/src/components/TopBanner.jsx
++++ b/hyperloop-ui/src/components/TopBanner.jsx
+@@ -47,7 +47,7 @@ const BALANCE_NAMES = ['billion', 'trillion', 'quadrillion', 'quintillion', 'sex
+ // (scientific notation past decillions)
+ const formatBalance = (value) => {
+     if (!Number.isFinite(value)) return '0'
+-    if (value < 1_000_000_000) return Math.floor(value).toLocaleString()
++    if (value < 1_000_000_000) return Math.floor(value).toLocaleString('en-GB', { maximumFractionDigits: 0 })
+     let tier = Math.floor(Math.log10(value) / 3)
+     if (tier > 2 + BALANCE_NAMES.length) return value.toExponential(2).replace('e+', 'e')
+     let scaled = value / Math.pow(1000, tier)
+@@ -58,7 +58,9 @@ const formatBalance = (value) => {
+ 
+ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
+     const [floats, setFloats] = useState([])
+-    const [eventSecondsLeft, setEventSecondsLeft] = useState(activeEvent?.durationSeconds || 0)
++    // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
++    const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
++    const [eventSecondsLeft, setEventSecondsLeft] = useState(() => eventRemaining(activeEvent))
+     const btnRef = useRef(null)
+     const [displayBalance, setDisplayBalance] = useState(balance)
+     const [displayReputation, setDisplayReputation] = useState(reputation)
+@@ -74,15 +76,17 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
+ 
+     useEffect(() => {
+         if (!activeEvent || activeEvent.durationSeconds === 0) return;
+-        setEventSecondsLeft(activeEvent.durationSeconds);
++        setEventSecondsLeft(eventRemaining(activeEvent));
+         const timer = setInterval(() => {
++            const next = activeEvent.expiresAt ? eventRemaining(activeEvent) : null;
+             setEventSecondsLeft(prev => {
+-                if (prev <= 1) {
++                const value = next !== null ? next : prev - 1;
++                if (value <= 0) {
+                     clearInterval(timer);
+                     onEventExpire?.();
+                     return 0;
+                 }
+-                return prev - 1;
++                return value;
+             });
+         }, 1000);
+         return () => clearInterval(timer);
+@@ -174,8 +178,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
+     const getEventIndicatorText = () => {
+         if (!activeEvent) return ''
+         const { effectType, title, instantCashAmount } = activeEvent
+-        if (effectType === 'instantCash') return `${title} — +£${instantCashAmount?.toLocaleString()}`
+-        if (effectType === 'instantCashLoss') return `${title} — -£${Math.abs(instantCashAmount)?.toLocaleString()}`
++        if (effectType === 'instantCash') return `${title} — +£${instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`
++        if (effectType === 'instantCashLoss') return `${title} — -£${Math.abs(instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`
+         if (effectType === 'passiveBoost') return `${title} — +100% passive income`
+         if (effectType === 'passivePenalty') return `${title} — -50% passive income`
+         if (effectType === 'workBoost') return `${title} — +50% work earnings`
+diff --git a/hyperloop-ui/src/pages/CitiesPage.jsx b/hyperloop-ui/src/pages/CitiesPage.jsx
+index bf1e9ff..1dcdaed 100644
+--- a/hyperloop-ui/src/pages/CitiesPage.jsx
++++ b/hyperloop-ui/src/pages/CitiesPage.jsx
+@@ -108,7 +108,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+     const formatPopulation = (pop) => {
+         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
+         if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
+-        return pop.toLocaleString()
++        return pop.toLocaleString('en-GB', { maximumFractionDigits: 0 })
+     }
+ 
+     const getDisconnectCost = (city) => Math.floor(constructionManager.calculateTierConnectionCost(city) / 2)
+@@ -180,7 +180,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                     )}
+                     {city.name}
+                 </div>
+-                <div className="tierAndPopulation">Tier {city.tier} | {city.population.toLocaleString()}</div>
++                <div className="tierAndPopulation">Tier {city.tier} | {city.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</div>
+             </button>
+         )
+     }
+@@ -273,11 +273,16 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
+                                         playClickSound2();
+                                         const cost = constructionManager.calculateTierConnectionCost(selectedCity);
+-                                        if (balance < cost) { setShowNoFunds(true); playNotEnoughFundsSound(); closeModal(); }
+-                                        else { constructionManager.startStationConstruction(selectedCity); playConstructionSound(); onSave(); closeModal(); }
++                                        // The balance shown on screen refreshes once a second, so check the real one (bug #122)
++                                        if (constructionManager.progressionManager.balance < cost) { setShowNoFunds(true); playNotEnoughFundsSound(); closeModal(); }
++                                        else {
++                                            constructionManager.startStationConstruction(selectedCity);
++                                            if (constructionManager.progressionManager.citiesUnderConstruction.includes(selectedCity)) { playConstructionSound(); onSave(); }
++                                            closeModal();
++                                        }
+                                     }}>
+                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+-                                            Connect (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString()})
++                                            Connect (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{constructionManager.calculateTierConnectionCost(selectedCity).toLocaleString('en-GB', { maximumFractionDigits: 0 })})
+                                         </span>
+                                     </button>
+                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+@@ -288,7 +293,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                     <h3>{selectedCity.name}</h3>
+                                     <hr />
+                                     <p><strong>Country</strong>: {selectedCity.country}</p>
+-                                    <p><strong>Population</strong>: {selectedCity.population.toLocaleString()}</p>
++                                    <p><strong>Population</strong>: {selectedCity.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</p>
+                                     {(() => {
+                                         const coords = cityCoordinates[selectedCity.name]
+                                         const coordsMap = coords ? { [selectedCity.name]: coords } : null
+@@ -356,7 +361,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                                     }}
+                                                 >
+                                                     <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+-                                                        Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString()} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)
++                                                        Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)
+                                                     </span>
+                                                 </button>
+                                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough funds or reputation</p>}
+diff --git a/hyperloop-ui/src/pages/DepartureBoard.css b/hyperloop-ui/src/pages/DepartureBoard.css
+index 6afddaf..246357d 100644
+--- a/hyperloop-ui/src/pages/DepartureBoard.css
++++ b/hyperloop-ui/src/pages/DepartureBoard.css
+@@ -6,6 +6,7 @@
+     font-family: 'B612 Mono', 'Courier New', monospace;
+     padding: 16px;
+     min-height: calc(100vh - 116px);
++    box-sizing: border-box;
+     padding-bottom: 24px;
+     position: relative;
+     overflow-x: auto;
+diff --git a/hyperloop-ui/src/pages/DevelopmentPage.jsx b/hyperloop-ui/src/pages/DevelopmentPage.jsx
+index d746682..ee830da 100644
+--- a/hyperloop-ui/src/pages/DevelopmentPage.jsx
++++ b/hyperloop-ui/src/pages/DevelopmentPage.jsx
+@@ -100,7 +100,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                             <span>Total development income:</span>
+                             <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                 <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
+-                                {totalRevenue.toLocaleString()}/day
++                                {totalRevenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
+                             </strong>
+                         </div>
+                     </div>
+@@ -125,7 +125,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
+                                     {info.totalPct === 100 && ' 🎉 Maximum reached!'}
+                                 </p>
+-                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString()}</span></strong> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></p>
++                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></p>
+                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
+                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
+                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
+@@ -181,7 +181,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                         }
+                                     }}>
+                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+-                                            Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString()}
++                                            Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                             {(() => {
+                                                 const discount = economyManager.getUpgradeSum('developmentDiscount')
+                                                 return discount > 0 ? <span style={{ color: '#f5a623', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
+@@ -212,7 +212,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                                         <span style={{ fontSize: '0.85rem', color: '#888' }}>Base Revenue</span>
+                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
+                                                             <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
+-                                                            {selectedDevelopment.revenue.toLocaleString()}/day
++                                                            {selectedDevelopment.revenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
+                                                             {totalBoostPct > 0 && (
+                                                                 <span
+                                                                     style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
+@@ -243,7 +243,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                                     <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgraded Revenue</span>
+                                                     <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 'bold' }}>
+                                                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
+-                                                        <span>{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment)).toLocaleString()}/day</span>
++                                                        <span>{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment)).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</span>
+                                                         <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0, 15, 50, 100][getLevel(selectedDevelopment)]}%)</span>
+                                                     </span>
+                                                 </div>
+@@ -317,7 +317,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                             {!isUnderConstruction && (
+                                                 <div className="dev-revenue-strip">
+                                                     {development.revenue
+-                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)).toLocaleString()}/day</>
++                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</>
+                                                         : 'UPGRADE'}
+                                                 </div>
+                                             )}
+@@ -345,7 +345,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                     style={{ width: '100%', height: '180px' }}
+                                 />
+                                 <div className="dev-revenue-strip" style={{ color: '#aaa' }}>
+-                                    {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.revenue.toLocaleString()}/day</> : 'UPGRADE'}
++                                    {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.revenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</> : 'UPGRADE'}
+                                 </div>
+                             </div>
+                             <div>{development.name}</div>
+diff --git a/hyperloop-ui/src/pages/HomePage.css b/hyperloop-ui/src/pages/HomePage.css
+index 8c98aa5..e3c7739 100644
+--- a/hyperloop-ui/src/pages/HomePage.css
++++ b/hyperloop-ui/src/pages/HomePage.css
+@@ -121,12 +121,19 @@
+     cursor: pointer;
+     letter-spacing: 1px;
+     pointer-events: all;
++    transition: background 0.2s, transform 0.1s;
+ }
+ 
+ .globe-toggle-active {
+     background: rgba(0, 0, 0, 0.2);
+ }
+ 
++/* Same gold fill and small grow as the Hyper-Link phone button */
++.globe-toggle-btn:hover {
++    background: rgba(245, 166, 35, 0.2);
++    transform: scale(1.05);
++}
++
+ .globe-loading {
+     position: absolute;
+     top: 50%;
+diff --git a/hyperloop-ui/src/pages/HomePage.jsx b/hyperloop-ui/src/pages/HomePage.jsx
+index a0f1504..54d18f2 100644
+--- a/hyperloop-ui/src/pages/HomePage.jsx
++++ b/hyperloop-ui/src/pages/HomePage.jsx
+@@ -24,7 +24,7 @@ function formatPopulation(pop) {
+     if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
+     if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
+     if (pop >= 1000) return Math.round(pop / 1000) + 'k'
+-    return pop.toLocaleString()
++    return pop.toLocaleString('en-GB', { maximumFractionDigits: 0 })
+ }
+ 
+ function loadGrayscaleTexture(url, onLoad) {
+@@ -435,6 +435,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
+             </div>
+             <button
+                 className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
++                onMouseEnter={() => playHoverSound()}
+                 onClick={() => {
+                     setShowOwned(prev => {
+                         showOwnedRef.current = !prev
+@@ -458,7 +459,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
+                         <h3>{selectedGlobeCity.name}</h3>
+                         <hr />
+                         <p><strong>Country</strong>: {selectedGlobeCity.country}</p>
+-                        <p><strong>Population</strong>: {selectedGlobeCity.population.toLocaleString()}</p>
++                        <p><strong>Population</strong>: {selectedGlobeCity.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</p>
+                         {economyManager && (() => {
+                             const coords = cityCoordinates[selectedGlobeCity.name]
+                             const coordsMap = coords ? { [selectedGlobeCity.name]: coords } : null
+@@ -501,7 +502,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
+                                 <h3>Connect {selectedUnlockedCity.name}?</h3>
+                                 <hr />
+                                 <p><strong>Country</strong>: {selectedUnlockedCity.country}</p>
+-                                <p><strong>Population</strong>: {selectedUnlockedCity.population.toLocaleString()}</p>
++                                <p><strong>Population</strong>: {selectedUnlockedCity.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</p>
+                                 {constructionManager && (() => {
+                                     const cost = constructionManager.calculateTierConnectionCost(selectedUnlockedCity)
+                                     const canAfford = balance >= cost
+@@ -513,15 +514,18 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
+                                                 onMouseEnter={() => playHoverSound()}
+                                                 onClick={() => {
+                                                     playClickSound2()
+-                                                    if (!canAfford) { playNotEnoughFundsSound(); return }
++                                                    // The balance shown on screen refreshes once a second, so check the real one (bug #122)
++                                                    if (!canAfford || constructionManager.progressionManager.balance < cost) { playNotEnoughFundsSound(); return }
+                                                     constructionManager.startStationConstruction(selectedUnlockedCity)
+-                                                    playConstructionSound()
+-                                                    onConnectCity?.()
++                                                    if (constructionManager.progressionManager.citiesUnderConstruction.includes(selectedUnlockedCity)) {
++                                                        playConstructionSound()
++                                                        onConnectCity?.()
++                                                    }
+                                                     setSelectedUnlockedCity(null)
+                                                 }}
+                                             >
+                                                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+-                                                    Connect (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{cost.toLocaleString()})
++                                                    Connect (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{cost.toLocaleString('en-GB', { maximumFractionDigits: 0 })})
+                                                 </span>
+                                                 {!canAfford && <span style={{ fontSize: '0.75rem', color: '#c00', fontWeight: 'normal' }}>Not enough funds</span>}
+                                             </button>
+diff --git a/hyperloop-ui/src/pages/OpeningPage.jsx b/hyperloop-ui/src/pages/OpeningPage.jsx
+index bf3fe2f..7e2b8c6 100644
+--- a/hyperloop-ui/src/pages/OpeningPage.jsx
++++ b/hyperloop-ui/src/pages/OpeningPage.jsx
+@@ -2,13 +2,14 @@ import starterCities from "../data/starterCities"
+ import cityThumbnails from '../data/cityThumbnails.js'
+ import countryFlags from "../data/countryFlags"
+ import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
+-import { useState } from 'react'
++import { useState, useRef } from 'react'
+ import globeIcon from '/public/globeIcon.png'
+ import './OpeningPage.css'
+ 
+ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
+     const [step, setStep] = useState(1)
+     const [localName, setLocalName] = useState("")
++    const pickedRef = useRef(false) // a double-click on a city must not start it twice or play the sounds twice (bug #122)
+ 
+     const handleConfirm = () => {
+         if (!localName.trim()) return
+@@ -68,6 +69,8 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
+     key={city.name}
+     onMouseEnter={() => playHoverSound()}
+   onClick={() => {
++    if (pickedRef.current) return
++    pickedRef.current = true
+     playClickSound2()
+     playConstructionSound()
+     constructionManager.startTutorialConstruction(city)
+@@ -89,7 +92,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
+                                     <span className="starter-city-name">{city.name}</span>
+                                 </div>
+                                 <span className="starter-city-country">{city.country}</span>
+-                                <span className="starter-city-pop">{city.population.toLocaleString()} population</span>
++                                <span className="starter-city-pop">{city.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })} population</span>
+                                 <span className="starter-city-tier">Tier {city.tier} city</span>
+                             </div>
+                         </div>
+diff --git a/hyperloop-ui/src/pages/ProgressPage.jsx b/hyperloop-ui/src/pages/ProgressPage.jsx
+index 7b410b4..06a1090 100644
+--- a/hyperloop-ui/src/pages/ProgressPage.jsx
++++ b/hyperloop-ui/src/pages/ProgressPage.jsx
+@@ -39,7 +39,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
+     const formatPopulation = (pop) => {
+         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
+         if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
+-        return pop.toLocaleString()
++        return pop.toLocaleString('en-GB', { maximumFractionDigits: 0 })
+     }
+ 
+     const [claimed, setClaimed] = useState(() => new Set(
+@@ -364,7 +364,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
+                     whiteSpace: 'nowrap',
+                 }}>
+                     {f.reward.type === 'cash'
+-                        ? <><img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount.toLocaleString()}</>
++                        ? <><img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>
+                         : <><img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', borderRadius: '0' }} />+{f.reward.amount}</>
+                     }
+                 </div>

@@ -121,10 +121,17 @@
     cursor: pointer;
     letter-spacing: 1px;
     pointer-events: all;
+    transition: background 0.2s, transform 0.1s;
 }
 
 .globe-toggle-active {
     background: rgba(0, 0, 0, 0.2);
+}
+
+/* Same gold fill and small grow as the Hyper-Link phone button */
+.globe-toggle-btn:hover {
+    background: rgba(245, 166, 35, 0.2);
+    transform: scale(1.05);
 }
 
 .globe-loading {

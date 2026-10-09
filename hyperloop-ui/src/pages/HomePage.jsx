@@ -435,6 +435,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             </div>
             <button
                 className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
+                onMouseEnter={() => playHoverSound()}
                 onClick={() => {
                     setShowOwned(prev => {
                         showOwnedRef.current = !prev

@@ -5,7 +5,8 @@
     color: #f5a623;
     font-family: 'B612 Mono', 'Courier New', monospace;
     padding: 16px;
-    min-height: 0;
+    min-height: calc(100vh - 116px);
+    box-sizing: border-box;
     padding-bottom: 24px;
     position: relative;
     overflow-x: auto;

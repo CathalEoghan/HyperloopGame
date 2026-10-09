@@ -1209,7 +1209,7 @@ function App() {
             borderRadius: '12px',
             width: '100%',
             maxWidth: '98vw',
-            maxHeight: '85vh',
+            maxHeight: 'calc(100vh - 100px)', // at least as tall as the board's own minimum height, so it only scrolls when the list is longer (bug #122)
             overflowY: 'auto',
             boxShadow: '0 0 60px rgba(245,166,35,0.15), 0 24px 80px rgba(0,0,0,0.9)',
             animation: 'boardModalIn 0.25s ease-out',
