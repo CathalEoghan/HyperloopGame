@@ -1,0 +1,276 @@
+.prestige-page {
+    background: rgb(255, 246, 239);
+    font-family: 'Inter', sans-serif;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.prestige-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px 8px;
+}
+
+.prestige-title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: bold;
+    color: #222;
+}
+
+.prestige-points {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    background: #333;
+    border: 1px solid #f5a623;
+    border-radius: 8px;
+    padding: 6px 14px;
+}
+
+.prestige-points-label {
+    color: #bbb;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-family: 'Courier New', monospace;
+}
+
+.prestige-points-value {
+    color: #f5a623;
+    font-size: 1.2rem;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+}
+
+.prestige-tree {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px 20px 16px;
+}
+
+.prestige-layer-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* The line joining one layer to the next */
+.prestige-spine {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 22px;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.prestige-spine::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    height: 22px;
+    width: 3px;
+    background: #c9b8a6;
+    border-radius: 2px;
+}
+
+.prestige-spine-open::before {
+    background: #f5a623;
+}
+
+.prestige-spine-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.72rem;
+    color: #8a7a6a;
+    text-align: center;
+}
+
+.prestige-spine-open .prestige-spine-label {
+    color: #c27f00;
+}
+
+.prestige-layer {
+    background: rgb(255, 252, 248);
+    border: 1px solid #e8d8c8;
+    border-radius: 12px;
+    padding: 12px 14px 14px;
+}
+
+.prestige-layer-locked {
+    opacity: 0.6;
+}
+
+.prestige-layer-header {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.prestige-layer-name {
+    font-weight: 700;
+    color: #222;
+}
+
+.prestige-layer-cost {
+    font-size: 0.78rem;
+    color: #888;
+}
+
+.prestige-layer-count {
+    margin-left: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: #c27f00;
+    font-weight: bold;
+}
+
+.prestige-nodes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+}
+
+.prestige-node {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 8px;
+    min-height: 74px;
+    text-align: left;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #333;
+    border: 2px solid #555;
+    color: #ddd;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.prestige-node:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 166, 35, 0.25);
+}
+
+.prestige-node-name {
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 1.25;
+}
+
+.prestige-node-tag {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: #aaa;
+}
+
+.prestige-node-available {
+    border-color: #f5a623;
+    color: #fff;
+    box-shadow: 0 0 10px rgba(245, 166, 35, 0.35);
+}
+
+.prestige-node-available .prestige-node-tag {
+    color: #f5a623;
+}
+
+.prestige-node-unaffordable {
+    border-color: #777;
+}
+
+.prestige-node-locked {
+    background: #555;
+    border-color: #666;
+    color: #aaa;
+}
+
+.prestige-node-owned {
+    background: #f5a623;
+    border-color: #f5a623;
+    color: #222;
+}
+
+.prestige-node-owned .prestige-node-tag {
+    color: #222;
+    font-weight: bold;
+}
+
+.prestige-node-selected {
+    outline: 3px solid #222;
+    outline-offset: 2px;
+}
+
+.prestige-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    min-height: 64px;
+    padding: 12px 20px;
+    background: #333;
+    border-top: 2px solid #f5a623;
+    margin-bottom: 4px;
+}
+
+.prestige-detail-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.prestige-detail-name {
+    color: #f5a623;
+    font-weight: 700;
+}
+
+.prestige-detail-cost {
+    color: #aaa;
+    font-weight: 400;
+    font-size: 0.78rem;
+}
+
+.prestige-detail-desc {
+    color: #eee;
+    font-size: 0.88rem;
+}
+
+.prestige-detail-hint {
+    color: #aaa;
+    font-size: 0.85rem;
+}
+
+.prestige-detail-owned {
+    color: #f5a623;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.prestige-buy-btn {
+    flex-shrink: 0;
+    padding: 9px 16px;
+    border-radius: 8px;
+    border: none;
+    background: #f5a623;
+    color: white;
+    font-weight: 700;
+    font-family: 'Inter', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+}
+
+.prestige-buy-btn:hover {
+    transform: scale(1.04);
+}
+
+.prestige-buy-btn-disabled {
+    background: #666;
+    color: #ddd;
+    cursor: not-allowed;
+    max-width: 190px;
+    font-size: 0.78rem;
+}

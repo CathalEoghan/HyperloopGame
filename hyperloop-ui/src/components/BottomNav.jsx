@@ -5,6 +5,7 @@ function BottomNav({ activeTab, onSelect }) {
     const targetCities = activeTab === "Cities" ? "Home" : "Cities"
     const targetDevelopment = activeTab === "Development" ? "Home" : "Development"
     const targetProgress = activeTab === "Progress" ? "Home" : "Progress"
+    const targetPrestige = activeTab === "Prestige" ? "Home" : "Prestige"
     const targetSettings = activeTab === "Settings" ? "Home" : "Settings"
 
     const handleClick = (currentTab, target) => {
@@ -32,6 +33,11 @@ function BottomNav({ activeTab, onSelect }) {
                 onMouseEnter={() => playBottomNavbarHoverSound()}
                 onClick={() => handleClick("Progress", targetProgress)}>
                 Progress
+            </button>
+            <button className="Prestige"
+                onMouseEnter={() => playBottomNavbarHoverSound()}
+                onClick={() => handleClick("Prestige", targetPrestige)}>
+                Prestige
             </button>
             <button className="Settings"
                 onMouseEnter={() => playBottomNavbarHoverSound()}

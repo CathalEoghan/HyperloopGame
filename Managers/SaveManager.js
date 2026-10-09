@@ -37,6 +37,8 @@ const AUX_KEYS = [
     'hyperloop_last_farewell_date',
     'hyperloop_pending_daily',
     'hyperloop_pending_offline',
+    // Prestige Points and bought Prestige upgrades
+    'hyperloop_prestige',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -86,6 +88,7 @@ const AUX_SHAPES = {
     hyperloop_pending_rankups: v => Number.isFinite(v),
     hyperloop_event_tint: v => typeof v === 'boolean',
     hyperloop_dev_portrait_bonus: v => v === 1,
+    hyperloop_prestige: v => v !== null && typeof v === 'object' && !Array.isArray(v) && Number.isFinite(v.points) && Array.isArray(v.owned),
     hyperloop_pending_daily: v => v !== null && typeof v === 'object' && Number.isFinite(v.cashBonus) && Number.isFinite(v.repBonus),
     hyperloop_pending_offline: v => v !== null && typeof v === 'object' && Number.isFinite(v.offlineSeconds) && Number.isFinite(v.offlineIncome),
 }

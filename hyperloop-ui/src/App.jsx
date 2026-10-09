@@ -12,6 +12,7 @@ import DepartureBoard from "./pages/DepartureBoard"
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
 import SettingsPage from './pages/SettingsPage'
+import PrestigePage from './pages/PrestigePage.jsx'
 import DelayModal from "./components/DelayModal"
 import OfflineModal from "./components/OfflineModal"
 import ConstructionScreen from "./components/ConstructionScreen"
@@ -1233,6 +1234,7 @@ function App() {
           </div>
         </div>
       )}
+      {activeTab === "Prestige" && <PrestigePage />}
       {activeTab === "Settings" && (
         <SettingsPage
           topOffset={topOffset}

@@ -24,3 +24,12 @@ font-family: 'Inter', sans-serif;
     background-color: #f5a623;
     color: white;
 }
+
+/* Five tabs have to fit on a narrow screen */
+@media (max-width: 600px) {
+    .bottomNav button {
+        font-size: 0.72rem;
+        padding: 0 2px;
+        min-width: 0;
+    }
+}
