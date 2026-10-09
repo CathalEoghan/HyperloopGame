@@ -259,10 +259,10 @@ export const POSTS = {
         'travel calories dont count',
         'children should be banned from loops',
         'i hate kids',
-        'broo whos eating cheese in arrivals #what 🤢'
-        'How do hyperloops actually work 🤔'
+        'broo whos eating cheese in arrivals #what 🤢',
+        'How do hyperloops actually work 🤔',
         'Mental note: never let your brother pack your pags #terrible',
-        'whats everyone reading? 📚'
+        'whats everyone reading? 📚',
         'why does no one know how to dress',
         'DONT MESS WITH ME TODAY',
         'i just miss him so badly',
