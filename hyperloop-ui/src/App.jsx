@@ -117,6 +117,8 @@ function App() {
     return !claimTabLock(tabId, takeover);
   });
   const blockedRef = useRef(blockedByOtherTab);
+  // Set just before Delete Save or Import reloads the page, so the save-on-close below can't write the old game back over the result.
+  const leavingRef = useRef(false);
   const [rankManager] = useState(() => new RankManager());
   const [progressionManager] = useState(() => new ProgressionManager(rankManager));
   const [economyManager] = useState(() => {
@@ -448,7 +450,7 @@ function App() {
   const [workRange, setWorkRange] = useState(() => economyManager.calculateWorkClickRange(rankManager.rank));
 
   const triggerSave = (farewells) => {
-    if (blockedRef.current) return;
+    if (blockedRef.current || leavingRef.current) return;
     saveGame(progressionManager, rankManager, terminalNameRef.current, farewells ?? farewellsRef.current);
     // Every save is also a sign of life, so offline time is counted from the newest save
     localStorage.setItem('hyperloop_heartbeat_at', Date.now());
@@ -957,15 +959,17 @@ function App() {
   useEffect(() => {
     // Save what happened since the last timed save, so closing or reloading the page loses nothing (bug #94).
     const saveNow = () => {
-      if (blockedRef.current) return;
+      if (blockedRef.current || leavingRef.current) return;
       saveGame(progressionManager, rankManager, terminalNameRef.current, farewellsRef.current);
       localStorage.setItem('hyperloop_heartbeat_at', Date.now());
     };
     const handleHidden = () => { if (document.visibilityState === 'hidden') saveNow(); };
     const handleUnload = () => {
       if (blockedRef.current) return;
-      saveNow();
-      localStorage.setItem('hyperloop_hidden_at', Date.now());
+      if (!leavingRef.current) {
+        saveNow();
+        localStorage.setItem('hyperloop_hidden_at', Date.now());
+      }
       if (readTabLock()?.id === tabId) localStorage.removeItem(TAB_LOCK_KEY);
     };
     // Another tab asked to take over: save everything now, then step aside.
@@ -1242,15 +1246,19 @@ function App() {
           onTerminalNameChange={setTerminalName}
           lastSaved={lastSaved}
                     onDeleteSave={() => {
+            leavingRef.current = true;
             stopTick();
             deleteSave();
             clearGameState();
+            localStorage.removeItem('hyperloop_heartbeat_at');
+            localStorage.removeItem('hyperloop_hidden_at');
             window.location.reload();
           }}
           onExportSave={() => {triggerSave(); exportSave(); }}
           onImportSave={async (file) => {
             stopTick();
             try { await importSave(file); } catch (err) { startTick(); throw err; }
+            leavingRef.current = true;
             window.location.reload();
           }}
           onManualSave={triggerSave}

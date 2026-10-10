@@ -360,11 +360,11 @@
 }
 
 .prestige-node-locked .prestige-node-img {
-    filter: saturate(0.55) brightness(0.72);
+    filter: grayscale(1) brightness(0.6);
 }
 
 .prestige-node-unaffordable .prestige-node-img {
-    filter: grayscale(1) brightness(0.6);
+    filter: saturate(0.7) brightness(0.8);
 }
 
 .prestige-node-owned .prestige-node-art {
