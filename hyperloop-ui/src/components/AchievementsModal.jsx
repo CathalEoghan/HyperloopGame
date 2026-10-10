@@ -22,7 +22,6 @@ export function AchievementsButton({ unseen = 0, showBubble = false, bubbleKey =
                 onClick={onClick}
                 onMouseEnter={() => playHoverSound()}
                 aria-label="Achievements"
-                title="Achievements"
             >
                 <img src={trophyIcon} alt="Achievements" />
                 {unseen > 0 && <span className="hyperlink-badge">{unseen > 9 ? '9+' : unseen}</span>}

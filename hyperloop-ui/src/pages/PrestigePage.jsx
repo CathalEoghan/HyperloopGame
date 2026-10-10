@@ -70,7 +70,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
             <div className="prestige-header">
                 <div className="prestige-header-text">
                     <h1 className="prestige-title">Prestige Upgrades</h1>
-                    <span className="prestige-subtitle">{totalOwned} of {PRESTIGE_UPGRADES.length} upgrades owned · {PRESTIGE_UPGRADES.filter(u => u.implemented).length} live, {PRESTIGE_UPGRADES.filter(u => !u.implemented).length} coming soon</span>
+                    <span className="prestige-subtitle">{totalOwned} of {PRESTIGE_UPGRADES.length} upgrades owned</span>
                 </div>
                 <div className="prestige-points">
                     <span className="prestige-points-label">Prestige Points</span>
