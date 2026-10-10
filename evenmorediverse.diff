@@ -1,0 +1,25 @@
+diff --git a/Managers/AchievementManager/achievements.js b/Managers/AchievementManager/achievements.js
+index b46a2ad..d8c8443 100644
+--- a/Managers/AchievementManager/achievements.js
++++ b/Managers/AchievementManager/achievements.js
+@@ -16,6 +16,7 @@ export const ACHIEVEMENTS = [
+     { id: 'trulyGlobal', group: 'Cities', name: 'Truly Global', description: 'Connect every city.', check: ctx => ctx.regularTotal > 0 && ctx.regularConnected >= ctx.regularTotal },
+     { id: 'topSecret', group: 'Cities', name: 'Top Secret', description: 'Connect the last city.', check: ctx => ctx.secretConnected },
+     { id: 'diverse', group: 'Cities', name: 'Diverse', description: 'Connect to 10 unique countries.', check: atLeast('countries', 10) },
++    { id: 'evenMoreDiverse', group: 'Cities', name: 'Even More Diverse', description: 'Connect to 50 unique countries.', check: atLeast('countries', 50) },
+ 
+     // Developments
+     { id: 'developing', group: 'Developments', name: 'Developing', description: 'Construct your first development.', check: atLeast('builds', 1) },
+diff --git a/Managers/PrestigeManager/PRESTIGE_STATUS.md b/Managers/PrestigeManager/PRESTIGE_STATUS.md
+index 9bce371..6465eb0 100644
+--- a/Managers/PrestigeManager/PRESTIGE_STATUS.md
++++ b/Managers/PrestigeManager/PRESTIGE_STATUS.md
+@@ -57,7 +57,7 @@ None: all 26 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
+ 
+ ## Achievements
+ 
+-- 38 achievements in `Managers/AchievementManager/achievements.js`. Unlocked ids are stored in `hyperloop_achievements`, running totals (Work presses, farewells) in `hyperloop_achievement_counters`, the Hyper-Link mute in `hyperloop_hyperlink_muted`.
++- 39 achievements in `Managers/AchievementManager/achievements.js`. Unlocked ids are stored in `hyperloop_achievements`, running totals (Work presses, farewells) in `hyperloop_achievement_counters`, the Hyper-Link mute in `hyperloop_hyperlink_muted`.
+ - They are permanent: a prestige keeps all three, only Delete Save clears them. Importing a save replaces them with the file's.
+ - State achievements (cities, builds, balance, rank, likes, counters, Prestige) are checked every second; event ones are unlocked where they happen (mute, credits portrait, retiring).
+ - Upgrades count as developments (the Enterprise and Infrastructure categories only exist as upgrades). Milestone upgrades (Anniversary Sales, Early Retirement, Founders' Hall, Commemorative Displays) do not count.

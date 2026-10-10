@@ -16,6 +16,7 @@ export const ACHIEVEMENTS = [
     { id: 'trulyGlobal', group: 'Cities', name: 'Truly Global', description: 'Connect every city.', check: ctx => ctx.regularTotal > 0 && ctx.regularConnected >= ctx.regularTotal },
     { id: 'topSecret', group: 'Cities', name: 'Top Secret', description: 'Connect the last city.', check: ctx => ctx.secretConnected },
     { id: 'diverse', group: 'Cities', name: 'Diverse', description: 'Connect to 10 unique countries.', check: atLeast('countries', 10) },
+    { id: 'evenMoreDiverse', group: 'Cities', name: 'Even More Diverse', description: 'Connect to 50 unique countries.', check: atLeast('countries', 50) },
 
     // Developments
     { id: 'developing', group: 'Developments', name: 'Developing', description: 'Construct your first development.', check: atLeast('builds', 1) },
