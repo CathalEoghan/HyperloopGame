@@ -116,6 +116,23 @@ export class ProgressionManager {
         });
     }
 
+    // Early Retirement is unlocked at Rank 100 and paid for with Reputation, not cash, and it is not built
+    // (no construction time). Owning it lets the player prestige.
+    hasEarlyRetirement() {
+        return this.purchasedUpgrades.some(u => u.effectType === 'earlyRetirement');
+    }
+
+    buyEarlyRetirement(upgrade) {
+        if (!upgrade || upgrade.effectType !== 'earlyRetirement') return false;
+        if (!this.unlockedUpgrades.includes(upgrade) || this.hasEarlyRetirement()) return false;
+        const repCost = upgrade.effectValue;
+        if (this.reputation < repCost) return false;
+        this.addReputation(-repCost);
+        this.purchasedUpgrades.push(upgrade);
+        this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u !== upgrade);
+        return true;
+    }
+
     getDevelopmentUpgradeLevel(development) {
         return this.developmentUpgradeLevels[development.name] || 0;
     }
@@ -127,7 +144,8 @@ export class ProgressionManager {
         return {
             nextLevel,
             cashCost: Math.floor(development.cost * UPGRADE_CASH_PCTS[nextLevel] * upgradeDiscountMultiplier),
-            repCost: UPGRADE_REP_COSTS[nextLevel],
+            // Good Standing: upgrading developments costs no Reputation
+            repCost: PrestigeManager.owns('goodStanding') ? 0 : UPGRADE_REP_COSTS[nextLevel],
             boostPct: UPGRADE_BOOST_PCTS[nextLevel],
             totalPct: UPGRADE_TOTAL_PCTS[nextLevel],
         };

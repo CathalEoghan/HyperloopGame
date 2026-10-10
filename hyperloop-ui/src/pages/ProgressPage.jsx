@@ -6,6 +6,7 @@ import countryFlags from '../data/countryFlags.js'
 import cashIcon from '../assets/misc/cash.png'
 import { playHoverSound, playFarewellAcceptSound, playReputationWorkBonusSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
+import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import './ProgressPage.css'
 
 const CashValue = ({ amount, suffix = '' }) => (
@@ -70,7 +71,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         localStorage.setItem('hyperloop_progress_rewards', JSON.stringify([...claimedRef.current]))
         const hasBoost = (purchasedUpgrades || []).some(u => u.effectType === 'progressRewardBoost')
         const reward = getRandomReward()
-        if (hasBoost) reward.amount *= 2
+        // Additive: the boost upgrade adds +1x, Viral Superstar adds +2x (tripled on its own)
+        const rewardFactor = 1 + (hasBoost ? 1 : 0) + (PrestigeManager.owns('viralSuperstar') ? 2 : 0)
+        reward.amount *= rewardFactor
         const rect = e.currentTarget.getBoundingClientRect()
         const id = Date.now() + Math.random()
         setFloats(prev => [...prev, { id, reward, x: rect.left + rect.width / 2, y: rect.top }])
@@ -195,11 +198,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             ...(has('afternoonBoost') ? [{ label: 'Afternoon Bonus', value: `+${Math.round(economyManager.getUpgradeSum('afternoonBoost') * 100)}%${hour >= 12 && hour < 18 ? ' (Active)' : ' (Inactive)'}` }] : []),
             ...(has('eveningBoost') ? [{ label: 'Evening Bonus', value: `+${Math.round(economyManager.getUpgradeSum('eveningBoost') * 100)}%${hour >= 18 && hour < 22 ? ' (Active)' : ' (Inactive)'}` }] : []),
             ...(has('nightBoost') ? [{ label: 'Night Bonus', value: `+${Math.round(economyManager.getUpgradeSum('nightBoost') * 100)}%${(hour >= 22 || hour < 6) ? ' (Active)' : ' (Inactive)'}` }] : []),
-            { label: 'Work Click Bonus', value: count('workClickBonus') > 0 ? `×${(1 + count('workClickBonus') * 0.45).toFixed(2)} to click earnings` : '—' },
+            { label: 'Work Click Bonus', value: (count('workClickBonus') > 0 || PrestigeManager.owns('speedyConveyorBelts')) ? `×${(1 + count('workClickBonus') * 0.45 + (PrestigeManager.owns('speedyConveyorBelts') ? 3 : 0)).toFixed(2)} to click earnings` : '—' },
             { label: 'Farewell Window', value: count('farewellWindowExtension') > 0 ? `${5 + count('farewellWindowExtension') * 5} minutes` : '—' },
-            { label: 'Farewell Rep Bonus', value: has('farewellRepDoubled') ? '×2 per farewell' : '—' },
+            { label: 'Farewell Rep Bonus', value: (has('farewellRepDoubled') || PrestigeManager.owns('oralHygiene')) ? `×${1 + (has('farewellRepDoubled') ? 1 : 0) + (PrestigeManager.owns('oralHygiene') ? 5 : 0)} per farewell` : '—' },
             {
-                label: 'Offline Earnings Cap', value: count('offlineCapExtension') === 0 ? '—' : (() => {
+                label: 'Offline Earnings Cap', value: PrestigeManager.owns('automatedScheduling') ? 'No cap' : count('offlineCapExtension') === 0 ? '—' : (() => {
                     const hours = 48 + count('offlineCapExtension') * 24
                     if (hours >= 168) return '1 week'
                     return `${Math.round(hours / 24)} days`

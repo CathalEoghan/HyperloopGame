@@ -29,17 +29,19 @@ Built with React, Three.js and a lot of Monster energy drinks.`
 
 const BONUS_KEY = 'hyperloop_dev_portrait_bonus'
 
-function CreditsModal({ onClose, onReputationBonus }) {
+function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
     const [claimed, setClaimed] = useState(() => !!localStorage.getItem(BONUS_KEY))
     const [showToast, setShowToast] = useState(false)
 
     const handlePortraitClick = () => {
-        if (claimed) return
+        // Already claimed (maybe before achievements existed): the click still counts for the achievement
+        if (claimed) { onSurprise?.(); return }
         playClickSound2()
         localStorage.setItem(BONUS_KEY, '1')
         setClaimed(true)
         setShowToast(true)
         onReputationBonus?.(50)
+        onSurprise?.()
         setTimeout(() => setShowToast(false), 3000)
     }
 

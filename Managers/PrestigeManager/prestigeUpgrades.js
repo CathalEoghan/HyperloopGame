@@ -9,6 +9,15 @@ export const PRESTIGE_LAYERS = [
     { layer: 4, cost: 5 },
 ]
 
+// Upgrades whose effect is not in the game yet, with what each one is waiting for.
+// Anything not listed here is live. Keep Managers/PrestigeManager/PRESTIGE_STATUS.md in step.
+export const NOT_IMPLEMENTED = {
+    vipPods: 'Needs VIP passengers, which are not built yet.',
+    governmentGrants: 'Needs prestige runs (Early Retirement) and the new-run screen.',
+    lobbyingSuavity: 'Needs a city-picker on the rank-up screen.',
+    bestPAEver: 'Needs the Work button to be clickable from code.',
+}
+
 export const PRESTIGE_UPGRADES = [
     // Layer 1
     { id: 'staffFeedbackForms', icon: '📝', layer: 1, name: 'Staff Feedback Forms', description: '+250% income.' },
@@ -44,4 +53,9 @@ export const PRESTIGE_UPGRADES = [
     { id: 'bestPAEver', icon: '🧑‍💼', layer: 4, name: 'Best P.A. Ever', description: 'Work clicks itself once every 500ms.' },
     { id: 'lobbyingSuavity', icon: '🕶️', layer: 4, name: 'Lobbying Suavity', description: 'Choose any city to connect when ranking up.' },
     { id: 'crisisAvoidanceSpecialists', icon: '🚨', layer: 4, name: 'Crisis Avoidance Specialists', description: 'No negative events, ever.' },
-].map(u => ({ ...u, cost: PRESTIGE_LAYERS.find(l => l.layer === u.layer).cost }))
+].map(u => ({
+    ...u,
+    cost: PRESTIGE_LAYERS.find(l => l.layer === u.layer).cost,
+    implemented: !(u.id in NOT_IMPLEMENTED),
+    pendingNote: NOT_IMPLEMENTED[u.id] || null,
+}))

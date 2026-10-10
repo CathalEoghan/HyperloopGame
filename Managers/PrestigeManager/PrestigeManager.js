@@ -1,6 +1,12 @@
 import { PRESTIGE_UPGRADES } from './prestigeUpgrades.js'
 
 export const PRESTIGE_KEY = 'hyperloop_prestige'
+export const PRESTIGE_HISTORY_KEY = 'hyperloop_prestige_history'
+// Prestige Points for ending a run: 1 for every 50 ranks reached (2 at Rank 100)
+export const RANKS_PER_PRESTIGE_POINT = 50
+export const PRESTIGE_MIN_RANK = 100
+
+let ownedCache = { raw: undefined, set: new Set() }
 
 const byId = Object.fromEntries(PRESTIGE_UPGRADES.map(u => [u.id, u]))
 
@@ -64,11 +70,54 @@ export class PrestigeManager {
         this.save()
     }
 
+    // Points a run is worth if it ends at this rank. Fast Learner doubles them (Five-Star Researchers does not:
+    // it only changes what Experimental Technology pays).
+    static pointsForRank(rank) {
+        const base = Math.floor(rank / RANKS_PER_PRESTIGE_POINT)
+        return PrestigeManager.owns('fastLearner') ? base * 2 : base
+    }
+
+    static getHistory() {
+        try {
+            const list = JSON.parse(localStorage.getItem(PRESTIGE_HISTORY_KEY))
+            return Array.isArray(list) ? list.filter(r => r && typeof r === 'object') : []
+        } catch { return [] }
+    }
+
+    // Ends a run: pays out the points and writes the run into the history. Returns the points paid.
+    static completeRun(stats) {
+        const points = PrestigeManager.pointsForRank(stats.rank)
+        const manager = new PrestigeManager()
+        manager.addPoints(points)
+        const history = PrestigeManager.getHistory()
+        history.push({ ...stats, points, endedAt: Date.now() })
+        try { localStorage.setItem(PRESTIGE_HISTORY_KEY, JSON.stringify(history.slice(-100))) } catch { /* storage full */ }
+        return points
+    }
+
+    // Does the player own this Prestige upgrade? Safe to call from anywhere (economy maths, modals).
+    // Reads the stored list, cached against the raw string so hot loops stay cheap.
+    static owns(id) {
+        let raw = null
+        try { raw = localStorage.getItem(PRESTIGE_KEY) } catch { /* storage unavailable */ }
+        if (raw !== ownedCache.raw) {
+            let ids = []
+            try {
+                const parsed = JSON.parse(raw)
+                if (parsed && Array.isArray(parsed.owned)) ids = parsed.owned.filter(i => byId[i])
+            } catch { /* unreadable: treat as none owned */ }
+            ownedCache = { raw, set: new Set(ids) }
+        }
+        return ownedCache.set.has(id)
+    }
+
     // Hands out the Prestige Points an upgrade rewards when it is bought. Five-Star Researchers
-    // doubles the reward. Reads the stored state first, so it is safe to call from anywhere.
+    // doubles the reward, then Fast Learner doubles the total (+1 for every 1 gained).
+    // Reads the stored state first, so it is safe to call from anywhere.
     static award(basePoints) {
         const manager = new PrestigeManager()
-        const points = manager.has('fiveStarResearchers') ? basePoints * 2 : basePoints
+        let points = manager.has('fiveStarResearchers') ? basePoints * 2 : basePoints
+        if (manager.has('fastLearner')) points *= 2
         manager.addPoints(points)
         return points
     }

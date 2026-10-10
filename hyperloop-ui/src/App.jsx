@@ -35,10 +35,15 @@ import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManag
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
+import { PrestigeManager, PRESTIGE_MIN_RANK } from "Managers/PrestigeManager/PrestigeManager.js";
+import { AchievementManager } from "Managers/AchievementManager/AchievementManager.js";
+import AchievementToast from "./components/AchievementToast.jsx";
+import AchievementsModal, { AchievementsButton } from "./components/AchievementsModal.jsx";
+import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture } from './utils/time.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
-import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState } from 'Managers/SaveManager.js'
+import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
@@ -131,6 +136,41 @@ function App() {
 
   const [savedData] = useState(() => hasSave() ? loadGame(progressionManager, rankManager) : null);
 
+  // Achievements are kept apart from the run, so a prestige doesn't touch them. A game from before achievements
+  // starts its farewell total from the farewells already given.
+  const [achievements] = useState(() => {
+    const am = new AchievementManager();
+    am.seedCounter('farewells', savedData?.farewellsGiven || 0);
+    return am;
+  });
+  const [achievementQueue, setAchievementQueue] = useState([]);
+  const [achievementsOpen, setAchievementsOpen] = useState(false);
+  // Announces newly unlocked achievements. Several at once (e.g. a game from before achievements) become one toast.
+  const announceAchievements = (ids) => {
+    if (!ids.length) return;
+    const items = ids.length > 3
+      ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'See them on the Progress page.' }]
+      : ids.map(id => ({ key: id, title: AchievementManager.byId(id).name, subtitle: AchievementManager.byId(id).description }));
+    setAchievementQueue(prev => [...prev, ...items]);
+  };
+  const unlockAchievement = (id) => { if (achievements.unlock(id)) announceAchievements([id]); };
+
+  // Hyper-Link can be muted: no notification sound or bubble for new posts (they still arrive).
+  const [hyperLinkMuted, setHyperLinkMuted] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('hyperloop_hyperlink_muted')) === true; } catch { return false; }
+  });
+  const hyperLinkMutedRef = useRef(hyperLinkMuted);
+  const toggleHyperLinkMute = () => {
+    const next = !hyperLinkMutedRef.current;
+    hyperLinkMutedRef.current = next;
+    setHyperLinkMuted(next);
+    try { localStorage.setItem('hyperloop_hyperlink_muted', JSON.stringify(next)); } catch { /* storage full */ }
+    if (next) unlockAchievement('shutUp');
+  };
+
+  // After a prestige: the terminal name carries over and the starter city is drawn for the player (null otherwise).
+  const [runStart] = useState(() => hasSave() ? null : readRunStart());
+
   const [offlineData, setOfflineData] = useState(() => {
     if (blockedByOtherTab) return null;
     // Offline earnings are kept in storage until the player presses Collect, so closing
@@ -177,7 +217,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(() => hasSave() && progressionManager.purchasedCities.length > 0);
   const [constructionReady, setConstructionReady] = useState(false);
   const [showOfflineModal, setShowOfflineModal] = useState(!!offlineData);
-  const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || 'Hyperloop Empire');
+  const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || runStart?.terminalName || 'Hyperloop Empire');
   const [createdAt] = useState(() => savedData?.createdAt || Date.now());
   economyManager.createdAt = createdAt; // so the income figures on screen include the Founders' Hall bonus
   const [farewellsGiven, setFarewellsGiven] = useState(() => savedData?.farewellsGiven || 0);
@@ -302,7 +342,10 @@ function App() {
   ));
   const MILESTONES = [
     { rank: 10, upgradeName: 'Commemorative Displays' },
+    { rank: 25, upgradeName: 'Anniversary Sales' },
     { rank: 50, upgradeName: "Founders' Hall" },
+    // Not handed over: it is unlocked, and bought with 250 Reputation (Development > Upgrades)
+    { rank: PRESTIGE_MIN_RANK, upgradeName: 'Early Retirement' },
   ];
   const claimedCityRef = useRef(null);
 
@@ -434,7 +477,7 @@ function App() {
     economyManager.activeEvent = null;
     const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
     economyManager.activeEvent = savedEvent;
-    const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25));
+    const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25)) * (PrestigeManager.owns('betterInterestRates') ? 10 : 1);
     let repBonus = economyManager.getUpgradeSum('dailyLoginRep');
     if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
         localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus }));
@@ -487,9 +530,11 @@ function App() {
       setHyperLinkFeed(newFeed)
       if (!hyperLinkOpenRef.current) {
         setHyperLinkUnread(prev => { const n = prev + 1; localStorage.setItem('hyperloop_hyperlink_unread', n); return n })
-        playPhoneNotificationSound()
-        setHyperLinkBubble(true)
-        setTimeout(() => setHyperLinkBubble(false), 3000)
+        if (!hyperLinkMutedRef.current) {
+          playPhoneNotificationSound()
+          setHyperLinkBubble(true)
+          setTimeout(() => setHyperLinkBubble(false), 3000)
+        }
       }
     }
   }
@@ -778,9 +823,11 @@ function App() {
               localStorage.setItem('hyperloop_hyperlink_unread', newCount)
               return newCount
             })
-            playPhoneNotificationSound()
-            setHyperLinkBubble(true)
-            setTimeout(() => setHyperLinkBubble(false), 3000)
+            if (!hyperLinkMutedRef.current) {
+              playPhoneNotificationSound()
+              setHyperLinkBubble(true)
+              setTimeout(() => setHyperLinkBubble(false), 3000)
+            }
           }
         } else {
           // Nothing could be generated: try again in 30 seconds, not every second (bug #71)
@@ -839,7 +886,7 @@ function App() {
         }
       });
 
-      if (Math.random() < 0.0002) {
+      if (!PrestigeManager.owns('bulletproofPlanning') && Math.random() < 0.0002) {
         const eligible = schedule.filter(entry => {
           const diff = minutesUntilDeparture(entry, now.getTime());
           const maxDelay = (23 * 60 + 55) - (entry.hour * 60 + entry.minute);
@@ -881,10 +928,14 @@ function App() {
       const forceEvent = timeSinceLastEvent > 300000;
       if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= 2 && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
         lastEventTime.current = Date.now();
-        const positiveOnly = Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
-        const event = getRandomEvent(positiveOnly);
+        const noNegatives = PrestigeManager.owns('crisisAvoidanceSpecialists');
+        const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
+        let event = getRandomEvent(positiveOnly);
+        // Pizza Parties: positive events are +200% stronger (the effect is tripled)
+        const pizza = PrestigeManager.owns('pizzaParties') && event.type === 'positive';
+        if (pizza && event.effect) event = { ...event, effect: { ...event.effect, multiplier: 1 + (event.effect.multiplier - 1) * 3 } };
 
-        const skipEvent = event.type === 'negative' && Math.random() < Math.min(1, economyManager.getUpgradeSum('negativeEventReduction'));
+        const skipEvent = event.type === 'negative' && (noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('negativeEventReduction')));
         if (!skipEvent) {
           const bonusExtension = event.type === 'positive'
             ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
@@ -892,7 +943,7 @@ function App() {
           const durationSeconds = Math.floor(event.duration() * bonusExtension);
 
           if (event.effectType === 'instantCash') {
-            const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1);
+            const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? 3 : 1);
             progressionManager.addCash(bonus);
             const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
             activeEventRef.current = fullEvent;
@@ -937,6 +988,12 @@ function App() {
       setTotalCashEarned(progressionManager.totalCashEarned);
       setReputation(progressionManager.reputation);
       setPurchasedCitiesCount(progressionManager.purchasedCities.length);
+
+      // Achievements: check the game once a second (balance and the like change between the events that trigger a save)
+      if (progressionManager.purchasedCities.length > 0) {
+        const fresh = achievements.evaluate(progressionManager, rankManager);
+        if (fresh.length) announceAchievements(fresh);
+      }
     }, 1000);
   };
 
@@ -945,6 +1002,30 @@ function App() {
       clearInterval(tickIntervalRef.current);
       tickIntervalRef.current = null;
     }
+  };
+
+  // Early Retirement: end the run, pay out the Prestige Points, log the run, wipe everything but what a prestige keeps,
+  // and reload into the new-run screen (the same fresh start Delete Save gives).
+  const handlePrestige = () => {
+    if (!progressionManager.hasEarlyRetirement() || rankManager.rank < PRESTIGE_MIN_RANK) return;
+    if (leavingRef.current) return;
+    leavingRef.current = true;
+    stopTick();
+    achievements.unlock('happyRetirement');
+    PrestigeManager.completeRun({
+      rank: rankManager.rank,
+      cash: progressionManager.totalCashEarned,
+      cities: progressionManager.purchasedCities.length,
+      developments: progressionManager.purchasedDevelopments.length,
+      farewells: farewellsRef.current,
+      startedAt: createdAt,
+      home: progressionManager.purchasedCities[0]?.name || null,
+    });
+    const starter = starterCities[Math.floor(Math.random() * starterCities.length)];
+    startPrestigeRun(terminalNameRef.current, starter.name);
+    localStorage.removeItem('hyperloop_heartbeat_at');
+    localStorage.removeItem('hyperloop_hidden_at');
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -1024,8 +1105,9 @@ function App() {
   if (isLoading) return <LoadingScreen onComplete={() => setIsLoading(false)} />;
 
     if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
-    return <OpeningPage constructionManager={constructionManager} setPickedCity={city => {
-      localStorage.setItem('hyperloop_onboarding_pending', '1');
+    return <OpeningPage constructionManager={constructionManager} runStart={runStart} setPickedCity={city => {
+      // A prestige run skips the first-time walkthrough
+      if (!runStart) localStorage.setItem('hyperloop_onboarding_pending', '1');
       setPickedCity(city);
     }} setTerminalName={setTerminalName} />;
   }
@@ -1037,7 +1119,7 @@ function App() {
       onEnter={() => {
         if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => { })
         setConstructionReady(true)
-        setShowOnboarding(true)
+        setShowOnboarding(!runStart)
       }}
     />;
   }
@@ -1087,6 +1169,7 @@ function App() {
         }}
         onWork={(onRepGain) => {
           const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
+          achievements.addCounter('work');
           progressionManager.addCash(earned);
           setBalance(progressionManager.balance);
           const gotRep = Math.random() < economyManager.getWorkRepChance();
@@ -1133,8 +1216,13 @@ function App() {
           onSave={triggerSave}
           onDisconnect={(city) => {
             const disconnectCost = constructionManager.calculateTierConnectionCost(city) / 2;
-            progressionManager.spendCash(disconnectCost);
-            progressionManager.addReputation(-20);
+            if (PrestigeManager.owns('amicableBreakups')) {
+              // Amicable Breakups: no cost, and half the connection cost comes back (a refund, not earnings)
+              progressionManager.balance += disconnectCost;
+            } else {
+              progressionManager.spendCash(disconnectCost);
+              progressionManager.addReputation(-20);
+            }
             progressionManager.disconnectCity(city);
             const todayKey = new Date().toDateString();
             const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
@@ -1238,7 +1326,21 @@ function App() {
           </div>
         </div>
       )}
-      {activeTab === "Prestige" && <PrestigePage />}
+      {activeTab === "Prestige" && (
+        <PrestigePage
+          rank={rankSet}
+          hasEarlyRetirement={progressionManager.hasEarlyRetirement()}
+          runStats={{
+            rank: rankSet,
+            cash: totalCashEarned,
+            cities: purchasedCitiesCount,
+            developments: progressionManager.purchasedDevelopments.length,
+            farewells: farewellsGiven,
+            startedAt: createdAt,
+          }}
+          onPrestige={handlePrestige}
+        />
+      )}
       {activeTab === "Settings" && (
         <SettingsPage
           topOffset={topOffset}
@@ -1263,8 +1365,10 @@ function App() {
           }}
           onManualSave={triggerSave}
           onReputationBonus={(amount) => { progressionManager.addReputation(amount); setReputation(progressionManager.reputation); }}
+          onSurprise={() => unlockAchievement('surprise')}
         />
       )}
+      <AchievementToast queue={achievementQueue} onShift={() => setAchievementQueue(q => q.slice(1))} />
       <TickerBar terminalName={terminalName} />
       <BottomNav activeTab={activeTab} onSelect={(tab) => {
         if (departureBoardAudioRef.current) {
@@ -1278,7 +1382,7 @@ function App() {
 
       {showSaved && (
         <div style={{
-          position: 'fixed', bottom: '108px', right: '16px',
+          position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
           background: '#222', color: '#f5a623',
           fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
           padding: '4px 12px', borderRadius: '6px',
@@ -1346,6 +1450,7 @@ function App() {
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
           capHours={Math.round(economyManager.calculateOfflineCap() / 3600)}
+          bonusFactor={PrestigeManager.owns('eliteAccountants') ? 4 : 2}
           reputation={reputation}
           onSpendRep={(amount) => { offlineDoubleRep.current = amount; }}
           onCollect={(finalIncome) => {
@@ -1395,6 +1500,7 @@ function App() {
             }
             const newCount = farewellsRef.current + 1;
             farewellsRef.current = newCount;
+            achievements.addCounter('farewells');
             setFarewellsGiven(newCount);
             triggerSave(newCount);
             finishDeparture(activeDeparture);
@@ -1487,7 +1593,12 @@ function App() {
           onContinue={() => {
             const milestone = milestoneQueue[0];
             const upgrade = allUpgrades.find(u => u.name === milestone.upgradeName);
-            if (upgrade) {
+            if (upgrade && upgrade.effectType === 'earlyRetirement') {
+              // Unlocked, not owned: the reveal popup comes from the unlock itself
+              if (!progressionManager.unlockedUpgrades.includes(upgrade) && !progressionManager.hasEarlyRetirement()) {
+                progressionManager.unlockedUpgrades.push(upgrade);
+              }
+            } else if (upgrade) {
               progressionManager.purchasedUpgrades.push(upgrade);
               prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
               setDevRevealQueue(prev => [...prev, upgrade]);
@@ -1524,10 +1635,31 @@ function App() {
         />
       )}
 
+      {activeTab === "Home" && !popupOpen && (
+        <AchievementsButton onClick={() => setAchievementsOpen(true)} />
+      )}
+
+      {achievementsOpen && (
+        <AchievementsModal
+          achievementManager={achievements}
+          purchasedUpgrades={progressionManager.purchasedUpgrades}
+          onClose={() => setAchievementsOpen(false)}
+        />
+      )}
+
       {hyperLinkOpen && (
         <HyperLinkModal
           feed={hyperLinkFeed}
           terminalName={terminalName}
+          muted={hyperLinkMuted}
+          onToggleMute={toggleHyperLinkMute}
+          // Cult of Celebrity: liking a post gives 1 Reputation (likes are permanent, so it can't be farmed)
+          onLikeReward={() => {
+            if (!PrestigeManager.owns('cultOfCelebrity')) return;
+            progressionManager.addReputation(1);
+            setReputation(progressionManager.reputation);
+            triggerSave();
+          }}
           onClose={() => setHyperLinkOpen(false)}
         />
       )}

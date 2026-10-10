@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { playLeavingSound, playFarewellAcceptSound, playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { minutesUntilDeparture } from '../utils/time.js'
@@ -48,6 +49,24 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const gateClosed = minutesUntilDeparture(departure) <= 5
     const repGain = economyManager ? economyManager.getFarewellRepGain(5) : 5
 
+    const accept = () => {
+        playFarewellAcceptSound()
+        onFarewell(repGain)
+    }
+
+    // Video Message: the farewell is accepted automatically, after a moment so it can still be seen
+    const autoSend = PrestigeManager.owns('videoMessage')
+    const sentRef = useRef(false)
+    useEffect(() => {
+        if (!autoSend) return
+        const t = setTimeout(() => {
+            if (sentRef.current) return
+            sentRef.current = true
+            accept()
+        }, 2500)
+        return () => clearTimeout(t)
+    }, [])
+
     return (
         <div className="farewell-overlay">
             <div className="farewell-modal">
@@ -71,12 +90,19 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 <p className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}>
                     {timeDisplay}
                 </p>
-                <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={() => {
-                    playFarewellAcceptSound()
-                    onFarewell(repGain)
-                }}>
-                    Give a personal farewell (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
-                </button>
+                {autoSend ? (
+                    <p className="farewell-message" data-testid="video-message">
+                        🎥 Sending your video message… (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
+                    </p>
+                ) : (
+                    <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={() => {
+                        if (sentRef.current) return
+                        sentRef.current = true
+                        accept()
+                    }}>
+                        Give a personal farewell (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
+                    </button>
+                )}
             </div>
         </div>
     )

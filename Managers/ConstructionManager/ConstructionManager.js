@@ -1,3 +1,4 @@
+import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js'
 import { FIVE_SECONDS, TEN_SECONDS, TWENTY_SECONDS, FORTY_FIVE_SECONDS, TWO_MINUTES, FIVE_MINUTES } from '../TimeManager/TimeManager.js'
 
 export class ConstructionManager {
@@ -50,7 +51,8 @@ export class ConstructionManager {
         const canAfford = this.progressionManager.spendCash(connectionCost);
         if (!canAfford) return;
 
-        const duration = this.calculateTierTime(city);
+        // Advanced Engineering: built immediately (finishes on the next tick)
+        const duration = PrestigeManager.owns('advancedEngineering') ? 0 : this.calculateTierTime(city);
         city.finishTime = this.timeManager.getFinishTime(duration);
         city.underConstruction = true;
         this.progressionManager.citiesUnderConstruction.push(city);
@@ -81,7 +83,7 @@ export class ConstructionManager {
     startDevelopmentConstruction(development, discountedCost) {
         const cost = discountedCost ?? development.cost;
         if (!this.progressionManager.spendCash(cost)) return;
-        const duration = TWENTY_SECONDS;
+        const duration = PrestigeManager.owns('advancedEngineering') ? 0 : TWENTY_SECONDS;
         development.finishTime = this.timeManager.getFinishTime(duration);
         development.underConstruction = true;
         this.progressionManager.developmentsUnderConstruction.push(development);

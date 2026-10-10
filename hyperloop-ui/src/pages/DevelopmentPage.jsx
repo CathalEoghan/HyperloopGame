@@ -125,7 +125,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
                                     {info.totalPct === 100 && ' 🎉 Maximum reached!'}
                                 </p>
-                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></p>
+                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></>}</p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
@@ -156,7 +156,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 </>
                             ) : available.some(d => d.name === selectedDevelopment.name) ? (
                                 <>
-                                    <h3>Build {selectedDevelopment.name}?</h3>
+                                    <h3>{selectedDevelopment.effectType === 'earlyRetirement' ? `Purchase ${selectedDevelopment.name}?` : `Build ${selectedDevelopment.name}?`}</h3>
                                     <img className="modal-city-image" src={developmentImages[selectedDevelopment.name]} alt={selectedDevelopment.name}
                                         onClick={(e) => { e.stopPropagation(); setEnlargedImage(developmentImages[selectedDevelopment.name]) }}
                                         style={{ cursor: 'zoom-in' }} />
@@ -169,25 +169,40 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             <strong>Effect:</strong> {EFFECT_DESCRIPTIONS[selectedDevelopment.effectType](selectedDevelopment.effectValue, selectedDevelopment)}
                                         </p>
                                     )}
-                                    <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
-                                        const cost = economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost)
-                                        if (balance < cost) { playClickSound2(); playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
-                                        else {
-                                            playClickSound2();
-                                            playConstructionSound();
-                                            constructionManager.startDevelopmentConstruction(selectedDevelopment, economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost));
+                                    {selectedDevelopment.effectType === 'earlyRetirement' ? (
+                                        // Bought with Reputation, not cash, and not built: it is owned straight away
+                                        <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: reputation >= selectedDevelopment.effectValue ? 1 : 0.5 }} onClick={() => {
+                                            if (!progressionManager.buyEarlyRetirement(selectedDevelopment)) { playNotEnoughFundsSound(); return }
+                                            playClickSound2(); playFarewellAcceptSound();
                                             onSave();
                                             closeModal();
-                                        }
-                                    }}>
-                                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                            Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
-                                            {(() => {
-                                                const discount = economyManager.getUpgradeSum('developmentDiscount')
-                                                return discount > 0 ? <span style={{ color: '#f5a623', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
-                                            })()})
-                                        </span>
-                                    </button>
+                                        }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                                Purchase ({selectedDevelopment.effectValue} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                            </span>
+                                        </button>
+                                    ) : (
+                                    <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
+                                            const cost = economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost)
+                                            if (balance < cost) { playClickSound2(); playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
+                                            else {
+                                                playClickSound2();
+                                                playConstructionSound();
+                                                constructionManager.startDevelopmentConstruction(selectedDevelopment, economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost));
+                                                onSave();
+                                                closeModal();
+                                            }
+                                        }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                                Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                                {(() => {
+                                                    const discount = economyManager.getUpgradeSum('developmentDiscount')
+                                                    return discount > 0 ? <span style={{ color: '#f5a623', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
+                                                })()})
+                                            </span>
+                                        </button>
+
+                                    )}
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </>
                             ) : (

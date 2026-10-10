@@ -610,3 +610,135 @@
     background: #4a3e32;
     transform: none;
 }
+
+/* Upgrades whose effect is not in the game yet */
+.prestige-node-art .prestige-node-soon {
+    position: absolute;
+    bottom: 6px;
+    left: 6px;
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #f5a623;
+    border: 1px solid rgba(245, 166, 35, 0.6);
+    backdrop-filter: blur(3px);
+}
+
+.prestige-pop-soon {
+    font-size: 0.78rem;
+    line-height: 1.35;
+    color: #f5a623;
+}
+
+/* Early Retirement bar, confirm screen and run history */
+.prestige-retire {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 10px 28px;
+    background: rgba(0, 0, 0, 0.22);
+    border-bottom: 1px solid rgba(245, 166, 35, 0.18);
+    font-size: 0.82rem;
+    color: var(--pt-muted);
+}
+
+.prestige-retire-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.prestige-retire-text > b { color: var(--pt-text); font-size: 0.95rem; }
+.prestige-gold { color: var(--pt-gold); }
+
+.prestige-retire-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.prestige-retire-btn {
+    font-family: inherit;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: 2px solid var(--pt-gold);
+    background: var(--pt-gold);
+    color: #1d1815;
+    cursor: pointer;
+}
+
+.prestige-retire-btn:hover { filter: brightness(1.1); }
+
+.prestige-retire-btn.prestige-buy-btn-disabled {
+    background: transparent;
+    color: var(--pt-muted);
+    border-color: rgba(245, 166, 35, 0.3);
+    cursor: not-allowed;
+}
+
+.prestige-retire-btn-quiet {
+    background: transparent;
+    color: var(--pt-gold);
+}
+
+.prestige-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 400;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.prestige-modal {
+    width: min(440px, 100%);
+    max-height: 86vh;
+    overflow-y: auto;
+    background: var(--pt-panel);
+    border: 2px solid var(--pt-gold);
+    border-radius: 14px;
+    padding: 20px 24px;
+    box-shadow: 0 0 30px rgba(245, 166, 35, 0.25);
+    color: var(--pt-text);
+    font-family: 'Inter', sans-serif;
+}
+
+.prestige-modal-wide { width: min(560px, 100%); }
+.prestige-modal h2 { margin: 0 0 12px; font-size: 1.3rem; }
+
+.prestige-modal-stats {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 16px;
+    font-size: 0.88rem;
+    color: var(--pt-muted);
+}
+
+.prestige-modal-stats b { color: var(--pt-text); text-align: right; }
+
+.prestige-modal-gain {
+    margin: 14px 0 8px;
+    text-align: center;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: var(--pt-gold);
+    font-family: 'Courier New', monospace;
+}
+
+.prestige-modal-note { margin: 4px 0; font-size: 0.8rem; color: var(--pt-muted); }
+.prestige-modal-note b { color: var(--pt-text); }
+.prestige-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+
+.prestige-runs { display: flex; flex-direction: column; font-size: 0.82rem; max-height: 50vh; overflow-y: auto; }
+.prestige-runs-row { display: grid; grid-template-columns: 0.5fr 0.6fr 0.7fr 1.6fr 1fr; gap: 8px; padding: 6px 4px; border-bottom: 1px solid rgba(245, 166, 35, 0.12); }
+.prestige-runs-head { color: var(--pt-muted); font-family: 'Courier New', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; position: sticky; top: 0; background: var(--pt-panel); }
+
+@media (max-width: 900px) {
+    .prestige-retire { flex-direction: column; align-items: stretch; padding: 10px 16px; }
+    .prestige-retire-actions { justify-content: flex-end; }
+}

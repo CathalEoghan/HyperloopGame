@@ -15,11 +15,12 @@ function formatDuration(seconds) {
     return 'a moment'
 }
 
-function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, onSpendRep, capHours = 48 }) {
+function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, onSpendRep, capHours = 48, bonusFactor = 2 }) {
     const [doubled, setDoubled] = useState(false)
     const [doubleHovered, setDoubleHovered] = useState(false)
     const canDouble = reputation >= 20 && !doubled
-    const displayIncome = doubled ? Math.floor(offlineIncome * 2) : Math.floor(offlineIncome)
+    const displayIncome = doubled ? Math.floor(offlineIncome * bonusFactor) : Math.floor(offlineIncome)
+    const bonusWord = bonusFactor >= 4 ? 'Quadruple' : 'Double'
 
     return (
         <div className="modal-overlay">
@@ -34,9 +35,9 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                     <span className="offline-earnings-amount" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '22px', height: '22px', border: 'none', borderRadius: '0', objectFit: 'contain', marginTop: '3px' }} />
                         {displayIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
-                        {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold' }}>×2</span>}
+                        {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold' }}>×{bonusFactor}</span>}
                     </span>
-                    <span className="offline-earnings-note">Capped at {capHours} hours</span>
+                    <span className="offline-earnings-note">{Number.isFinite(capHours) ? `Capped at ${capHours} hours` : 'No cap on offline earnings'}</span>
                 </div>
                 {!doubled && (
                     <button
@@ -61,7 +62,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
     setDoubled(true)
 }}
                     >
-                        Double earnings (20
+                        {bonusWord} earnings (20
                         <img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle' }} />
                         )
                     </button>

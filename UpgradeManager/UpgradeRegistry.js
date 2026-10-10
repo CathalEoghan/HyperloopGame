@@ -158,6 +158,8 @@ import { foundersHall } from './FoundersHall.js'
 import { experimentalTechnology } from './ExperimentalTechnology.js'
 import { commemorativeDisplays } from './CommemorativeDisplays.js'
 import { expandedDutyFree } from './ExpandedDutyFree.js'
+import { earlyRetirement } from './EarlyRetirement.js'
+import { anniversarySales } from './AnniversarySales.js'
 
 
 
@@ -323,6 +325,8 @@ export const allUpgrades = [
     commemorativeDisplays,
     experimentalTechnology,
     expandedDutyFree,
+    anniversarySales,
+    earlyRetirement,
 
     
 

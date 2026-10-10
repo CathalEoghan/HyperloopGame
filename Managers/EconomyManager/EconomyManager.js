@@ -1,3 +1,9 @@
+import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js';
+import { ACHIEVEMENT_IDS } from '../AchievementManager/achievements.js';
+
+// Cached against the raw stored string: income maths asks for this once per city, every second
+let achievementCache = { raw: undefined, n: 0 };
+
 const SECONDS_IN_A_DAY = 86400;
 const POPULATION_INCOME_MODIFIER = 0.0001;
 
@@ -34,6 +40,50 @@ export class EconomyManager {
         if (!homeCity) return 0;
         const count = this.progressionManager.purchasedUpgrades.filter(u => u.effectType === 'localCountryBoost').length;
         return (homeCity.localCountryBoostValue || 0) * count;
+    }
+
+    // Prestige upgrades. All percentages are additive with the normal boosts.
+    // Unique achievements unlocked. There is no Achievements system yet, so this is 0; when it exists it
+    // stores the unlocked ids in 'hyperloop_achievements' and Anniversary Sales and Trophy Cabinet switch on.
+    getUniqueAchievementCount() {
+        let raw = null;
+        try { raw = localStorage.getItem('hyperloop_achievements'); } catch { /* storage unavailable */ }
+        if (raw !== achievementCache.raw) {
+            let n = 0;
+            try {
+                const list = JSON.parse(raw);
+                if (Array.isArray(list)) n = new Set(list.filter(id => ACHIEVEMENT_IDS.has(id))).size;
+            } catch { /* unreadable: none */ }
+            achievementCache = { raw, n };
+        }
+        return achievementCache.n;
+    }
+
+    getPrestigeDevBoost() {
+        let b = 0;
+        if (PrestigeManager.owns('trophyCabinet')) b += 0.25 * this.getUniqueAchievementCount();
+        if (PrestigeManager.owns('staffFeedbackForms')) b += 2.5;
+        if (PrestigeManager.owns('irresistibleDiscounts')) b += 5;
+        return b;
+    }
+
+    getPrestigeCityBoost() {
+        let b = 0;
+        if (PrestigeManager.owns('trophyCabinet')) b += 0.25 * this.getUniqueAchievementCount();
+        if (PrestigeManager.owns('staffFeedbackForms')) b += 2.5;
+        if (PrestigeManager.owns('globalTicketCuts')) b += 7.5;
+        return b;
+    }
+
+    // Lines for the boost breakdown popups.
+    prestigeBoostLines(kind) {
+        const lines = [];
+        if (PrestigeManager.owns('staffFeedbackForms')) lines.push('Staff Feedback Forms: +250%');
+        const trophies = PrestigeManager.owns('trophyCabinet') ? this.getUniqueAchievementCount() : 0;
+        if (trophies > 0) lines.push(`Trophy Cabinet: +${trophies * 25}%`);
+        if (kind === 'dev' && PrestigeManager.owns('irresistibleDiscounts')) lines.push('Irresistible Discounts: +500%');
+        if (kind === 'city' && PrestigeManager.owns('globalTicketCuts')) lines.push('Global Ticket Cuts: +750%');
+        return lines;
     }
 
     hasUpgrade(effectType) {
@@ -181,7 +231,7 @@ export class EconomyManager {
         const specialBoost = this.getSpecialDayBonus();
         const timeBoost = this.getTimeOfDayBonus();
 
-        const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost;
+        const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost + this.getPrestigeDevBoost();
         return Math.floor(base * (1 + totalBoost));
     }
 
@@ -252,6 +302,8 @@ export class EconomyManager {
         const timePeriod = hour >= 6 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : hour >= 18 && hour < 22 ? 'Evening' : 'Night';
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
+
+        lines.push(...this.prestigeBoostLines('dev')); totalBoost += this.getPrestigeDevBoost();
 
         const foundersLine = this.foundersHallLine();
         if (foundersLine) lines.push(foundersLine);
@@ -352,6 +404,8 @@ export class EconomyManager {
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
 
+        lines.push(...this.prestigeBoostLines('city')); totalBoost += this.getPrestigeCityBoost();
+
         const foundersLine = this.foundersHallLine();
         if (foundersLine) lines.push(foundersLine);
 
@@ -391,13 +445,14 @@ export class EconomyManager {
         const wkndBoost = this.hasUpgrade('weekendBoost') && this.isWeekend() ? this.getUpgradeSum('weekendBoost') : 0;
         const specialBoost = this.getSpecialDayBonus();
         const timeBoost = this.getTimeOfDayBonus();
+        const prestigeBoost = this.getPrestigeDevBoost();
 
         let developmentIncome = 0;
         this.progressionManager.purchasedDevelopments.forEach(development => {
             const base = this.getEffectiveDevRevenue(development);
             const categoryEffectType = categoryEffectMap[development.category];
             const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
-            const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost;
+            const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost + prestigeBoost;
             developmentIncome += base * (1 + totalBoost);
         });
         return developmentIncome;
@@ -471,6 +526,7 @@ export class EconomyManager {
 
         totalBoost += this.getSpecialDayBonus();
         totalBoost += this.getTimeOfDayBonus();
+        totalBoost += this.getPrestigeCityBoost();
 
         income *= (1 + totalBoost);
 
@@ -506,10 +562,18 @@ export class EconomyManager {
         return Math.round(value / 100) * 100;
     }
 
+    // 1 + 45% per Work upgrade, plus Speedy Conveyor Belts' +300% (quadrupled), all additive.
+    getWorkMultiplier(upgradeCount) {
+        let m = 1 + (upgradeCount * 0.45) + (PrestigeManager.owns('speedyConveyorBelts') ? 3 : 0);
+        // Anniversary Sales: +5% per unique achievement (additive)
+        if (this.hasUpgrade('workPerAchievement')) m += this.getUpgradeSum('workPerAchievement') * this.getUniqueAchievementCount();
+        return m;
+    }
+
     calculateWorkClickEarnings(rank) {
         const count = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length;
-        const multiplier = 1 + (count * 0.45);
+        const multiplier = this.getWorkMultiplier(count);
         const xpRequired = Math.floor(500 * Math.pow(rank, 2.5));
         const roll = (Math.random() + Math.random()) / 2;
         const percentage = 0.001 + roll * 0.004;
@@ -523,7 +587,7 @@ export class EconomyManager {
     calculateWorkClickRange(rank) {
         const count = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length;
-        const multiplier = 1 + (count * 0.45);
+        const multiplier = this.getWorkMultiplier(count);
         const xpRequired = Math.floor(500 * Math.pow(rank, 2.5));
         let low = Math.max(250, xpRequired * 0.001) * multiplier;
         let high = Math.max(250, xpRequired * 0.005) * multiplier;
@@ -535,6 +599,7 @@ export class EconomyManager {
     }
 
     calculateOfflineCap() {
+        if (PrestigeManager.owns('automatedScheduling')) return Infinity;
         const extensions = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'offlineCapExtension').length;
         return 172800 + (extensions * 86400);
@@ -566,9 +631,11 @@ export class EconomyManager {
     }
 
     getFarewellRepGain(baseRep = 5) {
-        let rep = baseRep;
-        if (this.hasUpgrade('farewellRepDoubled')) rep *= 2;
-        return rep;
+        // Additive: the doubling upgrade adds +1x, Oral Hygiene adds +5x (x6 on its own).
+        let factor = 1;
+        if (this.hasUpgrade('farewellRepDoubled')) factor += 1;
+        if (PrestigeManager.owns('oralHygiene')) factor += 5;
+        return baseRep * factor;
     }
 
     getFarewellCityIncomeBonus(city) {
@@ -585,7 +652,8 @@ export class EconomyManager {
     getFoundersHallMultiplier(createdAt = this.createdAt) {
         if (!this.hasUpgradeByName("Founders' Hall") || !createdAt) return 1.0;
         const daysActive = Math.floor((Date.now() - createdAt) / 86400000);
-        const boostPct = Math.floor(daysActive / 10) * 0.01;
+        const stepPct = PrestigeManager.owns('foundersHallExpansion') ? 0.02 : 0.01;
+        const boostPct = Math.floor(daysActive / 10) * stepPct;
         return 1 + boostPct;
     }
 

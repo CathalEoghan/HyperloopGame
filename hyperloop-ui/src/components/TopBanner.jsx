@@ -180,9 +180,9 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const { effectType, title, instantCashAmount } = activeEvent
         if (effectType === 'instantCash') return `${title} — +£${instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`
         if (effectType === 'instantCashLoss') return `${title} — -£${Math.abs(instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`
-        if (effectType === 'passiveBoost') return `${title} — +100% passive income`
+        if (effectType === 'passiveBoost') return `${title} — +${Math.round(((activeEvent.effect?.multiplier ?? 2) - 1) * 100)}% passive income`
         if (effectType === 'passivePenalty') return `${title} — -50% passive income`
-        if (effectType === 'workBoost') return `${title} — +50% work earnings`
+        if (effectType === 'workBoost') return `${title} — +${Math.round(((activeEvent.effect?.multiplier ?? 1.5) - 1) * 100)}% work earnings`
         if (effectType === 'workPenalty') return `${title} — -50% work earnings`
         return title
     }

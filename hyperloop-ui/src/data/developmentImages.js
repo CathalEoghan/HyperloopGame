@@ -338,6 +338,8 @@ const developmentImages = {
     "Cargo Office Expansion": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CargoOfficeExpansion.jpg",
     "Founders' Hall": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FoundersHall.jpg",
     "Commemorative Displays": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CommemorativeDisplays.jpg",
+    "Anniversary Sales": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/AnniversarySales.jpg",
+    "Early Retirement": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/EarlyRetirement.jpg",
     "Experimental Technology": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ExperimentalTechnology.jpg",
     "Sleeping Pods": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SleepingPods.jpg",
     "Car Rental": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CarRental.jpg",

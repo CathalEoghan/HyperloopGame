@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <g stroke="#000" stroke-width="20" stroke-linejoin="round" stroke-linecap="round">
+    <!-- handles -->
+    <path d="M118 96 H62 C44 96 36 108 38 124 C44 190 82 226 140 232" fill="none"/>
+    <path d="M394 96 H450 C468 96 476 108 474 124 C468 190 430 226 372 232" fill="none"/>
+    <!-- cup -->
+    <path d="M110 44 H402 V160 C402 232 340 286 256 286 C172 286 110 232 110 160 Z" fill="#c4c4c4"/>
+    <!-- stem -->
+    <path d="M222 286 H290 L300 372 H212 Z" fill="#888"/>
+    <!-- base -->
+    <path d="M150 372 H362 C372 372 380 380 380 390 V452 C380 462 372 468 362 468 H150 C140 468 132 462 132 452 V390 C132 380 140 372 150 372 Z" fill="#888"/>
+    <!-- plate on base -->
+    <rect x="196" y="402" width="120" height="36" rx="10" fill="#fff"/>
+    <!-- star on cup -->
+    <path d="M256 84 L275 132 L326 135 L286 168 L299 218 L256 190 L213 218 L226 168 L186 135 L237 132 Z" fill="#fff"/>
+  </g>
+</svg>

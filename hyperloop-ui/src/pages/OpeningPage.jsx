@@ -3,12 +3,18 @@ import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from "../data/countryFlags"
 import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
 import { useState, useRef } from 'react'
+import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import globeIcon from '/public/globeIcon.png'
 import './OpeningPage.css'
 
-function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
-    const [step, setStep] = useState(1)
-    const [localName, setLocalName] = useState("")
+// runStart: set after a prestige. The terminal name carries over, and the starter city was drawn for the player
+// unless they own Personal Favours, which lets them choose it.
+function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runStart = null }) {
+    const [step, setStep] = useState(runStart ? 2 : 1)
+    const [localName, setLocalName] = useState(runStart?.terminalName || "")
+    const canChoose = !runStart || PrestigeManager.owns('personalFavours')
+    const drawn = runStart ? starterCities.find(c => c.name === runStart.city) : null
+    const offered = canChoose || !drawn ? starterCities : [drawn]
     const pickedRef = useRef(false) // a double-click on a city must not start it twice or play the sounds twice (bug #122)
 
     const handleConfirm = () => {
@@ -57,13 +63,21 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName }) {
         <div className="opening-background">
             <div className="opening-city-step">
                 <div className="opening-logo"><img src={globeIcon} alt="globe" className="brand-icon" /> HYPERLOOP EMPIRE</div>
-                <h1 className="opening-welcome">Good name.</h1>
-                <p className="opening-tagline">
-                    Where in the world is <strong>{localName}</strong> located?<br />
-                    This will be your home city - the beating heart of your network.
-                </p>
+                <h1 className="opening-welcome">{runStart ? 'A fresh start.' : 'Good name.'}</h1>
+                {runStart ? (
+                    <p className="opening-tagline">
+                        {canChoose
+                            ? <>Personal Favours: choose where <strong>{localName}</strong> begins its next chapter.</>
+                            : <>Your new home city for <strong>{localName}</strong> has been chosen for you.</>}
+                    </p>
+                ) : (
+                    <p className="opening-tagline">
+                        Where in the world is <strong>{localName}</strong> located?<br />
+                        This will be your home city - the beating heart of your network.
+                    </p>
+                )}
                 <div className="starter-city-row">
-                    {starterCities.map((city) => (
+                    {offered.map((city) => (
                         <div
     className="starter-city-card"
     key={city.name}

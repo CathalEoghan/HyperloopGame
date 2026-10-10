@@ -1,0 +1,41 @@
+.achievement-toast {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 10001;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    max-width: min(420px, calc(100vw - 32px));
+    padding: 10px 18px 10px 14px;
+    background: #222;
+    color: white;
+    border: 2px solid #f5a623;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    font-family: 'Inter', sans-serif;
+    pointer-events: none;
+    animation: achievement-toast-in 0.35s ease-out;
+}
+
+.achievement-toast-icon { font-size: 1.8rem; }
+
+.achievement-toast-text { display: flex; flex-direction: column; gap: 1px; }
+
+.achievement-toast-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #f5a623;
+}
+
+.achievement-toast-title { font-weight: 700; font-size: 1rem; }
+
+.achievement-toast-sub { font-size: 0.78rem; color: #ccc; }
+
+@keyframes achievement-toast-in {
+    from { opacity: 0; transform: translate(-50%, -16px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+}

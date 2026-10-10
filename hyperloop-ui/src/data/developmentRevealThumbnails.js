@@ -335,6 +335,8 @@ import JulyTicketDeals from '../assets/developments-reveal/JulyTicketDeals.jpg'
 import CargoOfficeExpansion from '../assets/developments-reveal/CargoOfficeExpansion.jpg'
 import FoundersHall from '../assets/developments-reveal/FoundersHall.jpg'
 import CommemorativeDisplays from '../assets/developments-reveal/CommemorativeDisplays.jpg'
+import AnniversarySales from '../assets/developments-reveal/AnniversarySales.jpg'
+import EarlyRetirement from '../assets/developments-reveal/EarlyRetirement.jpg'
 import ExperimentalTechnology from '../assets/developments-reveal/ExperimentalTechnology.jpg'
 import SleepingPods from '../assets/developments-reveal/SleepingPods.jpg'
 import CarRental from '../assets/developments-reveal/CarRental.jpg'
@@ -681,6 +683,8 @@ const developmentRevealImages = {
     "Cargo Office Expansion": CargoOfficeExpansion,
     "Founders' Hall": FoundersHall,
     "Commemorative Displays": CommemorativeDisplays,
+    "Anniversary Sales": AnniversarySales,
+    "Early Retirement": EarlyRetirement,
     "Experimental Technology": ExperimentalTechnology,
     "Sleeping Pods": SleepingPods,
     "Car Rental": CarRental,

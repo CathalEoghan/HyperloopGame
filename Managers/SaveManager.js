@@ -39,6 +39,12 @@ const AUX_KEYS = [
     'hyperloop_pending_offline',
     // Prestige Points and bought Prestige upgrades
     'hyperloop_prestige',
+    // One row per finished prestige run
+    'hyperloop_prestige_history',
+    // Unlocked achievements and their running totals; Hyper-Link mute
+    'hyperloop_achievements',
+    'hyperloop_achievement_counters',
+    'hyperloop_hyperlink_muted',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -67,7 +73,43 @@ function clearDayState() {
 // Everything that belongs to the current game apart from the save itself. Used by Delete Save.
 export function clearGameState() {
     removeKeys(AUX_KEYS)
+    removeKeys(['hyperloop_run_start'])
     clearDayState()
+}
+
+// What a prestige keeps. Everything else about the run is cleared. The two date stamps stay so that the
+// fresh run can't be handed today's daily bonus or today's first-farewell bonus a second time.
+const PRESTIGE_KEEP_KEYS = [
+    'hyperloop_prestige',
+    'hyperloop_prestige_history',
+    'hyperloop_achievements',
+    'hyperloop_achievement_counters',
+    'hyperloop_hyperlink_muted',
+    'hyperloop_hyperlink_liked',
+    'hyperloop_last_login',
+    'hyperloop_last_farewell_date',
+]
+
+// Wipes the current run and leaves a note for the next start-up: keep the terminal name, and the starter
+// city that was drawn for it (the player only gets to choose with Personal Favours).
+export function startPrestigeRun(terminalName, starterCityName) {
+    const kept = {}
+    PRESTIGE_KEEP_KEYS.forEach(key => {
+        const val = localStorage.getItem(key)
+        if (val !== null) kept[key] = val
+    })
+    deleteSave()
+    clearGameState()
+    Object.entries(kept).forEach(([key, val]) => localStorage.setItem(key, val))
+    localStorage.setItem('hyperloop_run_start', JSON.stringify({ terminalName, city: starterCityName }))
+}
+
+// The note left by startPrestigeRun, until the new run's starter city is picked.
+export function readRunStart() {
+    try {
+        const note = JSON.parse(localStorage.getItem('hyperloop_run_start'))
+        return note && typeof note.terminalName === 'string' ? note : null
+    } catch { return null }
 }
 
 function bundleAuxState() {
@@ -85,6 +127,8 @@ function bundleAuxState() {
 const AUX_SHAPES = {
     hyperloop_hyperlink_user_pfps: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_hyperlink_unread: v => Number.isFinite(v),
+    hyperloop_hyperlink_muted: v => typeof v === 'boolean',
+    hyperloop_achievement_counters: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_pending_rankups: v => Number.isFinite(v),
     hyperloop_event_tint: v => typeof v === 'boolean',
     hyperloop_dev_portrait_bonus: v => v === 1,
@@ -208,6 +252,8 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
 
     save.checksum = computeChecksum(save)
     localStorage.setItem(SAVE_KEY, JSON.stringify(save))
+    // The new run exists now, so the start-up note from a prestige has done its job
+    localStorage.removeItem('hyperloop_run_start')
 }
 
 export function loadGame(progressionManager, rankManager) {

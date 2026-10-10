@@ -48,7 +48,7 @@ function formatPostText(text) {
     )
 }
 
-function HyperLinkModal({ feed, onClose, terminalName }) {
+function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = false, onToggleMute }) {
     const now = new Date()
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     const [likedPosts, setLikedPosts] = useState(() => {
@@ -75,6 +75,7 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
         setTimeout(() => setLikeAnimating(null), 800)
         setLikedPosts(newLiked)
         localStorage.setItem('hyperloop_hyperlink_liked', JSON.stringify([...newLiked]))
+        if (onLikeReward) onLikeReward()
     }
 
     const handlePostTap = (postId) => {
@@ -106,7 +107,18 @@ function HyperLinkModal({ feed, onClose, terminalName }) {
                             <img src={phoneIcon} alt="" style={{ width: '18px', height: '18px', border: 'none', borderRadius: '0', opacity: 0.9 }} />
                             <div className="hyperlink-logo">Hyper<span>-</span>Link</div>
                         </div>
-                        <button className="hyperlink-close" onClick={onClose}>✕</button>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            {onToggleMute && (
+                                <button
+                                    className="hyperlink-close hyperlink-mute"
+                                    onClick={onToggleMute}
+                                    title={muted ? 'Unmute notifications' : 'Mute notifications'}
+                                    aria-label={muted ? 'Unmute notifications' : 'Mute notifications'}
+                                    aria-pressed={muted}
+                                >{muted ? '🔕' : '🔔'}</button>
+                            )}
+                            <button className="hyperlink-close" onClick={onClose}>✕</button>
+                        </div>
                     </div>
                     <div className="hyperlink-feed">
                         {feed.length === 0 ? (

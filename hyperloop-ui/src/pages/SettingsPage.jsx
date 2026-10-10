@@ -158,7 +158,7 @@ function LegalModal({ onClose }) {
     )
 }
 
-function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave, onReputationBonus, topOffset = 113 }) {
+function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave, onReputationBonus, onSurprise, topOffset = 113 }) {
     const [logOpen, setLogOpen] = useState(false)
     const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '8k')
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
@@ -242,7 +242,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     }
     return (
         <div className="settings-page" style={{ height: `calc(100vh - ${topOffset + 141}px)`, overflowY: "auto" }}>
-            {showCredits && <CreditsModal onClose={() => setShowCredits(false)} onReputationBonus={onReputationBonus} />}
+            {showCredits && <CreditsModal onClose={() => setShowCredits(false)} onReputationBonus={onReputationBonus} onSurprise={onSurprise} />}
             {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
             {showLegal && <LegalModal onClose={() => setShowLegal(false)} />}
 
