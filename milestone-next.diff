@@ -1,0 +1,41 @@
+diff --git a/hyperloop-ui/src/components/MilestoneModal.css b/hyperloop-ui/src/components/MilestoneModal.css
+index 8384a2c..3869418 100644
+--- a/hyperloop-ui/src/components/MilestoneModal.css
++++ b/hyperloop-ui/src/components/MilestoneModal.css
+@@ -66,6 +66,12 @@
+     color: #111;
+ }
+ 
++.milestone-next {
++    margin: 0;
++    font-size: 0.8rem;
++    color: #777;
++}
++
+ @keyframes milestone-fadein {
+     from { opacity: 0; transform: translateY(20px); }
+     to   { opacity: 1; transform: translateY(0); }
+diff --git a/hyperloop-ui/src/components/MilestoneModal.jsx b/hyperloop-ui/src/components/MilestoneModal.jsx
+index cc5cf43..ddbe916 100644
+--- a/hyperloop-ui/src/components/MilestoneModal.jsx
++++ b/hyperloop-ui/src/components/MilestoneModal.jsx
+@@ -3,6 +3,9 @@ import { playClickSound2, playRankUpSound, playHoverSound } from '../utils/sound
+ import fireworksIcon from '../assets/misc/fireworks.png'
+ import './MilestoneModal.css'
+ 
++// The rank of the milestone after each one. Rank 100 (Early Retirement) is the last, so it shows none.
++const NEXT_MILESTONE_RANK = { 10: 25, 25: 50, 50: 100 }
++
+ function MilestoneModal({ milestone, onContinue }) {
+     useEffect(() => {
+         playRankUpSound()
+@@ -21,6 +24,9 @@ function MilestoneModal({ milestone, onContinue }) {
+                     <span className="milestone-reward-label">Special Unlock</span>
+                     <span className="milestone-reward-name">{milestone.upgradeName}</span>
+                 </div>
++                {NEXT_MILESTONE_RANK[milestone.rank] && (
++                    <p className="milestone-next">Next milestone at Rank {NEXT_MILESTONE_RANK[milestone.rank]}</p>
++                )}
+                 <button
+                     className="closeButton"
+                     onMouseEnter={() => playHoverSound()}

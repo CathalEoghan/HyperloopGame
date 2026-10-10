@@ -66,6 +66,12 @@
     color: #111;
 }
 
+.milestone-next {
+    margin: 0;
+    font-size: 0.8rem;
+    color: #777;
+}
+
 @keyframes milestone-fadein {
     from { opacity: 0; transform: translateY(20px); }
     to   { opacity: 1; transform: translateY(0); }

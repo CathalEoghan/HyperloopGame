@@ -3,6 +3,9 @@ import { playClickSound2, playRankUpSound, playHoverSound } from '../utils/sound
 import fireworksIcon from '../assets/misc/fireworks.png'
 import './MilestoneModal.css'
 
+// The rank of the milestone after each one. Rank 100 (Early Retirement) is the last, so it shows none.
+const NEXT_MILESTONE_RANK = { 10: 25, 25: 50, 50: 100 }
+
 function MilestoneModal({ milestone, onContinue }) {
     useEffect(() => {
         playRankUpSound()
@@ -21,6 +24,9 @@ function MilestoneModal({ milestone, onContinue }) {
                     <span className="milestone-reward-label">Special Unlock</span>
                     <span className="milestone-reward-name">{milestone.upgradeName}</span>
                 </div>
+                {NEXT_MILESTONE_RANK[milestone.rank] && (
+                    <p className="milestone-next">Next milestone at Rank {NEXT_MILESTONE_RANK[milestone.rank]}</p>
+                )}
                 <button
                     className="closeButton"
                     onMouseEnter={() => playHoverSound()}
