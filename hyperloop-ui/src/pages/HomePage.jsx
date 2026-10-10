@@ -6,6 +6,7 @@ import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
 import { playHoverSound, playClickSound2, playConstructionSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js'
+import { makeStarPositions } from '../utils/stars.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import cashIcon from '../assets/misc/cash.png'
 import './HomePage.css'
@@ -238,8 +239,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             globeMaterial.uniforms.sunDirection.value.copy(getSunWorldPosition().normalize())
         }, 60000)
 
-        const starPositions = new Float32Array(2000 * 3)
-        for (let i = 0; i < 2000 * 3; i++) starPositions[i] = (Math.random() - 0.5) * 100
+        const starPositions = makeStarPositions()
         const starGeo = new THREE.BufferGeometry()
         starGeo.setAttribute('position', new THREE.BufferAttribute(starPositions, 3))
         scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05 })))
