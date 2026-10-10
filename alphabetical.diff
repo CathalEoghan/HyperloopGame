@@ -1,0 +1,46 @@
+diff --git a/Managers/PrestigeManager/PrestigeManager.js b/Managers/PrestigeManager/PrestigeManager.js
+index cf703c7..7ebc4fb 100644
+--- a/Managers/PrestigeManager/PrestigeManager.js
++++ b/Managers/PrestigeManager/PrestigeManager.js
+@@ -36,7 +36,8 @@ export class PrestigeManager {
+ 
+     has(id) { return this.owned.includes(id) }
+ 
+-    layerUpgrades(layer) { return PRESTIGE_UPGRADES.filter(u => u.layer === layer) }
++    // In alphabetical order, which is the order the Prestige page lays them out in
++    layerUpgrades(layer) { return PRESTIGE_UPGRADES.filter(u => u.layer === layer).sort((a, b) => a.name.localeCompare(b.name)) }
+ 
+     ownedInLayer(layer) { return this.layerUpgrades(layer).filter(u => this.has(u.id)).length }
+ 
+diff --git a/hyperloop-ui/src/components/AchievementsModal.jsx b/hyperloop-ui/src/components/AchievementsModal.jsx
+index 41fe970..19ca3b4 100644
+--- a/hyperloop-ui/src/components/AchievementsModal.jsx
++++ b/hyperloop-ui/src/components/AchievementsModal.jsx
+@@ -8,6 +8,9 @@ import { ACHIEVEMENTS } from 'Managers/AchievementManager/achievements.js'
+ 
+ // The bottom-right counterpart of the Hyper-Link button. It reuses that button's styling and notification
+ // indications (pulse, red count, bubble above it) so the two match.
++// Listed alphabetically
++const SORTED_ACHIEVEMENTS = [...ACHIEVEMENTS].sort((a, b) => a.name.localeCompare(b.name))
++
+ export function AchievementsButton({ unseen = 0, showBubble = false, bubbleKey = 0, onClick }) {
+     return (
+         <div style={{ position: 'fixed', bottom: 112.5, right: 12, zIndex: 150 }}>
+@@ -34,7 +37,7 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
+     const firstUnseenRef = useRef(null)
+     // Opening the page with something new on it: bring the first new achievement into view
+     useEffect(() => { firstUnseenRef.current?.scrollIntoView({ block: 'center' }) }, [])
+-    const firstUnseenId = ACHIEVEMENTS.find(a => achievementManager.has(a.id) && achievementManager.isUnseen(a.id))?.id
++    const firstUnseenId = SORTED_ACHIEVEMENTS.find(a => achievementManager.has(a.id) && achievementManager.isUnseen(a.id))?.id
+     // What the achievements are worth, once the Anniversary Sales / Trophy Cabinet upgrades that use them are owned
+     const bonusLines = []
+     if (count > 0 && (purchasedUpgrades || []).some(u => u.effectType === 'workPerAchievement')) {
+@@ -58,7 +61,7 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
+                 <div className="achievements-body">
+                     {bonusLines.length > 0 && <p className="achievement-bonus-note">{bonusLines.join(' · ')}</p>}
+                     <div className="achievement-grid">
+-                        {ACHIEVEMENTS.map(a => {
++                        {SORTED_ACHIEVEMENTS.map(a => {
+                             const done = achievementManager.has(a.id)
+                             const isNew = done && achievementManager.isUnseen(a.id)
+                             return (

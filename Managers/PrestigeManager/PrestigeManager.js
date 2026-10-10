@@ -36,7 +36,8 @@ export class PrestigeManager {
 
     has(id) { return this.owned.includes(id) }
 
-    layerUpgrades(layer) { return PRESTIGE_UPGRADES.filter(u => u.layer === layer) }
+    // In alphabetical order, which is the order the Prestige page lays them out in
+    layerUpgrades(layer) { return PRESTIGE_UPGRADES.filter(u => u.layer === layer).sort((a, b) => a.name.localeCompare(b.name)) }
 
     ownedInLayer(layer) { return this.layerUpgrades(layer).filter(u => this.has(u.id)).length }
 
