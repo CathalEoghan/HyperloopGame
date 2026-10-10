@@ -1,0 +1,110 @@
+.citypicker-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.citypicker-panel {
+    width: 560px;
+    max-width: 100%;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+    background: #fff4e5;
+    border: 2px solid #f5a623;
+    border-radius: 16px;
+    font-family: 'Inter', sans-serif;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8);
+}
+
+.citypicker-title { margin: 0; font-size: 1.3rem; color: #222; text-align: center; }
+.citypicker-sub { margin: 0; font-size: 0.85rem; color: #666; text-align: center; }
+
+.citypicker-search {
+    padding: 10px 14px;
+    border: 2px solid #f5a623;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+    outline: none;
+}
+
+.citypicker-tiers { display: flex; align-items: center; gap: 6px; }
+
+.citypicker-tier {
+    padding: 4px 12px;
+    border: 1px solid #f5a623;
+    border-radius: 14px;
+    background: #fff;
+    color: #333;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.citypicker-tier-on { background: #f5a623; color: #fff; }
+
+.citypicker-count { margin-left: auto; font-family: 'Courier New', monospace; font-size: 0.8rem; color: #888; }
+
+.citypicker-list {
+    flex: 1;
+    min-height: 160px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-right: 4px;
+}
+
+.citypicker-empty { text-align: center; color: #888; padding: 24px 0; }
+
+.citypicker-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border: 1px solid #e0cfae;
+    border-radius: 8px;
+    background: #fff;
+    color: #222;
+    font-family: inherit;
+    font-size: 0.9rem;
+    text-align: left;
+    cursor: pointer;
+}
+
+.citypicker-row:hover { background: #ffeccc; }
+.citypicker-row-on { background: #333; color: #fff; border-color: #f5a623; }
+.citypicker-row-on:hover { background: #333; }
+
+.citypicker-flag { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
+.citypicker-name { font-weight: 700; }
+.citypicker-country { color: #888; font-size: 0.8rem; flex: 1; }
+.citypicker-row-on .citypicker-country { color: #ccc; }
+.citypicker-badge { font-family: 'Courier New', monospace; font-size: 0.75rem; color: #b36b00; }
+.citypicker-row-on .citypicker-badge { color: #f5a623; }
+
+.citypicker-actions { display: flex; gap: 10px; justify-content: space-between; }
+
+.citypicker-back,
+.citypicker-confirm {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: 2px solid #f5a623;
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.citypicker-back { background: #fff; color: #333; }
+.citypicker-confirm { background: #f5a623; color: #fff; flex: 1; }
+.citypicker-confirm:disabled { opacity: 0.5; cursor: not-allowed; }

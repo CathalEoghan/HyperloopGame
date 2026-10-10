@@ -56,7 +56,7 @@ const formatBalance = (value) => {
     return `${scaled.toFixed(2)} ${BALANCE_NAMES[tier - 3]}`
 }
 
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
     const [floats, setFloats] = useState([])
     // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
     const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
@@ -204,7 +204,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     </div>
                 )}
             </div>
-           <button ref={btnRef} className="work-banner-btn" onClick={handleWork} onKeyDown={e => { if (e.repeat) e.preventDefault() }} onMouseEnter={() => playHoverSound()}>
+           <button ref={btnRef} className={`work-banner-btn${autoWork ? ' work-banner-auto' : ''}`} onClick={handleWork} onKeyDown={e => { if (e.repeat) e.preventDefault() }} onMouseEnter={() => playHoverSound()}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                     Work (+<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(((workRange?.low || 0) + (workRange?.high || 0)) / 2, true)})
                 </span>

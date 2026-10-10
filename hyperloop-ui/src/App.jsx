@@ -4,6 +4,7 @@ import ExperienceBar from "./components/ExperienceBar";
 import BottomNav from "./components/BottomNav";
 import TickerBar from "./components/TickerBar";
 import RankUpModal from "./components/RankUpModal";
+import CityPickerModal from "./components/CityPickerModal";
 import CityRevealModal from "./components/CityRevealModal"
 import CitiesPage from "./pages/CitiesPage"
 import HomePage from "./pages/HomePage"
@@ -36,6 +37,8 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { PrestigeManager, PRESTIGE_MIN_RANK } from "Managers/PrestigeManager/PrestigeManager.js";
+import { AUTO_WORK_INTERVAL_MS, workClicksDue } from "Managers/PrestigeManager/autoWork.js";
+import { applyGovernmentGrant } from "Managers/PrestigeManager/governmentGrants.js";
 import { AchievementManager } from "Managers/AchievementManager/AchievementManager.js";
 import AchievementToast from "./components/AchievementToast.jsx";
 import AchievementsModal, { AchievementsButton } from "./components/AchievementsModal.jsx";
@@ -390,6 +393,82 @@ function App() {
   const gameStartTime = useRef(Date.now());
 
 
+  // Lobbying Suavity turns the rank-up's random city into a choice
+  const lobbying = PrestigeManager.owns('lobbyingSuavity');
+  const [showCityPicker, setShowCityPicker] = useState(false);
+  const [claimedByChoice, setClaimedByChoice] = useState(false);
+  // Takes the rank-up: unlocks the city (drawn at random, or chosen) and pays the rank-up bonuses.
+  const claimRankUp = (newCity, chosen) => {
+    if (claimedCityRef.current) return;
+    if (newCity) {
+      progressionManager.unlockCity(newCity);
+      claimedCityRef.current = newCity;
+      setClaimedByChoice(chosen);
+      setCityClaimPending(true);
+      setTimeout(() => setClaimedCity(newCity), 300);
+    }
+    // A chosen city is final, so a free re-roll has nothing to act on
+    if (!chosen && economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
+    const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
+    if (freeRep > 0) progressionManager.addReputation(freeRep);
+    setPendingRankUps(prev => prev - 1);
+    triggerSave();
+  };
+
+  // Government Grants: the first tick after a new run's starter city is connected (and only then).
+  const grantPending = useRef(!!runStart && PrestigeManager.owns('governmentGrants'));
+  const giveGovernmentGrant = () => {
+    applyGovernmentGrant(progressionManager, rankManager, allCities);
+    // Dozens of developments arrive at once, so they count as already seen instead of each getting a popup
+    const seen = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
+    [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades].forEach(d => {
+      seen.add(d.name);
+      queuedRevealNames.current.add(d.name);
+    });
+    localStorage.setItem('hyperloop_shown_reveals', JSON.stringify([...seen]));
+    // The milestone upgrades for the ranks skipped (Rank 10 and 25)
+    MILESTONES.forEach(milestone => {
+      if (milestone.rank <= rankManager.rank && !claimedMilestones.current.has(`rank_${milestone.rank}`)) {
+        setMilestoneQueue(prev => prev.some(m => m.rank === milestone.rank) ? prev : [...prev, milestone]);
+      }
+    });
+    ensureTodaySchedule();   // there are departures to say farewell to straight away
+    triggerSave();
+  };
+
+  // One press of Work. A manual press counts towards the Work achievements and plays the bonus sound;
+  // Best P.A. Ever's presses (auto) earn the same money and Reputation, quietly.
+  const performWork = (onRepGain, { auto = false } = {}) => {
+    const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
+    if (!auto) achievements.addCounter('work');
+    progressionManager.addCash(earned);
+    setBalance(progressionManager.balance);
+    const gotRep = Math.random() < economyManager.getWorkRepChance();
+    if (gotRep) {
+      progressionManager.addReputation(5);
+      setReputation(progressionManager.reputation);
+      if (!auto) playReputationWorkBonusSound();
+    }
+    onRepGain?.(earned, gotRep);
+  };
+
+  // Best P.A. Ever: Work clicks itself every 500 ms, making up clicks a throttled background tab missed.
+  useEffect(() => {
+    let lastClickAt = Date.now();
+    const id = setInterval(() => {
+      const now = Date.now();
+      // Not while the game hasn't started, or another tab is running it
+      if (!PrestigeManager.owns('bestPAEver') || blockedRef.current || progressionManager.purchasedCities.length === 0) {
+        lastClickAt = now;
+        return;
+      }
+      const due = workClicksDue(now, lastClickAt);
+      lastClickAt = due.lastClickAt;
+      for (let i = 0; i < due.clicks; i++) performWork(null, { auto: true });
+    }, AUTO_WORK_INTERVAL_MS);
+    return () => clearInterval(id);
+  }, []);
+
    // Generate today's departure schedule if it doesn't exist yet. Runs on load and again when the
   // date changes while the game is open (bug #66).
   function ensureTodaySchedule() {
@@ -662,6 +741,10 @@ function App() {
         }
       }
       constructionManager.update();
+      if (grantPending.current && progressionManager.purchasedCities.length > 0) {
+        grantPending.current = false;
+        giveGovernmentGrant();
+      }
 
       const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];
       const currentUnlockedCount = currentUnlocked.length;
@@ -1168,19 +1251,8 @@ function App() {
           setShowEventModal(false);
           localStorage.removeItem('hyperloop_active_event');
         }}
-        onWork={(onRepGain) => {
-          const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
-          achievements.addCounter('work');
-          progressionManager.addCash(earned);
-          setBalance(progressionManager.balance);
-          const gotRep = Math.random() < economyManager.getWorkRepChance();
-          if (gotRep) {
-            progressionManager.addReputation(5);
-            setReputation(progressionManager.reputation);
-            playReputationWorkBonusSound();
-          }
-          onRepGain?.(earned, gotRep);
-        }}
+        onWork={(onRepGain) => performWork(onRepGain)}
+        autoWork={PrestigeManager.owns('bestPAEver')}
         workRange={workRange}
       />
       <ExperienceBar
@@ -1514,22 +1586,21 @@ function App() {
       )}
 
       {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
-        <RankUpModal key={rankSet} rank={rankSet} onClaim={() => {
+        <RankUpModal key={rankSet} rank={rankSet} choose={lobbying && !showCityPicker && progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
-         const newCity = progressionManager.getRandomUnlockedCity(allCities, null, economyManager.getMinCityTierOnRankUp());
-          if (newCity) {
-            progressionManager.unlockCity(newCity);
-            claimedCityRef.current = newCity;
-            setCityClaimPending(true);
-            setTimeout(() => setClaimedCity(newCity), 300);
-          }
-          if (economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
-          const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
-          if (freeRep > 0) progressionManager.addReputation(freeRep);
-          setPendingRankUps(prev => prev - 1);
-          triggerSave();
+         // Lobbying Suavity: the player picks the city (once none are left to unlock, there is nothing to pick)
+         if (lobbying && progressionManager.getUnlockableCities(allCities).length > 0) { setShowCityPicker(true); return; }
+         claimRankUp(progressionManager.getRandomUnlockedCity(allCities, null, economyManager.getMinCityTierOnRankUp()), false);
         }} />
+      )}
+
+      {showCityPicker && !dailyLoginData && !showOfflineModal && !activeDeparture && pendingRankUps > 0 && !claimedCity && (
+        <CityPickerModal
+          cities={progressionManager.getUnlockableCities(allCities)}
+          onCancel={() => setShowCityPicker(false)}
+          onPick={(city) => { setShowCityPicker(false); claimRankUp(city, true); }}
+        />
       )}
 
       {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
@@ -1567,11 +1638,12 @@ function App() {
               })
             }
             claimedCityRef.current = null;
+            setClaimedByChoice(false);
             setCityClaimPending(false);
             setClaimedCity(null)
           }}
                     // No re-roll button when the offered city is the only one left to unlock.
-          onReroll={!progressionManager.getRandomUnlockedCity(allCities, claimedCity) ? undefined : () => {
+          onReroll={claimedByChoice || !progressionManager.getRandomUnlockedCity(allCities, claimedCity) ? undefined : () => {
             const rerollCost = hasFreeReroll ? 0 : economyManager.getRerollRepCost(15);
             if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
             // Pick the replacement first, never the city being re-rolled away, and only then charge

@@ -758,6 +758,7 @@ dailyLogin.wav - Sound by rhodesmas via Freesound
 notEnoughFunds.wav - Sound by rhodesmas via Freesound
 DepartureBoard.mp3 - Sound by tilllt via Freesound
 phoneNotification.mp3 - Sound by nevak36 via Freesound
+specialChime.mp3 - Sound by Olivia Parker via Freesound
 
 MISC IMAGES
 

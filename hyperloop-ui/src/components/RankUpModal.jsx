@@ -1,7 +1,8 @@
 import './RankUpModal.css'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 
-function RankUpModal({ onClaim }) {
+// choose: Lobbying Suavity lets the player pick the city, so the button says so
+function RankUpModal({ onClaim, choose = false }) {
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -10,7 +11,7 @@ function RankUpModal({ onClaim }) {
           onMouseEnter={() => playHoverSound()}
           onClick={() => { playClickSound2(); onClaim(); }}
         >
-          Claim City
+          {choose ? 'Choose a City' : 'Claim City'}
         </button>
       </div>
     </div>

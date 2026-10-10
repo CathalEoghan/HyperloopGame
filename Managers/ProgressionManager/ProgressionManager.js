@@ -81,14 +81,18 @@ export class ProgressionManager {
         this.unlockedRewards = this.unlockedRewards.filter(r => r !== development);
     }
 
+    // Every city a rank-up could hand out: not connected, not already unlocked. The Antarctic Peninsula is the
+    // secret finale city, so it is never part of a normal unlock. Lobbying Suavity lets the player pick from these.
+    getUnlockableCities(allCities) {
+        return allCities.filter(city =>
+            city.continent !== 'Antarctica' &&
+            !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city)
+        );
+    }
+
         // exclude: a city that must not come back, e.g. the one being re-rolled away (bug #106).
         getRandomUnlockedCity(allCities, exclude = null, minTier = 1) {
-                // Antarctic Peninsula is the secret finale city — never hand it out as a normal unlock.
-        const eligible = allCities.filter(city =>
-            city.continent !== 'Antarctica' &&
-            !this.purchasedCities.includes(city) && !this.unlockedCities.includes(city) &&
-            city !== exclude
-        );
+        const eligible = this.getUnlockableCities(allCities).filter(city => city !== exclude);
         if (eligible.length === 0) return null;
         // Skilled Negotiation Teams: prefer cities of at least minTier, fall back to any city if none are left.
         const preferred = minTier > 1 ? eligible.filter(city => city.tier >= minTier) : eligible;

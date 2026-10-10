@@ -6,7 +6,7 @@ delete its line from `NOT_IMPLEMENTED` and move it to the live table below.
 
 All percentages are additive with the normal boosts (never multiplied).
 
-## Live (23 of 26)
+## Live (26 of 26)
 
 | Layer | Upgrade | Effect in the game | Where |
 |---|---|---|---|
@@ -33,14 +33,13 @@ All percentages are additive with the normal boosts (never multiplied).
 | 4 | Speedy Conveyor Belts | Work earnings x4 (+300%, additive with the Work upgrades) | `getWorkMultiplier` |
 | 4 | Global Ticket Cuts | Cities +750% | `getPrestigeCityBoost` |
 | 4 | Crisis Avoidance Specialists | No negative events | App.jsx event trigger |
+| 4 | Government Grants | A new run starts at Rank 25 with the starter city plus 24 random cities connected for free | `applyGovernmentGrant` (governmentGrants.js), called from App.jsx on the first tick after the starter is connected |
+| 4 | Lobbying Suavity | Claiming a rank-up opens a searchable city picker instead of drawing a random city (no re-roll) | `CityPickerModal`, `claimRankUp` in App.jsx, `getUnlockableCities` |
+| 4 | Best P.A. Ever | Work clicks itself every 500 ms (silent, not counted for the Work achievements); a background tab makes up missed clicks, up to 150 | `workClicksDue` (autoWork.js), `performWork` in App.jsx |
 
-## Not live yet (3 of 26)
+## Not live yet
 
-| Layer | Upgrade | Waiting for |
-|---|---|---|
-| 4 | Government Grants | Start-of-run setup (Rank 25, 24 cities and developments unlocked); prestige runs now exist |
-| 4 | Lobbying Suavity | A city-picker on the rank-up screen |
-| 4 | Best P.A. Ever | Making the Work button clickable from code (auto-click every 500 ms) |
+None: all 26 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is empty; add an id there to show a new upgrade as "Coming soon".
 
 ## Milestone upgrades
 
@@ -72,3 +71,9 @@ All percentages are additive with the normal boosts (never multiplied).
 - When a departure's farewell window opens, `App.jsx` rolls `economyManager.getVipChance()` (2%, x10 with VIP Pods) and stores `vip: true` on the queued departure, so it survives a reload.
 - A VIP uses the normal Farewell modal with VIP wording and plays `specialChime.mp3` instead of the leaving sound. The farewell is worth x5 Reputation on top of every other bonus (`getFarewellRepGain(base, isVip)`), and unlocks Very Important Person.
 - Tuning: `VIP_BASE_CHANCE` and `VIP_REP_MULTIPLIER` at the top of `EconomyManager.js`.
+
+## Government Grants, Lobbying Suavity, Best P.A. Ever
+
+- **Government Grants:** only for a run started by retiring (the "fresh start" screen). Rank comes from XP, which is the total cash earned, so the grant sets that total to what Rank 25 needs; the balance is untouched. The 24 cities are random regular cities (never the Antarctic Peninsula) and are connected, not just unlocked, so their developments unlock. Those developments are marked as already seen so the game does not show a popup for each. The Rank 10 and Rank 25 milestone upgrades are handed over, and today's departure schedule is created. Tuning: `GRANT_RANK` and `GRANT_CITIES` in `governmentGrants.js`.
+- **Lobbying Suavity:** the rank-up button says "Choose a City". The picker lists every city that is not connected or unlocked, best tier first, with search and tier filters, and asks for a confirmation because the choice is final. Back leaves the rank-up waiting. A chosen city has no re-roll, and the free re-roll from "freeRerollOnRankUp" is not stored for it.
+- **Best P.A. Ever:** one shared `performWork` in `App.jsx` serves both the Work button and the auto-clicker. Auto-clicks earn the same money and Reputation chance, play no sound and do not count towards Hard Worker and Industrious. The button pulses every 500 ms while the upgrade is owned. Tuning: `AUTO_WORK_INTERVAL_MS` and `AUTO_WORK_MAX_CATCHUP` in `autoWork.js`.
