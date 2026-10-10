@@ -1,3 +1,4 @@
+import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js'
 import { Upgrade } from "../../UpgradeManager/Upgrade.js";
 import { Development } from "../../DevelopmentManager/Development.js";
 
@@ -71,6 +72,7 @@ export class ProgressionManager {
         if (this.purchasedDevelopments.includes(development) || this.purchasedUpgrades.includes(development)) return;
         if (development instanceof Upgrade) {
             this.purchasedUpgrades.push(development);
+            if (development.effectType === 'prestigePoints') PrestigeManager.award(development.effectValue);
             this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u !== development);
         } else {
             this.purchasedDevelopments.push(development);

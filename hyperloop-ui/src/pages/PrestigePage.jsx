@@ -1,8 +1,22 @@
-import { useState, useRef, useLayoutEffect } from 'react'
+import { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { playClickSound2, playHoverSound, playFarewellAcceptSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import './PrestigePage.css'
+
+// Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
+const IMAGES = import.meta.glob('../assets/prestige-upgrades-thumb/*.jpg', { eager: true, import: 'default' })
+const imageFor = u => IMAGES[`../assets/prestige-upgrades-thumb/${u.name.replace(/[^A-Za-z0-9]/g, '')}.jpg`]
+
+const CARDS_PER_ROW = 5
+const chunk = (list, size) => Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, i * size + size))
+
+function UpgradeArt({ upgrade, className }) {
+    const src = imageFor(upgrade)
+    return src
+        ? <img className={className} src={src} alt="" draggable={false} />
+        : <span className={`${className} prestige-art-fallback`}>{upgrade.icon}</span>
+}
 
 // Ticker bar plus bottom navigation, fixed at the bottom of the screen
 const BOTTOM_BARS = 102
@@ -24,12 +38,13 @@ function PrestigePage() {
     const [selectedId, setSelectedId] = useState(null)
     const refresh = () => setTick(t => t + 1)
 
-    const selected = PRESTIGE_UPGRADES.find(u => u.id === selectedId) ?? null
-    const reason = selected ? prestige.blockedReason(selected.id) : null
+    const popRef = useRef(null)
+    // Bring the buy popover into view when an upgrade is picked near the bottom of the list
+    useEffect(() => { popRef.current?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }) }, [selectedId])
     const totalOwned = prestige.owned.length
 
     return (
-        <div className="prestige-page" ref={pageRef} style={pageHeight ? { height: pageHeight } : undefined}>
+        <div className="prestige-page" ref={pageRef} onClick={() => setSelectedId(null)} style={pageHeight ? { height: pageHeight } : undefined}>
             <div className="prestige-header">
                 <div className="prestige-header-text">
                     <h1 className="prestige-title">Prestige Upgrades</h1>
@@ -72,25 +87,52 @@ function PrestigePage() {
                                     <span className="prestige-layer-cost">{cost} point{cost === 1 ? '' : 's'} each</span>
                                     <span className="prestige-layer-count">{owned}/{upgrades.length}</span>
                                 </div>
-                                <div className="prestige-nodes" style={{ '--cols': { 1: 1, 2: 5, 3: 6, 4: 7 }[layer] }}>
-                                    {upgrades.map(u => {
-                                        const isOwned = prestige.has(u.id)
-                                        const canBuy = prestige.canBuy(u.id)
-                                        const state = isOwned ? 'owned' : canBuy ? 'available' : unlocked ? 'unaffordable' : 'locked'
-                                        return (
-                                            <button key={u.id}
-                                                className={`prestige-node prestige-node-${state} ${selectedId === u.id ? 'prestige-node-selected' : ''}`}
-                                                onMouseEnter={() => playHoverSound()}
-                                                onClick={() => { playClickSound2(); setSelectedId(u.id) }}>
-                                                <span className="prestige-node-top">
-                                                    <span className="prestige-node-icon">{u.icon}</span>
-                                                    <span className="prestige-node-tag">{isOwned ? '✔ Owned' : unlocked ? `${u.cost} pt${u.cost === 1 ? '' : 's'}` : '🔒'}</span>
-                                                </span>
-                                                <span className="prestige-node-name">{u.name}</span>
-                                                <span className="prestige-node-desc">{u.description}</span>
-                                            </button>
-                                        )
-                                    })}
+                                <div className={`prestige-rows ${upgrades.length <= CARDS_PER_ROW ? 'prestige-rows-single' : ''}`}>
+                                    {chunk(upgrades, upgrades.length === 7 ? 4 : CARDS_PER_ROW).map((row, rowIndex) => (
+                                        <div key={rowIndex} className="prestige-row" style={{ '--n': row.length }}>
+                                            {row.map((u, colIndex) => {
+                                                const isOwned = prestige.has(u.id)
+                                                const canBuy = prestige.canBuy(u.id)
+                                                const state = isOwned ? 'owned' : canBuy ? 'available' : unlocked ? 'unaffordable' : 'locked'
+                                                const isSelected = selectedId === u.id
+                                                const popReason = isSelected ? prestige.blockedReason(u.id) : null
+                                                return (
+                                                    <div key={u.id} className={`prestige-slot prestige-slot-${state}`}>
+                                                        <button
+                                                            className={`prestige-node prestige-node-${state} ${isSelected ? 'prestige-node-selected' : ''}`}
+                                                            onMouseEnter={() => playHoverSound()}
+                                                            onClick={e => { e.stopPropagation(); playClickSound2(); setSelectedId(isSelected ? null : u.id) }}>
+                                                            <span className="prestige-node-art">
+                                                                <UpgradeArt upgrade={u} className="prestige-node-img" />
+                                                                <span className="prestige-node-tag">{isOwned ? '✔ Owned' : unlocked ? `${u.cost} pt${u.cost === 1 ? '' : 's'}` : '🔒'}</span>
+                                                            </span>
+                                                            <span className="prestige-node-name">{u.name}</span>
+                                                            <span className="prestige-node-desc">{u.description}</span>
+                                                        </button>
+                                                        {isSelected && (
+                                                            <div ref={popRef} className={`prestige-pop ${colIndex >= CARDS_PER_ROW - 2 && row.length === CARDS_PER_ROW ? 'prestige-pop-left' : ''}`} onClick={e => e.stopPropagation()}>
+                                                                <div className="prestige-pop-title">{u.name}</div>
+                                                                <div className="prestige-pop-meta">Layer {u.layer} · {u.cost} point{u.cost === 1 ? '' : 's'}</div>
+                                                                {popReason === 'Owned'
+                                                                    ? <div className="prestige-pop-owned">✔ Owned</div>
+                                                                    : <>
+                                                                        {!popReason && <div className="prestige-pop-after">Points after buying: <b>{prestige.points - u.cost}</b></div>}
+                                                                        <button className={`prestige-buy-btn ${popReason ? 'prestige-buy-btn-disabled' : ''}`}
+                                                                            onMouseEnter={() => playHoverSound()}
+                                                                            onClick={() => {
+                                                                                if (popReason) { playNotEnoughFundsSound(); return }
+                                                                                if (prestige.buy(u.id)) { playFarewellAcceptSound(); setSelectedId(null); refresh() }
+                                                                            }}>
+                                                                            {popReason ?? `Buy for ${u.cost} point${u.cost === 1 ? '' : 's'}`}
+                                                                        </button>
+                                                                    </>}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                )
+                                            })}
+                                        </div>
+                                    ))}
                                 </div>
                             </div>
                         </div>
@@ -98,29 +140,6 @@ function PrestigePage() {
                 })}
             </div>
 
-            <div className="prestige-detail">
-                {selected ? (
-                    <>
-                        <span className="prestige-detail-icon">{selected.icon}</span>
-                        <div className="prestige-detail-text">
-                            <span className="prestige-detail-name">{selected.name} <span className="prestige-detail-cost">· Layer {selected.layer} · {selected.cost} point{selected.cost === 1 ? '' : 's'}</span></span>
-                            <span className="prestige-detail-desc">{selected.description}</span>
-                        </div>
-                        {reason === 'Owned'
-                            ? <span className="prestige-detail-owned">✔ Owned</span>
-                            : <button className={`prestige-buy-btn ${reason ? 'prestige-buy-btn-disabled' : ''}`}
-                                onMouseEnter={() => playHoverSound()}
-                                onClick={() => {
-                                    if (reason) { playNotEnoughFundsSound(); return }
-                                    if (prestige.buy(selected.id)) { playFarewellAcceptSound(); refresh() }
-                                }}>
-                                {reason ?? `Buy for ${selected.cost} point${selected.cost === 1 ? '' : 's'}`}
-                            </button>}
-                    </>
-                ) : (
-                    <span className="prestige-detail-hint">Select an upgrade to buy it.</span>
-                )}
-            </div>
         </div>
     )
 }

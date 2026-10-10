@@ -73,7 +73,6 @@
 }
 
 .prestige-layer-wrap {
-    max-width: 1500px;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
@@ -152,9 +151,6 @@
     box-shadow: 0 -2px 0 var(--pt-gold) inset, 0 0 26px rgba(245, 166, 35, 0.08);
 }
 
-.prestige-layer-locked {
-    opacity: 0.62;
-}
 
 .prestige-layer-header {
     display: flex;
@@ -176,8 +172,8 @@
 }
 
 .prestige-layer-locked .prestige-layer-badge {
-    background: #5b4d3e;
-    color: var(--pt-muted);
+    background: #6a5944;
+    color: #e6d7c2;
 }
 
 .prestige-layer-name {
@@ -199,15 +195,7 @@
     color: var(--pt-gold);
 }
 
-.prestige-nodes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
-}
-
-/* Each layer picks how many cards share a row, so wrapped rows stay balanced and centred */
-.prestige-nodes > .prestige-node {
+.prestige-node {
     flex: 0 0 max(190px, calc((100% - (var(--cols) - 1) * 12px) / var(--cols)));
     min-width: 0;
 }
@@ -299,19 +287,17 @@
 }
 
 .prestige-node-locked {
-    background: #2a231d;
+    background: #2d251e;
     border-style: dashed;
-    border-color: #4a3e32;
+    border-color: #5d4e3f;
 }
 
-.prestige-node-locked .prestige-node-icon {
-    filter: grayscale(1);
-    opacity: 0.5;
+.prestige-node-locked .prestige-node-name {
+    color: #e6d7c2;
 }
 
-.prestige-node-locked .prestige-node-name,
 .prestige-node-locked .prestige-node-desc {
-    opacity: 0.55;
+    color: #b9a78d;
 }
 
 /* Bought */
@@ -336,65 +322,271 @@
     outline-offset: 2px;
 }
 
-/* Purchase bar */
-.prestige-detail {
+/* Upgrade artwork */
+.prestige-node-art {
+    position: relative;
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #1d1815;
+}
+
+.prestige-node-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+}
+
+.prestige-node:hover .prestige-node-img {
+    transform: scale(1.06);
+}
+
+.prestige-node-art .prestige-node-tag {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    backdrop-filter: blur(3px);
+}
+
+.prestige-art-fallback {
     display: flex;
     align-items: center;
-    gap: 16px;
-    min-height: 72px;
-    padding: 12px 28px;
-    background: #14100d;
-    border-top: 2px solid var(--pt-gold);
+    justify-content: center;
+    font-size: 2.4rem;
 }
 
-.prestige-detail-icon {
-    font-size: 2rem;
+.prestige-node-locked .prestige-node-img {
+    filter: saturate(0.55) brightness(0.72);
 }
 
-.prestige-detail-text {
-    flex: 1;
+.prestige-node-unaffordable .prestige-node-img {
+    filter: grayscale(1) brightness(0.6);
+}
+
+.prestige-node-owned .prestige-node-art {
+    box-shadow: 0 0 0 2px rgba(35, 26, 16, 0.55);
+}
+
+
+/* ---- Tree layout: every card the same size, with branches from the layer above ---- */
+.prestige-page {
+    --card-w: 220px;
+    --card-gap: 12px;
+    --lane: 26px;
+    --line: #4a3e32;
+}
+
+@media (max-width: 1399px) { .prestige-page { --card-w: 190px; } }
+@media (max-width: 1150px) { .prestige-page { --card-w: 160px; } }
+@media (max-width: 960px)  { .prestige-page { --card-w: 140px; --card-gap: 8px; --lane: 20px; } }
+
+.prestige-tree {
+    overflow-x: auto;
+    padding-bottom: 170px; /* room for the buy popover under the last row */
+}
+
+.prestige-layer-wrap {
+    width: fit-content;
+    min-width: min-content;
+}
+
+.prestige-layer {
+    width: calc(5 * var(--card-w) + 4 * var(--card-gap) + 2 * var(--lane) + 36px);
+    max-width: none;
+    box-sizing: border-box;
+}
+
+.prestige-layer-open { --line: var(--pt-gold); }
+
+.prestige-rows {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: var(--card-gap);
 }
 
-.prestige-detail-name {
+.prestige-row {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    gap: var(--card-gap);
+    padding: 16px var(--lane) 0;
+}
+
+/* the line coming down from the gate into the first row */
+.prestige-layer-header {
+    position: relative;
+    margin-bottom: 0;
+}
+
+.prestige-layer-header::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: -15px;
+    bottom: -1px;
+    width: 3px;
+    margin-left: -1px;
+    background: var(--line);
+    transform: translateX(-1px);
+}
+
+/* the horizontal rail over each row: from the left trunk to the last card in the row */
+.prestige-row::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 10px;
+    right: calc(var(--lane) + (100% - 2 * var(--lane) - (var(--n) * var(--card-w) + (var(--n) - 1) * var(--card-gap))) / 2 + var(--card-w) / 2);
+    height: 3px;
+    background: var(--line);
+    border-radius: 2px;
+}
+
+/* the left trunk joining one row's rail to the next */
+.prestige-row:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: calc(-1 * var(--card-gap));
+    left: 10px;
+    width: 3px;
+    background: var(--line);
+    border-radius: 2px;
+}
+
+/* a layer of one card has no trunk: its rail starts at the card */
+.prestige-rows-single .prestige-row::before {
+    left: calc(50% - 1px);
+    right: calc(50% - 1px);
+}
+
+.prestige-slot {
+    position: relative;
+    flex: 0 0 var(--card-w);
+    width: var(--card-w);
+    display: flex;
+    flex-direction: column;
+}
+
+/* the short stem from the rail down into each card */
+.prestige-slot::before {
+    content: '';
+    position: absolute;
+    top: -16px;
+    left: 50%;
+    height: 16px;
+    width: 3px;
+    margin-left: -1px;
+    background: var(--line);
+}
+
+.prestige-slot-owned::before {
+    background: var(--pt-gold);
+    box-shadow: 0 0 6px var(--pt-gold);
+}
+
+.prestige-node {
+    width: 100%;
+    min-height: 196px;
+}
+
+/* ---- Buy popover, attached to the selected card ---- */
+.prestige-pop {
+    position: absolute;
+    z-index: 20;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 250px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px 14px;
+    background: #14100d;
+    border: 2px solid var(--pt-gold);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(245, 166, 35, 0.3);
+    animation: prestige-pop-in 0.14s ease-out;
+}
+
+.prestige-pop::before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    margin-left: -7px;
+    width: 12px;
+    height: 12px;
+    background: #14100d;
+    border-left: 2px solid var(--pt-gold);
+    border-top: 2px solid var(--pt-gold);
+    transform: rotate(45deg);
+}
+
+.prestige-pop-left {
+    left: auto;
+    right: 0;
+    transform: none;
+}
+
+.prestige-pop-left::before {
+    left: auto;
+    right: calc(var(--card-w) / 2 - 7px);
+    margin-left: 0;
+}
+
+@keyframes prestige-pop-in {
+    from { opacity: 0; margin-top: -6px; }
+    to { opacity: 1; margin-top: 0; }
+}
+
+.prestige-pop-title {
     color: var(--pt-gold);
     font-weight: 800;
-    font-size: 1.05rem;
 }
 
-.prestige-detail-cost {
+.prestige-pop-meta {
     color: var(--pt-muted);
-    font-weight: 400;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
+    margin-top: -4px;
 }
 
-.prestige-detail-desc {
+.prestige-pop-after {
+    font-size: 0.85rem;
     color: var(--pt-text);
-    font-size: 0.92rem;
 }
 
-.prestige-detail-hint {
-    color: var(--pt-muted);
-    font-size: 0.9rem;
-}
-
-.prestige-detail-owned {
+.prestige-pop-owned {
     color: var(--pt-gold);
     font-weight: 800;
-    white-space: nowrap;
 }
 
+.prestige-pop .prestige-buy-btn {
+    width: 100%;
+    max-width: none;
+}
+
+/* Same-height cards across a row */
+.prestige-slot .prestige-node {
+    flex: 1;
+}
+
+/* Buy button */
 .prestige-buy-btn {
     flex-shrink: 0;
-    padding: 11px 22px;
+    padding: 10px 18px;
     border-radius: 10px;
     border: none;
     background: var(--pt-gold);
     color: #1d1815;
     font-weight: 800;
-    font-size: 0.95rem;
+    font-size: 0.92rem;
     font-family: 'Inter', sans-serif;
     cursor: pointer;
     box-shadow: 0 0 14px rgba(245, 166, 35, 0.45);
@@ -402,16 +594,15 @@
 }
 
 .prestige-buy-btn:hover {
-    transform: scale(1.05);
+    transform: scale(1.04);
     background: #ffb83d;
 }
 
 .prestige-buy-btn-disabled {
     background: #4a3e32;
-    color: #bda98f;
+    color: #cdb9a0;
     cursor: not-allowed;
     box-shadow: none;
-    max-width: 230px;
     font-size: 0.8rem;
 }
 

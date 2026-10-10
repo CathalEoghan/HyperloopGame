@@ -8,6 +8,7 @@ export const EFFECT_DESCRIPTIONS = {
     shoppingIncome: (v) => `+${pct(v)}% income from Shopping developments`,
     serviceIncome: (v) => `+${pct(v)}% income from Service developments`,
     developmentBoost: (v) => `+${pct(v)}% income from all developments`,
+    prestigePoints: (v) => `Rewards ${v} Prestige Points`,
     connectionBoost: (v) => `+${pct(v)}% income from all city connections`,
     workClickBonus: () => `+45% Work click earnings`,
     offlineCapExtension: () => `+24 hours offline earnings cap`,

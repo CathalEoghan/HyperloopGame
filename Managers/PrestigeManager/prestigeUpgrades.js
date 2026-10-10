@@ -27,10 +27,14 @@ export const PRESTIGE_UPGRADES = [
     // Layer 3
     { id: 'automatedScheduling', icon: '🗓️', layer: 3, name: 'Automated Scheduling', description: 'No cap on offline earnings.' },
     { id: 'trophyCabinet', icon: '🏆', layer: 3, name: 'Trophy Cabinet', description: '+25% earnings for each unique achievement unlocked.' },
+    { id: 'pizzaParties', icon: '🍕', layer: 3, name: 'Pizza Parties', description: 'Positive events are +200% stronger.' },
     { id: 'irresistibleDiscounts', icon: '🏷️', layer: 3, name: 'Irresistible Discounts', description: 'Developments earn +500%.' },
     { id: 'bulletproofPlanning', icon: '🛡️', layer: 3, name: 'Bulletproof Planning', description: 'No more delays, ever.' },
+    { id: 'foundersHallExpansion', icon: '🏛️', layer: 3, name: 'Founders Hall Expansion', description: '+1% extra from the Founders Hall bonus.' },
     { id: 'personalFavours', icon: '🎁', layer: 3, name: 'Personal Favours', description: 'Choose your starting city every run.' },
     { id: 'vipPods', icon: '🚀', layer: 3, name: 'VIP Pods', description: 'x10 VIP chance.' },
+
+    { id: 'fiveStarResearchers', icon: '🔬', layer: 3, name: 'Five-Star Researchers', description: 'Experimental Technology rewards double the Prestige Points (10 instead of 5).' },
 
     // Layer 4
     { id: 'fastLearner', icon: '🎓', layer: 4, name: 'Fast Learner', description: '+1 Prestige Point for every 1 Prestige Point gained.' },

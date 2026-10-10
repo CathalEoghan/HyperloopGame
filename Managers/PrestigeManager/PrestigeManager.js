@@ -63,4 +63,13 @@ export class PrestigeManager {
         this.points += Math.floor(amount)
         this.save()
     }
+
+    // Hands out the Prestige Points an upgrade rewards when it is bought. Five-Star Researchers
+    // doubles the reward. Reads the stored state first, so it is safe to call from anywhere.
+    static award(basePoints) {
+        const manager = new PrestigeManager()
+        const points = manager.has('fiveStarResearchers') ? basePoints * 2 : basePoints
+        manager.addPoints(points)
+        return points
+    }
 }
