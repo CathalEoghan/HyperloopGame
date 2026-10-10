@@ -6,6 +6,9 @@ let achievementCache = { raw: undefined, n: 0 };
 
 const SECONDS_IN_A_DAY = 86400;
 const POPULATION_INCOME_MODIFIER = 0.0001;
+// VIP passengers: the chance a departure has one (x10 with VIP Pods), and how much more their farewell is worth.
+const VIP_BASE_CHANCE = 0.02;
+const VIP_REP_MULTIPLIER = 5;
 
 const TIER_INCOME = {
     1: 10000,
@@ -630,12 +633,18 @@ export class EconomyManager {
         return Math.max(0, baseCost - discount);
     }
 
-    getFarewellRepGain(baseRep = 5) {
+    getFarewellRepGain(baseRep = 5, isVip = false) {
         // Additive: the doubling upgrade adds +1x, Oral Hygiene adds +5x (x6 on its own).
         let factor = 1;
         if (this.hasUpgrade('farewellRepDoubled')) factor += 1;
         if (PrestigeManager.owns('oralHygiene')) factor += 5;
-        return baseRep * factor;
+        // A VIP farewell is worth more, on top of everything else.
+        return baseRep * factor * (isVip ? VIP_REP_MULTIPLIER : 1);
+    }
+
+    // The chance that a departure's passenger is a VIP, rolled when its farewell window opens.
+    getVipChance() {
+        return Math.min(1, VIP_BASE_CHANCE * (PrestigeManager.owns('vipPods') ? 10 : 1));
     }
 
     getFarewellCityIncomeBonus(city) {

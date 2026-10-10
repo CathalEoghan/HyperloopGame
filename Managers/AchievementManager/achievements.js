@@ -34,7 +34,7 @@ export const ACHIEVEMENTS = [
     { id: 'shutUp', group: 'Hyper-Link', name: 'Shut Up!', description: 'Mute Hyper-Link.' },
 
     // Farewells
-    { id: 'veryImportantPerson', group: 'Farewells', name: 'Very Important Person', description: 'Give a farewell to a VIP passenger.', pending: 'VIP passengers are not in the game yet.' },
+    { id: 'veryImportantPerson', group: 'Farewells', name: 'Very Important Person', description: 'Give a farewell to a VIP passenger.' },
     { id: 'niceManager', group: 'Farewells', name: 'Nice Manager', description: 'Give a farewell.', check: atLeast('farewells', 1) },
     { id: 'greatManager', group: 'Farewells', name: 'Great Manager', description: 'Give a total of 10 farewells.', check: atLeast('farewells', 10) },
     { id: 'bestManagerEver', group: 'Farewells', name: 'Best Manager Ever', description: 'Give a total of 100 farewells.', check: atLeast('farewells', 100) },

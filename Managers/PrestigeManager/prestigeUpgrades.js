@@ -12,7 +12,6 @@ export const PRESTIGE_LAYERS = [
 // Upgrades whose effect is not in the game yet, with what each one is waiting for.
 // Anything not listed here is live. Keep Managers/PrestigeManager/PRESTIGE_STATUS.md in step.
 export const NOT_IMPLEMENTED = {
-    vipPods: 'Needs VIP passengers, which are not built yet.',
     governmentGrants: 'Needs prestige runs (Early Retirement) and the new-run screen.',
     lobbyingSuavity: 'Needs a city-picker on the rank-up screen.',
     bestPAEver: 'Needs the Work button to be clickable from code.',

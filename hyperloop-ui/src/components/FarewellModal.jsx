@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
-import { playLeavingSound, playFarewellAcceptSound, playHoverSound } from '../utils/sound.js'
+import { playLeavingSound, playSpecialChime, playFarewellAcceptSound, playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'
@@ -18,7 +18,8 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     })
 
     useEffect(() => {
-        playLeavingSound()
+        // A VIP gets its own chime
+        if (departure.vip) playSpecialChime(); else playLeavingSound()
         const timer = setInterval(() => {
             if (departure.expiresAt) {
                 // Read the clock every second, so a sleeping laptop or a throttled tab can't stretch the window
@@ -47,7 +48,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const flagCode = countryFlags[departure.country]
     // The board shows GATE CLOSED for the last 5 minutes, so the announcement matches it
     const gateClosed = minutesUntilDeparture(departure) <= 5
-    const repGain = economyManager ? economyManager.getFarewellRepGain(5) : 5
+    const repGain = economyManager ? economyManager.getFarewellRepGain(5, !!departure.vip) : 5
 
     const accept = () => {
         playFarewellAcceptSound()
@@ -69,8 +70,8 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
 
     return (
         <div className="farewell-overlay">
-            <div className="farewell-modal">
-                <p className="farewell-attention">ATTENTION</p>
+            <div className="farewell-modal" data-vip={departure.vip ? 'true' : undefined}>
+                <p className="farewell-attention">{departure.vip ? 'VIP PASSENGER' : 'ATTENTION'}</p>
                 <div className="farewell-divider">━━━━━━━━━━━━━━━━━━━━</div>
                 <div className="farewell-destination">
                     {flagCode && (
@@ -83,9 +84,13 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                     <span className="farewell-city-name">{departure.name}</span>
                 </div>
                 <p className="farewell-message">
-                    {gateClosed
-                        ? <>Gate <strong>{departure.gate}</strong> is now closed for <strong>{departure.name}</strong>. There is still time to give passengers a personal farewell.</>
-                        : <>Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Gate <strong>{departure.gate}</strong>.</>}
+                    {departure.vip
+                        ? (gateClosed
+                            ? <>A VIP is on board the flight to <strong>{departure.name}</strong>, and Gate <strong>{departure.gate}</strong> has just closed. There is still time to give them a very special farewell.</>
+                            : <>A VIP is about to depart for <strong>{departure.name}</strong> from Gate <strong>{departure.gate}</strong>. Don't let them leave without a very special farewell.</>)
+                        : gateClosed
+                            ? <>Gate <strong>{departure.gate}</strong> is now closed for <strong>{departure.name}</strong>. There is still time to give passengers a personal farewell.</>
+                            : <>Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Gate <strong>{departure.gate}</strong>.</>}
                 </p>
                 <p className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}>
                     {timeDisplay}
@@ -100,7 +105,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                         sentRef.current = true
                         accept()
                     }}>
-                        Give a personal farewell (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
+                        {departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell'} (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
                     </button>
                 )}
             </div>

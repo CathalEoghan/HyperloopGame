@@ -876,7 +876,8 @@ function App() {
           const secondsElapsed = Math.max(0, Math.floor((now.getTime() - windowStartTs) / 1000));
           const secondsRemaining = Math.max(30, windowMinutes * 60 - secondsElapsed);
           const expiresAt = Date.now() + secondsRemaining * 1000;
-          const depEntry = { ...entry, secondsRemaining, expiresAt };
+          // Decided now, so Prestige upgrades bought earlier today count, and it's kept with the queued farewell.
+          const depEntry = { ...entry, secondsRemaining, expiresAt, vip: Math.random() < economyManager.getVipChance() };
           setDepartureQueue(queue => {
             if (queue.some(d => departureId(d) === departureId(depEntry))) return queue;
             const next = [...queue, depEntry];
@@ -1501,6 +1502,7 @@ function App() {
             const newCount = farewellsRef.current + 1;
             farewellsRef.current = newCount;
             achievements.addCounter('farewells');
+            if (activeDeparture?.vip) unlockAchievement('veryImportantPerson');
             setFarewellsGiven(newCount);
             triggerSave(newCount);
             finishDeparture(activeDeparture);
