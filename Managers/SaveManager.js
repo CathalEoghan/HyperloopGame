@@ -44,6 +44,7 @@ const AUX_KEYS = [
     // Unlocked achievements and their running totals; Hyper-Link mute
     'hyperloop_achievements',
     'hyperloop_achievement_counters',
+    'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
 ]
 
@@ -84,6 +85,7 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_prestige_history',
     'hyperloop_achievements',
     'hyperloop_achievement_counters',
+    'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
     'hyperloop_hyperlink_liked',
     'hyperloop_last_login',

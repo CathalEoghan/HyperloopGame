@@ -5,6 +5,8 @@ import { allCities } from '../../CityManager/CityRegistry.js'
 
 export const ACHIEVEMENTS_KEY = 'hyperloop_achievements'
 export const COUNTERS_KEY = 'hyperloop_achievement_counters'
+// Achievements earned but not yet looked at (the red dot on the Achievements page)
+export const UNSEEN_KEY = 'hyperloop_achievements_unseen'
 
 const REGULAR_CITIES = allCities.filter(c => c.continent !== 'Antarctica')
 // Upgrades handed out as milestone rewards (or Early Retirement) aren't "constructed" by the player
@@ -16,6 +18,7 @@ export class AchievementManager {
     constructor() {
         this.unlocked = new Set()
         this.counters = {}
+        this.unseen = new Set()
         this.load()
     }
 
@@ -23,6 +26,10 @@ export class AchievementManager {
         try {
             const list = JSON.parse(localStorage.getItem(ACHIEVEMENTS_KEY))
             if (Array.isArray(list)) this.unlocked = new Set(list.filter(id => ACHIEVEMENT_IDS.has(id)))
+        } catch { /* nothing saved yet */ }
+        try {
+            const list = JSON.parse(localStorage.getItem(UNSEEN_KEY))
+            if (Array.isArray(list)) this.unseen = new Set(list.filter(id => this.unlocked.has(id)))
         } catch { /* nothing saved yet */ }
         try {
             const c = JSON.parse(localStorage.getItem(COUNTERS_KEY))
@@ -36,6 +43,7 @@ export class AchievementManager {
         try {
             localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify([...this.unlocked]))
             localStorage.setItem(COUNTERS_KEY, JSON.stringify(this.counters))
+            localStorage.setItem(UNSEEN_KEY, JSON.stringify([...this.unseen]))
         } catch { /* storage full */ }
     }
 
@@ -43,10 +51,22 @@ export class AchievementManager {
 
     get count() { return this.unlocked.size }
 
+    isUnseen(id) { return this.unseen.has(id) }
+
+    get unseenCount() { return this.unseen.size }
+
+    // The player has looked at this achievement: its red dot goes. Returns true if there was one.
+    markSeen(id) {
+        if (!this.unseen.delete(id)) return false
+        this.save()
+        return true
+    }
+
     // Unlocks one achievement. Returns true if it is new.
     unlock(id) {
         if (!ACHIEVEMENT_IDS.has(id) || this.unlocked.has(id)) return false
         this.unlocked.add(id)
+        this.unseen.add(id)
         this.save()
         return true
     }
@@ -100,7 +120,7 @@ export class AchievementManager {
         const ctx = this.buildContext(progressionManager, rankManager)
         const fresh = []
         ACHIEVEMENTS.forEach(a => {
-            if (a.check && !this.unlocked.has(a.id) && a.check(ctx)) { this.unlocked.add(a.id); fresh.push(a.id) }
+            if (a.check && !this.unlocked.has(a.id) && a.check(ctx)) { this.unlocked.add(a.id); this.unseen.add(a.id); fresh.push(a.id) }
         })
         if (fresh.length) this.save()
         return fresh

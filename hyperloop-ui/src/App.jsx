@@ -148,6 +148,10 @@ function App() {
   });
   const [achievementQueue, setAchievementQueue] = useState([]);
   const [achievementsOpen, setAchievementsOpen] = useState(false);
+  const [unseenAchievements, setUnseenAchievements] = useState(() => achievements.unseenCount);
+  // 0 = no bubble; each new announcement gets a new number, so the bubble restarts
+  const [achievementBubble, setAchievementBubble] = useState(0);
+  const achievementBubbleTimer = useRef(null);
   // Announces newly unlocked achievements. Several at once (e.g. a game from before achievements) become one toast.
   const announceAchievements = (ids) => {
     if (!ids.length) return;
@@ -155,7 +159,13 @@ function App() {
       ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'See them on the Progress page.' }]
       : ids.map(id => ({ key: id, title: AchievementManager.byId(id).name, subtitle: AchievementManager.byId(id).description }));
     setAchievementQueue(prev => [...prev, ...items]);
+    // Same indications as the Hyper-Link button: pulse and red count (from the unseen total), and a bubble for 3 seconds
+    setUnseenAchievements(achievements.unseenCount);
+    setAchievementBubble(n => n + 1);
+    clearTimeout(achievementBubbleTimer.current);
+    achievementBubbleTimer.current = setTimeout(() => setAchievementBubble(0), 3000);
   };
+  const markAchievementSeen = (id) => { if (achievements.markSeen(id)) setUnseenAchievements(achievements.unseenCount); };
   const unlockAchievement = (id) => { if (achievements.unlock(id)) announceAchievements([id]); };
 
   // Hyper-Link can be muted: no notification sound or bubble for new posts (they still arrive).
@@ -823,8 +833,9 @@ function App() {
         triggerSave();
       }
 
-      // Hyper-Link post generation every 3-5 minutes
-      if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 1) {
+      // Hyper-Link post generation every 1-3 minutes, from the first connected city on (it used to wait for a second city,
+      // which left a one-city network with only the official account's posts)
+      if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 0) {
         // Clean up posts older than 2 days
         const twoDaysAgo = Date.now() - 172800000
         const storedFeed = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
@@ -1710,13 +1721,19 @@ function App() {
       )}
 
       {activeTab === "Home" && !popupOpen && (
-        <AchievementsButton onClick={() => setAchievementsOpen(true)} />
+        <AchievementsButton
+          unseen={unseenAchievements}
+          showBubble={achievementBubble > 0}
+          bubbleKey={achievementBubble}
+          onClick={() => setAchievementsOpen(true)}
+        />
       )}
 
       {achievementsOpen && (
         <AchievementsModal
           achievementManager={achievements}
           purchasedUpgrades={progressionManager.purchasedUpgrades}
+          onSeen={markAchievementSeen}
           onClose={() => setAchievementsOpen(false)}
         />
       )}

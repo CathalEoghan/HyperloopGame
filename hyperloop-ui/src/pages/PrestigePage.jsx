@@ -6,7 +6,9 @@ import './PrestigePage.css'
 
 // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
 const IMAGES = import.meta.glob('../assets/prestige-upgrades-thumb/*.jpg', { eager: true, import: 'default' })
-const imageFor = u => IMAGES[`../assets/prestige-upgrades-thumb/${u.name.replace(/[^A-Za-z0-9]/g, '')}.jpg`]
+// Matched ignoring case: "Cult of Celebrity" must find CultOfCelebrity.jpg
+const IMAGES_BY_NAME = Object.fromEntries(Object.entries(IMAGES).map(([path, src]) => [path.split('/').pop().replace('.jpg', '').toLowerCase(), src]))
+const imageFor = u => IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-9]/g, '').toLowerCase()]
 
 const CARDS_PER_ROW = 5
 const chunk = (list, size) => Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, i * size + size))
@@ -147,16 +149,10 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                         <div key={layer} className="prestige-layer-wrap">
                             {layer > 1 && (
                                 <div className={`prestige-conduit ${unlocked ? 'prestige-conduit-open' : ''}`}>
-                                    <div className="prestige-conduit-track">
-                                        <div className="prestige-conduit-fill" style={{ height: `${(prevOwned / prevTotal) * 100}%` }} />
-                                    </div>
                                     <div className="prestige-gate">
                                         <span className="prestige-gate-icon">{unlocked ? '🔓' : '🔒'}</span>
                                         <span>{unlocked ? `Layer ${layer} open` : `Own all ${prevTotal} Layer ${layer - 1} upgrade${prevTotal === 1 ? '' : 's'} to open Layer ${layer}`}</span>
                                         {!unlocked && <span className="prestige-gate-count">{prevOwned}/{prevTotal}</span>}
-                                    </div>
-                                    <div className="prestige-conduit-track prestige-conduit-track-short">
-                                        <div className="prestige-conduit-fill" style={{ height: unlocked ? '100%' : '0%' }} />
                                     </div>
                                 </div>
                             )}

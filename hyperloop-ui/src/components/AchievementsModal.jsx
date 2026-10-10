@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import './AchievementsModal.css'
 import './HyperLink.css'
 import trophyIcon from '../assets/misc/trophy.svg'
@@ -5,25 +6,35 @@ import { playHoverSound } from '../utils/sound.js'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { ACHIEVEMENTS } from 'Managers/AchievementManager/achievements.js'
 
-// The bottom-right counterpart of the Hyper-Link button. It reuses that button's styling so the two match.
-export function AchievementsButton({ onClick }) {
+// The bottom-right counterpart of the Hyper-Link button. It reuses that button's styling and notification
+// indications (pulse, red count, bubble above it) so the two match.
+export function AchievementsButton({ unseen = 0, showBubble = false, bubbleKey = 0, onClick }) {
     return (
         <div style={{ position: 'fixed', bottom: 112.5, right: 12, zIndex: 150 }}>
+            {showBubble && (
+                <div key={bubbleKey} className="hyperlink-notification-bubble hyperlink-notification-bubble-right">New achievement!</div>
+            )}
             <button
-                className="hyperlink-phone-btn"
+                className={`hyperlink-phone-btn${unseen > 0 ? ' hyperlink-phone-btn-pulse' : ''}`}
                 onClick={onClick}
                 onMouseEnter={() => playHoverSound()}
                 aria-label="Achievements"
                 title="Achievements"
             >
                 <img src={trophyIcon} alt="Achievements" />
+                {unseen > 0 && <span className="hyperlink-badge">{unseen > 9 ? '9+' : unseen}</span>}
             </button>
         </div>
     )
 }
 
-export default function AchievementsModal({ achievementManager, purchasedUpgrades, onClose }) {
+// onSeen(id) is called when the player hovers over (or taps) an achievement they had not looked at yet.
+export default function AchievementsModal({ achievementManager, purchasedUpgrades, onSeen = () => {}, onClose }) {
     const count = achievementManager.count
+    const firstUnseenRef = useRef(null)
+    // Opening the page with something new on it: bring the first new achievement into view
+    useEffect(() => { firstUnseenRef.current?.scrollIntoView({ block: 'center' }) }, [])
+    const firstUnseenId = ACHIEVEMENTS.find(a => achievementManager.has(a.id) && achievementManager.isUnseen(a.id))?.id
     // What the achievements are worth, once the Anniversary Sales / Trophy Cabinet upgrades that use them are owned
     const bonusLines = []
     if (count > 0 && (purchasedUpgrades || []).some(u => u.effectType === 'workPerAchievement')) {
@@ -49,8 +60,16 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                     <div className="achievement-grid">
                         {ACHIEVEMENTS.map(a => {
                             const done = achievementManager.has(a.id)
+                            const isNew = done && achievementManager.isUnseen(a.id)
                             return (
-                                <div key={a.id} className={`achievement-card${done ? ' achievement-done' : ''}`} onMouseEnter={() => playHoverSound()}>
+                                <div
+                                    key={a.id}
+                                    ref={a.id === firstUnseenId ? firstUnseenRef : undefined}
+                                    className={`achievement-card${done ? ' achievement-done' : ''}`}
+                                    onMouseEnter={() => { playHoverSound(); if (isNew) onSeen(a.id) }}
+                                    onClick={() => { if (isNew) onSeen(a.id) }}
+                                >
+                                    {isNew && <span className="achievement-new-dot" aria-label="New" />}
                                     <span className="achievement-card-icon">{done ? '🏆' : '🔒'}</span>
                                     <div className="achievement-card-text">
                                         <span className="achievement-card-name">{a.name}</span>

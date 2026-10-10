@@ -1,0 +1,632 @@
+diff --git a/Managers/AchievementManager/AchievementManager.js b/Managers/AchievementManager/AchievementManager.js
+index 8057ebb..ab423ca 100644
+--- a/Managers/AchievementManager/AchievementManager.js
++++ b/Managers/AchievementManager/AchievementManager.js
+@@ -5,6 +5,8 @@ import { allCities } from '../../CityManager/CityRegistry.js'
+ 
+ export const ACHIEVEMENTS_KEY = 'hyperloop_achievements'
+ export const COUNTERS_KEY = 'hyperloop_achievement_counters'
++// Achievements earned but not yet looked at (the red dot on the Achievements page)
++export const UNSEEN_KEY = 'hyperloop_achievements_unseen'
+ 
+ const REGULAR_CITIES = allCities.filter(c => c.continent !== 'Antarctica')
+ // Upgrades handed out as milestone rewards (or Early Retirement) aren't "constructed" by the player
+@@ -16,6 +18,7 @@ export class AchievementManager {
+     constructor() {
+         this.unlocked = new Set()
+         this.counters = {}
++        this.unseen = new Set()
+         this.load()
+     }
+ 
+@@ -24,6 +27,10 @@ export class AchievementManager {
+             const list = JSON.parse(localStorage.getItem(ACHIEVEMENTS_KEY))
+             if (Array.isArray(list)) this.unlocked = new Set(list.filter(id => ACHIEVEMENT_IDS.has(id)))
+         } catch { /* nothing saved yet */ }
++        try {
++            const list = JSON.parse(localStorage.getItem(UNSEEN_KEY))
++            if (Array.isArray(list)) this.unseen = new Set(list.filter(id => this.unlocked.has(id)))
++        } catch { /* nothing saved yet */ }
+         try {
+             const c = JSON.parse(localStorage.getItem(COUNTERS_KEY))
+             if (c && typeof c === 'object' && !Array.isArray(c)) {
+@@ -36,6 +43,7 @@ export class AchievementManager {
+         try {
+             localStorage.setItem(ACHIEVEMENTS_KEY, JSON.stringify([...this.unlocked]))
+             localStorage.setItem(COUNTERS_KEY, JSON.stringify(this.counters))
++            localStorage.setItem(UNSEEN_KEY, JSON.stringify([...this.unseen]))
+         } catch { /* storage full */ }
+     }
+ 
+@@ -43,10 +51,22 @@ export class AchievementManager {
+ 
+     get count() { return this.unlocked.size }
+ 
++    isUnseen(id) { return this.unseen.has(id) }
++
++    get unseenCount() { return this.unseen.size }
++
++    // The player has looked at this achievement: its red dot goes. Returns true if there was one.
++    markSeen(id) {
++        if (!this.unseen.delete(id)) return false
++        this.save()
++        return true
++    }
++
+     // Unlocks one achievement. Returns true if it is new.
+     unlock(id) {
+         if (!ACHIEVEMENT_IDS.has(id) || this.unlocked.has(id)) return false
+         this.unlocked.add(id)
++        this.unseen.add(id)
+         this.save()
+         return true
+     }
+@@ -100,7 +120,7 @@ export class AchievementManager {
+         const ctx = this.buildContext(progressionManager, rankManager)
+         const fresh = []
+         ACHIEVEMENTS.forEach(a => {
+-            if (a.check && !this.unlocked.has(a.id) && a.check(ctx)) { this.unlocked.add(a.id); fresh.push(a.id) }
++            if (a.check && !this.unlocked.has(a.id) && a.check(ctx)) { this.unlocked.add(a.id); this.unseen.add(a.id); fresh.push(a.id) }
+         })
+         if (fresh.length) this.save()
+         return fresh
+diff --git a/Managers/SaveManager.js b/Managers/SaveManager.js
+index ad65272..b2c9bb7 100644
+--- a/Managers/SaveManager.js
++++ b/Managers/SaveManager.js
+@@ -44,6 +44,7 @@ const AUX_KEYS = [
+     // Unlocked achievements and their running totals; Hyper-Link mute
+     'hyperloop_achievements',
+     'hyperloop_achievement_counters',
++    'hyperloop_achievements_unseen',
+     'hyperloop_hyperlink_muted',
+ ]
+ 
+@@ -84,6 +85,7 @@ const PRESTIGE_KEEP_KEYS = [
+     'hyperloop_prestige_history',
+     'hyperloop_achievements',
+     'hyperloop_achievement_counters',
++    'hyperloop_achievements_unseen',
+     'hyperloop_hyperlink_muted',
+     'hyperloop_hyperlink_liked',
+     'hyperloop_last_login',
+diff --git a/hyperloop-ui/src/App.jsx b/hyperloop-ui/src/App.jsx
+index 223ba6a..d87ca07 100644
+--- a/hyperloop-ui/src/App.jsx
++++ b/hyperloop-ui/src/App.jsx
+@@ -148,6 +148,10 @@ function App() {
+   });
+   const [achievementQueue, setAchievementQueue] = useState([]);
+   const [achievementsOpen, setAchievementsOpen] = useState(false);
++  const [unseenAchievements, setUnseenAchievements] = useState(() => achievements.unseenCount);
++  // 0 = no bubble; each new announcement gets a new number, so the bubble restarts
++  const [achievementBubble, setAchievementBubble] = useState(0);
++  const achievementBubbleTimer = useRef(null);
+   // Announces newly unlocked achievements. Several at once (e.g. a game from before achievements) become one toast.
+   const announceAchievements = (ids) => {
+     if (!ids.length) return;
+@@ -155,7 +159,13 @@ function App() {
+       ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'See them on the Progress page.' }]
+       : ids.map(id => ({ key: id, title: AchievementManager.byId(id).name, subtitle: AchievementManager.byId(id).description }));
+     setAchievementQueue(prev => [...prev, ...items]);
++    // Same indications as the Hyper-Link button: pulse and red count (from the unseen total), and a bubble for 3 seconds
++    setUnseenAchievements(achievements.unseenCount);
++    setAchievementBubble(n => n + 1);
++    clearTimeout(achievementBubbleTimer.current);
++    achievementBubbleTimer.current = setTimeout(() => setAchievementBubble(0), 3000);
+   };
++  const markAchievementSeen = (id) => { if (achievements.markSeen(id)) setUnseenAchievements(achievements.unseenCount); };
+   const unlockAchievement = (id) => { if (achievements.unlock(id)) announceAchievements([id]); };
+ 
+   // Hyper-Link can be muted: no notification sound or bubble for new posts (they still arrive).
+@@ -823,8 +833,9 @@ function App() {
+         triggerSave();
+       }
+ 
+-      // Hyper-Link post generation every 3-5 minutes
+-      if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 1) {
++      // Hyper-Link post generation every 1-3 minutes, from the first connected city on (it used to wait for a second city,
++      // which left a one-city network with only the official account's posts)
++      if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 0) {
+         // Clean up posts older than 2 days
+         const twoDaysAgo = Date.now() - 172800000
+         const storedFeed = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
+@@ -1710,13 +1721,19 @@ function App() {
+       )}
+ 
+       {activeTab === "Home" && !popupOpen && (
+-        <AchievementsButton onClick={() => setAchievementsOpen(true)} />
++        <AchievementsButton
++          unseen={unseenAchievements}
++          showBubble={achievementBubble > 0}
++          bubbleKey={achievementBubble}
++          onClick={() => setAchievementsOpen(true)}
++        />
+       )}
+ 
+       {achievementsOpen && (
+         <AchievementsModal
+           achievementManager={achievements}
+           purchasedUpgrades={progressionManager.purchasedUpgrades}
++          onSeen={markAchievementSeen}
+           onClose={() => setAchievementsOpen(false)}
+         />
+       )}
+diff --git a/hyperloop-ui/src/components/AchievementsModal.css b/hyperloop-ui/src/components/AchievementsModal.css
+index 971b9a0..b602d52 100644
+--- a/hyperloop-ui/src/components/AchievementsModal.css
++++ b/hyperloop-ui/src/components/AchievementsModal.css
+@@ -96,6 +96,7 @@
+ }
+ 
+ .achievement-card {
++    position: relative;
+     display: flex;
+     align-items: center;
+     gap: 10px;
+@@ -128,3 +129,23 @@
+     font-size: 0.65rem;
+     color: #b36b00;
+ }
++
++/* The red dot on an achievement just gained: it goes when the player hovers over it */
++.achievement-new-dot {
++    position: absolute;
++    top: -5px;
++    right: -5px;
++    width: 14px;
++    height: 14px;
++    border-radius: 50%;
++    background: #e74c3c;
++    border: 2px solid #0a0a0a;
++    box-sizing: border-box;
++    pointer-events: none;
++}
++
++/* The bubble over the bottom-right button grows leftwards, so it stays on screen */
++.hyperlink-notification-bubble.hyperlink-notification-bubble-right {
++    left: auto;
++    right: 0;
++}
+diff --git a/hyperloop-ui/src/components/AchievementsModal.jsx b/hyperloop-ui/src/components/AchievementsModal.jsx
+index 03fa92a..41fe970 100644
+--- a/hyperloop-ui/src/components/AchievementsModal.jsx
++++ b/hyperloop-ui/src/components/AchievementsModal.jsx
+@@ -1,3 +1,4 @@
++import { useEffect, useRef } from 'react'
+ import './AchievementsModal.css'
+ import './HyperLink.css'
+ import trophyIcon from '../assets/misc/trophy.svg'
+@@ -5,25 +6,35 @@ import { playHoverSound } from '../utils/sound.js'
+ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+ import { ACHIEVEMENTS } from 'Managers/AchievementManager/achievements.js'
+ 
+-// The bottom-right counterpart of the Hyper-Link button. It reuses that button's styling so the two match.
+-export function AchievementsButton({ onClick }) {
++// The bottom-right counterpart of the Hyper-Link button. It reuses that button's styling and notification
++// indications (pulse, red count, bubble above it) so the two match.
++export function AchievementsButton({ unseen = 0, showBubble = false, bubbleKey = 0, onClick }) {
+     return (
+         <div style={{ position: 'fixed', bottom: 112.5, right: 12, zIndex: 150 }}>
++            {showBubble && (
++                <div key={bubbleKey} className="hyperlink-notification-bubble hyperlink-notification-bubble-right">New achievement!</div>
++            )}
+             <button
+-                className="hyperlink-phone-btn"
++                className={`hyperlink-phone-btn${unseen > 0 ? ' hyperlink-phone-btn-pulse' : ''}`}
+                 onClick={onClick}
+                 onMouseEnter={() => playHoverSound()}
+                 aria-label="Achievements"
+                 title="Achievements"
+             >
+                 <img src={trophyIcon} alt="Achievements" />
++                {unseen > 0 && <span className="hyperlink-badge">{unseen > 9 ? '9+' : unseen}</span>}
+             </button>
+         </div>
+     )
+ }
+ 
+-export default function AchievementsModal({ achievementManager, purchasedUpgrades, onClose }) {
++// onSeen(id) is called when the player hovers over (or taps) an achievement they had not looked at yet.
++export default function AchievementsModal({ achievementManager, purchasedUpgrades, onSeen = () => {}, onClose }) {
+     const count = achievementManager.count
++    const firstUnseenRef = useRef(null)
++    // Opening the page with something new on it: bring the first new achievement into view
++    useEffect(() => { firstUnseenRef.current?.scrollIntoView({ block: 'center' }) }, [])
++    const firstUnseenId = ACHIEVEMENTS.find(a => achievementManager.has(a.id) && achievementManager.isUnseen(a.id))?.id
+     // What the achievements are worth, once the Anniversary Sales / Trophy Cabinet upgrades that use them are owned
+     const bonusLines = []
+     if (count > 0 && (purchasedUpgrades || []).some(u => u.effectType === 'workPerAchievement')) {
+@@ -49,8 +60,16 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
+                     <div className="achievement-grid">
+                         {ACHIEVEMENTS.map(a => {
+                             const done = achievementManager.has(a.id)
++                            const isNew = done && achievementManager.isUnseen(a.id)
+                             return (
+-                                <div key={a.id} className={`achievement-card${done ? ' achievement-done' : ''}`} onMouseEnter={() => playHoverSound()}>
++                                <div
++                                    key={a.id}
++                                    ref={a.id === firstUnseenId ? firstUnseenRef : undefined}
++                                    className={`achievement-card${done ? ' achievement-done' : ''}`}
++                                    onMouseEnter={() => { playHoverSound(); if (isNew) onSeen(a.id) }}
++                                    onClick={() => { if (isNew) onSeen(a.id) }}
++                                >
++                                    {isNew && <span className="achievement-new-dot" aria-label="New" />}
+                                     <span className="achievement-card-icon">{done ? '🏆' : '🔒'}</span>
+                                     <div className="achievement-card-text">
+                                         <span className="achievement-card-name">{a.name}</span>
+diff --git a/hyperloop-ui/src/pages/PrestigePage.css b/hyperloop-ui/src/pages/PrestigePage.css
+index c081cda..4fba5f3 100644
+--- a/hyperloop-ui/src/pages/PrestigePage.css
++++ b/hyperloop-ui/src/pages/PrestigePage.css
+@@ -1,13 +1,13 @@
+ /* Prestige tree: a dark control-room panel with gold accents, so it reads as its own place */
+ .prestige-page {
+-    --pt-bg: #1d1815;
+-    --pt-panel: #272019;
+-    --pt-card: #342a22;
++    --pt-bg: #0a0a0a;
++    --pt-panel: #141414;
++    --pt-card: #1c1c1c;
+     --pt-gold: #f5a623;
+     --pt-gold-soft: rgba(245, 166, 35, 0.16);
+-    --pt-text: #f3e8da;
+-    --pt-muted: #a8977f;
+-    background: radial-gradient(ellipse at 50% 0%, #3a2b1c 0%, var(--pt-bg) 55%);
++    --pt-text: #f2f2f2;
++    --pt-muted: #9a9a9a;
++    background: radial-gradient(ellipse at 50% 0%, #1e1e1e 0%, var(--pt-bg) 55%);
+     font-family: 'Inter', sans-serif;
+     display: flex;
+     flex-direction: column;
+@@ -79,33 +79,12 @@
+     align-items: stretch;
+ }
+ 
+-/* The pipe between two layers: fills with gold as the layer above is completed */
++/* The gate between two layers: opens when the layer above is complete */
+ .prestige-conduit {
+     display: flex;
+     flex-direction: column;
+     align-items: center;
+-}
+-
+-.prestige-conduit-track {
+-    width: 6px;
+-    height: 22px;
+-    background: #4a3e32;
+-    border-radius: 3px;
+-    overflow: hidden;
+-    display: flex;
+-    flex-direction: column;
+-    justify-content: flex-start;
+-}
+-
+-.prestige-conduit-track-short {
+-    height: 16px;
+-}
+-
+-.prestige-conduit-fill {
+-    width: 100%;
+-    background: var(--pt-gold);
+-    box-shadow: 0 0 8px var(--pt-gold);
+-    transition: height 0.5s ease;
++    margin: 14px 0;
+ }
+ 
+ .prestige-gate {
+@@ -114,7 +93,7 @@
+     gap: 8px;
+     padding: 6px 16px;
+     border-radius: 999px;
+-    border: 2px solid #4a3e32;
++    border: 2px solid #3a3a3a;
+     background: var(--pt-panel);
+     color: var(--pt-muted);
+     font-family: 'Courier New', monospace;
+@@ -140,7 +119,7 @@
+ .prestige-layer {
+     position: relative;
+     background: var(--pt-panel);
+-    border: 1px solid #3d3228;
++    border: 1px solid #2c2c2c;
+     border-radius: 16px;
+     padding: 14px 18px 18px;
+ }
+@@ -167,13 +146,13 @@
+     justify-content: center;
+     border-radius: 50%;
+     background: var(--pt-gold);
+-    color: #1d1815;
++    color: #0a0a0a;
+     font-weight: 800;
+ }
+ 
+ .prestige-layer-locked .prestige-layer-badge {
+-    background: #6a5944;
+-    color: #e6d7c2;
++    background: #555555;
++    color: #e8e8e8;
+ }
+ 
+ .prestige-layer-name {
+@@ -214,7 +193,7 @@
+     padding: 12px 14px 14px;
+     border-radius: 12px;
+     background: var(--pt-card);
+-    border: 2px solid #55473a;
++    border: 2px solid #444444;
+     color: var(--pt-text);
+     cursor: pointer;
+     font-family: 'Inter', sans-serif;
+@@ -269,11 +248,11 @@
+ 
+ .prestige-node-available .prestige-node-tag {
+     background: var(--pt-gold);
+-    color: #1d1815;
++    color: #0a0a0a;
+ }
+ 
+ .prestige-node-available .prestige-node-desc {
+-    color: #d9c7ae;
++    color: #dddddd;
+ }
+ 
+ @keyframes prestige-pulse {
+@@ -283,42 +262,42 @@
+ 
+ /* Layer is open but not enough points */
+ .prestige-node-unaffordable {
+-    border-color: #6d5a46;
++    border-color: #555555;
+ }
+ 
+ .prestige-node-locked {
+-    background: #2d251e;
++    background: #161616;
+     border-style: dashed;
+-    border-color: #5d4e3f;
++    border-color: #4a4a4a;
+ }
+ 
+ .prestige-node-locked .prestige-node-name {
+-    color: #e6d7c2;
++    color: #e8e8e8;
+ }
+ 
+ .prestige-node-locked .prestige-node-desc {
+-    color: #b9a78d;
++    color: #aaaaaa;
+ }
+ 
+ /* Bought */
+ .prestige-node-owned {
+     background: linear-gradient(160deg, #f7b53c 0%, #d98b0d 100%);
+     border-color: #ffd37a;
+-    color: #231a10;
++    color: #111111;
+     box-shadow: 0 0 18px rgba(245, 166, 35, 0.35);
+ }
+ 
+ .prestige-node-owned .prestige-node-desc {
+-    color: #3d2c14;
++    color: #1a1a1a;
+ }
+ 
+ .prestige-node-owned .prestige-node-tag {
+-    background: rgba(35, 26, 16, 0.85);
++    background: rgba(0, 0, 0, 0.85);
+     color: var(--pt-gold);
+ }
+ 
+ .prestige-node-selected {
+-    outline: 3px solid #fff3dc;
++    outline: 3px solid #ffffff;
+     outline-offset: 2px;
+ }
+ 
+@@ -330,7 +309,7 @@
+     aspect-ratio: 16 / 10;
+     border-radius: 8px;
+     overflow: hidden;
+-    background: #1d1815;
++    background: #0a0a0a;
+ }
+ 
+ .prestige-node-img {
+@@ -368,7 +347,7 @@
+ }
+ 
+ .prestige-node-owned .prestige-node-art {
+-    box-shadow: 0 0 0 2px rgba(35, 26, 16, 0.55);
++    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55);
+ }
+ 
+ 
+@@ -377,7 +356,6 @@
+     --card-w: 220px;
+     --card-gap: 12px;
+     --lane: 26px;
+-    --line: #4a3e32;
+ }
+ 
+ @media (max-width: 1399px) { .prestige-page { --card-w: 190px; } }
+@@ -400,8 +378,6 @@
+     box-sizing: border-box;
+ }
+ 
+-.prestige-layer-open { --line: var(--pt-gold); }
+-
+ .prestige-rows {
+     position: relative;
+     display: flex;
+@@ -414,55 +390,12 @@
+     display: flex;
+     justify-content: center;
+     gap: var(--card-gap);
+-    padding: 16px var(--lane) 0;
++    padding: 0 var(--lane);
+ }
+ 
+-/* the line coming down from the gate into the first row */
+ .prestige-layer-header {
+     position: relative;
+-    margin-bottom: 0;
+-}
+-
+-.prestige-layer-header::after {
+-    content: '';
+-    position: absolute;
+-    left: 50%;
+-    top: -15px;
+-    bottom: -1px;
+-    width: 3px;
+-    margin-left: -1px;
+-    background: var(--line);
+-    transform: translateX(-1px);
+-}
+-
+-/* the horizontal rail over each row: from the left trunk to the last card in the row */
+-.prestige-row::before {
+-    content: '';
+-    position: absolute;
+-    top: 0;
+-    left: 10px;
+-    right: calc(var(--lane) + (100% - 2 * var(--lane) - (var(--n) * var(--card-w) + (var(--n) - 1) * var(--card-gap))) / 2 + var(--card-w) / 2);
+-    height: 3px;
+-    background: var(--line);
+-    border-radius: 2px;
+-}
+-
+-/* the left trunk joining one row's rail to the next */
+-.prestige-row:not(:last-child)::after {
+-    content: '';
+-    position: absolute;
+-    top: 0;
+-    bottom: calc(-1 * var(--card-gap));
+-    left: 10px;
+-    width: 3px;
+-    background: var(--line);
+-    border-radius: 2px;
+-}
+-
+-/* a layer of one card has no trunk: its rail starts at the card */
+-.prestige-rows-single .prestige-row::before {
+-    left: calc(50% - 1px);
+-    right: calc(50% - 1px);
++    margin-bottom: 14px;
+ }
+ 
+ .prestige-slot {
+@@ -473,23 +406,6 @@
+     flex-direction: column;
+ }
+ 
+-/* the short stem from the rail down into each card */
+-.prestige-slot::before {
+-    content: '';
+-    position: absolute;
+-    top: -16px;
+-    left: 50%;
+-    height: 16px;
+-    width: 3px;
+-    margin-left: -1px;
+-    background: var(--line);
+-}
+-
+-.prestige-slot-owned::before {
+-    background: var(--pt-gold);
+-    box-shadow: 0 0 6px var(--pt-gold);
+-}
+-
+ .prestige-node {
+     width: 100%;
+     min-height: 196px;
+@@ -508,7 +424,7 @@
+     flex-direction: column;
+     gap: 8px;
+     padding: 12px 14px;
+-    background: #14100d;
++    background: #000000;
+     border: 2px solid var(--pt-gold);
+     border-radius: 12px;
+     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(245, 166, 35, 0.3);
+@@ -523,7 +439,7 @@
+     margin-left: -7px;
+     width: 12px;
+     height: 12px;
+-    background: #14100d;
++    background: #000000;
+     border-left: 2px solid var(--pt-gold);
+     border-top: 2px solid var(--pt-gold);
+     transform: rotate(45deg);
+@@ -584,7 +500,7 @@
+     border-radius: 10px;
+     border: none;
+     background: var(--pt-gold);
+-    color: #1d1815;
++    color: #0a0a0a;
+     font-weight: 800;
+     font-size: 0.92rem;
+     font-family: 'Inter', sans-serif;
+@@ -599,15 +515,15 @@
+ }
+ 
+ .prestige-buy-btn-disabled {
+-    background: #4a3e32;
+-    color: #cdb9a0;
++    background: #3a3a3a;
++    color: #bbbbbb;
+     cursor: not-allowed;
+     box-shadow: none;
+     font-size: 0.8rem;
+ }
+ 
+ .prestige-buy-btn-disabled:hover {
+-    background: #4a3e32;
++    background: #3a3a3a;
+     transform: none;
+ }
+ 
+@@ -666,7 +582,7 @@
+     border-radius: 8px;
+     border: 2px solid var(--pt-gold);
+     background: var(--pt-gold);
+-    color: #1d1815;
++    color: #0a0a0a;
+     cursor: pointer;
+ }
+ 
+diff --git a/hyperloop-ui/src/pages/PrestigePage.jsx b/hyperloop-ui/src/pages/PrestigePage.jsx
+index 558ad20..7bad84a 100644
+--- a/hyperloop-ui/src/pages/PrestigePage.jsx
++++ b/hyperloop-ui/src/pages/PrestigePage.jsx
+@@ -6,7 +6,9 @@ import './PrestigePage.css'
+ 
+ // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
+ const IMAGES = import.meta.glob('../assets/prestige-upgrades-thumb/*.jpg', { eager: true, import: 'default' })
+-const imageFor = u => IMAGES[`../assets/prestige-upgrades-thumb/${u.name.replace(/[^A-Za-z0-9]/g, '')}.jpg`]
++// Matched ignoring case: "Cult of Celebrity" must find CultOfCelebrity.jpg
++const IMAGES_BY_NAME = Object.fromEntries(Object.entries(IMAGES).map(([path, src]) => [path.split('/').pop().replace('.jpg', '').toLowerCase(), src]))
++const imageFor = u => IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-9]/g, '').toLowerCase()]
+ 
+ const CARDS_PER_ROW = 5
+ const chunk = (list, size) => Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, i * size + size))
+@@ -147,17 +149,11 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
+                         <div key={layer} className="prestige-layer-wrap">
+                             {layer > 1 && (
+                                 <div className={`prestige-conduit ${unlocked ? 'prestige-conduit-open' : ''}`}>
+-                                    <div className="prestige-conduit-track">
+-                                        <div className="prestige-conduit-fill" style={{ height: `${(prevOwned / prevTotal) * 100}%` }} />
+-                                    </div>
+                                     <div className="prestige-gate">
+                                         <span className="prestige-gate-icon">{unlocked ? '🔓' : '🔒'}</span>
+                                         <span>{unlocked ? `Layer ${layer} open` : `Own all ${prevTotal} Layer ${layer - 1} upgrade${prevTotal === 1 ? '' : 's'} to open Layer ${layer}`}</span>
+                                         {!unlocked && <span className="prestige-gate-count">{prevOwned}/{prevTotal}</span>}
+                                     </div>
+-                                    <div className="prestige-conduit-track prestige-conduit-track-short">
+-                                        <div className="prestige-conduit-fill" style={{ height: unlocked ? '100%' : '0%' }} />
+-                                    </div>
+                                 </div>
+                             )}
+                             <div className={`prestige-layer ${unlocked ? 'prestige-layer-open' : 'prestige-layer-locked'}`}>

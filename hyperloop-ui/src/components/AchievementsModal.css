@@ -96,6 +96,7 @@
 }
 
 .achievement-card {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -127,4 +128,24 @@
     font-family: 'Courier New', monospace;
     font-size: 0.65rem;
     color: #b36b00;
+}
+
+/* The red dot on an achievement just gained: it goes when the player hovers over it */
+.achievement-new-dot {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #e74c3c;
+    border: 2px solid #0a0a0a;
+    box-sizing: border-box;
+    pointer-events: none;
+}
+
+/* The bubble over the bottom-right button grows leftwards, so it stays on screen */
+.hyperlink-notification-bubble.hyperlink-notification-bubble-right {
+    left: auto;
+    right: 0;
 }
