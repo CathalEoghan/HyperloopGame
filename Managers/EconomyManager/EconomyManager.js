@@ -27,16 +27,6 @@ const WORK_ROLL_SPREAD = 4 / 3;
 
 const UPGRADE_MULTIPLIERS = [1.0, 1.15, 1.50, 2.00];
 
-// Network effect: every connected city and development earns more the bigger the network is, so
-// passive income starts small (Work carries the early game) and snowballs as the network grows.
-// multiplier = 1 + NETWORK_K * (connected cities / NETWORK_SCALE) ^ NETWORK_EXPONENT
-// (x1.1 at 3 cities, x2.5 at 10, x10 at 25, x39 at 50, x151 at 100, x1,735 at 340).
-// It multiplies the base income; every other boost stays additive on top, so the prestige income
-// upgrades keep their full strength.
-const NETWORK_K = 1.5;
-const NETWORK_SCALE = 10;
-const NETWORK_EXPONENT = 2;
-
 export class EconomyManager {
     constructor(progressionManager) {
         this.progressionManager = progressionManager;
@@ -46,17 +36,6 @@ export class EconomyManager {
         this.coordinates = null;
         // When this save was created, set by the UI. Lets the figures shown on screen include the Founders' Hall bonus.
         this.createdAt = null;
-    }
-
-    getNetworkMultiplier() {
-        const cities = this.progressionManager.purchasedCities.length;
-        return 1 + NETWORK_K * Math.pow(cities / NETWORK_SCALE, NETWORK_EXPONENT);
-    }
-
-    // The line shown in the boost popups, or null while the network is too small to matter
-    networkBoostLine() {
-        const n = this.getNetworkMultiplier();
-        return n >= 1.05 ? `Network effect (${this.progressionManager.purchasedCities.length} cities): x${n < 10 ? n.toFixed(1) : Math.round(n).toLocaleString('en-GB')}` : null;
     }
 
     getUpgradeSum(effectType) {
@@ -274,7 +253,7 @@ export class EconomyManager {
         const timeBoost = this.getTimeOfDayBonus();
 
         const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost + this.getPrestigeDevBoost();
-        return Math.floor(base * this.getNetworkMultiplier() * (1 + totalBoost));
+        return Math.floor(base * (1 + totalBoost));
     }
 
 
@@ -350,10 +329,7 @@ export class EconomyManager {
         const foundersLine = this.foundersHallLine();
         if (foundersLine) lines.push(foundersLine);
 
-        // The network effect multiplies the base income; the other boosts are added together on top of it
-        const networkLine = this.networkBoostLine();
-        if (networkLine) lines.unshift(networkLine);
-        return { lines, totalBoost: this.getNetworkMultiplier() * (1 + totalBoost) - 1 };
+        return { lines, totalBoost };
     }
 
         getCityBoostBreakdown(city, coordinates = null) {
@@ -454,9 +430,7 @@ export class EconomyManager {
         const foundersLine = this.foundersHallLine();
         if (foundersLine) lines.push(foundersLine);
 
-        const networkLine = this.networkBoostLine();
-        if (networkLine) lines.unshift(networkLine);
-        return { lines, totalBoost: this.getNetworkMultiplier() * (1 + totalBoost) - 1 };
+        return { lines, totalBoost };
     }
 
     calculateDevelopmentIncome() {
@@ -495,13 +469,12 @@ export class EconomyManager {
         const prestigeBoost = this.getPrestigeDevBoost();
 
         let developmentIncome = 0;
-        const network = this.getNetworkMultiplier();
         this.progressionManager.purchasedDevelopments.forEach(development => {
             const base = this.getEffectiveDevRevenue(development);
             const categoryEffectType = categoryEffectMap[development.category];
             const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
             const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost + prestigeBoost;
-            developmentIncome += base * network * (1 + totalBoost);
+            developmentIncome += base * (1 + totalBoost);
         });
         return developmentIncome;
     }
@@ -510,7 +483,7 @@ export class EconomyManager {
         coordinates = coordinates ?? this.coordinates;
         const tierBase = TIER_INCOME[city.tier] || 0;
         const popBonus = city.population * POPULATION_INCOME_MODIFIER;
-        let income = (tierBase + popBonus) * this.getNetworkMultiplier();
+        let income = tierBase + popBonus;
 
         let totalBoost = 0;
 

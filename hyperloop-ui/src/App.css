@@ -7,6 +7,34 @@ body, .App {
     background-color: rgb(255, 246, 239);
 }
 
+/* Scrollbars: amber to match the game. Light by default, darker track on the Prestige page and its popups.
+   Change the three colours here to restyle every scrollbar in the game. */
+:root {
+    --sb-track: rgba(245, 166, 35, 0.12);
+    --sb-thumb: #f5a623;
+    --sb-thumb-hover: #d98a00;
+}
+.prestige-page, .prestige-modal-overlay {
+    --sb-track: rgba(255, 255, 255, 0.07);
+    --sb-thumb: #f5a623;
+    --sb-thumb-hover: #ffc35a;
+}
+/* Chrome, Edge, Safari and Electron (the Steam build) */
+*::-webkit-scrollbar { width: 12px; height: 12px; }
+*::-webkit-scrollbar-track { background: var(--sb-track); border-radius: 12px; }
+*::-webkit-scrollbar-thumb {
+    background: var(--sb-thumb);
+    border-radius: 12px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover { background: var(--sb-thumb-hover); background-clip: content-box; }
+*::-webkit-scrollbar-corner { background: transparent; }
+/* Firefox. Browsers that understand the webkit rules above ignore them as soon as these are set, so they only get them if they don't. */
+@supports not selector(::-webkit-scrollbar) {
+    * { scrollbar-width: thin; scrollbar-color: var(--sb-thumb) var(--sb-track); }
+}
+
 .brand-icon {
     width: 20px;
     height: 20px;

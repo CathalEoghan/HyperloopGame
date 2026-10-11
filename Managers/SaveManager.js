@@ -214,7 +214,7 @@ function validateSave(save) {
     if (save.purchasedUpgrades.length > allUpgrades.length) return false
 
     // There is deliberately no limit on how fast a save may have earned (bug #140): the late game, with Prestige
-    // upgrades and the network effect, can honestly average more than any fixed ceiling, and a hand-edited save
+    // upgrades, can honestly average more than any fixed ceiling, and a hand-edited save
     // harms nobody else (bug #114).
 
     return true
