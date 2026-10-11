@@ -6,7 +6,7 @@ export const PRESTIGE_HISTORY_KEY = 'hyperloop_prestige_history'
 export const RANKS_PER_PRESTIGE_POINT = 50
 export const PRESTIGE_MIN_RANK = 100
 
-let ownedCache = { raw: undefined, set: new Set() }
+let ownedCache = { raw: undefined, set: new Set(), points: 0 }
 
 const byId = Object.fromEntries(PRESTIGE_UPGRADES.map(u => [u.id, u]))
 
@@ -99,17 +99,29 @@ export class PrestigeManager {
     // Does the player own this Prestige upgrade? Safe to call from anywhere (economy maths, modals).
     // Reads the stored list, cached against the raw string so hot loops stay cheap.
     static owns(id) {
+        PrestigeManager.refreshCache()
+        return ownedCache.set.has(id)
+    }
+
+    // The Prestige Points the player holds right now (unspent), for Generational Wisdom. Same cached read as owns().
+    static pointsHeld() {
+        PrestigeManager.refreshCache()
+        return ownedCache.points
+    }
+
+    static refreshCache() {
         let raw = null
         try { raw = localStorage.getItem(PRESTIGE_KEY) } catch { /* storage unavailable */ }
         if (raw !== ownedCache.raw) {
             let ids = []
+            let points = 0
             try {
                 const parsed = JSON.parse(raw)
                 if (parsed && Array.isArray(parsed.owned)) ids = parsed.owned.filter(i => byId[i])
+                if (parsed && Number.isFinite(parsed.points) && parsed.points > 0) points = Math.floor(parsed.points)
             } catch { /* unreadable: treat as none owned */ }
-            ownedCache = { raw, set: new Set(ids) }
+            ownedCache = { raw, set: new Set(ids), points }
         }
-        return ownedCache.set.has(id)
     }
 
     // Hands out the Prestige Points an upgrade rewards when it is bought. Five-Star Researchers

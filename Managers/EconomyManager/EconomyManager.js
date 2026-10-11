@@ -92,8 +92,14 @@ export class EconomyManager {
         return achievementCache.n;
     }
 
+    // Generational Wisdom: +10% for every Prestige Point currently held, so spending points gives some of it back
+    getGenerationalWisdomBoost() {
+        return PrestigeManager.owns('generationalWisdom') ? 0.1 * PrestigeManager.pointsHeld() : 0;
+    }
+
     getPrestigeDevBoost() {
         let b = 0;
+        b += this.getGenerationalWisdomBoost();
         if (PrestigeManager.owns('trophyCabinet')) b += 0.25 * this.getUniqueAchievementCount();
         if (PrestigeManager.owns('staffFeedbackForms')) b += 2.5;
         if (PrestigeManager.owns('irresistibleDiscounts')) b += 5;
@@ -102,6 +108,7 @@ export class EconomyManager {
 
     getPrestigeCityBoost() {
         let b = 0;
+        b += this.getGenerationalWisdomBoost();
         if (PrestigeManager.owns('trophyCabinet')) b += 0.25 * this.getUniqueAchievementCount();
         if (PrestigeManager.owns('staffFeedbackForms')) b += 2.5;
         if (PrestigeManager.owns('globalTicketCuts')) b += 7.5;
@@ -112,6 +119,8 @@ export class EconomyManager {
     prestigeBoostLines(kind) {
         const lines = [];
         if (PrestigeManager.owns('staffFeedbackForms')) lines.push('Staff Feedback Forms: +250%');
+        const wisdom = this.getGenerationalWisdomBoost();
+        if (wisdom > 0) lines.push(`Generational Wisdom: +${Math.round(wisdom * 100)}%`);
         const trophies = PrestigeManager.owns('trophyCabinet') ? this.getUniqueAchievementCount() : 0;
         if (trophies > 0) lines.push(`Trophy Cabinet: +${trophies * 25}%`);
         if (kind === 'dev' && PrestigeManager.owns('irresistibleDiscounts')) lines.push('Irresistible Discounts: +500%');

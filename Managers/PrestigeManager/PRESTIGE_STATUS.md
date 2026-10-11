@@ -6,7 +6,7 @@ delete its line from `NOT_IMPLEMENTED` and move it to the live table below.
 
 All percentages are additive with the normal boosts (never multiplied).
 
-## Live (26 of 26)
+## Live (27 of 27)
 
 | Layer | Upgrade | Effect in the game | Where |
 |---|---|---|---|
@@ -34,12 +34,13 @@ All percentages are additive with the normal boosts (never multiplied).
 | 4 | Global Ticket Cuts | Cities +750% | `getPrestigeCityBoost` |
 | 4 | Crisis Avoidance Specialists | No negative events | App.jsx event trigger |
 | 4 | Government Grants | A new run starts at Rank 25 with the starter city plus 24 random cities connected for free | `applyGovernmentGrant` (governmentGrants.js), called from App.jsx on the first tick after the starter is connected |
+| 4 | Generational Wisdom | +10% city and development income for each Prestige Point currently held (unspent; additive with the other prestige boosts) | EconomyManager `getGenerationalWisdomBoost`, `PrestigeManager.pointsHeld` |
 | 4 | Lobbying Suavity | Claiming a rank-up opens a searchable city picker instead of drawing a random city (no re-roll) | `CityPickerModal`, `claimRankUp` in App.jsx, `getUnlockableCities` |
 | 4 | Best P.A. Ever | Work clicks itself every 500 ms (silent, not counted for the Work achievements); a background tab makes up missed clicks, up to 150 | `workClicksDue` (autoWork.js), `performWork` in App.jsx |
 
 ## Not live yet
 
-None: all 26 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is empty; add an id there to show a new upgrade as "Coming soon".
+None: all 27 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is empty; add an id there to show a new upgrade as "Coming soon".
 
 ## Milestone upgrades
 

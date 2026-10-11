@@ -48,6 +48,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'globalTicketCuts', icon: '🎫', layer: 4, name: 'Global Ticket Cuts', description: 'Cities earn +750%.' },
     { id: 'bestPAEver', icon: '🧑‍💼', layer: 4, name: 'Best P.A. Ever', description: 'Work clicks itself once every 500ms.' },
     { id: 'lobbyingSuavity', icon: '🕶️', layer: 4, name: 'Lobbying Suavity', description: 'Choose any city to connect when ranking up.' },
+    { id: 'generationalWisdom', icon: '📜', layer: 4, name: 'Generational Wisdom', description: '+10% city and development income for every Prestige Point you currently hold.' },
     { id: 'crisisAvoidanceSpecialists', icon: '🚨', layer: 4, name: 'Crisis Avoidance Specialists', description: 'No negative events, ever.' },
 ].map(u => ({
     ...u,
