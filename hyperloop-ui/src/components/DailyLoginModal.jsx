@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { playClickSound2, playHoverSound, playDailyLoginSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import cashIcon from '../assets/misc/cash.png'
-import globeIcon from '/public/globeIcon.png'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './DailyLoginModal.css'
 
 function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRep }) {

@@ -1,0 +1,573 @@
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..c2658d7
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1 @@
++node_modules/
+diff --git a/Managers/PrestigeManager/PrestigeManager.js b/Managers/PrestigeManager/PrestigeManager.js
+index 6f3fee1..b23dc13 100644
+--- a/Managers/PrestigeManager/PrestigeManager.js
++++ b/Managers/PrestigeManager/PrestigeManager.js
+@@ -5,6 +5,8 @@ export const PRESTIGE_HISTORY_KEY = 'hyperloop_prestige_history'
+ // Prestige Points for ending a run: 1 for every 50 ranks reached (2 at Rank 100)
+ export const RANKS_PER_PRESTIGE_POINT = 50
+ export const PRESTIGE_MIN_RANK = 100
++// Past runs kept for the history list and the Retirement count (a run takes hours, so this is never reached in practice)
++const HISTORY_LIMIT = 1000
+ 
+ let ownedCache = { raw: undefined, set: new Set(), points: 0 }
+ 
+@@ -95,7 +97,7 @@ export class PrestigeManager {
+         manager.addPoints(points)
+         const history = PrestigeManager.getHistory()
+         history.push({ ...stats, points, endedAt: Date.now() })
+-        try { localStorage.setItem(PRESTIGE_HISTORY_KEY, JSON.stringify(history.slice(-100))) } catch { /* storage full */ }
++        try { localStorage.setItem(PRESTIGE_HISTORY_KEY, JSON.stringify(history.slice(-HISTORY_LIMIT))) } catch { /* storage full */ }
+         return points
+     }
+ 
+diff --git a/Managers/SaveManager.js b/Managers/SaveManager.js
+index 34e404d..e22d606 100644
+--- a/Managers/SaveManager.js
++++ b/Managers/SaveManager.js
+@@ -31,6 +31,8 @@ const AUX_KEYS = [
+     'hyperloop_event_tint',
+     'hyperloop_hyperlink_used_month_posts',
+     'hyperloop_pending_rankups',
++    // Cities Government Grants connected for free: Amicable Breakups refunds nothing for them
++    'hyperloop_granted_cities',
+     // Kept with the save so a backup can't re-offer today's daily bonus, and an uncollected
+     // reward travels with the balance it belongs to (bug #67).
+     'hyperloop_last_login',
+@@ -92,6 +94,8 @@ const PRESTIGE_KEEP_KEYS = [
+     'hyperloop_hyperlink_liked',
+     'hyperloop_last_login',
+     'hyperloop_last_farewell_date',
++    // The credits portrait pays its Reputation once ever, not once per run
++    'hyperloop_dev_portrait_bonus',
+ ]
+ 
+ // Wipes the current run and leaves a note for the next start-up: keep the terminal name, and the starter
+@@ -209,13 +213,9 @@ function validateSave(save) {
+     if (save.purchasedDevelopments.length > allDevelopments.length) return false
+     if (save.purchasedUpgrades.length > allUpgrades.length) return false
+ 
+-    // Rate check — earnings can't be impossibly high relative to terminal age
+-    const ageSeconds = (Date.now() - save.createdAt) / 1000
+-    if (ageSeconds > 0) {
+-        const maxTheoreticalRate = 50_000_000 // £50M/second absolute ceiling
+-        const impliedRate = save.totalCashEarned / ageSeconds
+-        if (impliedRate > maxTheoreticalRate) return false
+-    }
++    // There is deliberately no limit on how fast a save may have earned (bug #140): the late game, with Prestige
++    // upgrades and the network effect, can honestly average more than any fixed ceiling, and a hand-edited save
++    // harms nobody else (bug #114).
+ 
+     return true
+ }
+diff --git a/apply_facts117.mjs b/apply_facts117.mjs
+deleted file mode 100644
+index 0ec5863..0000000
+--- a/apply_facts117.mjs
++++ /dev/null
+@@ -1,61 +0,0 @@
+-// Fixes city-fact issues from bug #117. Run from the repo root:  node apply_facts117.mjs
+-// Each change replaces one exact piece of text and stops with a message if it is not found,
+-// so nothing is changed by guesswork. Safe to run twice (already-applied changes are skipped).
+-import fs from 'fs'
+-
+-const changes = [
+-  ['Lisbon', "started in the 17th century, but the dome wasn't officially completed until 1966—a construction period spanning over 300 years.",
+-             "started in 1682, but the dome wasn't officially completed until 1966—a construction period spanning almost 300 years."],
+-  ['Paris', "To see every single piece of art for just 30 seconds straight, you would be exploring for 35 days without sleeping.",
+-            "To see each of its roughly 35,000 works on display for just 30 seconds, you would need about 12 days of non-stop looking."],
+-  ['Valletta', "0.8 square kilometers (about 0.3 square miles)", "0.61 square kilometers (about 0.24 square miles)"],
+-  ['Antwerp', "It is the only museum in the world designated as a UNESCO World Heritage site.",
+-              "It is one of the very few museums in the world to be a UNESCO World Heritage site in its own right."],
+-  ['Sanaa', "Sana'a is often called the world's first 'skyscraper city' because of its ancient multi-story tower houses that rise up to nine stories high.",
+-            "Sana'a's Old City is famous for its ancient multi-story tower houses that rise up to nine stories high, an early form of the skyscraper city."],
+-  ['Kyoto', "who had visited and admired the city on his honeymoon—insisting", "who had visited and admired the city—insisting"],
+-  ['Bangalore', "was the first city in Asia to have electric streetlights, turned on in August 1905. This earned the 'Silicon Valley of India' its early nickname.",
+-                "was one of the first cities in Asia to have electric streetlights, turned on in August 1905. That early appetite for technology foreshadowed its later nickname, the 'Silicon Valley of India'."],
+-  ['Aberdeen', "Aberdeen is home to the world's first-ever commercial MRI scanner, developed in the city in the 1980s and used to take the first clinical scan of a patient's internal organs.",
+-               "Aberdeen is home to the world's first full-body MRI scanner, a research prototype built by University of Aberdeen scientists in the late 1970s and used for the first clinical scan of a patient in 1980."],
+-  ['George_Town', "was the very first British settlement in Southeast Asia, founded by Francis Light in 1786.",
+-                  "was one of the first British settlements in Southeast Asia, founded by Francis Light in 1786."],
+-  ['Georgetown', "an intricate 17th-century Dutch-engineered system", "an intricate Dutch-engineered, 18th-century system"],
+-  ['Nagoya', "which held the Guinness World Record for the world's largest planetarium dome until 2017.",
+-             "which Guinness World Records lists as having the world's largest planetarium dome."],
+-  ['BuenosAires', "a specific sub-neighborhood - Palermo Chico - is affectionately nicknamed", "a specific sub-neighborhood of Palermo, around Plaza Güemes, is affectionately nicknamed"],
+-  ['Philadelphia', "oldest continuously operating theatre in the English-speaking world", "oldest continuously operating theatre in the United States"],
+-  ['Havana', "by what is said to be a 25-carat diamond that once belonged to Russian Tsar Nicholas II.",
+-             "by a diamond set into the floor, a replica of a 25-carat gem said to have once belonged to Russian Tsar Nicholas II."],
+-  ['SanFrancisco', "is officially named 'Karl,' inspired by the giant from the movie Big Fish. Karl even has a massive social media presence with hundreds of thousands of followers tracking his movements.",
+-                   "is affectionately nicknamed 'Karl,' after the giant from the movie Big Fish. Karl even has a huge social media following, with a popular account tracking his movements."],
+-  ['MonteCarlo', "This staggering 1 in 67 million event birthed the psychological phenomenon known as the Gambler's Fallacy.",
+-                 "This staggering 1 in 67 million event became the classic example of the psychological phenomenon known as the Gambler's Fallacy, also called the Monte Carlo Fallacy."],
+-  ['LosAngeles', "its official name was over 40 characters long:", "its name is traditionally given as:"],
+-  ['Tehran', "The area of Tehran dates back to the Elamite kingdom of the 4th millennium BC – the oldest civilization known in the region.",
+-             "The Tehran area has been settled for thousands of years, and the ancient city of Ray, now part of greater Tehran, is among the oldest known settlements in the region."],
+-  ['CapeTown', "(except Sundays) since 1806, making it one of the oldest daily time signals in the world.",
+-               "(except Sundays) since 1902, continuing a time-signal tradition that dates back to 1806."],
+-  ['Milwaukee', "The first practical typewriter was invented in Milwaukee in 1869, which is where the familiar QWERTY keyboard layout was perfected by C. Latham Sholes.",
+-                "The first practical typewriter was invented in Milwaukee and patented in 1868 by C. Latham Sholes, who also perfected the familiar QWERTY keyboard layout there."],
+-  ['Bucharest', "Ploieșt.", "Ploiești."],
+-  ['Islamabad', "in an grid-like sector system", "in a grid-like sector system"],
+-  ['Tallinn', "after a major battle..", "after a major battle."],
+-  ['Miami', "Black Caeser", "Black Caesar"],
+-  ['Hanoi', "The historic Old Quarter features uniquely narrow houses built to avoid French colonial property taxes, which were once calculated by the width of the building's street-facing facade.",
+-            "The historic Old Quarter's narrow streets were each named after the trade guild that once worked there, which is why so many are still called after goods such as silk, silver and paper."],
+-  ['Hamburg', "more bridges than Venice, Amsterdam, and London combined - earning it the nickname the 'Venice of the North'.",
+-              "more bridges than Venice, Amsterdam, and London combined."],
+-]
+-
+-let failed = 0
+-for (const [file, oldText, newText] of changes) {
+-  const path = `CityManager/${file}.js`
+-  if (!fs.existsSync(path)) { console.log(`MISSING FILE ${path}`); failed++; continue }
+-  const text = fs.readFileSync(path, 'utf8')
+-  const hits = text.split(oldText).length - 1
+-  if (hits === 1) { fs.writeFileSync(path, text.replace(oldText, () => newText)); console.log(`changed  ${file}`) }
+-  else if (text.includes(newText)) console.log(`already  ${file}`)
+-  else { console.log(`NOT FOUND (${hits} matches) ${file}`); failed++ }
+-}
+-console.log(failed ? `${failed} change(s) need attention` : 'all done')
+diff --git a/hyperloop-ui/index.html b/hyperloop-ui/index.html
+index 31cc915..36626ef 100644
+--- a/hyperloop-ui/index.html
++++ b/hyperloop-ui/index.html
+@@ -2,7 +2,7 @@
+ <html lang="en">
+   <head>
+     <meta charset="UTF-8" />
+-<link rel="icon" type="image/png" href="/globeIcon.png" />
++<link rel="icon" type="image/png" href="/src/assets/misc/globeIcon.png" />
+     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <title>Hyperloop Empire</title>
+diff --git a/hyperloop-ui/src/App.jsx b/hyperloop-ui/src/App.jsx
+index ba45a43..8929a06 100644
+--- a/hyperloop-ui/src/App.jsx
++++ b/hyperloop-ui/src/App.jsx
+@@ -38,6 +38,7 @@ import { TimeManager } from "Managers/TimeManager/TimeManager.js";
+ import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
+ import { PrestigeManager, PRESTIGE_MIN_RANK } from "Managers/PrestigeManager/PrestigeManager.js";
+ import { AUTO_WORK_INTERVAL_MS, workClicksDue } from "Managers/PrestigeManager/autoWork.js";
++import { readGrantedCities, writeGrantedCities } from "./utils/grantedCities.js";
+ import { applyGovernmentGrant } from "Managers/PrestigeManager/governmentGrants.js";
+ import { AchievementManager } from "Managers/AchievementManager/AchievementManager.js";
+ import AchievementToast from "./components/AchievementToast.jsx";
+@@ -46,7 +47,7 @@ import starterCities from "./data/starterCities.js"
+ import { allCities } from "../../CityManager/CityRegistry.js";
+ import { departureTimestamp, minutesUntilDeparture } from './utils/time.js'
+ import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
+-import { playSpecialChime, playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
++import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
+ import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
+ import { getRandomEvent } from "./data/events.js"
+ import cityCoordinates from "./data/cityCoordinates.js"
+@@ -163,9 +164,8 @@ function App() {
+   // Announces newly unlocked achievements. Several at once (e.g. a game from before achievements) become one toast.
+   const announceAchievements = (ids) => {
+     if (!ids.length) return;
+-    playSpecialChime();
+     const items = ids.length > 3
+-      ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'See them on the Progress page.' }]
++      ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'Open the trophy button at the bottom right to see them.' }]
+       : ids.map(id => ({ key: id, title: AchievementManager.byId(id).name, subtitle: AchievementManager.byId(id).description }));
+     setAchievementQueue(prev => [...prev, ...items]);
+     // Same indications as the Hyper-Link button: pulse and red count (from the unseen total), and a bubble for 3 seconds
+@@ -471,7 +471,8 @@ function App() {
+   // Government Grants: the first tick after a new run's starter city is connected (and only then).
+   const grantPending = useRef(!!runStart && PrestigeManager.owns('governmentGrants'));
+   const giveGovernmentGrant = () => {
+-    applyGovernmentGrant(progressionManager, rankManager, allCities);
++    const grant = applyGovernmentGrant(progressionManager, rankManager, allCities);
++    writeGrantedCities(grant.cities.map(c => c.name));
+     // Dozens of developments arrive at once, so they count as already seen instead of each getting a popup
+     const seen = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
+     [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades].forEach(d => {
+@@ -1348,9 +1349,13 @@ function App() {
+           onSave={triggerSave}
+           onDisconnect={(city) => {
+             const disconnectCost = constructionManager.calculateTierConnectionCost(city) / 2;
++            // A city Government Grants connected for free has nothing to refund
++            const grantedNames = readGrantedCities();
++            const wasGranted = grantedNames.includes(city.name);
++            if (wasGranted) writeGrantedCities(grantedNames.filter(n => n !== city.name));
+             if (PrestigeManager.owns('amicableBreakups')) {
+               // Amicable Breakups: no cost, and half the connection cost comes back (a refund, not earnings)
+-              progressionManager.balance += disconnectCost;
++              if (!wasGranted) progressionManager.balance += disconnectCost;
+             } else {
+               progressionManager.spendCash(disconnectCost);
+               progressionManager.addReputation(-20);
+@@ -1517,7 +1522,7 @@ function App() {
+ 
+       {showSaved && (
+         <div style={{
+-          position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
++          position: 'fixed', bottom: '71px', left: '50%', transform: 'translateX(-50%)',
+           background: '#222', color: '#f5a623',
+           fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
+           padding: '4px 12px', borderRadius: '6px',
+@@ -1632,8 +1637,10 @@ function App() {
+         }} />
+       )}
+ 
+-      {showCityPicker && !dailyLoginData && !showOfflineModal && !activeDeparture && pendingRankUps > 0 && !claimedCity && (
++      {showCityPicker && pendingRankUps > 0 && !claimedCity && (
+         <CityPickerModal
++          // Hidden, not removed, while another popup is on top, so the search and the chosen city survive it (bug #142)
++          hidden={!!dailyLoginData || showOfflineModal || !!activeDelay || !!activeDeparture || devRevealQueue.length > 0}
+           cities={progressionManager.getUnlockableCities(allCities)}
+           onCancel={() => setShowCityPicker(false)}
+           onPick={(city) => { setShowCityPicker(false); claimRankUp(city, true); }}
+diff --git a/hyperloop-ui/public/globeIcon.png b/hyperloop-ui/src/assets/misc/globeIcon.png
+similarity index 100%
+rename from hyperloop-ui/public/globeIcon.png
+rename to hyperloop-ui/src/assets/misc/globeIcon.png
+diff --git a/hyperloop-ui/src/components/AchievementToast.jsx b/hyperloop-ui/src/components/AchievementToast.jsx
+index 4c8585b..adb6d58 100644
+--- a/hyperloop-ui/src/components/AchievementToast.jsx
++++ b/hyperloop-ui/src/components/AchievementToast.jsx
+@@ -1,5 +1,5 @@
+ import React, { useEffect } from 'react'
+-import { playReputationWorkBonusSound } from '../utils/sound.js'
++import { playSpecialChime } from '../utils/sound.js'
+ import './AchievementToast.css'
+ 
+ const SHOW_MS = 4500
+@@ -9,7 +9,7 @@ function AchievementToast({ queue, onShift }) {
+     const current = queue[0]
+     useEffect(() => {
+         if (!current) return
+-        playReputationWorkBonusSound()
++        playSpecialChime()   // once per toast; the unlock itself makes no sound, so the two never play together
+         const timer = setTimeout(onShift, SHOW_MS)
+         return () => clearTimeout(timer)
+     }, [current?.key])
+diff --git a/hyperloop-ui/src/components/CityPickerModal.jsx b/hyperloop-ui/src/components/CityPickerModal.jsx
+index 4c17c82..1bea9c0 100644
+--- a/hyperloop-ui/src/components/CityPickerModal.jsx
++++ b/hyperloop-ui/src/components/CityPickerModal.jsx
+@@ -9,16 +9,17 @@ const TIERS = [3, 2, 1]
+ // Used by Lobbying Suavity (any city to unlock on a rank-up) and Personal Favours (any home city for a new run).
+ // Lobbying Suavity: instead of a random city, the player picks any city that isn't unlocked yet.
+ // Choosing is a two-step (pick, then confirm) because the choice is final: there is no re-roll.
+-function CityPickerModal({ cities, onPick, onCancel, title = 'Lobbying Suavity', subtitle = 'Choose any city to unlock. Your choice is final.', confirmLabel = name => `Unlock ${name}` }) {
++function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lobbying Suavity', subtitle = 'Choose any city to unlock. Your choice is final.', confirmLabel = name => `Unlock ${name}` }) {
+     const [query, setQuery] = useState('')
+     const [tier, setTier] = useState(0)          // 0 = every tier
+     const [selected, setSelected] = useState(null)
+ 
+     useEffect(() => {
++        if (hidden) return
+         const onKey = e => { if (e.key === 'Escape') onCancel() }
+         window.addEventListener('keydown', onKey)
+         return () => window.removeEventListener('keydown', onKey)
+-    }, [onCancel])
++    }, [onCancel, hidden])
+ 
+     // The best earners first, then alphabetical
+     const sorted = useMemo(
+@@ -31,7 +32,7 @@ function CityPickerModal({ cities, onPick, onCancel, title = 'Lobbying Suavity',
+     )
+ 
+     return (
+-        <div className="citypicker-overlay">
++        <div className="citypicker-overlay" style={hidden ? { display: 'none' } : undefined}>
+             <div className="citypicker-panel" role="dialog" aria-label="Choose a city">
+                 <h2 className="citypicker-title">{title}</h2>
+                 <p className="citypicker-sub">{subtitle}</p>
+diff --git a/hyperloop-ui/src/components/ConstructionScreen.jsx b/hyperloop-ui/src/components/ConstructionScreen.jsx
+index 8c5880f..5b8bb2a 100644
+--- a/hyperloop-ui/src/components/ConstructionScreen.jsx
++++ b/hyperloop-ui/src/components/ConstructionScreen.jsx
+@@ -1,7 +1,7 @@
+ import { useState, useEffect } from 'react'
+ import cityThumbnails from '../data/cityThumbnails.js'
+ import cityImages from '../data/cityImages.js'
+-import globeIcon from '/public/globeIcon.png'
++import globeIcon from '../assets/misc/globeIcon.png'
+ import './ConstructionScreen.css'
+ 
+ const TIPS = [
+diff --git a/hyperloop-ui/src/components/CreditsModal.jsx b/hyperloop-ui/src/components/CreditsModal.jsx
+index 15651a8..cabe0bf 100644
+--- a/hyperloop-ui/src/components/CreditsModal.jsx
++++ b/hyperloop-ui/src/components/CreditsModal.jsx
+@@ -1,6 +1,6 @@
+ import { useState } from 'react'
+ import { playClickSound2, playHoverSound } from '../utils/sound.js'
+-import globeIcon from '/public/globeIcon.png'
++import globeIcon from '../assets/misc/globeIcon.png'
+ import mePhoto from '../assets/misc/me.jpg'
+ import './CreditsModal.css'
+ 
+diff --git a/hyperloop-ui/src/components/DailyLoginModal.jsx b/hyperloop-ui/src/components/DailyLoginModal.jsx
+index 5e561a1..6cb4754 100644
+--- a/hyperloop-ui/src/components/DailyLoginModal.jsx
++++ b/hyperloop-ui/src/components/DailyLoginModal.jsx
+@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
+ import { playClickSound2, playHoverSound, playDailyLoginSound, playNotEnoughFundsSound } from '../utils/sound.js'
+ import reputationIcon from '../assets/misc/reputation.png'
+ import cashIcon from '../assets/misc/cash.png'
+-import globeIcon from '/public/globeIcon.png'
++import globeIcon from '../assets/misc/globeIcon.png'
+ import './DailyLoginModal.css'
+ 
+ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRep }) {
+diff --git a/hyperloop-ui/src/components/GuideModal.jsx b/hyperloop-ui/src/components/GuideModal.jsx
+index ac9e695..bf46abb 100644
+--- a/hyperloop-ui/src/components/GuideModal.jsx
++++ b/hyperloop-ui/src/components/GuideModal.jsx
+@@ -11,6 +11,8 @@ const GUIDE_SECTIONS = [
+     { title: '⏱️ Delays', content: 'Occasionally a loop will be delayed. You can compensate passengers (costs cash) or refuse compensation (costs Reputation). Certain upgrades reduce both the compensation cost and reputation penalty.' },
+     { title: '🏆 Reputation', content: 'Reputation is earned by giving farewells, collecting Progress page rewards, from certain upgrades, and rarely through working. It is spent re-rolling city unlocks, refusing delay compensation, upgrading developments, disconnecting cities and doubling bonuses. Reputation never drops below zero.' },
+     { title: '💤 Offline Earnings', content: 'Your terminal earns income while you are away, capped at 48 hours by default. Upgrades can extend this cap up to 7 days. Check back regularly to collect your earnings.' },
++    { title: '🏅 Achievements', content: 'Achievements unlock as you play and are kept for good, even when you retire. Open the trophy button at the bottom right to see them. Some Rank milestone upgrades and Prestige upgrades grow with the number you have unlocked.' },
++    { title: '🎓 Prestige', content: 'At Rank 100, buy Early Retirement (250 Reputation, under Development, Upgrades) and retire from the Prestige tab. Your run resets and you earn Prestige Points, 1 for every 50 ranks reached. Spend them on permanent Prestige upgrades, which are kept in every future run. They come in four layers costing 1, 2, 3 and 5 points; own every upgrade in a layer to open the next.' },
+     { title: '⚡ Events', content: 'Random events periodically affect your terminal — positively or negatively. These can multiply your passive income or work earnings for a short time. Building an Event Hall increases your chances of positive events.' },
+ ]
+ 
+diff --git a/hyperloop-ui/src/components/LoadingScreen.jsx b/hyperloop-ui/src/components/LoadingScreen.jsx
+index f8d258d..6b88779 100644
+--- a/hyperloop-ui/src/components/LoadingScreen.jsx
++++ b/hyperloop-ui/src/components/LoadingScreen.jsx
+@@ -26,7 +26,7 @@ import openingAudio from '../assets/sounds/openingAudio.mp3'
+ import { preloadImages } from '../utils/imageCache.js'
+ import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
+ import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
+-import globeIcon from '/public/globeIcon.png'
++import globeIcon from '../assets/misc/globeIcon.png'
+ import './LoadingScreen.css'
+ 
+ const DURATION = 5000
+diff --git a/hyperloop-ui/src/components/OnboardingModal.jsx b/hyperloop-ui/src/components/OnboardingModal.jsx
+index 613115d..848b071 100644
+--- a/hyperloop-ui/src/components/OnboardingModal.jsx
++++ b/hyperloop-ui/src/components/OnboardingModal.jsx
+@@ -1,5 +1,5 @@
+ import { playClickSound2, playHoverSound } from '../utils/sound.js'
+-import globeIcon from '/public/globeIcon.png'
++import globeIcon from '../assets/misc/globeIcon.png'
+ import './OnboardingModal.css'
+ 
+ function OnboardingModal({ onDismiss }) {
+diff --git a/hyperloop-ui/src/components/SecretCityModal.jsx b/hyperloop-ui/src/components/SecretCityModal.jsx
+index e922855..3b9a9c9 100644
+--- a/hyperloop-ui/src/components/SecretCityModal.jsx
++++ b/hyperloop-ui/src/components/SecretCityModal.jsx
+@@ -1,6 +1,6 @@
+ import { useState } from 'react'
+ import { playClickSound2, playHoverSound } from '../utils/sound.js'
+-import globeIcon from '/public/globeIcon.png'
++import globeIcon from '../assets/misc/globeIcon.png'
+ import './SecretCityModal.css'
+ 
+ function SecretCityModal({ onContinue }) {
+diff --git a/hyperloop-ui/src/pages/CitiesPage.jsx b/hyperloop-ui/src/pages/CitiesPage.jsx
+index 8e47529..6bf1489 100644
+--- a/hyperloop-ui/src/pages/CitiesPage.jsx
++++ b/hyperloop-ui/src/pages/CitiesPage.jsx
+@@ -12,6 +12,7 @@ import constructionIcon from '../assets/misc/construction.png'
+ import poorIcon from '../assets/misc/poor.png'
+ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+ import { usePersistedChoice } from '../utils/usePersistedChoice.js'
++import { isGrantedCity } from '../utils/grantedCities.js'
+ import { playClickSound2, playConstructionSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
+ import { formatTime } from '../utils/time.js';
+ 
+@@ -346,7 +347,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                         // Amicable Breakups: disconnecting costs nothing and refunds half the connection cost
+                                         const amicable = PrestigeManager.owns('amicableBreakups')
+                                         const disconnectCost = amicable ? 0 : getDisconnectCost(selectedCity)
+-                                        const refund = amicable ? getDisconnectCost(selectedCity) : 0
++                                        // A city Government Grants connected for free has nothing to refund
++                                        const refund = amicable && !isGrantedCity(selectedCity.name) ? getDisconnectCost(selectedCity) : 0
+                                         const canAfford = amicable || (balance >= disconnectCost && reputation >= 20)
+                                         return confirmDisconnect ? (
+                                             <>
+@@ -365,7 +367,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                                     }}
+                                                 >
+                                                     <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+-                                                        {amicable ? <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</> : <>Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)</>}
++                                                        {amicable ? (refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>) : <>Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)</>}
+                                                     </span>
+                                                 </button>
+                                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough funds or reputation</p>}
+diff --git a/hyperloop-ui/src/pages/OpeningPage.jsx b/hyperloop-ui/src/pages/OpeningPage.jsx
+index dba66fa..74410ec 100644
+--- a/hyperloop-ui/src/pages/OpeningPage.jsx
++++ b/hyperloop-ui/src/pages/OpeningPage.jsx
+@@ -6,7 +6,7 @@ import { useState, useRef } from 'react'
+ import { allCities } from '../../../CityManager/CityRegistry'
+ import CityPickerModal from '../components/CityPickerModal.jsx'
+ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+-import globeIcon from '/public/globeIcon.png'
++import globeIcon from '../assets/misc/globeIcon.png'
+ import './OpeningPage.css'
+ 
+ // runStart: set after a prestige. The terminal name carries over, and the starter city was drawn for the player
+diff --git a/hyperloop-ui/src/pages/PrestigePage.jsx b/hyperloop-ui/src/pages/PrestigePage.jsx
+index d12d316..0865487 100644
+--- a/hyperloop-ui/src/pages/PrestigePage.jsx
++++ b/hyperloop-ui/src/pages/PrestigePage.jsx
+@@ -87,7 +87,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
+                 <div className="prestige-retire-text">
+                     <b>Early Retirement</b>
+                     {canRetire
+-                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> (1 per {RANKS_PER_PRESTIGE_POINT} ranks, you are Rank {rank}). Your run resets.</span>
++                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)} per {RANKS_PER_PRESTIGE_POINT} ranks, you are Rank {rank}). Your run resets.</span>
+                         : rank >= PRESTIGE_MIN_RANK
+                             ? <span>Early Retirement is waiting under Development, Upgrades. Purchase it for 250 Reputation to prestige.</span>
+                             : <span>Reach Rank {PRESTIGE_MIN_RANK} and purchase Early Retirement (250 Reputation) to prestige. You are Rank {rank}.</span>}
+@@ -115,7 +115,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
+                         </div>
+                         <div className="prestige-modal-gain">+{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</div>
+                         <p className="prestige-modal-note"><b>Resets:</b> cash, rank, reputation, cities, developments, upgrades and milestones.</p>
+-                        <p className="prestige-modal-note"><b>Kept:</b> Prestige Points and upgrades, terminal name, Hyper-Link likes and your run history.</p>
++                        <p className="prestige-modal-note"><b>Kept:</b> Prestige Points and upgrades, achievements, terminal name, Hyper-Link likes and your run history.</p>
+                         <div className="prestige-modal-actions">
+                             <button className="prestige-retire-btn prestige-retire-btn-quiet" onClick={() => { playClickSound2(); setConfirming(false) }}>Keep playing</button>
+                             <button className="prestige-retire-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playFarewellAcceptSound(); onPrestige() }}>Retire</button>
+diff --git a/hyperloop-ui/src/pages/ProgressPage.jsx b/hyperloop-ui/src/pages/ProgressPage.jsx
+index 580555a..7a745fc 100644
+--- a/hyperloop-ui/src/pages/ProgressPage.jsx
++++ b/hyperloop-ui/src/pages/ProgressPage.jsx
+@@ -243,7 +243,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
+             ...(has('afternoonBoost') ? [{ label: 'Afternoon Bonus', value: `+${Math.round(economyManager.getUpgradeSum('afternoonBoost') * 100)}%${hour >= 12 && hour < 18 ? ' (Active)' : ' (Inactive)'}` }] : []),
+             ...(has('eveningBoost') ? [{ label: 'Evening Bonus', value: `+${Math.round(economyManager.getUpgradeSum('eveningBoost') * 100)}%${hour >= 18 && hour < 22 ? ' (Active)' : ' (Inactive)'}` }] : []),
+             ...(has('nightBoost') ? [{ label: 'Night Bonus', value: `+${Math.round(economyManager.getUpgradeSum('nightBoost') * 100)}%${(hour >= 22 || hour < 6) ? ' (Active)' : ' (Inactive)'}` }] : []),
+-            { label: 'Work Click Bonus', value: (count('workClickBonus') > 0 || PrestigeManager.owns('speedyConveyorBelts')) ? `×${(1 + count('workClickBonus') * 0.45 + (PrestigeManager.owns('speedyConveyorBelts') ? 3 : 0)).toFixed(2)} to click earnings` : '—' },
++            { label: 'Work Click Bonus', value: (count('workClickBonus') > 0 || PrestigeManager.owns('speedyConveyorBelts') || economyManager.hasUpgrade('workPerAchievement')) ? `×${economyManager.getWorkMultiplier(count('workClickBonus')).toFixed(2)} to click earnings` : '—' },
+             { label: 'Farewell Window', value: count('farewellWindowExtension') > 0 ? `${5 + count('farewellWindowExtension') * 5} minutes` : '—' },
+             { label: 'Farewell Rep Bonus', value: (has('farewellRepDoubled') || PrestigeManager.owns('oralHygiene')) ? `×${1 + (has('farewellRepDoubled') ? 1 : 0) + (PrestigeManager.owns('oralHygiene') ? 5 : 0)} per farewell` : '—' },
+             {
+diff --git a/hyperloop-ui/src/utils/effectDescriptions.js b/hyperloop-ui/src/utils/effectDescriptions.js
+index 4880af5..16a126d 100644
+--- a/hyperloop-ui/src/utils/effectDescriptions.js
++++ b/hyperloop-ui/src/utils/effectDescriptions.js
+@@ -1,3 +1,5 @@
++import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
++
+ // One list of upgrade effect descriptions, used by the unlock popup and the Developments page.
+ // Whole percentages stay whole (15), fractions show properly (2.5 rather than 3) and floating point noise is removed
+ const pct = v => +(v * 100).toFixed(1)
+@@ -10,7 +12,8 @@ export const EFFECT_DESCRIPTIONS = {
+     developmentBoost: (v) => `+${pct(v)}% income from all developments`,
+     earlyRetirement: (v) => `Ready to pass it on? Purchasing this upgrade with ${v} Reputation will allow you to prestige.`,
+     workPerAchievement: (v) => `+${pct(v)}% work earnings for every unique achievement unlocked`,
+-    prestigePoints: (v) => `Rewards ${v} Prestige Points`,
++    // What it really pays: Five-Star Researchers doubles it, then Fast Learner doubles the total
++    prestigePoints: (v) => `Rewards ${v * (PrestigeManager.owns('fiveStarResearchers') ? 2 : 1) * (PrestigeManager.owns('fastLearner') ? 2 : 1)} Prestige Points`,
+     connectionBoost: (v) => `+${pct(v)}% income from all city connections`,
+     workClickBonus: () => `+45% Work click earnings`,
+     offlineCapExtension: () => `+24 hours offline earnings cap`,
+diff --git a/hyperloop-ui/src/utils/grantedCities.js b/hyperloop-ui/src/utils/grantedCities.js
+new file mode 100644
+index 0000000..8ffb79c
+--- /dev/null
++++ b/hyperloop-ui/src/utils/grantedCities.js
+@@ -0,0 +1,16 @@
++// Cities that Government Grants connected for free. Amicable Breakups refunds half the connection cost, which
++// would be free money for these, so they are remembered until disconnected (kept with the save, cleared by a new run).
++export const GRANTED_CITIES_KEY = 'hyperloop_granted_cities'
++
++export function readGrantedCities() {
++    try {
++        const list = JSON.parse(localStorage.getItem(GRANTED_CITIES_KEY))
++        return Array.isArray(list) ? list : []
++    } catch { return [] }
++}
++
++export function writeGrantedCities(names) {
++    try { localStorage.setItem(GRANTED_CITIES_KEY, JSON.stringify(names)) } catch { /* storage full */ }
++}
++
++export const isGrantedCity = name => readGrantedCities().includes(name)
+diff --git a/undo_devs.cjs b/undo_devs.cjs
+deleted file mode 100644
+index 38a71d4..0000000
+--- a/undo_devs.cjs
++++ /dev/null
+@@ -1,21 +0,0 @@
+-const fs = require('fs')
+-const path = require('path')
+-
+-const devDir = String.raw`C:\Users\Cathal\Documents\HyperloopGame\DevelopmentManager`
+-
+-let updated = 0
+-fs.readdirSync(devDir).filter(f => f.endsWith('.js')).forEach(filename => {
+-    const filepath = path.join(devDir, filename)
+-    let content = fs.readFileSync(filepath, 'utf8')
+-    const newContent = content.replace(
+-        /new Development\s*\(\s*"[^"]+"\s*,\s*(\d+)\s*,\s*"[^"]+"\s*,\s*(\d+)/g,
+-        (match, cost, revenue) => match
+-            .replace(cost, Math.round(parseInt(cost) / 10))
+-            .replace(revenue, Math.round(parseInt(revenue) / 8))
+-    )
+-    if (newContent !== content) {
+-        fs.writeFileSync(filepath, newContent)
+-        updated++
+-    }
+-})
+-console.log(`Updated ${updated} development files`)
+\ No newline at end of file
+diff --git a/update_devs.js b/update_devs.js
+deleted file mode 100644
+index 5387f97..0000000
+--- a/update_devs.js
++++ /dev/null
+@@ -1,21 +0,0 @@
+-const fs = require('fs')
+-const path = require('path')
+-
+-const devDir = String.raw`C:\Users\Cathal\Documents\HyperloopGame\DevelopmentManager`
+-const pattern = /new Development\s*\(\s*"[^"]+"\s*,\s*(\d+)\s*,\s*"[^"]+"\s*,\s*(\d+)/g
+-
+-let updated = 0
+-fs.readdirSync(devDir).filter(f => f.endsWith('.js')).forEach(filename => {
+-    const filepath = path.join(devDir, filename)
+-    let content = fs.readFileSync(filepath, 'utf8')
+-    const newContent = content.replace(pattern, (match, cost, revenue) => {
+-        return match
+-            .replace(cost, Math.round(parseInt(cost) * 10))
+-            .replace(revenue, Math.round(parseInt(revenue) * 8))
+-    })
+-    if (newContent !== content) {
+-        fs.writeFileSync(filepath, newContent)
+-        updated++
+-    }
+-})
+-console.log(`Updated ${updated} development files`)
+\ No newline at end of file
+diff --git a/update_upgrades.cjs b/update_upgrades.cjs
+deleted file mode 100644
+index 113502b..0000000
+--- a/update_upgrades.cjs
++++ /dev/null
+@@ -1,19 +0,0 @@
+-const fs = require('fs')
+-const path = require('path')
+-
+-const dir = String.raw`C:\Users\Cathal\Documents\HyperloopGame\UpgradeManager`
+-
+-let updated = 0
+-fs.readdirSync(dir).filter(f => f.endsWith('.js')).forEach(filename => {
+-    const filepath = path.join(dir, filename)
+-    let content = fs.readFileSync(filepath, 'utf8')
+-    const newContent = content.replace(
+-        /(new Upgrade\s*\(\s*['"][^'"]+['"]\s*,\s*)(\d+)(\s*,)/g,
+-        (match, pre, cost, post) => `${pre}${Math.round(parseInt(cost) * 5)}${post}`
+-    )
+-    if (newContent !== content) {
+-        fs.writeFileSync(filepath, newContent)
+-        updated++
+-    }
+-})
+-console.log(`Updated ${updated} upgrade files`)
+\ No newline at end of file

@@ -1,3 +1,5 @@
+import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+
 // One list of upgrade effect descriptions, used by the unlock popup and the Developments page.
 // Whole percentages stay whole (15), fractions show properly (2.5 rather than 3) and floating point noise is removed
 const pct = v => +(v * 100).toFixed(1)
@@ -10,7 +12,8 @@ export const EFFECT_DESCRIPTIONS = {
     developmentBoost: (v) => `+${pct(v)}% income from all developments`,
     earlyRetirement: (v) => `Ready to pass it on? Purchasing this upgrade with ${v} Reputation will allow you to prestige.`,
     workPerAchievement: (v) => `+${pct(v)}% work earnings for every unique achievement unlocked`,
-    prestigePoints: (v) => `Rewards ${v} Prestige Points`,
+    // What it really pays: Five-Star Researchers doubles it, then Fast Learner doubles the total
+    prestigePoints: (v) => `Rewards ${v * (PrestigeManager.owns('fiveStarResearchers') ? 2 : 1) * (PrestigeManager.owns('fastLearner') ? 2 : 1)} Prestige Points`,
     connectionBoost: (v) => `+${pct(v)}% income from all city connections`,
     workClickBonus: () => `+45% Work click earnings`,
     offlineCapExtension: () => `+24 hours offline earnings cap`,

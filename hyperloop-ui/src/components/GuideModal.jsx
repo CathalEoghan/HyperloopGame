@@ -11,6 +11,8 @@ const GUIDE_SECTIONS = [
     { title: '⏱️ Delays', content: 'Occasionally a loop will be delayed. You can compensate passengers (costs cash) or refuse compensation (costs Reputation). Certain upgrades reduce both the compensation cost and reputation penalty.' },
     { title: '🏆 Reputation', content: 'Reputation is earned by giving farewells, collecting Progress page rewards, from certain upgrades, and rarely through working. It is spent re-rolling city unlocks, refusing delay compensation, upgrading developments, disconnecting cities and doubling bonuses. Reputation never drops below zero.' },
     { title: '💤 Offline Earnings', content: 'Your terminal earns income while you are away, capped at 48 hours by default. Upgrades can extend this cap up to 7 days. Check back regularly to collect your earnings.' },
+    { title: '🏅 Achievements', content: 'Achievements unlock as you play and are kept for good, even when you retire. Open the trophy button at the bottom right to see them. Some Rank milestone upgrades and Prestige upgrades grow with the number you have unlocked.' },
+    { title: '🎓 Prestige', content: 'At Rank 100, buy Early Retirement (250 Reputation, under Development, Upgrades) and retire from the Prestige tab. Your run resets and you earn Prestige Points, 1 for every 50 ranks reached. Spend them on permanent Prestige upgrades, which are kept in every future run. They come in four layers costing 1, 2, 3 and 5 points; own every upgrade in a layer to open the next.' },
     { title: '⚡ Events', content: 'Random events periodically affect your terminal — positively or negatively. These can multiply your passive income or work earnings for a short time. Building an Event Hall increases your chances of positive events.' },
 ]
 

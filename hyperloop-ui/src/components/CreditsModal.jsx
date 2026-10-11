@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
-import globeIcon from '/public/globeIcon.png'
+import globeIcon from '../assets/misc/globeIcon.png'
 import mePhoto from '../assets/misc/me.jpg'
 import './CreditsModal.css'
 

@@ -12,6 +12,7 @@ import constructionIcon from '../assets/misc/construction.png'
 import poorIcon from '../assets/misc/poor.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
+import { isGrantedCity } from '../utils/grantedCities.js'
 import { playClickSound2, playConstructionSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 
@@ -346,7 +347,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         // Amicable Breakups: disconnecting costs nothing and refunds half the connection cost
                                         const amicable = PrestigeManager.owns('amicableBreakups')
                                         const disconnectCost = amicable ? 0 : getDisconnectCost(selectedCity)
-                                        const refund = amicable ? getDisconnectCost(selectedCity) : 0
+                                        // A city Government Grants connected for free has nothing to refund
+                                        const refund = amicable && !isGrantedCity(selectedCity.name) ? getDisconnectCost(selectedCity) : 0
                                         const canAfford = amicable || (balance >= disconnectCost && reputation >= 20)
                                         return confirmDisconnect ? (
                                             <>
@@ -365,7 +367,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     }}
                                                 >
                                                     <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                        {amicable ? <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</> : <>Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)</>}
+                                                        {amicable ? (refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>) : <>Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)</>}
                                                     </span>
                                                 </button>
                                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough funds or reputation</p>}

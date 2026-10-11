@@ -9,16 +9,17 @@ const TIERS = [3, 2, 1]
 // Used by Lobbying Suavity (any city to unlock on a rank-up) and Personal Favours (any home city for a new run).
 // Lobbying Suavity: instead of a random city, the player picks any city that isn't unlocked yet.
 // Choosing is a two-step (pick, then confirm) because the choice is final: there is no re-roll.
-function CityPickerModal({ cities, onPick, onCancel, title = 'Lobbying Suavity', subtitle = 'Choose any city to unlock. Your choice is final.', confirmLabel = name => `Unlock ${name}` }) {
+function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lobbying Suavity', subtitle = 'Choose any city to unlock. Your choice is final.', confirmLabel = name => `Unlock ${name}` }) {
     const [query, setQuery] = useState('')
     const [tier, setTier] = useState(0)          // 0 = every tier
     const [selected, setSelected] = useState(null)
 
     useEffect(() => {
+        if (hidden) return
         const onKey = e => { if (e.key === 'Escape') onCancel() }
         window.addEventListener('keydown', onKey)
         return () => window.removeEventListener('keydown', onKey)
-    }, [onCancel])
+    }, [onCancel, hidden])
 
     // The best earners first, then alphabetical
     const sorted = useMemo(
@@ -31,7 +32,7 @@ function CityPickerModal({ cities, onPick, onCancel, title = 'Lobbying Suavity',
     )
 
     return (
-        <div className="citypicker-overlay">
+        <div className="citypicker-overlay" style={hidden ? { display: 'none' } : undefined}>
             <div className="citypicker-panel" role="dialog" aria-label="Choose a city">
                 <h2 className="citypicker-title">{title}</h2>
                 <p className="citypicker-sub">{subtitle}</p>

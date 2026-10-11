@@ -26,7 +26,7 @@ import openingAudio from '../assets/sounds/openingAudio.mp3'
 import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
-import globeIcon from '/public/globeIcon.png'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './LoadingScreen.css'
 
 const DURATION = 5000

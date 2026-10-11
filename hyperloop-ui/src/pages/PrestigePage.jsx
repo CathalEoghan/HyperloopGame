@@ -87,7 +87,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 <div className="prestige-retire-text">
                     <b>Early Retirement</b>
                     {canRetire
-                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> (1 per {RANKS_PER_PRESTIGE_POINT} ranks, you are Rank {rank}). Your run resets.</span>
+                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)} per {RANKS_PER_PRESTIGE_POINT} ranks, you are Rank {rank}). Your run resets.</span>
                         : rank >= PRESTIGE_MIN_RANK
                             ? <span>Early Retirement is waiting under Development, Upgrades. Purchase it for 250 Reputation to prestige.</span>
                             : <span>Reach Rank {PRESTIGE_MIN_RANK} and purchase Early Retirement (250 Reputation) to prestige. You are Rank {rank}.</span>}
@@ -115,7 +115,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                         </div>
                         <div className="prestige-modal-gain">+{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</div>
                         <p className="prestige-modal-note"><b>Resets:</b> cash, rank, reputation, cities, developments, upgrades and milestones.</p>
-                        <p className="prestige-modal-note"><b>Kept:</b> Prestige Points and upgrades, terminal name, Hyper-Link likes and your run history.</p>
+                        <p className="prestige-modal-note"><b>Kept:</b> Prestige Points and upgrades, achievements, terminal name, Hyper-Link likes and your run history.</p>
                         <div className="prestige-modal-actions">
                             <button className="prestige-retire-btn prestige-retire-btn-quiet" onClick={() => { playClickSound2(); setConfirming(false) }}>Keep playing</button>
                             <button className="prestige-retire-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playFarewellAcceptSound(); onPrestige() }}>Retire</button>

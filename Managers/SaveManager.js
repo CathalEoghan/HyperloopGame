@@ -31,6 +31,8 @@ const AUX_KEYS = [
     'hyperloop_event_tint',
     'hyperloop_hyperlink_used_month_posts',
     'hyperloop_pending_rankups',
+    // Cities Government Grants connected for free: Amicable Breakups refunds nothing for them
+    'hyperloop_granted_cities',
     // Kept with the save so a backup can't re-offer today's daily bonus, and an uncollected
     // reward travels with the balance it belongs to (bug #67).
     'hyperloop_last_login',
@@ -92,6 +94,8 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_hyperlink_liked',
     'hyperloop_last_login',
     'hyperloop_last_farewell_date',
+    // The credits portrait pays its Reputation once ever, not once per run
+    'hyperloop_dev_portrait_bonus',
 ]
 
 // Wipes the current run and leaves a note for the next start-up: keep the terminal name, and the starter
@@ -209,13 +213,9 @@ function validateSave(save) {
     if (save.purchasedDevelopments.length > allDevelopments.length) return false
     if (save.purchasedUpgrades.length > allUpgrades.length) return false
 
-    // Rate check — earnings can't be impossibly high relative to terminal age
-    const ageSeconds = (Date.now() - save.createdAt) / 1000
-    if (ageSeconds > 0) {
-        const maxTheoreticalRate = 50_000_000 // £50M/second absolute ceiling
-        const impliedRate = save.totalCashEarned / ageSeconds
-        if (impliedRate > maxTheoreticalRate) return false
-    }
+    // There is deliberately no limit on how fast a save may have earned (bug #140): the late game, with Prestige
+    // upgrades and the network effect, can honestly average more than any fixed ceiling, and a hand-edited save
+    // harms nobody else (bug #114).
 
     return true
 }

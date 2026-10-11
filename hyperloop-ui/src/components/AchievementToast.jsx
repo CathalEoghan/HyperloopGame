@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { playReputationWorkBonusSound } from '../utils/sound.js'
+import { playSpecialChime } from '../utils/sound.js'
 import './AchievementToast.css'
 
 const SHOW_MS = 4500
@@ -9,7 +9,7 @@ function AchievementToast({ queue, onShift }) {
     const current = queue[0]
     useEffect(() => {
         if (!current) return
-        playReputationWorkBonusSound()
+        playSpecialChime()   // once per toast; the unlock itself makes no sound, so the two never play together
         const timer = setTimeout(onShift, SHOW_MS)
         return () => clearTimeout(timer)
     }, [current?.key])

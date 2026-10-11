@@ -6,7 +6,7 @@ import { useState, useRef } from 'react'
 import { allCities } from '../../../CityManager/CityRegistry'
 import CityPickerModal from '../components/CityPickerModal.jsx'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
-import globeIcon from '/public/globeIcon.png'
+import globeIcon from '../assets/misc/globeIcon.png'
 import './OpeningPage.css'
 
 // runStart: set after a prestige. The terminal name carries over, and the starter city was drawn for the player

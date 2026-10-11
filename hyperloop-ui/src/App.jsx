@@ -38,6 +38,7 @@ import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { PrestigeManager, PRESTIGE_MIN_RANK } from "Managers/PrestigeManager/PrestigeManager.js";
 import { AUTO_WORK_INTERVAL_MS, workClicksDue } from "Managers/PrestigeManager/autoWork.js";
+import { readGrantedCities, writeGrantedCities } from "./utils/grantedCities.js";
 import { applyGovernmentGrant } from "Managers/PrestigeManager/governmentGrants.js";
 import { AchievementManager } from "Managers/AchievementManager/AchievementManager.js";
 import AchievementToast from "./components/AchievementToast.jsx";
@@ -46,7 +47,7 @@ import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture } from './utils/time.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
-import { playSpecialChime, playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
@@ -163,9 +164,8 @@ function App() {
   // Announces newly unlocked achievements. Several at once (e.g. a game from before achievements) become one toast.
   const announceAchievements = (ids) => {
     if (!ids.length) return;
-    playSpecialChime();
     const items = ids.length > 3
-      ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'See them on the Progress page.' }]
+      ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'Open the trophy button at the bottom right to see them.' }]
       : ids.map(id => ({ key: id, title: AchievementManager.byId(id).name, subtitle: AchievementManager.byId(id).description }));
     setAchievementQueue(prev => [...prev, ...items]);
     // Same indications as the Hyper-Link button: pulse and red count (from the unseen total), and a bubble for 3 seconds
@@ -471,7 +471,8 @@ function App() {
   // Government Grants: the first tick after a new run's starter city is connected (and only then).
   const grantPending = useRef(!!runStart && PrestigeManager.owns('governmentGrants'));
   const giveGovernmentGrant = () => {
-    applyGovernmentGrant(progressionManager, rankManager, allCities);
+    const grant = applyGovernmentGrant(progressionManager, rankManager, allCities);
+    writeGrantedCities(grant.cities.map(c => c.name));
     // Dozens of developments arrive at once, so they count as already seen instead of each getting a popup
     const seen = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
     [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades].forEach(d => {
@@ -1348,9 +1349,13 @@ function App() {
           onSave={triggerSave}
           onDisconnect={(city) => {
             const disconnectCost = constructionManager.calculateTierConnectionCost(city) / 2;
+            // A city Government Grants connected for free has nothing to refund
+            const grantedNames = readGrantedCities();
+            const wasGranted = grantedNames.includes(city.name);
+            if (wasGranted) writeGrantedCities(grantedNames.filter(n => n !== city.name));
             if (PrestigeManager.owns('amicableBreakups')) {
               // Amicable Breakups: no cost, and half the connection cost comes back (a refund, not earnings)
-              progressionManager.balance += disconnectCost;
+              if (!wasGranted) progressionManager.balance += disconnectCost;
             } else {
               progressionManager.spendCash(disconnectCost);
               progressionManager.addReputation(-20);
@@ -1517,7 +1522,7 @@ function App() {
 
       {showSaved && (
         <div style={{
-          position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', bottom: '71px', left: '50%', transform: 'translateX(-50%)',
           background: '#222', color: '#f5a623',
           fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
           padding: '4px 12px', borderRadius: '6px',
@@ -1632,8 +1637,10 @@ function App() {
         }} />
       )}
 
-      {showCityPicker && !dailyLoginData && !showOfflineModal && !activeDeparture && pendingRankUps > 0 && !claimedCity && (
+      {showCityPicker && pendingRankUps > 0 && !claimedCity && (
         <CityPickerModal
+          // Hidden, not removed, while another popup is on top, so the search and the chosen city survive it (bug #142)
+          hidden={!!dailyLoginData || showOfflineModal || !!activeDelay || !!activeDeparture || devRevealQueue.length > 0}
           cities={progressionManager.getUnlockableCities(allCities)}
           onCancel={() => setShowCityPicker(false)}
           onPick={(city) => { setShowCityPicker(false); claimRankUp(city, true); }}
