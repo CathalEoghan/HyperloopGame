@@ -1,7 +1,7 @@
 import { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
-import { playClickSound2, playHoverSound, playFarewellAcceptSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialChime, playNotEnoughFundsSound } from '../utils/sound.js'
 import './PrestigePage.css'
 
 // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
@@ -199,7 +199,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                                                             onMouseEnter={() => playHoverSound()}
                                                                             onClick={() => {
                                                                                 if (popReason) { playNotEnoughFundsSound(); return }
-                                                                                if (prestige.buy(u.id)) { playFarewellAcceptSound(); setSelectedId(null); refresh() }
+                                                                                if (prestige.buy(u.id)) { playSpecialChime(); setSelectedId(null); refresh() }
                                                                             }}>
                                                                             {popReason ?? `Buy for ${u.cost} point${u.cost === 1 ? '' : 's'}`}
                                                                         </button>

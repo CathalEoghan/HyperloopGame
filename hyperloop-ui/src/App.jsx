@@ -45,7 +45,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture } from './utils/time.js'
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
+import { playSpecialChime, playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
@@ -157,6 +157,7 @@ function App() {
   // Announces newly unlocked achievements. Several at once (e.g. a game from before achievements) become one toast.
   const announceAchievements = (ids) => {
     if (!ids.length) return;
+    playSpecialChime();
     const items = ids.length > 3
       ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'See them on the Progress page.' }]
       : ids.map(id => ({ key: id, title: AchievementManager.byId(id).name, subtitle: AchievementManager.byId(id).description }));
