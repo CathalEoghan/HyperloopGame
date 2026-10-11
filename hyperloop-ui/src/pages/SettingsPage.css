@@ -2,7 +2,9 @@
     padding: 24px;
     padding-bottom: 116px;
     background: rgb(255, 246, 239);
-    min-height: 100vh;
+    /* The height is set in SettingsPage.jsx to fit between the banner and the bottom bar. A min-height of 100vh here
+       made the box taller than the window, so the whole page scrolled as well as the box (two scrollbars). */
+    box-sizing: border-box;
     font-family: 'Inter', sans-serif;
 }
 
