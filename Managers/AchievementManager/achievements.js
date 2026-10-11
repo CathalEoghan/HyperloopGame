@@ -20,7 +20,7 @@ export const ACHIEVEMENTS = [
     { id: 'continentalSpan', group: 'Cities', name: 'Continental Span', description: 'Connect a city on every continent in one run (excluding Antarctica).', check: ctx => ctx.continentsTotal > 0 && ctx.continents >= ctx.continentsTotal },
     { id: 'bestCityInTheWorld', group: 'Cities', name: 'Best City in the World', description: 'Connect Belfast to your network.', check: ctx => ctx.cityNames.includes('Belfast') },
     { id: 'noConnectionForYou', group: 'Cities', name: 'No Connection for You!', description: 'Disconnect a city.' },
-    { id: 'islander', group: 'Cities', name: 'Islander', description: 'Start a run using Palikir or Apia as your home city.', pending: true },
+    { id: 'islander', group: 'Cities', name: 'Islander', description: 'Start a run using Palikir or Apia as your home city.' },
 
     // Developments
     { id: 'developing', group: 'Developments', name: 'Developing', description: 'Construct your first development.', check: atLeast('builds', 1) },

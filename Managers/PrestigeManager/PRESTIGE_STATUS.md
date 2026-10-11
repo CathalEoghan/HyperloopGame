@@ -21,7 +21,7 @@ All percentages are additive with the normal boosts (never multiplied).
 | 2 | Video Message | Farewell is sent automatically after 2.5 s | FarewellModal |
 | 2 | Viral Superstar | Progress rewards x3 (adds +2x; with the x2 upgrade it is x4) | ProgressPage `handleCardClick` |
 | 3 | Automated Scheduling | No cap on offline earnings | `calculateOfflineCap` returns Infinity |
-| 3 | Personal Favours | After a prestige you choose your starter city; without it the city is drawn for you | OpeningPage `runStart` |
+| 3 | Personal Favours | After a prestige you choose your starter city from the six starters or any city in the world (city picker); without it the city is drawn for you | OpeningPage `runStart` |
 | 3 | Pizza Parties | Positive events +200% stronger (effect tripled, instant cash x3) | App.jsx event trigger |
 | 3 | Irresistible Discounts | Developments +500% | `getPrestigeDevBoost` |
 | 3 | Bulletproof Planning | No delays | App.jsx delay block |
@@ -51,7 +51,7 @@ None: all 26 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 - Points for a run: 1 per 50 ranks reached (2 at Rank 100), doubled by Fast Learner. Five-Star Researchers only affects Experimental Technology.
 - Retire resets: cash, rank, Reputation, cities, developments, upgrades, milestones, Founders' Hall clock, farewell count.
 - Retire keeps: Prestige Points and upgrades, run history, terminal name, Hyper-Link likes, and the daily-bonus and first-farewell date stamps (so a new run can't be handed today's bonuses twice).
-- New run: a fresh start screen; the starter city is drawn (Personal Favours lets you choose). No first-time walkthrough.
+- New run: a fresh start screen; the starter city is drawn (Personal Favours lets you choose any city). No first-time walkthrough.
 - Each finished run is logged (`hyperloop_prestige_history`) and shown under Past runs.
 - Experimental Technology (5 points) is a reward of the Antarctic Peninsula, which only opens once every regular city is connected, so those points need a complete run.
 

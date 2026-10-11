@@ -36,7 +36,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'irresistibleDiscounts', icon: '🏷️', layer: 3, name: 'Irresistible Discounts', description: 'Developments earn +500%.' },
     { id: 'bulletproofPlanning', icon: '🛡️', layer: 3, name: 'Bulletproof Planning', description: 'No more delays, ever.' },
     { id: 'foundersHallExpansion', icon: '🏛️', layer: 3, name: 'Founders Hall Expansion', description: '+1% extra from the Founders Hall bonus.' },
-    { id: 'personalFavours', icon: '🎁', layer: 3, name: 'Personal Favours', description: 'Choose your starting city every run.' },
+    { id: 'personalFavours', icon: '🎁', layer: 3, name: 'Personal Favours', description: 'Choose any city in the world as your starting city every run.' },
     { id: 'vipPods', icon: '🚀', layer: 3, name: 'VIP Pods', description: 'x10 VIP chance.' },
 
     { id: 'fiveStarResearchers', icon: '🔬', layer: 3, name: 'Five-Star Researchers', description: 'Experimental Technology rewards double the Prestige Points (10 instead of 5).' },

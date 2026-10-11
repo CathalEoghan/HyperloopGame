@@ -6,9 +6,10 @@ import './CityPickerModal.css'
 
 const TIERS = [3, 2, 1]
 
+// Used by Lobbying Suavity (any city to unlock on a rank-up) and Personal Favours (any home city for a new run).
 // Lobbying Suavity: instead of a random city, the player picks any city that isn't unlocked yet.
 // Choosing is a two-step (pick, then confirm) because the choice is final: there is no re-roll.
-function CityPickerModal({ cities, onPick, onCancel }) {
+function CityPickerModal({ cities, onPick, onCancel, title = 'Lobbying Suavity', subtitle = 'Choose any city to unlock. Your choice is final.', confirmLabel = name => `Unlock ${name}` }) {
     const [query, setQuery] = useState('')
     const [tier, setTier] = useState(0)          // 0 = every tier
     const [selected, setSelected] = useState(null)
@@ -32,8 +33,8 @@ function CityPickerModal({ cities, onPick, onCancel }) {
     return (
         <div className="citypicker-overlay">
             <div className="citypicker-panel" role="dialog" aria-label="Choose a city">
-                <h2 className="citypicker-title">Lobbying Suavity</h2>
-                <p className="citypicker-sub">Choose any city to unlock. Your choice is final.</p>
+                <h2 className="citypicker-title">{title}</h2>
+                <p className="citypicker-sub">{subtitle}</p>
                 <input
                     className="citypicker-search"
                     type="text"
@@ -81,7 +82,7 @@ function CityPickerModal({ cities, onPick, onCancel }) {
                         disabled={!selected}
                         onMouseEnter={() => playHoverSound()}
                         onClick={() => { playClickSound2(); onPick(selected) }}
-                    >{selected ? `Unlock ${selected.name}` : 'Pick a city'}</button>
+                    >{selected ? confirmLabel(selected.name) : 'Pick a city'}</button>
                 </div>
             </div>
         </div>
