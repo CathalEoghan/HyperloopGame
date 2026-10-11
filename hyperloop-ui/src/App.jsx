@@ -144,6 +144,8 @@ function App() {
   const [achievements] = useState(() => {
     const am = new AchievementManager();
     am.seedCounter('farewells', savedData?.farewellsGiven || 0);
+    // Upgrades already made in this run count too (a game from before this achievement)
+    am.seedCounter('devUpgrades', Object.values(progressionManager.developmentUpgradeLevels || {}).reduce((sum, n) => sum + (Number(n) || 0), 0));
     return am;
   });
   const [achievementQueue, setAchievementQueue] = useState([]);
@@ -607,6 +609,8 @@ function App() {
   }, [showEventModal]);
 
   const fireOfficialHyperLinkPost = (trigger) => {
+    // No updates at all for the phone until a city is connected
+    if (progressionManager.purchasedCities.length === 0) return
     const post = generateOfficialEventPost({
       terminalName: terminalNameRef.current,
       homeCity: progressionManager.purchasedCities[0],
@@ -1203,6 +1207,7 @@ function App() {
     return <OpeningPage constructionManager={constructionManager} runStart={runStart} setPickedCity={city => {
       // A prestige run skips the first-time walkthrough
       if (!runStart) localStorage.setItem('hyperloop_onboarding_pending', '1');
+      if (city?.name === 'Palikir' || city?.name === 'Apia') unlockAchievement('islander');
       setPickedCity(city);
     }} setTerminalName={setTerminalName} />;
   }
@@ -1308,6 +1313,7 @@ function App() {
               progressionManager.addReputation(-20);
             }
             progressionManager.disconnectCity(city);
+            if (achievements.unlock('noConnectionForYou')) announceAchievements(['noConnectionForYou']);
             const todayKey = new Date().toDateString();
             const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
             const updated = schedule.filter(e => e.name !== city.name);
@@ -1333,6 +1339,7 @@ function App() {
           onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
             if (success) {
+              achievements.addCounter('devUpgrades');
               triggerSave();
               hyperLinkTriggerRef.current = { type: 'developmentUpgraded', data: { development: development.name } }
               setHyperLinkTrigger({ type: 'developmentUpgraded', data: { development: development.name } })
@@ -1350,6 +1357,7 @@ function App() {
           purchasedDevelopments={progressionManager.purchasedDevelopments}
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           farewellsGiven={farewellsGiven}
+          achievementManager={achievements}
           createdAt={createdAt}
           onCollectReward={(reward) => {
             if (reward.type === 'cash') {
@@ -1487,6 +1495,7 @@ function App() {
             dailyDoubleRep.current = 0;
             setReputation(progressionManager.reputation); // so the next popup does not offer a double the player can no longer afford (bug #122)
             localStorage.removeItem('hyperloop_pending_daily');
+            achievements.addCounter('dailyBonus');
             progressionManager.addCash(finalBonus);
             if (dailyLoginData.repBonus > 0) progressionManager.addReputation(dailyLoginData.repBonus);
             setDailyLoginData(null);
@@ -1555,8 +1564,8 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
-          onDismiss={(repCost) => { progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
+          onCompensate={(cost) => { unlockAchievement('sorry'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
+          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
         />
       )}
 

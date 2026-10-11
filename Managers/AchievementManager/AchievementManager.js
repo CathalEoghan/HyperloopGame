@@ -9,6 +9,7 @@ export const COUNTERS_KEY = 'hyperloop_achievement_counters'
 export const UNSEEN_KEY = 'hyperloop_achievements_unseen'
 
 const REGULAR_CITIES = allCities.filter(c => c.continent !== 'Antarctica')
+const REGULAR_CONTINENTS = new Set(REGULAR_CITIES.map(c => c.continent)).size
 // Upgrades handed out as milestone rewards (or Early Retirement) aren't "constructed" by the player
 const NOT_BUILT = new Set(['dailyLoginMultiplier', 'terminalAgeBoost', 'workPerAchievement', 'earlyRetirement'])
 
@@ -102,6 +103,12 @@ export class AchievementManager {
             regularTotal: REGULAR_CITIES.length,
             secretConnected: cities.some(c => c.continent === 'Antarctica'),
             countries: new Set(cities.map(c => c.country)).size,
+            continents: new Set(cities.map(c => c.continent).filter(c => c !== 'Antarctica')).size,
+            continentsTotal: REGULAR_CONTINENTS,
+            cityNames: cities.map(c => c.name),
+            reputation: progressionManager.reputation,
+            dailyBonus: this.counter('dailyBonus'),
+            devUpgrades: this.counter('devUpgrades'),
             builds,
             categories,
             rank: rankManager.rank,

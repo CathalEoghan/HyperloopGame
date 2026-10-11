@@ -16,12 +16,43 @@ const CashValue = ({ amount, suffix = '' }) => (
     </span>
 )
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, createdAt, onCollectReward, topOffset = 113 }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, topOffset = 113 }) {
     const [, setTick] = useState(0)
     useEffect(() => {
         const interval = setInterval(() => setTick(t => t + 1), 1000)
         return () => clearInterval(interval)
     }, [])
+
+    // The General Stats and Active Bonuses sections can be folded away; the choice is remembered
+    const [collapsed, setCollapsed] = useState(() => {
+        try {
+            const saved = JSON.parse(localStorage.getItem('hyperloop_progress_collapsed'))
+            return saved && typeof saved === 'object' && !Array.isArray(saved) ? saved : {}
+        } catch { return {} }
+    })
+    const toggleSection = (key) => {
+        playHoverSound()
+        setCollapsed(prev => {
+            const next = { ...prev, [key]: !prev[key] }
+            try { localStorage.setItem('hyperloop_progress_collapsed', JSON.stringify(next)) } catch { /* storage full */ }
+            return next
+        })
+    }
+    const sectionHeader = (id, title, style) => (
+        <h2
+            className="progress-section-header progress-section-toggle"
+            key={id}
+            style={style}
+            role="button"
+            tabIndex={0}
+            aria-expanded={!collapsed[id]}
+            onClick={() => toggleSection(id)}
+            onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSection(id) } }}
+        >
+            <span className={`progress-chevron${collapsed[id] ? ' progress-chevron-closed' : ''}`}>▾</span>
+            {title}
+        </h2>
+    )
 
     const terminalAge = () => {
         const totalSeconds = Math.floor((Date.now() - createdAt) / 1000)
@@ -135,11 +166,24 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const mostProfitableDev = revenueDevs.length ? revenueDevs.reduce((best, d) => economyManager.getEffectiveDevIncomeWithBoosts(d) > economyManager.getEffectiveDevIncomeWithBoosts(best) ? d : best) : null
     const leastProfitableDev = revenueDevs.length ? revenueDevs.reduce((worst, d) => economyManager.getEffectiveDevIncomeWithBoosts(d) < economyManager.getEffectiveDevIncomeWithBoosts(worst) ? d : worst) : null
 
+    const likedCount = (() => {
+        try { return (JSON.parse(localStorage.getItem('hyperloop_hyperlink_liked')) || []).length } catch { return 0 }
+    })()
+
     const generalStats = [
         { label: 'Terminal age', value: terminalAge() },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
         { label: 'Total revenue', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
         { label: 'Personal farewells given', value: farewellsGiven ?? 0 },
+        // Straight from the connected cities, so a disconnect shows at once
+        { label: 'Unique cities connected', value: new Set(purchasedCities.map(c => c.name)).size },
+        { label: 'Unique countries connected', value: new Set(purchasedCities.map(c => c.country)).size },
+        { label: 'Unique continents connected', value: new Set(purchasedCities.map(c => c.continent)).size },
+        { label: 'Hyper-Link posts liked', value: likedCount },
+        { label: 'Developments upgraded', value: achievementManager?.counter('devUpgrades') ?? 0 },
+        { label: 'Retirement count', value: PrestigeManager.getHistory().length },
+        { label: 'Work button clicks', value: (achievementManager?.counter('work') ?? 0).toLocaleString('en-GB') },
+        { label: 'Daily bonuses collected', value: achievementManager?.counter('dailyBonus') ?? 0 },
         { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(mostProfitableCity))} suffix="/day" /></span> : '—' },
         { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(leastProfitableCity))} suffix="/day" /></span> : '—' },
         { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{mostProfitableDev.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
@@ -259,18 +303,20 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         <>
             <div className="progress-page" style={{ height: `calc(100vh - ${topOffset + 141}px)` }}>
                 <div className="progress-content">
-                    <h2 className="progress-section-header">General Stats</h2>
-                    <div className="progress-stats">
-                        {generalStats.map(({ label, value }) => (
-                            <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
-                                <span className="stat-label">{label}</span>
-                                <span className="stat-value">{value}</span>
-                            </div>
-                        ))}
-                    </div>
+                    {sectionHeader('general', 'General Stats')}
+                    {!collapsed.general && (
+                        <div className="progress-stats">
+                            {generalStats.map(({ label, value }) => (
+                                <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
+                                    <span className="stat-label">{label}</span>
+                                    <span className="stat-value">{value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
 
-                    <h2 className="progress-section-header" style={{ marginTop: '24px' }}>Active Bonuses</h2>
-                    {upgradeStats.length === 0 ? (
+                    {sectionHeader('bonuses', 'Active Bonuses', { marginTop: '24px' })}
+                    {collapsed.bonuses ? null : upgradeStats.length === 0 ? (
                         <p style={{ color: '#888', fontFamily: 'Inter, sans-serif', fontSize: '0.9rem', marginTop: '8px' }}>No upgrades purchased yet.</p>
                     ) : (
                         <div className="progress-stats">

@@ -65,6 +65,22 @@
     gap: 12px;
 }
 
+.progress-section-toggle {
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+    width: fit-content;
+}
+
+.progress-chevron {
+    display: inline-block;
+    font-size: 1rem;
+    color: #f5a623;
+    transition: transform 0.15s ease;
+}
+
+.progress-chevron-closed { transform: rotate(-90deg); }
+
 .progress-section-header-row {
     display: flex;
     align-items: center;

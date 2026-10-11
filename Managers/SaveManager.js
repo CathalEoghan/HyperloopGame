@@ -46,6 +46,7 @@ const AUX_KEYS = [
     'hyperloop_achievement_counters',
     'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
+    'hyperloop_progress_collapsed',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -87,6 +88,7 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_achievement_counters',
     'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
+    'hyperloop_progress_collapsed',
     'hyperloop_hyperlink_liked',
     'hyperloop_last_login',
     'hyperloop_last_farewell_date',
@@ -130,6 +132,7 @@ const AUX_SHAPES = {
     hyperloop_hyperlink_user_pfps: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_hyperlink_unread: v => Number.isFinite(v),
     hyperloop_hyperlink_muted: v => typeof v === 'boolean',
+    hyperloop_progress_collapsed: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_achievement_counters: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_pending_rankups: v => Number.isFinite(v),
     hyperloop_event_tint: v => typeof v === 'boolean',

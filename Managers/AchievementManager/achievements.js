@@ -17,11 +17,17 @@ export const ACHIEVEMENTS = [
     { id: 'topSecret', group: 'Cities', name: 'Top Secret', description: 'Connect the last city.', check: ctx => ctx.secretConnected },
     { id: 'diverse', group: 'Cities', name: 'Diverse', description: 'Connect to 10 unique countries.', check: atLeast('countries', 10) },
     { id: 'evenMoreDiverse', group: 'Cities', name: 'Even More Diverse', description: 'Connect to 50 unique countries.', check: atLeast('countries', 50) },
+    { id: 'continentalSpan', group: 'Cities', name: 'Continental Span', description: 'Connect a city on every continent in one run (excluding Antarctica).', check: ctx => ctx.continentsTotal > 0 && ctx.continents >= ctx.continentsTotal },
+    { id: 'bestCityInTheWorld', group: 'Cities', name: 'Best City in the World', description: 'Connect Belfast to your network.', check: ctx => ctx.cityNames.includes('Belfast') },
+    { id: 'noConnectionForYou', group: 'Cities', name: 'No Connection for You!', description: 'Disconnect a city.' },
+    { id: 'islander', group: 'Cities', name: 'Islander', description: 'Start a run using Palikir or Apia as your home city.', pending: true },
 
     // Developments
     { id: 'developing', group: 'Developments', name: 'Developing', description: 'Construct your first development.', check: atLeast('builds', 1) },
     { id: 'developed', group: 'Developments', name: 'Developed', description: 'Construct 10 developments.', check: atLeast('builds', 10) },
     { id: 'neverADullMoment', group: 'Developments', name: 'Never a Dull Moment', description: 'Construct 100 developments.', check: atLeast('builds', 100) },
+    { id: 'upgraded', group: 'Developments', name: 'Upgraded', description: 'Upgrade a development for the first time.', check: atLeast('devUpgrades', 1) },
+    { id: 'renovator', group: 'Developments', name: 'Renovator', description: 'Upgrade a development 10 times.', check: atLeast('devUpgrades', 10) },
     { id: 'bigSpender', group: 'Developments', name: 'Big Spender', description: 'Construct 10 Shopping-category developments.', check: built('Shopping', 10) },
     { id: 'funTimes', group: 'Developments', name: 'Fun Times', description: 'Construct 10 Recreation-category developments.', check: built('Recreation', 10) },
     { id: 'bossy', group: 'Developments', name: 'Bossy', description: 'Construct 10 Enterprise-category developments.', check: built('Enterprise', 10) },
@@ -39,6 +45,18 @@ export const ACHIEVEMENTS = [
     { id: 'niceManager', group: 'Farewells', name: 'Nice Manager', description: 'Give a farewell.', check: atLeast('farewells', 1) },
     { id: 'greatManager', group: 'Farewells', name: 'Great Manager', description: 'Give a total of 10 farewells.', check: atLeast('farewells', 10) },
     { id: 'bestManagerEver', group: 'Farewells', name: 'Best Manager Ever', description: 'Give a total of 100 farewells.', check: atLeast('farewells', 100) },
+
+    // Reputation
+    { id: 'wellLiked', group: 'Reputation', name: 'Well-Liked', description: 'Have 1000 Reputation at any given time.', check: atLeast('reputation', 1000) },
+    { id: 'loathed', group: 'Reputation', name: 'Loathed', description: 'Have 0 Reputation at any given time.', check: ctx => ctx.reputation <= 0 },
+
+    // Daily bonus
+    { id: 'welcomeBack', group: 'Daily bonus', name: 'Welcome Back', description: 'Collect your daily bonus for the first time.', check: atLeast('dailyBonus', 1) },
+    { id: 'frequentLooper', group: 'Daily bonus', name: 'Frequent Looper', description: 'Collect your daily bonus 7 times.', check: atLeast('dailyBonus', 7) },
+
+    // Delays
+    { id: 'sorry', group: 'Delays', name: 'Sorry!', description: 'Compensate a delayed departure.' },
+    { id: 'toughLuck', group: 'Delays', name: 'Tough Luck', description: 'Refuse to compensate a delayed departure.' },
 
     // Money
     { id: 'firstMillion', group: 'Money', name: 'First Million', description: 'Have a total of 2 million in your treasury.', check: atLeast('balance', 2e6) },

@@ -182,6 +182,10 @@
 }
 
 .hyperlink-post {
+    /* Double-tapping a post likes it: it must not select the text or flash the tap highlight */
+    -webkit-user-select: none;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
     background: white;
     border-bottom: 1px solid #f0f0f0;
     padding: 14px 16px;
