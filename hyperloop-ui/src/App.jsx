@@ -62,7 +62,7 @@ const OFFLINE_RATE = 1.0;
 // Nothing is earned in that time (income, offline pay, daily bonus, Work clicks), so no rank-up or reward popup can
 // pile up behind the welcome popup.
 const onboardingPending = () => localStorage.getItem('hyperloop_onboarding_pending') === '1';
-const RANK_UP_REPUTATION = 3;
+const RANK_UP_REPUTATION = 5;
 const SECONDS_IN_A_DAY = 86400;
 // The Antarctic finale unlocks once every regular city is connected (bug #115).
 const REGULAR_CITY_COUNT = allCities.filter(c => c.continent !== 'Antarctica').length;
