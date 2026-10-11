@@ -2,6 +2,14 @@ import { POSTS, FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/h
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import { minutesUntilDeparture } from './time.js'
 
+// Development names are written in title case ("Pharmacy"), but in a post people write them as ordinary words
+// ("the pharmacy"). Only names that are proper nouns or acronyms keep their capitals.
+const POST_KEEP_CAPS = { indian: 'Indian', vietnamese: 'Vietnamese', moroccan: 'Moroccan', italian: 'Italian', irish: 'Irish', hyperloop: 'Hyperloop', sim: 'SIM' }
+export function inPost(name) {
+    return String(name).replace(/[A-Za-zÀ-ÿ]+/g, w => POST_KEEP_CAPS[w.toLowerCase()] || w.toLowerCase())
+}
+
+
 const DEV_KEY_MAP = {
     'Irish Bar': 'irishBar',
     'Escape Room': 'escapeRoom',
@@ -187,10 +195,10 @@ function substituteText(text, data, gameState) {
         .replace(/\{delayedCity\}/g, data.delayedCity || '')
         .replace(/\{gateNumber\}/g, data.gateNumber || '')
         .replace(/\{campaignCountry\}/g, data.campaignCountry || '')
-        .replace(/\{store\}/g, data.store || 'new store')
-        .replace(/\{recreation\}/g, data.recreation || 'new attraction')
-        .replace(/\{service\}/g, data.service || 'new service')
-        .replace(/\{development\}/g, data.development || 'the development')
+        .replace(/\{store\}/g, data.store ? inPost(data.store) : 'new store')
+        .replace(/\{recreation\}/g, data.recreation ? inPost(data.recreation) : 'new attraction')
+        .replace(/\{service\}/g, data.service ? inPost(data.service) : 'new service')
+        .replace(/\{development\}/g, data.development ? inPost(data.development) : 'the development')
         .replace(/\{currentTime\}/g, now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
         .replace(/\{cityCount\}/g, purchasedCities.length)
 }

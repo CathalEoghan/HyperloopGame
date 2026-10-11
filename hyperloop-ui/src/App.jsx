@@ -1349,7 +1349,7 @@ function App() {
           purchasedCities={progressionManager.purchasedCities}
           unlockedCities={progressionManager.unlockedCities}
           purchasedCitiesCount={purchasedCitiesCount}
-          disabled={hyperLinkOpen || popupOpen}
+          disabled={hyperLinkOpen || popupOpen || achievementsOpen}
           economyManager={economyManager}
           balance={balance}
           constructionManager={constructionManager}

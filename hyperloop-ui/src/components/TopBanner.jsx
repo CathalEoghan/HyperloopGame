@@ -206,7 +206,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             </div>
            <button ref={btnRef} className={`work-banner-btn${autoWork ? ' work-banner-auto' : ''}`} onClick={handleWork} onKeyDown={e => { if (e.repeat) e.preventDefault() }} onMouseEnter={() => playHoverSound()}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-                    Work (+<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(((workRange?.low || 0) + (workRange?.high || 0)) / 2, true)})
+                    Work (+<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(((workRange?.low || 0) + (workRange?.high || 0)) / 2, workRange?.low !== workRange?.high)})
                 </span>
             </button>
             <div className="work-divider" />
