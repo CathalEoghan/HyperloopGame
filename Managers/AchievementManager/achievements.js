@@ -10,7 +10,7 @@ const built = (cat, n) => ctx => (ctx.categories[cat] || 0) >= n
 
 export const ACHIEVEMENTS = [
     // Cities
-    { id: 'firstSteps', group: 'Cities', name: 'First Steps', description: 'Connect your first city.', check: atLeast('cities', 1) },
+    { id: 'firstSteps', group: 'Cities', name: 'First Steps', description: 'Connect your first city after your home city.', check: atLeast('cities', 2) },
     { id: 'connected', group: 'Cities', name: 'Connected', description: 'Connect 10 cities.', check: atLeast('cities', 10) },
     { id: 'wellConnected', group: 'Cities', name: 'Well-Connected', description: 'Connect 100 cities.', check: atLeast('cities', 100) },
     { id: 'trulyGlobal', group: 'Cities', name: 'Truly Global', description: 'Connect every city.', check: ctx => ctx.regularTotal > 0 && ctx.regularConnected >= ctx.regularTotal },
