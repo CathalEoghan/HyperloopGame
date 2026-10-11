@@ -1,0 +1,56 @@
+/* The list of cities after "Claim all". The modal frame itself comes from RankUpModal.css. */
+/* The other pages also style a bare .modal (width 320px, 60 x 40 images), so these rules need the extra specificity */
+.modal.claimed-modal {
+    width: min(620px, 92vw);
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.claimed-list {
+    align-self: stretch;
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 8px;
+    max-height: 55vh;
+    overflow-y: auto;
+    margin: 12px 0 4px;
+    padding: 2px 4px 2px 2px;
+    text-align: left;
+}
+
+.claimed-box {
+    background: rgb(255, 252, 248);
+    border: 2px solid black;
+    border-radius: 8px;
+    padding: 8px 10px;
+    min-width: 0;
+}
+
+.claimed-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modal .claimed-box img.claimed-flag {
+    width: 24px !important;
+    height: auto !important;
+    margin: 0 !important;
+    flex-shrink: 0;
+    border: none !important;
+    border-radius: 2px;
+}
+
+.claimed-name {
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.claimed-sub {
+    font-size: 0.75rem;
+    color: #777;
+    margin-top: 2px;
+}

@@ -4,6 +4,7 @@ import ExperienceBar from "./components/ExperienceBar";
 import BottomNav from "./components/BottomNav";
 import TickerBar from "./components/TickerBar";
 import RankUpModal from "./components/RankUpModal";
+import ClaimedCitiesModal from "./components/ClaimedCitiesModal";
 import CityPickerModal from "./components/CityPickerModal";
 import CityRevealModal from "./components/CityRevealModal"
 import CitiesPage from "./pages/CitiesPage"
@@ -256,6 +257,8 @@ function App() {
   // Persist unclaimed rank-ups so a reload before pressing Claim doesn't lose them.
   useEffect(() => { if (!blockedRef.current) localStorage.setItem('hyperloop_pending_rankups', pendingRankUps) }, [pendingRankUps]);
   const [claimedCity, setClaimedCity] = useState(null);
+  // The cities unlocked by "Claim all", while their summary is on screen
+  const [claimAllCities, setClaimAllCities] = useState(null);
   const [departureQueue, setDepartureQueue] = useState(() => {
     let queue;
     try {
@@ -465,6 +468,26 @@ function App() {
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') + RANK_UP_REPUTATION;
     if (freeRep > 0) progressionManager.addReputation(freeRep);
     setPendingRankUps(prev => prev - 1);
+    triggerSave();
+  };
+
+  // "Claim all": one random city for every waiting rank-up, and one summary instead of a reveal for each.
+  // There is no re-roll here; the single Claim button is still there for that. If the cities run out, the rest
+  // of the ranks still pay their Reputation.
+  const claimAllRankUps = () => {
+    if (claimedCityRef.current || pendingRankUps < 1) return;
+    const minTier = economyManager.getMinCityTierOnRankUp();
+    const gained = [];
+    for (let i = 0; i < pendingRankUps; i++) {
+      const city = progressionManager.getRandomUnlockedCity(allCities, null, minTier);
+      if (!city) break;
+      progressionManager.unlockCity(city);
+      gained.push(city);
+    }
+    const freeRep = (economyManager.getUpgradeSum('freeRepOnRankUp') + RANK_UP_REPUTATION) * pendingRankUps;
+    if (freeRep > 0) progressionManager.addReputation(freeRep);
+    setPendingRankUps(0);
+    if (gained.length > 0) setClaimAllCities(gained);
     triggerSave();
   };
 
@@ -1271,7 +1294,7 @@ function App() {
   // True while any popup is, or is about to be, on screen. The globe and the Hyper-Link phone button ignore input then (bugs #80, #122).
   const popupOpen = showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
-    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || pendingRankUps > 0
+    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || pendingRankUps > 0
     || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)
 
   return (
@@ -1553,7 +1576,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && showEventModal && activeEvent && devRevealQueue.length === 0 && !claimedCity && (
+      {!dailyLoginData && !showOfflineModal && showEventModal && activeEvent && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && (
         <EventModal
           key={`${activeEvent.id}-${activeEvent.expiresAt}-${activeEvent.instantCashAmount}`}
           event={activeEvent}
@@ -1617,7 +1640,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && !claimAllCities && (
         <FarewellModal
           key={departureId(activeDeparture)}
           departure={activeDeparture}
@@ -1627,8 +1650,8 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && (
-        <RankUpModal key={rankSet} rank={rankSet} choose={lobbying && !showCityPicker && progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && (
+        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={lobbying && !showCityPicker && progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
          // Lobbying Suavity: the player picks the city (once none are left to unlock, there is nothing to pick)
@@ -1647,7 +1670,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && (
+      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && !claimAllCities && (
         <DevelopmentRevealModal
           key={devRevealQueue[0].name}
           development={devRevealQueue[0]}
@@ -1705,7 +1728,11 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !cityClaimPending && pendingRankUps === 0 && (
+      {claimAllCities && !dailyLoginData && !showOfflineModal && (
+        <ClaimedCitiesModal cities={claimAllCities} onClose={() => setClaimAllCities(null)} />
+      )}
+
+      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !cityClaimPending && pendingRankUps === 0 && (
         <MilestoneModal
           milestone={milestoneQueue[0]}
           onContinue={() => {
