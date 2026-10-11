@@ -1522,7 +1522,7 @@ function App() {
 
       {showSaved && (
         <div style={{
-          position: 'fixed', bottom: '71px', left: '50%', transform: 'translateX(-50%)',
+          position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
           background: '#222', color: '#f5a623',
           fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
           padding: '4px 12px', borderRadius: '6px',
