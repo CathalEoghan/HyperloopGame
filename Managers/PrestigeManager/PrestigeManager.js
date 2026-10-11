@@ -58,6 +58,8 @@ export class PrestigeManager {
     canBuy(id) { return this.blockedReason(id) === null }
 
     buy(id) {
+        // Another part of the game (Experimental Technology) may have paid out points since this copy was loaded
+        this.load()
         if (!this.canBuy(id)) return false
         this.points -= byId[id].cost
         this.owned.push(id)
@@ -67,6 +69,7 @@ export class PrestigeManager {
 
     addPoints(amount) {
         if (!Number.isFinite(amount) || amount <= 0) return
+        this.load()
         this.points += Math.floor(amount)
         this.save()
     }

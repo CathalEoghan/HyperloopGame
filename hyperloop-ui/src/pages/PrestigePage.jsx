@@ -52,6 +52,11 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     const [, setTick] = useState(0)
     const [selectedId, setSelectedId] = useState(null)
     const refresh = () => setTick(t => t + 1)
+    // Points can be paid out while this page is open (Experimental Technology finishing a build), so re-read them
+    useEffect(() => {
+        const t = setInterval(() => { prestige.load(); refresh() }, 1000)
+        return () => clearInterval(t)
+    }, [])
 
     const popRef = useRef(null)
     // Bring the buy popover into view when an upgrade is picked near the bottom of the list

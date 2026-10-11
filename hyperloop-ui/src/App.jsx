@@ -46,7 +46,7 @@ import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture } from './utils/time.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
-import { playSpecialChime, playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
+import { playSpecialChime, playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
@@ -275,6 +275,39 @@ function App() {
     saveDepartureQueue(next);
     return next;
   });
+  // Everything a farewell pays out and records. Used by the farewell popup's button, and by Video Message, which sends
+  // it straight from the tick so a popup that is open (the daily bonus overnight, say) can't make the farewell expire.
+  function giveFarewell(dep, repGain) {
+    const today = new Date().toDateString();
+    const isFirstToday = lastFarewellDateRef.current !== today;
+    const hasDoubleFirst = economyManager.hasUpgrade('firstFarewellOfDayDouble');
+    const finalRep = (isFirstToday && hasDoubleFirst) ? (repGain ?? 5) * 2 : (repGain ?? 5);
+    if (isFirstToday) {
+      lastFarewellDateRef.current = today;
+      localStorage.setItem('hyperloop_last_farewell_date', today);
+    }
+    progressionManager.addReputation(finalRep);
+    // Personal Image Branding: +10% of the departing city's daily income per farewell.
+    const farewellCity = allCities.find(c => c.name === dep?.name);
+    const farewellCash = farewellCity ? economyManager.getFarewellCityIncomeBonus(farewellCity) : 0;
+    if (farewellCash > 0) {
+      progressionManager.addCash(farewellCash);
+      setBalance(progressionManager.balance);
+    }
+    const newCount = farewellsRef.current + 1;
+    farewellsRef.current = newCount;
+    achievements.addCounter('farewells');
+    if (dep?.vip) unlockAchievement('veryImportantPerson');
+    setFarewellsGiven(newCount);
+    triggerSave(newCount);
+    finishDeparture(dep);
+    hyperLinkTriggerRef.current = { type: 'farewellGiven', data: { city: dep?.name } };
+    setHyperLinkTrigger({ type: 'farewellGiven', data: { city: dep?.name } });
+  }
+  // The tick is set up once, so it calls the newest copy through this
+  const giveFarewellRef = useRef(null);
+  giveFarewellRef.current = giveFarewell;
+
   // A delay popup that hasn't been answered survives a reload, so it can't be skipped for free (bug #94).
   const [activeDelay, setActiveDelay] = useState(() => {
     try {
@@ -651,14 +684,8 @@ function App() {
   const injectCityIntoSchedule = (city) => {
     const todayKey = new Date().toDateString();
     const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
-    if (schedule.length === 0) {
-      const pending = JSON.parse(localStorage.getItem('hyperloop_pending_injections') || '[]');
-      if (!pending.includes(city.name)) {
-        pending.push(city.name);
-        localStorage.setItem('hyperloop_pending_injections', JSON.stringify(pending));
-      }
-      return;
-    }
+    // With no schedule yet (the first city connected on a new game's first day), this city starts today's schedule
+    // on its own, 30+ minutes ahead, so its departure and farewell don't wait for the Departure Board to be opened (bug #144).
     if (schedule.some(e => e.name === city.name)) return;
     const now = new Date();
     const currentMins = now.getHours() * 60 + now.getMinutes();
@@ -986,6 +1013,12 @@ function App() {
           const expiresAt = Date.now() + secondsRemaining * 1000;
           // Decided now, so Prestige upgrades bought earlier today count, and it's kept with the queued farewell.
           const depEntry = { ...entry, secondsRemaining, expiresAt, vip: Math.random() < economyManager.getVipChance() };
+          // Video Message sends the farewell on the spot, whatever popup is open, instead of queueing it behind them
+          if (PrestigeManager.owns('videoMessage')) {
+            playFarewellAcceptSound();
+            giveFarewellRef.current(depEntry, economyManager.getFarewellRepGain(5, !!depEntry.vip));
+            return;
+          }
           setDepartureQueue(queue => {
             if (queue.some(d => departureId(d) === departureId(depEntry))) return queue;
             const next = [...queue, depEntry];
@@ -1584,33 +1617,7 @@ function App() {
           key={departureId(activeDeparture)}
           departure={activeDeparture}
           economyManager={economyManager}
-          onFarewell={(repGain) => {
-            const today = new Date().toDateString();
-            const isFirstToday = lastFarewellDateRef.current !== today;
-            const hasDoubleFirst = economyManager.hasUpgrade('firstFarewellOfDayDouble');
-            const finalRep = (isFirstToday && hasDoubleFirst) ? (repGain ?? 5) * 2 : (repGain ?? 5);
-            if (isFirstToday) {
-              lastFarewellDateRef.current = today;
-              localStorage.setItem('hyperloop_last_farewell_date', today);
-            }
-            progressionManager.addReputation(finalRep);
-            // Personal Image Branding: +10% of the departing city's daily income per farewell.
-            const farewellCity = allCities.find(c => c.name === activeDeparture?.name);
-            const farewellCash = farewellCity ? economyManager.getFarewellCityIncomeBonus(farewellCity) : 0;
-            if (farewellCash > 0) {
-              progressionManager.addCash(farewellCash);
-              setBalance(progressionManager.balance);
-            }
-            const newCount = farewellsRef.current + 1;
-            farewellsRef.current = newCount;
-            achievements.addCounter('farewells');
-            if (activeDeparture?.vip) unlockAchievement('veryImportantPerson');
-            setFarewellsGiven(newCount);
-            triggerSave(newCount);
-            finishDeparture(activeDeparture);
-            hyperLinkTriggerRef.current = { type: 'farewellGiven', data: { city: activeDeparture?.name } };
-            setHyperLinkTrigger({ type: 'farewellGiven', data: { city: activeDeparture?.name } });
-          }}
+          onFarewell={(repGain) => giveFarewell(activeDeparture, repGain)}
           onMiss={() => { finishDeparture(activeDeparture); hyperLinkTriggerRef.current = { type: 'farewellMissed' }; setHyperLinkTrigger({ type: 'farewellMissed' }); }}
         />
       )}
