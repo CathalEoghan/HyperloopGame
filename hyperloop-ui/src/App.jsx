@@ -45,6 +45,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture } from './utils/time.js'
+import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playSpecialChime, playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
@@ -55,6 +56,7 @@ import monitorIcon from './assets/misc/monitor.png'
 import "./App.css";
 
 const OFFLINE_RATE = 1.0;
+const RANK_UP_REPUTATION = 3;
 const SECONDS_IN_A_DAY = 86400;
 // The Antarctic finale unlocks once every regular city is connected (bug #115).
 const REGULAR_CITY_COUNT = allCities.filter(c => c.continent !== 'Antarctica').length;
@@ -422,7 +424,8 @@ function App() {
     }
     // A chosen city is final, so a free re-roll has nothing to act on
     if (!chosen && economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
-    const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
+    // Every rank-up pays a little Reputation, so a player who mostly plays passively still reaches Early Retirement's 250
+    const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') + RANK_UP_REPUTATION;
     if (freeRep > 0) progressionManager.addReputation(freeRep);
     setPendingRankUps(prev => prev - 1);
     triggerSave();
@@ -452,7 +455,7 @@ function App() {
   // One press of Work. A manual press counts towards the Work achievements and plays the bonus sound;
   // Best P.A. Ever's presses (auto) earn the same money and Reputation, quietly.
   const performWork = (onRepGain, { auto = false } = {}) => {
-    const earned = economyManager.calculateWorkClickEarnings(rankManager.rank);
+    const earned = economyManager.calculateWorkClickEarnings();
     if (!auto) achievements.addCounter('work');
     progressionManager.addCash(earned);
     setBalance(progressionManager.balance);
@@ -582,7 +585,7 @@ function App() {
   const dailyDoubleRep = useRef(0);
   const offlineDoubleRep = useRef(0);
 
-  const [workRange, setWorkRange] = useState(() => economyManager.calculateWorkClickRange(rankManager.rank));
+  const [workRange, setWorkRange] = useState(() => economyManager.calculateWorkClickRange());
 
   const triggerSave = (farewells) => {
     if (blockedRef.current || leavingRef.current) return;
@@ -1007,7 +1010,7 @@ function App() {
           const newHour = Math.floor(newTotalMins / 60) % 24;
           const newMinute = newTotalMins % 60;
           const newTime = `${String(newHour).padStart(2, '0')}:${String(newMinute).padStart(2, '0')}`;
-          const compensation = Math.round(delayMinutes * 50);
+          const compensation = Math.round(delayMinutes * 50 * INCOME_SCALE);
           triggeredDelays.current.add(entry.time);
                     // The delayed departure takes its new place in the day's order (bug #103).
           const updated = schedule.map(e => e.time === entry.time
@@ -1081,7 +1084,7 @@ function App() {
         }
       }
 
-      setWorkRange(economyManager.calculateWorkClickRange(rankManager.rank));
+      setWorkRange(economyManager.calculateWorkClickRange());
       setBalance(progressionManager.balance);
       setRankSet(rankManager.rank);
       rankSetRef.current = rankManager.rank;

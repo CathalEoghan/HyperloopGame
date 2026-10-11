@@ -1,22 +1,41 @@
 import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js';
 import { ACHIEVEMENT_IDS } from '../AchievementManager/achievements.js';
+import { INCOME_SCALE } from './incomeScale.js';
 
 // Cached against the raw stored string: income maths asks for this once per city, every second
 let achievementCache = { raw: undefined, n: 0 };
 
 const SECONDS_IN_A_DAY = 86400;
-const POPULATION_INCOME_MODIFIER = 0.0001;
+const POPULATION_INCOME_MODIFIER = 0.0001 * INCOME_SCALE;
 // VIP passengers: the chance a departure has one (x10 with VIP Pods), and how much more their farewell is worth.
 const VIP_BASE_CHANCE = 0.02;
 const VIP_REP_MULTIPLIER = 5;
 
 const TIER_INCOME = {
-    1: 10000,
-    2: 50000,
-    3: 100000
+    1: 10000 * INCOME_SCALE,
+    2: 50000 * INCOME_SCALE,
+    3: 100000 * INCOME_SCALE
 };
 
+// A Work click is worth this many seconds of the player's passive income, so Work and passive income grow together.
+// The minimum keeps the very first clicks worthwhile, before there is much passive income.
+const WORK_SECONDS_OF_INCOME = 10;
+const WORK_MIN_CLICK = 250;
+// How much a click can vary: between 1/3 and 5/3 of the average (the same spread as before)
+const WORK_ROLL_MIN = 1 / 3;
+const WORK_ROLL_SPREAD = 4 / 3;
+
 const UPGRADE_MULTIPLIERS = [1.0, 1.15, 1.50, 2.00];
+
+// Network effect: every connected city and development earns more the bigger the network is, so
+// passive income starts small (Work carries the early game) and snowballs as the network grows.
+// multiplier = 1 + NETWORK_K * (connected cities / NETWORK_SCALE) ^ NETWORK_EXPONENT
+// (x1.1 at 3 cities, x2.5 at 10, x10 at 25, x39 at 50, x151 at 100, x1,735 at 340).
+// It multiplies the base income; every other boost stays additive on top, so the prestige income
+// upgrades keep their full strength.
+const NETWORK_K = 1.5;
+const NETWORK_SCALE = 10;
+const NETWORK_EXPONENT = 2;
 
 export class EconomyManager {
     constructor(progressionManager) {
@@ -27,6 +46,17 @@ export class EconomyManager {
         this.coordinates = null;
         // When this save was created, set by the UI. Lets the figures shown on screen include the Founders' Hall bonus.
         this.createdAt = null;
+    }
+
+    getNetworkMultiplier() {
+        const cities = this.progressionManager.purchasedCities.length;
+        return 1 + NETWORK_K * Math.pow(cities / NETWORK_SCALE, NETWORK_EXPONENT);
+    }
+
+    // The line shown in the boost popups, or null while the network is too small to matter
+    networkBoostLine() {
+        const n = this.getNetworkMultiplier();
+        return n >= 1.05 ? `Network effect (${this.progressionManager.purchasedCities.length} cities): x${n < 10 ? n.toFixed(1) : Math.round(n).toLocaleString('en-GB')}` : null;
     }
 
     getUpgradeSum(effectType) {
@@ -235,7 +265,7 @@ export class EconomyManager {
         const timeBoost = this.getTimeOfDayBonus();
 
         const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost + this.getPrestigeDevBoost();
-        return Math.floor(base * (1 + totalBoost));
+        return Math.floor(base * this.getNetworkMultiplier() * (1 + totalBoost));
     }
 
 
@@ -311,7 +341,10 @@ export class EconomyManager {
         const foundersLine = this.foundersHallLine();
         if (foundersLine) lines.push(foundersLine);
 
-        return { lines, totalBoost };
+        // The network effect multiplies the base income; the other boosts are added together on top of it
+        const networkLine = this.networkBoostLine();
+        if (networkLine) lines.unshift(networkLine);
+        return { lines, totalBoost: this.getNetworkMultiplier() * (1 + totalBoost) - 1 };
     }
 
         getCityBoostBreakdown(city, coordinates = null) {
@@ -412,7 +445,9 @@ export class EconomyManager {
         const foundersLine = this.foundersHallLine();
         if (foundersLine) lines.push(foundersLine);
 
-        return { lines, totalBoost };
+        const networkLine = this.networkBoostLine();
+        if (networkLine) lines.unshift(networkLine);
+        return { lines, totalBoost: this.getNetworkMultiplier() * (1 + totalBoost) - 1 };
     }
 
     calculateDevelopmentIncome() {
@@ -451,12 +486,13 @@ export class EconomyManager {
         const prestigeBoost = this.getPrestigeDevBoost();
 
         let developmentIncome = 0;
+        const network = this.getNetworkMultiplier();
         this.progressionManager.purchasedDevelopments.forEach(development => {
             const base = this.getEffectiveDevRevenue(development);
             const categoryEffectType = categoryEffectMap[development.category];
             const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
             const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost + prestigeBoost;
-            developmentIncome += base * (1 + totalBoost);
+            developmentIncome += base * network * (1 + totalBoost);
         });
         return developmentIncome;
     }
@@ -465,7 +501,7 @@ export class EconomyManager {
         coordinates = coordinates ?? this.coordinates;
         const tierBase = TIER_INCOME[city.tier] || 0;
         const popBonus = city.population * POPULATION_INCOME_MODIFIER;
-        let income = tierBase + popBonus;
+        let income = (tierBase + popBonus) * this.getNetworkMultiplier();
 
         let totalBoost = 0;
 
@@ -573,27 +609,37 @@ export class EconomyManager {
         return m;
     }
 
-    calculateWorkClickEarnings(rank) {
+    // Passive income per second without any running event, with the Founders' Hall bonus: what a Work click is
+    // measured against. Cached for a quarter of a second, since every click asks for it.
+    getBasePassivePerSecond() {
+        const now = Date.now();
+        if (this._passiveCache && now - this._passiveCache.at < 250) return this._passiveCache.value;
+        const value = (this.calculateDevelopmentIncome() + this.calculatePopulationIncome(this.coordinates))
+            / SECONDS_IN_A_DAY * this.getFoundersHallMultiplier();
+        this._passiveCache = { at: now, value };
+        return value;
+    }
+
+    calculateWorkClickEarnings() {
         const count = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length;
         const multiplier = this.getWorkMultiplier(count);
-        const xpRequired = Math.floor(500 * Math.pow(rank, 2.5));
+        const average = this.getBasePassivePerSecond() * WORK_SECONDS_OF_INCOME;
         const roll = (Math.random() + Math.random()) / 2;
-        const percentage = 0.001 + roll * 0.004;
-        let total = Math.max(250, xpRequired * percentage) * multiplier;
+        let total = Math.max(WORK_MIN_CLICK, average * (WORK_ROLL_MIN + roll * WORK_ROLL_SPREAD)) * multiplier;
         if (this.activeEvent?.effectType === 'workBoost' || this.activeEvent?.effectType === 'workPenalty') {
             total *= this.activeEvent.effect.multiplier;
         }
         return this.roundWorkValue(total);
     }
 
-    calculateWorkClickRange(rank) {
+    calculateWorkClickRange() {
         const count = this.progressionManager.purchasedUpgrades
             .filter(u => u.effectType === 'workClickBonus').length;
         const multiplier = this.getWorkMultiplier(count);
-        const xpRequired = Math.floor(500 * Math.pow(rank, 2.5));
-        let low = Math.max(250, xpRequired * 0.001) * multiplier;
-        let high = Math.max(250, xpRequired * 0.005) * multiplier;
+        const average = this.getBasePassivePerSecond() * WORK_SECONDS_OF_INCOME;
+        let low = Math.max(WORK_MIN_CLICK, average * WORK_ROLL_MIN) * multiplier;
+        let high = Math.max(WORK_MIN_CLICK, average * (WORK_ROLL_MIN + WORK_ROLL_SPREAD)) * multiplier;
         if (this.activeEvent?.effectType === 'workBoost' || this.activeEvent?.effectType === 'workPenalty') {
             low *= this.activeEvent.effect.multiplier;
             high *= this.activeEvent.effect.multiplier;

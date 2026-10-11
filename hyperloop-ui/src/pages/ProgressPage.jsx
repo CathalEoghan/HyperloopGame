@@ -7,6 +7,7 @@ import cashIcon from '../assets/misc/cash.png'
 import { playHoverSound, playFarewellAcceptSound, playReputationWorkBonusSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import './ProgressPage.css'
 
 const CashValue = ({ amount, suffix = '' }) => (
@@ -85,11 +86,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     const getRandomReward = () => {
         const roll = Math.random() * 100
-        if (roll < 25) return { type: 'cash', amount: 2500 }
-        if (roll < 47) return { type: 'cash', amount: 5000 }
-        if (roll < 65) return { type: 'cash', amount: 10000 }
-        if (roll < 75) return { type: 'cash', amount: 25000 }
-        if (roll < 80) return { type: 'cash', amount: 50000 }
+        if (roll < 25) return { type: 'cash', amount: 2500 * INCOME_SCALE }
+        if (roll < 47) return { type: 'cash', amount: 5000 * INCOME_SCALE }
+        if (roll < 65) return { type: 'cash', amount: 10000 * INCOME_SCALE }
+        if (roll < 75) return { type: 'cash', amount: 25000 * INCOME_SCALE }
+        if (roll < 80) return { type: 'cash', amount: 50000 * INCOME_SCALE }
         if (roll < 92) return { type: 'rep', amount: 5 }
         if (roll < 98) return { type: 'rep', amount: 10 }
         return { type: 'rep', amount: 20 }

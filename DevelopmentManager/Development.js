@@ -1,7 +1,9 @@
 
 // Development.js
 
-const REVENUE_SCALE = 6.5;
+import { INCOME_SCALE } from '../Managers/EconomyManager/incomeScale.js';
+
+const REVENUE_SCALE = 6.5 * INCOME_SCALE;
 
 export class Development {
     constructor(name, cost, category, revenue) {
