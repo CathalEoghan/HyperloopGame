@@ -3,7 +3,7 @@ import './GuideModal.css'
 
 const GUIDE_SECTIONS = [
     { title: '⚡ Getting Started', content: 'Name your terminal and choose your home city. Your home city determines which country receives local transport bonuses from certain upgrades.' },
-    { title: '💼 Working', content: 'Tap the Work button at the top of the screen to earn cash. A tap earns at least £250 and more as you rank up, reaching millions per tap late in the game. Each Work upgrade adds +45%. There is a rare chance to earn +5 Reputation from working.' },
+    { title: '💼 Working', content: 'Tap the Work button at the top of the screen to earn cash. A tap earns at least £250, and more as you connect cities and build developments (boosts and events don't raise it). Each Work upgrade adds +45%. There is a rare chance to earn +5 Reputation from working.' },
     { title: '⬆️ Ranking Up', content: 'As you earn cash, your XP increases and you rank up. Every rank up unlocks a new city you can connect to your network. You can re-roll an unwanted city unlock for 15 Reputation.' },
     { title: '🌍 Connecting Cities', content: 'Go to the Cities tab to connect unlocked cities. Each city earns daily income based on its tier and population. Tier 3 cities earn significantly more than Tier 1. Connecting a city also unlocks its unique development or upgrade.' },
     { title: '🏗️ Developments', content: 'Visit the Development tab to build developments in your terminal. Each earns daily income and can be upgraded up to 3 times for up to 100% income boost. Upgrades modify your entire network — from boosting city income to reducing delay costs.' },

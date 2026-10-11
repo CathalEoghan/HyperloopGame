@@ -17,8 +17,10 @@ const TIER_INCOME = {
     3: 100000 * INCOME_SCALE
 };
 
-// A Work click is worth this many seconds of the player's passive income, so Work and passive income grow together.
-// The minimum keeps the very first clicks worthwhile, before there is much passive income.
+// A Work click is worth this many seconds of the player's BASE income: tier and population income of every connected
+// city plus the (levelled) revenue of every development, before any boost, event or Prestige perk. Work only grows by
+// connecting and building, by the Work upgrades, or by Prestige Work perks, so passive boosts never inflate it.
+// The minimum keeps the very first clicks worthwhile.
 const WORK_SECONDS_OF_INCOME = 10;
 const WORK_MIN_CLICK = 250;
 // How much a click can vary: between 1/3 and 5/3 of the average (the same spread as before)
@@ -591,13 +593,16 @@ export class EconomyManager {
         return m;
     }
 
-    // Passive income per second without any running event, with the Founders' Hall bonus: what a Work click is
-    // measured against. Cached for a quarter of a second, since every click asks for it.
+    // BASE income per second (no boosts, events, Founders' Hall or Prestige perks): what a Work click is measured
+    // against. Cached for a quarter of a second, since every click asks for it.
     getBasePassivePerSecond() {
         const now = Date.now();
         if (this._passiveCache && now - this._passiveCache.at < 250) return this._passiveCache.value;
-        const value = (this.calculateDevelopmentIncome() + this.calculatePopulationIncome(this.coordinates))
-            / SECONDS_IN_A_DAY * this.getFoundersHallMultiplier();
+        const cities = this.progressionManager.purchasedCities
+            .reduce((sum, c) => sum + (TIER_INCOME[c.tier] || 0) + c.population * POPULATION_INCOME_MODIFIER, 0);
+        const developments = this.progressionManager.purchasedDevelopments
+            .reduce((sum, d) => sum + this.getEffectiveDevRevenue(d), 0);
+        const value = (cities + developments) / SECONDS_IN_A_DAY;
         this._passiveCache = { at: now, value };
         return value;
     }
