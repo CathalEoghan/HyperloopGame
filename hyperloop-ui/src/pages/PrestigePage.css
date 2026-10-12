@@ -646,8 +646,6 @@
     font-family: 'Courier New', monospace;
 }
 
-.prestige-modal-note { margin: 4px 0; font-size: 0.8rem; color: var(--pt-muted); }
-.prestige-modal-note b { color: var(--pt-text); }
 .prestige-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
 .prestige-runs { display: flex; flex-direction: column; font-size: 0.82rem; max-height: 50vh; overflow-y: auto; }
@@ -658,3 +656,41 @@
     .prestige-retire { flex-direction: column; align-items: stretch; padding: 10px 16px; }
     .prestige-retire-actions { justify-content: flex-end; }
 }
+
+/* Retire dialog */
+.prestige-modal-sub { margin: -6px 0 14px; font-size: 0.85rem; color: var(--pt-muted); }
+
+.prestige-reward {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--pt-gold-soft);
+    border: 2px solid var(--pt-gold);
+    border-radius: 12px;
+    padding: 10px 16px;
+    box-shadow: 0 0 18px rgba(245, 166, 35, 0.25);
+}
+.prestige-reward-label { color: var(--pt-muted); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1.6px; font-family: 'Courier New', monospace; }
+.prestige-reward-value { color: var(--pt-gold); font-size: 2.4rem; font-weight: 800; line-height: 1.1; font-family: 'Courier New', monospace; }
+.prestige-reward-sub { font-size: 0.8rem; color: var(--pt-muted); }
+.prestige-reward-balance { margin-top: 6px; font-size: 0.85rem; color: var(--pt-muted); }
+.prestige-reward-balance b { color: var(--pt-text); }
+.prestige-reward-next { margin: 8px 0 14px; text-align: center; font-size: 0.78rem; color: var(--pt-muted); }
+.prestige-reward-next b { color: var(--pt-gold); }
+
+.prestige-reset-keep { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+.prestige-reset-keep > div { border-radius: 10px; padding: 8px 12px; }
+.prestige-reset { background: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.45); }
+.prestige-keep { background: rgba(245, 166, 35, 0.08); border: 1px solid rgba(245, 166, 35, 0.4); }
+.prestige-reset-keep h4 { margin: 0 0 4px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.4px; font-family: 'Courier New', monospace; }
+.prestige-reset h4 { color: #e74c3c; }
+.prestige-keep h4 { color: var(--pt-gold); }
+.prestige-reset-keep ul { list-style: none; margin: 0; padding: 0; font-size: 0.8rem; color: var(--pt-text); }
+.prestige-reset-keep li { padding: 2px 0 2px 18px; position: relative; }
+.prestige-reset li::before { content: '✕'; position: absolute; left: 0; color: #e74c3c; font-weight: 700; }
+.prestige-keep li::before { content: '✓'; position: absolute; left: 0; color: var(--pt-gold); font-weight: 700; }
+
+/* Keep playing is the safe, filled choice; the wipe is the outlined one until it is confirmed */
+.prestige-keep-btn { background: var(--pt-gold); color: #111; }
+.prestige-retire-btn.prestige-retire-danger { background: #c0392b; border-color: #c0392b; color: #fff; }
+@media (max-width: 480px) { .prestige-reset-keep { grid-template-columns: 1fr; } }

@@ -54,3 +54,11 @@
     color: #777;
     margin-top: 2px;
 }
+
+/* Development thumbnails are square-ish photos, so they get a fixed box instead of the flag's auto height */
+.modal .claimed-box img.claimed-thumb {
+    width: 34px !important;
+    height: 34px !important;
+    object-fit: cover;
+    border-radius: 6px;
+}

@@ -3,6 +3,12 @@ body, html {
     padding: 0;
 }
 
+/* Nothing in the game scrolls sideways. If something ever pokes out (the sliding ticker text, a floating "+£"),
+   it must not make the page grow a horizontal scrollbar: that bar is amber now, and it squeezes the bottom bar upwards. */
+html {
+    overflow-x: hidden;
+}
+
 body, .App {
     background-color: rgb(255, 246, 239);
 }

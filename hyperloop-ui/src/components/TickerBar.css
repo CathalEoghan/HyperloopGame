@@ -7,6 +7,7 @@
     background: #0a0a0a;
     border-top: 1px solid #f5a623;
     overflow: hidden;
+    contain: paint; /* the long sliding text can never add to the page's scrollable width */
     z-index: 50;
     display: flex;
     align-items: center;

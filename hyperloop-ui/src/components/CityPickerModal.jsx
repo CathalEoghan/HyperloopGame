@@ -9,7 +9,7 @@ const TIERS = [3, 2, 1]
 // Used by Lobbying Suavity (any city to unlock on a rank-up) and Personal Favours (any home city for a new run).
 // Lobbying Suavity: instead of a random city, the player picks any city that isn't unlocked yet.
 // Choosing is a two-step (pick, then confirm) because the choice is final: there is no re-roll.
-function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lobbying Suavity', subtitle = 'Choose any city to unlock. Your choice is final.', confirmLabel = name => `Unlock ${name}` }) {
+function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lobbying Suavity', subtitle = 'Choose any city to unlock. Your choice is final.', confirmLabel = name => `Unlock ${name}`, waiting = 0, onClaimAll }) {
     const [query, setQuery] = useState('')
     const [tier, setTier] = useState(0)          // 0 = every tier
     const [selected, setSelected] = useState(null)
@@ -78,6 +78,11 @@ function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lo
                 </div>
                 <div className="citypicker-actions">
                     <button className="citypicker-back" onMouseEnter={() => playHoverSound()} onClick={onCancel}>Back</button>
+                    {onClaimAll && waiting >= 3 && (
+                        <button className="citypicker-back" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClaimAll() }}>
+                            Claim all cities, randomised ({waiting} waiting)
+                        </button>
+                    )}
                     <button
                         className="citypicker-confirm"
                         disabled={!selected}

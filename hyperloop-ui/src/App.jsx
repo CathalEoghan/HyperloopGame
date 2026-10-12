@@ -5,6 +5,7 @@ import BottomNav from "./components/BottomNav";
 import TickerBar from "./components/TickerBar";
 import RankUpModal from "./components/RankUpModal";
 import ClaimedCitiesModal from "./components/ClaimedCitiesModal";
+import ClaimedDevelopmentsModal from "./components/ClaimedDevelopmentsModal";
 import CityPickerModal from "./components/CityPickerModal";
 import CityRevealModal from "./components/CityRevealModal"
 import CitiesPage from "./pages/CitiesPage"
@@ -259,6 +260,8 @@ function App() {
   const [claimedCity, setClaimedCity] = useState(null);
   // The cities unlocked by "Claim all", while their summary is on screen
   const [claimAllCities, setClaimAllCities] = useState(null);
+  // Set after "Claim all developments": the list of everything that was waiting in the reveal queue
+  const [claimAllDevs, setClaimAllDevs] = useState(null);
   const [departureQueue, setDepartureQueue] = useState(() => {
     let queue;
     try {
@@ -1294,7 +1297,7 @@ function App() {
   // True while any popup is, or is about to be, on screen. The globe and the Hyper-Link phone button ignore input then (bugs #80, #122).
   const popupOpen = showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
-    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || pendingRankUps > 0
+    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
     || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)
 
   return (
@@ -1576,7 +1579,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && showEventModal && activeEvent && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && (
+      {!dailyLoginData && !showOfflineModal && showEventModal && activeEvent && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && (
         <EventModal
           key={`${activeEvent.id}-${activeEvent.expiresAt}-${activeEvent.instantCashAmount}`}
           event={activeEvent}
@@ -1640,7 +1643,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && !claimAllCities && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && !claimAllCities && !claimAllDevs && (
         <FarewellModal
           key={departureId(activeDeparture)}
           departure={activeDeparture}
@@ -1650,7 +1653,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && (
         <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={lobbying && !showCityPicker && progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
@@ -1665,15 +1668,26 @@ function App() {
           // Hidden, not removed, while another popup is on top, so the search and the chosen city survive it (bug #142)
           hidden={!!dailyLoginData || showOfflineModal || !!activeDelay || !!activeDeparture || devRevealQueue.length > 0}
           cities={progressionManager.getUnlockableCities(allCities)}
+          waiting={pendingRankUps}
+          onClaimAll={() => { setShowCityPicker(false); claimAllRankUps(); }}
           onCancel={() => setShowCityPicker(false)}
           onPick={(city) => { setShowCityPicker(false); claimRankUp(city, true); }}
         />
       )}
 
-      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && !claimAllCities && (
+      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && !claimAllCities && !claimAllDevs && (
         <DevelopmentRevealModal
           key={devRevealQueue[0].name}
           development={devRevealQueue[0]}
+          waiting={devRevealQueue.length}
+          onClaimAll={() => {
+            const all = devRevealQueue
+            const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+            all.forEach(d => { if (!shown.includes(d.name)) shown.push(d.name) })
+            localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shown))
+            setDevRevealQueue([])
+            setClaimAllDevs([...all].sort((a, b) => (a.category || '').localeCompare(b.category || '') || a.name.localeCompare(b.name)))
+          }}
           onContinue={() => {
             const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
             shown.push(devRevealQueue[0].name)
@@ -1728,11 +1742,15 @@ function App() {
         />
       )}
 
+      {claimAllDevs && !dailyLoginData && !showOfflineModal && (
+        <ClaimedDevelopmentsModal developments={claimAllDevs} onClose={() => setClaimAllDevs(null)} />
+      )}
+
       {claimAllCities && !dailyLoginData && !showOfflineModal && (
         <ClaimedCitiesModal cities={claimAllCities} onClose={() => setClaimAllCities(null)} />
       )}
 
-      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !cityClaimPending && pendingRankUps === 0 && (
+      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !cityClaimPending && pendingRankUps === 0 && (
         <MilestoneModal
           milestone={milestoneQueue[0]}
           onContinue={() => {

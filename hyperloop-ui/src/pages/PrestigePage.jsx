@@ -1,5 +1,6 @@
 import { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { MAX_RANK } from 'Managers/RankManager/RankManager.js'
 import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialChime, playNotEnoughFundsSound } from '../utils/sound.js'
 import './PrestigePage.css'
@@ -68,6 +69,13 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     const [showRuns, setShowRuns] = useState(false)
     const canRetire = hasEarlyRetirement && rank >= PRESTIGE_MIN_RANK
     const retirePoints = PrestigeManager.pointsForRank(rank)
+    // How the payout adds up, and how far away the next step is (worth knowing before retiring)
+    const pointsPerStep = PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)
+    const payoutSteps = Math.floor(rank / RANKS_PER_PRESTIGE_POINT)
+    const nextStepRank = (payoutSteps + 1) * RANKS_PER_PRESTIGE_POINT
+    // Retiring wipes the run, so it takes a second click; closing the dialog disarms it
+    const [armed, setArmed] = useState(false)
+    const closeConfirm = () => { setArmed(false); setConfirming(false) }
     const history = PrestigeManager.getHistory()
 
     return (
@@ -102,23 +110,59 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
             </div>
 
             {confirming && runStats && (
-                <div className="prestige-modal-overlay" onClick={e => { e.stopPropagation(); setConfirming(false) }}>
+                <div className="prestige-modal-overlay" onClick={e => { e.stopPropagation(); closeConfirm() }}>
                     <div className="prestige-modal" onClick={e => e.stopPropagation()}>
                         <h2>Retire this terminal?</h2>
+                        <p className="prestige-modal-sub">This ends your run and pays out Prestige Points.</p>
+
+                        <div className="prestige-reward">
+                            <span className="prestige-reward-label">You will earn</span>
+                            <span className="prestige-reward-value">+{retirePoints}</span>
+                            <span className="prestige-reward-sub">
+                                Rank {rank}: {payoutSteps} block{payoutSteps === 1 ? '' : 's'} of {RANKS_PER_PRESTIGE_POINT} ranks × {pointsPerStep} point{pointsPerStep === 1 ? '' : 's'}
+                            </span>
+                            <span className="prestige-reward-balance">Prestige Points: {prestige.points} → <b>{prestige.points + retirePoints}</b></span>
+                        </div>
+                        {nextStepRank <= MAX_RANK && (
+                            <p className="prestige-reward-next">{nextStepRank - rank} more rank{nextStepRank - rank === 1 ? '' : 's'} (Rank {nextStepRank}) would earn <b>+{pointsPerStep} more</b>.</p>
+                        )}
+
                         <div className="prestige-modal-stats">
-                            <span>Rank reached</span><b>{runStats.rank}</b>
                             <span>Total cash earned</span><b>{fmtCash(runStats.cash)}</b>
                             <span>Cities connected</span><b>{runStats.cities}</b>
                             <span>Developments built</span><b>{runStats.developments}</b>
                             <span>Farewells given</span><b>{runStats.farewells}</b>
                             <span>Time on this run</span><b>{fmtSpan(Date.now() - runStats.startedAt)}</b>
                         </div>
-                        <div className="prestige-modal-gain">+{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</div>
-                        <p className="prestige-modal-note"><b>Resets:</b> cash, rank, reputation, cities, developments, upgrades and milestones.</p>
-                        <p className="prestige-modal-note"><b>Kept:</b> Prestige Points and upgrades, achievements, terminal name, Hyper-Link likes and your run history.</p>
+
+                        <div className="prestige-reset-keep">
+                            <div className="prestige-reset">
+                                <h4>Resets</h4>
+                                <ul>
+                                    <li>Cash and rank</li>
+                                    <li>Reputation</li>
+                                    <li>Cities</li>
+                                    <li>Developments and upgrades</li>
+                                    <li>Milestones</li>
+                                </ul>
+                            </div>
+                            <div className="prestige-keep">
+                                <h4>Kept</h4>
+                                <ul>
+                                    <li>Prestige Points and upgrades</li>
+                                    <li>Achievements</li>
+                                    <li>Terminal name</li>
+                                    <li>Hyper-Link likes</li>
+                                    <li>Run history</li>
+                                </ul>
+                            </div>
+                        </div>
+
                         <div className="prestige-modal-actions">
-                            <button className="prestige-retire-btn prestige-retire-btn-quiet" onClick={() => { playClickSound2(); setConfirming(false) }}>Keep playing</button>
-                            <button className="prestige-retire-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playFarewellAcceptSound(); onPrestige() }}>Retire</button>
+                            <button className="prestige-retire-btn prestige-keep-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeConfirm() }}>Keep playing</button>
+                            {armed
+                                ? <button className="prestige-retire-btn prestige-retire-danger" onMouseEnter={() => playHoverSound()} onClick={() => { playFarewellAcceptSound(); onPrestige() }}>Yes, retire and reset</button>
+                                : <button className="prestige-retire-btn prestige-retire-btn-quiet" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setArmed(true) }}>Retire…</button>}
                         </div>
                     </div>
                 </div>
