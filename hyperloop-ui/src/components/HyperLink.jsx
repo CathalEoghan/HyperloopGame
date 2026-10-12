@@ -112,7 +112,6 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                 <button
                                     className="hyperlink-close hyperlink-mute"
                                     onClick={onToggleMute}
-                                    title={muted ? 'Unmute notifications' : 'Mute notifications'}
                                     aria-label={muted ? 'Unmute notifications' : 'Mute notifications'}
                                     aria-pressed={muted}
                                 >{muted ? '🔕' : '🔔'}</button>

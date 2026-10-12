@@ -93,7 +93,6 @@
 }
 
 .modal {
-    animation: modal-fadein 0.25s ease;
 }
 
 @keyframes modal-fadein {

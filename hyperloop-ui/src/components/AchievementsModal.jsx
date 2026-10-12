@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import './AchievementsModal.css'
 import './HyperLink.css'
 import trophyIcon from '../assets/misc/trophy.svg'
-import { playHoverSound } from '../utils/sound.js'
+import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { ACHIEVEMENTS } from 'Managers/AchievementManager/achievements.js'
 
@@ -55,7 +55,7 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                         <span>Achievements</span>
                         <span className="achievements-count">{count} / {ACHIEVEMENTS.length}</span>
                     </div>
-                    <button className="achievements-close" onClick={onClose} aria-label="Close">✕</button>
+                    <button className="achievements-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close">✕</button>
                 </div>
                 <div className="achievements-body">
                     {bonusLines.length > 0 && <p className="achievement-bonus-note">{bonusLines.join(' · ')}</p>}
