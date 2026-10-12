@@ -437,6 +437,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
                 onMouseEnter={() => playHoverSound()}
                 onClick={() => {
+                    playClickSound2()
                     setShowOwned(prev => {
                         showOwnedRef.current = !prev
                         try { localStorage.setItem('globeShowOwned', String(!prev)) } catch { /* storage blocked, ignore */ }

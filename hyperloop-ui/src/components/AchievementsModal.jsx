@@ -19,7 +19,7 @@ export function AchievementsButton({ unseen = 0, showBubble = false, bubbleKey =
             )}
             <button
                 className={`hyperlink-phone-btn${unseen > 0 ? ' hyperlink-phone-btn-pulse' : ''}`}
-                onClick={onClick}
+                onClick={() => { playClickSound2(); onClick() }}
                 onMouseEnter={() => playHoverSound()}
                 aria-label="Achievements"
             >

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './HyperLink.css'
 import phoneIcon from '../assets/misc/phone.png'
-import { playHoverSound } from '../utils/sound.js'
+import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import wifiIcon from '../assets/misc/wifi.png'
 import batteryIcon from '../assets/misc/battery.png'
 import signalIcon from '../assets/misc/signal.png'
@@ -111,12 +111,13 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                             {onToggleMute && (
                                 <button
                                     className="hyperlink-close hyperlink-mute"
-                                    onClick={onToggleMute}
+                                    onMouseEnter={() => playHoverSound()}
+                                    onClick={() => { playClickSound2(); onToggleMute() }}
                                     aria-label={muted ? 'Unmute notifications' : 'Mute notifications'}
                                     aria-pressed={muted}
                                 >{muted ? '🔕' : '🔔'}</button>
                             )}
-                            <button className="hyperlink-close" onClick={onClose}>✕</button>
+                            <button className="hyperlink-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>✕</button>
                         </div>
                     </div>
                     <div className="hyperlink-feed">
@@ -199,7 +200,7 @@ export function HyperLinkButton({ unread, onClick, showBubble }) {
             )}
             <button
                 className={`hyperlink-phone-btn${unread > 0 ? ' hyperlink-phone-btn-pulse' : ''}`}
-                onClick={onClick}
+                onClick={() => { playClickSound2(); onClick() }}
                 onMouseEnter={() => playHoverSound()}
             >
                 <img src={phoneIcon} alt="Hyper-Link" />
