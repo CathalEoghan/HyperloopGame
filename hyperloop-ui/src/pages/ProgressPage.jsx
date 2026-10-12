@@ -288,7 +288,6 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                 })()
             },
             { label: 'Daily Login Cash', value: has('dailyLoginMultiplier') ? '×2 (50% of a day\'s income)' : '—' },
-            { label: 'Daily Login Rep Doubling', value: has('dailyRepDoubled') ? '×2' : '—' },
             { label: 'Work Reputation Chance', value: economyManager.getWorkRepChance() > 0.005 ? `${(economyManager.getWorkRepChance() * 100).toFixed(1)}% per click` : '—' },
             { label: 'Farewell Cash Bonus', value: has('personalImageBranding') ? "10% of the city's daily income" : '—' },
         ]

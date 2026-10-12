@@ -6,6 +6,6 @@ export const personalStylingRetinue = new Upgrade(
     "Personal Styling Retinue",
     56500,
     "Enterprise",
-    "dailyRepDoubled",
-    2
+    "dailyLoginRep",
+    5
 )

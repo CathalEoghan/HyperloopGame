@@ -63,7 +63,6 @@ const OFFLINE_RATE = 1.0;
 // Nothing is earned in that time (income, offline pay, daily bonus, Work clicks), so no rank-up or reward popup can
 // pile up behind the welcome popup.
 const onboardingPending = () => localStorage.getItem('hyperloop_onboarding_pending') === '1';
-const RANK_UP_REPUTATION = 5;
 const SECONDS_IN_A_DAY = 86400;
 // The Antarctic finale unlocks once every regular city is connected (bug #115).
 const REGULAR_CITY_COUNT = allCities.filter(c => c.continent !== 'Antarctica').length;
@@ -470,8 +469,8 @@ function App() {
     }
     // A chosen city is final, so a free re-roll has nothing to act on
     if (!chosen && economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
-    // Every rank-up pays a little Reputation, so a player who mostly plays passively still reaches Early Retirement's 250
-    const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') + RANK_UP_REPUTATION;
+    // Ranking up pays no Reputation of its own; only the Passenger Appreciation Initiatives upgrade adds some
+    const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
     if (freeRep > 0) progressionManager.addReputation(freeRep);
     setPendingRankUps(prev => prev - 1);
     triggerSave();
@@ -490,7 +489,7 @@ function App() {
       progressionManager.unlockCity(city);
       gained.push(city);
     }
-    const freeRep = (economyManager.getUpgradeSum('freeRepOnRankUp') + RANK_UP_REPUTATION) * pendingRankUps;
+    const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') * pendingRankUps;
     if (freeRep > 0) progressionManager.addReputation(freeRep);
     setPendingRankUps(0);
     if (gained.length > 0) setClaimAllCities(gained);
@@ -633,16 +632,15 @@ function App() {
     if (lastLogin === today) return;
     localStorage.setItem('hyperloop_last_login', today);
     const hasCommemorativeDisplays = progressionManager.purchasedUpgrades.some(u => u.name === 'Commemorative Displays');
-    const hasDailyRepDoubled = progressionManager.purchasedUpgrades.some(u => u.effectType === 'dailyRepDoubled');
     // The bonus is worked out without any running event, so an event can't double or halve it
     const savedEvent = economyManager.activeEvent;
     economyManager.activeEvent = null;
     const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
     economyManager.activeEvent = savedEvent;
     const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25)) * (PrestigeManager.owns('betterInterestRates') ? 10 : 1);
-    let repBonus = economyManager.getUpgradeSum('dailyLoginRep');
-    if (hasDailyRepDoubled && repBonus > 0) repBonus *= 2;
-        localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus }));
+    // Passenger Loyalty Scheme and Personal Styling Retinue each add their own +5
+    const repBonus = economyManager.getUpgradeSum('dailyLoginRep');
+    localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus }));
     setDailyLoginData({ cashBonus, repBonus });
   }
   useEffect(() => { checkDailyLogin(); }, []);
