@@ -408,6 +408,9 @@ function App() {
     // Not handed over: it is unlocked, and bought with 250 Reputation (Development > Upgrades)
     { rank: PRESTIGE_MIN_RANK, upgradeName: 'Early Retirement' },
   ];
+  // A milestone can be noticed by more than one path (the load check, a rank-up while playing, a skipped rank), so it
+  // goes into the queue once however often it is asked for: a second entry handed the reward over twice.
+  const queueMilestone = (milestone) => setMilestoneQueue(prev => prev.some(m => m.rank === milestone.rank) ? prev : [...prev, milestone]);
   const claimedCityRef = useRef(null);
 
   const activeEventRef = useRef((() => {
@@ -613,7 +616,7 @@ function App() {
     // not just ones reached since the last save — so a reload can't lose one.
     MILESTONES.forEach(milestone => {
       if (milestone.rank <= rankManager.rank && !claimedMilestones.current.has(`rank_${milestone.rank}`)) {
-        setMilestoneQueue(prev => [...prev, milestone]);
+        queueMilestone(milestone);
       }
     });
   }, []);
@@ -814,7 +817,7 @@ function App() {
         for (let r = previousRank + 1; r <= rankManager.rank; r++) {
           const milestone = MILESTONES.find(m => m.rank === r);
           if (milestone && !claimedMilestones.current.has(`rank_${r}`)) {
-            setMilestoneQueue(prev => [...prev, milestone]);
+            queueMilestone(milestone);
           }
         }
       }
@@ -1756,6 +1759,13 @@ function App() {
           onContinue={() => {
             const milestone = milestoneQueue[0];
             const upgrade = allUpgrades.find(u => u.name === milestone.upgradeName);
+            // Already handed over (a duplicate in the queue, say): drop it without paying out again
+            if (claimedMilestones.current.has(`rank_${milestone.rank}`) || (upgrade && progressionManager.purchasedUpgrades.some(u => u.name === upgrade.name))) {
+              claimedMilestones.current.add(`rank_${milestone.rank}`);
+              localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
+              setMilestoneQueue(prev => prev.filter(m => m.rank !== milestone.rank));
+              return;
+            }
             if (upgrade && upgrade.effectType === 'earlyRetirement') {
               // Unlocked, not owned: the reveal popup comes from the unlock itself
               if (!progressionManager.unlockedUpgrades.includes(upgrade) && !progressionManager.hasEarlyRetirement()) {
@@ -1768,7 +1778,7 @@ function App() {
             }
             claimedMilestones.current.add(`rank_${milestone.rank}`);
             localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
-            setMilestoneQueue(prev => prev.slice(1));
+            setMilestoneQueue(prev => prev.filter(m => m.rank !== milestone.rank));
             triggerSave();
           }}
         />
