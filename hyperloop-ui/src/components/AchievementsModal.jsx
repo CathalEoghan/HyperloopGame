@@ -4,6 +4,7 @@ import './HyperLink.css'
 import trophyIcon from '../assets/misc/trophy.svg'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { ACHIEVEMENTS } from 'Managers/AchievementManager/achievements.js'
 
 // The bottom-right counterpart of the Hyper-Link button. It reuses that button's styling and notification
@@ -43,7 +44,7 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
         bonusLines.push(`Anniversary Sales: +${count * 5}% Work earnings`)
     }
     if (count > 0 && PrestigeManager.owns('trophyCabinet')) {
-        bonusLines.push(`Trophy Cabinet: +${count * 25}% city and development income`)
+        bonusLines.push(`Trophy Cabinet: ×${(1 + count * PRESTIGE_VALUES.trophyCabinetPerAchievement).toFixed(2)} city and development income`)
     }
 
     return (

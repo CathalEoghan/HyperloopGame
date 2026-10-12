@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import BoostTooltip from '../components/BoostTooltip.jsx'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
 import { matchesSearch } from '../utils/search.js'
 import './DevelopmentPage.css'
@@ -6,7 +7,7 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
-import { EFFECT_DESCRIPTIONS } from '../utils/effectDescriptions.js'
+import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.js'
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
@@ -16,7 +17,7 @@ import constructionIcon from '../assets/misc/construction.png'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
-function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, balance, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onUpgradeBuilt, topOffset = 113 }) {
+function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onUpgradeBuilt, topOffset = 113 }) {
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [activeCategory, setActiveCategory] = usePersistedChoice('developmentsCategory', CATEGORIES, 'All')
@@ -24,7 +25,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [search, setSearch] = useState('')
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [showUpgradeModal, setShowUpgradeModal] = useState(false)
-    const [showBoostTooltip, setShowBoostTooltip] = useState(false)
+    const [showBoostTooltip, setShowBoostTooltip] = useState(null) // the badge being hovered
 
     const progressionManager = constructionManager.progressionManager
     const allItems = [...allDevelopments, ...allUpgrades]
@@ -85,7 +86,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 <div className="category-filter">
                     {CATEGORIES.map(cat => (
                         <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
-                            onClick={() => setActiveCategory(cat)}
+                            onClick={() => { playClickSound2(); setActiveCategory(cat) }}
                             onMouseEnter={() => playHoverSound()}>
                             {cat}
                         </button>
@@ -115,7 +116,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 {/* Upgrade modal */}
                 {showUpgradeModal && selectedDevelopment && (() => {
                     const info = getUpgradeInfo(selectedDevelopment)
-                    const canAfford = info && balance >= info.cashCost && reputation >= info.repCost
+                    // The real balance, not the on-screen one, which can be up to a second old (bug #170)
+                    const canAfford = info && progressionManager.balance >= info.cashCost && progressionManager.reputation >= info.repCost
                     return (
                         <div className="modal-overlay" onClick={() => setShowUpgradeModal(false)}>
                             <div className="modal" onClick={e => e.stopPropagation()}>
@@ -129,9 +131,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
-                                        if (!canAfford) { playNotEnoughFundsSound(); return; }
+                                        if (!canAfford || !onUpgrade(selectedDevelopment, 1.0 - economyManager.getUpgradeSum('developmentUpgradeDiscount'))) { playNotEnoughFundsSound(); return; }
                                         playFarewellAcceptSound();
-                                        onUpgrade(selectedDevelopment, 1.0 - economyManager.getUpgradeSum('developmentUpgradeDiscount'));
                                         setShowUpgradeModal(false);
                                     }}>
                                         Upgrade
@@ -169,6 +170,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             <strong>Effect:</strong> {EFFECT_DESCRIPTIONS[selectedDevelopment.effectType](selectedDevelopment.effectValue, selectedDevelopment)}
                                         </p>
                                     )}
+                                    {!selectedDevelopment.revenue && stackingNote(selectedDevelopment.effectType) && (
+                                        <p className="effect-stacking-note">{stackingNote(selectedDevelopment.effectType)}</p>
+                                    )}
                                     {selectedDevelopment.effectType === 'earlyRetirement' ? (
                                         // Bought with Reputation, not cash, and not built: it is owned straight away
                                         <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: reputation >= selectedDevelopment.effectValue ? 1 : 0.5 }} onClick={() => {
@@ -184,11 +188,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     ) : (
                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
                                             const cost = economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost)
-                                            if (balance < cost) { playClickSound2(); playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
+                                            // The real balance, and only report a build that really started (bug #170)
+                                            if (progressionManager.balance >= cost) constructionManager.startDevelopmentConstruction(selectedDevelopment, cost)
+                                            if (!progressionManager.developmentsUnderConstruction.includes(selectedDevelopment)) { playClickSound2(); playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
                                             else {
                                                 playClickSound2();
                                                 playConstructionSound();
-                                                constructionManager.startDevelopmentConstruction(selectedDevelopment, economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost));
                                                 onSave();
                                                 closeModal();
                                             }
@@ -231,22 +236,11 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                             {totalBoostPct > 0 && (
                                                                 <span
                                                                     style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
-                                                                    onMouseEnter={() => setShowBoostTooltip(true)}
-                                                                    onMouseLeave={() => setShowBoostTooltip(false)}
+                                                                    onMouseEnter={(e) => setShowBoostTooltip(e.currentTarget)}
+                                                                    onMouseLeave={() => setShowBoostTooltip(null)}
                                                                 >
                                                                     (+{totalBoostPct}%)
-                                                                    {showBoostTooltip && (
-                                                                        <div style={{
-                                                                            position: 'absolute', bottom: '120%', right: 0,
-                                                                            background: '#222', color: 'white',
-                                                                            borderRadius: '6px', padding: '6px 10px',
-                                                                            fontSize: '0.75rem', whiteSpace: 'nowrap',
-                                                                            zIndex: 999, fontWeight: 'normal',
-                                                                            boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
-                                                                        }}>
-                                                                            {tooltipLines.map((line, i) => <div key={i}>{line}</div>)}
-                                                                        </div>
-                                                                    )}
+                                                                    <BoostTooltip anchor={showBoostTooltip} lines={tooltipLines} />
                                                                 </span>
                                                             )}
                                                         </span>
@@ -276,6 +270,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 return fn ? fn(selectedDevelopment.effectValue, selectedDevelopment) : 'Special effect'
                                             })()}
                                         </p>
+                                    )}
+                                    {!selectedDevelopment.revenue && stackingNote(selectedDevelopment.effectType) && (
+                                        <p className="effect-stacking-note">{stackingNote(selectedDevelopment.effectType)}</p>
                                     )}
                                     <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                         {selectedDevelopment.revenue && getLevel(selectedDevelopment) < 3 && (
@@ -312,7 +309,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 const level = getLevel(development)
                                 return (
                                     <button className="development" key={development.name}
-                                        onClick={() => setSelectedDevelopment(development)}
+                                        onClick={() => { playClickSound2(); setSelectedDevelopment(development) }}
                                         onMouseEnter={() => playHoverSound()}>
                                         <div className="city-image-wrapper">
                                             <img
@@ -352,7 +349,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 <div className="development-row">
                     {sortedAvailable.map(development => (
                         <button className="development" key={development.name}
-                            onClick={() => setSelectedDevelopment(development)}
+                            onClick={() => { playClickSound2(); setSelectedDevelopment(development) }}
                             onMouseEnter={() => playHoverSound()}>
                             <div className="city-image-wrapper">
                                 <img className="unavailable"

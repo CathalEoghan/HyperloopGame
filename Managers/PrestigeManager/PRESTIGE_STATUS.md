@@ -4,14 +4,14 @@ The source of truth is `NOT_IMPLEMENTED` at the top of `prestigeUpgrades.js`. An
 there is live. Un-listed ones show a "Coming soon" badge on the Prestige page. When you finish one,
 delete its line from `NOT_IMPLEMENTED` and move it to the live table below.
 
-All percentages are additive with the normal boosts (never multiplied).
+The income, Work, farewell and Progress perks are true multipliers: they apply after the normal boosts have been added up, and multiply each other (bug #147). Their strengths live in `PRESTIGE_VALUES`, prestigeUpgrades.js, and the descriptions are built from them.
 
 ## Live (27 of 27)
 
 | Layer | Upgrade | Effect in the game | Where |
 |---|---|---|---|
-| 1 | Staff Feedback Forms | +250% to city and development income | EconomyManager `getPrestigeDevBoost` / `getPrestigeCityBoost` |
-| 2 | Oral Hygiene | Farewell Reputation x6 (adds +5x; with the x2 upgrade it is x7) | `getFarewellRepGain` |
+| 1 | Staff Feedback Forms | x2 city and development income | EconomyManager `prestigeMultipliers`, `getPrestigeDevMultiplier` / `getPrestigeCityMultiplier` |
+| 2 | Oral Hygiene | x6 farewell Reputation (x12 with the x2 upgrade) | `getFarewellRepGain` |
 | 2 | Better Interest Rates | Daily bonus cash x10 | App.jsx `checkDailyLogin` |
 | 2 | Elite Accountants | Offline "double" becomes x4, same 20 Rep | OfflineModal `bonusFactor` |
 | 2 | Cult of Celebrity | +1 Rep for each Hyper-Link post liked (likes are permanent) | HyperLink `onLikeReward` |
@@ -19,22 +19,22 @@ All percentages are additive with the normal boosts (never multiplied).
 | 2 | Amicable Breakups | Disconnect costs nothing and refunds half the connection cost | App.jsx `onDisconnect`, CitiesPage |
 | 2 | Advanced Engineering | Cities and developments build immediately (finish on the next tick) | ConstructionManager |
 | 2 | Video Message | Farewell is sent automatically after 2.5 s | FarewellModal |
-| 2 | Viral Superstar | Progress rewards x3 (adds +2x; with the x2 upgrade it is x4) | ProgressPage `handleCardClick` |
+| 2 | Viral Superstar | x3 Progress rewards (x6 with the x2 upgrade) | ProgressPage `handleCardClick` |
 | 3 | Automated Scheduling | No cap on offline earnings | `calculateOfflineCap` returns Infinity |
 | 3 | Personal Favours | After a prestige you choose your starter city from the six starters or any city in the world (city picker); without it the city is drawn for you | OpeningPage `runStart` |
 | 3 | Pizza Parties | Positive events +200% stronger (effect tripled, instant cash x3) | App.jsx event trigger |
-| 3 | Irresistible Discounts | Developments +500% | `getPrestigeDevBoost` |
+| 3 | Irresistible Discounts | x3 development income | `getPrestigeDevMultiplier` |
 | 3 | Bulletproof Planning | No delays | App.jsx delay block |
 | 3 | Founders Hall Expansion | Founders' Hall step 1% to 2% per 10 days | `getFoundersHallMultiplier` |
-| 3 | Trophy Cabinet | +25% city and development income per unique achievement (passive income only, not Work) | `getPrestigeCityBoost`, `getPrestigeDevBoost` |
+| 3 | Trophy Cabinet | City and development income x(1 + 2% per unique achievement), x2 at 50 (passive income only, not Work) | `getTrophyCabinetMultiplier` |
 | 3 | VIP Pods | VIP chance x10 (2% becomes 20%) | `getVipChance` |
 | 3 | Five-Star Researchers | Experimental Technology gives 10 Prestige Points | `PrestigeManager.award` |
 | 4 | Fast Learner | Prestige Points gained are doubled (applied after Five-Star) | `PrestigeManager.award` |
-| 4 | Speedy Conveyor Belts | Work earnings x4 (+300%, additive with the Work upgrades) | `getWorkMultiplier` |
-| 4 | Global Ticket Cuts | Cities +750% | `getPrestigeCityBoost` |
+| 4 | Speedy Conveyor Belts | x2 Work earnings, on top of the Work upgrades and Anniversary Sales | `getWorkMultiplier` |
+| 4 | Global Ticket Cuts | x3 city income | `getPrestigeCityMultiplier` |
 | 4 | Crisis Avoidance Specialists | No negative events | App.jsx event trigger |
 | 4 | Government Grants | A new run starts at Rank 25 with the starter city plus 24 random cities connected for free | `applyGovernmentGrant` (governmentGrants.js), called from App.jsx on the first tick after the starter is connected |
-| 4 | Generational Wisdom | +10% city and development income for each Prestige Point currently held (unspent; additive with the other prestige boosts) | EconomyManager `getGenerationalWisdomBoost`, `PrestigeManager.pointsHeld` |
+| 4 | Generational Wisdom | City and development income x(1 + 5% per Prestige Point currently held, unspent), x1.5 with 10 | EconomyManager `getGenerationalWisdomMultiplier`, `PrestigeManager.pointsHeld` |
 | 4 | Lobbying Suavity | Claiming a rank-up opens a searchable city picker instead of drawing a random city (no re-roll) | `CityPickerModal`, `claimRankUp` in App.jsx, `getUnlockableCities` |
 | 4 | Best P.A. Ever | Work clicks itself every 500 ms (silent, not counted for the Work achievements); a background tab makes up missed clicks, up to 150 | `workClicksDue` (autoWork.js), `performWork` in App.jsx |
 

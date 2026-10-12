@@ -5,6 +5,23 @@ import GuideModal from '../components/GuideModal.jsx'
 import './SettingsPage.css'
 
 const VERSION_LOG = [
+    {
+        version: 'v2.2',
+        label: 'Prestige & Achievements',
+        major: true,
+        date: 'October 2026',
+        notes: [
+            'Prestige: at Rank 100, buy Early Retirement (250 Reputation) and retire from the new Prestige tab to earn Prestige Points',
+            '27 permanent Prestige upgrades in four layers, kept in every future run',
+            '51 achievements, kept for good, with a trophy button on the home screen',
+            '"Claim all" buttons for waiting rank-ups and development reveals',
+            'Work is now worth about 10 seconds of base income per click, and income has been rebalanced',
+            'VIP passengers, worth five times the Reputation at farewells',
+            'Hyper-Link can be muted',
+            'Income boost breakdowns now show the upgrades added together, then the Prestige perks and Founders\' Hall that multiply them, and the Guide explains how boosts stack',
+            'Many bug fixes and text corrections',
+        ]
+    },
 
     {
         version: 'v2.1',
@@ -135,7 +152,8 @@ function LegalModal({ onClose }) {
                 <div className="credits-body">
                     <p className="credits-section">PRIVACY</p>
                     <p className="credits-line">All save data is stored locally on your device using localStorage.</p>
-                    <p className="credits-line">No personal data is collected, transmitted or stored on any server.</p>
+                    <p className="credits-line">There is no account, and your save and game data are never sent to any server.</p>
+                    <p className="credits-line">To keep the game small, city and development photos are loaded from Cloudinary and country flags from flagcdn.com. Like any website, these services receive your IP address when they send an image. Nothing else about you or your game is sent to them.</p>
                     <p className="credits-line">No analytics, tracking or third-party cookies are used.</p>
                     <p className="credits-line">Deleting your save removes all locally stored game data.</p>
                     <p className="credits-section">CONTENT</p>

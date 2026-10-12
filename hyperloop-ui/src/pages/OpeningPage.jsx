@@ -56,6 +56,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
         onChange={(e) => setLocalName(e.target.value)}
         onKeyDown={(e) => e.key === "Enter" && handleConfirm()}
         placeholder="e.g. Grand Central"
+        maxLength={32}
         autoFocus
     />
 </div>

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
+import BoostTooltip from '../components/BoostTooltip.jsx'
 import './CitiesPage.css'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
@@ -36,7 +37,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [collapsedCountries, setCollapsedCountries] = useState(new Set())
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)
-    const [showCityBoostTip, setShowCityBoostTip] = useState(false)
+    const [showCityBoostTip, setShowCityBoostTip] = useState(null) // the badge being hovered
 
     useEffect(() => {
         if (preSelectedCity) {
@@ -154,7 +155,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
             <button
                 className="city"
                 key={city.name}
-                onClick={() => setSelectedCity(city)}
+                onClick={() => { playClickSound2(); setSelectedCity(city) }}
                 onMouseEnter={() => playHoverSound()}
             >
                 <div className="city-image-wrapper">
@@ -194,7 +195,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         const isCollapsed = collapsedCountries.has(`${section}:${country}`)
         return (
             <div key={country}>
-                <h2 className="country" style={{ borderLeftColor: borderColour }} onClick={() => toggleCountry(section, country)}>
+                <h2 className="country" style={{ borderLeftColor: borderColour }} onClick={() => { playClickSound2(); toggleCountry(section, country) }}>
                     {country}
                     <img src={`https://flagcdn.com/w40/${countryFlags[country]}.png`} width="20" alt={country} />
                     <span className="country-city-count">{cities.length}</span>
@@ -233,7 +234,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             key={c}
                             className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}
                             style={activeContinent === c ? { background: CONTINENT_COLOURS[c], borderColor: CONTINENT_COLOURS[c] } : {}}
-                            onClick={() => setActiveContinent(c)}
+                            onClick={() => { playClickSound2(); setActiveContinent(c) }}
                             onMouseEnter={() => playHoverSound()}
                         >
                             {c}
@@ -311,23 +312,11 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     {boostPct > 0 && (
                                                         <span
                                                             style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
-                                                            onMouseEnter={() => setShowCityBoostTip(true)}
-                                                            onMouseLeave={() => setShowCityBoostTip(false)}
+                                                            onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
+                                                            onMouseLeave={() => setShowCityBoostTip(null)}
                                                         >
                                                             (+{boostPct}%)
-                                                            {showCityBoostTip && lines.length > 0 && (
-                                                                <div style={{
-                                                                    position: 'absolute', bottom: '120%', left: '50%',
-                                                                    transform: 'translateX(-50%)',
-                                                                    background: '#222', color: 'white',
-                                                                    borderRadius: '6px', padding: '6px 10px',
-                                                                    fontSize: '0.75rem', whiteSpace: 'nowrap',
-                                                                    zIndex: 999, fontWeight: 'normal',
-                                                                    boxShadow: '0 2px 8px rgba(0,0,0,0.3)'
-                                                                }}>
-                                                                    {lines.map((line, i) => <div key={i}>{line}</div>)}
-                                                                </div>
-                                                            )}
+                                                            <BoostTooltip anchor={showCityBoostTip} lines={lines} />
                                                         </span>
                                                     )}
                                                 </strong>
@@ -360,7 +349,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     onMouseEnter={() => playHoverSound()}
                                                     style={{ borderColor: '#c0392b', color: '#c0392b', opacity: canAfford ? 1 : 0.5 }}
                                                     onClick={() => {
-                                                        if (!canAfford) { playNotEnoughFundsSound(); return; }
+                                                        // Checked again against the real balance and Reputation: the figures on screen can be a second old (bug #170)
+                                                        const pm = constructionManager.progressionManager
+                                                        if (!canAfford || (!amicable && (pm.balance < disconnectCost || pm.reputation < 20))) { playNotEnoughFundsSound(); return; }
                                                         playClickSound2();
                                                         onDisconnect(selectedCity);
                                                         closeModal();
@@ -411,8 +402,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             </h1>
                             {!flatList && (
                                 <div className="collapse-controls">
-                                    <button className="collapse-btn" onClick={() => collapseAll('purchased', sortedPurchasedCountries)}>Collapse all</button>
-                                    <button className="collapse-btn" onClick={() => expandAll('purchased', sortedPurchasedCountries)}>Expand all</button>
+                                    <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); collapseAll('purchased', sortedPurchasedCountries) }}>Collapse all</button>
+                                    <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); expandAll('purchased', sortedPurchasedCountries) }}>Expand all</button>
                                 </div>
                             )}
                         </div>
@@ -441,8 +432,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             </h1>
                             {!flatList && (
                                 <div className="collapse-controls">
-                                    <button className="collapse-btn" onClick={() => collapseAll('available', sortedAvailableCountries)}>Collapse all</button>
-                                    <button className="collapse-btn" onClick={() => expandAll('available', sortedAvailableCountries)}>Expand all</button>
+                                    <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); collapseAll('available', sortedAvailableCountries) }}>Collapse all</button>
+                                    <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); expandAll('available', sortedAvailableCountries) }}>Expand all</button>
                                 </div>
                             )}
                         </div>

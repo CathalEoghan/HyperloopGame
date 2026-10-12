@@ -245,6 +245,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.05 })))
 
         const sprites = []
+        // Set when the globe closes, so a flag that finishes loading afterwards isn't attached to the disposed scene
+        let disposed = false
         const purchasedNames = new Set(purchasedCitiesRef.current.map(c => c.name))
         const unlockedNames = new Set((unlockedCitiesRef.current || []).map(c => c.name))
 
@@ -265,6 +267,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             })
             if (!isPurchased && !isUnlocked) {
                 loadGrayscaleTexture(flagUrl, (greyTex) => {
+                    if (disposed) { greyTex?.dispose(); return }
                     if (greyTex) { spriteMat.map = greyTex; spriteMat.needsUpdate = true }
                 })
             } else if (!isPurchased && isUnlocked) {
@@ -422,6 +425,17 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             mount.removeEventListener('wheel', onWheel)
             window.removeEventListener('resize', onResize)
             if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement)
+            // Dispose the scene as well as the renderer. Three.js gives every sprite (the flags) one shared shape, and each
+            // renderer that draws it leaves a listener on that shape; disposing it removes those listeners. Without this,
+            // every visit to Home kept the old globe's renderer in memory, about 100 KB each (bug #183).
+            disposed = true
+            scene.traverse(obj => {
+                obj.geometry?.dispose()
+                const materials = Array.isArray(obj.material) ? obj.material : obj.material ? [obj.material] : []
+                materials.forEach(m => { m.map?.dispose(); m.dispose() })
+            })
+            dayTexture.dispose()
+            nightTexture.dispose()
             renderer.forceContextLoss()
             renderer.dispose()
         }
@@ -544,7 +558,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     <img
                         className="city-hover-image"
                         src={cityThumbnails[hoveredCity.city.name] || cityImages[hoveredCity.city.name]}
-                        alt={hoveredCity.city.name}
+                        alt={hoveredCity.isPurchased || hoveredCity.isUnlocked ? hoveredCity.city.name : 'Unknown city'}
                         style={!hoveredCity.isPurchased ? { filter: 'grayscale(100%)' } : {}}
                     />
                     <div className="city-hover-name">

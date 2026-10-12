@@ -18,3 +18,18 @@ export function departureTimestamp(entry, nowMs = Date.now()) {
 export function minutesUntilDeparture(entry, nowMs = Date.now()) {
     return Math.round(departureTimestamp(entry, nowMs) / 60000) - Math.floor(nowMs / 60000)
 }
+
+// On the night the clocks go forward, an hour of wall-clock time doesn't exist (01:00-01:59 in the UK), so a departure
+// placed there really leaves an hour later. Schedules skip those minutes (bug #176).
+export function isRealMinute(minuteOfDay, nowMs = Date.now()) {
+    const d = new Date(nowMs)
+    const t = new Date(d.getFullYear(), d.getMonth(), d.getDate(), Math.floor(minuteOfDay / 60), minuteOfDay % 60)
+    return t.getDate() === d.getDate() && t.getHours() * 60 + t.getMinutes() === minuteOfDay
+}
+
+// The first real minute at or after this one, in 5-minute steps
+export function skipMissingMinutes(minuteOfDay, nowMs = Date.now()) {
+    let m = minuteOfDay
+    while (m < 24 * 60 && !isRealMinute(m, nowMs)) m += 5
+    return m
+}

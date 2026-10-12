@@ -376,3 +376,10 @@
   padding: 0 !important;
   border: none !important;
 }
+/* Under an upgrade's Effect line: says a "+%" upgrade adds to the others rather than multiplying */
+.effect-stacking-note {
+  font-size: 0.78rem;
+  color: #888;
+  font-style: italic;
+  margin: -4px 0 8px;
+}

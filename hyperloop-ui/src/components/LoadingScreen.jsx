@@ -130,8 +130,11 @@ function LoadingScreen({ onComplete }) {
         return () => clearInterval(interval)
     }, [])
 
+    // A double-click must not play the opening sound twice (bug #173)
+    const enteredRef = useRef(false)
     const handleEnter = () => {
-        if (!ready) return
+        if (!ready || enteredRef.current) return
+        enteredRef.current = true
         if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => {})
         setFading(true)
         setTimeout(onComplete, 600)

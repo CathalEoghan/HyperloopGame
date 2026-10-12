@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
 import globeIcon from '../assets/misc/globeIcon.png'
@@ -33,8 +33,11 @@ function ConstructionScreen({ city, isComplete, onEnter }) {
         return () => clearInterval(interval)
     }, [])
 
+    // A double-click must not enter twice, which played the opening sound twice (bug #173)
+    const enteredRef = useRef(false)
     const handleEnter = () => {
-        if (!isComplete) return
+        if (!isComplete || enteredRef.current) return
+        enteredRef.current = true
         setFading(true)
         setTimeout(onEnter, 500)
     }

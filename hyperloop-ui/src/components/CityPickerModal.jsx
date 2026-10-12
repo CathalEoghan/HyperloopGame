@@ -50,7 +50,7 @@ function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lo
                             key={t}
                             className={`citypicker-tier${tier === t ? ' citypicker-tier-on' : ''}`}
                             onMouseEnter={() => playHoverSound()}
-                            onClick={() => setTier(t)}
+                            onClick={() => { playClickSound2(); setTier(t) }}
                         >{t === 0 ? 'All' : `Tier ${t}`}</button>
                     ))}
                     <span className="citypicker-count">{shown.length} of {cities.length}</span>
@@ -64,7 +64,7 @@ function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lo
                                 key={city.name}
                                 className={`citypicker-row${selected === city ? ' citypicker-row-on' : ''}`}
                                 onMouseEnter={() => playHoverSound()}
-                                onClick={() => setSelected(city)}
+                                onClick={() => { playClickSound2(); setSelected(city) }}
                             >
                                 {flag
                                     ? <img className="citypicker-flag" src={`https://flagcdn.com/w40/${flag}.png`} alt="" loading="lazy" />
@@ -77,7 +77,7 @@ function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lo
                     })}
                 </div>
                 <div className="citypicker-actions">
-                    <button className="citypicker-back" onMouseEnter={() => playHoverSound()} onClick={onCancel}>Back</button>
+                    <button className="citypicker-back" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onCancel() }}>Back</button>
                     {onClaimAll && waiting >= 3 && (
                         <button className="citypicker-back" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClaimAll() }}>
                             Claim all cities, randomised ({waiting} waiting)

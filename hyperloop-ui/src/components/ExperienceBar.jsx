@@ -14,7 +14,7 @@ return (
 
     <div className="fill" style={{ width: `${percent}%`, backgroundColor: fillColour, transition: 'width 0.8s ease-out, background-color 0.5s ease' }}></div>
     <div className="text">
-            {atMaxRank ? 'Max rank reached' : xpRemaining <= 0 ? `Rank ${nextRank} reached` : `${xpRemaining.toFixed(0)} XP to Rank ${nextRank}`}
+            {atMaxRank ? 'Max rank reached' : xpRemaining <= 0 ? `Rank ${nextRank} reached` : `${xpRemaining.toLocaleString('en-GB', { maximumFractionDigits: 0 })} XP to Rank ${nextRank}`}
     </div>
 
     </div>

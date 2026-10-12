@@ -12,14 +12,18 @@ function UpgradeRevealModal({ upgrade, onContinue }) {
         playDevelopmentUnlockedSound()
     }, [])
 
-    const effectDesc = EFFECT_DESCRIPTIONS[upgrade.effectType]
+    // Early Retirement is bought, not unlocked: its shop text ("Purchasing this upgrade…") would be wrong here (bug #169)
+    const isRetirement = upgrade.effectType === 'earlyRetirement'
+    const effectDesc = isRetirement
+        ? 'You can now retire from the Prestige tab whenever you are ready.'
+        : EFFECT_DESCRIPTIONS[upgrade.effectType]
         ? EFFECT_DESCRIPTIONS[upgrade.effectType](upgrade.effectValue, upgrade)
         : 'Special effect unlocked'
 
     return (
         <div className="modal-overlay">
             <div className="upgrade-reveal-modal">
-                <p className="upgrade-reveal-heading">You've unlocked a bonus!</p>
+                <p className="upgrade-reveal-heading">{isRetirement ? 'Early Retirement purchased!' : "You've unlocked a bonus!"}</p>
                 <img
                     className="upgrade-reveal-image"
                     src={developmentRevealThumbnails[upgrade.name] || cloudinaryResize(developmentImages[upgrade.name], 600) || developmentThumbnails[upgrade.name]}

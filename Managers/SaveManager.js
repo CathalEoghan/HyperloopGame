@@ -28,7 +28,6 @@ const AUX_KEYS = [
     'hyperloop_hyperlink_user_pfps',
     'hyperloop_hyperlink_fired_devposts',
     'hyperloop_hyperlink_liked',
-    'hyperloop_event_tint',
     'hyperloop_hyperlink_used_month_posts',
     'hyperloop_pending_rankups',
     // Cities Government Grants connected for free: Amicable Breakups refunds nothing for them
@@ -131,7 +130,10 @@ function bundleAuxState() {
 
 // What each extra value must hold once parsed. Anything else in an imported file is skipped,
 // because the game reads these on startup and a wrong type crashed it on every load.
-// Keys not listed here hold a list.
+// Keys not listed here hold a list of strings (names or ids); the entries are checked too, since a list holding
+// null broke the game loop (bug #178).
+const isObj = v => v !== null && typeof v === 'object' && !Array.isArray(v)
+const listOf = ok => v => Array.isArray(v) && v.every(ok)
 const AUX_SHAPES = {
     hyperloop_hyperlink_user_pfps: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_hyperlink_unread: v => Number.isFinite(v),
@@ -139,12 +141,15 @@ const AUX_SHAPES = {
     hyperloop_progress_collapsed: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_achievement_counters: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_pending_rankups: v => Number.isFinite(v),
-    hyperloop_event_tint: v => typeof v === 'boolean',
     hyperloop_dev_portrait_bonus: v => v === 1,
     hyperloop_prestige: v => v !== null && typeof v === 'object' && !Array.isArray(v) && Number.isFinite(v.points) && Array.isArray(v.owned),
     hyperloop_pending_daily: v => v !== null && typeof v === 'object' && Number.isFinite(v.cashBonus) && Number.isFinite(v.repBonus),
     hyperloop_pending_offline: v => v !== null && typeof v === 'object' && Number.isFinite(v.offlineSeconds) && Number.isFinite(v.offlineIncome),
+    hyperloop_hyperlink_feed: listOf(p => isObj(p) && typeof p.id === 'string' && typeof p.text === 'string' && Number.isFinite(p.timestamp)),
+    hyperloop_hyperlink_used_month_posts: listOf(e => isObj(e) && typeof e.id === 'string' && Number.isFinite(e.year)),
+    hyperloop_prestige_history: listOf(isObj),
 }
+const listOfStrings = listOf(x => typeof x === 'string')
 // These two hold a plain date string ("Tue Sep 29 2026"), not JSON.
 const AUX_DATE_KEYS = ['hyperloop_last_login', 'hyperloop_last_farewell_date']
 
@@ -153,7 +158,7 @@ function auxValueOk(key, value) {
     if (AUX_DATE_KEYS.includes(key)) return !Number.isNaN(Date.parse(value))
     let parsed
     try { parsed = JSON.parse(value) } catch { return false }
-    return (AUX_SHAPES[key] ?? Array.isArray)(parsed)
+    return (AUX_SHAPES[key] ?? listOfStrings)(parsed)
 }
 
 function restoreAuxState(state) {
@@ -197,6 +202,11 @@ function validateSave(save) {
     if (SAVE_NUMBERS.some(key => !Number.isFinite(save[key]))) return false
     if (SAVE_NAME_LISTS.some(key => save[key] !== undefined && !(Array.isArray(save[key]) && save[key].every(n => typeof n === 'string')))) return false
     if (SAVE_BUILD_LISTS.some(key => save[key] !== undefined && !(Array.isArray(save[key]) && save[key].every(item => item && typeof item.name === 'string' && Number.isFinite(item.finishTime))))) return false
+    // Values the game shows or calculates with straight away: a name that isn't text crashed every load, and a creation
+    // date that isn't a number wiped the balance through the Founders' Hall bonus (bug #178)
+    if (save.terminalName !== undefined && typeof save.terminalName !== 'string') return false
+    if (save.createdAt !== undefined && !(Number.isFinite(save.createdAt) && save.createdAt > 0)) return false
+    if (save.farewellsGiven !== undefined && !(Number.isFinite(save.farewellsGiven) && save.farewellsGiven >= 0)) return false
     if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
     // No upper limit on balance or reputation: the game has none, so a long-running save must import (bug #114).
     // Every development upgrade level must be a whole number from 0 to 3 (bug #82)
@@ -226,7 +236,8 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
     // free starter city (bug #87).
     if (progressionManager.purchasedCities.length === 0) return
     const existing = getSaveRaw()
-    const createdAt = existing?.createdAt ?? Date.now()
+    // A creation date that isn't a number is replaced rather than written back (bug #178)
+    const createdAt = Number.isFinite(existing?.createdAt) && existing.createdAt > 0 ? Math.min(existing.createdAt, Date.now()) : Date.now()
 
     const save = {
         version: 1,
@@ -360,10 +371,13 @@ export function loadGame(progressionManager, rankManager) {
             city.rewards.forEach(reward => { if (!owned.has(reward)) progressionManager.unlockReward(reward) })
         })
 
+        // The same checks as an import, for a save already in storage (bug #178); a creation date in the future
+        // (the clock was ahead) is brought back to now
+        const createdAt = Number.isFinite(save.createdAt) && save.createdAt > 0 ? Math.min(save.createdAt, Date.now()) : Date.now()
         return {
-            terminalName: save.terminalName || 'Hyperloop Central',
-            createdAt: save.createdAt ?? Date.now(),
-            farewellsGiven: save.farewellsGiven ?? 0,
+            terminalName: typeof save.terminalName === 'string' && save.terminalName.trim() ? save.terminalName : 'Hyperloop Central',
+            createdAt,
+            farewellsGiven: Number.isFinite(save.farewellsGiven) && save.farewellsGiven >= 0 ? save.farewellsGiven : 0,
             lastSaved: save.timestamp ?? null,
         }
 

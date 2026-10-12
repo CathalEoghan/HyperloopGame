@@ -20,6 +20,8 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     useEffect(() => {
         // A VIP gets its own chime
         if (departure.vip) playSpecialChime(); else playLeavingSound()
+        // The fallback count is kept here, not inside a state update, so onMiss never runs during one (bug #175)
+        let fallbackLeft = secondsLeft
         const timer = setInterval(() => {
             if (departure.expiresAt) {
                 // Read the clock every second, so a sleeping laptop or a throttled tab can't stretch the window
@@ -28,14 +30,9 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 if (left <= 0) { clearInterval(timer); onMiss() }
                 return
             }
-            setSecondsLeft(prev => {
-                if (prev <= 1) {
-                    clearInterval(timer)
-                    onMiss()
-                    return 0
-                }
-                return prev - 1
-            })
+            fallbackLeft -= 1
+            setSecondsLeft(Math.max(0, fallbackLeft))
+            if (fallbackLeft <= 0) { clearInterval(timer); onMiss() }
         }, 1000)
         return () => clearInterval(timer)
     }, [])

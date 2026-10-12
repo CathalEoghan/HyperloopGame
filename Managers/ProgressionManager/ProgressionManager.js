@@ -147,7 +147,8 @@ export class ProgressionManager {
         if (nextLevel > 3) return null;
         return {
             nextLevel,
-            cashCost: Math.floor(development.cost * UPGRADE_CASH_PCTS[nextLevel] * upgradeDiscountMultiplier),
+            // The tiny tolerance stops decimal rounding knocking £1 off a round price (£61,249 for 35% of £175,000)
+            cashCost: Math.floor(development.cost * UPGRADE_CASH_PCTS[nextLevel] * upgradeDiscountMultiplier + 1e-6),
             // Good Standing: upgrading developments costs no Reputation
             repCost: PrestigeManager.owns('goodStanding') ? 0 : UPGRADE_REP_COSTS[nextLevel],
             boostPct: UPGRADE_BOOST_PCTS[nextLevel],

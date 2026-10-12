@@ -105,7 +105,10 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                     <div className="hyperlink-header">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <img src={phoneIcon} alt="" style={{ width: '18px', height: '18px', border: 'none', borderRadius: '0', opacity: 0.9 }} />
-                            <div className="hyperlink-logo">Hyper<span>-</span>Link</div>
+                            <div>
+                                <div className="hyperlink-logo">Hyper<span>-</span>Link</div>
+                                <div className="hyperlink-disclaimer">All scenarios and characters are completely fictional</div>
+                            </div>
                         </div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             {onToggleMute && (

@@ -14,12 +14,28 @@ export const PRESTIGE_LAYERS = [
 export const NOT_IMPLEMENTED = {
 }
 
+// The perks' strengths. Each is a true multiplier, applied after the ordinary boosts have been added up, so a perk
+// keeps its full effect however many other boosts are owned (bug #147). The descriptions below are built from these.
+export const PRESTIGE_VALUES = {
+    staffFeedbackForms: 2,             // x2 city and development income
+    irresistibleDiscounts: 3,          // x3 development income
+    globalTicketCuts: 3,               // x3 city income
+    trophyCabinetPerAchievement: 0.02, // x(1 + 2% per unique achievement)
+    generationalWisdomPerPoint: 0.05,  // x(1 + 5% per Prestige Point held)
+    speedyConveyorBelts: 2,            // x2 Work earnings
+    oralHygiene: 6,                    // x6 Reputation from farewells
+    viralSuperstar: 3,                 // x3 Progress rewards
+}
+const mult = v => `x${v}`
+const pct = v => `${Math.round(v * 100)}%`
+const V = PRESTIGE_VALUES
+
 export const PRESTIGE_UPGRADES = [
     // Layer 1
-    { id: 'staffFeedbackForms', icon: '📝', layer: 1, name: 'Staff Feedback Forms', description: '+250% income.' },
+    { id: 'staffFeedbackForms', icon: '📝', layer: 1, name: 'Staff Feedback Forms', description: `${mult(V.staffFeedbackForms)} city and development income.` },
 
     // Layer 2
-    { id: 'oralHygiene', icon: '🦷', layer: 2, name: 'Oral Hygiene', description: 'x6 Reputation from farewells.' },
+    { id: 'oralHygiene', icon: '🦷', layer: 2, name: 'Oral Hygiene', description: `${mult(V.oralHygiene)} Reputation from farewells.` },
     { id: 'betterInterestRates', icon: '🏦', layer: 2, name: 'Better Interest Rates', description: 'x10 cash from the daily bonus.' },
     { id: 'eliteAccountants', icon: '🧮', layer: 2, name: 'Elite Accountants', description: 'The optional double bonus when claiming offline earnings becomes a quadruple bonus, for the same cost.' },
     { id: 'cultOfCelebrity', icon: '❤️', layer: 2, name: 'Cult of Celebrity', description: 'Liking a Hyper-Link post now gives 1 Reputation.' },
@@ -27,13 +43,13 @@ export const PRESTIGE_UPGRADES = [
     { id: 'amicableBreakups', icon: '🤝', layer: 2, name: 'Amicable Breakups', description: 'Disconnecting costs nothing and refunds half the cost.' },
     { id: 'advancedEngineering', icon: '🏗️', layer: 2, name: 'Advanced Engineering', description: 'Cities and developments are constructed immediately.' },
     { id: 'videoMessage', icon: '🎥', layer: 2, name: 'Video Message', description: 'Farewells are accepted automatically.' },
-    { id: 'viralSuperstar', icon: '🌟', layer: 2, name: 'Viral Superstar', description: 'Progress rewards are tripled.' },
+    { id: 'viralSuperstar', icon: '🌟', layer: 2, name: 'Viral Superstar', description: `${mult(V.viralSuperstar)} cash and Reputation from Progress rewards.` },
 
     // Layer 3
     { id: 'automatedScheduling', icon: '🗓️', layer: 3, name: 'Automated Scheduling', description: 'No cap on offline earnings.' },
-    { id: 'trophyCabinet', icon: '🏆', layer: 3, name: 'Trophy Cabinet', description: '+25% earnings for each unique achievement unlocked.' },
+    { id: 'trophyCabinet', icon: '🏆', layer: 3, name: 'Trophy Cabinet', description: `City and development income multiplied by an extra ${pct(V.trophyCabinetPerAchievement)} for each unique achievement unlocked (x${1 + 50 * V.trophyCabinetPerAchievement} at 50).` },
     { id: 'pizzaParties', icon: '🍕', layer: 3, name: 'Pizza Parties', description: 'Positive events are +200% stronger.' },
-    { id: 'irresistibleDiscounts', icon: '🏷️', layer: 3, name: 'Irresistible Discounts', description: 'Developments earn +500%.' },
+    { id: 'irresistibleDiscounts', icon: '🏷️', layer: 3, name: 'Irresistible Discounts', description: `${mult(V.irresistibleDiscounts)} development income.` },
     { id: 'bulletproofPlanning', icon: '🛡️', layer: 3, name: 'Bulletproof Planning', description: 'No more delays, ever.' },
     { id: 'foundersHallExpansion', icon: '🏛️', layer: 3, name: 'Founders Hall Expansion', description: '+1% extra from the Founders Hall bonus.' },
     { id: 'personalFavours', icon: '🎁', layer: 3, name: 'Personal Favours', description: 'Choose any city in the world as your starting city every run.' },
@@ -44,11 +60,11 @@ export const PRESTIGE_UPGRADES = [
     // Layer 4
     { id: 'fastLearner', icon: '🎓', layer: 4, name: 'Fast Learner', description: '+1 Prestige Point for every 1 Prestige Point gained.' },
     { id: 'governmentGrants', icon: '🏛️', layer: 4, name: 'Government Grants', description: 'Start at Rank 25, with 24 cities and developments already unlocked.' },
-    { id: 'speedyConveyorBelts', icon: '⚙️', layer: 4, name: 'Speedy Conveyor Belts', description: 'Work earnings are quadrupled.' },
-    { id: 'globalTicketCuts', icon: '🎫', layer: 4, name: 'Global Ticket Cuts', description: 'Cities earn +750%.' },
+    { id: 'speedyConveyorBelts', icon: '⚙️', layer: 4, name: 'Speedy Conveyor Belts', description: `${mult(V.speedyConveyorBelts)} Work earnings.` },
+    { id: 'globalTicketCuts', icon: '🎫', layer: 4, name: 'Global Ticket Cuts', description: `${mult(V.globalTicketCuts)} city income.` },
     { id: 'bestPAEver', icon: '🧑‍💼', layer: 4, name: 'Best P.A. Ever', description: 'Work clicks itself once every 500ms.' },
     { id: 'lobbyingSuavity', icon: '🕶️', layer: 4, name: 'Lobbying Suavity', description: 'Choose any city to connect when ranking up.' },
-    { id: 'generationalWisdom', icon: '📜', layer: 4, name: 'Generational Wisdom', description: '+10% city and development income for every Prestige Point you currently hold.' },
+    { id: 'generationalWisdom', icon: '📜', layer: 4, name: 'Generational Wisdom', description: `City and development income multiplied by an extra ${pct(V.generationalWisdomPerPoint)} for every Prestige Point you currently hold (x${1 + 10 * V.generationalWisdomPerPoint} with 10).` },
     { id: 'crisisAvoidanceSpecialists', icon: '🚨', layer: 4, name: 'Crisis Avoidance Specialists', description: 'No negative events, ever.' },
 ].map(u => ({
     ...u,

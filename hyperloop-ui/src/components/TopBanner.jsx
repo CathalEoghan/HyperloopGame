@@ -8,6 +8,7 @@ import reputationIcon from '../assets/misc/reputation.png'
 import pinIcon from '../assets/misc/pin.png'
 import countryFlags from '../data/countryFlags.js'
 import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } from '../utils/sound.js'
+import { formatBalance } from '../utils/formatBalance.js'
 
 const WORK_PHRASES = [
     'Processed passenger', 'Attended meeting', 'Worked security', 'Shop inspection',
@@ -41,22 +42,7 @@ const formatWorkAmount = (value, tilde = false) => {
     return `${scaled.toFixed(1)}${WORK_SUFFIXES[tier - 1]}${t}`
 }
 
-const BALANCE_NAMES = ['billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion', 'decillion']
-
-// Full digits below a billion; then "3.72 billion", "1.05 quadrillion" and so on
-// (scientific notation past decillions)
-const formatBalance = (value) => {
-    if (!Number.isFinite(value)) return '0'
-    if (value < 1_000_000_000) return Math.floor(value).toLocaleString('en-GB', { maximumFractionDigits: 0 })
-    let tier = Math.floor(Math.log10(value) / 3)
-    if (tier > 2 + BALANCE_NAMES.length) return value.toExponential(2).replace('e+', 'e')
-    let scaled = value / Math.pow(1000, tier)
-    // 999.996 billion rounds to "1000.00 billion", so step up to the next name instead
-    if (Number(scaled.toFixed(2)) >= 1000 && tier < 2 + BALANCE_NAMES.length) { tier += 1; scaled = value / Math.pow(1000, tier) }
-    return `${scaled.toFixed(2)} ${BALANCE_NAMES[tier - 3]}`
-}
-
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity }) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, workDisabled = false }) {
     const [floats, setFloats] = useState([])
     // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
     const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
@@ -77,17 +63,18 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     useEffect(() => {
         if (!activeEvent || activeEvent.durationSeconds === 0) return;
         setEventSecondsLeft(eventRemaining(activeEvent));
+        // Counted here rather than inside a state update: ending the event updates App, which React does not allow
+        // from inside another component's state update (bug #175)
+        let left = eventRemaining(activeEvent);
         const timer = setInterval(() => {
-            const next = activeEvent.expiresAt ? eventRemaining(activeEvent) : null;
-            setEventSecondsLeft(prev => {
-                const value = next !== null ? next : prev - 1;
-                if (value <= 0) {
-                    clearInterval(timer);
-                    onEventExpire?.();
-                    return 0;
-                }
-                return value;
-            });
+            left = activeEvent.expiresAt ? eventRemaining(activeEvent) : left - 1;
+            if (left <= 0) {
+                clearInterval(timer);
+                setEventSecondsLeft(0);
+                onEventExpire?.();
+                return;
+            }
+            setEventSecondsLeft(left);
         }, 1000);
         return () => clearInterval(timer);
     }, [activeEvent?.id]);
@@ -164,6 +151,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     }, [reputation])
 
     const handleWork = () => {
+        if (workDisabled) return
         const id = floatId++
         const rect = btnRef.current.getBoundingClientRect()
         const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]

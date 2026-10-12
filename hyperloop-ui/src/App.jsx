@@ -47,7 +47,7 @@ import AchievementToast from "./components/AchievementToast.jsx";
 import AchievementsModal, { AchievementsButton } from "./components/AchievementsModal.jsx";
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
-import { departureTimestamp, minutesUntilDeparture } from './utils/time.js'
+import { departureTimestamp, minutesUntilDeparture, isRealMinute, skipMissingMinutes } from './utils/time.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -521,6 +521,8 @@ function App() {
   // One press of Work. A manual press counts towards the Work achievements and plays the bonus sound;
   // Best P.A. Ever's presses (auto) earn the same money and Reputation, quietly.
   const performWork = (onRepGain, { auto = false } = {}) => {
+    // Nothing is earned until the welcome popup is closed (bug #159)
+    if (onboardingPending()) return;
     const earned = economyManager.calculateWorkClickEarnings();
     if (!auto) achievements.addCounter('work');
     progressionManager.addCash(earned);
@@ -576,6 +578,7 @@ function App() {
         const lastTime = departures[departures.length - 1].minuteOfDay;
         if (minuteOfDay - lastTime < 10) minuteOfDay = Math.ceil((lastTime + 10) / 5) * 5;
       }
+      minuteOfDay = skipMissingMinutes(minuteOfDay);
       const availableGates = [];
       for (let g = 1; g <= numGates; g++) {
         if (minuteOfDay - gateLastUsed[g] >= 30) availableGates.push(g);
@@ -724,7 +727,7 @@ function App() {
     let attempts = 0;
     while (attempts < 24) {
       const clash = schedule.some(e => Math.abs((e.hour * 60 + e.minute) - newMinutes) < 10);
-      if (!clash && newMinutes <= maxMins) break;
+      if (!clash && newMinutes <= maxMins && isRealMinute(newMinutes)) break;
       newMinutes += 5;
       attempts++;
     }
@@ -858,8 +861,10 @@ function App() {
       }
 
       const nonSecretPurchased = progressionManager.purchasedCities.filter(c => c.continent !== 'Antarctica');
+      // Already unlocked counts too: after a disconnect it waits on the Cities page to be reconnected, without the popup (bug #165)
       const secretCityOwned = progressionManager.purchasedCities.some(c => c.continent === 'Antarctica') ||
-        progressionManager.citiesUnderConstruction.some(c => c.continent === 'Antarctica');
+        progressionManager.citiesUnderConstruction.some(c => c.continent === 'Antarctica') ||
+        progressionManager.unlockedCities.some(c => c.continent === 'Antarctica');
       if (nonSecretPurchased.length === REGULAR_CITY_COUNT && !secretCityOwned && !secretCityTriggered.current) {
         secretCityTriggered.current = true;
         setShowSecretCityModal(true);
@@ -927,7 +932,7 @@ function App() {
         // itself out and each post becomes eligible again once that month comes back around.
         const currentYear = new Date().getFullYear()
         const usedMonthPostRecords = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_month_posts') || '[]')
-          .filter(e => e.year === currentYear)
+          .filter(e => e && e.year === currentYear)   // a bad entry must not stop the game loop (bug #178)
         const usedMonthPostIds = usedMonthPostRecords.map(e => e.id)
         // Only pictures used in the last 3 hours count as used, so they come round again instead of running out (bug #71)
         const feedPfpIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPfpId).filter(Boolean))
@@ -1056,7 +1061,8 @@ function App() {
         }
       });
 
-      if (!PrestigeManager.owns('bulletproofPlanning') && Math.random() < 0.0002) {
+      // A delay popup that hasn't been answered yet blocks the next one, or the new delay would replace it unpaid (bug #158)
+      if (!PrestigeManager.owns('bulletproofPlanning') && !localStorage.getItem('hyperloop_pending_delay') && Math.random() < 0.0002) {
         const eligible = schedule.filter(entry => {
           const diff = minutesUntilDeparture(entry, now.getTime());
           const maxDelay = (23 * 60 + 55) - (entry.hour * 60 + entry.minute);
@@ -1064,7 +1070,7 @@ function App() {
           // random delay below is always at least 10 minutes, so a departure with
           // less room than that would otherwise get its delay silently capped down
           // to 0 minutes (and £0 compensation) while still popping the delay modal.
-          return diff > 60 && diff <= 120 && maxDelay >= 10 && !triggeredDelays.current.has(entry.time) && !entry.delayed;
+          return diff > 60 && diff <= 120 && maxDelay >= 10 && !triggeredDelays.current.has(`${entry.time}_${entry.name}`) && !entry.delayed;
         });
         if (eligible.length > 0) {
           const entry = eligible[Math.floor(Math.random() * eligible.length)];
@@ -1073,14 +1079,16 @@ function App() {
             Math.ceil((Math.floor(Math.random() * 230) + 10) / 5) * 5,
             Math.floor(maxDelay / 5) * 5
           );
-          const newTotalMins = (entry.hour * 60 + entry.minute) + delayMinutes;
+          // Never into the hour the clocks skip (bug #176)
+          const newTotalMins = Math.min(skipMissingMinutes((entry.hour * 60 + entry.minute) + delayMinutes), 23 * 60 + 55);
           const newHour = Math.floor(newTotalMins / 60) % 24;
           const newMinute = newTotalMins % 60;
           const newTime = `${String(newHour).padStart(2, '0')}:${String(newMinute).padStart(2, '0')}`;
           const compensation = Math.round(delayMinutes * 50 * INCOME_SCALE);
-          triggeredDelays.current.add(entry.time);
+          triggeredDelays.current.add(`${entry.time}_${entry.name}`);
                     // The delayed departure takes its new place in the day's order (bug #103).
-          const updated = schedule.map(e => e.time === entry.time
+          // Matched on the city too: a delayed departure can land on another's time, and only this one moves (bug #171)
+          const updated = schedule.map(e => e.time === entry.time && e.name === entry.name
             ? { ...e, hour: newHour, minute: newMinute, time: newTime, minuteOfDay: newTotalMins, delayed: true }
             : e).sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute));
           localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
@@ -1339,6 +1347,8 @@ function App() {
           localStorage.removeItem('hyperloop_active_event');
         }}
         onWork={(onRepGain) => performWork(onRepGain)}
+        // Popups block the mouse, but a focused Work button could still be pressed from the keyboard behind them (bug #159)
+        workDisabled={popupOpen || hyperLinkOpen || achievementsOpen}
         autoWork={PrestigeManager.owns('bestPAEver')}
         workRange={workRange}
       />
@@ -1563,6 +1573,7 @@ function App() {
         <DailyLoginModal
           cashBonus={dailyLoginData.cashBonus}
           repBonus={dailyLoginData.repBonus}
+          repSources={progressionManager.purchasedUpgrades.filter(u => u.effectType === 'dailyLoginRep').map(u => u.name)}
           reputation={reputation}
           onSpendRep={(amount) => { dailyDoubleRep.current = amount; }}
           onCollect={(finalBonus) => {
@@ -1608,6 +1619,9 @@ function App() {
         <OnboardingModal
                     onDismiss={() => {
             localStorage.removeItem('hyperloop_onboarding_pending');
+            // A new game's first day counts as already welcomed: the daily bonus ("Welcome back!") starts tomorrow,
+            // rather than on the first reload of day one (bug #181)
+            localStorage.setItem('hyperloop_last_login', new Date().toDateString());
             setShowOnboarding(false);
           }}
         />
@@ -1751,7 +1765,7 @@ function App() {
         <ClaimedCitiesModal cities={claimAllCities} onClose={() => setClaimAllCities(null)} />
       )}
 
-      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !cityClaimPending && pendingRankUps === 0 && (
+      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !cityClaimPending && pendingRankUps === 0 && (
         <MilestoneModal
           milestone={milestoneQueue[0]}
           onContinue={() => {
@@ -1772,7 +1786,8 @@ function App() {
             } else if (upgrade) {
               progressionManager.purchasedUpgrades.push(upgrade);
               prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
-              setDevRevealQueue(prev => [...prev, upgrade]);
+              // It is an upgrade the player now owns, so it gets the upgrade popup with its effect (bug #172)
+              setRevealedUpgradeQueue(prev => [...prev, upgrade]);
             }
             claimedMilestones.current.add(`rank_${milestone.rank}`);
             localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
@@ -1787,6 +1802,8 @@ function App() {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');
           if (antarcticCity) {
+            // Unlocked first, so it stays on the Cities page if the connection can't be paid for yet (bug #165)
+            progressionManager.unlockCity(antarcticCity);
             constructionManager.startStationConstruction(antarcticCity);
             triggerSave();
             setClaimedCity(antarcticCity);

@@ -3,6 +3,7 @@ import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT } from 'Ma
 import { MAX_RANK } from 'Managers/RankManager/RankManager.js'
 import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialChime, playNotEnoughFundsSound } from '../utils/sound.js'
+import { formatBalance } from '../utils/formatBalance.js'
 import './PrestigePage.css'
 
 // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
@@ -14,10 +15,10 @@ const imageFor = u => IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-9]/g, '').toLower
 const CARDS_PER_ROW = 5
 const chunk = (list, size) => Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, i * size + size))
 
+// From a billion up, the same names as the top bar (billion, trillion … decillion), not "£999000000.00 trillion" (bug #177)
 const fmtCash = n => {
     if (!Number.isFinite(n)) return '—'
-    if (n >= 1e12) return `£${(n / 1e12).toFixed(2)} trillion`
-    if (n >= 1e9) return `£${(n / 1e9).toFixed(2)} billion`
+    if (n >= 1e9) return `£${formatBalance(n)}`
     if (n >= 1e6) return `£${(n / 1e6).toFixed(2)} million`
     return `£${Math.floor(n).toLocaleString('en-GB')}`
 }
@@ -83,7 +84,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
             <div className="prestige-header">
                 <div className="prestige-header-text">
                     <h1 className="prestige-title">Prestige Upgrades</h1>
-                    <span className="prestige-subtitle">{totalOwned} of {PRESTIGE_UPGRADES.length} upgrades owned</span>
+                    <span className="prestige-subtitle">{totalOwned} of {PRESTIGE_UPGRADES.length} upgrades owned • All bonuses are multiplicative</span>
                 </div>
                 <div className="prestige-points">
                     <span className="prestige-points-label">Prestige Points</span>

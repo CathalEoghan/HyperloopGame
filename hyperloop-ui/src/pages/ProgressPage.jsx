@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect } from 'react'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
@@ -7,6 +7,7 @@ import cashIcon from '../assets/misc/cash.png'
 import { playHoverSound, playFarewellAcceptSound, playReputationWorkBonusSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import './ProgressPage.css'
 
@@ -103,8 +104,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         localStorage.setItem('hyperloop_progress_rewards', JSON.stringify([...claimedRef.current]))
         const hasBoost = (purchasedUpgrades || []).some(u => u.effectType === 'progressRewardBoost')
         const reward = getRandomReward()
-        // Additive: the boost upgrade adds +1x, Viral Superstar adds +2x (tripled on its own)
-        const rewardFactor = 1 + (hasBoost ? 1 : 0) + (PrestigeManager.owns('viralSuperstar') ? 2 : 0)
+        // The boost upgrade (x2) and Viral Superstar multiply each other
+        const rewardFactor = (hasBoost ? 2 : 1) * (PrestigeManager.owns('viralSuperstar') ? PRESTIGE_VALUES.viralSuperstar : 1)
         reward.amount *= rewardFactor
         const rect = e.currentTarget.getBoundingClientRect()
         const id = Date.now() + Math.random()
@@ -142,26 +143,19 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         return 'unknown'
     }
 
-    const totalPopulation = useMemo(() =>
-        purchasedCities.reduce((sum, c) => sum + c.population, 0), [purchasedCities])
-
-    const totalRevenue = useMemo(() => {
-        const cityIncome = purchasedCities.reduce((sum, c) => sum + economyManager.calculateCityIncome(c), 0)
+    // Worked out on every render (the page re-renders each second). These lists are added to in place, so a memo
+    // keyed on them never noticed a new city or development, and boosts that follow the clock froze too (bug #157).
+    const cityIncomes = new Map(purchasedCities.map(c => [c, economyManager.calculateCityIncome(c)]))
+    const totalPopulation = purchasedCities.reduce((sum, c) => sum + c.population, 0)
+    const totalRevenue = (() => {
+        const cityIncome = [...cityIncomes.values()].reduce((sum, v) => sum + v, 0)
         const devIncome = (purchasedDevelopments || []).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0)
         return economyManager.withFoundersHall(cityIncome + devIncome)
-    }, [purchasedCities, purchasedDevelopments, purchasedUpgrades])
-
-    const mostProfitableCity = useMemo(() => {
-        if (!purchasedCities.length) return null
-        return purchasedCities.reduce((best, c) =>
-            economyManager.calculateCityIncome(c) > economyManager.calculateCityIncome(best) ? c : best)
-    }, [purchasedCities])
-
-    const leastProfitableCity = useMemo(() => {
-        if (!purchasedCities.length) return null
-        return purchasedCities.reduce((worst, c) =>
-            economyManager.calculateCityIncome(c) < economyManager.calculateCityIncome(worst) ? c : worst)
-    }, [purchasedCities])
+    })()
+    const mostProfitableCity = purchasedCities.length
+        ? purchasedCities.reduce((best, c) => cityIncomes.get(c) > cityIncomes.get(best) ? c : best) : null
+    const leastProfitableCity = purchasedCities.length
+        ? purchasedCities.reduce((worst, c) => cityIncomes.get(c) < cityIncomes.get(worst) ? c : worst) : null
 
     const revenueDevs = (purchasedDevelopments || []).filter(d => d.revenue > 0)
     const mostProfitableDev = revenueDevs.length ? revenueDevs.reduce((best, d) => economyManager.getEffectiveDevIncomeWithBoosts(d) > economyManager.getEffectiveDevIncomeWithBoosts(best) ? d : best) : null
@@ -199,10 +193,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
         const seasonUpgrade = economyManager.getCurrentSeasonUpgrade()
         const monthUpgrade = economyManager.getCurrentMonthUpgrade()
-        const now = new Date()
-        const hour = now.getHours()
-        const timePeriod = hour >= 6 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : hour >= 18 && hour < 22 ? 'Evening' : 'Night'
-        const timeBonus = economyManager.getTimeOfDayBonus()
+        const hour = new Date().getHours()
         const isBusinessWeek = economyManager.isBusinessWeek()
         const isWeekend = economyManager.isWeekend()
 
@@ -234,7 +225,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Arctic City Bonus', value: sum('arcticBoost') > 0 ? `+${Math.round(sum('arcticBoost') * 100)}%` : '—' },
             { label: 'Equator City Bonus', value: sum('equatorBoost') > 0 ? `+${Math.round(sum('equatorBoost') * 100)}%` : '—' },
             { label: 'Southern Hemisphere Bonus', value: sum('southernHemisphereBoost') > 0 ? `+${Math.round(sum('southernHemisphereBoost') * 100)}%` : '—' },
-            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `${Math.round(economyManager.getFoundersHallMultiplier(createdAt) * 100 - 100)}% (grows over time)` : '—' },
+            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(createdAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
             { label: 'Current Season Boost', value: seasonUpgrade ? `+${Math.round(seasonUpgrade.effectValue * 100)}% (${seasonUpgrade.name})` : '—' },
             { label: 'Current Month Boost', value: monthUpgrade ? `+${Math.round(monthUpgrade.effectValue * 100)}% (${monthUpgrade.name})` : '—' },
             { label: 'Business Week Bonus', value: sum('businessWeekBoost') > 0 ? `+${Math.round(sum('businessWeekBoost') * 100)}%${isBusinessWeek ? ' ✓ active' : ''}` : '—' },
@@ -245,7 +236,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             ...(has('nightBoost') ? [{ label: 'Night Bonus', value: `+${Math.round(economyManager.getUpgradeSum('nightBoost') * 100)}%${(hour >= 22 || hour < 6) ? ' (Active)' : ' (Inactive)'}` }] : []),
             { label: 'Work Click Bonus', value: (count('workClickBonus') > 0 || PrestigeManager.owns('speedyConveyorBelts') || economyManager.hasUpgrade('workPerAchievement')) ? `×${economyManager.getWorkMultiplier(count('workClickBonus')).toFixed(2)} to click earnings` : '—' },
             { label: 'Farewell Window', value: count('farewellWindowExtension') > 0 ? `${5 + count('farewellWindowExtension') * 5} minutes` : '—' },
-            { label: 'Farewell Rep Bonus', value: (has('farewellRepDoubled') || PrestigeManager.owns('oralHygiene')) ? `×${1 + (has('farewellRepDoubled') ? 1 : 0) + (PrestigeManager.owns('oralHygiene') ? 5 : 0)} per farewell` : '—' },
+            { label: 'Farewell Rep Bonus', value: (has('farewellRepDoubled') || PrestigeManager.owns('oralHygiene')) ? `×${economyManager.getFarewellRepGain(1)} per farewell` : '—' },
             {
                 label: 'Offline Earnings Cap', value: PrestigeManager.owns('automatedScheduling') ? 'No cap' : count('offlineCapExtension') === 0 ? '—' : (() => {
                     const hours = 48 + count('offlineCapExtension') * 24
@@ -287,7 +278,16 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     return `${owned.length} ${owned.length === 1 ? 'country' : 'countries'}${same ? `, +${Math.round(owned[0].effectValue * 100)}% each` : ''}`
                 })()
             },
-            { label: 'Daily Login Cash', value: has('dailyLoginMultiplier') ? '×2 (50% of a day\'s income)' : '—' },
+            {
+                // The daily bonus is a quarter of a day's income, doubled by Commemorative Displays and x10 with Better Interest Rates (bug #161)
+                label: 'Daily Login Cash', value: (() => {
+                    const doubled = has('dailyLoginMultiplier')
+                    const interest = PrestigeManager.owns('betterInterestRates')
+                    if (!doubled && !interest) return '—'
+                    const pct = (doubled ? 50 : 25) * (interest ? 10 : 1)
+                    return `${pct}% of a day's income (${[doubled && 'Commemorative Displays ×2', interest && 'Better Interest Rates ×10'].filter(Boolean).join(', ')})`
+                })()
+            },
             { label: 'Work Reputation Chance', value: economyManager.getWorkRepChance() > 0.005 ? `${(economyManager.getWorkRepChance() * 100).toFixed(1)}% per click` : '—' },
             { label: 'Farewell Cash Bonus', value: has('personalImageBranding') ? "10% of the city's daily income" : '—' },
         ]

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import './TipsBar.css'
+import { playClickSound2, playHoverSound } from '../utils/sound.js'
 
 const TIPS = [
     "Connect more cities to increase your daily income — Tier 3 cities earn the most.",
@@ -21,9 +22,8 @@ const TIPS = [
     "Random events can multiply your passive income or work earnings temporarily.",
     "Building an Event Hall increases your chances of positive events.",
     "The Passenger Loyalty Scheme earns you +5 Reputation every day you log in.",
-    "Commemorative Displays doubles your daily login bonus to £50,000.",
+    "Commemorative Displays doubles your daily login bonus, from a quarter of a day's income to half.",
     "Your home city's country earns local transport bonuses from certain upgrades.",
-    "The first farewell you give each day can earn double Reputation with the right upgrade.",
     "Seasonal packages boost your income during their respective season.",
     "City advertising campaigns boost all income from cities in that country.",
     "Check the Settings page to manually save, export, or back up your progress.",
@@ -52,7 +52,7 @@ function TipsBar() {
         <div className={`tips-bar ${fading ? 'tips-fading' : ''}`}>
             <span className="tips-label">TIP</span>
             <span className="tips-text">{TIPS[tipIndex]}</span>
-            <button className="tips-dismiss" onClick={() => setVisible(false)}>✕</button>
+            <button className="tips-dismiss" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setVisible(false) }}>✕</button>
         </div>
     )
 }

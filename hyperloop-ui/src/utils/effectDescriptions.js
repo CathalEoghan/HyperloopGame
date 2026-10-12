@@ -11,7 +11,7 @@ export const EFFECT_DESCRIPTIONS = {
     serviceIncome: (v) => `+${pct(v)}% income from Service developments`,
     developmentBoost: (v) => `+${pct(v)}% income from all developments`,
     earlyRetirement: (v) => `Ready to pass it on? Purchasing this upgrade with ${v} Reputation will allow you to prestige.`,
-    workPerAchievement: (v) => `+${pct(v)}% work earnings for every unique achievement unlocked`,
+    workPerAchievement: (v) => `+${pct(v)}% Work earnings for every unique achievement unlocked`,
     // What it really pays: Five-Star Researchers doubles it, then Fast Learner doubles the total
     prestigePoints: (v) => `Rewards ${v * (PrestigeManager.owns('fiveStarResearchers') ? 2 : 1) * (PrestigeManager.owns('fastLearner') ? 2 : 1)} Prestige Points`,
     connectionBoost: (v) => `+${pct(v)}% income from all city connections`,
@@ -35,33 +35,52 @@ export const EFFECT_DESCRIPTIONS = {
     localCountryBoost: () => `Bonus income from cities in your home country`,
     dailyLoginMultiplier: () => 'Doubles your daily login cash bonus',
     progressRewardBoost: () => 'Doubles the cash and Reputation rewards from city and country discoveries on the Progress page',
-    terminalAgeBoost: () => '+1% to all income per 10 days active; grows the longer you play',
+    terminalAgeBoost: () => 'Multiplies all city and development income by an extra 1% for every 10 days active, on top of your other boosts',
     seasonBoost: (v, upgrade) => { const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${pct(v)}% income during this ${isMonthly ? 'month' : 'season'}`; },
     rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll cities`,
     freeRerollOnRankUp: () => `One free city re-roll each time you rank up`,
     positiveEventBoost: (v) => `+${pct(v)}% chance of positive events`,
     dailyLoginRep: (v) => `+${v} Reputation every day you log in`,
     freeRepOnRankUp: (v) => `+${v} Reputation each time you rank up`,
-    businessWeekBoost: (v) => `+${pct(v)}% earnings Monday to Friday`,
+    businessWeekBoost: (v) => `+${pct(v)}% income Monday to Friday`,
     equatorBoost: (v) => `+${pct(v)}% income from cities near the equator`,
     infrastructureDevBoost: (v) => `+${pct(v)}% development income per Infrastructure item owned`,
     enterpriseDevBoost: (v) => `+${pct(v)}% development income per Enterprise item owned`,
     serviceDevBoost: (v) => `+${pct(v)}% development income per Service item owned`,
     devContinentBoost: (v) => `+${pct(v)}% development income per unique continent connected`,
-    morningBoost: (v) => `+${pct(v)}% earnings between 6am and 12pm`,
-    afternoonBoost: (v) => `+${pct(v)}% earnings between 12pm and 6pm`,
-    eveningBoost: (v) => `+${pct(v)}% earnings between 6pm and 10pm`,
-    nightBoost: (v) => `+${pct(v)}% earnings between 10pm and 6am`,
-    weekendBoost: (v) => `+${pct(v)}% earnings on weekends`,
+    morningBoost: (v) => `+${pct(v)}% income between 6am and 12pm`,
+    afternoonBoost: (v) => `+${pct(v)}% income between 12pm and 6pm`,
+    eveningBoost: (v) => `+${pct(v)}% income between 6pm and 10pm`,
+    nightBoost: (v) => `+${pct(v)}% income between 10pm and 6am`,
+    weekendBoost: (v) => `+${pct(v)}% income on weekends`,
     smallCityBoost: (v) => `+${pct(v)}% income from cities under 100,000 population`,
-    christmasBoost: () => `+100% all earnings on Christmas Day`,
-    valentinesBoost: () => `+100% all earnings on Valentine's Day`,
-    halloweenBoost: () => `+100% all earnings on Halloween`,
-    fourthOfJulyBoost: () => `+100% all earnings on 4th of July`,
-    easterBoost: () => `+100% all earnings on Easter Sunday`,
-    newYearsBoost: () => `+100% all earnings on New Year's Day`,
+    christmasBoost: () => `+100% city and development income on Christmas Day`,
+    valentinesBoost: () => `+100% city and development income on Valentine's Day`,
+    halloweenBoost: () => `+100% city and development income on Halloween`,
+    fourthOfJulyBoost: () => `+100% city and development income on 4th of July`,
+    easterBoost: () => `+100% city and development income on Easter Sunday`,
+    newYearsBoost: () => `+100% city and development income on New Year's Day`,
     skilledNegotiationTeams: () => `Guaranteed at least Tier 2 city on each rank up`,
     personalImageBranding: (v) => `Earn ${pct(v)}% of a city's daily income when giving a farewell`,
     firstFarewellOfDayDouble: () => `First farewell of the day earns double Reputation`,
     developmentUpgradeDiscount: (v) => `-${pct(v)}% development upgrade cost`,
+}
+
+// Regular upgrades that raise income all go into one pot and are ADDED together (+20% and +30% make +50%). Only the
+// Prestige perks and the Founders' Hall multiply, and they show as "x". This note says so on the Developments page,
+// so a "+%" upgrade isn't mistaken for a multiplier.
+const ADDS_TO_INCOME = new Set([
+    'foodIncome', 'recreationIncome', 'shoppingIncome', 'serviceIncome', 'developmentBoost', 'connectionBoost',
+    'continentExpansionBoost', 'countryExpansionBoost', 'southernHemisphereBoost', 'arcticBoost', 'continentBoost',
+    'countryAdvertisingBoost', 'localCountryBoost', 'seasonBoost', 'businessWeekBoost', 'equatorBoost',
+    'infrastructureDevBoost', 'enterpriseDevBoost', 'serviceDevBoost', 'devContinentBoost', 'morningBoost',
+    'afternoonBoost', 'eveningBoost', 'nightBoost', 'weekendBoost', 'smallCityBoost', 'christmasBoost',
+    'valentinesBoost', 'halloweenBoost', 'fourthOfJulyBoost', 'easterBoost', 'newYearsBoost',
+])
+const ADDS_TO_WORK = new Set(['workClickBonus', 'workPerAchievement'])
+
+export function stackingNote(effectType) {
+    if (ADDS_TO_INCOME.has(effectType)) return 'Adds to your other income upgrades rather than multiplying them.'
+    if (ADDS_TO_WORK.has(effectType)) return 'Adds to your other Work upgrades rather than multiplying them.'
+    return null
 }

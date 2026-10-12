@@ -5,7 +5,8 @@ import cashIcon from '../assets/misc/cash.png'
 import globeIcon from '../assets/misc/globeIcon.png'
 import './DailyLoginModal.css'
 
-function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRep }) {
+// repSources: the names of the owned upgrades that pay the daily Reputation (bug #154)
+function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRep, repSources = [] }) {
     const [doubled, setDoubled] = useState(false)
     const [doubleHovered, setDoubleHovered] = useState(false)
     const canDouble = reputation >= 20 && !doubled
@@ -37,7 +38,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                     )}
                 </div>
                 {repBonus > 0 && (
-                    <p className="daily-login-note">Reputation bonus from Passenger Loyalty Scheme</p>
+                    <p className="daily-login-note">{repSources.length > 0 ? `Reputation bonus from ${repSources.join(' and ')}` : 'Daily Reputation bonus'}</p>
                 )}
                 {!doubled && (
                     <button

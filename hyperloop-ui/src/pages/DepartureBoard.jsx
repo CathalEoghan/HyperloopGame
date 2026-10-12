@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import './DepartureBoard.css'
-import { playSplitFlapLong, playSplitFlapShort } from '../utils/sound.js'
-import { minutesUntilDeparture } from '../utils/time.js'
+import { playSplitFlapLong, playSplitFlapShort, playClickSound2, playHoverSound } from '../utils/sound.js'
+import { minutesUntilDeparture, skipMissingMinutes } from '../utils/time.js'
 
 function getOrdinal(n) {
     const s = ['th', 'st', 'nd', 'rd']
@@ -91,6 +91,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                 const lastTime = departures[departures.length - 1].minuteOfDay
                 if (minuteOfDay - lastTime < minGap) minuteOfDay = Math.ceil((lastTime + minGap) / 5) * 5
             }
+            minuteOfDay = skipMissingMinutes(minuteOfDay)
             const availableGates = []
             for (let g = 1; g <= numGates; g++) {
                 if (minuteOfDay - gateLastUsed[g] >= minGateGap) availableGates.push(g)
@@ -154,36 +155,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                 if (filtered.length > 0) { setSchedule(filtered); return }
             }
         }
-        const pending = JSON.parse(localStorage.getItem('hyperloop_pending_injections') || '[]')
-        // Cities waiting for a slot are left out of the random day, then placed 30+ minutes ahead below
-        let generated = generateSchedule(purchasedCities.filter(c => !pending.includes(c.name)))
-        if (pending.length > 0) {
-            const now = new Date()
-            const currentMins = now.getHours() * 60 + now.getMinutes()
-            const maxMins = 23 * 60 + 30
-            pending.forEach(cityName => {
-                if (generated.some(e => e.name === cityName)) return
-                const city = purchasedCities.find(c => c.name === cityName)
-                if (!city) return
-                let newMinutes = Math.ceil((currentMins + 30 + Math.floor(Math.random() * 30)) / 5) * 5
-                let attempts = 0
-                while (attempts < 24) {
-                    const clash = generated.some(e => Math.abs((e.hour * 60 + e.minute) - newMinutes) < 10)
-                    if (!clash && newMinutes <= maxMins) break
-                    newMinutes += 5; attempts++
-                }
-                if (newMinutes > maxMins) return
-                const usedGates = new Set(generated.map(e => e.gate))
-                let gate = Math.floor(Math.random() * 30) + 1
-                for (let g = 1; g <= 30; g++) { if (!usedGates.has(g)) { gate = g; break } }
-                const hour = Math.floor(newMinutes / 60)
-                const minute = newMinutes % 60
-                const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
-                generated.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay: newMinutes, gate })
-            })
-            generated = generated.sort((a, b) => a.minuteOfDay - b.minuteOfDay)
-            localStorage.removeItem('hyperloop_pending_injections')
-        }
+        const generated = generateSchedule(purchasedCities)
         if (generated.length > 0) { localStorage.setItem(key, JSON.stringify(generated)); setSchedule(generated) }
     }, [purchasedCities])
 
@@ -194,7 +166,10 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
             if (!saved) return
             const parsed = JSON.parse(saved)
             if (!parsed.length) return
-            const filtered = parsed.filter(e => currentCityNames.has(e.name))
+            // Read the names now: the cities list is added to in place, so a set made when the board opened would
+            // leave out a city connected since (bug #166)
+            const names = new Set(purchasedCities.map(c => c.name))
+            const filtered = parsed.filter(e => names.has(e.name))
             const lm = lagMapRef.current
             let anyChanged = false
             filtered.forEach(entry => {
@@ -207,11 +182,10 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                 }
                 prevStatusRef.current[entry.name] = currentStatus
             })
-            // A delay made while the board is open changes the stored schedule; show it straight away
+            // The stored schedule is the truth: a delay, a city connected or disconnected, or a new day all show straight away (bug #166)
             setSchedule(prev => {
-                const byName = new Map(filtered.map(e => [e.name, e]))
-                const next = prev.map(e => byName.get(e.name) || e).sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute))
-                const same = next.every((e, i) => e.name === prev[i].name && e.time === prev[i].time && e.hour === prev[i].hour && e.minute === prev[i].minute && !!e.delayed === !!prev[i].delayed)
+                const next = [...filtered].sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute))
+                const same = next.length === prev.length && next.every((e, i) => e.name === prev[i].name && e.time === prev[i].time && !!e.delayed === !!prev[i].delayed)
                 return same ? prev : next
             })
             if (anyChanged) setRenderTick(t => t + 1)
@@ -283,13 +257,13 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
                 <h2 className="board-title" style={{ margin: 0 }}>Departures {today}</h2>
                 {onClose && (
-                    <button onClick={onClose} style={{
+                    <button onClick={() => { playClickSound2(); onClose() }} style={{
                         background: 'none', border: '1px solid #444', color: '#888',
                         fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
                         padding: '4px 12px', borderRadius: '4px', cursor: 'pointer',
                         letterSpacing: '1px', transition: 'color 0.2s, border-color 0.2s'
                     }}
-                    onMouseEnter={e => { e.target.style.color = '#f5a623'; e.target.style.borderColor = '#f5a623' }}
+                    onMouseEnter={e => { playHoverSound(); e.target.style.color = '#f5a623'; e.target.style.borderColor = '#f5a623' }}
                     onMouseLeave={e => { e.target.style.color = '#888'; e.target.style.borderColor = '#444' }}
                     >✕ CLOSE</button>
                 )}
