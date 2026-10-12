@@ -102,6 +102,30 @@ font-size: 1rem;
     cursor: pointer;
 }
 
+/* The photo sits on its own layer so it can zoom slowly on hover without moving the label */
+.MysterySpot::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--board-img) center / cover no-repeat;
+    transition: transform 0.4s ease, filter 0.3s ease;
+}
+
+.MysterySpot:hover::before { transform: scale(1.08); filter: brightness(1.15) saturate(1.1); }
+.MysterySpot:active::before { transform: scale(1.03); }
+.MysterySpot:focus-visible { outline: 2px solid #f5a623; outline-offset: -4px; }
+
+.MysterySpotLabel {
+    transition: background 0.25s ease, color 0.25s ease, letter-spacing 0.25s ease;
+}
+
+.MysterySpot:hover .MysterySpotLabel { background: #f5a623; color: #111; letter-spacing: 2.5px; }
+
+@media (prefers-reduced-motion: reduce) {
+    .MysterySpot::before, .MysterySpotLabel { transition: none; }
+    .MysterySpot:hover::before { transform: none; }
+}
+
 .MysterySpotLabel {
     position: absolute;
     bottom: 0;
