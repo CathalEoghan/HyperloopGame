@@ -44,6 +44,27 @@ function play(src) {
     return audio
 }
 
+// The hover tick fires for every item the mouse crosses, so sweeping down a long list used to start dozens of
+// overlapping copies of it: much louder (about +5 dB) and a rattling buzz instead of ticks. Now there is one shared
+// sound that restarts, at most one tick per HOVER_MIN_GAP_MS, at a lower volume. Tweak the two numbers to taste.
+const HOVER_MIN_GAP_MS = 90
+const HOVER_VOLUME = 0.5
+let hoverAudio = null
+let lastHoverAt = 0
+
+function playHover() {
+    if (!canPlay()) return
+    const now = performance.now()
+    if (now - lastHoverAt < HOVER_MIN_GAP_MS) return
+    lastHoverAt = now
+    if (!hoverAudio) {
+        hoverAudio = new Audio(hoverSound)
+        hoverAudio.volume = HOVER_VOLUME
+    }
+    hoverAudio.currentTime = 0
+    hoverAudio.play().catch(() => {})
+}
+
 export const playEventSound = () => play(eventSound)
 export const playDiceRollSound = () => play(diceRollSound)
 export function playWorkClickSound()            { play(workClickSound) }
@@ -55,7 +76,7 @@ export function playSpecialChime()              { play(specialChime) }
 export function playClickSound2()               { play(click_sound_2) }
 export function playClickSound3()               { play(click_sound_3) }
 export function playRankUpSound()               { play(rankUpSound) }
-export function playHoverSound()                { play(hoverSound) }
+export function playHoverSound()                { playHover() }
 export function playReputationWorkBonusSound()  { play(reputationWorkBonus) }
 export function playBottomNavbarHoverSound()    { play(bottomNavbarHover) }
 export function playOpeningAudio()              { play(openingAudio) }
