@@ -35,9 +35,15 @@ const DEV_KEY_MAP = {
     'Watch Store': 'watchStore',
     'Candy Store': 'candyStore',
     'Bookstore': 'bookstore',
+    'Bowling Alley': 'bowlingAlley',
+    'Luxury Hotel': 'luxuryHotel',
+    'Gaming Arcade': 'gamingArcade',
+    'Surf Shop': 'surfShop',
 }
 
 export const UPGRADE_KEY_MAP = {
+    'Anniversary Sales': 'anniversarySales',
+    'Prayer Room': 'prayerRoom',
     'Personal Styling Retinue': 'personalStylingRetinue',
     'Local Airport Links': 'localAirportLinks',
     'Billboard Design Overhauls': 'billboardDesignOverhauls',
