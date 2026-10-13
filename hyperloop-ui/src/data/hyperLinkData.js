@@ -1149,7 +1149,9 @@ export const POSTS = {
         regulatory_fine: [
             'Following a recent inspection, we are implementing improvements across {terminalName} to meet regulatory standards. Thank you for your patience 🙏',
         ],
+    },
 
+    // Passenger reactions to events (key = event_ + event id). Top level, NOT inside officialEvent.
     // Positive: passive income boost (30-180 s) - the best ones to fill
     event_profits_surge: [
         'The company are doing exceptionally well this quarter. Onwards and upwards. 📈',
@@ -1204,6 +1206,4 @@ export const POSTS = {
         'Fully support the staff walkout. #ForTheWorkers',
         'what are they walking out about 🤔',
     ],
-
-    }
 }

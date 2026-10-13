@@ -39,6 +39,9 @@ const DEV_KEY_MAP = {
     'Luxury Hotel': 'luxuryHotel',
     'Gaming Arcade': 'gamingArcade',
     'Surf Shop': 'surfShop',
+    'Antiques Store': 'antiquesStore',
+    'Bubble Tea Shop': 'bubbleTeaShop',
+    'Cat Café': 'catCafe',
 }
 
 export const UPGRADE_KEY_MAP = {
@@ -117,6 +120,12 @@ function buildEligibleCategories(gameState) {
 
     if (activeEvent?.type === 'positive') add('positiveEvent', 4)
     if (activeEvent?.type === 'negative') add('negativeEvent', 4)
+
+    // Passengers react to the specific event, using its id to find their posts
+    const reactionKey = activeEvent?.id ? 'event_' + activeEvent.id : null
+    if (reactionKey && POSTS[reactionKey]?.length) {
+        add(reactionKey, 6, { occasion: activeEvent.occasion })
+    }
     if (gameState.reputation < 40) add('lowReputation', 3)
     if (gameState.reputation > 200) add('highReputation', 3)
 
@@ -130,7 +139,9 @@ function buildEligibleCategories(gameState) {
     if (foodCount === 0) add('noFood', 3)
     else if (foodCount > 10) add('manyFood', 2)
 
-    if (builtIn('Shopping') === 0) add('noShopping', 2)
+    const shoppingCount = builtIn('Shopping')
+    if (shoppingCount === 0) add('noShopping', 2)
+    else if (shoppingCount > 10) add('manyShopping', 2)
     if (builtIn('Recreation') === 0) add('noRecreation', 2)
     if (builtIn('Service') === 0) add('noService', 2)
     if (builtIn('Enterprise') === 0) add('noEnterprise', 2)
@@ -198,6 +209,7 @@ function substituteText(text, data, gameState) {
         .replace(/\{finalCallCity\}/g, data.finalCallCity || '')
         .replace(/\{goToGateCity\}/g, data.goToGateCity || '')
         .replace(/\{departedCity\}/g, data.departedCity || '')
+        .replace(/\{occasion\}/g, data.occasion || 'the big event')
         .replace(/\{delayedCity\}/g, data.delayedCity || '')
         .replace(/\{gateNumber\}/g, data.gateNumber || '')
         .replace(/\{campaignCountry\}/g, data.campaignCountry || '')
