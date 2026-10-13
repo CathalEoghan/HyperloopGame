@@ -722,46 +722,56 @@ export const POSTS = {
     postOffice: [
         'Woo i can finally send stuff to myself from {homeCity} #PostOffice',
         'The stamps are cool #PostOffice',
+        'Anyone seen the postcards at the post office?? Theyre gorgeous'
     ],
 
     bank: [
         'Making a withdrawal 🏦',
         'The new bank is gorgeous. And so convenient #moneymatters',
+        'Met some financial advisors at the bank before my loop. They told me this really should be my last trip of the year. I told them I still have 7 left #lol'
     ],
 
     eventHall: [
         'Event hall is open! The terminal can host so many cool things now',
         'When\'s the next convention? #EventHall',
+        'They should throw a loop convention or something. im a big nerd for loops.'
     ],
 
     localAirportLinks: [
         'Flying locally has never been so easy with these new links ✈️',
         'Thank god theres better airport links now. cuts down on so much travel time',
+        'Jet lag. Now I have loop lag on top of that.'
     ],
 
     billboardDesignOverhauls: [
         'Anyone seen those new billboards? Pretty cool',
         'Those billboards are soo distracting! nearly crashed the car 🚗',
+        'When did the new billboards go up?'
     ],
 
     irishBar: [
         'kiss me im Irish 😘 jk i just like the irish bar',
         'drinking at the irish bar so dangerous 😂 gonna be half alive by the time i get on this loop',
+        'Dia daoibh! Sláinte! All the irish i know sorry'
     ],
 
     escapeRoom: [
         'literally had to end the escape room early cus i forgot about my loop🤣 maybe next time',
         'anyone tried the new escape room? is it scary 😦',
+        'Left my kid in the escape room so i could relax. Now he doesnt want to leave. #great'
+    
     ],
 
     carMuseum: [
         'finally a place for all the car geeks #CarMuseum',
         'car museum is so random but i guess its there for the bored dads?? 🚘',
+        'Car museum. How exciting. Not. #AntiCar'
     ],
 
     hostel: [
         'no but this woman in the hostel is walking around in just a towel somebody get her clothes🤣🤣',
         'the hostel is actually pretty good value! comfy enough beds and the food wasnt half bad 😊',
+        'We had a hostel party last night - was good fun! Sorry about the noise lol'
     ],
 
     terminalRadio: [
@@ -785,6 +795,7 @@ export const POSTS = {
     trainStation: [
         'the trains at the new train station are immaculate #goodjob',
         'No drunks at the new train station?? what is this place',
+        'The train station makes travel to and from the loop terminal so much easier!'
     ],
 
     gym: [
@@ -796,26 +807,31 @@ export const POSTS = {
     skincareStore: [
         'Stocking up on spf at the skincare store #important',
         'my skin is GLOWING #skincarestore',
+        'My sister called me asking me to buy some new cleansers and moisturisers for her. How much luggage do you think i have??'
     ],
 
     cinema: [
         'ohh a cinema? wonder if i have enough time to watch something',
         'dont judge i went to the cinema just to try the popcorn 🍿',
+        'are 30 minute films a thing?? i dont have any more time than that'
     ],
 
     swimwearStore: [
         'bought a lil bikini for my holiday 👙',
         'these swimming shorts are so ✨🩳',
+        'I forgot my swimwear - somehow. Good thing the new swimwear store opened!'
     ],
 
     smoothieShop: [
         'just had a banana passionfruit blend. #DIVINE #smoothieshop',
         'what flavours does everyone recommend for the new smoothie shop 🍌🍑🍎🍓🍍',
+        'Woman in front of me cant make her mind up about what smoothie flavour she wants. just pick banana goddammit'
     ],
 
     quietRoom: [
         'Thank goodness for the quiet room. Very considerate #ThankYouManager',
         'oh and another thing. NO EATING IN THE QUIET ROOM.',
+        'shh. no talking in the quiet room.'
     ],
 
     spa: [
@@ -827,19 +843,23 @@ export const POSTS = {
     costumeStore: [
         'whose idea was it to build a costume store? whole gate looks like a pound-shop haunted house',
         'just bought a skeleton mask at the new #CostumeStore. Time to scare ✌️',
+        'Some cheeky bugger thought I was dressed out in a costume from the new costume store! This is my travel outfit!!'
     ],
 
     hyperloopMuseum: [
         'If you have some time today, have a look around the new #HyperloopMuseum - very interesting history on display!',
         'so bored im walking around the new hyperloop museum … IN the hyperloop terminal lol',
+        'I never knew what a hyperloop actually was till i visited the museum about it lmao'
     ],
 bakery: [
         'mm! fresh breads and bagels at the bakery 🥯',
         'day going well so far. arrived early, checked in, security was ok - sitting now with a baguette from the bakery #chill',
+        'The lines for the bakery are super long - and no wonder! The smell is just divine 🥖'
     ],
 beerTent: [
         'think i lost my passport at the beer tent has anyone seen it??',
         'Prost! 🍻 #beertent',
+        'Happy drinking! 🍻'
     ],
 pharmacy: [
         'some rude ass just bunked me at the pharmacy !',
@@ -848,54 +868,103 @@ pharmacy: [
 yogaStudio: [
         'id try yoga but i feel like id fart mid pose or something lol',
         'So rested after a group yoga session at the {terminalName} yoga studio 🧘',
+        '...And breathe out! The new #yogastudio is a draught of fresh air.'
     ],
 
 pettingZoo: [
         'no one asked for a petting zoo … but also no one complained',
         'the baby llamas at the petting zoo are literally the cutest thing ive seen omg 🥺',
+        'Lowkey feel like adopting this baby guinea pig and taking it back home with me'
     ],
 
 southernHemisphereTradeAgreements: [
 'The new southern hemisphere trade agreements are brilliant. The world is more than just Asia, Europe and the Americas #GlobalSouth', 
 'Do the new agreements mean it’s cheaper to loop to australia now ?',
+'what is a southern hemisphere'
 ],
 
 streetFoodFair: [
 'Anyone tried the dan dan noodles at the street food fair? Acc insane 🍜',
 'bought a proper new york hotdog at the street food fair. delish 🌭',
+'If you have free time, stop by the street food fair - so many cultures and cuisines to sample!'
 ],
+
 staffCafeteriaRenovations: [
         'the new staff cafeteria renovations is one of the reasons why i love working here. #thankYOU',
         'the new staff cafeteria is gorgeous. seriously - good job 👍',
+        'ok it looks nicer but is the food any better??'
     ],
+
 indoorGarden: [
         'took a stroll around the beautiful indoor garden 🌳 #nature',
         'the indoor garden is so lovely - defo helps me destress 🌻',
+        'Serene views at the new indoor garden - feel so relaxed now'
     ],
 
     simCardServices: [
         'thank god for the sim card service - would literally be SIM-less rn without it',
         'Want to shout out to the worker at the sim card services!! she was genuinely so helpful in helping me find the right travel sim #goodservice',
+        'Whats a sim card'
     ],
 
     businessLoungeRenovations: [
         'i snuck into the business lounge to see the renovations - looks great!!',
         'The new business lounge renovations are genuinely excellent. #businesstravel',
+        'Thank goodness for the business lounge! Now I can just relax and sip a coffee ☕'
     ],
 
     watchStore: [
         'picked up a new watch for my boyfriend at the watch store - cant wait to see his face when he opens it 😊',
         'yeah i cant afford a new watch so what',
+        'Now i definitely wont miss my loop #watchstore ⌚'
     ],
 
      candyStore: [
         'can we literally ban kids from the candy store omg',
         'anyone tried the sherbert at the candy store??? CRAZY good',
+        'if youre at the new candy store. REMEMBER. travel calories dont count'
     ],
 
     bookstore: [
         'If you\'re looking for a cozy reading nook, go to the bookstore - it\'s honestly a vibe',
         'books and quiet at the bookstore 📖 #needed',
+        'At the bookstore... surrounded by soaring shelves and dusty literatures...'
+    ],
+
+    bowlingAlley: [
+        'anyone wanna bowl??',
+        'just landed a strike at the bowling alley #likeaboss 🎳',
+        'how the hell do you get the bowling ball to stay on the lane??'
+    ],
+
+    luxuryHotel: [
+        'feeling pampered and plucked at this gorgeous hotel. would definitely come back',
+        'Just ordered a pizza to my room! Chefs came up and everything lol.',
+        'These beds are so comfy. This hotel is just pure luxury',
+    ],
+
+    gamingArcade: [
+        'Could literally spend all day at the arcade shooting aliens',
+        'Pro tip: leave your kids at the arcade. The staff will offer to supervise them for you! #parentingtips',
+        'whats everyones favourite game at the arcade 👾'
+    ],
+
+    anniversarySales: [
+        'MOVE OUT OF MY WAY the sales are on',
+        'what is everyone buying in the anniversary sales?',
+        'Spent too much in the anniversary sales... now im worried they wont let me board with all this lol 🛍️'
+    ],
+
+    surfShop: [
+        'whys that guy carrying a surfboard lol',
+        'Who wants to browse the surfboards with me?? 🏄🏼‍♂️',
+        'i dont even surf why am in here lol'
+    ],
+
+    prayerRoom: [
+        'Thank you, manager, for providing the prayer room. This is very important to some of us, and we are grateful 🙏',
+        'Please be respectful in the new #prayerroom. No eating, talking etc.',
+        'ok hear me out the prayer room is cool but imagine a nightclub called the prayer room',
     ],
 
     lowReputation: [
