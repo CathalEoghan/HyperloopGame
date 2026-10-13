@@ -1136,7 +1136,7 @@ function App() {
             playEventSound();
             setActiveEvent(fullEvent);
             setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id } };
+            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
             setTimeout(() => { activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event'); }, 8000);
           } else if (event.effectType === 'instantCashLoss') {
             const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
@@ -1146,7 +1146,7 @@ function App() {
             playEventSound();
             setActiveEvent(fullEvent);
             setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id } };
+            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
             setTimeout(() => { activeEventRef.current = null; }, 8000);
           } else {
             const fullEvent = { ...event, durationSeconds, expiresAt: Date.now() + durationSeconds * 1000 };
@@ -1155,7 +1155,7 @@ function App() {
             playEventSound();
             setActiveEvent(fullEvent);
             setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id }, until: fullEvent.expiresAt };
+            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion }, until: fullEvent.expiresAt };
             setTimeout(() => {
               activeEventRef.current = null;
               setActiveEvent(null);

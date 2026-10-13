@@ -1004,8 +1004,8 @@ officialEvent: {
         'What a day at {terminalName}! We love welcoming all our passengers, famous or otherwise 😊',
     ],
     tourism_surge: [
-        'Welcome to all visitors travelling through {terminalName} for the event this week! We\'re delighted to have you 🌍',
-        'Huge numbers travelling through {terminalName} today — welcome to everyone joining us for the international event nearby! ✈️',
+        'Welcome to all visitors travelling through {terminalName} for {occasion} this week! We\'re delighted to have you 🌍',
+        'Huge numbers travelling through {terminalName} today — welcome to everyone in town for {occasion}! ✈️',
     ],
     record_day: [
         'Today is shaping up to be a record-breaking day at {terminalName}! Thank you to every single passenger 🎉',

@@ -327,6 +327,7 @@ export function generateOfficialEventPost(gameState) {
     const text = pool[Math.floor(Math.random() * pool.length)]
     const substituted = text
         .replace(/\{terminalName\}/g, () => terminalName)
+        .replace(/\{occasion\}/g, trigger.data?.occasion || 'the big event')
         .replace(/\{delayedCity\}/g, trigger.data?.delayedCity || '')
         .replace(/\{cityCount\}/g, gameState.purchasedCities?.length || 0)
 

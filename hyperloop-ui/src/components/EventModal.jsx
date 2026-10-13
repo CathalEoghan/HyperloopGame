@@ -33,7 +33,7 @@ function EventModal({ event, onContinue, terminalName }) {
     }
 
     const description = typeof event.description === 'function'
-        ? event.description(terminalName || 'your terminal')
+        ? event.description(terminalName || 'your terminal', event)
         : event.description
 
     return (

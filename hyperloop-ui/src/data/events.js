@@ -1,3 +1,21 @@
+// What is happening nearby during a Tourism Surge (reads as "With ___ taking place nearby")
+export const TOURISM_OCCASIONS = [
+    'a major political summit',
+    'a Grand Prix',
+    'a huge comic convention',
+    'a world record attempt',
+    'a city marathon',
+    'a sold-out stadium concert',
+    'a three-day music festival',
+    'a blockbuster movie premiere',
+    'a gaming convention',
+    'a major sports final',
+    'an international food festival',
+    'a royal wedding',
+    'a global tech expo',
+    'a national carnival',
+]
+
 export const EVENTS = [
 
     // POSITIVE — Instant cash (10% of daily earnings)
@@ -59,7 +77,7 @@ export const EVENTS = [
         type: 'positive',
         effectType: 'passiveBoost',
         title: 'Tourism Surge',
-        description: (terminalName) => `A major international event nearby is driving huge numbers of tourists through ${terminalName}. Earnings are significantly elevated.`,
+        description: (terminalName, event) => `With ${event?.occasion || TOURISM_OCCASIONS[0]} taking place nearby, huge numbers of visitors are travelling through ${terminalName}. Earnings are significantly elevated.`,
         effect: { target: 'passive', multiplier: 2.0 },
         duration: () => Math.floor(Math.random() * 150 + 30),
     },
@@ -207,5 +225,8 @@ export const EVENTS = [
 
 export function getRandomEvent(isPositiveOnly = false) {
     const pool = isPositiveOnly ? EVENTS.filter(e => e.type === 'positive') : EVENTS
-    return pool[Math.floor(Math.random() * pool.length)]
+    const event = pool[Math.floor(Math.random() * pool.length)]
+    // Tourism Surge picks what is happening nearby once, so the popup and the Hyper-Link post agree
+    if (event.id === 'tourism_surge') return { ...event, occasion: TOURISM_OCCASIONS[Math.floor(Math.random() * TOURISM_OCCASIONS.length)] }
+    return event
 }
