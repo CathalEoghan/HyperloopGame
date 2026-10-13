@@ -6,12 +6,16 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    --globe-bar-h: 40px;
 }
 
 /* Compact top bar */
 .globe-top-info {
     text-align: center;
-    padding: 4px 0;
+    height: var(--globe-bar-h);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     z-index: 10;
     flex-shrink: 0;
 }
@@ -108,7 +112,9 @@
 
 .globe-toggle-btn {
     position: absolute;
-    top: 16px;
+    /* Centred on the top bar; uses translate (not transform) so the hover scale still works */
+    top: calc(var(--globe-bar-h) / 2);
+    translate: 0 -50%;
     right: 16px;
     z-index: 10;
     background: rgba(0, 0, 0, 0.6);
