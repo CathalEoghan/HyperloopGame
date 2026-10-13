@@ -964,7 +964,7 @@ indoorGarden: [
     prayerRoom: [
         'Thank you, manager, for providing the prayer room. This is very important to some of us, and we are grateful 🙏',
         'Please be respectful in the new #prayerroom. No eating, talking etc.',
-        'ok hear me out the prayer room is cool but imagine a nightclub called the prayer room',
+        'My mum wants to visit the prayer room anyone know where it is 🙏',
     ],
 
     lowReputation: [
