@@ -154,6 +154,22 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <h3><img src={constructionIcon} alt="construction" style={{ width: '20px', height: '20px', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '0' }} />{selectedDevelopment.name}</h3>
                                     <p>Under construction!</p>
                                     <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedDevelopment.finishTime))}</strong></p>
+                                    {(() => {
+                                        const skipCost = constructionManager.calculateSkipCost(selectedDevelopment)
+                                        if (skipCost <= 0) return null
+                                        const canSkip = progressionManager.reputation >= skipCost
+                                        return (
+                                            <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} onClick={() => {
+                                                // The real Reputation, not the figure on screen, which can be a second old (bug #170)
+                                                if (!constructionManager.skipConstruction(selectedDevelopment)) { playNotEnoughFundsSound(); return }
+                                                playClickSound2(); playFarewellAcceptSound(); onSave(); closeModal()
+                                            }}>
+                                                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                                    Build instantly ({skipCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                </span>
+                                            </button>
+                                        )
+                                    })()}
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </>
                             ) : available.some(d => d.name === selectedDevelopment.name) ? (

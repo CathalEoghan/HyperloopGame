@@ -1,6 +1,10 @@
 import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js'
 import { FIVE_SECONDS, TEN_SECONDS, TWENTY_SECONDS, FORTY_FIVE_SECONDS, TWO_MINUTES, FIVE_MINUTES } from '../TimeManager/TimeManager.js'
 
+// Finishing a build early costs Reputation by the time left: 1 per 5 seconds, never less than 2
+export const SKIP_MS_PER_REP = 5000
+export const SKIP_MIN_REP = 2
+
 export class ConstructionManager {
     constructor(progressionManager, timeManager) {
         this.progressionManager = progressionManager;
@@ -56,6 +60,27 @@ export class ConstructionManager {
         city.finishTime = this.timeManager.getFinishTime(duration);
         city.underConstruction = true;
         this.progressionManager.citiesUnderConstruction.push(city);
+    }
+
+    // Reputation to finish this city or development right now (0 when there is nothing left to wait for)
+    calculateSkipCost(item) {
+        if (!item || !item.underConstruction || item.finishTime == null) return 0;
+        const remaining = this.timeManager.getTimeRemaining(item.finishTime);
+        if (remaining <= 0) return 0;
+        return Math.max(SKIP_MIN_REP, Math.ceil(remaining / SKIP_MS_PER_REP));
+    }
+
+    // Spend Reputation to finish a build now. It is done by the next tick, the same way Advanced Engineering
+    // builds are, so everything that happens when a build completes still happens in one place.
+    skipConstruction(item) {
+        const pm = this.progressionManager;
+        const isBuilding = pm.citiesUnderConstruction.includes(item) || pm.developmentsUnderConstruction.includes(item);
+        if (!isBuilding) return false;
+        const cost = this.calculateSkipCost(item);
+        if (cost <= 0) return false; // already finishing: a second click must not charge again
+        if (!pm.spendReputation(cost)) return false;
+        item.finishTime = this.timeManager.getNow();
+        return true;
     }
 
     isConstructionComplete(item) {

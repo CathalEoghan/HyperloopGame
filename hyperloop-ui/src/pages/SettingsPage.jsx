@@ -18,6 +18,7 @@ const VERSION_LOG = [
             'Work is now worth about 10 seconds of base income per click, and income has been rebalanced',
             'VIP passengers, worth five times the Reputation at farewells',
             'Hyper-Link can be muted',
+            'Spend Reputation to build a city or development instantly: 1 Reputation per 5 seconds left, at least 2',
             'Income boost breakdowns now show the upgrades added together, then the Prestige perks and Founders\' Hall that multiply them, and the Guide explains how boosts stack',
             'Many bug fixes and text corrections',
         ]

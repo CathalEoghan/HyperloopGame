@@ -15,7 +15,7 @@ import poorIcon from '../assets/misc/poor.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { isGrantedCity } from '../utils/grantedCities.js'
-import { playClickSound2, playConstructionSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
@@ -259,6 +259,22 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <h3><img src={constructionIcon} alt="construction" style={{ width: '20px', height: '20px', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '0' }} />{selectedCity.name}</h3>
                                     <p>Under construction!</p>
                                     <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(selectedCity.finishTime))}</strong></p>
+                                    {(() => {
+                                        const skipCost = constructionManager.calculateSkipCost(selectedCity)
+                                        if (skipCost <= 0) return null
+                                        const canSkip = constructionManager.progressionManager.reputation >= skipCost
+                                        return (
+                                            <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} onClick={() => {
+                                                // The real Reputation, not the figure on screen, which can be a second old (bug #170)
+                                                if (!constructionManager.skipConstruction(selectedCity)) { playNotEnoughFundsSound(); return }
+                                                playClickSound2(); playFarewellAcceptSound(); onSave(); closeModal()
+                                            }}>
+                                                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                                    Build instantly ({skipCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                </span>
+                                            </button>
+                                        )
+                                    })()}
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
                                 </>
                             ) : available.includes(selectedCity) ? (
