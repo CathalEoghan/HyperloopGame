@@ -168,6 +168,17 @@ export class EconomyManager {
         return 1 + this.getUpgradeSum(effectType);
     }
 
+    // What a city earns per day before any boost (tier plus population): the first line of the city card.
+    getCityBaseIncome(city) {
+        return (TIER_INCOME[city.tier] || 0) + city.population * POPULATION_INCOME_MODIFIER;
+    }
+
+    // The multiplier a development's upgrade level gives (x1, x1.15, x1.5, x2), shown on the development card.
+    getDevLevelMultiplier(development) {
+        const rawLevel = Math.floor(Number(this.progressionManager.developmentUpgradeLevels[development.name])) || 0;
+        return UPGRADE_MULTIPLIERS[Math.max(0, Math.min(UPGRADE_MULTIPLIERS.length - 1, rawLevel))];
+    }
+
     getEffectiveDevRevenue(development) {
         const base = development.revenue || 0;
         // A level outside 0-3 (a hand-edited save) is treated as the nearest real level, never NaN (bug #82)

@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import BoostTooltip from '../components/BoostTooltip.jsx'
+import IncomeRow from '../components/IncomeRow.jsx'
 import './CitiesPage.css'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
@@ -303,25 +304,23 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         const effectiveIncome = economyManager.withFoundersHall(economyManager.calculateCityIncome(selectedCity, coordsMap))
                                         const { lines, totalBoost } = economyManager.getCityBoostBreakdown(selectedCity, coordsMap)
                                         const boostPct = Math.round(totalBoost * 100)
+                                        const baseIncome = economyManager.getCityBaseIncome(selectedCity)
                                         return (
-                                            <p>
-                                                Earning{' '}
-                                                <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '3px', overflow: 'visible' }}>
-                                                    <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />
-                                                    {effectiveIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
-                                                    {boostPct > 0 && (
+                                            <div style={{ width: '100%', margin: '8px 0' }}>
+                                                <IncomeRow label="Base income" amount={baseIncome} last={boostPct <= 0} />
+                                                {boostPct > 0 && (
+                                                    <IncomeRow label="Boosted income" amount={effectiveIncome} last>
                                                         <span
                                                             style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
                                                             onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
                                                             onMouseLeave={() => setShowCityBoostTip(null)}
                                                         >
-                                                            (+{boostPct}%)
+                                                            (+{boostPct.toLocaleString('en-GB')}%)
                                                             <BoostTooltip anchor={showCityBoostTip} lines={lines} />
                                                         </span>
-                                                    )}
-                                                </strong>
-                                                {' '}per day
-                                            </p>
+                                                    </IncomeRow>
+                                                )}
+                                            </div>
                                         )
                                     })()}
                                     <p><em>{selectedCity.fact}</em></p>

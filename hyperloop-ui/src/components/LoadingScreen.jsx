@@ -84,8 +84,10 @@ function LoadingScreen({ onComplete }) {
             cashIcon, clockIcon, reputationIcon, starIcon, departureBoardImg,
         ]
 
-        const flagSrcs = Object.values(countryFlags)
-            .map(code => `https://flagcdn.com/w40/${code}.png`)
+        // Two sizes: w40 for the lists and the globe, w80 for the bigger flags on the Progress page. That page used to
+        // fetch ~110 of its own on every first visit, which is why its flags appeared one by one.
+        const flagSrcs = [...new Set(Object.values(countryFlags))]
+            .flatMap(code => [`https://flagcdn.com/w40/${code}.png`, `https://flagcdn.com/w80/${code}.png`])
 
         // Only what's shown straight away: the lists and reveals use the local thumbnails above.
         // The Cloudinary photos (city and development details) load when first opened.

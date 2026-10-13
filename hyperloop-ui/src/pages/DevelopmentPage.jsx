@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react'
 import BoostTooltip from '../components/BoostTooltip.jsx'
+import IncomeRow from '../components/IncomeRow.jsx'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
 import { matchesSearch } from '../utils/search.js'
 import './DevelopmentPage.css'
@@ -225,38 +226,34 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     {selectedDevelopment.revenue ? (
                                         <div style={{ width: '100%', margin: '8px 0' }}>
                                             {(() => {
+                                                // Base revenue, then boosted (all the + and x modifiers), then upgraded (the level's multiplier)
                                                 const { lines: tooltipLines, totalBoost } = economyManager.getDevBoostBreakdown(selectedDevelopment)
                                                 const totalBoostPct = Math.round(totalBoost * 100)
+                                                const level = getLevel(selectedDevelopment)
+                                                const levelMult = economyManager.getDevLevelMultiplier(selectedDevelopment)
                                                 return (
-                                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #eee', position: 'relative' }}>
-                                                        <span style={{ fontSize: '0.85rem', color: '#888' }}>Base Revenue</span>
-                                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 'bold' }}>
-                                                            <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                                            {selectedDevelopment.revenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
-                                                            {totalBoostPct > 0 && (
+                                                    <>
+                                                        <IncomeRow label="Base revenue" amount={selectedDevelopment.revenue} />
+                                                        {totalBoostPct > 0 && (
+                                                            <IncomeRow label="Boosted revenue" amount={selectedDevelopment.revenue * (1 + totalBoost)}>
                                                                 <span
                                                                     style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
                                                                     onMouseEnter={(e) => setShowBoostTooltip(e.currentTarget)}
                                                                     onMouseLeave={() => setShowBoostTooltip(null)}
                                                                 >
-                                                                    (+{totalBoostPct}%)
+                                                                    (+{totalBoostPct.toLocaleString('en-GB')}%)
                                                                     <BoostTooltip anchor={showBoostTooltip} lines={tooltipLines} />
                                                                 </span>
-                                                            )}
-                                                        </span>
-                                                    </div>
+                                                            </IncomeRow>
+                                                        )}
+                                                        {level > 0 && (
+                                                            <IncomeRow label={`Upgraded (Level ${level})`} amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment))}>
+                                                                <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(×{+levelMult.toFixed(2)})</span>
+                                                            </IncomeRow>
+                                                        )}
+                                                    </>
                                                 )
                                             })()}
-                                            {getLevel(selectedDevelopment) > 0 && (
-                                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #eee' }}>
-                                                    <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgraded Revenue</span>
-                                                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 'bold' }}>
-                                                        <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                                        <span>{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment)).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</span>
-                                                        <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(+{[0, 15, 50, 100][getLevel(selectedDevelopment)]}%)</span>
-                                                    </span>
-                                                </div>
-                                            )}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
                                                 <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgrade Level</span>
                                                 <span style={{ fontWeight: 'bold' }}>{getLevel(selectedDevelopment)} / 3</span>
