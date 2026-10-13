@@ -85,7 +85,7 @@ function LoadingScreen({ onComplete }) {
 
         // Only what's shown straight away: the lists and reveals use the local thumbnails above.
         // The Cloudinary photos (city and development details) load when first opened.
-        // Flags are bundled with the game (public/flags), so there is nothing to wait for.
+        // Flags are inside the game's script itself (src/data/flagImages.js), so there is nothing to wait for.
         preloadImages(imageSrcs)
 
         SOUNDS.forEach(src => {
