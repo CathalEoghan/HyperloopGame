@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import cityThumbnails from '../data/cityThumbnails.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
-import countryFlags from '../data/countryFlags.js'
 import earthDay2k from '../assets/misc/2k_earth_daymap.jpg'
 import earthNight2k from '../assets/misc/2k_earth_nightmap.jpg'
 import earthDay8k from '../assets/misc/8k_earth_daymap.jpg'
@@ -84,14 +83,10 @@ function LoadingScreen({ onComplete }) {
             cashIcon, clockIcon, reputationIcon, starIcon, departureBoardImg,
         ]
 
-        // Two sizes: w40 for the lists and the globe, w80 for the bigger flags on the Progress page. That page used to
-        // fetch ~110 of its own on every first visit, which is why its flags appeared one by one.
-        const flagSrcs = [...new Set(Object.values(countryFlags))]
-            .flatMap(code => [`https://flagcdn.com/w40/${code}.png`, `https://flagcdn.com/w80/${code}.png`])
-
         // Only what's shown straight away: the lists and reveals use the local thumbnails above.
         // The Cloudinary photos (city and development details) load when first opened.
-        preloadImages([...imageSrcs, ...flagSrcs])
+        // Flags are bundled with the game (public/flags), so there is nothing to wait for.
+        preloadImages(imageSrcs)
 
         SOUNDS.forEach(src => {
             const audio = new Audio(src)
@@ -107,7 +102,7 @@ function LoadingScreen({ onComplete }) {
 
             if (pct < 0.20)      setStatusText('Loading city thumbnails...')
             else if (pct < 0.40) setStatusText('Loading developments...')
-            else if (pct < 0.60) setStatusText('Preloading flags...')
+            else if (pct < 0.60) setStatusText('Loading countries...')
             else if (pct < 0.80) setStatusText('Loading globe textures...')
             else                 setStatusText('Ready.')
 

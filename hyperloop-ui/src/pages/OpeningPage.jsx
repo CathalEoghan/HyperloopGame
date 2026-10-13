@@ -8,6 +8,7 @@ import CityPickerModal from '../components/CityPickerModal.jsx'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import globeIcon from '../assets/misc/globeIcon.png'
 import './OpeningPage.css'
+import { flagSrc } from '../utils/flagSrc.js'
 
 // runStart: set after a prestige. The terminal name carries over, and the starter city was drawn for the player
 // unless they own Personal Favours, which lets them choose it.
@@ -107,7 +108,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                                 <div className="starter-city-name-row">
                                     <img
                                         className="starter-city-flag"
-                                        src={`https://flagcdn.com/w40/${countryFlags[city.country]}.png`}
+                                        src={flagSrc(countryFlags[city.country])}
                                         alt={city.country}
                                     />
                                     <span className="starter-city-name">{city.name}</span>

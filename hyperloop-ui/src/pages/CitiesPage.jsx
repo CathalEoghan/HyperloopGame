@@ -17,6 +17,7 @@ import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { isGrantedCity } from '../utils/grantedCities.js'
 import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
+import { flagSrc } from '../utils/flagSrc.js'
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
 const CONTINENT_COLOURS = {
@@ -179,7 +180,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 </div>
                 <div>
                     {showFlag && (
-                        <img src={`https://flagcdn.com/w40/${countryFlags[city.country]}.png`} alt={city.country} title={city.country}
+                        <img src={flagSrc(countryFlags[city.country])} alt={city.country} title={city.country}
                             style={{ width: '18px', height: 'auto', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '2px' }} />
                     )}
                     {city.name}
@@ -198,7 +199,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
             <div key={country}>
                 <h2 className="country" style={{ borderLeftColor: borderColour }} onClick={() => { playClickSound2(); toggleCountry(section, country) }}>
                     {country}
-                    <img src={`https://flagcdn.com/w40/${countryFlags[country]}.png`} width="20" alt={country} />
+                    <img src={flagSrc(countryFlags[country])} width="20" alt={country} />
                     <span className="country-city-count">{cities.length}</span>
                 </h2>
                 {!isCollapsed && (
@@ -309,7 +310,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 </>
                             ) : (
                                 <>
-                                    <img src={`https://flagcdn.com/w40/${countryFlags[selectedCity.country]}.png`} />
+                                    <img src={flagSrc(countryFlags[selectedCity.country])} />
                                     <h3>{selectedCity.name}</h3>
                                     <hr />
                                     <p><strong>Country</strong>: {selectedCity.country}</p>

@@ -3,6 +3,7 @@ import countryFlags from '../data/countryFlags.js'
 import { matchesSearch } from '../utils/search.js'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import './CityPickerModal.css'
+import { flagSrc } from '../utils/flagSrc.js'
 
 const TIERS = [3, 2, 1]
 
@@ -67,7 +68,7 @@ function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lo
                                 onClick={() => { playClickSound2(); setSelected(city) }}
                             >
                                 {flag
-                                    ? <img className="citypicker-flag" src={`https://flagcdn.com/w40/${flag}.png`} alt="" loading="lazy" />
+                                    ? <img className="citypicker-flag" src={flagSrc(flag)} alt="" loading="lazy" />
                                     : <span className="citypicker-flag" />}
                                 <span className="citypicker-name">{city.name}</span>
                                 <span className="citypicker-country">{city.country}</span>

@@ -10,6 +10,7 @@ import { makeStarPositions } from '../utils/stars.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import cashIcon from '../assets/misc/cash.png'
 import './HomePage.css'
+import { flagSrc } from '../utils/flagSrc.js'
 
 function latLngToVector3(lat, lng, radius) {
     const phi = (90 - lat) * (Math.PI / 180)
@@ -98,7 +99,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             if (nowPurchased && !sprite.userData.isPurchased) {
                 // Was unlocked/dimmed → full colour
                 const flagCode = countryFlags[city.country]
-                sprite.material.map = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
+                sprite.material.map = textureLoader.load(flagSrc(flagCode))
                 sprite.material.color.set(1, 1, 1)
                 sprite.material.needsUpdate = true
                 sprite.userData.isPurchased = true
@@ -106,13 +107,13 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             } else if (nowUnlocked && !sprite.userData.isUnlocked) {
                 // Was grayscale → dimmed colour
                 const flagCode = countryFlags[city.country]
-                sprite.material.map = textureLoader.load(`https://flagcdn.com/w40/${flagCode}.png`)
+                sprite.material.map = textureLoader.load(flagSrc(flagCode))
                 sprite.material.color.set(0.1, 0.1, 0.1)
                 sprite.material.needsUpdate = true
                 sprite.userData.isUnlocked = true
             } else if (!nowPurchased && !nowUnlocked && !city.underConstruction && (sprite.userData.isUnlocked || sprite.userData.isPurchased)) {
                 // No longer on offer (for example it was re-rolled away) → back to grayscale
-                loadGrayscaleTexture(`https://flagcdn.com/w40/${countryFlags[city.country]}.png`, (greyTex) => {
+                loadGrayscaleTexture(flagSrc(countryFlags[city.country]), (greyTex) => {
                     if (greyTex) { sprite.material.map = greyTex; sprite.material.needsUpdate = true }
                 })
                 sprite.material.color.set(1, 1, 1)
@@ -260,7 +261,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             const isUnlocked = unlockedNames.has(city.name)
             const spritePos = latLngToVector3(coords.lat, coords.lng, globeRadius + 0.035)
             const surfaceNormal = latLngToVector3(coords.lat, coords.lng, 1)
-            const flagUrl = `https://flagcdn.com/w40/${flagCode}.png`
+            const flagUrl = flagSrc(flagCode)
             const spriteMat = new THREE.SpriteMaterial({
                 map: (isPurchased || isUnlocked) ? textureLoader.load(flagUrl) : null,
                 transparent: true, depthTest: true, depthWrite: false,
@@ -470,7 +471,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             {selectedGlobeCity && (
                 <div className="modal-overlay" onClick={() => setSelectedGlobeCity(null)}>
                     <div className="modal" onClick={e => e.stopPropagation()}>
-                        <img src={`https://flagcdn.com/w40/${countryFlags[selectedGlobeCity.country]}.png`} alt={selectedGlobeCity.country} />
+                        <img src={flagSrc(countryFlags[selectedGlobeCity.country])} alt={selectedGlobeCity.country} />
                         <h3>{selectedGlobeCity.name}</h3>
                         <hr />
                         <p><strong>Country</strong>: {selectedGlobeCity.country}</p>
@@ -501,7 +502,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     <div className="modal" onClick={e => e.stopPropagation()}>
                         {constructionManager?.progressionManager?.citiesUnderConstruction?.some(c => c.name === selectedUnlockedCity.name) ? (
                             <>
-                                <img src={`https://flagcdn.com/w40/${countryFlags[selectedUnlockedCity.country]}.png`} alt={selectedUnlockedCity.country} />
+                                <img src={flagSrc(countryFlags[selectedUnlockedCity.country])} alt={selectedUnlockedCity.country} />
                                 <h3>{selectedUnlockedCity.name}</h3>
                                 <hr />
                                 <p>Under construction!</p>
@@ -513,7 +514,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                             </>
                         ) : (
                             <>
-                                <img src={`https://flagcdn.com/w40/${countryFlags[selectedUnlockedCity.country]}.png`} alt={selectedUnlockedCity.country} />
+                                <img src={flagSrc(countryFlags[selectedUnlockedCity.country])} alt={selectedUnlockedCity.country} />
                                 <h3>Connect {selectedUnlockedCity.name}?</h3>
                                 <hr />
                                 <p><strong>Country</strong>: {selectedUnlockedCity.country}</p>

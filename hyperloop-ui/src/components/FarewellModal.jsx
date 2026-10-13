@@ -5,6 +5,7 @@ import reputationIcon from '../assets/misc/reputation.png'
 import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
+import { flagSrc } from '../utils/flagSrc.js'
 
 const secondsUntil = expiresAt => Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000))
 
@@ -73,7 +74,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 <div className="farewell-destination">
                     {flagCode && (
                         <img
-                            src={`https://flagcdn.com/w40/${flagCode}.png`}
+                            src={flagSrc(flagCode)}
                             alt={departure.country}
                             className="farewell-flag"
                         />

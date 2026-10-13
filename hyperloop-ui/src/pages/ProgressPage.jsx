@@ -10,6 +10,7 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import './ProgressPage.css'
+import { flagSrc } from '../utils/flagSrc.js'
 
 const CashValue = ({ amount, suffix = '' }) => (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
@@ -351,7 +352,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                     ) : (
                                         <>
                                             {flagCode ? (
-                                                <img className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={`https://flagcdn.com/w80/${flagCode}.png`} alt={country} />
+                                                <img className={`progress-country-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={flagSrc(flagCode, 80)} alt={country} />
                                             ) : (
                                                 <div className="progress-flag-unknown">?</div>
                                             )}
@@ -388,7 +389,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                             <img className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={cityThumbnails[city.name] || cityImages[city.name]} alt={city.name} />
                                             <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{city.name}</div>
                                             {flagCode ? (
-                                                <img className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={`https://flagcdn.com/w80/${flagCode}.png`} alt={city.country} />
+                                                <img className={`progress-city-flag ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={flagSrc(flagCode, 80)} alt={city.country} />
                                             ) : (
                                                 <div className="progress-city-flag-unknown">?</div>
                                             )}

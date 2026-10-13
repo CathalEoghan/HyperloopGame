@@ -9,6 +9,7 @@ import pinIcon from '../assets/misc/pin.png'
 import countryFlags from '../data/countryFlags.js'
 import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } from '../utils/sound.js'
 import { formatBalance } from '../utils/formatBalance.js'
+import { flagSrc } from '../utils/flagSrc.js'
 
 const WORK_PHRASES = [
     'Processed passenger', 'Attended meeting', 'Worked security', 'Shop inspection',
@@ -209,7 +210,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                 {homeCity && (
                     <div className="HomeCity">
                         <img src={pinIcon} alt="pin" style={{ width: '10px', height: '10px', border: 'none', borderRadius: '0', opacity: 0.6 }} />
-                        <img src={`https://flagcdn.com/w40/${countryFlags[homeCity.country]}.png`} alt={homeCity.country} style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '1px' }} />
+                        <img src={flagSrc(countryFlags[homeCity.country])} alt={homeCity.country} style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '1px' }} />
                         <span>{homeCity.name}, {homeCity.country}</span>
                     </div>
                 )}

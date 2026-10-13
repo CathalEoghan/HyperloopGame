@@ -18,6 +18,7 @@ const VERSION_LOG = [
             'Work is now worth about 10 seconds of base income per click, and income has been rebalanced',
             'VIP passengers, worth five times the Reputation at farewells',
             'Hyper-Link can be muted',
+            'Country flags are now bundled with the game, so they appear straight away instead of loading in one by one',
             'Spend Reputation to build a city or development instantly: 1 Reputation per 5 seconds left, at least 2',
             'Income boost breakdowns now show the upgrades added together, then the Prestige perks and Founders\' Hall that multiply them, and the Guide explains how boosts stack',
             'Many bug fixes and text corrections',
@@ -154,13 +155,14 @@ function LegalModal({ onClose }) {
                     <p className="credits-section">PRIVACY</p>
                     <p className="credits-line">All save data is stored locally on your device using localStorage.</p>
                     <p className="credits-line">There is no account, and your save and game data are never sent to any server.</p>
-                    <p className="credits-line">To keep the game small, city and development photos are loaded from Cloudinary and country flags from flagcdn.com. Like any website, these services receive your IP address when they send an image. Nothing else about you or your game is sent to them.</p>
+                    <p className="credits-line">To keep the game small, city and development photos are loaded from Cloudinary. Like any website, it receives your IP address when it sends an image. Nothing else about you or your game is sent to them.</p>
                     <p className="credits-line">No analytics, tracking or third-party cookies are used.</p>
                     <p className="credits-line">Deleting your save removes all locally stored game data.</p>
                     <p className="credits-section">CONTENT</p>
                     <p className="credits-line">City and development images are sourced from Pexels and Wikimedia Commons under their respective licences.</p>
                     <p className="credits-line">Sound effects are sourced from Freesound and Pixabay under their respective licences.</p>
                     <p className="credits-line">Globe textures courtesy of NASA Visible Earth.</p>
+                    <p className="credits-line">Country flags come from the flag-icons project (MIT licence).</p>
                     <p className="credits-section">DISCLAIMER</p>
                     <p className="credits-line">Hyperloop Empire is a fictional idle game provided for entertainment purposes only. All city names, facts and figures are used in a fictional context.</p>
                     <p className="credits-line">The game is provided as-is with no warranties expressed or implied.</p>
