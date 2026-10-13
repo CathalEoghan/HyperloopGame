@@ -1169,7 +1169,7 @@ export const POSTS = {
     event_tourism_surge: [
             'anyone else in town for {occasion}?? this place is packed',
             'Told my friends I was going to {occasion}. Did not expect this many people at {terminalName}',
-            'queue for the loop is insane today. blame {occasion} 😅',
+            'queue for the loop is insane today. turns out there\'s {occasion} on 😅',
         ],
     event_record_day: [
         'this place is CRAMMED.',
