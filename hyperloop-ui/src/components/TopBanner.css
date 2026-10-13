@@ -25,13 +25,9 @@ font-size: 1rem;
     animation: work-pulse 2.5s ease-in-out infinite;
 }
 
+/* Best P.A. Ever: no idle pulse of its own. The button pulses with each automatic click (TopBanner.jsx) */
 .work-banner-btn.work-banner-auto {
-    animation: work-auto-pulse 0.5s ease-out infinite;
-}
-
-@keyframes work-auto-pulse {
-    0%   { box-shadow: 0 0 0 0 rgba(245, 166, 35, 0.45); }
-    100% { box-shadow: 0 0 0 8px rgba(245, 166, 35, 0); }
+    animation: none;
 }
 
 .work-banner-btn:hover {

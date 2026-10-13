@@ -42,7 +42,7 @@ const formatWorkAmount = (value, tilde = false) => {
     return `${scaled.toFixed(1)}${WORK_SUFFIXES[tier - 1]}${t}`
 }
 
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, workDisabled = false }) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, autoWorkTick, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, workDisabled = false }) {
     const [floats, setFloats] = useState([])
     // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
     const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
@@ -150,6 +150,28 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         return () => { if (repAnimRef.current) cancelAnimationFrame(repAnimRef.current) }
     }, [reputation])
 
+    // Best P.A. Ever clicks Work for you: the button pulses and shows the same message a click does, with no sound
+    useEffect(() => {
+        if (!autoWork || !autoWorkTick || document.hidden) return
+        const btn = btnRef.current
+        if (!btn) return
+        if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
+            btn.animate(
+                [
+                    { boxShadow: '0 0 0 0 rgba(245, 166, 35, 0.7)', transform: 'scale(1.04)' },
+                    { boxShadow: '0 0 0 10px rgba(245, 166, 35, 0)', transform: 'scale(1)' },
+                ],
+                { duration: 450, easing: 'ease-out' }
+            )
+        }
+        const id = floatId++
+        const rect = btn.getBoundingClientRect()
+        const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
+        setFloats(prev => [...prev, { id, phrase, hasRep: autoWorkTick.reps > 0, repGain: autoWorkTick.reps * 5, earned: autoWorkTick.earned, x: rect.left + rect.width / 2, y: rect.top }])
+        // Not cancelled when the next click arrives: each message removes itself, as the manual ones do
+        setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
+    }, [autoWorkTick])  // eslint-disable-line react-hooks/exhaustive-deps
+
     const handleWork = () => {
         if (workDisabled) return
         const id = floatId++
@@ -242,7 +264,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                         +<img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(f.earned || (workRange?.low || 0))}
                         {f.hasRep && (
-                            <>&nbsp;+<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />5</>
+                            <>&nbsp;+<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{f.repGain || 5}</>
                         )}
                     </span>
                 </div>

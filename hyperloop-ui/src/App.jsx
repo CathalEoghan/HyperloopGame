@@ -520,6 +520,7 @@ function App() {
 
   // One press of Work. A manual press counts towards the Work achievements and plays the bonus sound;
   // Best P.A. Ever's presses (auto) earn the same money and Reputation, quietly.
+  const [autoWorkTick, setAutoWorkTick] = useState(null);
   const performWork = (onRepGain, { auto = false } = {}) => {
     // Nothing is earned until the welcome popup is closed (bug #159)
     if (onboardingPending()) return;
@@ -548,7 +549,13 @@ function App() {
       }
       const due = workClicksDue(now, lastClickAt);
       lastClickAt = due.lastClickAt;
-      for (let i = 0; i < due.clicks; i++) performWork(null, { auto: true });
+      // The Work button pulses and shows a message for these clicks, silently. Clicks made up after a background
+      // tab was throttled arrive together, so they show as one message with the total.
+      let clicks = 0, earned = 0, reps = 0;
+      for (let i = 0; i < due.clicks; i++) {
+        performWork((e, gotRep) => { clicks++; earned += e; if (gotRep) reps++; }, { auto: true });
+      }
+      if (clicks > 0) setAutoWorkTick({ clicks, earned, reps });
     }, AUTO_WORK_INTERVAL_MS);
     return () => clearInterval(id);
   }, []);
@@ -1350,6 +1357,7 @@ function App() {
         // Popups block the mouse, but a focused Work button could still be pressed from the keyboard behind them (bug #159)
         workDisabled={popupOpen || hyperLinkOpen || achievementsOpen}
         autoWork={PrestigeManager.owns('bestPAEver')}
+        autoWorkTick={autoWorkTick}
         workRange={workRange}
       />
       <ExperienceBar
