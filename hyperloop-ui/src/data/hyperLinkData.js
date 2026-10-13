@@ -39,7 +39,7 @@ export const FIRST_NAMES_MALE = [
     'Zachary', 'Zack', 'Zach', 'Zac', 'Edwin', 'Eliot', 'Elliott',
     'Elliot', 'Anthony', 'Ant', 'Declan', 'Callum', 'Kal', 'Cal',
     'Lewis', 'Jordan', 'Louis', 'Mason', 'Matthew', 'Luke', 'Marcus',
-    'Terry', 'Wayne', 'Wesley', 'Wes', 'Hugh', 'Owen','Olliver',
+    'Terry', 'Wayne', 'Wesley', 'Wes', 'Hugh', 'Owen', 'Olliver',
     'Olly', 'Ollie', 'Johnny', 'John', 'Jon', 'Phillip', 'Joseph', 'Nathaniel',
     'Nathan', 'Nate', 'Benny', 'Jonathan', 'Luc', 'Ray', 'Robin', 'Spencer',
     'Gerald', 'Art', 'Cooper', 'Davinder', 'Orville', 'Ernesto', 'Aidan',
@@ -56,7 +56,7 @@ export const FIRST_NAMES_MALE = [
     'Brayden', 'Darius', 'Daniel', 'Danny', 'Frankie', 'Frank', 'Jesse', 'Jasper',
     'Hayden', 'Enzo', 'Evan', 'Fraser', 'Everett', 'Griff', 'Dean', 'Edmund',
     'Fabian', 'Felix', 'Fabio', 'Isaiah', 'Rex', 'Reed', 'Reid', 'Gray', 'Grey',
-    'Cecil', 'Ralph', 'Raphael', 'Raph', 'Don', 'Duncan', 'Vitaly', 'Karlos', 'Bruce', 
+    'Cecil', 'Ralph', 'Raphael', 'Raph', 'Don', 'Duncan', 'Vitaly', 'Karlos', 'Bruce',
     'Brucie', 'Davood', 'Oran', 'Ibrahim', 'Matheus', 'Etienne', 'Wolfgang',
 ]
 
@@ -450,7 +450,7 @@ export const POSTS = {
         'MELTING IN THIS HEAT #july',
     ],
 
-     august: [
+    august: [
         'On a last minute summer\'s trip for #August 🧳',
         'It\'s definitely getting a lil colder recently but i like it #august',
         'omg guys its two showers to go until its christmas!!!',
@@ -464,7 +464,7 @@ export const POSTS = {
         'Hope everyones having a blessed september 🍃',
     ],
 
-      october: [
+    october: [
         'spooky season 🎃',
         'anywhere in this place that sells pumpkin spice lattes',
         'whats everyones halloween costumes this year??',
@@ -520,7 +520,7 @@ export const POSTS = {
         'Mum dragging me to the new {recreation} like plzzz',
     ],
 
-        newDevelopmentService: [
+    newDevelopmentService: [
         'Life is a little more convenient with the new {service} built here #{terminalName}',
         'Has anyone used the new {service}? what do you think?',
         'Good thing the new {service} is open - would genuinely be lost without it',
@@ -621,6 +621,7 @@ export const POSTS = {
         'Damn was excited to see the manager oh well',
         'Lowkey wish the manager said bye to us #sad',
         'kind of wanted to be in one of those viral manager farewell videos but whatever lol',
+        'sad i missed the manager. dont they usually come down and say bye?',
     ],
 
     positiveEvent: [
@@ -657,7 +658,7 @@ export const POSTS = {
         'This place desperately needs more options to travel to. Sick of the limited choice',
         'Can we get some more destinations plz?',
         'one big improvement id like to see is more travel destinations',
-        'MANAGER. CONNECT MORE CITIES. THIS PLACE IS A GHOST TOWN.', 
+        'MANAGER. CONNECT MORE CITIES. THIS PLACE IS A GHOST TOWN.',
         'wish they would add more connections. the pickings rn are slim',
         'the choices for destinations here are actually terrible 😂'
     ],
@@ -705,6 +706,14 @@ export const POSTS = {
         'Yay i love food and this terminal has so much of it #yum',
         'There\'s so much food choice here! 5 ⭐️',
         'one thing about this place i love: we are spoiled for food choices👍',
+    ],
+
+    manyShopping: [
+        'Lots of choices here to shop! Not great for a shopaholic like me lol',
+        'so hard to resist splashing the cash when there are so many amazing shops around lmao',
+        'if they didnt want us to bring a massive amount of shopping onto the loop, then why the hell did they build so many incredible shops?',
+        'So many stores! Which one should I visit first? 🤔🛍️',
+        'really great selection of stores here. my bff said we cant stay long though big sad',
     ],
 
     advertisingCampaign: [
@@ -759,7 +768,7 @@ export const POSTS = {
         'literally had to end the escape room early cus i forgot about my loop🤣 maybe next time',
         'anyone tried the new escape room? is it scary 😦',
         'Left my kid in the escape room so i could relax. Now he doesnt want to leave. #great'
-    
+
     ],
 
     carMuseum: [
@@ -851,51 +860,51 @@ export const POSTS = {
         'so bored im walking around the new hyperloop museum … IN the hyperloop terminal lol',
         'I never knew what a hyperloop actually was till i visited the museum about it lmao'
     ],
-bakery: [
+    bakery: [
         'mm! fresh breads and bagels at the bakery 🥯',
         'day going well so far. arrived early, checked in, security was ok - sitting now with a baguette from the bakery #chill',
         'The lines for the bakery are super long - and no wonder! The smell is just divine 🥖'
     ],
-beerTent: [
+    beerTent: [
         'think i lost my passport at the beer tent has anyone seen it??',
         'Prost! 🍻 #beertent',
         'Happy drinking! 🍻'
     ],
-pharmacy: [
+    pharmacy: [
         'some rude ass just bunked me at the pharmacy !',
         'forgot my prescription but its ok theres a pharmacy #happydays',
     ],
-yogaStudio: [
+    yogaStudio: [
         'id try yoga but i feel like id fart mid pose or something lol',
         'So rested after a group yoga session at the {terminalName} yoga studio 🧘',
         '...And breathe out! The new #yogastudio is a draught of fresh air.'
     ],
 
-pettingZoo: [
+    pettingZoo: [
         'no one asked for a petting zoo … but also no one complained',
         'the baby llamas at the petting zoo are literally the cutest thing ive seen omg 🥺',
         'Lowkey feel like adopting this baby guinea pig and taking it back home with me'
     ],
 
-southernHemisphereTradeAgreements: [
-'The new southern hemisphere trade agreements are brilliant. The world is more than just Asia, Europe and the Americas #GlobalSouth', 
-'Do the new agreements mean it’s cheaper to loop to australia now ?',
-'what is a southern hemisphere'
-],
+    southernHemisphereTradeAgreements: [
+        'The new southern hemisphere trade agreements are brilliant. The world is more than just Asia, Europe and the Americas #GlobalSouth',
+        'Do the new agreements mean it’s cheaper to loop to australia now ?',
+        'what is a southern hemisphere'
+    ],
 
-streetFoodFair: [
-'Anyone tried the dan dan noodles at the street food fair? Acc insane 🍜',
-'bought a proper new york hotdog at the street food fair. delish 🌭',
-'If you have free time, stop by the street food fair - so many cultures and cuisines to sample!'
-],
+    streetFoodFair: [
+        'Anyone tried the dan dan noodles at the street food fair? Acc insane 🍜',
+        'bought a proper new york hotdog at the street food fair. delish 🌭',
+        'If you have free time, stop by the street food fair - so many cultures and cuisines to sample!'
+    ],
 
-staffCafeteriaRenovations: [
+    staffCafeteriaRenovations: [
         'the new staff cafeteria renovations is one of the reasons why i love working here. #thankYOU',
         'the new staff cafeteria is gorgeous. seriously - good job 👍',
         'ok it looks nicer but is the food any better??'
     ],
 
-indoorGarden: [
+    indoorGarden: [
         'took a stroll around the beautiful indoor garden 🌳 #nature',
         'the indoor garden is so lovely - defo helps me destress 🌻',
         'Serene views at the new indoor garden - feel so relaxed now'
@@ -919,7 +928,7 @@ indoorGarden: [
         'Now i definitely wont miss my loop #watchstore ⌚'
     ],
 
-     candyStore: [
+    candyStore: [
         'can we literally ban kids from the candy store omg',
         'anyone tried the sherbert at the candy store??? CRAZY good',
         'if youre at the new candy store. REMEMBER. travel calories dont count'
@@ -967,6 +976,24 @@ indoorGarden: [
         'My mum wants to visit the prayer room anyone know where it is 🙏',
     ],
 
+    antiquesStore: [
+        'Passing the antiques store and my child said "you belong in there". i no longer have any children. #jk',
+        'The new antiques store is spectacular. Visited an hour ago and there are so many cool things - definitely check it out if you want an odd, interesting gift!',
+        'so dusty in the antiques store had to leave my asthma said NOPE.'
+    ],
+
+    bubbleTeaShop: [
+        'ok. best boba flavour. GO.',
+        'in line at the bubble tea shop! so cute 🧋',
+        'yum yum bubble tea',
+    ],
+
+    catCafe: [
+        'A CAT CAFÉ. IM LITERALLY DYING. GIVE ME ALL THE CATS.',
+        'too bad i have a cat allergy otherwise id be all up in that new cafe 😺',
+        'The cats are cute, but the food and drink is amazing in itself! LOVE the new cat café.',
+    ],
+
     lowReputation: [
         'This terminal\'s reputation is down the toilet. #dobetter',
         'The manager will have to work hard to restore their reputation #travel',
@@ -979,148 +1006,204 @@ indoorGarden: [
         'who doesn\'t love the manager? and this terminal?',
     ],
 
-   officialGeneral: [
-    'Welcome to {terminalName}! We hope you enjoy your journey 🚄',
-    'Reminder: please keep the terminal tidy. Bins are located throughout the building 🗑️',
-    'Thank you to everyone who travels with us. We\'re grateful for your support ❤️',
-    'Did you know? {terminalName} has connected {cityCount} cities worldwide 🌍',
-    'We\'re always looking to improve. Leave your feedback at the information desk 📝',
-    'Happy travelling everyone! Stay safe out there 🙏',
-    'Travelling with us today? We\'d love to hear your feedback 💬',
-    'Safe travels to all our passengers today 🌟',
-    'Thank you for choosing {terminalName} — we\'re glad you\'re here 🙏',
-    'We hope your journey with us today is a smooth one ✈️',
-    'A warm welcome to all passengers travelling through {terminalName} today 👋',
-    'Reminder: all lost property should be handed in at the information desk near Gate 1 🎒',
-    'We\'re committed to making every journey through {terminalName} a great one 💛',
-    'Whether you\'re coming or going, we\'re glad you chose {terminalName} ✨',
-    'Our team is here to help — don\'t hesitate to ask any member of staff 😊',
-    'Travelling with little ones today? Our family facilities are located on Level 2 👨‍👩‍👧',
-    'We\'re proud to connect {cityCount} cities and counting 🌍 Thank you for being part of the journey',
-    'Need assistance? Our information desk is open around the clock 🕐',
-    'Accessibility support is available at all times — please speak to any staff member ♿',
-    'Wishing everyone a smooth and enjoyable journey from all of us at {terminalName} 🚄',
-    'Good to see so many familiar faces today. Thank you for travelling with us again 🙏',
-    'Every journey starts here. We\'re honoured to be part of yours ❤️',
-    'The {terminalName} team wishes you a wonderful trip wherever you\'re headed ✈️',
-    'Reminder: please have your travel documents ready before boarding 📋',
-    'Reminder: we have a zero-tolerance policy on abuse of staff.',
-    'Attention passengers: please keep your belongings with you at all times 🧳',
-    'Notice: unattended luggage will be removed by security staff 🚫',
-    'Please stand behind the yellow line while the capsule is arriving ⚠️',
-    'Reminder: please let passengers exit the capsule before boarding 🚪',
-    'Passengers are kindly requested to keep walkways and escalators clear 🚶',
-    'Please check the departure board regularly, as gates can change at short notice 📋',
-    'Gate changes will be announced on the departure board and by our staff. Thank you for your patience 🔔',
-    'Reminder: all passengers must be at their gate before final call. Late arrivals cannot be boarded 🕐',
-    'Please keep noise to a minimum in the quiet areas of {terminalName}. Thank you for your consideration 🤫',
-    'Smoking is not permitted anywhere inside {terminalName}. Thank you for your cooperation 🚭',
-    'Please do not leave children unattended in the terminal. Our staff will help you find them if they get lost 👶',
-    'Reminder: pets must remain under control at all times while in the terminal 🐾',
-    'Spotted something unusual? Please report it to a member of staff straight away 👀',
-    'Thank you for treating our staff with kindness and respect. They are here to help 💛',
-    'Our cleaning team works around the clock to keep {terminalName} spotless. Please help them by using the bins 🧹',
-    'Please use the designated seating areas and keep exits clear. Thank you 💺',
-    'Free drinking water is available throughout the terminal. Stay hydrated on your journey 💧',
-    'Lost something? Our information desk will do all it can to return it to you 🔎',
-    'Feeling unwell? Please speak to a member of staff and we will arrange assistance 🩺',
-    'Reminder: please follow staff instructions in the event of an announcement or evacuation 🚨',
-    'Delays are rare but they happen. Check the departure board for the latest updates 🔄',
-    'We currently connect {cityCount} cities. Thank you for helping us grow 🌍',
-    '{cityCount} destinations and counting. Where will you go next? 🗺️',
-    'Thank you for your patience during busy periods. We are working hard to get everyone moving 🚄',
-    'Peak travel times are expected in the morning and evening. Plan ahead where you can ⏰',
-    'Planning a return trip? Check the departure board for upcoming services 📅',
-    'Remember to take your tickets and personal items with you when you leave 🎫',
-    'Our staff are happy to help with directions, tickets and anything else you need 🙋',
-    'We value your feedback. Please speak to a member of staff or visit the information desk 💬',
-    'It is always a pleasure to welcome you to {terminalName}. Enjoy your journey 🌟',
-    'From all of us at {terminalName}: thank you for choosing to travel with us today 🙏',
-    'Please remember to keep your voice down when taking calls in public areas 📵',
-    'Make sure you have everything before you leave your seat. Safe travels 🎒',
-    'Official notice: {terminalName} reserves the right to refuse boarding to any passenger who endangers others ⛔',
+    officialGeneral: [
+        'Welcome to {terminalName}! We hope you enjoy your journey 🚄',
+        'Reminder: please keep the terminal tidy. Bins are located throughout the building 🗑️',
+        'Thank you to everyone who travels with us. We\'re grateful for your support ❤️',
+        'Did you know? {terminalName} has connected {cityCount} cities worldwide 🌍',
+        'We\'re always looking to improve. Leave your feedback at the information desk 📝',
+        'Happy travelling everyone! Stay safe out there 🙏',
+        'Travelling with us today? We\'d love to hear your feedback 💬',
+        'Safe travels to all our passengers today 🌟',
+        'Thank you for choosing {terminalName} — we\'re glad you\'re here 🙏',
+        'We hope your journey with us today is a smooth one ✈️',
+        'A warm welcome to all passengers travelling through {terminalName} today 👋',
+        'Reminder: all lost property should be handed in at the information desk near Gate 1 🎒',
+        'We\'re committed to making every journey through {terminalName} a great one 💛',
+        'Whether you\'re coming or going, we\'re glad you chose {terminalName} ✨',
+        'Our team is here to help — don\'t hesitate to ask any member of staff 😊',
+        'Travelling with little ones today? Our family facilities are located on Level 2 👨‍👩‍👧',
+        'We\'re proud to connect {cityCount} cities and counting 🌍 Thank you for being part of the journey',
+        'Need assistance? Our information desk is open around the clock 🕐',
+        'Accessibility support is available at all times — please speak to any staff member ♿',
+        'Wishing everyone a smooth and enjoyable journey from all of us at {terminalName} 🚄',
+        'Good to see so many familiar faces today. Thank you for travelling with us again 🙏',
+        'Every journey starts here. We\'re honoured to be part of yours ❤️',
+        'The {terminalName} team wishes you a wonderful trip wherever you\'re headed ✈️',
+        'Reminder: please have your travel documents ready before boarding 📋',
+        'Reminder: we have a zero-tolerance policy on abuse of staff.',
+        'Attention passengers: please keep your belongings with you at all times 🧳',
+        'Notice: unattended luggage will be removed by security staff 🚫',
+        'Please stand behind the yellow line while the capsule is arriving ⚠️',
+        'Reminder: please let passengers exit the capsule before boarding 🚪',
+        'Passengers are kindly requested to keep walkways and escalators clear 🚶',
+        'Please check the departure board regularly, as gates can change at short notice 📋',
+        'Gate changes will be announced on the departure board and by our staff. Thank you for your patience 🔔',
+        'Reminder: all passengers must be at their gate before final call. Late arrivals cannot be boarded 🕐',
+        'Please keep noise to a minimum in the quiet areas of {terminalName}. Thank you for your consideration 🤫',
+        'Smoking is not permitted anywhere inside {terminalName}. Thank you for your cooperation 🚭',
+        'Please do not leave children unattended in the terminal. Our staff will help you find them if they get lost 👶',
+        'Reminder: pets must remain under control at all times while in the terminal 🐾',
+        'Spotted something unusual? Please report it to a member of staff straight away 👀',
+        'Thank you for treating our staff with kindness and respect. They are here to help 💛',
+        'Our cleaning team works around the clock to keep {terminalName} spotless. Please help them by using the bins 🧹',
+        'Please use the designated seating areas and keep exits clear. Thank you 💺',
+        'Free drinking water is available throughout the terminal. Stay hydrated on your journey 💧',
+        'Lost something? Our information desk will do all it can to return it to you 🔎',
+        'Feeling unwell? Please speak to a member of staff and we will arrange assistance 🩺',
+        'Reminder: please follow staff instructions in the event of an announcement or evacuation 🚨',
+        'Delays are rare but they happen. Check the departure board for the latest updates 🔄',
+        'We currently connect {cityCount} cities. Thank you for helping us grow 🌍',
+        '{cityCount} destinations and counting. Where will you go next? 🗺️',
+        'Thank you for your patience during busy periods. We are working hard to get everyone moving 🚄',
+        'Peak travel times are expected in the morning and evening. Plan ahead where you can ⏰',
+        'Planning a return trip? Check the departure board for upcoming services 📅',
+        'Remember to take your tickets and personal items with you when you leave 🎫',
+        'Our staff are happy to help with directions, tickets and anything else you need 🙋',
+        'We value your feedback. Please speak to a member of staff or visit the information desk 💬',
+        'It is always a pleasure to welcome you to {terminalName}. Enjoy your journey 🌟',
+        'From all of us at {terminalName}: thank you for choosing to travel with us today 🙏',
+        'Please remember to keep your voice down when taking calls in public areas 📵',
+        'Make sure you have everything before you leave your seat. Safe travels 🎒',
+        'Official notice: {terminalName} reserves the right to refuse boarding to any passenger who endangers others ⛔',
 
-],
-
-officialDelay: [
-    'We apologise for the delay to the {delayedCity} service. Thank you for your patience 🙏',
-    'Update: the {delayedCity} loop is experiencing a delay. We are working to resolve this ⚠️',
-],
-
-officialDelayCompensated: [
-    'Passengers affected by the {delayedCity} delay have been compensated. We are sorry for the inconvenience 💛',
-    'Compensation has been issued for the {delayedCity} delay. Thank you for your understanding 🙏',
-],
-
-officialEvent: {
-    // Positive - instant cash
-    award_won: [
-        '🏆 We are honoured to announce that {terminalName} has been named Terminal of the Year by the Global Transit Authority!',
-        'Incredible news — {terminalName} has won a Prestigious Award from the Global Transit Authority. Thank you to our passengers and team 🏆',
-    ],
-    government_grant: [
-        '{terminalName} has been awarded a Government Transport Innovation Grant. We will continue to invest in your experience 🙏',
-        'We are pleased to announce {terminalName} has received a government grant to support continued growth and development ✅',
     ],
 
-    // Positive - passive boost
-    viral_coverage: [
-        'We\'ve seen the video going around — welcome to all our new visitors! We hope {terminalName} lives up to the hype 😄',
-        'Overwhelmed by the response online! Thank you to everyone sharing their love for {terminalName} 🙏',
-    ],
-    celebrity_visit: [
-        'We can\'t say who, but {terminalName} may have had a very special passenger today 👀 Thank you for visiting!',
-        'What a day at {terminalName}! We love welcoming all our passengers, famous or otherwise 😊',
-    ],
-    tourism_surge: [
-        'Welcome to all visitors travelling through {terminalName} for {occasion} this week! We\'re delighted to have you 🌍',
-        'Huge numbers travelling through {terminalName} today — welcome to everyone in town for {occasion}! ✈️',
-    ],
-    record_day: [
-        'Today is shaping up to be a record-breaking day at {terminalName}! Thank you to every single passenger 🎉',
-        'We\'re on track to break passenger records today at {terminalName}. Thank you for travelling with us 🚄',
-    ],
-    staff_motivated: [
-        'Shoutout to the incredible team at {terminalName} today — you\'re the reason we keep getting better 💛',
-        'Our staff are going above and beyond today. {terminalName} is in great hands 🙌',
-    ],
-    efficiency_drive: [
-        'Our new productivity initiative is live at {terminalName} today. Expect an even smoother experience 💪',
+    officialDelay: [
+        'We apologise for the delay to the {delayedCity} service. Thank you for your patience 🙏',
+        'Update: the {delayedCity} loop is experiencing a delay. We are working to resolve this ⚠️',
     ],
 
-    // Negative - passive penalty
-    sickness_outbreak: [
-        'We are aware of a sickness affecting some staff today. Services are running but may be slower than usual. We apologise for any inconvenience 🙏',
-        'Health advisory: a bug is circulating in the terminal. Please wash hands regularly and stay safe 🤧',
-    ],
-    bad_press: [
-        'We are aware of recent media coverage and take all feedback seriously. We remain committed to delivering the best experience possible 🙏',
-        'In response to recent reports — we are listening, and we are working hard to address concerns at {terminalName} 💛',
-    ],
-    bad_weather: [
-        'Weather advisory: severe conditions may affect some services today. Please allow extra time and check your loop status ⛈️',
-        'Disruption warning: extreme weather is affecting the {terminalName} network. We are doing everything we can to keep you moving ⚠️',
-    ],
-    security_incident: [
-        'Security notice: we are currently managing an incident at {terminalName}. Please follow staff instructions and allow extra time 🔒',
-        'We are working with authorities to resolve an ongoing security situation. Thank you for your cooperation and patience 🙏',
-    ],
-    staff_walkout: [
-        'Service notice: some operations at {terminalName} are running at reduced capacity today. We apologise for any disruption 🙏',
-        'We are aware of industrial action affecting {terminalName} and are doing our best to minimise disruption to passengers ⚠️',
+    officialDelayCompensated: [
+        'Passengers affected by the {delayedCity} delay have been compensated. We are sorry for the inconvenience 💛',
+        'Compensation has been issued for the {delayedCity} delay. Thank you for your understanding 🙏',
     ],
 
-    // Negative - equipment/systems
-    equipment_damage: [
-        'Emergency maintenance is underway at {terminalName}. Some services may be affected. We apologise for the inconvenience 🔧',
-        'Maintenance notice: urgent repair works are taking place. Thank you for your patience while we get things back to normal 🛠️',
+    officialEvent: {
+        // Positive - instant cash
+        award_won: [
+            '🏆 We are honoured to announce that {terminalName} has been named Terminal of the Year by the Global Transit Authority!',
+            'Incredible news — {terminalName} has won a Prestigious Award from the Global Transit Authority. Thank you to our passengers and team 🏆',
+        ],
+        government_grant: [
+            '{terminalName} has been awarded a Government Transport Innovation Grant. We will continue to invest in your experience 🙏',
+            'We are pleased to announce {terminalName} has received a government grant to support continued growth and development ✅',
+        ],
+
+        // Positive - passive boost
+        viral_coverage: [
+            'We\'ve seen the video going around — welcome to all our new visitors! We hope {terminalName} lives up to the hype 😄',
+            'Overwhelmed by the response online! Thank you to everyone sharing their love for {terminalName} 🙏',
+        ],
+        celebrity_visit: [
+            'We can\'t say who, but {terminalName} may have had a very special passenger today 👀 Thank you for visiting!',
+            'What a day at {terminalName}! We love welcoming all our passengers, famous or otherwise 😊',
+        ],
+        tourism_surge: [
+            'Welcome to all visitors travelling through {terminalName} for {occasion} this week! We\'re delighted to have you 🌍',
+            'Huge numbers travelling through {terminalName} today — welcome to everyone in town for {occasion}! ✈️',
+        ],
+        record_day: [
+            'Today is shaping up to be a record-breaking day at {terminalName}! Thank you to every single passenger 🎉',
+            'We\'re on track to break passenger records today at {terminalName}. Thank you for travelling with us 🚄',
+        ],
+        staff_motivated: [
+            'Shoutout to the incredible team at {terminalName} today — you\'re the reason we keep getting better 💛',
+            'Our staff are going above and beyond today. {terminalName} is in great hands 🙌',
+        ],
+        efficiency_drive: [
+            'Our new productivity initiative is live at {terminalName} today. Expect an even smoother experience 💪',
+        ],
+
+        // Negative - passive penalty
+        sickness_outbreak: [
+            'We are aware of a sickness affecting some staff today. Services are running but may be slower than usual. We apologise for any inconvenience 🙏',
+            'Health advisory: a bug is circulating in the terminal. Please wash hands regularly and stay safe 🤧',
+        ],
+        bad_press: [
+            'We are aware of recent media coverage and take all feedback seriously. We remain committed to delivering the best experience possible 🙏',
+            'In response to recent reports — we are listening, and we are working hard to address concerns at {terminalName} 💛',
+        ],
+        bad_weather: [
+            'Weather advisory: severe conditions may affect some services today. Please allow extra time and check your loop status ⛈️',
+            'Disruption warning: extreme weather is affecting the {terminalName} network. We are doing everything we can to keep you moving ⚠️',
+        ],
+        security_incident: [
+            'Security notice: we are currently managing an incident at {terminalName}. Please follow staff instructions and allow extra time 🔒',
+            'We are working with authorities to resolve an ongoing security situation. Thank you for your cooperation and patience 🙏',
+        ],
+        staff_walkout: [
+            'Service notice: some operations at {terminalName} are running at reduced capacity today. We apologise for any disruption 🙏',
+            'We are aware of industrial action affecting {terminalName} and are doing our best to minimise disruption to passengers ⚠️',
+        ],
+
+        // Negative - equipment/systems
+        equipment_damage: [
+            'Emergency maintenance is underway at {terminalName}. Some services may be affected. We apologise for the inconvenience 🔧',
+            'Maintenance notice: urgent repair works are taking place. Thank you for your patience while we get things back to normal 🛠️',
+        ],
+        system_issues: [
+            'We are currently experiencing technical difficulties with some systems at {terminalName}. Our team is working on a fix ⚠️',
+            'Technical notice: some management systems are offline. Manual operations are in place. We apologise for any delays 🔧',
+        ],
+        regulatory_fine: [
+            'Following a recent inspection, we are implementing improvements across {terminalName} to meet regulatory standards. Thank you for your patience 🙏',
+        ],
+
+    // Positive: passive income boost (30-180 s) - the best ones to fill
+    event_profits_surge: [
+        'The company are doing exceptionally well this quarter. Onwards and upwards. 📈',
+        'Not surprised the company\'s doing well... the place is always completely packed.',
+        'so glad the company is doing well! been following them for a while 😄'
     ],
-    system_issues: [
-        'We are currently experiencing technical difficulties with some systems at {terminalName}. Our team is working on a fix ⚠️',
-        'Technical notice: some management systems are offline. Manual operations are in place. We apologise for any delays 🔧',
+    event_viral_coverage: [
+        'who else has seen the video lol',
+        'can someone PLEASE sent me the video i havent seen it yet!!',
+        'Howd that go viral? not even funny'
     ],
-    regulatory_fine: [
-        'Following a recent inspection, we are implementing improvements across {terminalName} to meet regulatory standards. Thank you for your patience 🙏',
+    event_celebrity_visit: [
+            'wait is that who I think it is??',
+            'Just walked past someone famous and I\'m pretending I didn\'t notice',
+            'who even is that and why do we all care'
+        ],
+    event_tourism_surge: [
+            'anyone else in town for {occasion}?? this place is packed',
+            'Told my friends I was going to {occasion}. Did not expect this many people at {terminalName}',
+            'queue for the loop is insane today. blame {occasion} 😅',
+        ],
+    event_record_day: [
+        'this place is CRAMMED.',
+        'guys. security lines extremely long today. theyve had to start moving passengers ahead based on when their loops leave #madness',
+        'im glad im just seeing my family off! i get to go home, place looks absolutely crawling today 😬😬'
     ],
-}
+
+    // Negative: passive income penalty (30-180 s) - also good to fill
+    event_sickness_outbreak: [
+        'whats this about a sickness outbreak? is it safe to travel?',
+        'yeah. theres definitely something going around. 🤒',
+        'Glad I brought tissues! 🤧'
+    ],
+    event_bad_press: [
+        'I\'m not sure if I believe all the bad press about the terminal! It\'s always been a good experience for me.',
+        'yikes. so many bad articles coming out recently about the terminal. maybe i should fly instead',
+        'idc about the bad press i just want to go on holiday lol #notbothered',
+    ],
+    event_bad_weather: [
+        'Glad I decided to leave early! Weather is terrible',
+        'no taxis will pick me up from the terminal. less capacity today cus of the weather or something #annoying',
+        'Guys... calm down... its just some wind and rain 🙄'
+    ],
+
+    event_security_incident: [
+        'ok im not panicking. ok maybe i am a little bit.',
+        'whats going on??',
+        'rang my mom to tell her i was ok. she said im glad but is the chocolate youre bringing me in your case also ok 😂'
+    ],
+    event_staff_walkout: [
+        'hey whered all the staff go?',
+        'Fully support the staff walkout. #ForTheWorkers',
+        'what are they walking out about 🤔',
+    ],
+
+    }
 }
