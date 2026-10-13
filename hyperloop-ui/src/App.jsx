@@ -40,6 +40,8 @@ import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { PrestigeManager, PRESTIGE_MIN_RANK } from "Managers/PrestigeManager/PrestigeManager.js";
 import { AUTO_WORK_INTERVAL_MS, workClicksDue } from "Managers/PrestigeManager/autoWork.js";
+import { bumpLivestreamClicks, livestreamRepFor } from "Managers/PrestigeManager/livestream.js";
+import { PRESTIGE_VALUES } from "Managers/PrestigeManager/prestigeUpgrades.js";
 import { readGrantedCities, writeGrantedCities } from "./utils/grantedCities.js";
 import { applyGovernmentGrant } from "Managers/PrestigeManager/governmentGrants.js";
 import { AchievementManager } from "Managers/AchievementManager/AchievementManager.js";
@@ -498,6 +500,9 @@ function App() {
 
   // Government Grants: the first tick after a new run's starter city is connected (and only then).
   const grantPending = useRef(!!runStart && PrestigeManager.owns('governmentGrants'));
+  // Sign-On Bonus: extra cash once the new run's starter city is connected. Put straight into the balance, not
+  // earned, so it can't count towards XP or the cash-earned total.
+  const signOnPending = useRef(!!runStart && PrestigeManager.owns('signOnBonus'));
   const giveGovernmentGrant = () => {
     const grant = applyGovernmentGrant(progressionManager, rankManager, allCities);
     writeGrantedCities(grant.cities.map(c => c.name));
@@ -525,16 +530,22 @@ function App() {
     // Nothing is earned until the welcome popup is closed (bug #159)
     if (onboardingPending()) return;
     const earned = economyManager.calculateWorkClickEarnings();
-    if (!auto) achievements.addCounter('work');
+    // Livestream Everything / Streaming Mastery: a guaranteed bonus every so many manual clicks this run
+    let livestreamRep = 0;
+    if (!auto) {
+      achievements.addCounter('work');
+      livestreamRep = livestreamRepFor(bumpLivestreamClicks(), id => PrestigeManager.owns(id));
+    }
     progressionManager.addCash(earned);
     setBalance(progressionManager.balance);
     const gotRep = Math.random() < economyManager.getWorkRepChance();
-    if (gotRep) {
-      progressionManager.addReputation(5);
+    const repEarned = (gotRep ? 5 : 0) + livestreamRep;
+    if (repEarned > 0) {
+      progressionManager.addReputation(repEarned);
       setReputation(progressionManager.reputation);
       if (!auto) playReputationWorkBonusSound();
     }
-    onRepGain?.(earned, gotRep);
+    onRepGain?.(earned, repEarned > 0, repEarned);
   };
 
   // Best P.A. Ever: Work clicks itself every 500 ms, making up clicks a throttled background tab missed.
@@ -833,6 +844,12 @@ function App() {
       if (grantPending.current && progressionManager.purchasedCities.length > 0) {
         grantPending.current = false;
         giveGovernmentGrant();
+      }
+      if (signOnPending.current && progressionManager.purchasedCities.length > 0) {
+        signOnPending.current = false;
+        progressionManager.balance += PRESTIGE_VALUES.signOnBonus;
+        setBalance(progressionManager.balance);
+        triggerSave();
       }
 
       const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];

@@ -25,14 +25,22 @@ export const PRESTIGE_VALUES = {
     speedyConveyorBelts: 2,            // x2 Work earnings
     oralHygiene: 6,                    // x6 Reputation from farewells
     viralSuperstar: 3,                 // x3 Progress rewards
+    livestreamRep: 5,                  // Livestream Everything: Reputation paid ...
+    livestreamEvery: 100,              // ... every this many manual Work clicks in a run
+    streamingMasteryFactor: 2,         // Streaming Mastery: the bonus is doubled ...
+    streamingMasteryEvery: 50,         // ... and paid every this many clicks instead
+    signOnBonus: 1000000,              // Sign-On Bonus: extra cash at the start of every new run
 }
 const mult = v => `x${v}`
 const pct = v => `${Math.round(v * 100)}%`
+const money = v => `£${v.toLocaleString('en-GB')}`
 const V = PRESTIGE_VALUES
 
 export const PRESTIGE_UPGRADES = [
     // Layer 1
     { id: 'staffFeedbackForms', icon: '📝', layer: 1, name: 'Staff Feedback Forms', description: `${mult(V.staffFeedbackForms)} city and development income.` },
+    { id: 'livestreamEverything', icon: '📡', layer: 1, name: 'Livestream Everything', description: `Guaranteed +${V.livestreamRep} Reputation every ${V.livestreamEvery} manual Work clicks (counted each run).` },
+    { id: 'signOnBonus', icon: '✍️', layer: 1, name: 'Sign-On Bonus', description: `${money(V.signOnBonus)} extra cash when you start a new run.` },
 
     // Layer 2
     { id: 'oralHygiene', icon: '🦷', layer: 2, name: 'Oral Hygiene', description: `${mult(V.oralHygiene)} Reputation from farewells.` },
@@ -65,6 +73,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'bestPAEver', icon: '🧑‍💼', layer: 4, name: 'Best P.A. Ever', description: 'Work clicks itself once every 500ms.' },
     { id: 'lobbyingSuavity', icon: '🕶️', layer: 4, name: 'Lobbying Suavity', description: 'Choose any city to connect when ranking up.' },
     { id: 'generationalWisdom', icon: '📜', layer: 4, name: 'Generational Wisdom', description: `City and development income multiplied by an extra ${pct(V.generationalWisdomPerPoint)} for every Prestige Point you currently hold (x${1 + 10 * V.generationalWisdomPerPoint} with 10).` },
+    { id: 'streamingMastery', icon: '🎬', layer: 4, name: 'Streaming Mastery', description: `The Livestream Everything bonus is doubled, and now paid every ${V.streamingMasteryEvery} manual Work clicks instead of every ${V.livestreamEvery}.` },
     { id: 'crisisAvoidanceSpecialists', icon: '🚨', layer: 4, name: 'Crisis Avoidance Specialists', description: 'No negative events, ever.' },
 ].map(u => ({
     ...u,

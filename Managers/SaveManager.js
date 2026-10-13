@@ -48,6 +48,8 @@ const AUX_KEYS = [
     'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
     'hyperloop_progress_collapsed',
+    // This run's manual Work clicks, for Livestream Everything. Part of the run: a prestige starts it again.
+    'hyperloop_livestream_clicks',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -142,6 +144,7 @@ const AUX_SHAPES = {
     hyperloop_achievement_counters: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_pending_rankups: v => Number.isFinite(v),
     hyperloop_dev_portrait_bonus: v => v === 1,
+    hyperloop_livestream_clicks: v => Number.isFinite(v) && v >= 0,
     hyperloop_prestige: v => v !== null && typeof v === 'object' && !Array.isArray(v) && Number.isFinite(v.points) && Array.isArray(v.owned),
     hyperloop_pending_daily: v => v !== null && typeof v === 'object' && Number.isFinite(v.cashBonus) && Number.isFinite(v.repBonus),
     hyperloop_pending_offline: v => v !== null && typeof v === 'object' && Number.isFinite(v.offlineSeconds) && Number.isFinite(v.offlineIncome),

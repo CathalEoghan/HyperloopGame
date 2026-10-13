@@ -179,8 +179,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
         setFloats(prev => [...prev, { id, phrase, hasRep: false, x: rect.left + rect.width / 2, y: rect.top }])
         setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
-        onWork((earned, gotRep) => {
-            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: gotRep, earned } : f))
+        onWork((earned, gotRep, repAmount) => {
+            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: gotRep, earned, repGain: repAmount } : f))
         })
         playWorkClickSound()
     }

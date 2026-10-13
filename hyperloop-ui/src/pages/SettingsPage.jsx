@@ -12,7 +12,7 @@ const VERSION_LOG = [
         date: 'October 2026',
         notes: [
             'Prestige: at Rank 100, buy Early Retirement (250 Reputation) and retire from the new Prestige tab to earn Prestige Points',
-            '27 permanent Prestige upgrades in four layers, kept in every future run',
+            '30 permanent Prestige upgrades in four layers, kept in every future run',
             '51 achievements, kept for good, with a trophy button on the home screen',
             '"Claim all" buttons for waiting rank-ups and development reveals',
             'Work is now worth about 10 seconds of base income per click, and income has been rebalanced',

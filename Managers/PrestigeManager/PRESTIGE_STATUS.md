@@ -6,11 +6,13 @@ delete its line from `NOT_IMPLEMENTED` and move it to the live table below.
 
 The income, Work, farewell and Progress perks are true multipliers: they apply after the normal boosts have been added up, and multiply each other (bug #147). Their strengths live in `PRESTIGE_VALUES`, prestigeUpgrades.js, and the descriptions are built from them.
 
-## Live (27 of 27)
+## Live (30 of 30)
 
 | Layer | Upgrade | Effect in the game | Where |
 |---|---|---|---|
 | 1 | Staff Feedback Forms | x2 city and development income | EconomyManager `prestigeMultipliers`, `getPrestigeDevMultiplier` / `getPrestigeCityMultiplier` |
+| 1 | Livestream Everything | Guaranteed +5 Reputation every 100 manual Work clicks in a run (Best P.A. Ever's auto-clicks don't count; the count starts again with each run) | `livestream.js` (`livestreamRepFor`), App.jsx `performWork` |
+| 1 | Sign-On Bonus | +£1,000,000 when a new run's starter city connects (added to the balance directly, so it is not earned cash and gives no XP) | App.jsx `signOnPending` |
 | 2 | Oral Hygiene | x6 farewell Reputation (x12 with the x2 upgrade) | `getFarewellRepGain` |
 | 2 | Better Interest Rates | Daily bonus cash x10 | App.jsx `checkDailyLogin` |
 | 2 | Elite Accountants | Offline "double" becomes x4, same 20 Rep | OfflineModal `bonusFactor` |
@@ -37,10 +39,11 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 4 | Generational Wisdom | City and development income x(1 + 5% per Prestige Point currently held, unspent), x1.5 with 10 | EconomyManager `getGenerationalWisdomMultiplier`, `PrestigeManager.pointsHeld` |
 | 4 | Lobbying Suavity | Claiming a rank-up opens a searchable city picker instead of drawing a random city (no re-roll) | `CityPickerModal`, `claimRankUp` in App.jsx, `getUnlockableCities` |
 | 4 | Best P.A. Ever | Work clicks itself every 500 ms (silent, not counted for the Work achievements); a background tab makes up missed clicks, up to 150 | `workClicksDue` (autoWork.js), `performWork` in App.jsx |
+| 4 | Streaming Mastery | Livestream Everything pays double (10 Reputation) and every 50 manual Work clicks instead of 100 | `livestreamSettings` (livestream.js) |
 
 ## Not live yet
 
-None: all 27 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is empty; add an id there to show a new upgrade as "Coming soon".
+None: all 30 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is empty; add an id there to show a new upgrade as "Coming soon".
 
 ## Milestone upgrades
 
@@ -50,7 +53,7 @@ None: all 27 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 ## Prestige runs
 
 - Points for a run: 1 per 50 ranks reached (2 at Rank 100), doubled by Fast Learner. Five-Star Researchers only affects Experimental Technology.
-- Retire resets: cash, rank, Reputation, cities, developments, upgrades, milestones, Founders' Hall clock, farewell count.
+- Retire resets: cash, rank, Reputation, cities, developments, upgrades, milestones, Founders' Hall clock, farewell count, and the Livestream click count (`hyperloop_livestream_clicks`; the Work button total on the Progress page is a separate lifetime count that a prestige keeps).
 - Retire keeps: Prestige Points and upgrades, run history, terminal name, Hyper-Link likes, and the daily-bonus and first-farewell date stamps (so a new run can't be handed today's bonuses twice).
 - New run: a fresh start screen; the starter city is drawn (Personal Favours lets you choose any city). No first-time walkthrough.
 - Each finished run is logged (`hyperloop_prestige_history`) and shown under Past runs.
