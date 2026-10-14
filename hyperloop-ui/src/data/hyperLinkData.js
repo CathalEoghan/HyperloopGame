@@ -721,6 +721,11 @@ export const POSTS = {
     noFood: [
         'What?? No restaurants or ANYTHING? What am i supposed to eat lmao',
         'OMG just open a food place give us something',
+        'CAN WE PLEASE GET SOME RESTAURANTS. THANK YOU',
+        'anyone have anything to eat? starving here, and there seem to be no real food places lol',
+        'dreaming of food. wish theyd open something up 😂',
+        'Where. are. the. restaurants. 🍴',
+        'Please build some food places, manager. I can\'t sustain myself on protein bars any longer',
         'no its not an earthquake or a tsunami or an atom bomb its my damn stomach rumbling. wish there was an ACTUAL food place here.',
     ],
 
@@ -748,11 +753,6 @@ export const POSTS = {
         'this place is so inconvenient lmao',
         'whats with the lack of services?',
         'where are all the service things',
-    ],
-
-    noEnterprise: [
-        'the manager should rly think about how to grow the company',
-        'feels like the manager could be doing more #enterprise',
     ],
 
     manyFood: [
@@ -1532,12 +1532,22 @@ export const POSTS = {
         'This terminal\'s reputation is down the toilet. #dobetter',
         'The manager will have to work hard to restore their reputation #travel',
         'when my friends said that we\'re using THIS place i was like... ugh. it has a bad #reputation for a reason.',
-    ],
+        'using this terminal bc i have to, not because i want to',
+        'My mum said this place is known for being terrible hope I survive 🤞',
+        'The manager\'s reputation isn\t great...',
+        'Was livestreaming my journey through here earlier and my followers were asking why the HELL i chose this over flying... lol didnt know it had a rly bad reputation 🤣',
+        'This place is known for being a bit rough, hopefully all goes well',
+        'My friends advised me not to travel through here... they said it has a bit of a bad reputation. What do you guys think?',
+        ],
 
     highReputation: [
         'This terminal truly deserves its high reputation. ✨',
         'everyone knows this is the best terminal #goodreputation',
         'who doesn\'t love the manager? and this terminal?',
+        'My friends were jealous when I told them I was travelling through here!',
+        'This place is simply amazing...',
+        'The terminal has a really good reputation, hopefully it lives up to it today!',
+        'Gonna vlog my travels through here - this place has a really good reputation',
     ],
 
     budgetHotel: [
