@@ -528,6 +528,13 @@ export const POSTS = {
         'Anyone have directions to the new {service}?',
     ],
 
+    newDevelopmentFood: [
+        'Thank goodness for the new {food}. My stomach was grumbling like crazy',
+        'Whos coming to get food with me at the new {food}??',
+        'Lines for the new {food} are out the door! People be hungry',
+        'anyone who has been the new {food} - whats the best thing on the menu?'
+    ],
+
     developmentUpgraded: [
         'the {development} here got a proper upgrade, looking way better now 😎',
         'not the {development} getting renovated right in front of me 😵',
@@ -1117,6 +1124,30 @@ export const POSTS = {
         'This terminal truly deserves its high reputation. ✨',
         'everyone knows this is the best terminal #goodreputation',
         'who doesn\'t love the manager? and this terminal?',
+    ],
+
+    budgetHotel: [
+        'I know its a budget hotel, but the service was actually very good!',
+        'beds arent the comfiest, nor are the rooms that great... but it is a budget hotel after all',
+        'Any rooms left at the cheaper hotel? 🛏️',
+    ],
+
+    iceRink: [
+        'damn i hurt my coccyx at the ice rink 😭',
+        'Brought my boyfriend to the ice rink while waiting for our loop. Turns out hes a professional ice skater??',
+        'not confident enough to skate on the ice rink without holding on to the wall at all times lol ⛸️',
+    ],
+
+    theatre: [
+        'The actors at the theatre are AMAZING. Totally moving performances. 🎭',
+        'the man who came in and walked past me in the aisle knocked down my popcorn!! i want a refund!!',
+        'the acting at the theatre... girl...',
+    ],
+
+    aquarium: [
+        'uh that fish looked at me weird #aquarium',
+        'whats everyones fave fish? i like the sunfish 🐟',
+        'The fish expert people are so smart. Their talks at the aquarium inspired me to go to the beach tomorrow',
     ],
 
     officialGeneral: [
