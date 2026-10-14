@@ -994,6 +994,48 @@ export const POSTS = {
         'The cats are cute, but the food and drink is amazing in itself! LOVE the new cat café.',
     ],
 
+    iceBar: [
+        'I said I wanted my drink cold, not the whole bar! #icebar',
+        'The ice bar makes for some good travel photos 📷',
+        'My god the ice bar is so friggin cold 🥶',
+    ],
+
+    comedyClub: [
+        'these comedians r hysterical #comedyclub',
+        'Sheesh. These routines are getting old - please hire some new comedians!',
+        'Everyone pls come support my friend doing a standup at the #comedyclub !!',
+    ],
+
+    luggageStorage: [
+        'they better not lose my luggage... #luggagestorage',
+        'The luggage storage is so handy! Just drop off your cases and go wild 🧳',
+        'The guys at the luggage storage offered to take my fifth suitcase for free... yeah i had five suitcases dont judge'
+    ],
+
+    convenienceStore: [
+        'the chocolate stick things you can buy at the checkout at the convenience store are divine. i bought like fifteen of them.',
+        'to the woman who bought twenty lottery tickets there now at the convenience store: when you win, remember i let you go in front of me. just saying',
+        'Stacking up on snacks at the convenience shop #yum 😋',
+    ],
+
+    basketballCourts: [
+        'Anyone up for a quick game of basketball at the courts? 🏀',
+        'do u need to bring ur own basketball or do the ppl at the courts provide 1',
+        'Just saw a woman wearing heels. ON THE BASKETBALL COURT. PLAYING BASKETBALL.'
+    ],
+
+    antiLitteringCampaign: [
+        'Terminal is looking so much more litter-free these days. Beautiful.',
+        'PPL WHO LITTER R DORKS.',
+        'The campaign for anti-littering is awesome. Less litter please! Keep our terminal clean! 🗑️'
+    ],
+
+    hyperloopPodRefurbishments: [
+        'The pods smell so fresh now. Defo been renovated recently',
+        'My friend who works here said all the pods were refurbished recently. You can defo tell',
+        'Love the new pods! #greatwork 👍'
+    ],
+
     lowReputation: [
         'This terminal\'s reputation is down the toilet. #dobetter',
         'The manager will have to work hard to restore their reputation #travel',
