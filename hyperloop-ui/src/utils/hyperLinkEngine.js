@@ -195,6 +195,13 @@ function getMonthCategory() {
 // and then stopped.
 const OWNED_POSTS_WEIGHT = 4
 
+// Ranks that have their own milestone posts (the list is `milestone<rank>` in hyperLinkData.js). To add one, add the
+// rank here and the list there. A milestone shows from that rank until MILESTONE_WINDOW ranks after it; the weight is
+// higher than the old 1 so that the short window is reliably seen.
+const MILESTONE_RANKS = [10, 50]
+const MILESTONE_WINDOW = 4
+const MILESTONE_WEIGHT = 4
+
 // Easter Sunday of a year (the same calculation the Easter Weekend Deals bonus uses)
 function easterSunday(year) {
     const a = year % 19, b = Math.floor(year / 100), c = year % 100
@@ -287,8 +294,11 @@ function buildEligibleCategories(gameState) {
         add('advertisingCampaign', 2, { campaignCountry: campaign.country })
     }
 
-    if (rankSet >= 10) add('milestone10', 1)
-    if (rankSet >= 50) add('milestone50', 1)
+    // A rank milestone's posts are about reaching that rank, so they only show from the rank itself until a few ranks later
+    for (const rank of MILESTONE_RANKS) {
+        const key = `milestone${rank}`
+        if (POSTS[key]?.length && rankSet >= rank && rankSet <= rank + MILESTONE_WINDOW) add(key, MILESTONE_WEIGHT)
+    }
 
     const ownedKeys = [...new Set([
         ...purchasedDevelopments.map(dev => DEV_KEY_MAP[dev.name]),
