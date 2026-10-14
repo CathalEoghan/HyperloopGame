@@ -1,4 +1,3 @@
-import { iceHockeyRink } from "../../../DevelopmentManager/IceHockeyRink"
 
 export const FIRST_NAMES_MALE = [
     'James', 'Oliver', 'Harry', 'Noah', 'Jack',

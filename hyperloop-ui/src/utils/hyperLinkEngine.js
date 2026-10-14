@@ -46,6 +46,18 @@ const DEV_KEY_MAP = {
     'Comedy Club': 'comedyClub',
     'Luggage Storage': 'luggageStorage',
     'Basketball Courts': 'basketballCourts',
+    'Casino': 'casino',
+    'Ice Hockey Rink': 'iceHockeyRink',
+    'Phone Store': 'phoneStore',
+    'Health Clinic': 'healthClinic',
+    'Gift Shop': 'giftShop',
+    'Fish & Chips': 'fishAndChips',
+    'Florist': 'florist',
+    'Coffee Shop': 'coffeeShop',
+    'Karaoke Bar': 'karaokeBar',
+    'Pub': 'pub',
+    'Swimming Pool': 'swimmingPool',
+    'Toy Store': 'toyStore',
 }
 
 export const UPGRADE_KEY_MAP = {
