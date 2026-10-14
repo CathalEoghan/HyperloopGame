@@ -793,6 +793,9 @@ export const POSTS = {
         'Someone buy me candy at the convenience store i cant afford any lol',
         'The guy at the checkout desk in the convenience store just asked for my number😱',
         'The convenience store is awesome 🙌 thanks manager not all of us can afford fancy restaurants!! noodles for me',
+        'the chocolate stick things you can buy at the checkout at the convenience store are divine. i bought like fifteen of them.',
+        'to the woman who bought twenty lottery tickets there now at the convenience store: when you win, remember i let you go in front of me. just saying',
+        'Stacking up on snacks at the convenience shop #yum 😋',
     ],
 
     kennel: [
@@ -1010,12 +1013,6 @@ export const POSTS = {
         'they better not lose my luggage... #luggagestorage',
         'The luggage storage is so handy! Just drop off your cases and go wild 🧳',
         'The guys at the luggage storage offered to take my fifth suitcase for free... yeah i had five suitcases dont judge'
-    ],
-
-    convenienceStore: [
-        'the chocolate stick things you can buy at the checkout at the convenience store are divine. i bought like fifteen of them.',
-        'to the woman who bought twenty lottery tickets there now at the convenience store: when you win, remember i let you go in front of me. just saying',
-        'Stacking up on snacks at the convenience shop #yum 😋',
     ],
 
     basketballCourts: [

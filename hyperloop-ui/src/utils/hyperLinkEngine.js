@@ -42,6 +42,10 @@ const DEV_KEY_MAP = {
     'Antiques Store': 'antiquesStore',
     'Bubble Tea Shop': 'bubbleTeaShop',
     'Cat Café': 'catCafe',
+    'Ice Bar': 'iceBar',
+    'Comedy Club': 'comedyClub',
+    'Luggage Storage': 'luggageStorage',
+    'Basketball Courts': 'basketballCourts',
 }
 
 export const UPGRADE_KEY_MAP = {
@@ -60,6 +64,8 @@ export const UPGRADE_KEY_MAP = {
     'Indoor Garden': 'indoorGarden',
     'Postal Office': 'postOffice',
     'Business Lounge Renovations': 'businessLoungeRenovations',
+    'Anti-Littering Campaign': 'antiLitteringCampaign',
+    'Hyperloop Pod Refurbishments': 'hyperloopPodRefurbishments',
 }
 
 function getTimeCategory() {
