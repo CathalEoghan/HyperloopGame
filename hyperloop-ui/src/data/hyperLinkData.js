@@ -490,6 +490,10 @@ export const POSTS = {
         'Thank god the new connection to {city} opened. I didn\'t want to walk there #NoWay',
         '{city}? anyone been there before',
         '{city}!! I\'VE DREAMT OF A LOOP TO {CITY} MY WHOLE LIFE',
+        'ah cool they connected {city}!',
+        'oh {city}. interesting',
+        'how much to get a loop to {city}?',
+        'Are tickets to the new connection, {city}, pricey? 🎟️',
         'Ohhh {city}. Now thats a place i want to go ❤️',
         'Finally! This new connection to {city} will do wonders for business and tourism #Yay',
         'So excited that {terminalName} just added {city} to their network #woo',
@@ -499,7 +503,15 @@ export const POSTS = {
     newCityTier1: [
         'You can get a hyperloop to {city} now lol soo random but also i love it',
         'what?? since when was there a connection to {city} who thought of this #Confused',
+        'has anyone heard of {city} before? it looks nice',
         'cool!! ive never been to {city} before, excited to go now',
+    ],
+
+    newCityTier3: [
+        'connection to {city} - defo needed for a city this big',
+        'Yay, I\'ve always wanted to go to {city} 😄',
+        '{city}?? uhh ill pass. i dont like big, crowded cities!',
+        'Glad to see a connection to {city}. It\'s a big city, so a connection was definitely required.'
     ],
 
     newDevelopmentShopping: [
@@ -539,6 +551,8 @@ export const POSTS = {
         'the {development} here got a proper upgrade, looking way better now 😎',
         'not the {development} getting renovated right in front of me 😵',
         'The new improved {development} is actually really nice!',
+        'wow anyone been to the new and improved {development} recently? looks really good',
+        'I didn\'t even recognise the {development}! Looks so great now!',
         'they spent some money on the {development} lol it defo shows',
         'anyone seen the new {development} since it stopped renovations? is it actually better now?',
     ],
@@ -546,6 +560,8 @@ export const POSTS = {
     boarding: [
         'Family making me go on this trip to {boardingCity} zzzz',
         'This boarding line is SO. LONG. #{boardingCity} 🫠',
+        'time to board! bye guys!',
+        'so many butterflies in my stomach boarding this loop to {boardingCity} 🦋',
         'Any tips on staying sane for this long ass hyperloop journey to {boardingCity}?',
         'Some idiot just bunked the boarding queue…',
         'Absolute KAREN arguing with the boarding staff keeping everyone behind smh #MOVE 😑',
@@ -1599,6 +1615,18 @@ export const POSTS = {
         'The new customer service centre is great. I feel bad for them having to deal with so many complaints everyday lol',
         'does anyone have the number for the new customer service centre',
         'I must say, the advisors at the customer service centre were very patient. Really really impressed 😄',
+    ],
+
+    rockBar: [
+        'The rock bar is cool - loads of vinyl records, posters, album art on the walls, could just walk around it looking at it all lol',
+        'A lager and some good music at the #RockBar',
+        'Watching a few tribute acts at the rock bar has made me want to start a band 🎺🥁📯🎶',
+    ],
+
+    bedAndBreakfast: [
+        'Bed AND breakfast? You\'re kidding 😲',
+        'can someone explain the difference between a bed and breakfast and a normal hotel',
+        'The old woman running the bed and breakfast is a delight. Would literally come back just for her lol',
     ],
 
     officialGeneral: [
