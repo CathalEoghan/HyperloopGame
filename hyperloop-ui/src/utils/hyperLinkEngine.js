@@ -59,6 +59,19 @@ const DEV_KEY_MAP = {
     'Swimming Pool': 'swimmingPool',
     'Toy Store': 'toyStore',
     'Ice Skating Rink': 'iceRink',
+    'Sleeping Pods': 'sleepingPods',
+    'Pizzeria': 'pizzeria',
+    'Fast Food Joint': 'fastFoodJoint',
+    'Photo Room': 'photoRoom',
+    'Ice Cream Parlour': 'iceCreamParlour',
+    'Laser Tag': 'laserTag',
+    'Chess Club': 'chessClub',
+    'Cocktail Bar': 'cocktailBar',
+    'Car Rental': 'carRental',
+    'Climbing Centre': 'climbingCentre',
+    'Indoor Surfing': 'indoorSurfing',
+    'Wrestling Arena': 'wrestlingArena',
+    'Beer Store': 'beerStore',
     'Theatre': 'theatre',
     'Budget Hotel': 'budgetHotel',
     'Aquarium': 'aquarium',
@@ -82,6 +95,7 @@ export const UPGRADE_KEY_MAP = {
     'Business Lounge Renovations': 'businessLoungeRenovations',
     'Anti-Littering Campaign': 'antiLitteringCampaign',
     'Hyperloop Pod Refurbishments': 'hyperloopPodRefurbishments',
+    'Customer Service Centre': 'customerServiceCentre',
 }
 
 function getTimeCategory() {
