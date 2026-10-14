@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
+import { getGlobeQuality } from '../utils/globeQuality.js'
 import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
-import { playHoverSound, playClickSound2, playConstructionSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { playHoverSound, playClickSound2, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js'
 import { makeStarPositions } from '../utils/stars.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import cashIcon from '../assets/misc/cash.png'
+import reputationIcon from '../assets/misc/reputation.png'
 import './HomePage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 
@@ -151,7 +153,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
 
         const globeRadius = 1
         const textureLoader = new THREE.TextureLoader()
-        const quality = localStorage.getItem('globeQuality') || '8k'
+        const quality = getGlobeQuality()
         let dayUrl, nightUrl
         try {
             dayUrl = new URL(`../assets/misc/${quality}_earth_daymap.jpg`, import.meta.url).href
@@ -509,6 +511,23 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                 {(() => {
                                     const uc = constructionManager.progressionManager.citiesUnderConstruction.find(c => c.name === selectedUnlockedCity.name)
                                     return uc ? <p><strong>{formatTime(constructionManager.timeManager.getTimeRemaining(uc.finishTime))}</strong> remaining</p> : null
+                                })()}
+                                {(() => {
+                                    // The same "Build instantly" as the Cities page, so the globe's popup offers it too
+                                    const uc = constructionManager.progressionManager.citiesUnderConstruction.find(c => c.name === selectedUnlockedCity.name)
+                                    const skipCost = constructionManager.calculateSkipCost(uc)
+                                    if (skipCost <= 0) return null
+                                    const canSkip = constructionManager.progressionManager.reputation >= skipCost
+                                    return (
+                                        <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} onClick={() => {
+                                            if (!constructionManager.skipConstruction(uc)) { playNotEnoughFundsSound(); return }
+                                            playClickSound2(); playFarewellAcceptSound(); onConnectCity?.(); setSelectedUnlockedCity(null)
+                                        }}>
+                                            <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                                Build instantly ({skipCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                            </span>
+                                        </button>
+                                    )
                                 })()}
                                 <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setSelectedUnlockedCity(null) }}>Close</button>
                             </>

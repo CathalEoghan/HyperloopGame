@@ -1,6 +1,7 @@
 import { POSTS, FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/hyperLinkData.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import { minutesUntilDeparture } from './time.js'
+import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 
 // Development names are written in title case ("Pharmacy"), but in a post people write them as ordinary words
 // ("the pharmacy"). Only names that are proper nouns or acronyms keep their capitals.
@@ -72,9 +73,24 @@ const DEV_KEY_MAP = {
     'Indoor Surfing': 'indoorSurfing',
     'Wrestling Arena': 'wrestlingArena',
     'Beer Store': 'beerStore',
+    'Art Gallery': 'artGallery',
+    'History Museum': 'historyMuseum',
+    'Table Tennis Court': 'tableTennisCourt',
+    'Hamburger Restaurant': 'hamburgerRestaurant',
+    'Night Lounge': 'nightLounge',
+    'Metal Bar': 'metalBar',
+    'Steak House': 'steakHouse',
+    'Hot Dog Restaurant': 'hotDogRestaurant',
     'Theatre': 'theatre',
     'Budget Hotel': 'budgetHotel',
     'Aquarium': 'aquarium',
+    'Jazz Lounge': 'jazzBar',
+    'Music Store': 'musicStore',
+    'Dance Studio': 'danceStudio',
+    'Live Music Lounge': 'liveMusicLounge',
+    'Waffle House': 'waffleHouse',
+    'Shoe Store': 'shoeStore',
+    'Jewellery Shop': 'jewelleryStore',
 }
 
 export const UPGRADE_KEY_MAP = {
@@ -96,6 +112,56 @@ export const UPGRADE_KEY_MAP = {
     'Anti-Littering Campaign': 'antiLitteringCampaign',
     'Hyperloop Pod Refurbishments': 'hyperloopPodRefurbishments',
     'Customer Service Centre': 'customerServiceCentre',
+    'Plush Terminal Seating': 'plushTerminalSeating',
+    'Soda Machines': 'sodaMachines',
+    'Taxi Depot': 'taxiDepot',
+    'Free Staff Breakfasts': 'freeStaffBreakfasts',
+    'Mural Commissions': 'muralCommissions',
+    'Palatial Interior Renovations': 'palatialInteriorRenovations',
+    'Free Phone Charging Stations': 'freePhoneChargingStations',
+    'Cross-Terminal Rickshaw Service': 'crossTerminalRickshawService',
+    'Uniform Redesign': 'uniformRedesign',
+    'Complementary Onboard Coffee': 'complementaryOnboardCoffee',
+    'Christmas Day Festival': 'christmasDayFestival',
+    'Fine Whisky Imports': 'fineWhiskyImports',
+    'Water Taxi Transfers': 'waterTaxiTransfers',
+    'Bus Transfers': 'busTransfers',
+    'Experimental Technology': 'experimentalTechnology',
+    'Personal Image Branding': 'personalImageBranding',
+    'Superior Coffee Imports': 'superiorCoffeeImports',
+    'Crime Prevention Campaign': 'crimePreventionCampaign',
+    'Embassy Hotline Centre': 'embassyHotlineCentre',
+    'Halloween Fair': 'halloweenFair',
+    'Improved Restroom Facilities': 'improvedRestroomFacilities',
+    'Currency Exchange Centre': 'currencyExchangeCentre',
+    "New Year's Celebrations": 'newYearsCelebrations',
+    'Fourth of July Shows': 'fourthOfJulyShows',
+    "Valentine's Day Sales": 'valentinesDaySales',
+    'Easter Weekend Deals': 'easterWeekendDeals',
+    'Tram Depot': 'tramDepot',
+    'Ferry Terminal': 'ferryTerminal',
+    'Integrated Metro System': 'integratedMetroSystem',
+    'Travel Agency': 'travelAgency',
+    'Emergency Training': 'emergencyTraining',
+    'Expanded Duty-Free': 'expandedDutyFree',
+    'Outdoor Garden': 'outdoorGarden',
+    'Dedicated Motorcycle Parking': 'dedicatedMotorcycleParking',
+    'Local Tours': 'localTours',
+    'Expanded Parking Facilities': 'expandedParkingFacilities',
+    'Information Centre': 'informationCentre',
+    'Nighttime Pay Incentives': 'nighttimePayIncentives',
+    'Evening Staff Meal Tickets': 'eveningStaffMealTickets',
+    'Complementary Afternoon Staff Meals': 'complementaryAfternoonStaffMeals',
+    'Passenger Loyalty Scheme': 'passengerLoyaltyScheme',
+    'Credit Card Lounges': 'creditCardLounges',
+    'Business-Class Cabins': 'businessClassCabins',
+    "Workers' Solidarity Fund": 'workersSolidarityFund',
+}
+
+// Prestige upgrades with their own posts (bought with Prestige Points, not built in a city)
+const PRESTIGE_POST_MAP = {
+    staffFeedbackForms: 'staffFeedbackForms',
+    livestreamEverything: 'livestreamEverything',
 }
 
 function getTimeCategory() {
@@ -120,16 +186,45 @@ function getMonthCategory() {
     return MONTH_NAMES[new Date().getMonth()]
 }
 
-const DEV_CATEGORIES = new Set([
-    ...Object.values(DEV_KEY_MAP),
-    ...Object.values(UPGRADE_KEY_MAP),
-])
+// All the posts about the developments and upgrades the player owns share this weight, however many they own,
+// so they make up roughly 1 post in 5 (the everyday categories weigh about 15 between them). Each line can come
+// back once it hasn't been used for 3 hours, like any other post. They used to fire once per development per run,
+// so most lines were never seen, and every owned development competed at once: they flooded the start of a run
+// and then stopped.
+const OWNED_POSTS_WEIGHT = 4
+
+// Easter Sunday of a year (the same calculation the Easter Weekend Deals bonus uses)
+function easterSunday(year) {
+    const a = year % 19, b = Math.floor(year / 100), c = year % 100
+    const d = Math.floor(b / 4), e = b % 4, f = Math.floor((b + 8) / 25)
+    const g = Math.floor((b - f + 1) / 3), h = (19 * a + b - d - g + 15) % 30
+    const i = Math.floor(c / 4), k = c % 4, l = (32 + 2 * e + 2 * i - h - k) % 7
+    const m = Math.floor((a + 11 * h + 22 * l) / 451)
+    return new Date(year, Math.floor((h + l - 7 * m + 114) / 31) - 1, ((h + l - 7 * m + 114) % 31) + 1)
+}
+
+// Posts that only make sense around their date (the upgrade owner still gets them, just not in July):
+// Halloween Fair 25-31 October, Christmas Day Festival 20-26 December, Fourth of July Shows 2-5 July, Valentine's Day
+// Sales 10-14 February, New Year's Celebrations 28 December-2 January, Easter Weekend Deals Good Friday-Easter Monday.
+const OWNED_POST_WINDOWS = {
+    halloweenFair: d => d.getMonth() === 9 && d.getDate() >= 25,
+    christmasDayFestival: d => d.getMonth() === 11 && d.getDate() >= 20 && d.getDate() <= 26,
+    fourthOfJulyShows: d => d.getMonth() === 6 && d.getDate() >= 2 && d.getDate() <= 5,
+    valentinesDaySales: d => d.getMonth() === 1 && d.getDate() >= 10 && d.getDate() <= 14,
+    newYearsCelebrations: d => (d.getMonth() === 11 && d.getDate() >= 28) || (d.getMonth() === 0 && d.getDate() <= 2),
+    // Easter moves every year: from Good Friday to Easter Monday
+    easterWeekendDeals: d => {
+        const easter = easterSunday(d.getFullYear())
+        const day = new Date(d.getFullYear(), d.getMonth(), d.getDate())
+        const days = Math.round((day - easter) / 86400000)
+        return days >= -2 && days <= 1
+    },
+}
 
 function buildEligibleCategories(gameState) {
     const {
         purchasedCities, purchasedDevelopments, purchasedUpgrades,
         activeEvent, schedule, trigger, rankSet,
-        firedDevCategories = [],
     } = gameState
 
     const cats = []
@@ -193,15 +288,12 @@ function buildEligibleCategories(gameState) {
     if (rankSet >= 10) add('milestone10', 1)
     if (rankSet >= 50) add('milestone50', 1)
 
-    purchasedDevelopments.forEach(dev => {
-        const key = DEV_KEY_MAP[dev.name]
-        if (key && POSTS[key] && !firedDevCategories.includes(key)) add(key, 2)
-    })
-
-    purchasedUpgrades.forEach(upg => {
-        const key = UPGRADE_KEY_MAP[upg.name]
-        if (key && POSTS[key] && !firedDevCategories.includes(key)) add(key, 2)
-    })
+    const ownedKeys = [...new Set([
+        ...purchasedDevelopments.map(dev => DEV_KEY_MAP[dev.name]),
+        ...purchasedUpgrades.map(upg => UPGRADE_KEY_MAP[upg.name]),
+        ...Object.entries(PRESTIGE_POST_MAP).filter(([id]) => PrestigeManager.owns(id)).map(([, key]) => key),
+    ])].filter(key => key && POSTS[key]?.length && (!OWNED_POST_WINDOWS[key] || OWNED_POST_WINDOWS[key](new Date())))
+    ownedKeys.forEach(key => add(key, OWNED_POSTS_WEIGHT / ownedKeys.length))
 
     return cats
 }
@@ -359,7 +451,6 @@ export function generateHyperLinkPost(gameState) {
         usedPostId: chosenPost.id,
         usedPfpId: pfpId,
         gender,
-        firedDevCategory: DEV_CATEGORIES.has(selected.category) ? selected.category : null,
         monthPostId: isMonthPost ? chosenPost.id : null,
     }
 }

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { playHoverSound, playClickSound2, playFarewellAcceptSound } from '../utils/sound.js'
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
+import { GLOBE_QUALITY_KEY, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
 import './SettingsPage.css'
 
 const VERSION_LOG = [
@@ -181,7 +182,7 @@ function LegalModal({ onClose }) {
 
 function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave, onReputationBonus, onSurprise, topOffset = 113 }) {
     const [logOpen, setLogOpen] = useState(false)
-    const [globeQuality, setGlobeQuality] = useState(localStorage.getItem('globeQuality') || '8k')
+    const [globeQuality, setGlobeQuality] = useState(savedGlobeQuality() || 'auto')
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
     const [eventTint, setEventTint] = useState(localStorage.getItem('hyperloop_event_tint') !== 'false')
@@ -201,7 +202,8 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
 
     const handleQualityChange = (quality) => {
         setGlobeQuality(quality)
-        localStorage.setItem('globeQuality', quality)
+        if (quality === 'auto') localStorage.removeItem(GLOBE_QUALITY_KEY)
+        else localStorage.setItem(GLOBE_QUALITY_KEY, quality)
     }
 
     const handleNightModeChange = (enabled) => {
@@ -311,9 +313,10 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Globe Texture Quality</span>
-                        <span className="settings-label-desc">Higher quality requires more loading time. Changes take effect on next visit to the home screen.</span>
+                        <span className="settings-label-desc">Higher quality requires more loading time. Auto picks for your device: Ultra on capable computers, Standard on slower ones. Changes take effect on next visit to the home screen.</span>
                     </div>
                     <div className="settings-options">
+                        <OptionBtn active={globeQuality === 'auto'} onClick={() => handleQualityChange('auto')}>Auto ({autoGlobeQuality() === '8k' ? 'Ultra' : 'Standard'})</OptionBtn>
                         <OptionBtn active={globeQuality === '2k'} onClick={() => handleQualityChange('2k')}>Standard (2K)</OptionBtn>
                         <OptionBtn active={globeQuality === '8k'} onClick={() => handleQualityChange('8k')}>Ultra (8K)</OptionBtn>
                     </div>

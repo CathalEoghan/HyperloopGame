@@ -961,7 +961,6 @@ function App() {
         // Only pictures used in the last 3 hours count as used, so they come round again instead of running out (bug #71)
         const feedPfpIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPfpId).filter(Boolean))
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]').filter(id => feedPfpIds.has(id))
-        const firedDevCategories = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
         const todayKey = new Date().toDateString()
         const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
         // When each template and picture was last shown, so the engine can pick the one used longest ago
@@ -985,7 +984,6 @@ function App() {
           usedPfps,
           templateLastUsed,
           pfpLastUsed,
-          firedDevCategories,
           trigger: hyperLinkTriggerRef.current,
         })
         if (post) {
@@ -996,10 +994,6 @@ function App() {
           if (post.usedPfpId && post.usedPfpId !== 'default' && post.usedPfpId !== 'official') {
             usedPfps.push(post.usedPfpId)
             localStorage.setItem('hyperloop_hyperlink_used_pfps', JSON.stringify(usedPfps))
-          }
-          if (post.firedDevCategory && !firedDevCategories.includes(post.firedDevCategory)) {
-            firedDevCategories.push(post.firedDevCategory)
-            localStorage.setItem('hyperloop_hyperlink_fired_devposts', JSON.stringify(firedDevCategories))
           }
           if (post.monthPostId) {
             usedMonthPostRecords.push({ id: post.monthPostId, year: currentYear })

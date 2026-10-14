@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import cityThumbnails from '../data/cityThumbnails.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
+import { getGlobeQuality } from '../utils/globeQuality.js'
 import earthDay2k from '../assets/misc/2k_earth_daymap.jpg'
 import earthNight2k from '../assets/misc/2k_earth_nightmap.jpg'
 import earthDay8k from '../assets/misc/8k_earth_daymap.jpg'
@@ -68,7 +69,7 @@ function LoadingScreen({ onComplete }) {
     const done = useRef(false)
 
     useEffect(() => {
-        const quality = localStorage.getItem('globeQuality') || '8k'
+        const quality = getGlobeQuality()
         const globeTextures = quality === '8k'
             ? [earthDay8k, earthNight8k]
             : [earthDay2k, earthNight2k]

@@ -532,7 +532,7 @@ export const POSTS = {
         'Thank goodness for the new {food}. My stomach was grumbling like crazy',
         'Whos coming to get food with me at the new {food}??',
         'Lines for the new {food} are out the door! People be hungry',
-        'anyone who has been the new {food} - whats the best thing on the menu?'
+        'anyone who has been to the new {food} - whats the best thing on the menu?'
     ],
 
     developmentUpgraded: [
@@ -1113,6 +1113,372 @@ export const POSTS = {
         'I genuinely don\'t know who\'s having more fun at the toy store. Me or the kids!',
         'my friend said about checking out the new toy store and i had to admit i couldnt because i have a fear of stuffed animals 😶',
         'I love toy stores. So much nostalgia 🧸🪁🪀',
+    ],
+
+    plushTerminalSeating: [
+        'These seats feel comfier. Or am I imagining it 😂',
+        'ok wait a sec. why are these seats so PLUSH?',
+        'if i fall asleep on ur shoulder by accident. dont blame me these seats are too comfy for terminal seats lol.',
+    ],
+
+    sodaMachines: [
+        'The soda machine ate my money wth',
+        'Literally cant pass a soda machine without getting a soda lol 🥤',
+        'I have never seen so many drink machines in my life lmao',
+    ],
+
+    taxiDepot: [
+        'the men at the taxi depot r so funny. i could listen to their stories for hours 🚕',
+        'how much is a taxi into the city? from the depot?',
+        'queue at the taxi depot is like 10 miles long. guess im calling my mum',
+    ],
+
+    freeStaffBreakfasts: [
+        'free staff breakfasts?? and just when i thought this job couldnt get any better 😁',
+        'even the coffee is free!! ☕️ #BestManagerEver',
+        'Don\'t even have to bring anything from home anymore now that breakfasts are totally free here 🍳',
+    ],
+
+    muralCommissions: [
+        'ok guys. be honest. what do you all think of the new murals in the arrivals hall?',
+        'The new murals are so pretty! 😍',
+        'Love the new murals! But been standing here for like 20 minutes trying to work out if it\'s a duck or a wind turbine 🤔',
+    ],
+
+    palatialInteriorRenovations: [
+        'This place is a goddamn PALACE 👑',
+        'What the heck? When did this place get so… palatial?',
+        'defo think the interior of this place deserves an award. its just beautiful.',
+    ],
+
+    freePhoneChargingStations: [
+        'whew the free phone charging stations defo came in clutch today. Phone was like 5% lol',
+        'THANK YOU FREE PHONE CHARGING STATIONS FOR SAVING MY PHONE 🔋🙏',
+        'Where are the free phone charging stations?? Someone tell me quick my phone bout to die 💀',
+    ],
+
+    crossTerminalRickshawService: [
+        'lol a rickshaw just flew past me this place is so random',
+        'The rickshaws are so handy! Literally flying to the gate rn 💨',
+        'The rickshaw drivers are HILARIOUS. literally wish the journey was longer so he could finish his story 😂',
+    ],
+
+    uniformRedesign: [
+        'These new uniforms r itchy 😮‍💨',
+        'So whats the verdict on the new uniforms?',
+        'I like the new uniforms! And they actually got my size right 😊',
+    ],
+
+    complementaryOnboardCoffee: [
+        'The new coffees onboard are delish - and free! #blessed',
+        'complementary coffee? does it give u compliments??',
+        'It\'s the small things that matter. The free coffees onboard elevate the overall experience in a minor but meaningful way #GoodManagement ☕️',
+    ],
+
+    christmasDayFestival: [
+        'happy holidays!! 🎄',
+        'travelling on Christmas Day - wasnt expecting it to be this busy!!',
+        'wishing everyone a merry Christmas 🎅',
+    ],
+
+    fineWhiskyImports: [
+        'the whisky here is unparalleled. #finewhisky',
+        'The whisky sold here is expensive but defo worth it so good 🥃',
+        'had some whisky earlier was like the nicest drink ive had in my life',
+    ],
+
+    waterTaxiTransfers: [
+        'eek i hate water taxis so scared ill fall into the water 😰',
+        'This water taxi so fast feels like im on a speedboat lol 🚤',
+        'getting seasick on this water taxi 🤢',
+    ],
+
+    busTransfers: [
+        'the bus ride this morning was lovely. thank god for the bus transfers. 🚌',
+        'anyone know when this bus transfer arrives??',
+        'the new bus transfers service is sweet. means i dont have to get a lift off Dad #win',
+    ],
+
+    experimentalTechnology: [
+        'this place continues to lead in technology. #bigtech',
+        'the terminal really represents the cutting edge of tech!',
+        'its not magic.. its just really good technology 🪄✨',
+    ],
+
+    personalImageBranding: [
+        'Why am I suddenly seeing the manager\'s face everywhere??',
+        'the manager really knows how to brand! #savvy',
+        'Fair game to the manager. Never seen someone so on top of their image 🖼️',
+    ],
+
+    superiorCoffeeImports: [
+        'Is it just me or does the coffee here suddenly taste… different?',
+        'My friend told me they recently signed some new import contracts or something. That\'s why the coffee tastes better now. ☕️',
+        'Mmm the coffee here is just superior #caffeinefreak',
+    ],
+
+    crimePreventionCampaign: [
+        'Ok I know security is important but how many scanners do we really need??',
+        'glad to have such competent security looking after us. safety is so important! 🚨',
+        'the new posters on harassment and mutual respect are defo needed. too many ppl these days with no boundaries!',
+    ],
+
+    embassyHotlineCentre: [
+        'On the line to my embassy via the new hotline centre. I dropped my passport on a river cruise taking a selfie #oops',
+        'is phoning the embassy through the new hotline centre easy enough? i need advice. cannot elaborate. but it may involve sharks',
+        'my friend works for the new embassy hotline centre - the amount of people who lose their passports on vacation is insane 🛂',
+    ],
+
+    halloweenFair: [
+        'Happy Halloween! Have fun and stay safe 🎃',
+        'The halloween fair is so fun! I came second place in the costume contest 🧟',
+        'Let me know in the comments. Couple costumes for Halloween: cringe or cute? 👻',
+    ],
+
+    improvedRestroomFacilities: [
+        'The new bathrooms look like they cost more to build than my whole house 😶',
+        'Love the new bathrooms. So clean and fresh. Will they stay that way though??',
+        'You can see yourself so clearly in the marble of the new bathrooms. It\'s terrible i look so ugly today',
+    ],
+
+    currencyExchangeCentre: [
+        'anyone know todays currency exchange rates? couldnt be bothered walking to the centre to find out',
+        'how much yen can i get for 2 dollars?',
+        'i forgot british pounds arent universal LOL. thank heavens for the currency exchange centre 💸',
+    ],
+
+    artGallery: [
+        'at the art gallery. i dont even like art that much just need something to do lol',
+        'The modern art installations at the gallery are fine. A little derivative, perhaps. #FineArt',
+        'Could stare at this painting all day long 🖼️ #ArtGallery',
+    ],
+
+    historyMuseum: [
+        'dragging the kids around the history museum was a MAJOR mistake. they wont leave the prehistoric section. what is it with kids and dinosaurs??',
+        'The history museum is so cool! What\'s everyone\'s favourite section? 🦖',
+        'Sneaking along this history tour at the museum they still haven\'t realised #hehe',
+    ],
+
+    tableTennisCourt: [
+        'damn whered i put that paddle #TableTennis',
+        'anyone up for a quick game of table tennis? 🏓',
+        'How long should a table tennis game go on for 😭 this wont end lmao',
+    ],
+
+    hamburgerRestaurant: [
+        'the best hamburger order? tell me quickly',
+        'Hot take: keep cheese out of burgers.',
+        'The man in front of me ordered like 70 toppings on his burger is this allowed 😭',
+    ],
+
+    nightLounge: [
+        'contrary to the name I actually found out its open all hours #NightLounge',
+        'best drink at the night lounge?? 🥂',
+        'Celebrating the start of our trip at the night lounge!! 🍸🍾',
+    ],
+
+    metalBar: [
+        'Never saw so much leather and tats in my life #mypeople',
+        'The bartenders at the metal bar are so chill. 😎',
+        'Any other metalheads tried out the terminal\'s metal bar yet?? 🤘',
+    ],
+
+    steakHouse: [
+        'Medium rare plz #SteakHouse',
+        'Steak. That is all 🥩',
+        'The stakes are high #lol #steakhouse',
+    ],
+
+    newYearsCelebrations: [
+        'Happy new years guys. Whats everyones resolutions for the new year?',
+        'Cannot believe thats the year over and done with already. Maybe time is accelerating',
+        'Any parties happening for new years?? beyond the terminal i mean lol',
+    ],
+
+    fourthOfJulyShows: [
+        'happy fourth of july yankees! 🇺🇸',
+        'only americans may like this post #fourthofjuly',
+        'Fourth of July just reminds me of all the history essays i wrote in school lol',
+    ],
+
+    valentinesDaySales: [
+        'Another year alone. Sigh. #ValentinesDay',
+        'Good dates for valentines? Literally no idea what to do',
+        'Happy valentines to everyone regardless of your relationship status 💘',
+    ],
+
+    easterWeekendDeals: [
+        'keep finding coloured eggs around the terminal 🤣',
+        'whos this annoying ass kid in the bunny suit? somebodys mother come and get her please',
+        'Happy easter!! 🐣',
+    ],
+
+    hotDogRestaurant: [
+        'wowww this hot dog is ginormous 🌭',
+        'FOR THE COMMENTS. Ketchup or mustard on a hot dog? 🌭',
+        'why is it even called a hot dog bro 😭',
+    ],
+
+    tramDepot: [
+        'The tram is the train\'s classier cousin 😏',
+        'I love trams 🚃',
+        'The tram depot is kind of empty today. Where is everyone? 🤔',
+    ],
+
+    ferryTerminal: [
+        'Love a lil ferry ⛴️',
+        'This ferry is so slow man hurry up 🙄',
+        'Damn got on the ferry and realised i left granddad sitting on the dock 😭',
+    ],
+
+    integratedMetroSystem: [
+        'Never used the metro before. What does line mean?',
+        'Somebody come escort me through the metro station cus i aint got a clue',
+        'Anyone used the metro station? How do I get to the city? 🚇',
+    ],
+
+    travelAgency: [
+        'went in with nothing. left with a holiday #travelagency',
+        'The travel agents are so helpful! Would defo recommend 👍',
+        'What are the deals like at the travel agency? Are they worth it? #travel',
+    ],
+
+    emergencyTraining: [
+        'Emergency training at work today. In the event of an earthquake, a fire, a typhoon, a tornado, a flash flood, a mudslide, a hurricane, a storm, an avalanche, a drought, a deluge, a tsunami, a sandstorm, or a nuclear bomb, we must always stay calm.',
+        'ok but did they cover what we should do if an escaped lion enters the terminal?',
+        'The new emergency training today was super helpful! Hopefully it\'s it\'s never needed though 😶',
+    ],
+
+    jazzBar: [
+        'Love a bit of smooth jazz 🎷 #JazzBar',
+        'Some rum and jazz 🍹',
+        'Never been so relaxed while travelling! Loving the jazz 🎺',
+    ],
+
+    expandedDutyFree: [
+        'travelling with my four sisters and they keep stopping at EVERY PERFUME stand they see. and i heard it expanded recently so this torment goes on FOR EVEN LONGER',
+        'oh wow the duty free here is even better now than it was last time i was here. very cool👌',
+        'My fave thing about travelling is stopping at the duty free and just trying every perfume there is lol',
+    ],
+
+    outdoorGarden: [
+        'yeah im definitely out appreciating nature at the new outdoor garden. defo not just having a smoke',
+        'Love walking around the outdoor garden. So much nature and serenity 🌷',
+        'Here the birdsong! What a treat - to step outside the busy hubbub of the terminal into the beautiful ourdoor garden 🪴 #lovenature',
+    ],
+
+    staffFeedbackForms: [
+        'anyone seen the new feedback forms going around?? i have opinions 🤣',
+        'Glad to hear this company actually take the opinions and thoughts of their workers seriously. 👍',
+        'can someone help me fill this feedback forms out #lost',
+    ],
+
+    livestreamEverything: [
+        'anybody else watch the manager go about their day? just me? lol',
+        'I had no idea watching the manager work would be so entertaining 😅',
+        'Keep screaming at my livestream WORK HARDER!',
+    ],
+
+    dedicatedMotorcycleParking: [
+        'motorcycle parked. time to travel 😎',
+        'The motorcycle parking is top-class!',
+        'if anyone DARES scratch my motorbike while its parked… i probably wont do anything but still',
+    ],
+
+    localTours: [
+        'Considering trying the local tours. Are they any good? Informative?',
+        'Staying in the city for a few days. The local tours have been great - shout out to our guide, he was amazing 🤩',
+        'Out touring the city #localtours',
+    ],
+
+    musicStore: [
+        'accidentally knocked over a drum at the music store #GetMeOut',
+        'Can I play any instruments? No. Am I still shopping at the music store as if I can? Yes.',
+        'theres a pianist at the music store really going off. Hes good though i must say 🎹',
+    ],
+
+    danceStudio: [
+        'trying out this beginners dance class cus i have a few hours to kill. anyone here going?',
+        'A girl in our dance class farted by accident 😶 good thing shes leaving the country in a few hours x',
+        'Going to an intermediate salsa class later. I genuinely thought salsa was just a food lol 💃',
+    ],
+
+    expandedParkingFacilities: [
+        'How much for tickets at the new, expanded parking facilities? 🚗',
+        'This parking garage is as big as a country 😶',
+        'This parking facility is huge and i forgot my number and also i lost my ticket so what now',
+    ],
+
+    liveMusicLounge: [
+        'That live singer… wow… acc shaking 😭',
+        'The live music lounge goes well with a bit of champagne 🥂',
+        'The live singer handled those two chatterboxes well. When will people learn how rude it is to talk above live entertainment?',
+    ],
+
+    waffleHouse: [
+        'wafflez!! 🧇',
+        'Waffles > pancakes. #DealWithIt',
+        'The waffle house are giving out free maple syrup! 🍁',
+    ],
+
+    informationCentre: [
+        'ohh so the i stands for information. i thought it was like an iguana centre or something',
+        'Thanks guys @ the information centre - sent me the right way and I did NOT miss my loop! So grateful to them 🙏',
+        'If youre lost defo go to the info centre - the ppl there are the best and so so knowledgeable',
+    ],
+
+    nighttimePayIncentives: [
+        'yeah working nighttime wouldnt be my first choice but have you seen those bonuses?? 💰',
+        'idc if theyre paying us more. i will never work night time 🕰️',
+        'the night shift creeps me out. need to keep reminding myself: money money money',
+    ],
+
+    eveningStaffMealTickets: [
+        'The evening staff meals are acc nice. Not sure why im surprised lol',
+        'Ill buy someones evening meal ticket im starving. ik i already ate but i have high energy needs',
+        'whats on in the staff cafeteria today? have a spare evening ticket here',
+    ],
+
+    complementaryAfternoonStaffMeals: [
+        'What\'s the verdict on the afternoon staff meals? Have a ticket unsure if I should use it or just buy food elsewhere',
+        'The salad bar in the afternoon cafeteria is insane so good 🥗',
+        'Like working here - saving money on lunches is another reason #freemeals',
+    ],
+
+    passengerLoyaltyScheme: [
+        'I collected enough points and im being upgraded YAYYY',
+        'How does the new passenger loyalty scheme work?',
+        'someone give me their points i need just a bit more to get access to the lounge',
+    ],
+
+    creditCardLounges: [
+        'I have access to the lounge, provided by my credit card provider. How about you?',
+        'do you need a credit card to get in to the new lounges',
+        'bad day to be creditcardless!',
+    ],
+
+    businessClassCabins: [
+        'bring me back to economy. business class so snobby 😒',
+        'Appreciate the new business-class cabins. Makes this business trip so much easier 👍',
+        'The business class attendants are so helpful! Took my briefcase immediately and brought me a glass of champagne. Could get used to this. 🥂',
+    ],
+
+    workersSolidarityFund: [
+        'The manager is setting aside some revenue for a workers\' solidarity fund. But will the unions be happy ?',
+        'I had to have my supervisor explain what a solidarity fund is lol',
+        'Great that the manager is putting some profits aside to the solidarity fund. Up the workers! 💪',
+    ],
+
+    shoeStore: [
+        'browsing the shoe store. some good kicks here',
+        'Bought a pair of sneakers at the shoe store - hope my case isn\'t over my limit now lol',
+        'Couldnt resist buying a pair of boots 🥾 never know when i might need them',
+    ],
+
+    jewelleryStore: [
+        'Bought a really nice necklace for my mum at the jewellery store 💎',
+        'Could spend hours just looking at all the rings 💍',
+        'cant afford any jewellery but ill still look around 🤣',
     ],
 
     lowReputation: [
