@@ -912,12 +912,12 @@ function App() {
 
       if (citiesChanged || devsChanged || rankChanged) {
         if (devsChanged) {
-          const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService' }
+          const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService', Food: 'newDevelopmentFood' }
           progressionManager.purchasedDevelopments.slice(prevDevCount.current).forEach(dev => {
             const key = devCatMap[dev.category]
             if (key) {
-              hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } }
-              setHyperLinkTrigger({ type: key, data: { store: dev.name, recreation: dev.name, service: dev.name } })
+              hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name, food: dev.name } }
+              setHyperLinkTrigger({ type: key, data: { store: dev.name, recreation: dev.name, service: dev.name, food: dev.name } })
             }
           })
         }

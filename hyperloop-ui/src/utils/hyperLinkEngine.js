@@ -58,6 +58,10 @@ const DEV_KEY_MAP = {
     'Pub': 'pub',
     'Swimming Pool': 'swimmingPool',
     'Toy Store': 'toyStore',
+    'Ice Skating Rink': 'iceRink',
+    'Theatre': 'theatre',
+    'Budget Hotel': 'budgetHotel',
+    'Aquarium': 'aquarium',
 }
 
 export const UPGRADE_KEY_MAP = {
@@ -234,6 +238,7 @@ function substituteText(text, data, gameState) {
         .replace(/\{store\}/g, data.store ? inPost(data.store) : 'new store')
         .replace(/\{recreation\}/g, data.recreation ? inPost(data.recreation) : 'new attraction')
         .replace(/\{service\}/g, data.service ? inPost(data.service) : 'new service')
+        .replace(/\{food\}/g, data.food ? inPost(data.food) : 'new restaurant')
         .replace(/\{development\}/g, data.development ? inPost(data.development) : 'the development')
         .replace(/\{currentTime\}/g, now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
         .replace(/\{cityCount\}/g, purchasedCities.length)
