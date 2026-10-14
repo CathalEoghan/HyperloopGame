@@ -884,6 +884,7 @@ export const POSTS = {
     pharmacy: [
         'some rude ass just bunked me at the pharmacy !',
         'forgot my prescription but its ok theres a pharmacy #happydays',
+        'Picking up some cough medicine at the pharmacy, grateful for it today 🙏'
     ],
     yogaStudio: [
         'id try yoga but i feel like id fart mid pose or something lol',
@@ -1147,7 +1148,91 @@ export const POSTS = {
     aquarium: [
         'uh that fish looked at me weird #aquarium',
         'whats everyones fave fish? i like the sunfish 🐟',
-        'The fish expert people are so smart. Their talks at the aquarium inspired me to go to the beach tomorrow',
+        'The fish expert people are so smart. Their talks at the aquarium inspired me to go to the beach tomorrow 🏖️',
+    ],
+
+    sleepingPods: [
+        'Booked a sleeping pod... so much better than sleeping on a bench 😴',
+        'gonna catch forty winks at the new #sleepingpods service! #donotdisturb',
+        'Sleeping pods are so worth it... and so much cheaper than a hotel !',
+    ],
+
+    pizzeria: [
+        'did i just witness someone... putting ketchup on a pizza... ?',
+        'the pizzeria has so many cool pizza combinations! the bacon, cheese and tomato one is my fave so far 🍕',
+        'Feel like I\'m in Italy at this beautiful pizzeria 🇮🇹',
+    ],
+
+    fastFoodJoint: [
+        'at the fast food place. they forgot my sauces. grr',
+        'Why is the ice cream machine permanently broken?? #fastfood',
+        'Damn got ketchup on my shirt by accident lol. last time i eat fast food before a business trip',
+    ],
+
+    photoRoom: [
+        'The photo rooms are such a good way to spend all that extra waiting time! Love love love 📸',
+        'Some dude just jumped into our photo room and photobombed us. 🙄',
+        'The props at the photo room are hilarous. I dressed up as a bag of frozen vegetables lol',
+    ],
+
+    iceCreamParlour: [
+        'Honeycomb is the best ice cream flavour. No I will not be discussing this.',
+        'Me and the kids popped in to the ice cream shop - so impressed with the range of flavours 🍨',
+        'Literally cried like a baby when my ice cream scoop fell on the ground lmao',
+    ],
+
+    laserTag: [
+        'Need 3 equally lonely and bored people to form a laser tag team with me #letsgo',
+        'I suck at laser tag but that wont stop me spending 2 hours here 😂',
+        'i want to do laser tag but the dark room scares me 💀',
+    ],
+
+    chessClub: [
+        'my elo is higher than yours #chessclub',
+        'Anyone up for a game of chess? ♟️',
+        '... and the new chess club is open! Checkmate!',
+    ],
+
+    cocktailBar: [
+        'these cocktails are dangerously good 🍹',
+        'whats everyones fave cocktail??',
+        'At the cocktail bar. How many is too many? 😎',
+    ],
+
+    carRental: [
+        'want to rent a car but scared ill scratch it or something lol. Public transport for me i guess!!',
+        'Vroom vroom! I\'m on the roads! In a rented car! 🚗',
+        'Has anyone rented a car from here before? What was your experience like?',
+    ],
+
+    climbingCentre: [
+        'A climbing centre? No wayyy. Terrified of heights.',
+        'Going climbing later with some friends before this loop #epic',
+        'Nearly fell at the climbing centre forgot I was attached to the safety rope yelled so loud 😅'
+    ],
+
+    indoorSurfing: [
+        'indoor surfing is literally the coolest thing they could have built here. time to grab my surfboard !!',
+        'My friend screamed the whole time at the indoor surfing thing. So glad I have it all saved on video 😂😂',
+        'The attendants at the indoor surfing are kinda... 😳',
+    ],
+
+    wrestlingArena: [
+        'Big fight happening tonight at the wrestling arena. Anyone else going?',
+        'If someone doesn\'t get knocked out with a folding chair, I want my money back. #Wrestling',
+        'loll wrestling is like the best form of entertainment. just pure camp 🤭',
+    ],
+
+    beerStore: [
+        'Topping up at the beer store for my dad, he\'s very specific about which beers he wants and which ones he hates 😅',
+        'The beers at the beer shop are actually pretty cheap! Definitely need to control myself here lol',
+        'OMGG bought so many beer crates now im paranoid they wont let me on the loop 💀',
+    ],
+
+    customerServiceCentre: [
+        'The new customer service centre is great. I feel bad for them having to deal with so many complaints everyday lol',
+        'does anyone have the number for the new customer service centre',
+        'I must say, the advisors at the customer service centre were very patient. Really really impressed 😄',
     ],
 
     officialGeneral: [
