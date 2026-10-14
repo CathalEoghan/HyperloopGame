@@ -87,6 +87,8 @@ const DEV_KEY_MAP = {
     'Jazz Lounge': 'jazzBar',
     'Music Store': 'musicStore',
     'Dance Studio': 'danceStudio',
+    'Rock Bar': 'rockBar',
+    'Bed & Breakfast': 'bedAndBreakfast',
     'Live Music Lounge': 'liveMusicLounge',
     'Waffle House': 'waffleHouse',
     'Shoe Store': 'shoeStore',

@@ -900,7 +900,7 @@ function App() {
         newCities.forEach(city => {
           if (homeCity && city.name === homeCity.name) return;
           injectCityIntoSchedule(city);
-          const newCityTrigger = { type: city.tier === 1 ? 'newCityTier1' : 'newCity', data: { city: city.name } }
+          const newCityTrigger = { type: city.tier === 1 ? 'newCityTier1' : city.tier === 3 ? 'newCityTier3' : 'newCity', data: { city: city.name } }
           hyperLinkTriggerRef.current = newCityTrigger
           setHyperLinkTrigger(newCityTrigger)
         });
