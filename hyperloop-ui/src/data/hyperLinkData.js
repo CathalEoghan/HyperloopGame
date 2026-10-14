@@ -1,3 +1,5 @@
+import { iceHockeyRink } from "../../../DevelopmentManager/IceHockeyRink"
+
 export const FIRST_NAMES_MALE = [
     'James', 'Oliver', 'Harry', 'Noah', 'Jack',
     'George', 'Charlie', 'Jacob', 'Alfie', 'Freddie',
@@ -1031,6 +1033,79 @@ export const POSTS = {
         'The pods smell so fresh now. Defo been renovated recently',
         'My friend who works here said all the pods were refurbished recently. You can defo tell',
         'Love the new pods! #greatwork 👍'
+    ],
+
+    casino: [
+        'I\'ll win this next round. Just wait. #poker #casino',
+        'How much money did you waste at the casino today? 🎰',
+        'The croupiers at the #casino are kind of dreamy, aren\'t they?',
+    ],
+
+    iceHockeyRink: [
+        'anyone going to see the ice hockey game later? at the terminal?',
+        'damn i wish i brought my hockey stick 🏒🥅',
+        'I\'d love to try out the new ice hockey rink. But I hate the cold!',
+    ],
+
+    phoneStore: [
+        'i dropped my phone down three flights of stairs. thank god for the phone shop.',
+        'might just buy a new phone here for the funzies. 📱',
+        'The man at the phone store laughed when i asked if they still sell rotary phones. NOT OKAY.',
+    ],
+
+    healthClinic: [
+        'The doc at the health clinic was a godsend! Someone give her a raise',
+        'Had this rash around my mouth - went to the health clinic here. Turned out it was just ketchup i forgot to wash off #humiliated',
+        'The health clinic really calmed my health anxiety nerves before the loop. HEROES! 🩺',
+    ],
+
+    giftShop: [
+        'Just bought my mum, my dad, my brother, my sister, my aunt, my aunt\'s neighbour, my dog, my teacher, my tutor, my cousin, my cousin\'s boyfriend, my neighbour, my neighbour\'s grandmother, and my cleaning lady some gifts from the gift shop.',
+        'do you think my friend will notice i bought their gift at the terminal gift shop 🤣',
+        'bought a miniature loop set at the gift shop. So cool',
+    ],
+
+    fishAndChips: [
+        'A seagull just swept down and took one of my chips. One question. How did a seagull get into the terminal in the first place?',
+        'Nothing beats chips doused in salt and vinegar!',
+        'Fish and chips mmmmm. Wish I could have this at home!',
+    ],
+
+    florist: [
+        'The flower shop is good if you need to apologise to your girlfriend for forgetting her birthday and also accidentally locking her out of the house seven times. Oops I overshared again',
+        'Whats everyones favourite flower at the florist? I personally like the violets and roses 🌹',
+        'The flowers at the florist are so pretty 💐🌷🌹🌸🌺',
+    ],
+
+    coffeeShop: [
+        'How hard is it to get my name right ugh #coffeeshops',
+        'Nothing beats a well-earned latte while travelling. ☕',
+        'Can we bring coffees from the coffee shop onto the loop?',
+    ],
+
+    karaokeBar: [
+        'Anyone up for a quick singsong at the karaoke bar? #fun',
+        'Ok guys. Tell me your fave karaoke tune! 🎤',
+        'No offence but... the girl singing at the karaoke bar... #CicadaFromHell',
+    ],
+
+    pub: [
+        'Anyone up for a pub quiz??',
+        'The live entertainment at the pub is so bad its just funny at this point',
+        'The pints at the pub are cheap as chips 🍻',
+        'Having a pint before my loop at the pub. 🍻 Cheers!',
+    ],
+
+    swimmingPool: [
+        'GUYS. No running at the swimming pool. #rulesarerules',
+        'Anyone down for a quick splash at the swimming pool?? 🏊',
+        'DAMN if i knew there was a swimming pool i would have brought my swimsuit! have so much time to kill lol',
+    ],
+
+    toyStore: [
+        'I genuinely don\'t know who\'s having more fun at the toy store. Me or the kids!',
+        'my friend said about checking out the new toy store and i had to admit i couldnt because i have a fear of stuffed animals 😶',
+        'I love toy stores. So much nostalgia 🧸🪁🪀',
     ],
 
     lowReputation: [
