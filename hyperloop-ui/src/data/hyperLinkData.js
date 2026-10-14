@@ -1864,4 +1864,16 @@ export const POSTS = {
         'Fully support the staff walkout. #ForTheWorkers',
         'what are they walking out about 🤔',
     ],
+
+    disconnected_city: [
+        'They disconnected {city}?? R U SERIOUS??',
+        'No this MUST be a joke. WHY would they disconnect that city?',
+        'I was literally due to loop out of {city} next month and I just heard it was disconnected. AWESOME.',
+        'BRING {CITY} BACK. 😠',
+        'This manager seriously DOES NOT HAVE THE FAINTEST IDEA HOW TO RUN THIS PLACE. why would you disconnect {city}?? 😠',
+        'acc thought my friend was joking when he said they disconnected {city} from the network. Like what was all that connecting for? So wasted',
+        'In shock they actually disconnected {city}. Like, in total shock.',
+        'Hey guys, I\'m going to create a petition to bring back {city} to the loop network. I\'ll share it on my profile. #PleaseSign',
+        '😠 ARE U 4 REAL? {city} is gone. im literally shaking rn',
+    ]
 }
