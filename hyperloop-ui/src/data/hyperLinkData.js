@@ -285,8 +285,13 @@ export const POSTS = {
         'didnt even pack breakfast lmao im so dumb',
         'Morning coffee!! ☕️',
         'best place for coffee here',
+        'Yawn so tired good morning',
+        'Rise and shine! Today will be a good day #thinkpositive',
+        'Having an energy drink ik its morning dont @ me',
         'coffee or tea',
         'morning loops are the worst',
+        'Such a beautiful morning ☀️',
+        'GOOD MORNING',
         'still so tired this morning',
         'Full day ahead everyone!! #GoodMorning ☀️',
         'What a lovely morning',
@@ -295,8 +300,17 @@ export const POSTS = {
 
     afternoon: [
         'Afternoon rush hour is crazzyyy today',
+        'How\'s everyone\'s days going so far? 🙂',
+        'so much lag from travelling i literally forgot its the afternoon. so tired',
         'The check-in desk was actually ok considering it\'s around noon',
         'Good afternoon everyone',
+        'Starting my afternoon shift, feeling #optimistic 😁',
+        'still so many hours left in the day acc crying',
+        'Good afternoon! How is everyone\'s days going so far?',
+        'I forgot how crazy this place gets in the noon. Shouldve went for a night loop 😅',
+        'Sun is strong today ☀️',
+        'People just stand in your way 😠 This is what I deserve for booking an afternoon loop i guess',
+        'Morning shift done! Now time to go home and relax 😌',
         'Halfway through the day guys!! Let\'s keep going #GoodAfternoon',
         'whats good for lunch??',
         'WHY oh why did i pick the afternoon loop #busy',
@@ -308,6 +322,16 @@ export const POSTS = {
         'the terminal is defo dying down a bit. less people since the afternoon',
         'Gonna have dinner wheres good for someone fussy like me',
         'Happy eve 🌇',
+        'Evening is my favourite time of the day here. I just like people-watching as the time draws to its close',
+        'Too late for lunch?',
+        'Can see some of the stars already beginning to emerge. Just magical ✨',
+        'Anyone wanna join me for an evening meal? Doesnt have to be fancy or anything',
+        'ik its evening idc im having a breakfast style meal I WAS IN THE AIR FOR LIKE TWELVE HOURS BEFORE I GOT HERE',
+        'Afternoon shift over. Not feeling so optimistic anymore lol',
+        'Getting ready to start my evening shift! #terminallife',
+        'Defo getting a bit colder now the suns dipping out',
+        'Arrived early for my loop later on tonight. What can I do to pass the time?',
+        'Anyonw wanna watch the sunset with me 🥺',
         'Ready for this day to be over',
         'The sunset looks so beautiful 😻',
         'Another day almost over... #timeflies'
@@ -340,6 +364,9 @@ export const POSTS = {
         'Happy Monday guys! Keep those #MondayBlues at bay',
         'Another monday zzzzzz',
         'go away Monday no one likes u',
+        'its a crime that friday is closer to monday than monday is to friday 😭',
+        'got the monday blues',
+        'idek what will make monday better but heres a cute icon of a penguin: 🐧',
         'trying to stay positive on this monday. but its hard. friday so far away',
         'good monday to everybody who celebrates it',
         'How do you guys keep upbeat on Mondays? Absolutely hate these days',
@@ -352,6 +379,7 @@ export const POSTS = {
         'tuesday is that annoying co worker who makes bad jokes and wears obnoxious ties',
         'Happy tuesday everyone!! Getting there slowly but surely!!',
         'whats everyone up to on a tuesday',
+        'Already making plans for the weekend lol',
 
     ],
 
@@ -362,6 +390,7 @@ export const POSTS = {
         'Wednesday is the friend who doesnt know if theyre more monday or friday #makeyourmindup',
         'wensday is easier to say than spell',
         'wednesday. ive had enough',
+        'Stay calm guys. Weekend is almost here. Just be patient! #postivity'
     ],
 
     thursday: [
@@ -376,6 +405,8 @@ export const POSTS = {
 
     friday: [
         'omg finallllllly #friday',
+        'going out tn with some of the coworkers! so excited for a lil boogie 💃',
+        'anyone any plans for friday night? 🥂',
         'Happy friday! lets have a productive and peaceful weekend ✌️',
         'I was feeling bad then i remembered its friday',
         'Whats everyones fave day and why is it friday',
@@ -1783,6 +1814,8 @@ export const POSTS = {
     ],
     event_viral_coverage: [
         'who else has seen the video lol',
+        'anyone who hasnt seen the video come to arrivals i have it here',
+        'SOMEONE SEND ME THE VIDEO',
         'can someone PLEASE sent me the video i havent seen it yet!!',
         'Howd that go viral? not even funny'
     ],
@@ -1798,6 +1831,7 @@ export const POSTS = {
         ],
     event_record_day: [
         'this place is CRAMMED.',
+        'Of course the record day is the day IM travelling. Really couldnt be bothered anymore',
         'guys. security lines extremely long today. theyve had to start moving passengers ahead based on when their loops leave #madness',
         'im glad im just seeing my family off! i get to go home, place looks absolutely crawling today 😬😬'
     ],
@@ -1806,6 +1840,7 @@ export const POSTS = {
     event_sickness_outbreak: [
         'whats this about a sickness outbreak? is it safe to travel?',
         'yeah. theres definitely something going around. 🤒',
+        'Not feeling the best but you just have to keep going #StayStrong',
         'Glad I brought tissues! 🤧'
     ],
     event_bad_press: [
