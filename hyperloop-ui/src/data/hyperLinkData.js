@@ -522,6 +522,14 @@ export const POSTS = {
         '{city}? anyone been there before',
         '{city}!! I\'VE DREAMT OF A LOOP TO {CITY} MY WHOLE LIFE',
         'ah cool they connected {city}!',
+        'a loop to {city}?? i have a cousin in {city} who owes me money #payday',
+        'cant wait to tell everyone i went to {city} before it was cool',
+        'OK guys i just booked {city} without even checking where it is. Anyone know?',
+        'Wait they connected {city}?! My ex lives there. Nope nope nope',
+        '{city}! My gran has been telling me to visit for years.',
+        'someone remind me why i always end up buying a ticket the second a new city opens',
+        'so is {city} good or are we just going to find out the hard way',
+        'the departure board looks better with {city} on it ngl',
         'oh {city}. interesting',
         'how much to get a loop to {city}?',
         'Are tickets to the new connection, {city}, pricey? 🎟️',
@@ -536,13 +544,25 @@ export const POSTS = {
         'what?? since when was there a connection to {city} who thought of this #Confused',
         'has anyone heard of {city} before? it looks nice',
         'cool!! ive never been to {city} before, excited to go now',
+        '{city}? is that a real place or did the manager make it up',
+        'i live 10 minutes from {city} and im still shocked its on the network',
+        'a hyperloop to {city}. i hope theyre ready for all of us',
+        '{city} has no idea whats coming',
+        'honestly love that {city} got a connection. smaller places deserve nice things too 🥹',
+        'been to {city} once. loved it. never thought id see a loop there',
     ],
 
     newCityTier3: [
         'connection to {city} - defo needed for a city this big',
         'Yay, I\'ve always wanted to go to {city} 😄',
         '{city}?? uhh ill pass. i dont like big, crowded cities!',
-        'Glad to see a connection to {city}. It\'s a big city, so a connection was definitely required.'
+        'Glad to see a connection to {city}. It\'s a big city, so a connection was definitely required.',
+        'A loop to {CITY}!! Finally the big leagues',
+        '{city} on the board. you know this terminal is serious now',
+        'just landed a ticket to {city} and im not sure i can afford the souvenirs 😭',
+        'if you get lost in {city} please do not call me. i will also be lost',
+        'I\'ve wanted to visit {city} my entire life! Is it as busy as everyone says??',
+        'cant believe a hyperloop to {city} exists now. The future is here 🚄',
     ],
 
     newDevelopmentShopping: [
@@ -554,6 +574,14 @@ export const POSTS = {
         'ok hear me out the cashier in the new {store} 😍',
         'The new {store} is everything i could shop in there for days',
         'the queue outside the new {store}... man...',
+        'I went into the new {store} for 5 minutes and came out 2 hours later with a bag. No idea what happened lmao',
+        'the new {store} has a sale on and i have never run faster',
+        'Ok, who told my dad about the new {store}. Hes been in there since it opened haha',
+        'new {store}! my bank account says no but my heart says yes 💳',
+        'Queueing outside the new {store} like its a concert 😭',
+        'the staff at the new {store} are SO nice. Spent way more than i planned because of them lol',
+        'if my suitcase doesnt close its because of the new {store}. not my fault',
+        'Anyone got a spare suitcase? The new {store} got me',
     ],
 
     newDevelopmentRecreation: [
@@ -562,6 +590,14 @@ export const POSTS = {
         'me and my pals had a blast at the new {recreation} check it out guys',
         'where\'s the new {recreation}? they sell alcohol right',
         'Mum dragging me to the new {recreation} like plzzz',
+        'The new {recreation} just opened and my kids have vanished. Not worried at all 🙃',
+        'killing time at the new {recreation} until my loop leaves! best decision today',
+        'Tried the new {recreation} and I\'m honestly obsessed. Who\'s coming with me tomorrow',
+        'i have never been so happy to have a 3 hour delay. the new {recreation} is great',
+        'the new {recreation} is making me feel like a tourist in my own life lol',
+        'anyone seen my granddad? think he went to the {recreation} but not sure',
+        'is the new {recreation} suitable for beginners? asking for a very uncoordinated friend',
+        'the new {recreation} is full of people who said theyd only stay for ten minutes 😂',
     ],
 
     newDevelopmentService: [
@@ -569,13 +605,25 @@ export const POSTS = {
         'Has anyone used the new {service}? what do you think?',
         'Good thing the new {service} is open - would genuinely be lost without it',
         'Anyone have directions to the new {service}?',
+        'the new {service} saved my entire trip. i could cry',
+        'someone tell the manager the new {service} is a real lifesaver 🙏',
+        'ok the new {service} is the best thing to happen to {terminalName} all week',
+        'the line for the new {service} is long but honestly worth it',
     ],
 
     newDevelopmentFood: [
         'Thank goodness for the new {food}. My stomach was grumbling like crazy',
         'Whos coming to get food with me at the new {food}??',
         'Lines for the new {food} are out the door! People be hungry',
-        'anyone who has been to the new {food} - whats the best thing on the menu?'
+        'anyone who has been to the new {food} - whats the best thing on the menu?',
+        'the new {food} smells SO good. i just had lunch but im tempted haha',
+        'Tried the new {food} and now I\'m ruined for all other food',
+        'The new {food} just fed my whole family for less than I\'d expected!!',
+        'Cant believe theres a new {food} and i just ate. why does this always happen',
+        'a food place! a real one! the new {food}!! im free!!',
+        'ok the new {food} is amazing and no i will not be sharing',
+        'whoever opened the new {food} deserves a medal 🏅',
+        'the new {food} has the best food in the terminal and im willing to fight about it',
     ],
 
     developmentUpgraded: [
@@ -710,12 +758,15 @@ export const POSTS = {
     ],
 
     fewCities: [
-        'This place desperately needs more options to travel to. Sick of the limited choice',
+        'This place desperately needs more options to travel to. Sick of the limited choices',
         'Can we get some more destinations plz?',
         'one big improvement id like to see is more travel destinations',
         'MANAGER. CONNECT MORE CITIES. THIS PLACE IS A GHOST TOWN.',
         'wish they would add more connections. the pickings rn are slim',
-        'the choices for destinations here are actually terrible 😂'
+        'the choices for destinations here are actually terrible 😂',
+        'what a terrible range of cities to loop to lol',
+        'It\'s no secret the range of cities on offer is thin - where do you guys want to see connected?',
+        'Would love more choices to travel to!',
     ],
 
     noFood: [
@@ -727,6 +778,12 @@ export const POSTS = {
         'Where. are. the. restaurants. 🍴',
         'Please build some food places, manager. I can\'t sustain myself on protein bars any longer',
         'no its not an earthquake or a tsunami or an atom bomb its my damn stomach rumbling. wish there was an ACTUAL food place here.',
+        'i have been chewing the same gum for 6 hours. it has no flavour left. please build a restaurant',
+        'smelled food and followed it for 20 minutes. it was a man eating a sandwich on a bench. i am not well',
+        'my toddler is eating my boarding pass. there is nothing else to feed him here',
+        'a food court would genuinely change my life right now',
+        'every terminal ive ever been to has a coffee place at least 😔',
+        'i would pay £20 for a bag of crisps. i would pay £20 for HALF a bag of crisps',
     ],
 
     noShopping: [
@@ -737,6 +794,13 @@ export const POSTS = {
         'build more shops!!',
         'where are all the shops?',
         'this place is terrible for shopping',
+        'forgot to buy my mum a present and the only thing for sale here is air',
+        'cant even get a neck pillow here. i will be sleeping on my own elbow tonight',
+        'i came to this terminal ready to spend money and there is nothing to spend it on. wild',
+        'not a single souvenir. how am i supposed to prove i was here',
+        'theres no shop so ive been window shopping at the windows. just windows 🪟',
+        'someone get a gift shop in here ASAP my friend\'s birthday is tomorrow and i have nothing',
+        'whats the point of having money if you cant spend it?',
     ],
 
     noRecreation: [
@@ -753,6 +817,16 @@ export const POSTS = {
         'this place is so inconvenient lmao',
         'whats with the lack of services?',
         'where are all the service things',
+        'my loop got delayed 9 hours and there are no hotels here. sleeping on my suitcase like a raccoon 🦝',
+        'no sleeping pods, no hotel, not even a decent bench. where am i supposed to nap',
+        'been dragging this suitcase around for 3 hours. is there seriously nowhere to store luggage',
+        'my phone has no signal and theres nowhere to buy a sim card. how do people live like this',
+        'got a headache and theres no pharmacy. i am going to be so dramatic about this',
+        'if i fall over is there at least a health clinic? asking for a friend (me)',
+        'been sat on a plane for 11 hours and cant even go to a gym to move my legs 😭',
+        'i booked a loop here AND a car for after, turns out theres no car rental. thanks for nothing',
+        'no one told me i would have to bring my dog to a terminal with no kennel. hes judging me',
+        'five loops, one terminal and ZERO services. i have never felt so unsupported 😤',
     ],
 
     manyFood: [
@@ -1538,6 +1612,13 @@ export const POSTS = {
         'Was livestreaming my journey through here earlier and my followers were asking why the HELL i chose this over flying... lol didnt know it had a rly bad reputation 🤣',
         'This place is known for being a bit rough, hopefully all goes well',
         'My friends advised me not to travel through here... they said it has a bit of a bad reputation. What do you guys think?',
+        'leaving a one star review for this terminal and i havent even boarded yet ⭐',
+        'the staff here have the energy of a wet sock. #lowreputation',
+        'my cousin told me to avoid this place and i did not listen. my cousin is always right',
+        'terminal rated 2/10 on every site i checked and somehow i still ended up here',
+        'every review i read said this place is a mess. and look at that, its a mess',
+        'does anyone know how a place gets this bad of a reputation? genuinely curious',
+        'i would say i expected better but i read the reviews and i did not',
         ],
 
     highReputation: [
@@ -1820,7 +1901,9 @@ export const POSTS = {
     event_profits_surge: [
         'The company are doing exceptionally well this quarter. Onwards and upwards. 📈',
         'Not surprised the company\'s doing well... the place is always completely packed.',
-        'so glad the company is doing well! been following them for a while 😄'
+        'so glad the company is doing well! been following them for a while 😄',
+        'DING DING DING. The company\'s profits have skyrocketed 🚀',
+        'Heard the manager has led the company into a golden age of profits. Good work!',
     ],
     event_viral_coverage: [
         'who else has seen the video lol',
@@ -1832,15 +1915,19 @@ export const POSTS = {
     event_celebrity_visit: [
             'wait is that who I think it is??',
             'Just walked past someone famous and I\'m pretending I didn\'t notice',
-            'who even is that and why do we all care'
+            'who even is that and why do we all care',
+            'Lol i got an autograph from them earlier',
         ],
     event_tourism_surge: [
             'anyone else in town for {occasion}?? this place is packed',
             'Told my friends I was going to {occasion}. Did not expect this many people at {terminalName}',
             'queue for the loop is insane today. turns out there\'s {occasion} on 😅',
+            'What is this about a major event happening? #OutOfTheLoop',
+            'Event? What event? Why is it so busy?'
         ],
     event_record_day: [
         'this place is CRAMMED.',
+        'Move. Out. Of. My. Way.',
         'Of course the record day is the day IM travelling. Really couldnt be bothered anymore',
         'guys. security lines extremely long today. theyve had to start moving passengers ahead based on when their loops leave #madness',
         'im glad im just seeing my family off! i get to go home, place looks absolutely crawling today 😬😬'
@@ -1849,6 +1936,7 @@ export const POSTS = {
     // Negative: passive income penalty (30-180 s) - also good to fill
     event_sickness_outbreak: [
         'whats this about a sickness outbreak? is it safe to travel?',
+        'Tissues, hand sanitiser, wipes... bring it on, sickness! #prepared',
         'yeah. theres definitely something going around. 🤒',
         'Not feeling the best but you just have to keep going #StayStrong',
         'Glad I brought tissues! 🤧'
@@ -1857,22 +1945,35 @@ export const POSTS = {
         'I\'m not sure if I believe all the bad press about the terminal! It\'s always been a good experience for me.',
         'yikes. so many bad articles coming out recently about the terminal. maybe i should fly instead',
         'idc about the bad press i just want to go on holiday lol #notbothered',
+        'Wondering if I should cancel my loop now... after all the bad press...',
+        'who cares about bad press im not missing my loop',
     ],
     event_bad_weather: [
         'Glad I decided to leave early! Weather is terrible',
         'no taxis will pick me up from the terminal. less capacity today cus of the weather or something #annoying',
-        'Guys... calm down... its just some wind and rain 🙄'
+        'Guys... calm down... its just some wind and rain 🙄',
+        'as if my fear of travelling wasnt bad enough... now theres a weather alert out lol',
+        'Good thing I brought an umbrella! ☂️ #badweather',
+        'Had an umbrella but it flew away in the bad weather. How\'s everyone else\'s day going?'
     ],
 
     event_security_incident: [
         'ok im not panicking. ok maybe i am a little bit.',
         'whats going on??',
-        'rang my mom to tell her i was ok. she said im glad but is the chocolate youre bringing me in your case also ok 😂'
+        'Can someone fill me in what happened today at the terminal? Something about a security incident?',
+        'rang my mom to tell her i was ok. she said im glad but is the chocolate youre bringing me in your case also ok 😂',
+        'Where do we go? Trying not to panic #securityincident',
+        'Who was responsible for the incident? What actually happened',
+        'I just heard screams... so scary... stay safe everyone #securityincident',
+        'All the news vans are here covering the security incident that happened earlier!',
+        'Just did an interview on the security incident that happened earlier. Scary stuff.',
     ],
     event_staff_walkout: [
         'hey whered all the staff go?',
         'Fully support the staff walkout. #ForTheWorkers',
         'what are they walking out about 🤔',
+        'Eerie here with so many staff gone',
+        'When will the staff be back?',
     ],
 
     disconnected_city: [
