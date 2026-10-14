@@ -31,7 +31,7 @@ Varanasi.jpg - Photo by Rachel Claire via Pexels
 Havana.jpg - Photo by AXP Photography via Pexels
 Cairo.jpg - Photo by Muhamad Guruh Budi Hartono via Pexels
 Dubai.jpg - Photo by Zaur Takhgiriev via Pexels
-Montreal.jpg - Photo by Mathias Reding via Pexels
+Montréal.jpg - Photo by Mathias Reding via Pexels
 RioDeJaneiro.jpg - Photo by Fernando Silva via Pexels
 Athens.jpg - Photo by Pham Ngoc Anh via Pexels
 Tijuana.jpg - Photo by Joel Martinez via Pexels
@@ -81,7 +81,6 @@ SaintPetersburg.jpg - Photo by Виктор Соломоник via Pexels
 Bordeaux.jpg - Photo by Borja Lopez via Pexels
 Copenhagen.jpg - Photo by C1 Superstar via Pexels
 Warsaw.jpg - Photo by Egor Komarov via Pexels
-Gdánsk.jpg - Photo by Piotr Arnoldes via Pexels
 Karachi.jpg - Photo by Tahamie Farooqui via Pexels
 Dhaka.jpg - Photo by Shubhra Dhar via Pexels
 Honolulu.jpg - Photo by Jess Loiterton via Pexels
@@ -102,7 +101,7 @@ Belgrade.jpg - Photo by Boris Hamer via Pexels
 HoChiMinhCity.jpg - Photo by Nguyên Đoàn via Pexels
 Belfast.jpg - Photo by Donovan Kelly via Pexels
 Oslo.jpg - Photo by @nomundodejr Jr. via Pexels
-Accra.jpg - Photo by Goldenwabbit via Wikimedia Commons
+Accra.jpg - Photo by Goldenwabbit via Wikimedia Commons ((Creative Commons Attribution-Share Alike 4.0 International license))
 Jakarta.jpg - Photo by el jusuf via Pexels 
 Suva.jpg - Photo by Donovan Kelly via Pexels
 Kraków.jpg - Photo by Justyna Sieczka via Pexels
@@ -113,7 +112,7 @@ Orlando.jpg - Photo by Frank Rojas via Pexels
 CapeTown.jpg - Photo by Pixabay via Pexels
 Almaty.jpg - Photo by Александр Шаварёв via Pexels
 Tashkent.jpg - Photo by Zokir via Pexels
-Kingston.jpg - Photo by Joao Xavier via Wikimedia Commons
+Kingston.jpg - Photo by Joao Xavier via Wikimedia Commons (Creative Commons Attribution-Share Alike 3.0 Unported license. Subject to disclaimers. Link: https://commons.wikimedia.org/wiki/File:Devonhouse.jpg)
 Cusco.jpg - Photo by Marco Luigy via Pexels
 Kinshasa.jpg - Photo by Vika Glitter via Pexels
 Minsk.jpg - Photo by Alexander Fadeev via Pexels
@@ -132,14 +131,13 @@ Durban.jpg - Photo by Andrew Harvard via Pexels
 Montevideo.jpg - Photo by Nikolai Kolosov via Pexels
 Thessaloniki.jpg - Photo by BAB2056 via Pexels
 Málaga.jpg - Photo by Ramon Karolan via Pexels
-Vienna.jpg - Photo by Nataly Nagorska via Pexels
 Naples.jpg - Photo by K via Pexels
 TheHague.jpg - Photo by Martijn Stoof via Pexels
 Denpasar.jpg - Photo by Max Statnykh via Pexels
 Zurich.jpg - Photo by Ilia Bronskiy via Pexels
 Turin.jpg - Photo by Ariadne Barroso via Pexels
 Bath.jpg - Photo by Lucas Carlini via Pexels
-Mancester.jpg - Photo by Max W via Pexels
+Manchester.jpg - Photo by Max W via Pexels
 Glasgow.jpg - Photo by Lewis Ashton via Pexels
 Perth.jpg - Photo by Tibor Janas via Pexels
 Auckland.jpg - Photo by Ollie Craig via Pexels
@@ -190,7 +188,7 @@ Zagreb.jpg - Photo by Vladimir Srajber via Pexels
 StLouis.jpg - Photo by James L via Pexels
 Cleveland.jpg - Photo by Matt via Pexels
 Valencia.jpg - Photo by Salvatore De Lellis via Pexels
-Bucharest.jpg - Photo by Madalin Pentelie via Wikimedia Commons
+Bucharest.jpg - Photo by Madalin Pentelie via Wikimedia Commons (Creative Commons CC0 1.0 Universal Public Domain Dedication)
 Nice.jpg - Photo by Daniel Furrer via Pexels
 Dallas.jpg - Photo by Anat Morad via Pexels
 Islamabad.jpg - Photo by Waqas Arshad via Pexels
@@ -229,7 +227,7 @@ SantoDomingo.jpg - Photo by Anthony Camilo via Pexels
 SanJosé.jpg - Photo by Spicypepper999 via Pexels
 Adelaide.jpg - Photo by Patrick McLachlan via Pexels
 Tianjin.jpg - Photo by 逐光 创梦 via Pexels
-Chihuahua.jpg - Photo by Comisión Mexicana de Filmaciones via Wikimedia Commons
+Chihuahua.jpg - Photo by Comisión Mexicana de Filmaciones via Wikimedia Commons (Creative Commons Attribution - ShareAlike 2.0 Generic license)
 Baku.jpg - Photo by Zulfugar Karimov via Pexels
 Kabul.jpg - Photo by Qasim Mirzaie via Pexels
 Genoa.jpg - Photo by Diego F. Parra via Pexels
@@ -245,7 +243,7 @@ Maputo.jpg - Photo by SINAL Multimédia via Pexels
 Monterrey.jpg - Photo by Dante Muñoz via Pexels
 Recife.jpg - Photo by Pedro Gonçalves via Pexels
 Birmingham.jpg - Photo by Richard Hunter-Rice via Pexels
-Dili.jpg - Photo by Bahnfrend via Wikimedia Commons
+Dili.jpg - Photo by Bahnfrend via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Daegu.jpg - Photo by Khan ishaan via Pexels
 Vilnius.jpg - Photo by Omar via Pexels
 Verona.jpg - Photo by Ensar * via Pexels
@@ -257,7 +255,7 @@ Antwerp.jpg - Photo by Willy De Laet via Pexels
 Calgary.jpg - Photo by Donovan Kelly via Pexels
 Nuuk.jpg - Photo by Биљана via Pexels
 Bruges.jpg - Photo by Cristian Salinas Cisternas via Pexels
-Darwin.jpg - Photo by Hagai Agmon-Snir via Wikimedia Commons
+Darwin.jpg - Photo by Hagai Agmon-Snir via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Hiroshima.jpg - Photo by Hoi Wai via Pexels
 Lyon.jpg - Photo by Luca Nardone via Pexels
 Lublin.jpg - Photo by Karolina Grabowska www.kaboompics.com via Pexels
@@ -265,7 +263,7 @@ Derry.jpg - Photo by K via Pexels
 Georgetown.jpg - Photo by amanderson2 via Wikimedia Commons
 Palermo.jpg - Photo by Elijah Cobb via Pexels
 Düsseldorf.jpg - Photo by Radwan Menzer via Pexels
-Christchurch.jpg - Photo by Michal Klajban via Wikimedia Commons
+Christchurch.jpg - Photo by Michal Klajban via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Tucson.jpg - Photo by Daquella manera via Flickr
 Sapporo.jpg - Photo via Pixabay
 Wuhan.jpg - Photo by CHINA YU via Pexels
@@ -274,7 +272,7 @@ George Town.jpg - Photo by Jun Lei Lim via Pexels
 Kigali.jpg - Photo by Faustin NKURUNZIZA via Pexels
 Yerevan.jpg - Photo by Valeria Drozdova via Pexels
 Pretoria.jpg - Photo by South African Tourism via Flickr
-İzmir.jpg - Photo by Picasa via Wikimedia Commons
+İzmir.jpg - Photo by Picasa via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Bandung.jpg - Photo by Irma Sjachlan via Pexels
 Salzburg.jpg - Photo by Picryl via Pixabay
 Liverpool.jpg - Photo by Balázs Gábor via Pexels
@@ -282,10 +280,10 @@ Nassau.jpg - Photo by Mikhail Nilov via Pexels
 Curitiba.jpg - Photo by Lenandro Melo via Pexels
 Bern.jpg - Photo by Vish Pix via Pexels
 Paramaribo.jpg - Photo by Jean-Pierre Ricardo Veira via Wikimedia Commons
-Bridgetown.jpg - Photo by Barry Haynes via Wikimedia Commons
-Bishkek.jpg - Photo by Jeremy Woodhouse via Wikimedia Commons
-PortVila.jpg - Photo by Phillip Capper via Wikimedia Commons
-Palikir.jpg - Photo by MaxMonaco via Wikimedia Commons
+Bridgetown.jpg - Photo by Barry Haynes via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International)
+Bishkek.jpg - Photo by Jeremy Woodhouse via Wikimedia Commons ( Creative Commons CC0 1.0 Universal Public Domain Dedication)
+PortVila.jpg - Photo by Phillip Capper via Wikimedia Commons (Creative Commons Attribution 2.0 Generic license, link: https://commons.wikimedia.org/wiki/File:Port_Vila,_Vanuatu,_2_June_2006_-_Flickr_-_PhillipC.jpg)
+Palikir.jpg - Photo by MaxMonaco via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, link: https://commons.wikimedia.org/wiki/File:Palikir_Government_Buildings.jpg)
 Pisa.jpg - Photo by Lucas Klein via Pexels
 Puebla.jpg - Photo by Sisgeo via Wikimedia Commons
 Malmö.jpg - Photo by Nik Nikolla via Pexels
@@ -294,45 +292,45 @@ Charleston.jpg - Photo by 1778011 via Pixabay
 Heraklion.jpg - Photo by Gintare K. via Pexels
 Alexandria.jpg - Photo by Moaz Ahmed Kamel via Pexels
 Rabat.jpg - Photo by MAG Photography via Pexels
-León.jpg - Photo by Juan Carlos Fonseca Mata via Wikimedia Commons
+León.jpg - Photo by Juan Carlos Fonseca Mata via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Fukuoka.jpg - Photo by arnaud audoin via Pexels
 Surabaya.jpg - Photo by Andy Pinaria via Pexels
 Cagliari.jpg - Photo by Mike Norris via Pexels
 Dubrovnik.jpg - Photo by Vitalii Dobrianskyi via Pexels
 QuebecCity.jpg - Photo by Quintin Soloviev via Wikimedia Commons
-Zhengzhou.jpg - Photo by Windmemories via Wikimedia Commons
+Zhengzhou.jpg - Photo by Windmemories via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Pittsburgh.jpg - Photo by Nicolas DeSarno via Pexels
 Kuching.jpg - Photo by Kevin T via Pexels
 PortMoresby.jpg  - Photo by Toktok No Maski Productions via Pexels
 CebuCity.jpg - Photo by HAVI3 via Pexels
 Lusaka.jpg - Photo by Mondoka via Large Norwegian Encyclopedia
-Khartoum.jpg - Photo by Christopher Michel via Wikimedia Commons
+Khartoum.jpg - Photo by Christopher Michel via Wikimedia Commons (Creative Commons Attribution 2.0 Generic license, link: https://commons.wikimedia.org/wiki/File:Khartoum,_Sudan_%2831764695924%29.jpg)
 Managua.jpg - Photo by hovedstad via Large Norwegian Encyclopedia
 Thimphu.jpg - Photo by Christopher Fynn via Wikimedia Commons
 Harbin.jpg - Photo by ainc T via Pexels
-Livingstone.jpg - Photo by YWAM Livingstone via Wikimedia Commons
+Livingstone.jpg - Photo by YWAM Livingstone via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Samarkand.jpg - Photo by AXP Photography via Pexels
 Poznań.jpg - Photo by Jakub Zerdzicki via Pexels
 Ankara.jpg - Photo by Mehdi via Pexels
 Macau.jpg - Photo by tian Jin via Pexels
 Ibadan.jpg - Photo by ShotbyWRZ via Pexels
 Sofia.jpg - Photo by Orlin Ratchev via Pexels
-Brazzaville.jpg - Photo by Africany via Wikimedia Commons
-Gaborone.jpg - Photo by CNJerem via Wikimedia Commons
-Kumasi.jpg - Photo by Maven Egote via Wikimedia Commons
+Brazzaville.jpg - Photo by Africany via Wikimedia Commons (Creative Commons CC0 1.0 Universal Public Domain Dedication)
+Gaborone.jpg - Photo by CNJerem via Wikimedia Commons (Creative Commons Attribution 4.0 International license, link: https://commons.wikimedia.org/wiki/File:View_from_I-Tower_SE_20200712.jpg)
+Kumasi.jpg - Photo by Maven Egote via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Bari.jpg - Photo by K via Pexels
 Brasília.jpg - Photo by Governo do Brasil via Wikimedia Commons
 Freetown.jpg - Photo by Tappiah Sesay via Pexels
 Cali.jpg - Photo by K via Pexels
 Monrovia.jpg - Photo by jbdodane via Flickr
 Bergen.jpg - Photo by mysurrogateband via Pexels
-CórdobaArgentina.jpg - Photo by Juan Coronel via Pexels
+Córdoba.jpg - Photo by Juan Coronel via Pexels
 Faro.jpg - Photo by Micheile Henderson via Pexels
-N'Djamena.jpg - Photo by Ken Doerr via Wikimedia Commons
-Conkary.jpg - Photo by World Bank Photo Collection via Flickr
+NDjamena.jpg - Photo by Ken Doerr via Wikimedia Commons
+Conakry.jpg - Photo by Boubacar Bila Diao Balde via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Skopje.jpg - Photo by Necip Duman via Pexels
 SaltLakeCity.jpg - Photo by Lukas Kloeppel via Pexels
-Niamey.jpg - Photo by Sakou Gado via Wikimedia Commons
+Niamey.jpg - Photo by Sakou Gado via Wikimedia Commons  Creative Commons Attribution-Share Alike 4.0 International license
 SanJuan.jpg - Photo by Diego F. Parra via Pexels
 Guayaquil.jpg - Photo by Viajante Dibujero via Pexels
 AntarcticPeninsula.jpg - Photo by Hugo Sykes via Pexels
@@ -358,7 +356,7 @@ BowlingAlley.jpg - Photo by Pavel Danilyuk via Pexels
 IceCreamParlour.jpg - Photo by ROMAN ODINTSOV via Pexels
 CoffeeShop.jpg - Photo by MART PRODUCTION via Pexels
 BeerTent.jpg - Photo by Brett Sayles via Pexels
-High-EndFashion.jpg - Photo by Masood Aslami via Pexels
+HighEndBoutique.jpg - Photo by Masood Aslami via Pexels
 Florist.jpg - Photo by Mariya Eskina via Pexels
 NightLounge.jpg - Photo by Matheus Bertelli via Pexels
 TableTennisCourt.jpg - Photo by Haydar Acer via Pexels
@@ -389,7 +387,7 @@ QuietRoom.jpg - Photo by Muhtelifane via Pexels
 CraftsShop.jpg - Photo by Eduardo Amorim via Pexels
 EnhancedCommunications.jpg - Photo by Fran Werner via Pexels
 EliteFisheryContracts.jpg - Photo by Michał Robak via Pexels
-WaterTaxiTransfer.jpg - Photo by Igor Passchier via Pexels
+WaterTaxiTransfers.jpg - Photo by Igor Passchier via Pexels
 CocktailBar.jpg - Photo by Matias via Pexels
 PhoneStore.jpg - Photo by Mathias Reding via Pexels
 BusTransfers.jpg - Photo by HONG SON via Pexels
@@ -409,7 +407,7 @@ GiftShop.jpg - Photo by Demetra Ioannidou via Pexels
 Casino.jpg - Photo by Vanessa Valkhof via Pexels
 CeramicsStore.jpg - Photo by Richard L via Pexels
 TapasRestaurant.jpg - Photo by The Castlebar via Pexels
-GlobalSouthTradeAgreements.jpg - Photo by Lara Jameson via Pexels
+SouthernHemisphereTradeAgreements.jpg. - Photo by Lara Jameson via Pexels
 CatCafé.jpg - Photo by Anh Cam via Pexels
 KebabShop.jpg - Photo by Valeria Boltneva via Pexels
 HandbagShop.jpg - Photo by shattha pilabut via Pexels
@@ -423,12 +421,11 @@ AsianTravelPackages.jpg - Photo by cottonbro studio via Pexels
 EuropeanTravelPackages.jpg - Photo by Beate Vogl via Pexels
 OceanianTravelPackages.jpg - Photo by Lara Jameson via Pexels
 Theatre.jpg - Photo by Monica Silvestre via Pexels
-WineMerchant.jpg - Photo by Kalilou Tirera via Pexels
+PremierWineImports.jpg - Photo by Kalilou Tirera via Pexels
 ImprovedRestroomFacilities.jpg - Photo by Maya Ali via Pexels
 EnhancedAdvertisingStrategies.jpg - Photo by Mikael Blomkvist via Pexels
 JewelleryShop.jpg - Photo by Hert Niks via Pexels
 StreetFoodFair.jpg - Photo by yusuf coşkun via Pexels
-CrossTerminalTukTukService.jpg - Photo by Eyefon Michael via Pexels
 SurfShop.jpg - Photo by Wendy Wei via Pexels
 CigarShop.jpg - Photo by Aleksandar Andreev via Pexels 
 FishAndChips.jpg - Photo by casper lin via Pexels
@@ -463,7 +460,7 @@ IceHockeyRink.jpg - Photo by Ron Lach via Pexels
 MoroccanRestaurant.jpg - Photo by Ali Dashti via Pexels
 FastFoodJoint.jpg - Photo by Tharnisha Reddy via Pexels
 IntegratedMetroSystem.jpg - Photo by Enric Cruz López via Pexels
-SourdoughBakery.jpg - Photo by Merve via Pexels
+SourdoughCafé.jpg - Photo by Merve via Pexels
 JazzLounge.jpg - Photo by cottonbro studio via Pexels
 HyperloopPodRefurbishments.jpg - Photo by Sameboat via Wikimedia Commons
 ToyStore.jpg - Photo by Harini Padmarajan via Pexels
@@ -482,7 +479,7 @@ Chocolatier.jpg - Photo by Linken Van Zyl via Pexels
 HealthClinic.jpg - Photo by Los Muertos Crew via Pexels
 Spa.jpg - Photo by Arina Krasnikova via Pexels
 GayBar.jpg - Photo by PNW Production via Pexels
-WhiskeyBar.jpg - Photo by DUONG QUÁCH via Pexels
+WhiskyBar.jpg - Photo by DUONG QUÁCH via Pexels
 SportsStore.jpg - Photo by BI ravencrow via Pexels
 LocalTours.jpg - Photo by Lorna Pauli via Pexels
 BiryaniRestaurant.jpg - Photo by Prabal Pratap Singh via Pexels
@@ -510,7 +507,7 @@ LocalAirportLinks.jpg - Photo by Sheldon Li via Pexels
 BubbleTeaShop.jpg - Photo by 🇻🇳🇻🇳Nguyễn Tiến Thịnh 🇻🇳🇻🇳 via Pexels
 CandleShop.jpg - Photo by Christina & Peter via Pexels
 PrayerRoom.jpg - Photo by Mehmet Guzel via Pexels
-BurgerRestaurant.jpg - Photo by Robin Stickel via Pexels
+HamburgerRestaurant.jpg - Photo by Robin Stickel via Pexels
 HyperloopMuseum.jpg - Photo by Neuhausengroup via Wikimedia Commons
 ArtificialIntelligenceImprovements - Photo by Tara Winstead via Pexels
 RecordsStore.jpg - Photo by Yelena from Pexels via Pexels
@@ -594,7 +591,7 @@ BusinessClassCabins.jpg - Photo by Lara Jameson via Pexels
 JanuaryTicketDeals.jpg - Photo by Klaus Dieter via Pexels
 OctoberTicketDeals.jpg - Photo by Fatma Gül via Pexels
 AdvertisingCampaignBelgium.jpg - Photo by Ivy Nguyen via Pexels
-ArcticTourismInitiaves.jpg - Photo by Markku Soini via Pexels
+ArcticTourismInitiatives.jpg - Photo by Markku Soini via Pexels
 DecemberTicketDeals.jpg - Photo by Fritz Jaspers via Pexels
 AdvertisingCampaignAustralia.jpg - Photo by Grantuking via Pexels
 AdvertisingCampaignPoland.jpg - Photo by Karolina Grabowska www.kaboompics.com via Pexels
@@ -645,7 +642,7 @@ RainforestConservationProjects.jpg - Photo by Toktok No Maski Productions via Pe
 IceBar.jpg - Photo by William Warb via Pexels
 SquidShack.jpg - Photo by Nguyen Huy via Pexels
 AntiquesStore.jpg - Photo by Ömer Tosun via Pexels
-InternationalDevelopmentProjects.jpg - Photo by MART PRODUCTION via Pexels
+InternationalDevelopmentSchemes.jpg - Photo by MART PRODUCTION via Pexels
 TreePlantingSchemes.jpg - Photo by Thirdman via Pexels
 NewYearsCelebrations.jpg - Photo by cottonbro studios via Pexels
 ArrivalsHallRenovation.jpg - Photo by Greece-China News via Pexels
@@ -681,7 +678,6 @@ ExpandedDutyFree.jpg - Photo by Travelling Tourist via Pexels
 SleepingPods.jpg - Photo by cottonbro studio via Pexels
 CarRental.jpg - Photo by Negative Space via Pexels
 SimCardServices.jpg - Photo by Jacob via Pexels
-MarketingSurveys.jpg - Photo by RDNE Stock project via Pexels
 SocialMediaManagers.jpg - Photo by Burst via Pexels
 EarlyRetirement.jpg - Photo by Kampus Production via Pexels
 AnniversarySales.jpg - Photo by cottonbro studio via Pexels
@@ -725,7 +721,7 @@ StreamingMastery.jpg - Photo by https://kaboompics.com/
 
 
 
-MALE PROFILE PICS
+MALE PROFILE PICS (Sourced from Pexels)
 Andrea Piacquadio, Ron Lach, Serhii Volyk, Vitaly Gariev, Kampus Production, 
 Aesthos AR. Photography, Srijit Mudi, RDNE Stock Project, Doğu Tuncer, Rajesh Syangtan
 ks concept, Cristian Cativo, cottonbro studio, Gabriel Passos, yiğithan akbay, CRISTIAN CAMILO ESTRADA,
@@ -735,7 +731,7 @@ Darya Sannikova, Sanket Mishra, YOUR CHANNEL, Faruk Canpolat, Diyath Fernando, M
 İbrahim Serdar, kovac .soul, Hoài Nam, Pexels User, LekePOV, Maximilian Orlowsky, Los Muertos Crew, Sarazh Izmailov,
 AVINASH Gond, Soundarapandian MS, Siarhei Nester,
 
-FEMALE PROFILE PICS
+FEMALE PROFILE PICS (Sourced from Pexels)
 Mayara Caroline Mombelli, https://kaboompics.com/, Vitaly Gariev, Elina Fairytale,  Andrea Piacquadio,
 Ron Lach, Kampus Production, Nano Erdozain, Vietnam Hidden Light, Laura Rincón, JESSICA TICOZZELLI, Pavel Danilyuk,
 Thanh Nhan, RDNE Stock Project, Min An, Cristian Cativo, cottonbro studio, Lada Bilozor, Teona Swift, Layanne Aguiar,
@@ -748,7 +744,6 @@ kovac .soul, Hoài Nam, Los Muertos Crew, Maria Lourdes Peyregne, Suzy Hazelwood
 
 SOUNDS
 
-cityConnectComplete.mp3 - Sound by Robinhood76 via Freesound
 leavingSound.mp3 - Sound by GraceSoundProductions via Pixabay
 farewellAccept.mp3 - Sound by Universfield via Pixabay
 constructionSound.mp3 - Sound by freesound community via Pixabay
@@ -757,20 +752,20 @@ openingAudio.mp3 - Sound via Pixabay
 hoverSound.mp3 - Sound by tunetank via Pixabay
 developmentUnlocked.mp3 - Sound by freesound via Pixabay
 eventSound.mp3 - Sound by DRAGON-STUDIO via Pixabay
-dailyLogin.wav - Sound by rhodesmas via Freesound
-notEnoughFunds.wav - Sound by rhodesmas via Freesound
+dailyLogin.wav - Sound by rhodesmas via Freesound (CC by Attribution 4.0)
+notEnoughFunds.wav - Sound by rhodesmas via Freesound (CC by Attribution 4.0)
 DepartureBoard.mp3 - Sound by tilllt via Freesound
 phoneNotification.mp3 - Sound by nevak36 via Freesound
-specialChime.mp3 - Sound by Olivia Parker via Freesound
+specialChime.mp3 - Sound by Olivia Parker via Pixabay (No attribution required)
 
 MISC IMAGES
 
 DepartureBoard.js - Photo by Neuhausengroup via Wikimedia Commons
-ReputationIcon.png - <a href="https://www.flaticon.com/free-icons/clean" title="clean icons">Clean icons created by Smashicons - Flaticon</a>
+reputation.png - <a href="https://www.flaticon.com/free-icons/clean" title="clean icons">Clean icons created by Smashicons - Flaticon</a>
 globeIcon.png - Photo by pngtree via pngtree
 hello.png - Photo by Magnific via flaticon.com
 pin.jpg - Photo by Vitaly Gorbachev via flaticon.com
-crane.png - Photo by Magnific via flaticon.com
+construction.png - Photo by Magnific via flaticon.com
 monitor.png - Photo by xnimrodx via flaticon.com
 warning.png - Photo by Gregor Cresnar via flaticon.com
 fireworks.png - Photo by Icon Mela via flaticon.com
@@ -781,3 +776,4 @@ phone.png - Photo by Magnific via flaticon.com
 battery.png - Photo by Stockio via flaticon.com
 signal.png - Photo by Andrejs Kirma via flaticon.com
 wifi.png - Photo by Prosymbols Premium via flaticon.com
+me.jpg - Photo by Cathal Eoghan (all rights reserved)
