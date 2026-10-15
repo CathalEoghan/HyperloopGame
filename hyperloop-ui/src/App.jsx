@@ -1489,7 +1489,13 @@ function App() {
             hyperLinkTriggerRef.current = { type: 'development_renamed', data: renamedData }
             setHyperLinkTrigger({ type: 'development_renamed', data: renamedData })
           }}
-          onRemove={() => unlockAchievement('hereTodayGoneTomorrow')}
+          onRemove={(development) => {
+            unlockAchievement('hereTodayGoneTomorrow')
+            // development is the category (e.g. "Pharmacy"); a removed development's custom name may already be gone, so it isn't used
+            const removedData = { development: development.name }
+            hyperLinkTriggerRef.current = { type: 'development_removed', data: removedData }
+            setHyperLinkTrigger({ type: 'development_removed', data: removedData })
+          }}
           onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
             if (success) {
