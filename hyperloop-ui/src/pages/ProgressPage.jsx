@@ -42,19 +42,25 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             return next
         })
     }
-    const sectionHeader = (id, title, style) => (
+    // A full-width bar that reads as a button: round chevron badge, title, optional count, and a Show/Hide label
+    const sectionHeader = (id, title, style, extra) => (
         <h2
-            className="progress-section-header progress-section-toggle"
+            className={`progress-section-header progress-section-toggle${collapsed[id] ? ' progress-section-closed' : ''}`}
             key={id}
             style={style}
             role="button"
             tabIndex={0}
             aria-expanded={!collapsed[id]}
+            title={collapsed[id] ? 'Click to show' : 'Click to hide'}
             onClick={() => toggleSection(id)}
             onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSection(id) } }}
         >
-            <span className={`progress-chevron${collapsed[id] ? ' progress-chevron-closed' : ''}`}>▾</span>
-            {title}
+            <span className="progress-chevron" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="16" height="16"><path d="M3.5 6 L8 10.5 L12.5 6" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
+            </span>
+            <span className="progress-section-title">{title}</span>
+            {extra}
+            <span className="progress-toggle-hint">{collapsed[id] ? 'Show' : 'Hide'}</span>
         </h2>
     )
 
@@ -364,15 +370,12 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                         </div>
                     )}
 
-                    <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
-                        Countries collected
-                        <span className="progress-fraction">{purchasedCountries.size} / {sortedCountries.length}</span>
-                    </h2>
+                    {sectionHeader('countries', 'Countries collected', { marginTop: '24px' }, <span className="progress-fraction">{purchasedCountries.size} / {sortedCountries.length}</span>)}
                     <div className="progress-bar-container">
                         <div className="progress-bar-fill" style={{ width: `${countryProgress}%` }} />
                         <span className="progress-bar-label">{Math.round(countryProgress)}%</span>
                     </div>
-                    <div className="progress-country-grid">
+                    {!collapsed.countries && <div className="progress-country-grid">
                         {sortedCountries.map(country => {
                             const state = getCountryState(country)
                             const flagCode = countryFlags[country]
@@ -396,17 +399,14 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                 </div>
                             )
                         })}
-                    </div>
+                    </div>}
 
-                    <h2 className="progress-section-header" style={{ marginTop: '24px' }}>
-                        Cities collected
-                        <span className="progress-fraction">{purchasedCities.length} / {visibleCities.length}</span>
-                    </h2>
+                    {sectionHeader('cities', 'Cities collected', { marginTop: '24px' }, <span className="progress-fraction">{purchasedCities.length} / {visibleCities.length}</span>)}
                     <div className="progress-bar-container">
                         <div className="progress-bar-fill" style={{ width: `${cityProgress}%` }} />
                         <span className="progress-bar-label">{Math.round(cityProgress)}%</span>
                     </div>
-                    <div className="progress-city-grid">
+                    {!collapsed.cities && <div className="progress-city-grid">
                         {sortedCities.map(city => {
                             const state = getCityState(city)
                             const flagCode = countryFlags[city.country]
@@ -432,7 +432,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                 </div>
                             )
                         })}
-                    </div>
+                    </div>}
                 </div>
             </div>
             {floats.map(f => (

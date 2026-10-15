@@ -65,21 +65,70 @@
     gap: 12px;
 }
 
+/* Collapsible sections: a full-width dark bar that clearly reads as a button */
 .progress-section-toggle {
     cursor: pointer;
     user-select: none;
     -webkit-user-select: none;
-    width: fit-content;
+    background: #333;
+    color: #fff;
+    border: 1px solid #f5a623;
+    border-radius: 8px;
+    padding: 9px 14px 9px 10px;
+    font-size: 1.15rem;
+    transition: background 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
 }
+
+.progress-section-toggle:hover {
+    background: #3d3d3d;
+    box-shadow: 0 4px 14px rgba(245, 166, 35, 0.35);
+}
+
+.progress-section-toggle:active { transform: translateY(1px); }
+
+.progress-section-toggle:focus-visible {
+    outline: 3px solid #f5a623;
+    outline-offset: 2px;
+}
+
+.progress-section-title { flex: 0 1 auto; }
 
 .progress-chevron {
-    display: inline-block;
-    font-size: 1rem;
-    color: #f5a623;
-    transition: transform 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #f5a623;
+    color: #222;
+    transition: transform 0.2s ease, background 0.15s ease;
 }
 
-.progress-chevron-closed { transform: rotate(-90deg); }
+.progress-section-toggle:hover .progress-chevron { background: #ffbc47; }
+
+/* Folded away: the arrow turns to point right */
+.progress-section-closed .progress-chevron { transform: rotate(-90deg); }
+
+/* Right-hand "Hide" / "Show" label */
+.progress-toggle-hint {
+    margin-left: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #f5a623;
+    border: 1px solid rgba(245, 166, 35, 0.6);
+    border-radius: 12px;
+    padding: 3px 12px;
+}
+
+.progress-section-toggle:hover .progress-toggle-hint {
+    background: #f5a623;
+    color: #222;
+}
 
 .progress-section-header-row {
     display: flex;
