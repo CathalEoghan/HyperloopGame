@@ -605,6 +605,7 @@ function App() {
     const gained = tallyLoops(progressionManager.purchasedCities);
     if (gained.departure > 0) achievements.addCounter('departures', gained.departure);
     if (gained.arrival > 0) achievements.addCounter('arrivals', gained.arrival);
+    if (gained.passengers > 0) achievements.addCounter('passengers', gained.passengers);
   }
   useEffect(() => { ensureTodaySchedule(); }, []);
   // Closing the game keeps the playtime since the last 10-second write

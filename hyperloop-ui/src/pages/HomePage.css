@@ -409,3 +409,10 @@
         top: calc(var(--globe-bar-h) + 6px);
     }
 }
+
+/* "412 passengers onboard" under a loop's progress bar */
+.loop-pax {
+    font-size: 0.66rem;
+    color: #ccc;
+    margin-top: 2px;
+}

@@ -833,6 +833,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                     {loop.delayed && <span className="loop-delayed">DELAYED · </span>}
                                                     Expected {formatClock(loop.endTs)} · {formatDuration(loop.endTs - nowMs)} left
                                                 </div>
+                                                <div className="loop-pax">{loop.passengers.toLocaleString('en-GB')} {loop.passengers === 1 ? 'passenger' : 'passengers'} onboard</div>
                                             </li>
                                         )
                                     })}

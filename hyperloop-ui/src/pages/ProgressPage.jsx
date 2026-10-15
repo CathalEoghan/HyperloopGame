@@ -186,6 +186,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         // Every departure and arrival that has happened, including the ones while you were away. Kept through a prestige.
         { label: 'Total number of departures', value: (achievementManager?.counter('departures') ?? 0).toLocaleString('en-GB') },
         { label: 'Total number of arrivals', value: (achievementManager?.counter('arrivals') ?? 0).toLocaleString('en-GB') },
+        { label: 'Total passenger count', value: (achievementManager?.counter('passengers') ?? 0).toLocaleString('en-GB') },
         // Time the game has been open across every run (Terminal age is this run only)
         { label: 'Total playtime', value: playtimeText(achievementManager?.counter('playtime') ?? 0) },
         // Straight from the connected cities, so a disconnect shows at once

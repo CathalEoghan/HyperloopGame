@@ -8,6 +8,7 @@
 // tomorrow's arrivals have usually set off already this evening.
 
 import cityCoordinates from '../data/cityCoordinates.js'
+import { allCities } from '../../../CityManager/CityRegistry.js'
 import { skipMissingMinutes, isRealMinute } from './time.js'
 
 export const LOOP_MPH_MIN = 700
@@ -83,6 +84,37 @@ function hashString(str) {
     for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) }
     return h >>> 0
 }
+
+// ---- Passengers ----
+
+// Passengers on board a loop, by the tier of the city that isn't the home city (where they are coming from or going
+// to). The secret Antarctic Peninsula (tier 0) only ever has a few researchers.
+const PASSENGER_RANGES = { 0: [8, 20], 1: [50, 150], 2: [250, 500], 3: [500, 1000] }
+const CITY_BY_NAME = new Map(allCities.map(c => [c.name, c]))
+// Each tier's smallest and largest population, so a big city leans towards the top of its tier's range
+const TIER_POPULATION = {}
+allCities.forEach(c => {
+    const t = TIER_POPULATION[c.tier] || (TIER_POPULATION[c.tier] = [Infinity, 0])
+    t[0] = Math.min(t[0], c.population); t[1] = Math.max(t[1], c.population)
+})
+
+// The same loop always has the same number: it comes from the loop itself (`seed`), half by chance and half by how
+// big the city is within its tier.
+export function loopPassengers(cityName, seed) {
+    const city = CITY_BY_NAME.get(cityName)
+    const tier = city && PASSENGER_RANGES[city.tier] ? city.tier : 1
+    const [lo, hi] = PASSENGER_RANGES[tier]
+    const [pMin, pMax] = TIER_POPULATION[tier] || [0, 0]
+    const size = city && city.population > 0 && pMax > pMin
+        ? (Math.log(city.population) - Math.log(Math.max(1, pMin))) / (Math.log(pMax) - Math.log(Math.max(1, pMin)))
+        : 0.5
+    const chance = hashString(`${seed}|passengers`) / 4294967296
+    const mix = Math.min(1, Math.max(0, 0.5 * size + 0.5 * chance))
+    return Math.round(lo + mix * (hi - lo))
+}
+
+// A loop's id: the same one the Active Loops list uses, so the list and the passenger total agree
+export const loopId = (kind, dayMs, entry) => `${kind === 'arrival' ? 'arr' : 'dep'}|${dayKey(dayMs)}|${entry.time}|${entry.name}`
 
 export function loopSpeedMph(seed) {
     return LOOP_MPH_MIN + (hashString(seed) % (LOOP_MPH_MAX - LOOP_MPH_MIN + 1))
@@ -260,9 +292,9 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
             const endTs = startTs + entryDuration(e, 'departure', homeCity.name, dayMs) * 60000
             if (nowMs < startTs || nowMs >= endTs) return
             loops.push({
-                id: `dep|${dayKey(dayMs)}|${e.time}|${e.name}`, kind: 'departure',
+                id: loopId('departure', dayMs, e), kind: 'departure',
                 from: homeCity.name, fromCountry: homeCity.country, to: e.name, toCountry: e.country,
-                startTs, endTs, delayed: !!e.delayed,
+                startTs, endTs, delayed: !!e.delayed, passengers: loopPassengers(e.name, loopId('departure', dayMs, e)),
             })
         })
     })
@@ -274,9 +306,9 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
             const startTs = endTs - entryDuration(e, 'arrival', homeCity.name, dayMs) * 60000
             if (nowMs < startTs || nowMs >= endTs) return
             loops.push({
-                id: `arr|${dayKey(dayMs)}|${e.time}|${e.name}`, kind: 'arrival',
+                id: loopId('arrival', dayMs, e), kind: 'arrival',
                 from: e.name, fromCountry: e.country, to: homeCity.name, toCountry: homeCity.country,
-                startTs, endTs, delayed: !!e.delayed,
+                startTs, endTs, delayed: !!e.delayed, passengers: loopPassengers(e.name, loopId('arrival', dayMs, e)),
             })
         })
     })
@@ -291,8 +323,9 @@ const COUNTED_KEY = 'hyperloop_loop_counted'
 // A day's schedule: how many loops it holds, and how many ran after `afterMs` and by `nowMs`
 function scheduledBetween(kind, dayMs, afterMs, nowMs) {
     const list = readSchedule(scheduleKey(kind, dayMs))
-    const ran = list.filter(e => { const t = entryTimestamp(e, dayMs); return t > afterMs && t <= nowMs }).length
-    return { total: list.length, ran, known: list.length > 0 }
+    const ranList = list.filter(e => { const t = entryTimestamp(e, dayMs); return t > afterMs && t <= nowMs })
+    const passengers = ranList.reduce((sum, e) => sum + loopPassengers(e.name, loopId(kind, dayMs, e)), 0)
+    return { total: list.length, ran: ranList.length, passengers, known: list.length > 0 }
 }
 
 // Counts the departures and arrivals that have happened since the last time this ran, including the ones while the
@@ -303,12 +336,16 @@ function scheduledBetween(kind, dayMs, afterMs, nowMs) {
 // schedule would have had. The first run only starts the count, and nothing is counted while only the home city is
 // connected (there are no loops then).
 export function tallyLoops(purchasedCities, nowMs = Date.now()) {
-    const result = { departure: 0, arrival: 0 }
+    const result = { departure: 0, arrival: 0, passengers: 0 }
     let state = {}
     try { state = JSON.parse(localStorage.getItem(COUNTED_KEY) || '{}') || {} } catch { state = {} }
     const hasLoops = !!purchasedCities && purchasedCities.length > 1
     const today = dayKey(nowMs)
     const perDay = hasLoops ? Math.min(SCHEDULE_CAP, purchasedCities.length - 1) : 0
+    // For days whose schedule is gone: the passengers an average loop to one of the connected cities would carry
+    const others = hasLoops ? purchasedCities.slice(1) : []
+    const averagePassengers = others.length
+        ? others.reduce((sum, c) => sum + loopPassengers(c.name, `estimate|${c.name}`), 0) / others.length : 0
     ;['departure', 'arrival'].forEach(kind => {
         const previous = state[kind]
         const lastMs = previous && Number.isFinite(previous.t) ? Math.min(previous.t, nowMs) : null
@@ -320,10 +357,14 @@ export function tallyLoops(purchasedCities, nowMs = Date.now()) {
                 const isToday = dayKey(dayMs) === today
                 const isLastDay = dayKey(dayMs) === dayKey(lastMs)
                 const day = scheduledBetween(kind, dayMs, lastMs, nowMs)
-                if (day.known) gained += day.ran
-                else if (!isToday) {
+                if (day.known) {
+                    gained += day.ran
+                    result.passengers += day.passengers
+                } else if (!isToday) {
                     // The schedule is gone: what was left of it when last seen, or a full day's worth
-                    gained += isLastDay ? (Number.isFinite(previous.left) ? previous.left : 0) : perDay
+                    const loops = isLastDay ? (Number.isFinite(previous.left) ? previous.left : 0) : perDay
+                    gained += loops
+                    result.passengers += Math.round(loops * averagePassengers)
                 }
                 if (isToday) break
                 dayMs = shiftDays(dayMs, 1)
