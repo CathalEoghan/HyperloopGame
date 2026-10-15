@@ -734,13 +734,33 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         }
     }, [])
 
+    // The trophy button is fixed to the bottom of the window, but the globe can sit lower than expected (a long
+    // terminal name wraps onto more lines on a narrow window). Keep the controls column ending above the trophy.
+    const rightControlsRef = useRef(null)
+    useEffect(() => {
+        const fit = () => {
+            const el = rightControlsRef.current
+            const box = el?.parentElement?.getBoundingClientRect()
+            if (!box) return
+            // Trophy: 112.5px up from the bottom of the window and about 78px tall, plus a little gap
+            const trophyTop = window.innerHeight - 200
+            const bottom = `${Math.max(168, Math.ceil(box.bottom - trophyTop))}px`
+            if (el.style.bottom !== bottom) el.style.bottom = bottom
+        }
+        fit()
+        // Re-checked every second too: the header can change height (an event banner, a renamed terminal) with no resize
+        const id = setInterval(fit, 1000)
+        window.addEventListener('resize', fit)
+        return () => { clearInterval(id); window.removeEventListener('resize', fit) }
+    }, [])
+
     return (
         <div className={`home-page${disabled ? ' home-page-disabled' : ''}`} style={{ pointerEvents: disabled ? 'none' : 'auto' }}>
             <div className="globe-top-info">
                 <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
                 <p className="globe-cities">{purchasedCitiesCount} {purchasedCitiesCount === 1 ? 'city' : 'cities'} connected</p>
             </div>
-            <div className="globe-right-controls">
+            <div className="globe-right-controls" ref={rightControlsRef}>
                 <div className="globe-controls-row">
                 <div className="globe-view-switch" role="tablist" aria-label="Globe view">
                     <button

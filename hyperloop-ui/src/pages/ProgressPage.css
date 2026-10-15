@@ -111,6 +111,19 @@
 /* Folded away: the arrow turns to point right */
 .progress-section-closed .progress-chevron { transform: rotate(-90deg); }
 
+/* A folded grid with rewards waiting */
+.progress-claim-badge {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: #222;
+    background: #FFD700;
+    border-radius: 10px;
+    padding: 3px 10px;
+    white-space: nowrap;
+    animation: gold-pulse 2s ease-in-out infinite;
+}
+
 /* Right-hand "Hide" / "Show" label */
 .progress-toggle-hint {
     margin-left: auto;

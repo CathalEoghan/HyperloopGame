@@ -320,10 +320,15 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
 
 const COUNTED_KEY = 'hyperloop_loop_counted'
 
-// A day's schedule: how many loops it holds, and how many ran after `afterMs` and by `nowMs`
-function scheduledBetween(kind, dayMs, afterMs, nowMs, homeName) {
+// A day's schedule: how many loops it holds, and how many ran after `afterMs` and by `nowMs`. Only cities still
+// connected count: a disconnected city's arrivals stay in the stored schedule but never run (nor show anywhere).
+function scheduledBetween(kind, dayMs, afterMs, nowMs, homeName, connected) {
     const list = readSchedule(scheduleKey(kind, dayMs))
-    const ranList = list.filter(e => { const t = entryTimestamp(e, dayMs); return t > afterMs && t <= nowMs })
+    const ranList = list.filter(e => {
+        if (connected && !connected.has(e.name)) return false
+        const t = entryTimestamp(e, dayMs)
+        return t > afterMs && t <= nowMs
+    })
     const passengers = ranList.reduce((sum, e) => sum + loopPassengers(e.name, loopId(kind, dayMs, e)), 0)
     const miles = ranList.reduce((sum, e) => sum + (distanceMiles(homeName, e.name) || 0), 0)
     return { total: list.length, ran: ranList.length, passengers, miles, known: list.length > 0 }
@@ -348,6 +353,7 @@ export function tallyLoops(purchasedCities, nowMs = Date.now()) {
     const averagePassengers = others.length
         ? others.reduce((sum, c) => sum + loopPassengers(c.name, `estimate|${c.name}`), 0) / others.length : 0
     const homeName = hasLoops ? purchasedCities[0].name : ''
+    const connected = new Set((purchasedCities || []).map(c => c.name))
     const averageMiles = others.length
         ? others.reduce((sum, c) => sum + (distanceMiles(homeName, c.name) || 0), 0) / others.length : 0
     ;['departure', 'arrival'].forEach(kind => {
@@ -360,7 +366,7 @@ export function tallyLoops(purchasedCities, nowMs = Date.now()) {
             for (let i = 0; i < 367; i++) {
                 const isToday = dayKey(dayMs) === today
                 const isLastDay = dayKey(dayMs) === dayKey(lastMs)
-                const day = scheduledBetween(kind, dayMs, lastMs, nowMs, homeName)
+                const day = scheduledBetween(kind, dayMs, lastMs, nowMs, homeName, connected)
                 if (day.known) {
                     gained += day.ran
                     result.passengers += day.passengers
@@ -378,7 +384,7 @@ export function tallyLoops(purchasedCities, nowMs = Date.now()) {
             result[kind] = gained
         }
         // Remember the moment, and how many of today's loops are still to come in case today's schedule is gone later
-        const todayLeft = scheduledBetween(kind, nowMs, nowMs, Infinity).ran
+        const todayLeft = scheduledBetween(kind, nowMs, nowMs, Infinity, homeName, connected).ran
         state[kind] = { t: nowMs, left: todayLeft }
     })
     try { localStorage.setItem(COUNTED_KEY, JSON.stringify(state)) } catch { /* storage full */ }

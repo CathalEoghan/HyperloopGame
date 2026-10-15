@@ -146,6 +146,9 @@ const AUX_SHAPES = {
     hyperloop_hyperlink_muted: v => typeof v === 'boolean',
     hyperloop_progress_collapsed: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_achievement_counters: v => v !== null && typeof v === 'object' && !Array.isArray(v),
+    // { departure: { t, left }, arrival: { t, left } }: the moment each total was last counted
+    hyperloop_loop_counted: v => v !== null && typeof v === 'object' && !Array.isArray(v)
+        && ['departure', 'arrival'].every(k => v[k] === undefined || (v[k] !== null && typeof v[k] === 'object' && Number.isFinite(v[k].t))),
     hyperloop_pending_rankups: v => Number.isFinite(v),
     hyperloop_dev_portrait_bonus: v => v === 1,
     hyperloop_livestream_clicks: v => Number.isFinite(v) && v >= 0,

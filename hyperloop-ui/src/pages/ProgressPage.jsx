@@ -60,6 +60,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             </span>
             <span className="progress-section-title">{title}</span>
             {extra}
+            {collapsed[id] && claimable?.[id] > 0 && (
+                <span className="progress-claim-badge">{claimable[id]} to claim</span>
+            )}
             <span className="progress-toggle-hint">{collapsed[id] ? 'Show' : 'Hide'}</span>
         </h2>
     )
@@ -160,6 +163,12 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         if (purchasedCountries.has(country)) return 'connected'
         if (unlockedCountriesSet.has(country)) return 'unlocked'
         return 'unknown'
+    }
+
+    // Rewards still waiting on each grid, shown on its header while it's folded away so they aren't missed
+    const claimable = {
+        countries: [...purchasedCountries].filter(c => sortedCountries.includes(c) && !claimed.has('country:' + c)).length,
+        cities: purchasedCities.filter(c => visibleCities.some(v => v.name === c.name) && !claimed.has('city:' + c.name)).length,
     }
 
     // Worked out on every render (the page re-renders each second). These lists are added to in place, so a memo
