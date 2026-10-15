@@ -19,6 +19,9 @@ export const NUM_GATES = 30
 export const ARRIVAL_DELAY_MAX_MINUTES = 60
 // The board shows ARRIVING for the last few minutes before a loop gets in
 export const ARRIVING_MINUTES = 10
+// An arrival stays lit on the board as long as its greeting can be open: 5 minutes, plus 5 for each of the
+// three farewell window upgrades
+export const ARRIVED_LIT_MINUTES = 20
 
 const EARTH_RADIUS_MILES = 3958.8
 const DAY_KINDS = { departure: 'departures_', arrival: 'arrivals_' }
@@ -222,6 +225,9 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
     place('departure', currentMins + 30, tripMinutes(homeCity.name, city.name, `${dayKey(nowMs)}|departure`))
     const inbound = tripMinutes(city.name, homeCity.name, `${dayKey(nowMs)}|arrival`)
     place('arrival', currentMins + 30 + inbound, inbound)
+    // With no arrivals today yet (the first city connected on a new game), an empty list is kept, so the board
+    // doesn't fill in a whole day of arrivals from a city that wasn't connected when they set off
+    if (localStorage.getItem(arrivalsKey(nowMs)) === null) writeSchedule(arrivalsKey(nowMs), [])
 }
 
 // ---- What's happening now ----
@@ -232,7 +238,7 @@ export function getArrivalStatus(entry, homeName, nowMs = Date.now(), lag = 0) {
     const arriveTs = entryTimestamp(entry, t)
     const startTs = arriveTs - entryDuration(entry, 'arrival', homeName, t) * 60000
     const minutesLeft = (arriveTs - t) / 60000
-    if (minutesLeft <= -15) return { label: 'ARRIVED', color: '#666', gone: true }
+    if (minutesLeft <= -ARRIVED_LIT_MINUTES) return { label: 'ARRIVED', color: '#666', gone: true }
     if (minutesLeft <= 0) return { label: 'ARRIVED', color: 'limegreen' }
     if (minutesLeft <= ARRIVING_MINUTES) return { label: 'ARRIVING', color: '#f5a623' }
     if (entry.delayed) return { label: 'DELAYED', color: '#e74c3c' }

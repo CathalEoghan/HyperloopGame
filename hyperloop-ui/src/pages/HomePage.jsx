@@ -388,7 +388,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         }
         const placePods = () => {
             const now = Date.now()
-            const hovered = hoveredLoopRef.current
+            // A highlighted loop that has since arrived no longer dims the others
+            const hovered = loopObjects.has(hoveredLoopRef.current) ? hoveredLoopRef.current : null
             const pulse = 1 + 0.2 * Math.sin(now / 250)
             loopObjects.forEach(o => {
                 const { startTs, endTs } = o.loop
@@ -440,6 +441,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         const onPointerDown = (e) => {
             if (e.pointerType === 'mouse' && e.button !== 0) return
             camTarget = null // grabbing the globe stops it turning to a loop
+            // A tap on a row (touch has no "leave") keeps its loop highlighted until the globe is touched
+            if (hoveredLoopRef.current) { hoveredLoopRef.current = null; setHoveredLoopId(null) }
             pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
             if (pointers.size === 1) {
                 isDragging = true
@@ -462,8 +465,11 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 updateCamera()
                 return
             }
-            // Hover only means something with a mouse; a finger has no hover
-            if (e.pointerType === 'mouse') {
+            // Hover only means something with a mouse; a finger has no hover. Only over the globe itself: the panels
+            // on top of it (the loops list, the view switch) must not light up flags hidden behind them.
+            if (e.pointerType === 'mouse' && e.target !== renderer.domElement) {
+                if (prevHoveredCity.current) { prevHoveredCity.current = null; setHoveredCity(null) }
+            } else if (e.pointerType === 'mouse') {
                 const rect = mount.getBoundingClientRect()
                 mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
                 mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
@@ -593,7 +599,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     }, [])
 
     return (
-        <div className="home-page" style={{ pointerEvents: disabled ? 'none' : 'auto' }}>
+        <div className={`home-page${disabled ? ' home-page-disabled' : ''}`} style={{ pointerEvents: disabled ? 'none' : 'auto' }}>
             <div className="globe-top-info">
                 <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
                 <p className="globe-cities">{purchasedCitiesCount} {purchasedCitiesCount === 1 ? 'city' : 'cities'} connected</p>

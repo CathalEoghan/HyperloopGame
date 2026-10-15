@@ -67,6 +67,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     const [tab, setTab] = useState(() => {
         try { return localStorage.getItem(TAB_KEY) === 'arrivals' ? 'arrivals' : 'departures' } catch { return 'departures' }
     })
+    const tabRef = useRef(tab)
     const [renderTick, setRenderTick] = useState(0)
     const [lagMap, setLagMap] = useState({})
     const prevStatusRef = useRef({})
@@ -83,6 +84,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
         playClickSound2()
         if (splitFlapEnabled()) playSplitFlapShort()
         setTab(next)
+        tabRef.current = next
         try { localStorage.setItem(TAB_KEY, next) } catch { /* storage blocked, ignore */ }
     }
 
@@ -141,15 +143,21 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
             // leave out a city connected since (bug #166)
             const { deps, arrs } = readLists()
             const lm = lagMapRef.current
-            let anyChanged = false
-            const note = (key, label) => {
+            // A change on the tab being shown flips (and clacks); one on the other tab only redraws
+            let anyChanged = false, shownChanged = false
+            const note = (key, state, shown) => {
                 const prevStatus = prevStatusRef.current[key]
-                if (prevStatus !== undefined && prevStatus !== label) anyChanged = true
-                prevStatusRef.current[key] = label
+                if (prevStatus !== undefined && prevStatus !== state) { anyChanged = true; if (shown) shownChanged = true }
+                prevStatusRef.current[key] = state
             }
-            deps.forEach(e => note(`dep|${e.name}`, getStatus(e.hour, e.minute, e.delayed, lm[`dep|${e.name}`] || 0).label))
-            arrs.forEach(e => note(`arr|${e.name}`, getArrivalStatus(e, homeName, Date.now(), lm[`arr|${e.name}`] || 0).label))
-            if (anyChanged && splitFlapEnabled()) playSplitFlapShort()
+            const onArrivals = tabRef.current === 'arrivals'
+            deps.forEach(e => note(`dep|${e.name}`, getStatus(e.hour, e.minute, e.delayed, lm[`dep|${e.name}`] || 0).label, !onArrivals))
+            arrs.forEach(e => {
+                // Fading out counts as a change too, though the label stays ARRIVED
+                const st = getArrivalStatus(e, homeName, Date.now(), lm[`arr|${e.name}`] || 0)
+                note(`arr|${e.name}`, st.label + (st.gone ? '|gone' : ''), onArrivals)
+            })
+            if (shownChanged && splitFlapEnabled()) playSplitFlapShort()
             // The stored schedule is the truth: a delay, a city connected or disconnected, or a new day all show straight away (bug #166)
             setSchedule(prev => sameList(deps, prev) ? prev : deps)
             setArrivals(prev => sameList(arrs, prev) ? prev : arrs)
@@ -262,7 +270,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                         Connect more cities to unlock {isArrivals ? 'arrivals' : 'departures'}!
                     </p>
                 ) : (
-                    <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>{isArrivals ? 'Loading arrivals...' : 'Loading departures...'}</p>
+                    <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>{isArrivals ? 'No arrivals today. New loops will arrive tomorrow.' : 'Loading departures...'}</p>
                 )
             ) : (
                 <table className="board-table" key={tab}>

@@ -151,8 +151,8 @@
     position: absolute;
     top: 6px;
     right: 16px;
-    /* Clear of the announcements ticker that runs along the bottom of the globe */
-    bottom: 84px;
+    /* Clear of the trophy button (fixed 112.5px up from the bottom of the screen, under this column) and the ticker */
+    bottom: 168px;
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -164,6 +164,11 @@
 
 .globe-right-controls > * {
     pointer-events: all;
+}
+
+/* While a popup is open the globe ignores input, and so do its controls */
+.home-page-disabled .globe-right-controls > * {
+    pointer-events: none;
 }
 
 .globe-view-switch {

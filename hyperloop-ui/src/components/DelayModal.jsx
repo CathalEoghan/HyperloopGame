@@ -26,7 +26,7 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
                 <div className="delay-divider">━━━━━━━━━━━━━━━━━━━━</div>
                 <p className="delay-message">
                     {delay.kind === 'arrival'
-                        ? <>The <strong>{delay.originalTime}</strong> loop from <strong>{delay.name}</strong> has been held up on its way to the terminal.</>
+                        ? <>The <strong>{delay.originalTime}</strong> loop from <strong>{delay.name}</strong> is running late due to unforeseen circumstances.</>
                         : <>The <strong>{delay.originalTime}</strong> loop to <strong>{delay.name}</strong> has been delayed due to unforeseen circumstances.</>}
                 </p>
                 <p className="delay-newtime">

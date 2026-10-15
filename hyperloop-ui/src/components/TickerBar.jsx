@@ -1,10 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './TickerBar.css'
 import { minutesUntilDeparture } from '../utils/time.js'
 import { arrivalsKey, readSchedule } from '../utils/loops.js'
 
 function TickerBar({ terminalName }) {
     const [messages, setMessages] = useState([])
+    // The announcements are refreshed by a timer set up once, so it reads the name through this
+    const terminalNameRef = useRef(terminalName)
+    useEffect(() => { terminalNameRef.current = terminalName }, [terminalName])
 
     function getActiveMessages(schedule) {
         const msgs = []
@@ -31,7 +34,7 @@ function TickerBar({ terminalName }) {
             if (diff > 0 && diff <= 10) {
                 msgs.push(`Attention: The ${entry.time} hyperloop from ${entry.name} will shortly arrive at Gate ${entry.gate}.`)
             } else if (diff <= 0 && diff > -10) {
-                msgs.push(`Attention: The hyperloop from ${entry.name} has arrived at Gate ${entry.gate}. Welcome to ${terminalName}.`)
+                msgs.push(`Attention: The hyperloop from ${entry.name} has arrived at Gate ${entry.gate}. Welcome to ${terminalNameRef.current}.`)
             }
         })
         setMessages(msgs)
