@@ -401,3 +401,11 @@
 .loop-delayed {
     color: #e74c3c;
 }
+
+/* On narrower windows the switch and filter would run into "N cities connected" in the middle of the bar,
+   so the controls drop just below the bar instead */
+@media (max-width: 1000px) {
+    .globe-right-controls {
+        top: calc(var(--globe-bar-h) + 6px);
+    }
+}

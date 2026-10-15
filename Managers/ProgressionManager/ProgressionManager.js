@@ -15,6 +15,14 @@ export function sanitizeDevelopmentName(raw) {
     return raw.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, DEV_NAME_MAX_LENGTH).trim();
 }
 
+// The name a development would end up with from what was typed. Its own name always counts as itself, even when it is
+// longer than the limit for custom names (some are up to 24 characters), so Reset can always put it back.
+export function resolveDevelopmentName(development, raw) {
+    const tidy = typeof raw === 'string' ? raw.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim() : '';
+    if (tidy === development.name) return development.name;
+    return sanitizeDevelopmentName(raw);
+}
+
 const UPGRADE_CASH_PCTS = [0, 0.15, 0.35, 0.50];
 const UPGRADE_REP_COSTS = [0, 5, 10, 15];
 const UPGRADE_BOOST_PCTS = [0, 15, 35, 50];
@@ -170,7 +178,7 @@ export class ProgressionManager {
     // the custom name; that costs the same. Nothing is charged when the name wouldn't change, or can't be afforded.
     renameDevelopment(development, rawName) {
         if (!this.canRenameDevelopment(development)) return false;
-        const name = sanitizeDevelopmentName(rawName);
+        const name = resolveDevelopmentName(development, rawName);
         if (!name) return false;
         if (name === this.getDevelopmentName(development)) return false;
         if (!this.spendReputation(DEV_RENAME_REP_COST)) return false;

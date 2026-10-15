@@ -12,7 +12,7 @@ import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.j
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
-import { DEV_NAME_MAX_LENGTH, DEV_RENAME_REP_COST, sanitizeDevelopmentName } from 'Managers/ProgressionManager/ProgressionManager.js'
+import { DEV_NAME_MAX_LENGTH, DEV_RENAME_REP_COST, resolveDevelopmentName } from 'Managers/ProgressionManager/ProgressionManager.js'
 import poorIcon from '../assets/misc/poor.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
@@ -154,11 +154,11 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     )
                 })()}
 
-                {/* Main development modal */}
                 {/* Rename modal: Reset only puts the original name back in the box; Confirm is what costs Reputation */}
                 {showRenameModal && selectedDevelopment && (() => {
                     const dev = selectedDevelopment
-                    const clean = sanitizeDevelopmentName(renameText)
+                    const clean = resolveDevelopmentName(dev, renameText)
+                    const isOriginal = clean === dev.name
                     const unchanged = clean === nameOf(dev)
                     // The real Reputation, not the on-screen figure, which can be a second old (bug #170)
                     const tooPoor = progressionManager.reputation < DEV_RENAME_REP_COST
@@ -173,7 +173,11 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         <div className="modal-overlay" onClick={() => { setShowRenameModal(false) }}>
                             <div className="modal" onClick={e => e.stopPropagation()}>
                                 <h3>Rename {dev.name}</h3>
-                                <p className="rename-note">Give it a name of your own. It will show as <em>{clean || '…'}</em>, with <em>{dev.name}</em> beneath it.</p>
+                                <p className="rename-note">
+                                    {isOriginal
+                                        ? <>Confirm to give it back its original name.</>
+                                        : <>Give it a name of your own. It will show as <em>{clean || '…'}</em>, with <em>{dev.name}</em> beneath it.</>}
+                                </p>
                                 <input
                                     className="rename-input"
                                     type="text"
@@ -185,7 +189,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     onChange={e => setRenameText(e.target.value)}
                                     onKeyDown={e => { if (e.key === 'Enter') confirm(); else if (e.key === 'Escape') setShowRenameModal(false) }}
                                 />
-                                <div className="rename-counter">{renameText.length}/{DEV_NAME_MAX_LENGTH}</div>
+                                <div className="rename-counter">{isOriginal ? 'Original name' : `${renameText.length}/${DEV_NAME_MAX_LENGTH}`}</div>
                                 {tooPoor && <p style={{ color: '#c0392b', fontSize: '0.8rem', margin: '4px 0' }}>Not enough Reputation.</p>}
                                 <div className="modal-button-row">
                                     <button className="closeButton" style={{ opacity: renameText === dev.name ? 0.5 : 1 }} onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setRenameText(dev.name) }}>Reset</button>
@@ -201,6 +205,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     )
                 })()}
 
+                {/* Main development modal */}
                 {selectedDevelopment && !showUpgradeModal && !showRenameModal && (
                     <div className="modal-overlay" onClick={closeModal}>
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
@@ -459,7 +464,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             )}
                                         </div>
                                         <div title={isRenamed(development) ? `${nameOf(development)} (${development.name})` : undefined}>{nameOf(development)}</div>
-                                        <div className="category">{isRenamed(development) ? `${development.name} • ${development.category}` : development.category}</div>
+                                        <div className={`category${isRenamed(development) ? ' category-original' : ''}`}>{isRenamed(development) ? `${development.name} • ${development.category}` : development.category}</div>
                                     </button>
                                 )
                             })}

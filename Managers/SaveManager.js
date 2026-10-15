@@ -213,11 +213,12 @@ function validateSave(save) {
     if (save.farewellsGiven !== undefined && !(Number.isFinite(save.farewellsGiven) && save.farewellsGiven >= 0)) return false
     if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
     // No upper limit on balance or reputation: the game has none, so a long-running save must import (bug #114).
-    // Custom development names: text, within the length limit, for developments that exist
+    // Custom development names must be text. Which developments they belong to isn't checked here: a development renamed
+    // in an update has its old name in the save (mapped on load), and names for anything not built are dropped on load.
     if (save.developmentNames !== undefined) {
         const names = save.developmentNames
         if (names === null || typeof names !== 'object' || Array.isArray(names)) return false
-        if (Object.entries(names).some(([key, value]) => typeof value !== 'string' || !allDevelopments.some(d => d.name === key))) return false
+        if (Object.values(names).some(value => typeof value !== 'string')) return false
     }
     // Every development upgrade level must be a whole number from 0 to 3 (bug #82)
     if (save.developmentUpgradeLevels && Object.values(save.developmentUpgradeLevels).some(v => !Number.isInteger(v) || v < 0 || v > 3)) return false

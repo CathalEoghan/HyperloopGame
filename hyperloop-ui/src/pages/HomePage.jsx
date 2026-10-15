@@ -142,6 +142,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         globeViewRef.current = view
         setGlobeView(view)
         setHoveredCity(null)
+        hoverLoops([])
         try { localStorage.setItem(VIEW_KEY, view) } catch { /* storage blocked, ignore */ }
     }
 
@@ -165,8 +166,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             const view = list.getBoundingClientRect()
             const showing = rows.some(r => { const b = r.getBoundingClientRect(); return b.top >= view.top - 1 && b.bottom <= view.bottom + 1 })
             if (showing) return
-            const row = rows[0] // the arc nearest the cursor
-            list.scrollTo({ top: row.offsetTop - list.clientHeight / 2 + row.clientHeight / 2, behavior: 'smooth' })
+            // The arc nearest the cursor, centred in the list (measured on screen: offsetTop counts from the whole panel)
+            const box = rows[0].getBoundingClientRect()
+            list.scrollTo({ top: list.scrollTop + (box.top - view.top) - list.clientHeight / 2 + box.height / 2, behavior: 'smooth' })
         }, 250)
         return () => clearTimeout(timer)
     }, [hoveredLoopIds])
@@ -427,7 +429,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             syncedLoops = list
         }
         const UP = new THREE.Vector3(0, 1, 0)
-        const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3(), tmpM = new THREE.Matrix4()
+        const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3(), tmpS = new THREE.Vector3(), tmpM = new THREE.Matrix4()
         const placePods = () => {
             const now = Date.now()
             // Highlighted loops that have since arrived no longer dim the others
@@ -444,8 +446,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 o.curve.getTangentAt(progress, tmpB)
                 tmpC.copy(tmpA).normalize()                 // away from the globe
                 tmpB.addScaledVector(tmpC, -tmpB.dot(tmpC)).normalize()
-                const side = new THREE.Vector3().crossVectors(tmpC, tmpB).normalize()
-                tmpM.makeBasis(tmpB, tmpC, side.negate())
+                tmpS.crossVectors(tmpB, tmpC).normalize()   // across the route
+                tmpM.makeBasis(tmpB, tmpC, tmpS)
                 o.pod.position.copy(tmpA)
                 o.pod.quaternion.setFromRotationMatrix(tmpM)
                 o.pod.scale.setScalar(zoom * (isLit ? 1.35 : 1))
@@ -577,7 +579,11 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 }
                 setHoveredCity(newHovered)
                 // A flag under the mouse wins; otherwise any routes under it light up (not while dragging the globe)
-                if (globeViewRef.current === 'loops' && !newHovered && !isDragging) hoverLoops(routesUnderMouse(e.clientX, e.clientY, rect), 'globe')
+                if (globeViewRef.current === 'loops' && !newHovered && !isDragging) {
+                    const ids = routesUnderMouse(e.clientX, e.clientY, rect)
+                    if (ids.length && !ids.some(id => hoveredLoopsRef.current.has(id))) playHoverSound()
+                    hoverLoops(ids, 'globe')
+                }
                 else if (hoverSourceRef.current === 'globe') hoverLoops([], 'globe')
             }
             if (!isDragging) return
@@ -629,11 +635,29 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             updateCamera()
         }
 
+        // Leaving the globe (off the window, say) lets go of any routes the mouse was over
+        const onPointerLeave = (e) => { if (e.pointerType === 'mouse' && hoverSourceRef.current === 'globe' && hoveredLoopsRef.current.size) hoverLoops([], 'globe') }
         mount.addEventListener('pointerdown', onPointerDown)
+        mount.addEventListener('pointerleave', onPointerLeave)
         window.addEventListener('pointermove', onPointerMove)
         window.addEventListener('pointerup', onPointerUp)
         window.addEventListener('pointercancel', onPointerCancel)
         mount.addEventListener('wheel', onWheel, { passive: false })
+
+        // A soft round glow, drawn once and shared by every flag at the end of a highlighted route
+        const glowTexture = (() => {
+            const canvas = document.createElement('canvas')
+            canvas.width = canvas.height = 64
+            const ctx = canvas.getContext('2d')
+            const g = ctx.createRadialGradient(32, 32, 4, 32, 32, 32)
+            g.addColorStop(0, 'rgba(255,255,255,0.9)')
+            g.addColorStop(0.45, 'rgba(255,255,255,0.45)')
+            g.addColorStop(1, 'rgba(255,255,255,0)')
+            ctx.fillStyle = g
+            ctx.fillRect(0, 0, 64, 64)
+            return new THREE.CanvasTexture(canvas)
+        })()
+        const flagGlows = new Map()
 
         const camPos = new THREE.Vector3()
         let animFrameId
@@ -643,6 +667,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             camPos.copy(camera.position).normalize()
             const loopsView = globeViewRef.current === 'loops'
             const loopCities = loopCityNamesRef.current
+            // The two ends of every highlighted route glow gold
+            const litCities = new Set()
+            if (loopsView) hoveredLoopsRef.current.forEach(id => { const o = loopObjects.get(id); if (o) { litCities.add(o.loop.from); litCities.add(o.loop.to) } })
             sprites.forEach(sprite => {
                 const facingCamera = sprite.userData.surfaceNormal.dot(camPos) > 0.1
                 // Active Loops shows only the cities with a loop running (and home); Connections can hide unowned ones
@@ -650,6 +677,17 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     ? loopCities.has(sprite.userData.city.name)
                     : showOwnedRef.current || sprite.userData.isPurchased
                 sprite.visible = facingCamera && shown
+                const lit = sprite.visible && litCities.has(sprite.userData.city.name)
+                sprite.scale.set(lit ? 0.027 : 0.02, lit ? 0.0175 : 0.013, 1)
+                let glow = flagGlows.get(sprite)
+                if (lit && !glow) {
+                    glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture, color: LOOP_GOLD, transparent: true, depthTest: true, depthWrite: false }))
+                    glow.position.copy(sprite.position).multiplyScalar(0.999)   // just behind the flag
+                    glow.scale.set(0.055, 0.045, 1)
+                    scene.add(glow)
+                    flagGlows.set(sprite, glow)
+                }
+                if (glow) glow.visible = lit
             })
             loopGroup.visible = loopsView
             if (loopsView) {
@@ -672,6 +710,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             cancelAnimationFrame(animFrameId)
             clearInterval(sunInterval)
             mount.removeEventListener('pointerdown', onPointerDown)
+            mount.removeEventListener('pointerleave', onPointerLeave)
             window.removeEventListener('pointermove', onPointerMove)
             window.removeEventListener('pointerup', onPointerUp)
             window.removeEventListener('pointercancel', onPointerCancel)

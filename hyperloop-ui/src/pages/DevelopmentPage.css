@@ -442,3 +442,11 @@
   background-color: #c0392b !important;
   color: #fff !important;
 }
+
+/* "Original name • Category" under a renamed development: one line, so renamed cards stay the same height as the rest */
+.development div.category-original {
+  display: block;
+  max-width: 100%;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
