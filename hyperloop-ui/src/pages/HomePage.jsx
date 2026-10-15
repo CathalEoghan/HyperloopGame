@@ -16,10 +16,13 @@ import { flagSrc } from '../utils/flagSrc.js'
 import { getActiveLoops, formatClock, formatDuration } from '../utils/loops.js'
 
 // Departures are drawn in the game's gold, arrivals in blue
-// Every route is white; the ones being pointed at (on the globe or in the list) turn gold
+// Every route is white; the ones being pointed at (on the globe or in the list) light up: gold for a departure, blue for an arrival
 const ARROW_COUNT = 5
 const LOOP_WHITE = 0xffffff
 const LOOP_GOLD = 0xf5a623
+// Arrivals light up in the same blue as the arrival bar and the arrival rows in the list
+const LOOP_BLUE = 0x4fc3f7
+const loopColor = (kind) => kind === 'arrival' ? LOOP_BLUE : LOOP_GOLD
 // How close (in pixels) the mouse must be to an arc to count as pointing at it
 const ARC_HIT_PX = 10
 const VIEW_KEY = 'globeView'
@@ -417,7 +420,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 // A dark underlay keeps white readable over bright land and cloud; the halo only shows when highlighted
                 const under = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0034, 5, false), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }))
                 const line = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0019, 5, false), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false }))
-                const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0065, 6, false), new THREE.MeshBasicMaterial({ color: LOOP_GOLD, transparent: true, opacity: 0.3, depthWrite: false }))
+                const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0065, 6, false), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
                 halo.visible = false
                 // The shuttle: a small rounded-off box, turned along the route, with a dark outline
                 const podGeo = new THREE.BoxGeometry(0.036, 0.012, 0.008)
@@ -425,7 +428,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 pod.add(new THREE.LineSegments(new THREE.EdgesGeometry(podGeo), new THREE.LineBasicMaterial({ color: 0x000000 })))
                 // Arrows showing the way the loop is going, only while highlighted
                 const arrows = Array.from({ length: ARROW_COUNT }, () => {
-                    const a = new THREE.Mesh(new THREE.ConeGeometry(0.0075, 0.02, 8), new THREE.MeshBasicMaterial({ color: LOOP_GOLD }))
+                    const a = new THREE.Mesh(new THREE.ConeGeometry(0.0075, 0.02, 8), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind) }))
                     a.visible = false
                     return a
                 })
@@ -458,8 +461,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 o.pod.position.copy(tmpA)
                 o.pod.quaternion.setFromRotationMatrix(tmpM)
                 o.pod.scale.setScalar(zoom * (isLit ? 1.35 : 1))
-                o.pod.material.color.setHex(isLit ? LOOP_GOLD : LOOP_WHITE)
-                o.line.material.color.setHex(isLit ? LOOP_GOLD : LOOP_WHITE)
+                o.pod.material.color.setHex(isLit ? loopColor(o.loop.kind) : LOOP_WHITE)
+                o.line.material.color.setHex(isLit ? loopColor(o.loop.kind) : LOOP_WHITE)
                 o.line.material.opacity = anyLit ? (isLit ? 1 : 0.3) : 0.8
                 o.under.material.opacity = anyLit && !isLit ? 0.12 : 0.35
                 o.halo.visible = isLit
@@ -675,8 +678,14 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             const loopsView = globeViewRef.current === 'loops'
             const loopCities = loopCityNamesRef.current
             // The two ends of every highlighted route glow gold
-            const litCities = new Set()
-            if (loopsView) hoveredLoopsRef.current.forEach(id => { const o = loopObjects.get(id); if (o) { litCities.add(o.loop.from); litCities.add(o.loop.to) } })
+            // city -> glow colour: blue for an arrival's ends, gold if any lit departure touches the city too
+            const litCities = new Map()
+            if (loopsView) hoveredLoopsRef.current.forEach(id => {
+                const o = loopObjects.get(id)
+                if (!o) return
+                const c = loopColor(o.loop.kind)
+                ;[o.loop.from, o.loop.to].forEach(n => { if (litCities.get(n) !== LOOP_GOLD) litCities.set(n, c) })
+            })
             sprites.forEach(sprite => {
                 const facingCamera = sprite.userData.surfaceNormal.dot(camPos) > 0.1
                 // Active Loops shows only the cities with a loop running (and home); Connections can hide unowned ones
@@ -684,17 +693,18 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     ? loopCities.has(sprite.userData.city.name)
                     : showOwnedRef.current || sprite.userData.isPurchased
                 sprite.visible = facingCamera && shown
-                const lit = sprite.visible && litCities.has(sprite.userData.city.name)
+                const glowHex = litCities.get(sprite.userData.city.name)
+                const lit = sprite.visible && glowHex !== undefined
                 sprite.scale.set(lit ? 0.027 : 0.02, lit ? 0.0175 : 0.013, 1)
                 let glow = flagGlows.get(sprite)
                 if (lit && !glow) {
-                    glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture, color: LOOP_GOLD, transparent: true, depthTest: true, depthWrite: false }))
+                    glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture, color: glowHex, transparent: true, depthTest: true, depthWrite: false }))
                     glow.position.copy(sprite.position).multiplyScalar(0.999)   // just behind the flag
                     glow.scale.set(0.055, 0.045, 1)
                     scene.add(glow)
                     flagGlows.set(sprite, glow)
                 }
-                if (glow) glow.visible = lit
+                if (glow) { glow.visible = lit; if (lit) glow.material.color.setHex(glowHex) }
             })
             loopGroup.visible = loopsView
             if (loopsView) {
