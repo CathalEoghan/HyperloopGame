@@ -362,6 +362,8 @@ function substituteText(text, data, gameState) {
         // player-given name is a proper name and keeps its own capitals — so it skips inPost(), and (like
         // {terminalName}) is inserted with a function so a '$' in a chosen name can't be read as a pattern.
         .replace(/\{developmentName\}/g, () => data.developmentName || (data.development ? inPost(data.development) : 'the development'))
+        // {name} is a development's original name (used by the renamed-development posts)
+        .replace(/\{name\}/g, () => data.name || 'the development')
         .replace(/\{currentTime\}/g, now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
         .replace(/\{cityCount\}/g, purchasedCities.length)
 }

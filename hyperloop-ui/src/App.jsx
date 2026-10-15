@@ -1482,7 +1482,13 @@ function App() {
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           economyManager={economyManager}
           onSave={triggerSave}
-          onRename={() => unlockAchievement('underNewManagement')}
+          onRename={(development) => {
+            unlockAchievement('underNewManagement')
+            // name is the original (e.g. "Pharmacy"); developmentName is the player's new name
+            const renamedData = { name: development.name, development: development.name, developmentName: progressionManager.getDevelopmentName(development) }
+            hyperLinkTriggerRef.current = { type: 'development_renamed', data: renamedData }
+            setHyperLinkTrigger({ type: 'development_renamed', data: renamedData })
+          }}
           onRemove={() => unlockAchievement('hereTodayGoneTomorrow')}
           onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
