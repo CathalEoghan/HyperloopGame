@@ -1485,7 +1485,7 @@ function App() {
           onRename={(development) => {
             unlockAchievement('underNewManagement')
             // name is the original (e.g. "Pharmacy"); developmentName is the player's new name
-            const renamedData = { name: development.name, development: development.name, developmentName: progressionManager.getDevelopmentName(development) }
+            const renamedData = { name: development.name, development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined }
             hyperLinkTriggerRef.current = { type: 'development_renamed', data: renamedData }
             setHyperLinkTrigger({ type: 'development_renamed', data: renamedData })
           }}
@@ -1501,8 +1501,8 @@ function App() {
             if (success) {
               achievements.addCounter('devUpgrades');
               triggerSave();
-              // developmentName carries any rename, so the post reads naturally even for a renamed development
-              const upgradedDevData = { development: development.name, developmentName: progressionManager.getDevelopmentName(development) };
+              // developmentName is sent only for a development the player renamed; otherwise the engine falls back to "the <category>"
+              const upgradedDevData = { development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined };
               hyperLinkTriggerRef.current = { type: 'developmentUpgraded', data: upgradedDevData }
               setHyperLinkTrigger({ type: 'developmentUpgraded', data: upgradedDevData })
             }
