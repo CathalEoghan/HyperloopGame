@@ -288,46 +288,51 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
 
 const COUNTED_KEY = 'hyperloop_loop_counted'
 
-// How many of a day's loops have run by `nowMs`, going by that day's schedule
-function elapsedOnDay(kind, dayMs, nowMs) {
+// A day's schedule: how many loops it holds, and how many ran after `afterMs` and by `nowMs`
+function scheduledBetween(kind, dayMs, afterMs, nowMs) {
     const list = readSchedule(scheduleKey(kind, dayMs))
-    return { total: list.length, elapsed: list.filter(e => entryTimestamp(e, dayMs) <= nowMs).length, known: list.length > 0 }
+    const ran = list.filter(e => { const t = entryTimestamp(e, dayMs); return t > afterMs && t <= nowMs }).length
+    return { total: list.length, ran, known: list.length > 0 }
 }
 
 // Counts the departures and arrivals that have happened since the last time this ran, including the ones while the
-// game was closed, and returns how many are new: { departure, arrival }. Schedules are stored per day, so a day
-// whose schedule has been cleared away (a long time away) counts as a full day of the loops a schedule would have had.
-// The first run only starts the count; nothing from before it is added.
+// game was closed, and returns how many are new: { departure, arrival }.
+// It remembers the moment it last counted (not how many it had counted), so a city disconnected or connected during
+// the day, or a fresh run after a prestige, can't make it count a loop twice or skip one. Schedules are stored per
+// day, so a day whose schedule has since been cleared away (a long time away) counts as a full day of the loops a
+// schedule would have had. The first run only starts the count, and nothing is counted while only the home city is
+// connected (there are no loops then).
 export function tallyLoops(purchasedCities, nowMs = Date.now()) {
     const result = { departure: 0, arrival: 0 }
-    if (!purchasedCities || purchasedCities.length <= 1) return result
     let state = {}
     try { state = JSON.parse(localStorage.getItem(COUNTED_KEY) || '{}') || {} } catch { state = {} }
+    const hasLoops = !!purchasedCities && purchasedCities.length > 1
     const today = dayKey(nowMs)
-    const perDay = Math.min(SCHEDULE_CAP, purchasedCities.length - 1)
+    const perDay = hasLoops ? Math.min(SCHEDULE_CAP, purchasedCities.length - 1) : 0
     ;['departure', 'arrival'].forEach(kind => {
-        const now = elapsedOnDay(kind, nowMs, nowMs)
         const previous = state[kind]
-        if (previous && typeof previous.day === 'string' && Number.isFinite(previous.n)) {
-            // The days from the last count up to today, oldest first (limited to a year)
-            const startMs = new Date(previous.day).getTime()
-            if (Number.isFinite(startMs)) {
-                let gained = 0
-                let dayMs = shiftDays(startMs, 0)
-                for (let i = 0; i < 366 && dayKey(dayMs) !== today; i++) {
-                    const isStored = dayKey(dayMs) === previous.day
-                    const day = elapsedOnDay(kind, dayMs, Infinity)
-                    // Where the schedule is gone, use what was last seen for that day, or what a schedule would hold
-                    const full = day.known ? day.total : (isStored && Number.isFinite(previous.len) ? previous.len : perDay)
-                    gained += Math.max(0, full - (isStored ? previous.n : 0))
-                    dayMs = shiftDays(dayMs, 1)
+        const lastMs = previous && Number.isFinite(previous.t) ? Math.min(previous.t, nowMs) : null
+        if (hasLoops && lastMs !== null) {
+            let gained = 0
+            let dayMs = shiftDays(lastMs, 0)
+            // Each day from the last count up to and including today (limited to a year)
+            for (let i = 0; i < 367; i++) {
+                const isToday = dayKey(dayMs) === today
+                const isLastDay = dayKey(dayMs) === dayKey(lastMs)
+                const day = scheduledBetween(kind, dayMs, lastMs, nowMs)
+                if (day.known) gained += day.ran
+                else if (!isToday) {
+                    // The schedule is gone: what was left of it when last seen, or a full day's worth
+                    gained += isLastDay ? (Number.isFinite(previous.left) ? previous.left : 0) : perDay
                 }
-                // Today (when the last count was today too, only what is new since)
-                gained += Math.max(0, now.elapsed - (previous.day === today ? previous.n : 0))
-                result[kind] = gained
+                if (isToday) break
+                dayMs = shiftDays(dayMs, 1)
             }
+            result[kind] = gained
         }
-        state[kind] = { day: today, n: Math.max(now.elapsed, previous?.day === today && Number.isFinite(previous.n) ? previous.n : 0), len: now.total }
+        // Remember the moment, and how many of today's loops are still to come in case today's schedule is gone later
+        const todayLeft = scheduledBetween(kind, nowMs, nowMs, Infinity).ran
+        state[kind] = { t: nowMs, left: todayLeft }
     })
     try { localStorage.setItem(COUNTED_KEY, JSON.stringify(state)) } catch { /* storage full */ }
     return result

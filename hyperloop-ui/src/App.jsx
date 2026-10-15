@@ -607,6 +607,16 @@ function App() {
     if (gained.arrival > 0) achievements.addCounter('arrivals', gained.arrival);
   }
   useEffect(() => { ensureTodaySchedule(); }, []);
+  // Closing the game keeps the playtime since the last 10-second write
+  useEffect(() => {
+    const flush = () => {
+      if (blockedRef.current) return;
+      const whole = Math.floor(playtimePending.current);
+      if (whole > 0) { playtimePending.current -= whole; achievements.addCounter('playtime', whole); }
+    };
+    window.addEventListener('pagehide', flush);
+    return () => window.removeEventListener('pagehide', flush);
+  }, [achievements]);
 
   // Immediate rank detection on load (catches offline rank ups)
   useEffect(() => {

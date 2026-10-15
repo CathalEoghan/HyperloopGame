@@ -61,19 +61,19 @@ None: all 30 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 
 ## Achievements
 
-- 51 achievements in `Managers/AchievementManager/achievements.js`. Unlocked ids are stored in `hyperloop_achievements`, running totals (Work presses, farewells) in `hyperloop_achievement_counters`, the Hyper-Link mute in `hyperloop_hyperlink_muted`.
+- 54 achievements in `Managers/AchievementManager/achievements.js`. Unlocked ids are stored in `hyperloop_achievements`, running totals (Work presses, farewells, greetings, departures, arrivals, playtime) in `hyperloop_achievement_counters`, the Hyper-Link mute in `hyperloop_hyperlink_muted`.
 - They are permanent: a prestige keeps all three, only Delete Save clears them. Importing a save replaces them with the file's.
 - State achievements (cities, builds, balance, rank, likes, counters, Prestige) are checked every second; event ones are unlocked where they happen (mute, credits portrait, retiring).
 - Upgrades count as developments (the Enterprise and Infrastructure categories only exist as upgrades). Milestone upgrades (Anniversary Sales, Early Retirement, Founders' Hall, Commemorative Displays) do not count.
 - Only manual Work presses count (Best P.A. Ever will not). Treasury achievements check the balance at any moment.
 - Truly Global = every regular city; Top Secret = the Antarctic Peninsula.
-- **Very Important Person** is earned by giving a farewell to a VIP passenger (see below).
+- **Very Important Person** is earned by giving a farewell or a greeting to a VIP passenger (see below).
 - Achievements already earned count for Trophy Cabinet and Anniversary Sales from the moment they unlock.
 
 ## VIP passengers
 
 - When a departure's farewell window opens, `App.jsx` rolls `economyManager.getVipChance()` (2%, x10 with VIP Pods) and stores `vip: true` on the queued departure, so it survives a reload.
-- A VIP uses the normal Farewell modal with VIP wording and plays `specialChime.mp3` instead of the leaving sound. The farewell is worth x5 Reputation on top of every other bonus (`getFarewellRepGain(base, isVip)`), and unlocks Very Important Person.
+- A VIP uses the normal Farewell modal with VIP wording and plays `specialChime.mp3` instead of the leaving sound. The farewell is worth x5 Reputation on top of every other bonus (`getFarewellRepGain(base, isVip)`), and unlocks Very Important Person. Arrivals can be VIPs too, with the same chance, reward and achievement.
 - Tuning: `VIP_BASE_CHANCE` and `VIP_REP_MULTIPLIER` at the top of `EconomyManager.js`.
 
 ## Government Grants, Lobbying Suavity, Best P.A. Ever
