@@ -11,6 +11,7 @@ import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import './ProgressPage.css'
 import { flagSrc } from '../utils/flagSrc.js'
+import { distanceMiles } from '../utils/loops.js'
 
 const CashValue = ({ amount, suffix = '' }) => (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
@@ -173,6 +174,14 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const mostProfitableDev = revenueDevs.length ? revenueDevs.reduce((best, d) => economyManager.getEffectiveDevIncomeWithBoosts(d) > economyManager.getEffectiveDevIncomeWithBoosts(best) ? d : best) : null
     const leastProfitableDev = revenueDevs.length ? revenueDevs.reduce((worst, d) => economyManager.getEffectiveDevIncomeWithBoosts(d) < economyManager.getEffectiveDevIncomeWithBoosts(worst) ? d : worst) : null
 
+    // The furthest and nearest connected cities from the home city, by real distance
+    const home = purchasedCities[0]
+    const routes = home ? purchasedCities.slice(1).map(c => ({ city: c, miles: distanceMiles(home.name, c.name) })).filter(r => r.miles !== null) : []
+    const longestRoute = routes.length ? routes.reduce((a, b) => b.miles > a.miles ? b : a) : null
+    const shortestRoute = routes.length ? routes.reduce((a, b) => b.miles < a.miles ? b : a) : null
+    const routeValue = r => r ? <span><span style={{ display: 'block' }}>{home.name} → {r.city.name}</span>{Math.round(r.miles).toLocaleString('en-GB')} miles</span> : '—'
+    const highestRank = Math.max(economyManager.progressionManager.rankManager?.rank || 1, achievementManager?.counter('highestRank') ?? 0)
+
     const likedCount = (() => {
         try { return (JSON.parse(localStorage.getItem('hyperloop_hyperlink_liked')) || []).length } catch { return 0 }
     })()
@@ -181,12 +190,16 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Terminal age', value: terminalAge() },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
         { label: 'Total revenue', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
+        { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.totalCashEarned || 0} /> },
         { label: 'Personal farewells given', value: farewellsGiven ?? 0 },
         { label: 'Greets given', value: economyManager.progressionManager.greetingsGiven ?? 0 },
+        { label: 'VIPs welcomed', value: (achievementManager?.counter('vips') ?? 0).toLocaleString('en-GB') },
+        { label: 'Delays compensated', value: (achievementManager?.counter('delaysCompensated') ?? 0).toLocaleString('en-GB') },
         // Every departure and arrival that has happened, including the ones while you were away. Kept through a prestige.
         { label: 'Total number of departures', value: (achievementManager?.counter('departures') ?? 0).toLocaleString('en-GB') },
         { label: 'Total number of arrivals', value: (achievementManager?.counter('arrivals') ?? 0).toLocaleString('en-GB') },
         { label: 'Total passenger count', value: (achievementManager?.counter('passengers') ?? 0).toLocaleString('en-GB') },
+        { label: 'Total distance travelled', value: `${(achievementManager?.counter('miles') ?? 0).toLocaleString('en-GB')} miles` },
         // Time the game has been open across every run (Terminal age is this run only)
         { label: 'Total playtime', value: playtimeText(achievementManager?.counter('playtime') ?? 0) },
         // Straight from the connected cities, so a disconnect shows at once
@@ -196,12 +209,15 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Hyper-Link posts liked', value: likedCount },
         { label: 'Developments upgraded', value: achievementManager?.counter('devUpgrades') ?? 0 },
         { label: 'Retirement count', value: PrestigeManager.getHistory().length },
+        { label: 'Highest rank reached', value: highestRank },
         { label: 'Work button clicks', value: (achievementManager?.counter('work') ?? 0).toLocaleString('en-GB') },
         { label: 'Daily bonuses collected', value: achievementManager?.counter('dailyBonus') ?? 0 },
         { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(mostProfitableCity))} suffix="/day" /></span> : '—' },
         { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(leastProfitableCity))} suffix="/day" /></span> : '—' },
         { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(mostProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
         { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(leastProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev))} suffix="/day" /></span> : '—' },
+        { label: 'Longest route', value: routeValue(longestRoute) },
+        { label: 'Shortest route', value: routeValue(shortestRoute) },
     ]
 
     const getUpgradeStats = () => {

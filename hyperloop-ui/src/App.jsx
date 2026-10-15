@@ -156,6 +156,8 @@ function App() {
   const [achievements] = useState(() => {
     const am = new AchievementManager();
     am.seedCounter('farewells', savedData?.farewellsGiven || 0);
+    // The best rank so far: this run, or any finished run
+    am.raiseCounter('highestRank', Math.max(rankManager.rank, ...PrestigeManager.getHistory().map(r => Number(r.rank) || 0)));
     // Upgrades already made in this run count too (a game from before this achievement)
     am.seedCounter('devUpgrades', Object.values(progressionManager.developmentUpgradeLevels || {}).reduce((sum, n) => sum + (Number(n) || 0), 0));
     return am;
@@ -299,7 +301,7 @@ function App() {
       }
       achievements.addCounter('greetings');
       progressionManager.greetingsGiven += 1;
-      if (dep?.vip) unlockAchievement('veryImportantPerson');
+      if (dep?.vip) { achievements.addCounter('vips'); unlockAchievement('veryImportantPerson'); }
       triggerSave();
       finishDeparture(dep);
       return;
@@ -323,7 +325,7 @@ function App() {
     const newCount = farewellsRef.current + 1;
     farewellsRef.current = newCount;
     achievements.addCounter('farewells');
-    if (dep?.vip) unlockAchievement('veryImportantPerson');
+    if (dep?.vip) { achievements.addCounter('vips'); unlockAchievement('veryImportantPerson'); }
     setFarewellsGiven(newCount);
     triggerSave(newCount);
     finishDeparture(dep);
@@ -606,6 +608,7 @@ function App() {
     if (gained.departure > 0) achievements.addCounter('departures', gained.departure);
     if (gained.arrival > 0) achievements.addCounter('arrivals', gained.arrival);
     if (gained.passengers > 0) achievements.addCounter('passengers', gained.passengers);
+    if (gained.miles >= 1) achievements.addCounter('miles', Math.round(gained.miles));
   }
   useEffect(() => { ensureTodaySchedule(); }, []);
   // Closing the game keeps the playtime since the last 10-second write
@@ -892,6 +895,7 @@ function App() {
       const devsChanged = newDevelopments.length > 0 || progressionManager.purchasedDevelopments.length !== prevDevNames.current.size;
       const rankChanged = rankManager.rank !== prevRank.current;
 
+      if (rankChanged) achievements.raiseCounter('highestRank', rankManager.rank);
       if (citiesChanged || devsChanged || rankChanged) {
         if (devsChanged) {
           const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService', Food: 'newDevelopmentFood' }
@@ -1703,7 +1707,7 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { unlockAchievement('sorry'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
+          onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
           onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
         />
       )}

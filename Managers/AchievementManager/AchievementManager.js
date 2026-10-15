@@ -79,6 +79,13 @@ export class AchievementManager {
         this.save()
     }
 
+    // Keeps the larger of the stored value and this one (a best, like the highest rank reached)
+    raiseCounter(name, value) {
+        if (!Number.isFinite(value) || value <= this.counter(name)) return
+        this.counters[name] = Math.floor(value)
+        this.save()
+    }
+
     // Start a running total from a value the game already knew (the farewell count of a game from before achievements).
     seedCounter(name, value) {
         if (name in this.counters || !Number.isFinite(value) || value <= 0) return
