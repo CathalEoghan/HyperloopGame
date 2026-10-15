@@ -769,22 +769,6 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             </div>
             <div className="globe-right-controls" ref={rightControlsRef}>
                 <div className="globe-controls-row">
-                <div className="globe-view-switch" role="tablist" aria-label="Globe view">
-                    <button
-                        role="tab"
-                        aria-selected={globeView === 'connections'}
-                        className={`globe-view-btn ${globeView === 'connections' ? 'globe-view-btn-active' : ''}`}
-                        onMouseEnter={() => { if (globeView !== 'connections') playHoverSound() }}
-                        onClick={() => chooseView('connections')}
-                    >Connections</button>
-                    <button
-                        role="tab"
-                        aria-selected={globeView === 'loops'}
-                        className={`globe-view-btn ${globeView === 'loops' ? 'globe-view-btn-active' : ''}`}
-                        onMouseEnter={() => { if (globeView !== 'loops') playHoverSound() }}
-                        onClick={() => chooseView('loops')}
-                    >Active Loops{loops.length > 0 && <span className="globe-view-count">{loops.length}</span>}</button>
-                </div>
                 {/* Always laid out, so the switch doesn't move when the view changes; hidden in Active Loops, where it has no effect */}
                 <button
                         className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
@@ -803,6 +787,22 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     >
                         {showOwned ? '👁 All cities' : '👁 Owned only'}
                     </button>
+                <div className="globe-view-switch" role="tablist" aria-label="Globe view">
+                    <button
+                        role="tab"
+                        aria-selected={globeView === 'connections'}
+                        className={`globe-view-btn ${globeView === 'connections' ? 'globe-view-btn-active' : ''}`}
+                        onMouseEnter={() => { if (globeView !== 'connections') playHoverSound() }}
+                        onClick={() => chooseView('connections')}
+                    >Connections</button>
+                    <button
+                        role="tab"
+                        aria-selected={globeView === 'loops'}
+                        className={`globe-view-btn ${globeView === 'loops' ? 'globe-view-btn-active' : ''}`}
+                        onMouseEnter={() => { if (globeView !== 'loops') playHoverSound() }}
+                        onClick={() => chooseView('loops')}
+                    >Active Loops{loops.length > 0 && <span className="globe-view-count">{loops.length}</span>}</button>
+                </div>
                 </div>
                 {globeView === 'loops' && (
                     <div className="loops-panel">
