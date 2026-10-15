@@ -378,19 +378,38 @@
     flex-shrink: 0;
 }
 
+/* The bar's line runs up to a small rectangle (a shuttle pod, like the ones on the globe) that marks where the loop is */
 .loop-bar {
+    --pod-w: 14px;
+    position: relative;
     height: 4px;
     background: rgba(255, 255, 255, 0.12);
     border-radius: 2px;
-    margin: 6px 0 4px;
-    overflow: hidden;
+    margin: 9px 0 7px;
 }
 
 .loop-bar-fill {
     height: 100%;
     background: var(--loop-color);
     border-radius: 2px;
+    /* From the start to the middle of the pod */
+    width: calc((100% - var(--pod-w)) * var(--p) + var(--pod-w) / 2);
     transition: width 1s linear;
+}
+
+.loop-pod {
+    position: absolute;
+    top: 50%;
+    left: calc((100% - var(--pod-w)) * var(--p));
+    width: var(--pod-w);
+    height: 9px;
+    transform: translateY(-50%);
+    background: #fff;
+    border: 1px solid var(--loop-color);
+    border-radius: 2px;
+    box-shadow: 0 0 5px var(--loop-color);
+    box-sizing: border-box;
+    transition: left 1s linear;
 }
 
 .loop-eta {

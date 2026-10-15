@@ -848,7 +848,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                     <span className="loop-city">{loop.to}</span>
                                                     <span className="loop-tag">{loop.kind === 'arrival' ? 'ARR' : 'DEP'}</span>
                                                 </div>
-                                                <div className="loop-bar"><div className="loop-bar-fill" style={{ width: `${progress}%` }} /></div>
+                                                <div className="loop-bar" style={{ '--p': progress / 100 }}><div className="loop-bar-fill" /><div className="loop-pod" /></div>
                                                 <div className="loop-eta">
                                                     {loop.delayed && <span className="loop-delayed">DELAYED · </span>}
                                                     Expected {formatClock(loop.endTs)} · {formatDuration(loop.endTs - nowMs)} left
