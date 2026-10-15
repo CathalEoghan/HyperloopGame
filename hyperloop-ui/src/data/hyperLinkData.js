@@ -2000,5 +2000,16 @@ export const POSTS = {
         'For people confused, the {name} is now known as {developmentName}.',
         'I defo could ahve thought of a better name than {developmentName} 😂',
         'idc what anyone says {developmentName} is acc a pretty cool name for it!'
+    ],
+
+    development_removed: [
+        'No way. They closed the {development}??',
+        'Why did they close the {development} im so sad rn😢',
+        'When did the {development} close? What the hell?',
+        'Ah so sad to see the {development} shut down. I have some good memories from there',
+        'Sign my petition to re-open the closed {development}!!',
+        'bring the {development} back!',
+        'rip the {development}',
+        'I miss the {development} already 😭'
     ]
 }
