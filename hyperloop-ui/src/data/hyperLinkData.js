@@ -1987,5 +1987,18 @@ export const POSTS = {
         'In shock they actually disconnected {city}. Like, in total shock.',
         'Hey guys, I\'m going to create a petition to bring back {city} to the loop network. I\'ll share it on my profile. #PleaseSign',
         '😠 ARE U 4 REAL? {city} is gone. im literally shaking rn',
+    ],
+
+    development_renamed: [
+        'Huh. {developmentName}. I like it!',
+        'What does everyone think of the new name for the {development}?? 🤔',
+        'since when was it called {developmentName} ?',
+        'Love the new name for the {development}! has so much character',
+        'idk i think {developmentName} is kinda stupid lol',
+        'who named it {developmentName} lmaoo',
+        'not sure how I feel about the new {development} name. Might grow on me over time',
+        'For people confused, the {name} is now known as {developmentName}.',
+        'I defo could ahve thought of a better name than {developmentName} 😂',
+        'idc what anyone says {developmentName} is acc a pretty cool name for it!'
     ]
 }
