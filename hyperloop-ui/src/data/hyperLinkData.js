@@ -1997,7 +1997,7 @@ export const POSTS = {
         'idk i think {developmentName} is kinda stupid lol',
         'who named it {developmentName} lmaoo',
         'not sure how I feel about the new {development} name. Might grow on me over time',
-        'For people confused, the {name} is now known as {developmentName}.',
+        'For people confused, the {development} is now known as {developmentName}.',
         'I defo could ahve thought of a better name than {developmentName} 😂',
         'idc what anyone says {developmentName} is acc a pretty cool name for it!'
     ],
