@@ -233,7 +233,9 @@ export function ensureSchedules(purchasedCities, nowMs = Date.now()) {
 }
 
 // A city connected during the day gets a departure 30-60 minutes from now, and a loop that sets off from it in
-// 30-60 minutes and arrives today if the trip is short enough. Nothing is added when today is nearly over.
+// 30-60 minutes and arrives today if the trip is short enough to get back before the day's cutoff — otherwise
+// the arrival rolls onto tomorrow's board instead, rather than vanishing (bug #182: a late-connected or
+// long-haul city's loop used to depart but never show up as having arrived anywhere, today or any other day).
 export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now()) {
     const homeCity = purchasedCities[0]
     if (!homeCity || city.name === homeCity.name) return
@@ -242,14 +244,16 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
     const lastMins = 23 * 60 + 30
 
     const place = (kind, earliestMins, durationMin) => {
-        const key = scheduleKey(kind, nowMs)
+        let dayMs = nowMs
+        let mins = Math.ceil((earliestMins + Math.floor(Math.random() * 30)) / 5) * 5
+        // Doesn't fit before today's cutoff: push the whole thing a day later rather than dropping it
+        if (mins >= lastMins) { dayMs = shiftDays(nowMs, 1); mins = Math.max(5, mins - 24 * 60) }
+        const key = scheduleKey(kind, dayMs)
         const schedule = readSchedule(key)
         if (schedule.some(e => e.name === city.name)) return
-        if (earliestMins >= lastMins) return
-        let mins = Math.ceil((earliestMins + Math.floor(Math.random() * 30)) / 5) * 5
         for (let attempts = 0; attempts < 24; attempts++) {
             const clash = schedule.some(e => Math.abs((e.hour * 60 + e.minute) - mins) < 10)
-            if (!clash && mins <= lastMins && isRealMinute(mins, nowMs)) break
+            if (!clash && mins <= lastMins && isRealMinute(mins, dayMs)) break
             mins += 5
         }
         if (mins > lastMins) return
