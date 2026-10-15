@@ -85,7 +85,9 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
     const chooseTab = (next) => {
         if (next === tab) return
         playClickSound2()
-        if (splitFlapEnabled()) playSplitFlapShort()
+        // Nothing to flip to: a board with no rows (e.g. only one city connected) just shows its empty message
+        const nextHasRows = (next === 'arrivals' ? arrivals : schedule).length > 0
+        if (nextHasRows && splitFlapEnabled()) playSplitFlapShort()
         setTab(next)
         tabRef.current = next
         try { localStorage.setItem(TAB_KEY, next) } catch { /* storage blocked, ignore */ }
