@@ -49,7 +49,8 @@ import AchievementToast from "./components/AchievementToast.jsx";
 import AchievementsModal, { AchievementsButton } from "./components/AchievementsModal.jsx";
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
-import { departureTimestamp, minutesUntilDeparture, isRealMinute, skipMissingMinutes } from './utils/time.js'
+import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
+import { ensureSchedules, injectCityIntoSchedules, pruneSchedules, arrivalsKey, readSchedule, writeSchedule, entryTimestamp, entryDuration, ARRIVAL_DELAY_MAX_MINUTES } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -97,7 +98,8 @@ function claimTabLock(id, force = false) {
 // Departures whose farewell window is open wait in a queue, so one opening while another is on
 // screen waits its turn instead of replacing it. Stored under the old key (as a list).
 const DEPARTURE_KEY = 'hyperloop_active_departure';
-const departureId = dep => `${dep.time}_${dep.name}`;
+// Arrivals share the queue (their greeting uses the same popup), so their ids are kept apart from departures'.
+const departureId = dep => `${dep.kind === 'arrival' ? 'arr_' : ''}${dep.time}_${dep.name}`;
 // A farewell whose window closed more than a minute ago is dropped, however it got left behind.
 const stillOpen = dep => !dep.expiresAt || Date.now() < dep.expiresAt + 60000;
 // A departure that waited its turn still gets at least 30 seconds on screen.
@@ -285,6 +287,21 @@ function App() {
   // Everything a farewell pays out and records. Used by the farewell popup's button, and by Video Message, which sends
   // it straight from the tick so a popup that is open (the daily bonus overnight, say) can't make the farewell expire.
   function giveFarewell(dep, repGain) {
+    // Greeting an arrival pays the same Reputation (and VIP bonus, and Personal Image Branding cash) as a farewell.
+    // It doesn't count as the day's first farewell, towards the farewell total, or set off farewell posts.
+    if (dep?.kind === 'arrival') {
+      progressionManager.addReputation(repGain ?? 5);
+      const arrivalCity = allCities.find(c => c.name === dep.name);
+      const greetCash = arrivalCity ? economyManager.getFarewellCityIncomeBonus(arrivalCity) : 0;
+      if (greetCash > 0) {
+        progressionManager.addCash(greetCash);
+        setBalance(progressionManager.balance);
+      }
+      achievements.addCounter('greetings');
+      triggerSave();
+      finishDeparture(dep);
+      return;
+    }
     const today = new Date().toDateString();
     const isFirstToday = lastFarewellDateRef.current !== today;
     const hasDoubleFirst = economyManager.hasUpgrade('firstFarewellOfDayDouble');
@@ -571,53 +588,11 @@ function App() {
     return () => clearInterval(id);
   }, []);
 
-   // Generate today's departure schedule if it doesn't exist yet. Runs on load and again when the
-  // date changes while the game is open (bug #66).
+  // Make today's departures and arrivals (and tomorrow's arrivals, which set off today) if they don't exist yet.
+  // Runs on load and again when the date changes while the game is open (bug #66).
   function ensureTodaySchedule() {
     if (blockedRef.current) return;
-    const today = new Date().toDateString();
-    const key = `departures_${today}`;
-    if (localStorage.getItem(key) || progressionManager.purchasedCities.length <= 1) return;
-    const homeCity = progressionManager.purchasedCities[0];
-    const departureCities = progressionManager.purchasedCities.filter(c => !homeCity || c.name !== homeCity.name);
-    const shuffled = [...departureCities].sort(() => Math.random() - 0.5).slice(0, Math.min(100, departureCities.length));
-    const totalMinutes = 24 * 60;
-    const slotSize = Math.floor(totalMinutes / shuffled.length);
-    const numGates = 30;
-    const gateLastUsed = new Array(numGates + 1).fill(-Infinity);
-    const departures = [];
-    shuffled.forEach((city, i) => {
-      const slotStart = i * slotSize;
-      const slotEnd = Math.min(slotStart + slotSize, totalMinutes - 1);
-      let minuteOfDay = Math.floor((slotStart + Math.floor(Math.random() * (slotEnd - slotStart))) / 5) * 5;
-      // Never exactly 00:00: its farewell window would start on the previous day, so no farewell would open
-      minuteOfDay = Math.max(5, minuteOfDay);
-      if (departures.length > 0) {
-        const lastTime = departures[departures.length - 1].minuteOfDay;
-        if (minuteOfDay - lastTime < 10) minuteOfDay = Math.ceil((lastTime + 10) / 5) * 5;
-      }
-      minuteOfDay = skipMissingMinutes(minuteOfDay);
-      const availableGates = [];
-      for (let g = 1; g <= numGates; g++) {
-        if (minuteOfDay - gateLastUsed[g] >= 30) availableGates.push(g);
-      }
-      let gate;
-      if (availableGates.length > 0) {
-        gate = availableGates[Math.floor(Math.random() * availableGates.length)];
-      } else {
-        let earliest = Infinity;
-        for (let g = 1; g <= numGates; g++) {
-          if (gateLastUsed[g] < earliest) { earliest = gateLastUsed[g]; gate = g; }
-        }
-      }
-      gateLastUsed[gate] = minuteOfDay;
-      const hour = Math.floor(minuteOfDay / 60);
-      const minute = minuteOfDay % 60;
-      const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-      departures.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay, gate });
-    });
-        departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay);
-    if (departures.length > 0) localStorage.setItem(key, JSON.stringify(departures));
+    ensureSchedules(progressionManager.purchasedCities);
   }
   useEffect(() => { ensureTodaySchedule(); }, []);
 
@@ -725,43 +700,15 @@ function App() {
   useState(() => {
     if (!savedData) {
       Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('departures_')) localStorage.removeItem(key)
+        if (key.startsWith('departures_') || key.startsWith('arrivals_')) localStorage.removeItem(key)
       })
     }
   });
 
-  const injectCityIntoSchedule = (city) => {
-    const todayKey = new Date().toDateString();
-    const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
-    // With no schedule yet (the first city connected on a new game's first day), this city starts today's schedule
-    // on its own, 30+ minutes ahead, so its departure and farewell don't wait for the Departure Board to be opened (bug #144).
-    if (schedule.some(e => e.name === city.name)) return;
-    const now = new Date();
-    const currentMins = now.getHours() * 60 + now.getMinutes();
-    const minFutureMins = currentMins + 30;
-    const maxMins = 23 * 60 + 30;
-    if (minFutureMins >= maxMins) return;
-    let newMinutes = Math.ceil((minFutureMins + Math.floor(Math.random() * 30)) / 5) * 5;
-    let attempts = 0;
-    while (attempts < 24) {
-      const clash = schedule.some(e => Math.abs((e.hour * 60 + e.minute) - newMinutes) < 10);
-      if (!clash && newMinutes <= maxMins && isRealMinute(newMinutes)) break;
-      newMinutes += 5;
-      attempts++;
-    }
-    if (newMinutes > maxMins) return;
-    const usedGates = new Set(schedule.map(e => e.gate));
-    let gate = Math.floor(Math.random() * 30) + 1;
-    for (let g = 1; g <= 30; g++) {
-      if (!usedGates.has(g)) { gate = g; break; }
-    }
-    const hour = Math.floor(newMinutes / 60);
-    const minute = newMinutes % 60;
-    const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
-    const newEntry = { name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay: newMinutes, gate };
-    const updated = [...schedule, newEntry].sort((a, b) => a.minuteOfDay - b.minuteOfDay);
-    localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
-  };
+  // A city connected during the day joins today's departures and arrivals. With no schedule yet (the first city
+  // connected on a new game's first day), it starts today's schedule on its own, so its departure and farewell don't
+  // wait for the Terminal Board to be opened (bug #144).
+  const injectCityIntoSchedule = (city) => injectCityIntoSchedules(city, progressionManager.purchasedCities);
 
   const tickIntervalRef = useRef(null);
   const lastWaitCheckRef = useRef(Date.now());
@@ -1030,9 +977,8 @@ function App() {
         triggeredDepartures.current = new Set();
         // A new day while the game is open: build its schedule and offer the daily bonus (bug #66),
         // and drop earlier days' schedules so they don't pile up in storage (bug #78).
-        Object.keys(localStorage).forEach(key => {
-          if (key.startsWith('departures_') && key !== `departures_${todayKey}`) localStorage.removeItem(key);
-        });
+        // Yesterday's departures are kept: some of those loops are still travelling (they show on the globe).
+        pruneSchedules(now.getTime());
         ensureTodaySchedule();
         checkDailyLogin();
       }
@@ -1079,38 +1025,85 @@ function App() {
         }
       });
 
-      // A delay popup that hasn't been answered yet blocks the next one, or the new delay would replace it unpaid (bug #158)
+      // Arrivals: the greeting opens as the loop gets in, and stays open as long as a farewell window would.
+      // The city is part of the key, so two arrivals at the same minute both get a greeting.
+      const homeName = progressionManager.purchasedCities[0]?.name;
+      const connectedNames = new Set(progressionManager.purchasedCities.map(c => c.name));
+      const arrivals = readSchedule(arrivalsKey(now.getTime()));
+      arrivals.forEach(entry => {
+        if (!connectedNames.has(entry.name)) return;
+        const key = `${todayKey}_arr_${entry.time}_${entry.name}`;
+        const arriveTs = entryTimestamp(entry, now.getTime());
+        const windowEndTs = arriveTs + windowMinutes * 60000;
+        const nowMinuteTs = Math.floor(now.getTime() / 60000) * 60000;
+        if (nowMinuteTs >= arriveTs && nowMinuteTs < windowEndTs && !triggeredDepartures.current.has(key)) {
+          triggeredDepartures.current.add(key);
+          localStorage.setItem('hyperloop_triggered_departures', JSON.stringify([...triggeredDepartures.current]));
+          const secondsRemaining = Math.max(30, Math.floor((windowEndTs - now.getTime()) / 1000));
+          const expiresAt = Date.now() + secondsRemaining * 1000;
+          const arrEntry = { ...entry, kind: 'arrival', secondsRemaining, expiresAt, vip: Math.random() < economyManager.getVipChance() };
+          // Video Message welcomes them on the spot too
+          if (PrestigeManager.owns('videoMessage')) {
+            playFarewellAcceptSound();
+            giveFarewellRef.current(arrEntry, economyManager.getFarewellRepGain(5, !!arrEntry.vip));
+            return;
+          }
+          setDepartureQueue(queue => {
+            if (queue.some(d => departureId(d) === departureId(arrEntry))) return queue;
+            const next = [...queue, arrEntry];
+            saveDepartureQueue(next);
+            return next;
+          });
+        }
+      });
+
+      // A delay popup that hasn't been answered yet blocks the next one, or the new delay would replace it unpaid (bug #158).
+      // Departures and arrivals share the one chance, so adding arrivals doesn't make delays more frequent.
       if (!PrestigeManager.owns('bulletproofPlanning') && !localStorage.getItem('hyperloop_pending_delay') && Math.random() < 0.0002) {
-        const eligible = schedule.filter(entry => {
+        // Require at least 10 minutes of headroom before the 23:55 cutoff — the
+        // random delay below is always at least 10 minutes, so a loop with
+        // less room than that would otherwise get its delay silently capped down
+        // to 0 minutes (and £0 compensation) while still popping the delay modal.
+        const canDelay = (entry, delayKey) => {
           const diff = minutesUntilDeparture(entry, now.getTime());
           const maxDelay = (23 * 60 + 55) - (entry.hour * 60 + entry.minute);
-          // Require at least 10 minutes of headroom before the 23:55 cutoff — the
-          // random delay below is always at least 10 minutes, so a departure with
-          // less room than that would otherwise get its delay silently capped down
-          // to 0 minutes (and £0 compensation) while still popping the delay modal.
-          return diff > 60 && diff <= 120 && maxDelay >= 10 && !triggeredDelays.current.has(`${entry.time}_${entry.name}`) && !entry.delayed;
-        });
+          return diff > 60 && diff <= 120 && maxDelay >= 10 && !triggeredDelays.current.has(delayKey) && !entry.delayed;
+        };
+        const eligible = [
+          ...schedule.filter(entry => canDelay(entry, `${entry.time}_${entry.name}`)).map(entry => ({ entry, kind: 'departure' })),
+          ...arrivals.filter(entry => connectedNames.has(entry.name) && canDelay(entry, `arr_${entry.time}_${entry.name}`)).map(entry => ({ entry, kind: 'arrival' })),
+        ];
         if (eligible.length > 0) {
-          const entry = eligible[Math.floor(Math.random() * eligible.length)];
+          const { entry, kind } = eligible[Math.floor(Math.random() * eligible.length)];
+          const isArrival = kind === 'arrival';
           const maxDelay = (23 * 60 + 55) - (entry.hour * 60 + entry.minute);
+          // A departure can be held back up to 4 hours; an arrival, already on its way, up to an hour
+          const longest = isArrival ? ARRIVAL_DELAY_MAX_MINUTES : 240;
           const delayMinutes = Math.min(
-            Math.ceil((Math.floor(Math.random() * 230) + 10) / 5) * 5,
+            Math.ceil((Math.floor(Math.random() * (longest - 10)) + 10) / 5) * 5,
             Math.floor(maxDelay / 5) * 5
           );
           // Never into the hour the clocks skip (bug #176)
-          const newTotalMins = Math.min(skipMissingMinutes((entry.hour * 60 + entry.minute) + delayMinutes), 23 * 60 + 55);
+          const oldTotalMins = entry.hour * 60 + entry.minute;
+          const newTotalMins = Math.min(skipMissingMinutes(oldTotalMins + delayMinutes), 23 * 60 + 55);
           const newHour = Math.floor(newTotalMins / 60) % 24;
           const newMinute = newTotalMins % 60;
           const newTime = `${String(newHour).padStart(2, '0')}:${String(newMinute).padStart(2, '0')}`;
           const compensation = Math.round(delayMinutes * 50 * INCOME_SCALE);
-          triggeredDelays.current.add(`${entry.time}_${entry.name}`);
-                    // The delayed departure takes its new place in the day's order (bug #103).
-          // Matched on the city too: a delayed departure can land on another's time, and only this one moves (bug #171)
-          const updated = schedule.map(e => e.time === entry.time && e.name === entry.name
-            ? { ...e, hour: newHour, minute: newMinute, time: newTime, minuteOfDay: newTotalMins, delayed: true }
+          triggeredDelays.current.add(`${isArrival ? 'arr_' : ''}${entry.time}_${entry.name}`);
+          // The delayed loop takes its new place in the day's order (bug #103).
+          // Matched on the city too: a delayed loop can land on another's time, and only this one moves (bug #171)
+          const list = isArrival ? arrivals : schedule;
+          const updated = list.map(e => e.time === entry.time && e.name === entry.name
+            ? {
+                ...e, hour: newHour, minute: newMinute, time: newTime, minuteOfDay: newTotalMins, delayed: true,
+                // An arrival set off at the same time as before, so its journey is longer by the delay
+                ...(isArrival ? { durationMin: entryDuration(e, 'arrival', homeName, now.getTime()) + (newTotalMins - oldTotalMins) } : {}),
+              }
             : e).sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute));
-          localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
-          const delay = { name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation };
+          if (isArrival) writeSchedule(arrivalsKey(now.getTime()), updated);
+          else localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
+          const delay = { name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation, ...(isArrival ? { kind: 'arrival' } : {}) };
           localStorage.setItem('hyperloop_pending_delay', JSON.stringify(delay));
           setActiveDelay(delay);
         }
@@ -1672,8 +1665,8 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { unlockAchievement('sorry'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
-          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
+          onCompensate={(cost) => { unlockAchievement('sorry'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
+          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
         />
       )}
 
@@ -1683,7 +1676,7 @@ function App() {
           departure={activeDeparture}
           economyManager={economyManager}
           onFarewell={(repGain) => giveFarewell(activeDeparture, repGain)}
-          onMiss={() => { finishDeparture(activeDeparture); hyperLinkTriggerRef.current = { type: 'farewellMissed' }; setHyperLinkTrigger({ type: 'farewellMissed' }); }}
+          onMiss={() => { finishDeparture(activeDeparture); if (activeDeparture.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'farewellMissed' }; setHyperLinkTrigger({ type: 'farewellMissed' }); } }}
         />
       )}
 

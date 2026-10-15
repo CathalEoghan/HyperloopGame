@@ -256,7 +256,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                 }}
                 style={{ '--board-img': `url(${departureBoardImg})` }}
             >
-                <span className="MysterySpotLabel">DEPARTURE BOARD</span>
+                <span className="MysterySpotLabel">TERMINAL BOARD</span>
                 {hasFarewellPending && <span className="departure-badge" />}
             </button>
             {floats.map(f => (

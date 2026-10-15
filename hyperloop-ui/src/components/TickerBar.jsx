@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './TickerBar.css'
 import { minutesUntilDeparture } from '../utils/time.js'
+import { arrivalsKey, readSchedule } from '../utils/loops.js'
 
 function TickerBar({ terminalName }) {
     const [messages, setMessages] = useState([])
@@ -23,7 +24,17 @@ function TickerBar({ terminalName }) {
     function loadMessages() {
         const today = new Date().toDateString()
         const saved = localStorage.getItem(`departures_${today}`)
-        if (saved) setMessages(getActiveMessages(JSON.parse(saved)))
+        const msgs = saved ? getActiveMessages(JSON.parse(saved)) : []
+        // Loops that have just come in, or are about to
+        readSchedule(arrivalsKey()).forEach(entry => {
+            const diff = minutesUntilDeparture(entry)
+            if (diff > 0 && diff <= 10) {
+                msgs.push(`Attention: The ${entry.time} hyperloop from ${entry.name} will shortly arrive at Gate ${entry.gate}.`)
+            } else if (diff <= 0 && diff > -10) {
+                msgs.push(`Attention: The hyperloop from ${entry.name} has arrived at Gate ${entry.gate}. Welcome to ${terminalName}.`)
+            }
+        })
+        setMessages(msgs)
     }
 
     useEffect(() => {

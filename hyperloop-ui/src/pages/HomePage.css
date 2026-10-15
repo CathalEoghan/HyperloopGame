@@ -111,12 +111,6 @@
 }
 
 .globe-toggle-btn {
-    position: absolute;
-    /* Centred on the top bar; uses translate (not transform) so the hover scale still works */
-    top: calc(var(--globe-bar-h) / 2);
-    translate: 0 -50%;
-    right: 16px;
-    z-index: 10;
     background: rgba(0, 0, 0, 0.6);
     color: #f5a623;
     border: 1px solid #f5a623;
@@ -151,4 +145,240 @@
     letter-spacing: 2px;
     z-index: 5;
     pointer-events: none;
+}
+/* ---- Top right: Connections | Active Loops, with the owned-only toggle or the loops panel under it ---- */
+.globe-right-controls {
+    position: absolute;
+    top: 6px;
+    right: 16px;
+    /* Clear of the announcements ticker that runs along the bottom of the globe */
+    bottom: 84px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    pointer-events: none;
+    max-width: calc(100% - 32px);
+}
+
+.globe-right-controls > * {
+    pointer-events: all;
+}
+
+.globe-view-switch {
+    display: inline-flex;
+    border: 1px solid #f5a623;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.6);
+    flex-shrink: 0;
+}
+
+.globe-view-btn {
+    background: transparent;
+    color: #f5a623;
+    border: none;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    padding: 6px 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.globe-view-btn + .globe-view-btn {
+    border-left: 1px solid #f5a623;
+}
+
+.globe-view-btn:hover {
+    background: rgba(245, 166, 35, 0.2);
+}
+
+.globe-view-btn-active,
+.globe-view-btn-active:hover {
+    background: #f5a623;
+    color: #0a0a1a;
+    cursor: default;
+}
+
+.globe-view-count {
+    background: #4fc3f7;
+    color: #0a0a1a;
+    border-radius: 8px;
+    padding: 0 6px;
+    font-size: 0.65rem;
+    font-weight: bold;
+    line-height: 16px;
+}
+
+.loops-panel {
+    width: 300px;
+    max-width: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    background: rgba(0, 0, 0, 0.72);
+    border: 1px solid #f5a623;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'Courier New', monospace;
+    color: #ddd;
+    backdrop-filter: blur(4px);
+}
+
+.loops-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #f5a623;
+    font-family: inherit;
+    font-size: 0.78rem;
+    letter-spacing: 1px;
+    padding: 8px 10px;
+    cursor: pointer;
+    text-align: left;
+    flex-shrink: 0;
+}
+
+.loops-panel-header:hover {
+    background: rgba(245, 166, 35, 0.12);
+}
+
+.loops-panel-title {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.loops-panel-next {
+    color: #999;
+    font-size: 0.68rem;
+    letter-spacing: 0.5px;
+}
+
+.loops-panel-caret {
+    color: #f5a623;
+}
+
+.loops-live-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #555;
+    flex-shrink: 0;
+}
+
+.loops-live-dot-on {
+    background: limegreen;
+    animation: loopsLivePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes loopsLivePulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(50, 205, 50, 0.6); }
+    50% { box-shadow: 0 0 0 4px rgba(50, 205, 50, 0); }
+}
+
+.loops-empty {
+    margin: 0;
+    padding: 4px 12px 12px;
+    font-size: 0.72rem;
+    color: #aaa;
+    line-height: 1.5;
+}
+
+.loops-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+    border-top: 1px solid rgba(245, 166, 35, 0.3);
+}
+
+.loop-row {
+    padding: 8px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    cursor: pointer;
+    --loop-color: #f5a623;
+}
+
+.loop-row-arrival {
+    --loop-color: #4fc3f7;
+}
+
+.loop-row:hover,
+.loop-row-hovered {
+    background: rgba(255, 255, 255, 0.06);
+}
+
+.loop-route {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.75rem;
+    color: #eee;
+    min-width: 0;
+}
+
+.loop-city {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.loop-flag {
+    width: 16px;
+    height: 11px;
+    object-fit: cover;
+    border-radius: 2px;
+    border: none;
+    flex-shrink: 0;
+}
+
+.loop-arrow {
+    color: var(--loop-color);
+    flex-shrink: 0;
+}
+
+.loop-tag {
+    margin-left: auto;
+    font-size: 0.6rem;
+    letter-spacing: 1px;
+    color: var(--loop-color);
+    border: 1px solid var(--loop-color);
+    border-radius: 3px;
+    padding: 0 4px;
+    flex-shrink: 0;
+}
+
+.loop-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    margin: 6px 0 4px;
+    overflow: hidden;
+}
+
+.loop-bar-fill {
+    height: 100%;
+    background: var(--loop-color);
+    border-radius: 2px;
+    transition: width 1s linear;
+}
+
+.loop-eta {
+    font-size: 0.66rem;
+    color: #999;
+}
+
+.loop-delayed {
+    color: #e74c3c;
 }

@@ -20,7 +20,7 @@ class ErrorBoundary extends Component {
 
   resetGame = () => {
     Object.keys(localStorage).forEach(key => {
-      if (key.startsWith('hyperloop_') || key.startsWith('departures_')) localStorage.removeItem(key)
+      if (key.startsWith('hyperloop_') || key.startsWith('departures_') || key.startsWith('arrivals_')) localStorage.removeItem(key)
     })
     window.location.reload()
   }

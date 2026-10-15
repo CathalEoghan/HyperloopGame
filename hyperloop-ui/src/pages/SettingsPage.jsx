@@ -344,7 +344,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Split-Flap Animation</span>
-                        <span className="settings-label-desc">Animated flip tiles and mechanical sound on the departure board.</span>
+                        <span className="settings-label-desc">Animated flip tiles and mechanical sound on the Terminal Board.</span>
                     </div>
                     <div className="settings-options">
                         <OptionBtn active={splitFlap} onClick={() => handleSplitFlapToggle(true)}>On</OptionBtn>

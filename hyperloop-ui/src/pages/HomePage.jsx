@@ -13,6 +13,12 @@ import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import './HomePage.css'
 import { flagSrc } from '../utils/flagSrc.js'
+import { getActiveLoops, formatClock, formatDuration } from '../utils/loops.js'
+
+// Departures are drawn in the game's gold, arrivals in blue
+const LOOP_COLORS = { departure: 0xf5a623, arrival: 0x4fc3f7 }
+const VIEW_KEY = 'globeView'
+const PANEL_KEY = 'globeLoopsPanelOpen'
 
 function latLngToVector3(lat, lng, radius) {
     const phi = (90 - lat) * (Math.PI / 180)
@@ -22,6 +28,24 @@ function latLngToVector3(lat, lng, radius) {
         radius * Math.cos(phi),
         radius * Math.sin(phi) * Math.sin(theta)
     )
+}
+
+// Points along the great circle between two cities, lifted into an arc. Longer routes arc higher.
+function arcPoints(from, to, segments = 64) {
+    const a = latLngToVector3(from.lat, from.lng, 1).normalize()
+    const b = latLngToVector3(to.lat, to.lng, 1).normalize()
+    const angle = a.angleTo(b)
+    const height = 0.02 + 0.2 * (angle / Math.PI)
+    const sinAngle = Math.sin(angle)
+    const points = []
+    for (let i = 0; i <= segments; i++) {
+        const t = i / segments
+        const p = sinAngle < 1e-6
+            ? a.clone().lerp(b, t).normalize()
+            : a.clone().multiplyScalar(Math.sin((1 - t) * angle) / sinAngle).add(b.clone().multiplyScalar(Math.sin(t * angle) / sinAngle))
+        points.push(p.multiplyScalar(1.006 + height * Math.sin(Math.PI * t)))
+    }
+    return points
 }
 
 function formatPopulation(pop) {
@@ -72,6 +96,51 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     const purchasedCitiesRef = useRef(purchasedCities)
     const unlockedCitiesRef = useRef(unlockedCities)
     const disabledRef = useRef(disabled)
+
+    // Connections (every city's flag) or Active Loops (only the loops travelling now, with their routes)
+    const [globeView, setGlobeView] = useState(() => {
+        try { return localStorage.getItem(VIEW_KEY) === 'loops' ? 'loops' : 'connections' } catch { return 'connections' }
+    })
+    const globeViewRef = useRef(globeView)
+    const [panelOpen, setPanelOpen] = useState(() => {
+        try { return localStorage.getItem(PANEL_KEY) !== 'false' } catch { return true }
+    })
+    const [loops, setLoops] = useState([])
+    const [nowMs, setNowMs] = useState(0)
+    const loopsRef = useRef([])
+    const loopCityNamesRef = useRef(new Set())
+    const [hoveredLoopId, setHoveredLoopId] = useState(null)
+    const hoveredLoopRef = useRef(null)
+    // Turns the globe to face a loop; set up with the scene
+    const focusLoopRef = useRef(null)
+
+    useEffect(() => {
+        const update = () => {
+            const list = getActiveLoops(purchasedCitiesRef.current)
+            const home = purchasedCitiesRef.current[0]
+            loopsRef.current = list
+            loopCityNamesRef.current = new Set([...(home ? [home.name] : []), ...list.flatMap(l => [l.from, l.to])])
+            setLoops(list)
+            setNowMs(Date.now())
+        }
+        const first = setTimeout(update, 0)
+        const interval = setInterval(update, 1000)
+        return () => { clearTimeout(first); clearInterval(interval) }
+    }, [])
+
+    const chooseView = (view) => {
+        if (view === globeViewRef.current) return
+        playClickSound2()
+        globeViewRef.current = view
+        setGlobeView(view)
+        setHoveredCity(null)
+        try { localStorage.setItem(VIEW_KEY, view) } catch { /* storage blocked, ignore */ }
+    }
+
+    const hoverLoop = (id) => {
+        hoveredLoopRef.current = id
+        setHoveredLoopId(id)
+    }
 
     useEffect(() => {
         purchasedCitiesRef.current = purchasedCities
@@ -285,6 +354,72 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         })
         spritesRef.current = sprites
 
+        // ---- Active loops: an arc per route and a pod travelling along it ----
+        const loopGroup = new THREE.Group()
+        scene.add(loopGroup)
+        const loopObjects = new Map()
+        let syncedLoops = null
+        const removeLoopObject = (id) => {
+            const o = loopObjects.get(id)
+            loopGroup.remove(o.line, o.pod)
+            o.line.geometry.dispose(); o.line.material.dispose()
+            o.pod.geometry.dispose(); o.pod.material.dispose()
+            loopObjects.delete(id)
+        }
+        const syncLoops = () => {
+            const list = loopsRef.current
+            const ids = new Set(list.map(l => l.id))
+            ;[...loopObjects.keys()].forEach(id => { if (!ids.has(id)) removeLoopObject(id) })
+            list.forEach(loop => {
+                if (loopObjects.has(loop.id)) { loopObjects.get(loop.id).loop = loop; return }
+                const from = cityCoordinates[loop.from], to = cityCoordinates[loop.to]
+                if (!from || !to) return
+                const points = arcPoints(from, to)
+                const color = LOOP_COLORS[loop.kind]
+                const line = new THREE.Line(
+                    new THREE.BufferGeometry().setFromPoints(points),
+                    new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.4, depthWrite: false })
+                )
+                const pod = new THREE.Mesh(new THREE.SphereGeometry(0.008, 12, 12), new THREE.MeshBasicMaterial({ color }))
+                loopGroup.add(line, pod)
+                loopObjects.set(loop.id, { line, pod, points, loop })
+            })
+            syncedLoops = list
+        }
+        const placePods = () => {
+            const now = Date.now()
+            const hovered = hoveredLoopRef.current
+            const pulse = 1 + 0.2 * Math.sin(now / 250)
+            loopObjects.forEach(o => {
+                const { startTs, endTs } = o.loop
+                const progress = Math.min(1, Math.max(0, (now - startTs) / Math.max(1, endTs - startTs)))
+                const f = progress * (o.points.length - 1)
+                const i = Math.floor(f)
+                o.pod.position.copy(o.points[i]).lerp(o.points[Math.min(i + 1, o.points.length - 1)], f - i)
+                const isHovered = hovered === o.loop.id
+                o.line.material.opacity = hovered ? (isHovered ? 1 : 0.12) : 0.4
+                o.pod.scale.setScalar((isHovered ? 1.8 : 1) * pulse)
+            })
+        }
+
+        // Turning to face a loop eases the camera round instead of jumping
+        let camTarget = null
+        focusLoopRef.current = (id) => {
+            const o = loopObjects.get(id)
+            if (!o) return
+            const p = o.pod.position.clone().normalize()
+            camTarget = { lon: THREE.MathUtils.radToDeg(Math.atan2(p.x, p.z)), lat: THREE.MathUtils.radToDeg(Math.asin(p.y)) }
+        }
+        const easeCamera = () => {
+            if (!camTarget) return
+            const dLon = ((camTarget.lon - camLon + 540) % 360) - 180
+            const dLat = camTarget.lat - camLat
+            if (Math.abs(dLon) < 0.05 && Math.abs(dLat) < 0.05) { camTarget = null; return }
+            camLon += dLon * 0.12
+            camLat = Math.max(-85, Math.min(85, camLat + dLat * 0.12))
+            updateCamera()
+        }
+
         const raycaster = new THREE.Raycaster()
         raycaster.params.Sprite = { threshold: 0.05 }
         const mouse = new THREE.Vector2()
@@ -304,6 +439,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         }
         const onPointerDown = (e) => {
             if (e.pointerType === 'mouse' && e.button !== 0) return
+            camTarget = null // grabbing the globe stops it turning to a loop
             pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
             if (pointers.size === 1) {
                 isDragging = true
@@ -400,12 +536,23 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         let animFrameId
         const animate = () => {
             animFrameId = requestAnimationFrame(animate)
+            easeCamera()
             camPos.copy(camera.position).normalize()
+            const loopsView = globeViewRef.current === 'loops'
+            const loopCities = loopCityNamesRef.current
             sprites.forEach(sprite => {
                 const facingCamera = sprite.userData.surfaceNormal.dot(camPos) > 0.1
-                const hiddenByToggle = !showOwnedRef.current && !sprite.userData.isPurchased
-                sprite.visible = facingCamera && !hiddenByToggle
+                // Active Loops shows only the cities with a loop running (and home); Connections can hide unowned ones
+                const shown = loopsView
+                    ? loopCities.has(sprite.userData.city.name)
+                    : showOwnedRef.current || sprite.userData.isPurchased
+                sprite.visible = facingCamera && shown
             })
+            loopGroup.visible = loopsView
+            if (loopsView) {
+                if (syncedLoops !== loopsRef.current) syncLoops()
+                placePods()
+            }
             renderer.render(scene, camera)
         }
         animate()
@@ -432,6 +579,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             // renderer that draws it leaves a listener on that shape; disposing it removes those listeners. Without this,
             // every visit to Home kept the old globe's renderer in memory, about 100 KB each (bug #183).
             disposed = true
+            focusLoopRef.current = null
             scene.traverse(obj => {
                 obj.geometry?.dispose()
                 const materials = Array.isArray(obj.material) ? obj.material : obj.material ? [obj.material] : []
@@ -450,20 +598,103 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
                 <p className="globe-cities">{purchasedCitiesCount} {purchasedCitiesCount === 1 ? 'city' : 'cities'} connected</p>
             </div>
-            <button
-                className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
-                onMouseEnter={() => playHoverSound()}
-                onClick={() => {
-                    playClickSound2()
-                    setShowOwned(prev => {
-                        showOwnedRef.current = !prev
-                        try { localStorage.setItem('globeShowOwned', String(!prev)) } catch { /* storage blocked, ignore */ }
-                        return !prev
-                    })
-                }}
-            >
-                {showOwned ? '👁 All cities' : '👁 Owned only'}
-            </button>
+            <div className="globe-right-controls">
+                <div className="globe-view-switch" role="tablist" aria-label="Globe view">
+                    <button
+                        role="tab"
+                        aria-selected={globeView === 'connections'}
+                        className={`globe-view-btn ${globeView === 'connections' ? 'globe-view-btn-active' : ''}`}
+                        onMouseEnter={() => { if (globeView !== 'connections') playHoverSound() }}
+                        onClick={() => chooseView('connections')}
+                    >Connections</button>
+                    <button
+                        role="tab"
+                        aria-selected={globeView === 'loops'}
+                        className={`globe-view-btn ${globeView === 'loops' ? 'globe-view-btn-active' : ''}`}
+                        onMouseEnter={() => { if (globeView !== 'loops') playHoverSound() }}
+                        onClick={() => chooseView('loops')}
+                    >Active Loops{loops.length > 0 && <span className="globe-view-count">{loops.length}</span>}</button>
+                </div>
+                {globeView === 'connections' && (
+                    <button
+                        className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
+                        onMouseEnter={() => playHoverSound()}
+                        onClick={() => {
+                            playClickSound2()
+                            setShowOwned(prev => {
+                                showOwnedRef.current = !prev
+                                try { localStorage.setItem('globeShowOwned', String(!prev)) } catch { /* storage blocked, ignore */ }
+                                return !prev
+                            })
+                        }}
+                    >
+                        {showOwned ? '👁 All cities' : '👁 Owned only'}
+                    </button>
+                )}
+                {globeView === 'loops' && (
+                    <div className="loops-panel">
+                        <button
+                            className="loops-panel-header"
+                            aria-expanded={panelOpen}
+                            onMouseEnter={() => playHoverSound()}
+                            onClick={() => {
+                                playClickSound2()
+                                setPanelOpen(prev => {
+                                    try { localStorage.setItem(PANEL_KEY, String(!prev)) } catch { /* storage blocked, ignore */ }
+                                    return !prev
+                                })
+                            }}
+                        >
+                            <span className={`loops-live-dot ${loops.length > 0 ? 'loops-live-dot-on' : ''}`} />
+                            <span className="loops-panel-title">
+                                {loops.length === 0 ? 'No loops running' : `${loops.length} ${loops.length === 1 ? 'loop' : 'loops'} running`}
+                                {loops.length > 0 && (
+                                    <span className="loops-panel-next">Next in: {loops[0].kind === 'arrival' ? loops[0].from : loops[0].to}, {formatClock(loops[0].endTs)}</span>
+                                )}
+                            </span>
+                            <span className="loops-panel-caret">{panelOpen ? '▾' : '▸'}</span>
+                        </button>
+                        {panelOpen && (
+                            loops.length === 0 ? (
+                                <p className="loops-empty">
+                                    {purchasedCitiesCount <= 1
+                                        ? 'Connect another city to start running loops.'
+                                        : 'No loops are travelling right now. Check the Terminal Board for the next one.'}
+                                </p>
+                            ) : (
+                                <ul className="loops-list" onMouseLeave={() => hoverLoop(null)}>
+                                    {loops.map(loop => {
+                                        const progress = Math.min(100, Math.max(0, ((nowMs - loop.startTs) / Math.max(1, loop.endTs - loop.startTs)) * 100))
+                                        const fromFlag = countryFlags[loop.fromCountry], toFlag = countryFlags[loop.toCountry]
+                                        return (
+                                            <li
+                                                key={loop.id}
+                                                className={`loop-row loop-row-${loop.kind} ${hoveredLoopId === loop.id ? 'loop-row-hovered' : ''}`}
+                                                onMouseEnter={() => hoverLoop(loop.id)}
+                                                onClick={() => { playClickSound2(); hoverLoop(loop.id); focusLoopRef.current?.(loop.id) }}
+                                            >
+                                                <div className="loop-route">
+                                                    {fromFlag && <img src={flagSrc(fromFlag)} alt="" className="loop-flag" />}
+                                                    <span className="loop-city">{loop.from}</span>
+                                                    <span className="loop-arrow">→</span>
+                                                    {toFlag && <img src={flagSrc(toFlag)} alt="" className="loop-flag" />}
+                                                    <span className="loop-city">{loop.to}</span>
+                                                    <span className="loop-tag">{loop.kind === 'arrival' ? 'ARR' : 'DEP'}</span>
+                                                </div>
+                                                <div className="loop-bar"><div className="loop-bar-fill" style={{ width: `${progress}%` }} /></div>
+                                                <div className="loop-eta">
+                                                    {loop.delayed && <span className="loop-delayed">DELAYED · </span>}
+                                                    Expected {formatClock(loop.endTs)} · {formatDuration(loop.endTs - nowMs)} left
+                                                </div>
+                                            </li>
+                                        )
+                                    })}
+                                </ul>
+                            )
+                        )}
+                    </div>
+                )}
+            </div>
             {!globeReady && (
                 <div className="globe-loading">
                     <p>Loading globe...</p>

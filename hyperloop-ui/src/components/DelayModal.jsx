@@ -25,10 +25,12 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
                 <p className="delay-header"><img src={warningIcon} alt="warning" style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '0' }} />LOOP DELAYED</p>
                 <div className="delay-divider">━━━━━━━━━━━━━━━━━━━━</div>
                 <p className="delay-message">
-                    The <strong>{delay.originalTime}</strong> loop to <strong>{delay.name}</strong> has been delayed due to unforeseen circumstances.
+                    {delay.kind === 'arrival'
+                        ? <>The <strong>{delay.originalTime}</strong> loop from <strong>{delay.name}</strong> has been held up on its way to the terminal.</>
+                        : <>The <strong>{delay.originalTime}</strong> loop to <strong>{delay.name}</strong> has been delayed due to unforeseen circumstances.</>}
                 </p>
                 <p className="delay-newtime">
-                    New departure time: <strong>{delay.newTime}</strong>
+                    {delay.kind === 'arrival' ? 'New arrival time' : 'New departure time'}: <strong>{delay.newTime}</strong>
                 </p>
                 <p className="delay-subtext">
                     Passengers are angry and some are demanding compensation.

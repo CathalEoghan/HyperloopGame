@@ -71,7 +71,7 @@ function removeKeys(keys) {
 function clearDayState() {
     removeKeys(DAY_STATE_KEYS)
     Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('departures_')) localStorage.removeItem(key)
+        if (key.startsWith('departures_') || key.startsWith('arrivals_')) localStorage.removeItem(key)
     })
 }
 

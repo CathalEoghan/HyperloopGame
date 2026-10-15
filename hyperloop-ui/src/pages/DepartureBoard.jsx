@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
 import './DepartureBoard.css'
 import { playSplitFlapLong, playSplitFlapShort, playClickSound2, playHoverSound } from '../utils/sound.js'
-import { minutesUntilDeparture, skipMissingMinutes } from '../utils/time.js'
+import { minutesUntilDeparture } from '../utils/time.js'
+import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus } from '../utils/loops.js'
+
+const TAB_KEY = 'terminalBoardTab'
 
 function getOrdinal(n) {
     const s = ['th', 'st', 'nd', 'rd']
@@ -59,6 +62,11 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
 
 function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     const [schedule, setSchedule] = useState([])
+    const [arrivals, setArrivals] = useState([])
+    // Arrivals or Departures, remembered for next time
+    const [tab, setTab] = useState(() => {
+        try { return localStorage.getItem(TAB_KEY) === 'arrivals' ? 'arrivals' : 'departures' } catch { return 'departures' }
+    })
     const [renderTick, setRenderTick] = useState(0)
     const [lagMap, setLagMap] = useState({})
     const prevStatusRef = useRef({})
@@ -68,72 +76,36 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     const [boardInitialized, setBoardInitialized] = useState(false)
 
     const splitFlapEnabled = () => localStorage.getItem('splitFlap') !== 'false'
+    const homeName = homeCity?.name
 
-    function generateSchedule(cities) {
-        const departureCities = cities.filter(c => !homeCity || c.name !== homeCity.name)
-        const shuffled = [...departureCities].sort(() => Math.random() - 0.5)
-        const selected = shuffled.slice(0, Math.min(100, shuffled.length))
-        const totalMinutes = 24 * 60
-        const minGap = 10
-        const numGates = 30
-        const minGateGap = 30
-        const slotSize = Math.floor(totalMinutes / selected.length)
-        const gateLastUsed = new Array(numGates + 1).fill(-Infinity)
-        const departures = []
-        selected.forEach((city, i) => {
-            const slotStart = i * slotSize
-            const slotEnd = Math.min(slotStart + slotSize, totalMinutes - 1)
-            let minuteOfDay = slotStart + Math.floor(Math.random() * (slotEnd - slotStart))
-            minuteOfDay = Math.floor(minuteOfDay / 5) * 5
-            // Never exactly 00:00: its farewell window would start on the previous day, so no farewell would open
-            minuteOfDay = Math.max(5, minuteOfDay)
-            if (departures.length > 0) {
-                const lastTime = departures[departures.length - 1].minuteOfDay
-                if (minuteOfDay - lastTime < minGap) minuteOfDay = Math.ceil((lastTime + minGap) / 5) * 5
-            }
-            minuteOfDay = skipMissingMinutes(minuteOfDay)
-            const availableGates = []
-            for (let g = 1; g <= numGates; g++) {
-                if (minuteOfDay - gateLastUsed[g] >= minGateGap) availableGates.push(g)
-            }
-            let gate
-            if (availableGates.length > 0) {
-                gate = availableGates[Math.floor(Math.random() * availableGates.length)]
-            } else {
-                let earliest = Infinity
-                for (let g = 1; g <= numGates; g++) {
-                    if (gateLastUsed[g] < earliest) { earliest = gateLastUsed[g]; gate = g }
-                }
-            }
-            gateLastUsed[gate] = minuteOfDay
-            const hour = Math.floor(minuteOfDay / 60)
-            const minute = minuteOfDay % 60
-            const timeString = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`
-            departures.push({ name: city.name, country: city.country, time: timeString, hour, minute, minuteOfDay, gate })
-        })
-        return departures.sort((a, b) => a.minuteOfDay - b.minuteOfDay)
+    const chooseTab = (next) => {
+        if (next === tab) return
+        playClickSound2()
+        if (splitFlapEnabled()) playSplitFlapShort()
+        setTab(next)
+        try { localStorage.setItem(TAB_KEY, next) } catch { /* storage blocked, ignore */ }
     }
 
-    const currentCityNames = new Set(purchasedCities.map(c => c.name))
-
+    // Each row flips a moment after the others, like a real board. Keyed by list as well as city: a city can be on both.
+    const rowCount = schedule.length + arrivals.length
     useEffect(() => {
-        if (schedule.length === 0) return
-        const lags = schedule.map(() => 2 + Math.random() * 3.9)
-        const maxIdx = Math.floor(Math.random() * schedule.length)
-        lags[maxIdx] = 6
+        if (rowCount === 0) return
+        const keys = [...schedule.map(e => `dep|${e.name}`), ...arrivals.map(e => `arr|${e.name}`)]
+        const lags = keys.map(() => 2 + Math.random() * 3.9)
+        lags[Math.floor(Math.random() * lags.length)] = 6
         const newMap = {}
-        schedule.forEach((entry, i) => { newMap[entry.name] = lags[i] })
+        keys.forEach((k, i) => { newMap[k] = lags[i] })
         lagMapRef.current = newMap
         setLagMap(newMap)
-    }, [schedule.length])
+    }, [rowCount])
 
     useEffect(() => {
-        if (schedule.length > 0 && !hasPlayedLongRef.current) {
+        if (rowCount > 0 && !hasPlayedLongRef.current) {
             hasPlayedLongRef.current = true
             if (splitFlapEnabled()) longFlapRef.current = playSplitFlapLong()
             setTimeout(() => setBoardInitialized(true), 6500)
         }
-    }, [schedule.length])
+    }, [rowCount])
 
     // Closing the board stops the long flap sound, so opening it again can't layer a second one over it (bug #135)
     useEffect(() => () => {
@@ -143,51 +115,44 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
         hasPlayedLongRef.current = false
     }, [])
 
+    // Today's lists, for the cities still connected, in time order
+    const readLists = () => {
+        const names = new Set(purchasedCities.map(c => c.name))
+        const byTime = (a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute)
+        return {
+            deps: readSchedule(departuresKey()).filter(e => names.has(e.name)).sort(byTime),
+            arrs: readSchedule(arrivalsKey()).filter(e => names.has(e.name)).sort(byTime),
+        }
+    }
+
     useEffect(() => {
         if (!purchasedCities || purchasedCities.length === 0) return
-        const today = new Date().toDateString()
-        const key = `departures_${today}`
-        const saved = localStorage.getItem(key)
-        if (saved) {
-            const parsed = JSON.parse(saved)
-            if (parsed.length > 0 && parsed[0].gate !== undefined) {
-                const filtered = parsed.filter(e => currentCityNames.has(e.name))
-                if (filtered.length > 0) { setSchedule(filtered); return }
-            }
-        }
-        const generated = generateSchedule(purchasedCities)
-        if (generated.length > 0) { localStorage.setItem(key, JSON.stringify(generated)); setSchedule(generated) }
+        ensureSchedules(purchasedCities)
+        const { deps, arrs } = readLists()
+        setSchedule(deps)
+        setArrivals(arrs)
     }, [purchasedCities])
 
     useEffect(() => {
+        const sameList = (next, prev) => next.length === prev.length && next.every((e, i) =>
+            e.name === prev[i].name && e.time === prev[i].time && !!e.delayed === !!prev[i].delayed)
         const interval = setInterval(() => {
-            const today = new Date().toDateString()
-            const saved = localStorage.getItem(`departures_${today}`)
-            if (!saved) return
-            const parsed = JSON.parse(saved)
-            if (!parsed.length) return
             // Read the names now: the cities list is added to in place, so a set made when the board opened would
             // leave out a city connected since (bug #166)
-            const names = new Set(purchasedCities.map(c => c.name))
-            const filtered = parsed.filter(e => names.has(e.name))
+            const { deps, arrs } = readLists()
             const lm = lagMapRef.current
             let anyChanged = false
-            filtered.forEach(entry => {
-                const lag = lm[entry.name] || 0
-                const currentStatus = getStatus(entry.hour, entry.minute, entry.delayed, lag).label
-                const prevStatus = prevStatusRef.current[entry.name]
-                if (prevStatus !== undefined && prevStatus !== currentStatus) {
-                    anyChanged = true
-                    if (splitFlapEnabled()) playSplitFlapShort()
-                }
-                prevStatusRef.current[entry.name] = currentStatus
-            })
+            const note = (key, label) => {
+                const prevStatus = prevStatusRef.current[key]
+                if (prevStatus !== undefined && prevStatus !== label) anyChanged = true
+                prevStatusRef.current[key] = label
+            }
+            deps.forEach(e => note(`dep|${e.name}`, getStatus(e.hour, e.minute, e.delayed, lm[`dep|${e.name}`] || 0).label))
+            arrs.forEach(e => note(`arr|${e.name}`, getArrivalStatus(e, homeName, Date.now(), lm[`arr|${e.name}`] || 0).label))
+            if (anyChanged && splitFlapEnabled()) playSplitFlapShort()
             // The stored schedule is the truth: a delay, a city connected or disconnected, or a new day all show straight away (bug #166)
-            setSchedule(prev => {
-                const next = [...filtered].sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute))
-                const same = next.length === prev.length && next.every((e, i) => e.name === prev[i].name && e.time === prev[i].time && !!e.delayed === !!prev[i].delayed)
-                return same ? prev : next
-            })
+            setSchedule(prev => sameList(deps, prev) ? prev : deps)
+            setArrivals(prev => sameList(arrs, prev) ? prev : arrs)
             if (anyChanged) setRenderTick(t => t + 1)
         }, 1000)
         return () => clearInterval(interval)
@@ -199,15 +164,19 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
     const month = now.toLocaleDateString('en-GB', { month: 'long' })
     const year = now.getFullYear()
     const today = `for ${weekday}, ${day} ${month} ${year}`
+    const isArrivals = tab === 'arrivals'
+    const list = isArrivals ? arrivals : schedule
 
     const { pairs, destWidth } = React.useMemo(() => {
-        const half = Math.ceil(schedule.length / 2)
-        const left = schedule.slice(0, half)
-        const right = schedule.slice(half)
+        const half = Math.ceil(list.length / 2)
+        const left = list.slice(0, half)
+        const right = list.slice(half)
         const pairs = Array.from({ length: half }, (_, i) => [left[i], right[i]])
-        const destWidth = Math.max(...(schedule.length > 0 ? schedule.map(e => e.name.length) : [8]), 8)
+        // The same width on both tabs, so switching doesn't make the board jump
+        const all = [...schedule, ...arrivals]
+        const destWidth = Math.max(...(all.length > 0 ? all.map(e => e.name.length) : [8]), 8)
         return { pairs, destWidth }
-    }, [schedule, renderTick])
+    }, [list, schedule, arrivals, renderTick])
 
     const renderCells = (entry) => {
         const enabled = splitFlapEnabled()
@@ -219,10 +188,15 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                 <td className="flip-cell board-col-inner"><div className="flip-card"><StaticText text={'-'.repeat(STATUS_WIDTH)} /></div></td>
             </>
         )
-        const lag = lagMap[entry.name] || 0
-        const status = getStatus(entry.hour, entry.minute, entry.delayed, lag)
-        const isGone = status.label === 'DEPARTED'
-        const showGate = status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
+        const lag = lagMap[`${isArrivals ? 'arr' : 'dep'}|${entry.name}`] || 0
+        const status = isArrivals
+            ? getArrivalStatus(entry, homeName, undefined, lag)
+            : getStatus(entry.hour, entry.minute, entry.delayed, lag)
+        const isGone = isArrivals ? !!status.gone : status.label === 'DEPARTED'
+        // An arrival's gate goes up as it gets close, like a departure's when it's time to go to the gate
+        const showGate = isArrivals
+            ? status.label === 'ARRIVING' || status.label === 'ARRIVED'
+            : status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
         const gateText = padText(showGate ? `-${String(entry.gate).padStart(2, '0')}` : '---', GATE_WIDTH)
         return (
             <>
@@ -254,8 +228,22 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
 
     return (
         <div className="departure-board">
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                <h2 className="board-title" style={{ margin: 0 }}>Departures {today}</h2>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', gap: '12px', flexWrap: 'wrap' }}>
+                <div className="board-heading">
+                    <div className="board-tabs" role="tablist" aria-label="Terminal Board">
+                        {[['arrivals', 'ARRIVALS'], ['departures', 'DEPARTURES']].map(([id, label]) => (
+                            <button
+                                key={id}
+                                role="tab"
+                                aria-selected={tab === id}
+                                className={`board-tab${tab === id ? ' board-tab-active' : ''}`}
+                                onMouseEnter={() => { if (tab !== id) playHoverSound() }}
+                                onClick={() => chooseTab(id)}
+                            >{label}</button>
+                        ))}
+                    </div>
+                    <h2 className="board-title" style={{ margin: 0 }}>{isArrivals ? 'Arrivals' : 'Departures'} {today}</h2>
+                </div>
                 {onClose && (
                     <button onClick={() => { playClickSound2(); onClose() }} style={{
                         background: 'none', border: '1px solid #444', color: '#888',
@@ -268,25 +256,25 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
                     >✕ CLOSE</button>
                 )}
             </div>
-            {schedule.length === 0 ? (
+            {list.length === 0 ? (
                 purchasedCities.length <= 1 ? (
                     <p style={{ color: '#f5a623', fontFamily: 'Courier New', marginTop: '24px' }}>
-                        Connect more cities to unlock departures!
+                        Connect more cities to unlock {isArrivals ? 'arrivals' : 'departures'}!
                     </p>
                 ) : (
-                    <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>Loading departures...</p>
+                    <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>{isArrivals ? 'Loading arrivals...' : 'Loading departures...'}</p>
                 )
             ) : (
-                <table className="board-table">
+                <table className="board-table" key={tab}>
                     <thead>
                         <tr>
-                            <td className="board-header">DESTINATION</td>
-                            <td className="board-header board-col-inner">DEPARTS</td>
+                            <td className="board-header">{isArrivals ? 'FROM' : 'DESTINATION'}</td>
+                            <td className="board-header board-col-inner">{isArrivals ? 'ARRIVES' : 'DEPARTS'}</td>
                             <td className="board-header board-col-inner">GATE</td>
                             <td className="board-header board-col-inner">STATUS</td>
                             <td className="board-col-divider board-header"></td>
-                            <td className="board-header">DESTINATION</td>
-                            <td className="board-header board-col-inner">DEPARTS</td>
+                            <td className="board-header">{isArrivals ? 'FROM' : 'DESTINATION'}</td>
+                            <td className="board-header board-col-inner">{isArrivals ? 'ARRIVES' : 'DEPARTS'}</td>
                             <td className="board-header board-col-inner">GATE</td>
                             <td className="board-header board-col-inner">STATUS</td>
                         </tr>

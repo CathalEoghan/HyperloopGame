@@ -44,8 +44,10 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const isUrgent = secondsLeft <= 60
 
     const flagCode = countryFlags[departure.country]
+    // An arriving loop uses the same popup, to greet its passengers instead of saying goodbye
+    const isArrival = departure.kind === 'arrival'
     // The board shows GATE CLOSED for the last 5 minutes, so the announcement matches it
-    const gateClosed = minutesUntilDeparture(departure) <= 5
+    const gateClosed = !isArrival && minutesUntilDeparture(departure) <= 5
     const repGain = economyManager ? economyManager.getFarewellRepGain(5, !!departure.vip) : 5
 
     const accept = () => {
@@ -69,7 +71,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     return (
         <div className="farewell-overlay">
             <div className="farewell-modal" data-vip={departure.vip ? 'true' : undefined}>
-                <p className="farewell-attention">{departure.vip ? 'VIP PASSENGER' : 'ATTENTION'}</p>
+                <p className="farewell-attention">{departure.vip ? (isArrival ? 'VIP ARRIVAL' : 'VIP PASSENGER') : (isArrival ? 'NOW ARRIVED' : 'ATTENTION')}</p>
                 <div className="farewell-divider">━━━━━━━━━━━━━━━━━━━━</div>
                 <div className="farewell-destination">
                     {flagCode && (
@@ -82,7 +84,11 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                     <span className="farewell-city-name">{departure.name}</span>
                 </div>
                 <p className="farewell-message">
-                    {departure.vip
+                    {isArrival
+                        ? (departure.vip
+                            ? <>A VIP has just arrived from <strong>{departure.name}</strong> at Gate <strong>{departure.gate}</strong>. Make sure they get a very special welcome.</>
+                            : <>The loop from <strong>{departure.name}</strong> has arrived at Gate <strong>{departure.gate}</strong>. Passengers are making their way through the terminal.</>)
+                    : departure.vip
                         ? (gateClosed
                             ? <>A VIP is on board the flight to <strong>{departure.name}</strong>, and Gate <strong>{departure.gate}</strong> has just closed. There is still time to give them a very special farewell.</>
                             : <>A VIP is about to depart for <strong>{departure.name}</strong> from Gate <strong>{departure.gate}</strong>. Don't let them leave without a very special farewell.</>)
@@ -95,7 +101,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 </p>
                 {autoSend ? (
                     <p className="farewell-message" data-testid="video-message">
-                        🎥 Sending your video message… (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
+                        🎥 Sending your video {isArrival ? 'welcome' : 'message'}… (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
                     </p>
                 ) : (
                     <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={() => {
@@ -103,7 +109,9 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                         sentRef.current = true
                         accept()
                     }}>
-                        {departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell'} (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
+                        {isArrival
+                            ? (departure.vip ? 'Give a VIP welcome' : 'Greet the passengers')
+                            : (departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell')} (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
                     </button>
                 )}
             </div>
