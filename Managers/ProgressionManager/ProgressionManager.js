@@ -46,6 +46,8 @@ export class ProgressionManager {
         this.developmentUpgradeLevels = {};
         // Custom names players have given developments: original name -> custom name. Only ever used for display.
         this.developmentNames = {};
+        // Arriving loops greeted in this run (a prestige starts it again, like the farewell count)
+        this.greetingsGiven = 0;
     }
 
     unlockReward(reward) {

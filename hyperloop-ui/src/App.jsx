@@ -50,7 +50,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
-import { ensureSchedules, injectCityIntoSchedules, pruneSchedules, arrivalsKey, readSchedule, writeSchedule, entryTimestamp, entryDuration, ARRIVAL_DELAY_MAX_MINUTES } from './utils/loops.js'
+import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, readSchedule, writeSchedule, entryTimestamp, entryDuration, ARRIVAL_DELAY_MAX_MINUTES } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -298,6 +298,8 @@ function App() {
         setBalance(progressionManager.balance);
       }
       achievements.addCounter('greetings');
+      progressionManager.greetingsGiven += 1;
+      if (dep?.vip) unlockAchievement('veryImportantPerson');
       triggerSave();
       finishDeparture(dep);
       return;
@@ -464,6 +466,7 @@ function App() {
   const prevRank = useRef(rankManager.rank);
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
   const lastTickTimeRef = useRef(Date.now());
+  const playtimePending = useRef(0);
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
   const lastModalClearedAt = useRef(Date.now() + 180000);
   const lastEventTime = useRef(Date.now());
@@ -594,6 +597,14 @@ function App() {
   function ensureTodaySchedule() {
     if (blockedRef.current) return;
     ensureSchedules(progressionManager.purchasedCities);
+    countLoops();
+  }
+  // Adds the departures and arrivals that have happened since the last count (including while the game was closed)
+  // to the lifetime totals on the Progress page.
+  function countLoops() {
+    const gained = tallyLoops(progressionManager.purchasedCities);
+    if (gained.departure > 0) achievements.addCounter('departures', gained.departure);
+    if (gained.arrival > 0) achievements.addCounter('arrivals', gained.arrival);
   }
   useEffect(() => { ensureTodaySchedule(); }, []);
 
@@ -749,6 +760,17 @@ function App() {
       // Nothing is earned until the welcome popup has been closed; the time in between is simply not counted.
       const onboarding = onboardingPending();
       let elapsed = onboarding ? 0 : gap;
+      // Total playtime: the time the game is open, kept for good (a long gap is the game being closed, not played).
+      // Written every 10 seconds rather than every tick.
+      if (!onboarding && gap <= LONG_GAP_SECONDS) {
+        playtimePending.current += gap;
+        if (playtimePending.current >= 10) {
+          const whole = Math.floor(playtimePending.current);
+          playtimePending.current -= whole;
+          achievements.addCounter('playtime', whole);
+        }
+      }
+      if (tickCount.current % 10 === 0 && !blockedRef.current) countLoops();
       if (gap > LONG_GAP_SECONDS && !onboarding) {
         elapsed = 0;
         constructionManager.update();
@@ -980,6 +1002,7 @@ function App() {
         // A new day while the game is open: build its schedule and offer the daily bonus (bug #66),
         // and drop earlier days' schedules so they don't pile up in storage (bug #78).
         // Yesterday's departures are kept: some of those loops are still travelling (they show on the globe).
+        countLoops();   // before the old days are cleared away
         pruneSchedules(now.getTime());
         ensureTodaySchedule();
         checkDailyLogin();

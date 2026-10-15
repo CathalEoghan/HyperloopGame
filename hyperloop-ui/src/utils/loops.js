@@ -282,3 +282,53 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
     })
     return loops.sort((a, b) => a.endTs - b.endTs)
 }
+
+
+// ---- Totals ----
+
+const COUNTED_KEY = 'hyperloop_loop_counted'
+
+// How many of a day's loops have run by `nowMs`, going by that day's schedule
+function elapsedOnDay(kind, dayMs, nowMs) {
+    const list = readSchedule(scheduleKey(kind, dayMs))
+    return { total: list.length, elapsed: list.filter(e => entryTimestamp(e, dayMs) <= nowMs).length, known: list.length > 0 }
+}
+
+// Counts the departures and arrivals that have happened since the last time this ran, including the ones while the
+// game was closed, and returns how many are new: { departure, arrival }. Schedules are stored per day, so a day
+// whose schedule has been cleared away (a long time away) counts as a full day of the loops a schedule would have had.
+// The first run only starts the count; nothing from before it is added.
+export function tallyLoops(purchasedCities, nowMs = Date.now()) {
+    const result = { departure: 0, arrival: 0 }
+    if (!purchasedCities || purchasedCities.length <= 1) return result
+    let state = {}
+    try { state = JSON.parse(localStorage.getItem(COUNTED_KEY) || '{}') || {} } catch { state = {} }
+    const today = dayKey(nowMs)
+    const perDay = Math.min(SCHEDULE_CAP, purchasedCities.length - 1)
+    ;['departure', 'arrival'].forEach(kind => {
+        const now = elapsedOnDay(kind, nowMs, nowMs)
+        const previous = state[kind]
+        if (previous && typeof previous.day === 'string' && Number.isFinite(previous.n)) {
+            // The days from the last count up to today, oldest first (limited to a year)
+            const startMs = new Date(previous.day).getTime()
+            if (Number.isFinite(startMs)) {
+                let gained = 0
+                let dayMs = shiftDays(startMs, 0)
+                for (let i = 0; i < 366 && dayKey(dayMs) !== today; i++) {
+                    const isStored = dayKey(dayMs) === previous.day
+                    const day = elapsedOnDay(kind, dayMs, Infinity)
+                    // Where the schedule is gone, use what was last seen for that day, or what a schedule would hold
+                    const full = day.known ? day.total : (isStored && Number.isFinite(previous.len) ? previous.len : perDay)
+                    gained += Math.max(0, full - (isStored ? previous.n : 0))
+                    dayMs = shiftDays(dayMs, 1)
+                }
+                // Today (when the last count was today too, only what is new since)
+                gained += Math.max(0, now.elapsed - (previous.day === today ? previous.n : 0))
+                result[kind] = gained
+            }
+        }
+        state[kind] = { day: today, n: Math.max(now.elapsed, previous?.day === today && Number.isFinite(previous.n) ? previous.n : 0), len: now.total }
+    })
+    try { localStorage.setItem(COUNTED_KEY, JSON.stringify(state)) } catch { /* storage full */ }
+    return result
+}

@@ -49,6 +49,8 @@ const AUX_KEYS = [
     'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
     'hyperloop_progress_collapsed',
+    // Where the departure and arrival totals had got to, so the same loops aren't counted twice
+    'hyperloop_loop_counted',
     // This run's manual Work clicks, for Livestream Everything. Part of the run: a prestige starts it again.
     'hyperloop_livestream_clicks',
 ]
@@ -93,6 +95,7 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
     'hyperloop_progress_collapsed',
+    'hyperloop_loop_counted',
     'hyperloop_hyperlink_liked',
     'hyperloop_last_login',
     'hyperloop_last_farewell_date',
@@ -211,6 +214,7 @@ function validateSave(save) {
     if (save.terminalName !== undefined && typeof save.terminalName !== 'string') return false
     if (save.createdAt !== undefined && !(Number.isFinite(save.createdAt) && save.createdAt > 0)) return false
     if (save.farewellsGiven !== undefined && !(Number.isFinite(save.farewellsGiven) && save.farewellsGiven >= 0)) return false
+    if (save.greetingsGiven !== undefined && !(Number.isFinite(save.greetingsGiven) && save.greetingsGiven >= 0)) return false
     if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
     // No upper limit on balance or reputation: the game has none, so a long-running save must import (bug #114).
     // Custom development names must be text. Which developments they belong to isn't checked here: a development renamed
@@ -256,6 +260,7 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
         timestamp: Date.now(),
         terminalName,
         farewellsGiven: farewellsGiven ?? 0,
+        greetingsGiven: progressionManager.greetingsGiven ?? 0,
         balance: progressionManager.balance,
         reputation: progressionManager.reputation,
         totalCashEarned: progressionManager.totalCashEarned,
@@ -376,6 +381,7 @@ export function loadGame(progressionManager, rankManager) {
         })
 
         progressionManager.developmentUpgradeLevels = save.developmentUpgradeLevels || {}
+        progressionManager.greetingsGiven = Number.isFinite(save.greetingsGiven) && save.greetingsGiven >= 0 ? Math.floor(save.greetingsGiven) : 0
 
         // Custom names only count for developments that are built, and are cleaned the same way as when typed
         const customNames = {}

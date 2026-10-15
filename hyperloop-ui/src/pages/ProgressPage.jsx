@@ -71,6 +71,17 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         return parts.join(' ') || 'Just started'
     }
 
+    const playtimeText = (totalSeconds) => {
+        const days = Math.floor(totalSeconds / 86400)
+        const h = Math.floor((totalSeconds % 86400) / 3600)
+        const m = Math.floor((totalSeconds % 3600) / 60)
+        const parts = []
+        if (days > 0) parts.push(`${days} ${days === 1 ? 'day' : 'days'}`)
+        if (h > 0) parts.push(`${h} ${h === 1 ? 'hour' : 'hours'}`)
+        if (m > 0 && days === 0) parts.push(`${m} ${m === 1 ? 'minute' : 'minutes'}`)
+        return parts.join(' ') || 'Under a minute'
+    }
+
     const formatPopulation = (pop) => {
         if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
         if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
@@ -171,6 +182,12 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
         { label: 'Total revenue', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
         { label: 'Personal farewells given', value: farewellsGiven ?? 0 },
+        { label: 'Greets given', value: economyManager.progressionManager.greetingsGiven ?? 0 },
+        // Every departure and arrival that has happened, including the ones while you were away. Kept through a prestige.
+        { label: 'Total number of departures', value: (achievementManager?.counter('departures') ?? 0).toLocaleString('en-GB') },
+        { label: 'Total number of arrivals', value: (achievementManager?.counter('arrivals') ?? 0).toLocaleString('en-GB') },
+        // Time the game has been open across every run (Terminal age is this run only)
+        { label: 'Total playtime', value: playtimeText(achievementManager?.counter('playtime') ?? 0) },
         // Straight from the connected cities, so a disconnect shows at once
         { label: 'Unique cities connected', value: new Set(purchasedCities.map(c => c.name)).size },
         { label: 'Unique countries connected', value: new Set(purchasedCities.map(c => c.country)).size },
