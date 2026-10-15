@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, Fragment } from 'react'
 import BoostTooltip from '../components/BoostTooltip.jsx'
 import IncomeRow from '../components/IncomeRow.jsx'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
@@ -357,13 +357,23 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             const income = selectedDevelopment.revenue ? economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment)) : 0
                                             const level = getLevel(selectedDevelopment)
                                             const canAfford = removal.amicable || progressionManager.reputation >= removal.repCost
+                                            // What removing it costs you, listed in plain terms rather than lumping a future rebuild cost in as if it were also "lost"
+                                            const losses = []
+                                            if (income > 0) losses.push(<><strong>£{Math.round(income).toLocaleString('en-GB')}/day</strong> income</>)
+                                            if (level > 0) losses.push(<>its upgrade level (<strong>LVL {level}</strong>)</>)
+                                            if (isRenamed(selectedDevelopment)) losses.push(<>its name</>)
                                             return (
                                                 <>
                                                     <p style={{ color: '#c0392b', fontWeight: 'bold', fontSize: '0.85rem', margin: '12px 0 4px' }}>
                                                         Remove {nameOf(selectedDevelopment)}?
                                                     </p>
                                                     <p style={{ fontSize: '0.8rem', color: '#555', margin: '0 0 8px' }}>
-                                                        It goes back to Available to build. You lose its {income > 0 && <><strong>£{Math.round(income).toLocaleString('en-GB')}/day</strong> income, </>}{level > 0 && <>its upgrade level (<strong>LVL {level}</strong>), </>}{isRenamed(selectedDevelopment) ? <>its name, and </> : null}the cost of building it again.
+                                                        It goes back to Available to build{losses.length > 0 && <>, losing {losses.map((piece, i) => (
+                                                            <Fragment key={i}>
+                                                                {i > 0 && (i === losses.length - 1 ? ' and ' : ', ')}
+                                                                {piece}
+                                                            </Fragment>
+                                                        ))}</>}. You'll have to pay full price to build it again.
                                                     </p>
                                                     <button
                                                         className="closeButton danger"
