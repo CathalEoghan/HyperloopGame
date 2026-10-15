@@ -1484,8 +1484,8 @@ function App() {
           onSave={triggerSave}
           onRename={(development) => {
             unlockAchievement('underNewManagement')
-            // name is the original (e.g. "Pharmacy"); developmentName is the player's new name
-            const renamedData = { name: development.name, development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined }
+            // development is the original category (e.g. "Pharmacy"); developmentName is the player's new name
+            const renamedData = { development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined }
             hyperLinkTriggerRef.current = { type: 'development_renamed', data: renamedData }
             setHyperLinkTrigger({ type: 'development_renamed', data: renamedData })
           }}

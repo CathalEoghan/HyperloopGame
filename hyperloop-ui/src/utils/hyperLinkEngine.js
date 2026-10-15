@@ -363,8 +363,6 @@ function substituteText(text, data, gameState) {
         // {terminalName}) is inserted with a function so a '$' in a chosen name can't be read as a pattern.
         // A development that was never renamed has no name of its own, so it reads as "the pharmacy".
         .replace(/\{developmentName\}/g, () => data.developmentName || (data.development ? 'the ' + inPost(data.development) : 'the development'))
-        // {name} is a development's original name (used by the renamed-development posts)
-        .replace(/\{name\}/g, () => data.name || 'the development')
         .replace(/\{currentTime\}/g, now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
         .replace(/\{cityCount\}/g, purchasedCities.length)
 }
