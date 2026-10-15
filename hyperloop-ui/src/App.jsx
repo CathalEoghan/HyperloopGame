@@ -611,10 +611,13 @@ function App() {
     if (gained.miles >= 1) achievements.addCounter('miles', Math.round(gained.miles));
   }
   useEffect(() => { ensureTodaySchedule(); }, []);
-  // Closing the game keeps the playtime since the last 10-second write
+  // Closing the game keeps the playtime since the last 10-second write. Not while leaving for Delete Save or
+  // Import: the achievements instance's in-memory counters are already stale once clearGameState() or an
+  // import has rewritten storage underneath it, and writing them back would undo the reset (bug #184: a new
+  // game had last run's achievement counters, because this still-pending flush wrote them straight back).
   useEffect(() => {
     const flush = () => {
-      if (blockedRef.current) return;
+      if (blockedRef.current || leavingRef.current) return;
       const whole = Math.floor(playtimePending.current);
       if (whole > 0) { playtimePending.current -= whole; achievements.addCounter('playtime', whole); }
     };
