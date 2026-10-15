@@ -84,7 +84,17 @@ export function playDevelopmentUnlockedSound()  { play(developmentUnlocked) }
 export function playDailyLoginSound()           { play(dailyLoginSound) }
 export function playNotEnoughFundsSound()       { play(notEnoughFundsSound) }
 export function playSplitFlapLong()  { return play(splitFlapLong) }
-export function playSplitFlapShort() { play(splitFlapShort) }
+
+// One shared clack, reused and restarted from the top on every call. Switching tabs on the Terminal Board fires
+// this a lot in quick succession; a fresh Audio() each time used to leave the old copies playing underneath,
+// which piled up into a buzzing drone instead of a single clean clack per switch.
+let shortFlapAudio = null
+export function playSplitFlapShort() {
+    if (!canPlay()) return
+    if (!shortFlapAudio) shortFlapAudio = new Audio(splitFlapShort)
+    shortFlapAudio.currentTime = 0
+    shortFlapAudio.play().catch(() => {})
+}
 export function playPhoneNotificationSound() { play(phoneNotificationSound) }
 export function playDepartureBoardSound() {
     if (!canPlay()) return null
