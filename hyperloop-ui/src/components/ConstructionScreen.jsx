@@ -47,29 +47,33 @@ function ConstructionScreen({ city, isComplete, onEnter }) {
             className={`construction-screen ${fading ? 'construction-fading' : ''} ${isComplete ? 'construction-clickable' : ''}`}
             onClick={handleEnter}
         >
-            <div className="construction-logo"><img src={officialLogo} alt="Hyperloop Empire" /></div>
-            <img
-                className={`construction-city-img ${isComplete ? 'construction-img-ready' : ''}`}
-                src={cityThumbnails[city.name] || cityImages[city.name]}
-                alt={city.name}
-            />
-            <div className="construction-text">
-                {isComplete ? (
-                    <>
-                        <h2 className="construction-title">{city.name} is ready!</h2>
-                        <p className="construction-subtitle">Your terminal is open for business.</p>
-                        <p className="construction-enter">Click anywhere to enter</p>
-                    </>
-                ) : (
-                    <>
-                        <h2 className="construction-title">
-                            Building your terminal in {city.name}
-                            <span className="construction-dots"><span>.</span><span>.</span><span>.</span></span>
-                        </h2>
-                        <p className="construction-subtitle">Connecting {city.name} to the hyperloop network</p>
-                    </>
-                )}
+            <div className="construction-main">
+                <div className="construction-logo"><img src={officialLogo} alt="Hyperloop Empire" /></div>
+                <img
+                    className={`construction-city-img ${isComplete ? 'construction-img-ready' : ''}`}
+                    src={cityThumbnails[city.name] || cityImages[city.name]}
+                    alt={city.name}
+                />
+                <div className="construction-text">
+                    {isComplete ? (
+                        <>
+                            <h2 className="construction-title">{city.name} is ready!</h2>
+                            <p className="construction-subtitle">Your terminal is open for business.</p>
+                            <p className="construction-enter">Click anywhere to enter</p>
+                        </>
+                    ) : (
+                        <>
+                            <h2 className="construction-title">
+                                Building your terminal in {city.name}
+                                <span className="construction-dots"><span>.</span><span>.</span><span>.</span></span>
+                            </h2>
+                            <p className="construction-subtitle">Connecting {city.name} to the hyperloop network</p>
+                        </>
+                    )}
+                </div>
             </div>
+            {/* In normal document flow (not absolutely positioned over the text above), so the ready state's
+                extra "Click anywhere to enter" line can never land underneath it (bug #185). */}
             <div className={`construction-tip ${tipVisible ? 'tip-visible' : 'tip-hidden'}`}>
                 <span className="construction-tip-label">TIP</span>
                 <span className="construction-tip-text">{TIPS[tipIndex]}</span>

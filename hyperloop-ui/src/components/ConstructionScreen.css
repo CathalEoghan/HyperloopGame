@@ -4,10 +4,24 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-family: 'Inter', sans-serif;
+    padding: 32px 0;
+    box-sizing: border-box;
+    /* On a short window the logo + city art + text + tip can add up to more than the viewport;
+       scroll instead of clipping anything off-screen (bug #185). */
+    overflow-y: auto;
+}
+
+/* Everything above the tip, centered in whatever space is left once the tip (a normal-flow
+   sibling below it, not absolutely positioned) has taken its share - so the tip never overlaps
+   the "Click anywhere to enter" line that appears once construction finishes (bug #185). */
+.construction-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
     gap: 36px;
-    font-family: 'Inter', sans-serif;
-    position: relative;
 }
 
 .construction-screen.construction-fading {
@@ -27,6 +41,13 @@
 .construction-logo img {
     width: 190px;
     height: 190px;
+    filter: drop-shadow(0 0 20px rgba(245, 166, 35, 0.7));
+    animation: construction-logo-pulse 2s ease-in-out infinite;
+}
+
+@keyframes construction-logo-pulse {
+    0%, 100% { filter: drop-shadow(0 0 14px rgba(245, 166, 35, 0.5)); }
+    50%       { filter: drop-shadow(0 0 26px rgba(245, 166, 35, 0.9)); }
 }
 
 .construction-city-img {
@@ -110,9 +131,9 @@
     border-radius: 56px;
     padding: 12px 28px 12px 16px;
     max-width: 680px;
+    margin-top: 24px;
+    flex-shrink: 0;
     transition: opacity 0.5s ease;
-    position: absolute;
-    bottom: 80px;
 }
 
 .tip-visible { opacity: 1; }
