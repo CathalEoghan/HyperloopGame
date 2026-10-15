@@ -20,12 +20,21 @@
 }
 
 .construction-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
+    font-size: 1.05rem;      /* was 0.8rem */
     font-weight: bold;
     letter-spacing: 3px;
     color: #f5a623;
     text-transform: uppercase;
+}
+
+.construction-logo .brand-icon {
+    width: 34px;             /* was 20px via global rule */
+    height: 34px;
+    margin-right: 0;
 }
 
 .construction-city-img {

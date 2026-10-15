@@ -744,36 +744,34 @@ kovac .soul, Hoài Nam, Los Muertos Crew, Maria Lourdes Peyregne, Suzy Hazelwood
 
 SOUNDS
 
-leavingSound.mp3 - Sound by GraceSoundProductions via Pixabay
-farewellAccept.mp3 - Sound by Universfield via Pixabay
-constructionSound.mp3 - Sound by freesound community via Pixabay
-workClickSound.mp3 - Sound by linhmitto via Pixabay
-openingAudio.mp3 - Sound via Pixabay
-hoverSound.mp3 - Sound by tunetank via Pixabay
-developmentUnlocked.mp3 - Sound by freesound via Pixabay
-eventSound.mp3 - Sound by DRAGON-STUDIO via Pixabay
+leavingSound.mp3 - Sound by GraceSoundProductions via Pixabay (Pixabay Content License)
+farewellAccept.mp3 - Sound by Universfield via Pixabay (Pixabay Content License)
+constructionSound.mp3 - Sound by freesound community via Pixabay (Pixabay Content License)
+workClickSound.mp3 - Sound by linhmitto via Pixabay (Pixabay Content License)
+openingAudio.mp3 - Sound via Pixabay (Pixabay Content License)
+hoverSound.mp3 - Sound by tunetank via Pixabay (Pixabay Content License)
+developmentUnlocked.mp3 - Sound by freesound via Pixabay (Pixabay Content License)
+eventSound.mp3 - Sound by DRAGON-STUDIO via Pixabay (Pixabay Content License)
 dailyLogin.wav - Sound by rhodesmas via Freesound (CC by Attribution 4.0)
 notEnoughFunds.wav - Sound by rhodesmas via Freesound (CC by Attribution 4.0)
-DepartureBoard.mp3 - Sound by tilllt via Freesound
-phoneNotification.mp3 - Sound by nevak36 via Freesound
-specialChime.mp3 - Sound by Olivia Parker via Pixabay (No attribution required)
+DepartureBoard.mp3 - Sound by tilllt via Freesound (Attribution 4.0 License)
+phoneNotification.mp3 - Sound by nevak36 via Freesound (No attribution required)
+specialChime.mp3 - Sound by Olivia Parker via Pixabay (Pixabay Content License)
 
 MISC IMAGES
 
-DepartureBoard.js - Photo by Neuhausengroup via Wikimedia Commons
+DepartureBoard.js - Photo by Neuhausengroup via Wikimedia Commons (Creative Commons Attribution 4.0 International license. Link: https://commons.wikimedia.org/wiki/File:Na19-Apr-Hyperloop.jpg)
 reputation.png - <a href="https://www.flaticon.com/free-icons/clean" title="clean icons">Clean icons created by Smashicons - Flaticon</a>
 globeIcon.png - Photo by pngtree via pngtree
-hello.png - Photo by Magnific via flaticon.com
-pin.jpg - Photo by Vitaly Gorbachev via flaticon.com
-construction.png - Photo by Magnific via flaticon.com
-monitor.png - Photo by xnimrodx via flaticon.com
-warning.png - Photo by Gregor Cresnar via flaticon.com
-fireworks.png - Photo by Icon Mela via flaticon.com
-poor.png - Photo by Puckung via flaticon.com
-monitor.png - Photo by xnimrodx via flaticon.com
-warning.png - Photo by Gregor Cresnar via flaticon.com
-phone.png - Photo by Magnific via flaticon.com
-battery.png - Photo by Stockio via flaticon.com
-signal.png - Photo by Andrejs Kirma via flaticon.com
-wifi.png - Photo by Prosymbols Premium via flaticon.com
+hello.png - Photo by Magnific via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/hello" title="hello icons">Hello icons created by Kalashnyk - Flaticon</a>
+pin.jpg - Photo by Vitaly Gorbachev via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by Vitaly Gorbachev - Flaticon</a>
+construction.png - Photo by Magnific via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/construction" title="construction icons">Construction icons created by Magnific - Flaticon</a>
+monitor.png - Photo by xnimrodx via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/computer" title="computer icons">Computer icons created by xnimrodx - Flaticon</a>
+fireworks.png - Photo by Icon Mela via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/fireworks" title="fireworks icons">Fireworks icons created by Design Circle - Flaticon</a>
+poor.png - Photo by Puckung via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/debt" title="debt icons">Debt icons created by Puckung - Flaticon</a>
+warning.png - Photo by Gregor Cresnar via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/error" title="error icons">Error icons created by Gregor Cresnar - Flaticon</a>
+phone.png - Photo by Magnific via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/sms" title="sms icons">Sms icons created by Magnific - Flaticon</a>
+battery.png - Photo by Stockio via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/battery" title="battery icons">Battery icons created by Stockio - Flaticon</a>
+signal.png - Photo by Andrejs Kirma via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/ui" title="ui icons">Ui icons created by Andrejs Kirma - Flaticon</a>
+wifi.png - Photo by Prosymbols Premium via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/wifi" title="wifi icons">Wifi icons created by Magnific - Flaticon</a>
 me.jpg - Photo by Cathal Eoghan (all rights reserved)
