@@ -1483,8 +1483,10 @@ function App() {
             if (success) {
               achievements.addCounter('devUpgrades');
               triggerSave();
-              hyperLinkTriggerRef.current = { type: 'developmentUpgraded', data: { development: development.name } }
-              setHyperLinkTrigger({ type: 'developmentUpgraded', data: { development: development.name } })
+              // developmentName carries any rename, so the post reads naturally even for a renamed development
+              const upgradedDevData = { development: development.name, developmentName: progressionManager.getDevelopmentName(development) };
+              hyperLinkTriggerRef.current = { type: 'developmentUpgraded', data: upgradedDevData }
+              setHyperLinkTrigger({ type: 'developmentUpgraded', data: upgradedDevData })
             }
             return success;
           }}

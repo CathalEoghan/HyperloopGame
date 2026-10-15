@@ -627,13 +627,13 @@ export const POSTS = {
     ],
 
     developmentUpgraded: [
-        'the {development} here got a proper upgrade, looking way better now 😎',
-        'not the {development} getting renovated right in front of me 😵',
-        'The new improved {development} is actually really nice!',
-        'wow anyone been to the new and improved {development} recently? looks really good',
-        'I didn\'t even recognise the {development}! Looks so great now!',
-        'they spent some money on the {development} lol it defo shows',
-        'anyone seen the new {development} since it stopped renovations? is it actually better now?',
+        'the {developmentName} here got a proper upgrade, looking way better now 😎',
+        'not the {developmentName} getting renovated right in front of me 😵',
+        'The new improved {developmentName} is actually really nice!',
+        'wow anyone been to the new and improved {developmentName} recently? looks really good',
+        'I didn\'t even recognise the {developmentName}! Looks so great now!',
+        'they spent some money on the {developmentName} lol it defo shows',
+        'anyone seen the new {developmentName} since it stopped renovations? is it actually better now?',
     ],
 
     boarding: [
