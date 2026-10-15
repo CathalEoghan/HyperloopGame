@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { getDistanceUnit, setDistanceUnit } from '../utils/units.js'
 import { playHoverSound, playClickSound2, playFarewellAcceptSound } from '../utils/sound.js'
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
@@ -186,6 +187,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
     const [eventTint, setEventTint] = useState(localStorage.getItem('hyperloop_event_tint') !== 'false')
+    const [distanceUnit, setDistanceUnitState] = useState(getDistanceUnit())
     const [splitFlap, setSplitFlap] = useState(localStorage.getItem('splitFlap') !== 'false')
     const [nameInput, setNameInput] = useState(terminalName)
     const [nameSaved, setNameSaved] = useState(false)
@@ -224,6 +226,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleSplitFlapToggle = (enabled) => {
         setSplitFlap(enabled)
         localStorage.setItem('splitFlap', enabled)
+    }
+
+    const handleDistanceUnit = (unit) => {
+        setDistanceUnitState(unit)
+        setDistanceUnit(unit)
     }
 
     const handleNameSave = () => {
@@ -304,6 +311,20 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <div className="settings-options">
                         <OptionBtn active={soundEnabled} onClick={() => handleSoundToggle(true)}>On</OptionBtn>
                         <OptionBtn active={!soundEnabled} onClick={() => handleSoundToggle(false)}>Off</OptionBtn>
+                    </div>
+                </div>
+            </div>
+
+            <div className="settings-section">
+                <h2 className="settings-section-title">Units</h2>
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Distance</span>
+                        <span className="settings-label-desc">Show distances in miles or kilometres, such as the Longest route and Total distance travelled on the Progress page.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={distanceUnit === 'mi'} onClick={() => handleDistanceUnit('mi')}>Miles</OptionBtn>
+                        <OptionBtn active={distanceUnit === 'km'} onClick={() => handleDistanceUnit('km')}>Kilometres</OptionBtn>
                     </div>
                 </div>
             </div>

@@ -12,6 +12,7 @@ import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import './ProgressPage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 import { distanceMiles } from '../utils/loops.js'
+import { formatDistance } from '../utils/units.js'
 
 const CashValue = ({ amount, suffix = '' }) => (
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
@@ -194,7 +195,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const routes = home ? purchasedCities.slice(1).map(c => ({ city: c, miles: distanceMiles(home.name, c.name) })).filter(r => r.miles !== null) : []
     const longestRoute = routes.length ? routes.reduce((a, b) => b.miles > a.miles ? b : a) : null
     const shortestRoute = routes.length ? routes.reduce((a, b) => b.miles < a.miles ? b : a) : null
-    const routeValue = r => r ? <span><span style={{ display: 'block' }}>{home.name} → {r.city.name}</span>{Math.round(r.miles).toLocaleString('en-GB')} miles</span> : '—'
+    const routeValue = r => r ? <span><span style={{ display: 'block' }}>{home.name} → {r.city.name}</span>{formatDistance(r.miles)}</span> : '—'
     const highestRank = Math.max(economyManager.progressionManager.rankManager?.rank || 1, achievementManager?.counter('highestRank') ?? 0)
 
     const likedCount = (() => {
@@ -214,7 +215,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Total number of departures', value: (achievementManager?.counter('departures') ?? 0).toLocaleString('en-GB') },
         { label: 'Total number of arrivals', value: (achievementManager?.counter('arrivals') ?? 0).toLocaleString('en-GB') },
         { label: 'Total passenger count', value: (achievementManager?.counter('passengers') ?? 0).toLocaleString('en-GB') },
-        { label: 'Total distance travelled', value: `${(achievementManager?.counter('miles') ?? 0).toLocaleString('en-GB')} miles` },
+        { label: 'Total distance travelled', value: formatDistance(achievementManager?.counter('miles') ?? 0) },
         // Time the game has been open across every run (Terminal age is this run only)
         { label: 'Total playtime', value: playtimeText(achievementManager?.counter('playtime') ?? 0) },
         // Straight from the connected cities, so a disconnect shows at once
