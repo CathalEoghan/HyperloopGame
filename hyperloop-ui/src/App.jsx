@@ -576,8 +576,11 @@ function App() {
     let lastClickAt = Date.now();
     const id = setInterval(() => {
       const now = Date.now();
-      // Not while the game hasn't started, or another tab is running it
-      if (!PrestigeManager.owns('bestPAEver') || blockedRef.current || progressionManager.purchasedCities.length === 0 || onboardingPending()) {
+      // Not while the game hasn't started, another tab is running it, or this tab is on its way out for
+      // Delete Save/Import (stopTick() only stops the main tick; this interval is separate and a stray
+      // auto-click here would otherwise still call progressionManager/performWork against the run that's
+      // about to be wiped, same family of bug as #184).
+      if (!PrestigeManager.owns('bestPAEver') || blockedRef.current || leavingRef.current || progressionManager.purchasedCities.length === 0 || onboardingPending()) {
         lastClickAt = now;
         return;
       }
