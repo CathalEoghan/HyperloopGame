@@ -330,11 +330,18 @@
     background: rgba(255, 255, 255, 0.06);
 }
 
-/* A row whose route is lit gold on the globe (or that is being pointed at) */
+/* A row whose route is lit on the globe (or that is being pointed at) */
 .loop-row-hovered,
 .loop-row-hovered:hover {
     background: rgba(245, 166, 35, 0.16);
     box-shadow: inset 3px 0 0 #f5a623;
+}
+
+/* ...in blue for an arrival, to match its arc on the globe */
+.loop-row-arrival.loop-row-hovered,
+.loop-row-arrival.loop-row-hovered:hover {
+    background: rgba(79, 195, 247, 0.16);
+    box-shadow: inset 3px 0 0 #4fc3f7;
 }
 
 .loop-route {
