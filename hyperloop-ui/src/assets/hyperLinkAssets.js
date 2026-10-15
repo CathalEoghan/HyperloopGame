@@ -1,5 +1,5 @@
 import defaultPfp from './misc/defaultAccountIcon.png'
-import officialPfp from './misc/officialAccountIcon.png'
+import officialPfp from './misc/globeIcon.png'
 
 const malePfpModules = import.meta.glob('./male-profile-pics/*.jpg', { eager: true })
 const femalePfpModules = import.meta.glob('./female-profile-pics/*.jpg', { eager: true })

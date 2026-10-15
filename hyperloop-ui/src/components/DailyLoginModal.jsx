@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { playClickSound2, playHoverSound, playDailyLoginSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import cashIcon from '../assets/misc/cash.png'
-import globeIcon from '../assets/misc/globeIcon.png'
+import officialLogo from '../assets/misc/officialLogo.png'
 import './DailyLoginModal.css'
 
 // repSources: the names of the owned upgrades that pay the daily Reputation (bug #154)
@@ -19,7 +19,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
     return (
         <div className="modal-overlay">
             <div className="daily-login-modal">
-                <p className="daily-login-heading"><img src={globeIcon} alt="globe" className="brand-icon" /> DAILY BONUS</p>
+                <p className="daily-login-heading"><img src={officialLogo} alt="Hyperloop Empire" className="daily-login-heading-logo" /> DAILY BONUS</p>
                 <h2 className="daily-login-title">Welcome back!</h2>
                 <p className="daily-login-subtitle">Your terminal has been busy while you were away. Here's your daily reward:</p>
                 <div className="daily-login-rewards">

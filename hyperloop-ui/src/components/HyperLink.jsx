@@ -149,7 +149,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                         <img
                                             src={pfp || defaultPfp}
                                             alt="pfp"
-                                            className={pfp ? 'hyperlink-pfp' : 'hyperlink-pfp-default'}
+                                            className={`${pfp ? 'hyperlink-pfp' : 'hyperlink-pfp-default'}${post.isOfficial ? ' hyperlink-pfp-official' : ''}`}
                                             onError={e => { e.target.src = defaultPfp }}
                                         />
                                         <div className="hyperlink-post-body">

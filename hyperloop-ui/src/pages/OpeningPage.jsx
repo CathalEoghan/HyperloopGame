@@ -6,7 +6,7 @@ import { useState, useRef } from 'react'
 import { allCities } from '../../../CityManager/CityRegistry'
 import CityPickerModal from '../components/CityPickerModal.jsx'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
-import globeIcon from '../assets/misc/globeIcon.png'
+import officialLogo from '../assets/misc/officialLogo.png'
 import './OpeningPage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 
@@ -42,7 +42,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
         return (
             <div className="opening-background">
                 <div className="opening-card">
-                    <div className="opening-logo"><img src={globeIcon} alt="globe" className="brand-icon" /> HYPERLOOP EMPIRE</div>
+                    <div className="opening-logo"><img src={officialLogo} alt="Hyperloop Empire" /></div>
                     <h1 className="opening-welcome">Welcome.</h1>
                     <p className="opening-tagline">
                         You're in charge of the world's first hyperloop network.<br />
@@ -77,7 +77,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
     return (
         <div className="opening-background">
             <div className="opening-city-step">
-                <div className="opening-logo"><img src={globeIcon} alt="globe" className="brand-icon" /> HYPERLOOP EMPIRE</div>
+                <div className="opening-logo"><img src={officialLogo} alt="Hyperloop Empire" /></div>
                 <h1 className="opening-welcome">{runStart ? 'A fresh start.' : 'Good name.'}</h1>
                 {runStart ? (
                     <p className="opening-tagline">

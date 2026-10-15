@@ -5,12 +5,8 @@
 }
 
 .onboarding-logo {
-    font-family: 'Courier New', monospace;
-    font-size: 0.75rem;
-    font-weight: bold;
-    letter-spacing: 3px;
-    color: #f5a623;
-    text-transform: uppercase;
+    display: flex;
+    justify-content: center;
     margin-bottom: 16px;
 }
 
@@ -77,8 +73,9 @@
 }
 
 .onboarding-logo img {
+    width: 58px !important;
+    height: 58px !important;
     border: none !important;
-    width: auto !important;
-    height: auto !important;
-    max-height: 40px;
+    object-fit: contain !important;
+    margin-bottom: 0 !important;
 }

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
-import globeIcon from '../assets/misc/globeIcon.png'
+import officialLogo from '../assets/misc/officialLogo.png'
 import mePhoto from '../assets/misc/me.jpg'
 import './CreditsModal.css'
 
@@ -48,7 +48,7 @@ function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="credits-modal" onClick={e => e.stopPropagation()}>
-                <p className="credits-heading"><img src={globeIcon} alt="globe" className="brand-icon" /> CREDITS</p>
+                <p className="credits-heading"><img src={officialLogo} alt="Hyperloop Empire" className="credits-heading-logo" /> CREDITS</p>
                 <div className="credits-body">
                     {CREDITS_TEXT.split('\n').map((line, i) => (
                         <p key={i} className={line === line.toUpperCase() && line.trim() ? 'credits-section' : 'credits-line'}>

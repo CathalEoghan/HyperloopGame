@@ -45,13 +45,14 @@
 
 /* Shared */
 .opening-logo {
-    font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
-    font-weight: bold;
-    letter-spacing: 3px;
-    color: #f5a623;
+    display: flex;
+    justify-content: center;
     margin-bottom: 24px;
-    text-transform: uppercase;
+}
+
+.opening-logo img {
+    width: 130px;
+    height: 130px;
 }
 
 .opening-welcome {

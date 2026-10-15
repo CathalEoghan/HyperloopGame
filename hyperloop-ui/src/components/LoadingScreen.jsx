@@ -26,7 +26,7 @@ import openingAudio from '../assets/sounds/openingAudio.mp3'
 import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
-import globeIcon from '../assets/misc/globeIcon.png'
+import officialLogo from '../assets/misc/officialLogo.png'
 import './LoadingScreen.css'
 
 const DURATION = 5000
@@ -144,8 +144,7 @@ function LoadingScreen({ onComplete }) {
             onClick={handleEnter}
         >
             <div className="loading-content">
-                <img src={globeIcon} alt="globe" className="loading-logo" />
-                <h1 className="loading-title">HYPERLOOP EMPIRE</h1>
+                <img src={officialLogo} alt="Hyperloop Empire" className="loading-logo" />
                 <p className="loading-tagline">The world's first hyperloop network</p>
                 <div className="loading-bar-track">
                     <div className="loading-bar-fill" style={{ width: `${progress}%` }} />

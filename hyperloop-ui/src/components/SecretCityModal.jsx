@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
-import globeIcon from '../assets/misc/globeIcon.png'
+import officialLogo from '../assets/misc/officialLogo.png'
 import './SecretCityModal.css'
 
 function SecretCityModal({ onContinue }) {
@@ -9,7 +9,7 @@ function SecretCityModal({ onContinue }) {
     return (
         <div className="modal-overlay">
             <div className="secret-city-modal">
-                <img src={globeIcon} alt="globe" style={{ width: '48px', height: '48px', border: 'none', borderRadius: '0', marginBottom: '12px' }} />
+                <img src={officialLogo} alt="Hyperloop Empire" style={{ width: '48px', height: '48px', border: 'none', borderRadius: '0', marginBottom: '12px' }} />
                 <h2 className="secret-city-title">You've connected every city!</h2>
                 <p className="secret-city-subtitle">Or have you...</p>
                 <button
