@@ -326,9 +326,15 @@
     --loop-color: #4fc3f7;
 }
 
-.loop-row:hover,
-.loop-row-hovered {
+.loop-row:hover {
     background: rgba(255, 255, 255, 0.06);
+}
+
+/* A row whose route is lit gold on the globe (or that is being pointed at) */
+.loop-row-hovered,
+.loop-row-hovered:hover {
+    background: rgba(245, 166, 35, 0.16);
+    box-shadow: inset 3px 0 0 #f5a623;
 }
 
 .loop-route {

@@ -16,7 +16,12 @@ import { flagSrc } from '../utils/flagSrc.js'
 import { getActiveLoops, formatClock, formatDuration } from '../utils/loops.js'
 
 // Departures are drawn in the game's gold, arrivals in blue
-const LOOP_COLORS = { departure: 0xf5a623, arrival: 0x4fc3f7 }
+// Every route is white; the ones being pointed at (on the globe or in the list) turn gold
+const ARROW_COUNT = 5
+const LOOP_WHITE = 0xffffff
+const LOOP_GOLD = 0xf5a623
+// How close (in pixels) the mouse must be to an arc to count as pointing at it
+const ARC_HIT_PX = 10
 const VIEW_KEY = 'globeView'
 const PANEL_KEY = 'globeLoopsPanelOpen'
 
@@ -109,8 +114,11 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     const [nowMs, setNowMs] = useState(0)
     const loopsRef = useRef([])
     const loopCityNamesRef = useRef(new Set())
-    const [hoveredLoopId, setHoveredLoopId] = useState(null)
-    const hoveredLoopRef = useRef(null)
+    // The loops being pointed at, nearest first. Several can be at once where routes overlap on the globe.
+    const [hoveredLoopIds, setHoveredLoopIds] = useState([])
+    const hoveredLoopsRef = useRef(new Set())
+    const hoverSourceRef = useRef('panel') // 'globe' or 'panel': only the globe scrolls the list
+    const loopsListRef = useRef(null)
     // Turns the globe to face a loop; set up with the scene
     const focusLoopRef = useRef(null)
 
@@ -137,10 +145,31 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         try { localStorage.setItem(VIEW_KEY, view) } catch { /* storage blocked, ignore */ }
     }
 
-    const hoverLoop = (id) => {
-        hoveredLoopRef.current = id
-        setHoveredLoopId(id)
+    const hoverLoops = (ids, source = 'panel') => {
+        const same = ids.length === hoveredLoopsRef.current.size && ids.every(id => hoveredLoopsRef.current.has(id))
+        hoverSourceRef.current = source
+        if (same) return
+        hoveredLoopsRef.current = new Set(ids)
+        setHoveredLoopIds(ids)
     }
+
+    // Pointing at a route on the globe brings its row into view, but only when none of the lit rows is showing already,
+    // and only after a short pause so sweeping across the globe doesn't make the list jump about.
+    useEffect(() => {
+        if (hoverSourceRef.current !== 'globe' || hoveredLoopIds.length === 0) return
+        const timer = setTimeout(() => {
+            const list = loopsListRef.current
+            if (!list) return
+            const rows = hoveredLoopIds.map(id => list.querySelector(`[data-loop-id="${id}"]`)).filter(Boolean)
+            if (rows.length === 0) return
+            const view = list.getBoundingClientRect()
+            const showing = rows.some(r => { const b = r.getBoundingClientRect(); return b.top >= view.top - 1 && b.bottom <= view.bottom + 1 })
+            if (showing) return
+            const row = rows[0] // the arc nearest the cursor
+            list.scrollTo({ top: row.offsetTop - list.clientHeight / 2 + row.clientHeight / 2, behavior: 'smooth' })
+        }, 250)
+        return () => clearTimeout(timer)
+    }, [hoveredLoopIds])
 
     useEffect(() => {
         purchasedCitiesRef.current = purchasedCities
@@ -361,9 +390,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         let syncedLoops = null
         const removeLoopObject = (id) => {
             const o = loopObjects.get(id)
-            loopGroup.remove(o.line, o.pod)
-            o.line.geometry.dispose(); o.line.material.dispose()
-            o.pod.geometry.dispose(); o.pod.material.dispose()
+            loopGroup.remove(o.group)
+            o.group.traverse(c => { if (c.geometry) c.geometry.dispose(); if (c.material) c.material.dispose() })
             loopObjects.delete(id)
         }
         const syncLoops = () => {
@@ -375,32 +403,97 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const from = cityCoordinates[loop.from], to = cityCoordinates[loop.to]
                 if (!from || !to) return
                 const points = arcPoints(from, to)
-                const color = LOOP_COLORS[loop.kind]
-                const line = new THREE.Line(
-                    new THREE.BufferGeometry().setFromPoints(points),
-                    new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.4, depthWrite: false })
-                )
-                const pod = new THREE.Mesh(new THREE.SphereGeometry(0.008, 12, 12), new THREE.MeshBasicMaterial({ color }))
-                loopGroup.add(line, pod)
-                loopObjects.set(loop.id, { line, pod, points, loop })
+                const curve = new THREE.CatmullRomCurve3(points)
+                const group = new THREE.Group()
+                // A dark underlay keeps white readable over bright land and cloud; the halo only shows when highlighted
+                const under = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0034, 5, false), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }))
+                const line = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0019, 5, false), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false }))
+                const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0065, 6, false), new THREE.MeshBasicMaterial({ color: LOOP_GOLD, transparent: true, opacity: 0.3, depthWrite: false }))
+                halo.visible = false
+                // The shuttle: a small rounded-off box, turned along the route, with a dark outline
+                const podGeo = new THREE.BoxGeometry(0.036, 0.012, 0.008)
+                const pod = new THREE.Mesh(podGeo, new THREE.MeshBasicMaterial({ color: LOOP_WHITE }))
+                pod.add(new THREE.LineSegments(new THREE.EdgesGeometry(podGeo), new THREE.LineBasicMaterial({ color: 0x000000 })))
+                // Arrows showing the way the loop is going, only while highlighted
+                const arrows = Array.from({ length: ARROW_COUNT }, () => {
+                    const a = new THREE.Mesh(new THREE.ConeGeometry(0.0075, 0.02, 8), new THREE.MeshBasicMaterial({ color: LOOP_GOLD }))
+                    a.visible = false
+                    return a
+                })
+                group.add(under, line, halo, pod, ...arrows)
+                loopGroup.add(group)
+                loopObjects.set(loop.id, { group, under, line, halo, pod, arrows, points, curve, loop })
             })
             syncedLoops = list
         }
+        const UP = new THREE.Vector3(0, 1, 0)
+        const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3(), tmpM = new THREE.Matrix4()
         const placePods = () => {
             const now = Date.now()
-            // A highlighted loop that has since arrived no longer dims the others
-            const hovered = loopObjects.has(hoveredLoopRef.current) ? hoveredLoopRef.current : null
-            const pulse = 1 + 0.2 * Math.sin(now / 250)
+            // Highlighted loops that have since arrived no longer dim the others
+            const lit = new Set([...hoveredLoopsRef.current].filter(id => loopObjects.has(id)))
+            const anyLit = lit.size > 0
+            // Keeps the shuttles and arrows the same size on screen however far the globe is zoomed
+            const zoom = camera.position.length() / 2.5
             loopObjects.forEach(o => {
                 const { startTs, endTs } = o.loop
                 const progress = Math.min(1, Math.max(0, (now - startTs) / Math.max(1, endTs - startTs)))
-                const f = progress * (o.points.length - 1)
-                const i = Math.floor(f)
-                o.pod.position.copy(o.points[i]).lerp(o.points[Math.min(i + 1, o.points.length - 1)], f - i)
-                const isHovered = hovered === o.loop.id
-                o.line.material.opacity = hovered ? (isHovered ? 1 : 0.12) : 0.4
-                o.pod.scale.setScalar((isHovered ? 1.8 : 1) * pulse)
+                const isLit = lit.has(o.loop.id)
+                // Shuttle: on the arc, long side along the direction of travel, flat side to the globe
+                o.curve.getPointAt(progress, tmpA)
+                o.curve.getTangentAt(progress, tmpB)
+                tmpC.copy(tmpA).normalize()                 // away from the globe
+                tmpB.addScaledVector(tmpC, -tmpB.dot(tmpC)).normalize()
+                const side = new THREE.Vector3().crossVectors(tmpC, tmpB).normalize()
+                tmpM.makeBasis(tmpB, tmpC, side.negate())
+                o.pod.position.copy(tmpA)
+                o.pod.quaternion.setFromRotationMatrix(tmpM)
+                o.pod.scale.setScalar(zoom * (isLit ? 1.35 : 1))
+                o.pod.material.color.setHex(isLit ? LOOP_GOLD : LOOP_WHITE)
+                o.line.material.color.setHex(isLit ? LOOP_GOLD : LOOP_WHITE)
+                o.line.material.opacity = anyLit ? (isLit ? 1 : 0.3) : 0.8
+                o.under.material.opacity = anyLit && !isLit ? 0.12 : 0.35
+                o.halo.visible = isLit
+                o.group.renderOrder = isLit ? 2 : 1
+                ;[o.under, o.line, o.halo, o.pod].forEach(m => { m.renderOrder = isLit ? 3 : 1 })
+                o.arrows.forEach((a, k) => {
+                    a.visible = isLit
+                    if (!isLit) return
+                    const t = ((k / ARROW_COUNT) + now / 9000) % 1   // drifts slowly the way the loop travels
+                    o.curve.getPointAt(t, tmpA)
+                    o.curve.getTangentAt(t, tmpB)
+                    a.position.copy(tmpA)
+                    a.quaternion.setFromUnitVectors(UP, tmpB)
+                    a.scale.setScalar(zoom)
+                })
             })
+        }
+
+        // Which routes the mouse is over: every arc within a few pixels, nearest first. Only the near side of the globe counts.
+        const routesUnderMouse = (clientX, clientY, rect) => {
+            const hits = []
+            const cam = camera.position
+            const px = new THREE.Vector3()
+            loopObjects.forEach(o => {
+                let best = Infinity, prevPt = null
+                for (let i = 0; i < o.points.length; i++) {
+                    const p = o.points[i]
+                    if (p.dot(cam) < 1) { prevPt = null; continue }
+                    px.copy(p).project(camera)
+                    const pt = { x: (px.x + 1) / 2 * rect.width + rect.left, y: (1 - px.y) / 2 * rect.height + rect.top }
+                    if (prevPt) {
+                        const dx = pt.x - prevPt.x, dy = pt.y - prevPt.y
+                        const len2 = dx * dx + dy * dy
+                        const t = len2 ? Math.max(0, Math.min(1, ((clientX - prevPt.x) * dx + (clientY - prevPt.y) * dy) / len2)) : 0
+                        best = Math.min(best, Math.hypot(clientX - (prevPt.x + t * dx), clientY - (prevPt.y + t * dy)))
+                    } else {
+                        best = Math.min(best, Math.hypot(clientX - pt.x, clientY - pt.y))
+                    }
+                    prevPt = pt
+                }
+                if (best <= ARC_HIT_PX) hits.push({ id: o.loop.id, d: best })
+            })
+            return hits.sort((a, b) => a.d - b.d).map(h => h.id)
         }
 
         // Turning to face a loop eases the camera round instead of jumping
@@ -442,7 +535,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             if (e.pointerType === 'mouse' && e.button !== 0) return
             camTarget = null // grabbing the globe stops it turning to a loop
             // A tap on a row (touch has no "leave") keeps its loop highlighted until the globe is touched
-            if (hoveredLoopRef.current) { hoveredLoopRef.current = null; setHoveredLoopId(null) }
+            if (hoveredLoopsRef.current.size) hoverLoops([])
             pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
             if (pointers.size === 1) {
                 isDragging = true
@@ -469,6 +562,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             // on top of it (the loops list, the view switch) must not light up flags hidden behind them.
             if (e.pointerType === 'mouse' && e.target !== renderer.domElement) {
                 if (prevHoveredCity.current) { prevHoveredCity.current = null; setHoveredCity(null) }
+                if (hoverSourceRef.current === 'globe' && hoveredLoopsRef.current.size) hoverLoops([], 'globe')
             } else if (e.pointerType === 'mouse') {
                 const rect = mount.getBoundingClientRect()
                 mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
@@ -482,6 +576,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     prevHoveredCity.current = newHovered
                 }
                 setHoveredCity(newHovered)
+                // A flag under the mouse wins; otherwise any routes under it light up (not while dragging the globe)
+                if (globeViewRef.current === 'loops' && !newHovered && !isDragging) hoverLoops(routesUnderMouse(e.clientX, e.clientY, rect), 'globe')
+                else if (hoverSourceRef.current === 'globe') hoverLoops([], 'globe')
             }
             if (!isDragging) return
             camLon -= (e.clientX - prev.x) * 0.3
@@ -672,16 +769,17 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                         : 'No loops are travelling right now. Check the Terminal Board for the next one.'}
                                 </p>
                             ) : (
-                                <ul className="loops-list" onMouseLeave={() => hoverLoop(null)}>
+                                <ul className="loops-list" ref={loopsListRef} onMouseLeave={() => hoverLoops([])}>
                                     {loops.map(loop => {
                                         const progress = Math.min(100, Math.max(0, ((nowMs - loop.startTs) / Math.max(1, loop.endTs - loop.startTs)) * 100))
                                         const fromFlag = countryFlags[loop.fromCountry], toFlag = countryFlags[loop.toCountry]
                                         return (
                                             <li
                                                 key={loop.id}
-                                                className={`loop-row loop-row-${loop.kind} ${hoveredLoopId === loop.id ? 'loop-row-hovered' : ''}`}
-                                                onMouseEnter={() => hoverLoop(loop.id)}
-                                                onClick={() => { playClickSound2(); hoverLoop(loop.id); focusLoopRef.current?.(loop.id) }}
+                                                data-loop-id={loop.id}
+                                                className={`loop-row loop-row-${loop.kind} ${hoveredLoopIds.includes(loop.id) ? 'loop-row-hovered' : ''}`}
+                                                onMouseEnter={() => hoverLoops([loop.id])}
+                                                onClick={() => { playClickSound2(); hoverLoops([loop.id]); focusLoopRef.current?.(loop.id) }}
                                             >
                                                 <div className="loop-route">
                                                     {fromFlag && <img src={flagSrc(fromFlag)} alt="" className="loop-flag" />}
