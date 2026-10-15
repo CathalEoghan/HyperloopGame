@@ -50,7 +50,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
-import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, readSchedule, writeSchedule, entryTimestamp, entryDuration, ARRIVAL_DELAY_MAX_MINUTES } from './utils/loops.js'
+import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, ARRIVAL_DELAY_MAX_MINUTES } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -1137,6 +1137,8 @@ function App() {
           const updated = list.map(e => e.time === entry.time && e.name === entry.name
             ? {
                 ...e, hour: newHour, minute: newMinute, time: newTime, minuteOfDay: newTotalMins, delayed: true,
+                // Kept so the loop's passenger count stays the same after the delay
+                originalTime: e.originalTime || e.time,
                 // An arrival set off at the same time as before, so its journey is longer by the delay
                 ...(isArrival ? { durationMin: entryDuration(e, 'arrival', homeName, now.getTime()) + (newTotalMins - oldTotalMins) } : {}),
               }
@@ -1451,10 +1453,13 @@ function App() {
             }
             progressionManager.disconnectCity(city);
             if (achievements.unlock('noConnectionForYou')) announceAchievements(['noConnectionForYou']);
-            const todayKey = new Date().toDateString();
-            const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
-            const updated = schedule.filter(e => e.name !== city.name);
-            localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
+            // Its loops still to come are taken off the timetable: today's departures, and today's and tomorrow's
+            // arrivals (otherwise the ticker still announced them, and reconnecting today brought the old ones back)
+            const nowMs = Date.now();
+            [departuresKey(nowMs), arrivalsKey(nowMs), arrivalsKey(shiftDays(nowMs, 1))].forEach(key => {
+              if (localStorage.getItem(key) === null) return;
+              writeSchedule(key, readSchedule(key).filter(e => e.name !== city.name));
+            });
             triggerSave();
           }}
         />

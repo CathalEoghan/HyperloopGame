@@ -116,6 +116,11 @@ export function loopPassengers(cityName, seed) {
 // A loop's id: the same one the Active Loops list uses, so the list and the passenger total agree
 export const loopId = (kind, dayMs, entry) => `${kind === 'arrival' ? 'arr' : 'dep'}|${dayKey(dayMs)}|${entry.time}|${entry.name}`
 
+// What a loop's passenger count is drawn from: its id at the time it was first scheduled, so a delay (which moves
+// the loop to a new time) doesn't change who is on board
+const passengersOf = (kind, dayMs, entry) =>
+    loopPassengers(entry.name, loopId(kind, dayMs, entry.originalTime ? { ...entry, time: entry.originalTime } : entry))
+
 export function loopSpeedMph(seed) {
     return LOOP_MPH_MIN + (hashString(seed) % (LOOP_MPH_MAX - LOOP_MPH_MIN + 1))
 }
@@ -294,7 +299,7 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
             loops.push({
                 id: loopId('departure', dayMs, e), kind: 'departure',
                 from: homeCity.name, fromCountry: homeCity.country, to: e.name, toCountry: e.country,
-                startTs, endTs, delayed: !!e.delayed, passengers: loopPassengers(e.name, loopId('departure', dayMs, e)),
+                startTs, endTs, delayed: !!e.delayed, passengers: passengersOf('departure', dayMs, e),
             })
         })
     })
@@ -308,7 +313,7 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
             loops.push({
                 id: loopId('arrival', dayMs, e), kind: 'arrival',
                 from: e.name, fromCountry: e.country, to: homeCity.name, toCountry: homeCity.country,
-                startTs, endTs, delayed: !!e.delayed, passengers: loopPassengers(e.name, loopId('arrival', dayMs, e)),
+                startTs, endTs, delayed: !!e.delayed, passengers: passengersOf('arrival', dayMs, e),
             })
         })
     })
@@ -329,7 +334,7 @@ function scheduledBetween(kind, dayMs, afterMs, nowMs, homeName, connected) {
         const t = entryTimestamp(e, dayMs)
         return t > afterMs && t <= nowMs
     })
-    const passengers = ranList.reduce((sum, e) => sum + loopPassengers(e.name, loopId(kind, dayMs, e)), 0)
+    const passengers = ranList.reduce((sum, e) => sum + passengersOf(kind, dayMs, e), 0)
     const miles = ranList.reduce((sum, e) => sum + (distanceMiles(homeName, e.name) || 0), 0)
     return { total: list.length, ran: ranList.length, passengers, miles, known: list.length > 0 }
 }

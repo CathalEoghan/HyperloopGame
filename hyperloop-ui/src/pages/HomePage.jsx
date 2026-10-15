@@ -213,6 +213,13 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 sprite.material.color.set(0.1, 0.1, 0.1)
                 sprite.material.needsUpdate = true
                 sprite.userData.isUnlocked = true
+            } else if (!nowPurchased && nowUnlocked && sprite.userData.isPurchased) {
+                // Disconnected: it goes back to waiting on the Cities page, so it's dimmed again, hidden by the
+                // Owned filter, and clicking it opens the unlocked-city card instead of the connected one
+                sprite.material.color.set(0.1, 0.1, 0.1)
+                sprite.material.needsUpdate = true
+                sprite.userData.isPurchased = false
+                sprite.userData.isUnlocked = true
             } else if (!nowPurchased && !nowUnlocked && !city.underConstruction && (sprite.userData.isUnlocked || sprite.userData.isPurchased)) {
                 // No longer on offer (for example it was re-rolled away) → back to grayscale
                 loadGrayscaleTexture(flagSrc(countryFlags[city.country]), (greyTex) => {
