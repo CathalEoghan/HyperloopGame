@@ -3,6 +3,7 @@ import { PRESTIGE_VALUES as PV } from '../PrestigeManager/prestigeUpgrades.js';
 import { ACHIEVEMENT_IDS } from '../AchievementManager/achievements.js';
 import { INCOME_SCALE } from './incomeScale.js';
 import { allCities } from '../../CityManager/CityRegistry.js';
+import { DEV_REMOVE_REP_COST } from '../ProgressionManager/ProgressionManager.js';
 
 // Cached against the raw stored string: income maths asks for this once per city, every second
 let achievementCache = { raw: undefined, n: 0 };
@@ -612,6 +613,17 @@ export class EconomyManager {
     calculateDiscountedBuildCost(baseCost) {
         const discount = this.getUpgradeSum('developmentDiscount');
         return Math.floor(baseCost * (1 - discount) + 1e-6);   // tolerance: no £1 lost to decimal rounding
+    }
+
+    // What removing a built development costs and pays back. Amicable Breakups: no Reputation, and half of what the
+    // development costs to build now comes back as a refund (the same deal as disconnecting a city).
+    getDevelopmentRemoval(development) {
+        const amicable = PrestigeManager.owns('amicableBreakups');
+        return {
+            amicable,
+            repCost: amicable ? 0 : DEV_REMOVE_REP_COST,
+            refund: amicable ? Math.floor(this.calculateDiscountedBuildCost(development.cost) / 2) : 0,
+        };
     }
 
     calculateDiscountedUpgradeCost(baseCost) {

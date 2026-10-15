@@ -458,7 +458,8 @@ function App() {
   const triggeredDelays = useRef(new Set());
   const tickCount = useRef(0);
   const prevPurchasedCount = useRef(progressionManager.purchasedCities.length);
-  const prevDevCount = useRef(progressionManager.purchasedDevelopments.length);
+  // Which developments were built at the last check. Names, not a count: one can be removed as another finishes.
+  const prevDevNames = useRef(new Set(progressionManager.purchasedDevelopments.map(d => d.name)));
   const prevUpgradesCount = useRef(progressionManager.purchasedUpgrades.length);
   const prevRank = useRef(rankManager.rank);
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
@@ -854,13 +855,14 @@ function App() {
       }
 
       const citiesChanged = progressionManager.purchasedCities.length !== prevPurchasedCount.current;
-      const devsChanged = progressionManager.purchasedDevelopments.length !== prevDevCount.current;
+      const newDevelopments = progressionManager.purchasedDevelopments.filter(d => !prevDevNames.current.has(d.name));
+      const devsChanged = newDevelopments.length > 0 || progressionManager.purchasedDevelopments.length !== prevDevNames.current.size;
       const rankChanged = rankManager.rank !== prevRank.current;
 
       if (citiesChanged || devsChanged || rankChanged) {
         if (devsChanged) {
           const devCatMap = { Shopping: 'newDevelopmentShopping', Recreation: 'newDevelopmentRecreation', Service: 'newDevelopmentService', Food: 'newDevelopmentFood' }
-          progressionManager.purchasedDevelopments.slice(prevDevCount.current).forEach(dev => {
+          newDevelopments.forEach(dev => {
             const key = devCatMap[dev.category]
             if (key) {
               hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name, food: dev.name } }
@@ -869,7 +871,7 @@ function App() {
           })
         }
         prevPurchasedCount.current = progressionManager.purchasedCities.length;
-        prevDevCount.current = progressionManager.purchasedDevelopments.length;
+        prevDevNames.current = new Set(progressionManager.purchasedDevelopments.map(d => d.name));
         prevRank.current = rankManager.rank;
         triggerSave();
       }

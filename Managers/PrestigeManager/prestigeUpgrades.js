@@ -48,9 +48,9 @@ export const PRESTIGE_UPGRADES = [
     { id: 'eliteAccountants', icon: '🧮', layer: 2, name: 'Elite Accountants', description: 'The optional double bonus when claiming offline earnings becomes a quadruple bonus, for the same cost.' },
     { id: 'cultOfCelebrity', icon: '❤️', layer: 2, name: 'Cult of Celebrity', description: 'Liking a Hyper-Link post now gives 1 Reputation.' },
     { id: 'goodStanding', icon: '🎖️', layer: 2, name: 'Good Standing', description: 'Upgrading developments costs no Reputation.' },
-    { id: 'amicableBreakups', icon: '🤝', layer: 2, name: 'Amicable Breakups', description: 'Disconnecting costs nothing and refunds half the cost.' },
+    { id: 'amicableBreakups', icon: '🤝', layer: 2, name: 'Amicable Breakups', description: 'Disconnecting a city or removing a development costs nothing and refunds half the cost.' },
     { id: 'advancedEngineering', icon: '🏗️', layer: 2, name: 'Advanced Engineering', description: 'Cities and developments are constructed immediately.' },
-    { id: 'videoMessage', icon: '🎥', layer: 2, name: 'Video Message', description: 'Farewells are accepted automatically.' },
+    { id: 'videoMessage', icon: '🎥', layer: 2, name: 'Video Message', description: 'Farewells and greetings are accepted automatically.' },
     { id: 'viralSuperstar', icon: '🌟', layer: 2, name: 'Viral Superstar', description: `${mult(V.viralSuperstar)} cash and Reputation from Progress rewards.` },
 
     // Layer 3

@@ -2,6 +2,7 @@ import { allCities } from '../CityManager/CityRegistry.js'
 import { allDevelopments } from '../DevelopmentManager/DevelopmentRegistry.js'
 import { allUpgrades } from '../UpgradeManager/UpgradeRegistry.js'
 import { MAX_RANK } from './RankManager/RankManager.js'
+import { sanitizeDevelopmentName } from './ProgressionManager/ProgressionManager.js'
 
 const SAVE_KEY = 'hyperloop_save'
 
@@ -212,6 +213,12 @@ function validateSave(save) {
     if (save.farewellsGiven !== undefined && !(Number.isFinite(save.farewellsGiven) && save.farewellsGiven >= 0)) return false
     if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
     // No upper limit on balance or reputation: the game has none, so a long-running save must import (bug #114).
+    // Custom development names: text, within the length limit, for developments that exist
+    if (save.developmentNames !== undefined) {
+        const names = save.developmentNames
+        if (names === null || typeof names !== 'object' || Array.isArray(names)) return false
+        if (Object.entries(names).some(([key, value]) => typeof value !== 'string' || !allDevelopments.some(d => d.name === key))) return false
+    }
     // Every development upgrade level must be a whole number from 0 to 3 (bug #82)
     if (save.developmentUpgradeLevels && Object.values(save.developmentUpgradeLevels).some(v => !Number.isInteger(v) || v < 0 || v > 3)) return false
     if (save.balance < 0) return false
@@ -259,6 +266,7 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
         unlockedDevelopments: progressionManager.unlockedDevelopments.map(d => d.name),
         unlockedUpgrades: progressionManager.unlockedUpgrades.map(u => u.name),
         developmentUpgradeLevels: progressionManager.developmentUpgradeLevels,
+        developmentNames: progressionManager.developmentNames,
         citiesUnderConstruction: progressionManager.citiesUnderConstruction.map(c => ({
             name: c.name,
             finishTime: c.finishTime
@@ -290,6 +298,11 @@ export function loadGame(progressionManager, rankManager) {
         if (save.developmentUpgradeLevels) {
             save.developmentUpgradeLevels = Object.fromEntries(
                 Object.entries(save.developmentUpgradeLevels).map(([name, level]) => [currentName(name), level])
+            )
+        }
+        if (save.developmentNames && typeof save.developmentNames === 'object' && !Array.isArray(save.developmentNames)) {
+            save.developmentNames = Object.fromEntries(
+                Object.entries(save.developmentNames).map(([name, custom]) => [currentName(name), custom])
             )
         }
 
@@ -362,6 +375,14 @@ export function loadGame(progressionManager, rankManager) {
         })
 
         progressionManager.developmentUpgradeLevels = save.developmentUpgradeLevels || {}
+
+        // Custom names only count for developments that are built, and are cleaned the same way as when typed
+        const customNames = {}
+        Object.entries(save.developmentNames || {}).forEach(([name, custom]) => {
+            const clean = sanitizeDevelopmentName(custom)
+            if (clean && clean !== name && progressionManager.purchasedDevelopments.some(d => d.name === name)) customNames[name] = clean
+        })
+        progressionManager.developmentNames = customNames
 
         // Unlock any reward of a connected city that isn't built, unlocked or being built —
         // e.g. when a city's reward has changed since the player connected it (bug #86).

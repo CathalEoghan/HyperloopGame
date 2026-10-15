@@ -182,8 +182,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Daily bonuses collected', value: achievementManager?.counter('dailyBonus') ?? 0 },
         { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(mostProfitableCity))} suffix="/day" /></span> : '—' },
         { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(leastProfitableCity))} suffix="/day" /></span> : '—' },
-        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{mostProfitableDev.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
-        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{leastProfitableDev.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev))} suffix="/day" /></span> : '—' },
+        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(mostProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(leastProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev))} suffix="/day" /></span> : '—' },
     ]
 
     const getUpgradeStats = () => {

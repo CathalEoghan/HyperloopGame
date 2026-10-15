@@ -383,3 +383,62 @@
   font-style: italic;
   margin: -4px 0 8px;
 }
+
+/* Renaming and removing developments */
+.modal-button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.modal-button-row .closeButton {
+  margin: 0;
+}
+
+.dev-original-name {
+  margin: -6px 0 4px;
+  font-size: 0.82rem;
+  color: #888;
+}
+
+.rename-note {
+  font-size: 0.85rem;
+  color: #555;
+  margin: 4px 0 10px;
+}
+
+.rename-input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 10px;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  text-align: center;
+  border: 2px solid black;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.rename-input:focus {
+  outline: 2px solid #f5a623;
+  outline-offset: 1px;
+}
+
+.rename-counter {
+  text-align: right;
+  font-size: 0.72rem;
+  color: #888;
+  margin: 2px 2px 8px;
+}
+
+/* Red buttons for removing a development (the plain .closeButton rules above use !important) */
+.modal .closeButton.danger {
+  border-color: #c0392b !important;
+  color: #c0392b !important;
+}
+
+.modal .closeButton.danger:hover {
+  background-color: #c0392b !important;
+  color: #fff !important;
+}

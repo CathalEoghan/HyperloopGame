@@ -2,6 +2,19 @@ import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js'
 import { Upgrade } from "../../UpgradeManager/Upgrade.js";
 import { Development } from "../../DevelopmentManager/Development.js";
 
+// Renaming a development, and removing one (it goes back to Available to build), each cost this much Reputation
+export const DEV_RENAME_REP_COST = 20;
+export const DEV_REMOVE_REP_COST = 20;
+// The longest custom name a development can have, so it fits on its card
+export const DEV_NAME_MAX_LENGTH = 20;
+
+// A custom name as it is kept: control characters dropped, spaces tidied and trimmed, cut to the limit.
+// Returns '' when nothing is left.
+export function sanitizeDevelopmentName(raw) {
+    if (typeof raw !== 'string') return '';
+    return raw.replace(/[\u0000-\u001f\u007f]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, DEV_NAME_MAX_LENGTH).trim();
+}
+
 const UPGRADE_CASH_PCTS = [0, 0.15, 0.35, 0.50];
 const UPGRADE_REP_COSTS = [0, 5, 10, 15];
 const UPGRADE_BOOST_PCTS = [0, 15, 35, 50];
@@ -23,6 +36,8 @@ export class ProgressionManager {
         this.rankManager = rankManager;
         this.developmentsUnderConstruction = [];
         this.developmentUpgradeLevels = {};
+        // Custom names players have given developments: original name -> custom name. Only ever used for display.
+        this.developmentNames = {};
     }
 
     unlockReward(reward) {
@@ -134,6 +149,48 @@ export class ProgressionManager {
         this.addReputation(-repCost);
         this.purchasedUpgrades.push(upgrade);
         this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u !== upgrade);
+        return true;
+    }
+
+    // What to show for a development: its custom name if it has one, otherwise its own name
+    getDevelopmentName(development) {
+        return this.developmentNames[development.name] || development.name;
+    }
+
+    hasCustomDevelopmentName(development) {
+        return !!this.developmentNames[development.name];
+    }
+
+    // Only a built development (not an upgrade, and not one still being built) can be renamed
+    canRenameDevelopment(development) {
+        return this.purchasedDevelopments.includes(development);
+    }
+
+    // Gives a built development a new name for DEV_RENAME_REP_COST Reputation. Typing its original name back removes
+    // the custom name; that costs the same. Nothing is charged when the name wouldn't change, or can't be afforded.
+    renameDevelopment(development, rawName) {
+        if (!this.canRenameDevelopment(development)) return false;
+        const name = sanitizeDevelopmentName(rawName);
+        if (!name) return false;
+        if (name === this.getDevelopmentName(development)) return false;
+        if (!this.spendReputation(DEV_RENAME_REP_COST)) return false;
+        if (name === development.name) delete this.developmentNames[development.name];
+        else this.developmentNames[development.name] = name;
+        return true;
+    }
+
+    // Takes a built development out: it goes back to Available to build, with its upgrade levels and custom name gone.
+    // Costs `repCost` Reputation (so none can be taken that isn't there) and pays back `refund` cash, which is a
+    // refund and not earnings.
+    removeDevelopment(development, repCost = DEV_REMOVE_REP_COST, refund = 0) {
+        if (!this.canRenameDevelopment(development)) return false;
+        if (repCost > 0 && !this.spendReputation(repCost)) return false;
+        if (refund > 0) this.balance += refund;
+        this.purchasedDevelopments = this.purchasedDevelopments.filter(d => d !== development);
+        delete this.developmentUpgradeLevels[development.name];
+        delete this.developmentNames[development.name];
+        // It can be built again only while a connected city still offers it (a city may have been disconnected since)
+        if (this.purchasedCities.some(c => c.rewards.some(r => r.name === development.name))) this.unlockReward(development);
         return true;
     }
 

@@ -12,6 +12,7 @@ import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.j
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
+import { DEV_NAME_MAX_LENGTH, DEV_RENAME_REP_COST, sanitizeDevelopmentName } from 'Managers/ProgressionManager/ProgressionManager.js'
 import poorIcon from '../assets/misc/poor.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
@@ -27,9 +28,15 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [showUpgradeModal, setShowUpgradeModal] = useState(false)
     const [showBoostTooltip, setShowBoostTooltip] = useState(null) // the badge being hovered
+    const [showRenameModal, setShowRenameModal] = useState(false)
+    const [renameText, setRenameText] = useState('')
+    const [confirmRemove, setConfirmRemove] = useState(false)
 
     const progressionManager = constructionManager.progressionManager
     const allItems = [...allDevelopments, ...allUpgrades]
+    // What a development is called on screen: the player's name for it, or its own
+    const nameOf = (d) => progressionManager.getDevelopmentName(d)
+    const isRenamed = (d) => progressionManager.hasCustomDevelopmentName(d)
 
     const underConstruction = allItems.filter(item =>
         developmentsUnderConstruction.some(d => d.name === item.name)
@@ -50,12 +57,13 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         let result = [...items]
         if (activeCategory === 'Upgrades') result = result.filter(d => !d.revenue)
         else if (activeCategory !== 'All') result = result.filter(d => d.category === activeCategory)
-        if (search.trim()) result = result.filter(d => matchesSearch(d.name, search))
+        // A renamed development is found by either of its names
+        if (search.trim()) result = result.filter(d => matchesSearch(nameOf(d), search) || matchesSearch(d.name, search))
         if (sortBy === 'revenue-high') result.sort((a, b) => incomeOf(b) - incomeOf(a))
         else if (sortBy === 'revenue-low') result.sort((a, b) => incomeOf(a) - incomeOf(b))
         else if (sortBy === 'category') result.sort((a, b) => a.category.localeCompare(b.category))
         else if (sortBy === 'upgrades-first') result.sort((a, b) => (a.revenue ? 1 : 0) - (b.revenue ? 1 : 0))
-        else result.sort((a, b) => a.name.localeCompare(b.name))
+        else result.sort((a, b) => nameOf(a).localeCompare(nameOf(b)))
         return result
     }
 
@@ -69,7 +77,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
     const getUpgradeInfo = (dev) => progressionManager.getDevelopmentUpgradeCostInfo(dev, 1.0 - economyManager.getUpgradeSum('developmentUpgradeDiscount'))
     const getLevel = (dev) => progressionManager.getDevelopmentUpgradeLevel(dev)
-    const closeModal = () => { setSelectedDevelopment(null); setShowUpgradeModal(false) }
+    const closeModal = () => { setSelectedDevelopment(null); setShowUpgradeModal(false); setShowRenameModal(false); setConfirmRemove(false) }
+    const openRename = (dev) => { setRenameText(nameOf(dev)); setShowRenameModal(true) }
 
     return (
         <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
@@ -122,7 +131,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     return (
                         <div className="modal-overlay" onClick={() => setShowUpgradeModal(false)}>
                             <div className="modal" onClick={e => e.stopPropagation()}>
-                                <h3>Upgrade {selectedDevelopment.name}</h3>
+                                <h3>Upgrade {nameOf(selectedDevelopment)}</h3>
                                 <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
                                 <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
@@ -146,7 +155,53 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 })()}
 
                 {/* Main development modal */}
-                {selectedDevelopment && !showUpgradeModal && (
+                {/* Rename modal: Reset only puts the original name back in the box; Confirm is what costs Reputation */}
+                {showRenameModal && selectedDevelopment && (() => {
+                    const dev = selectedDevelopment
+                    const clean = sanitizeDevelopmentName(renameText)
+                    const unchanged = clean === nameOf(dev)
+                    // The real Reputation, not the on-screen figure, which can be a second old (bug #170)
+                    const tooPoor = progressionManager.reputation < DEV_RENAME_REP_COST
+                    const canConfirm = clean !== '' && !unchanged && !tooPoor
+                    const confirm = () => {
+                        if (!canConfirm || !progressionManager.renameDevelopment(dev, clean)) { playNotEnoughFundsSound(); return }
+                        playFarewellAcceptSound()
+                        onSave()
+                        closeModal()
+                    }
+                    return (
+                        <div className="modal-overlay" onClick={() => { setShowRenameModal(false) }}>
+                            <div className="modal" onClick={e => e.stopPropagation()}>
+                                <h3>Rename {dev.name}</h3>
+                                <p className="rename-note">Give it a name of your own. It will show as <em>{clean || '…'}</em>, with <em>{dev.name}</em> beneath it.</p>
+                                <input
+                                    className="rename-input"
+                                    type="text"
+                                    value={renameText}
+                                    maxLength={DEV_NAME_MAX_LENGTH}
+                                    autoFocus
+                                    spellCheck={false}
+                                    aria-label="New name"
+                                    onChange={e => setRenameText(e.target.value)}
+                                    onKeyDown={e => { if (e.key === 'Enter') confirm(); else if (e.key === 'Escape') setShowRenameModal(false) }}
+                                />
+                                <div className="rename-counter">{renameText.length}/{DEV_NAME_MAX_LENGTH}</div>
+                                {tooPoor && <p style={{ color: '#c0392b', fontSize: '0.8rem', margin: '4px 0' }}>Not enough Reputation.</p>}
+                                <div className="modal-button-row">
+                                    <button className="closeButton" style={{ opacity: renameText === dev.name ? 0.5 : 1 }} onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setRenameText(dev.name) }}>Reset</button>
+                                    <button className="closeButton" style={{ opacity: canConfirm ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={confirm}>
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                            Confirm ({DEV_RENAME_REP_COST} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                        </span>
+                                    </button>
+                                    <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowRenameModal(false) }}>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })()}
+
+                {selectedDevelopment && !showUpgradeModal && !showRenameModal && (
                     <div className="modal-overlay" onClick={closeModal}>
                         <div className="modal" onClick={(e) => e.stopPropagation()}>
                             {underConstruction.some(d => d.name === selectedDevelopment.name) ? (
@@ -232,7 +287,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <img className="modal-city-image" src={developmentImages[selectedDevelopment.name]} alt={selectedDevelopment.name}
                                         onClick={(e) => { e.stopPropagation(); setEnlargedImage(developmentImages[selectedDevelopment.name]) }}
                                         style={{ cursor: 'zoom-in' }} />
-                                    <h3>{selectedDevelopment.name}</h3>
+                                    <h3>{nameOf(selectedDevelopment)}</h3>
+                                    {isRenamed(selectedDevelopment) && <p className="dev-original-name">{selectedDevelopment.name}</p>}
                                     <hr />
                                     {(() => {
                                         const sourceCity = purchasedCities.find(city => city.rewards.some(r => r.name === selectedDevelopment.name))
@@ -287,14 +343,69 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     {!selectedDevelopment.revenue && stackingNote(selectedDevelopment.effectType) && (
                                         <p className="effect-stacking-note">{stackingNote(selectedDevelopment.effectType)}</p>
                                     )}
-                                    <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
-                                        {selectedDevelopment.revenue && getLevel(selectedDevelopment) < 3 && (
-                                            <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowUpgradeModal(true) }}>
-                                                Upgrade
-                                            </button>
-                                        )}
-                                        <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
-                                    </div>
+                                    {(() => {
+                                        const canEdit = progressionManager.canRenameDevelopment(selectedDevelopment)
+                                        if (canEdit && confirmRemove) {
+                                            // The same two steps as disconnecting a city: ask, then a red Confirm
+                                            const removal = economyManager.getDevelopmentRemoval(selectedDevelopment)
+                                            const income = selectedDevelopment.revenue ? economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment)) : 0
+                                            const level = getLevel(selectedDevelopment)
+                                            const canAfford = removal.amicable || progressionManager.reputation >= removal.repCost
+                                            return (
+                                                <>
+                                                    <p style={{ color: '#c0392b', fontWeight: 'bold', fontSize: '0.85rem', margin: '12px 0 4px' }}>
+                                                        Remove {nameOf(selectedDevelopment)}?
+                                                    </p>
+                                                    <p style={{ fontSize: '0.8rem', color: '#555', margin: '0 0 8px' }}>
+                                                        It goes back to Available to build. You lose its {income > 0 && <><strong>£{Math.round(income).toLocaleString('en-GB')}/day</strong> income, </>}{level > 0 && <>its upgrade level (<strong>LVL {level}</strong>), </>}{isRenamed(selectedDevelopment) ? <>its name, and </> : null}the cost of building it again.
+                                                    </p>
+                                                    <button
+                                                        className="closeButton danger"
+                                                        onMouseEnter={() => playHoverSound()}
+                                                        style={{ opacity: canAfford ? 1 : 0.5 }}
+                                                        onClick={() => {
+                                                            // Worked out again from the real Reputation: the figure on screen can be a second old (bug #170)
+                                                            const now = economyManager.getDevelopmentRemoval(selectedDevelopment)
+                                                            if (!progressionManager.removeDevelopment(selectedDevelopment, now.repCost, now.refund)) { playNotEnoughFundsSound(); return }
+                                                            playClickSound2()
+                                                            onSave()
+                                                            closeModal()
+                                                        }}
+                                                    >
+                                                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                                                            {removal.amicable
+                                                                ? (removal.refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{removal.refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>)
+                                                                : <>Confirm ({removal.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)</>}
+                                                        </span>
+                                                    </button>
+                                                    {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough Reputation</p>}
+                                                    <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setConfirmRemove(false) }}>Cancel</button>
+                                                </>
+                                            )
+                                        }
+                                        return (
+                                            <div className="modal-button-row" style={{ marginTop: '12px' }}>
+                                                {selectedDevelopment.revenue && getLevel(selectedDevelopment) < 3 && (
+                                                    <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowUpgradeModal(true) }}>
+                                                        Upgrade
+                                                    </button>
+                                                )}
+                                                {canEdit && (
+                                                    <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); openRename(selectedDevelopment) }}>
+                                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                                            Rename ({DEV_RENAME_REP_COST} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                        </span>
+                                                    </button>
+                                                )}
+                                                {canEdit && (
+                                                    <button className="closeButton danger" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setConfirmRemove(true) }}>
+                                                        Remove development
+                                                    </button>
+                                                )}
+                                                <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); closeModal() }}>Close</button>
+                                            </div>
+                                        )
+                                    })()}
                                 </>
                             )}
                         </div>
@@ -347,8 +458,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 </div>
                                             )}
                                         </div>
-                                        <div>{development.name}</div>
-                                        <div className="category">{development.category}</div>
+                                        <div title={isRenamed(development) ? `${nameOf(development)} (${development.name})` : undefined}>{nameOf(development)}</div>
+                                        <div className="category">{isRenamed(development) ? `${development.name} • ${development.category}` : development.category}</div>
                                     </button>
                                 )
                             })}
