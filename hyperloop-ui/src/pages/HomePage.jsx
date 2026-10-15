@@ -605,6 +605,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 <p className="globe-cities">{purchasedCitiesCount} {purchasedCitiesCount === 1 ? 'city' : 'cities'} connected</p>
             </div>
             <div className="globe-right-controls">
+                <div className="globe-controls-row">
                 <div className="globe-view-switch" role="tablist" aria-label="Globe view">
                     <button
                         role="tab"
@@ -621,9 +622,12 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                         onClick={() => chooseView('loops')}
                     >Active Loops{loops.length > 0 && <span className="globe-view-count">{loops.length}</span>}</button>
                 </div>
-                {globeView === 'connections' && (
-                    <button
+                {/* Always laid out, so the switch doesn't move when the view changes; hidden in Active Loops, where it has no effect */}
+                <button
                         className={`globe-toggle-btn ${showOwned ? 'globe-toggle-active' : ''}`}
+                        style={globeView === 'connections' ? undefined : { visibility: 'hidden' }}
+                        tabIndex={globeView === 'connections' ? 0 : -1}
+                        aria-hidden={globeView !== 'connections'}
                         onMouseEnter={() => playHoverSound()}
                         onClick={() => {
                             playClickSound2()
@@ -636,7 +640,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     >
                         {showOwned ? '👁 All cities' : '👁 Owned only'}
                     </button>
-                )}
+                </div>
                 {globeView === 'loops' && (
                     <div className="loops-panel">
                         <button

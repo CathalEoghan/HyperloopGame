@@ -171,6 +171,14 @@
     pointer-events: none;
 }
 
+.globe-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    max-width: 100%;
+}
+
 .globe-view-switch {
     display: inline-flex;
     border: 1px solid #f5a623;
