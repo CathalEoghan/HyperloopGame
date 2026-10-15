@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { getDistanceUnit, setDistanceUnit } from '../utils/units.js'
+import { fullscreenSupported, isFullscreen, setFullscreen, onFullscreenChange } from '../utils/display.js'
 import { playHoverSound, playClickSound2, playFarewellAcceptSound } from '../utils/sound.js'
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
@@ -188,6 +189,8 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
     const [eventTint, setEventTint] = useState(localStorage.getItem('hyperloop_event_tint') !== 'false')
     const [distanceUnit, setDistanceUnitState] = useState(getDistanceUnit())
+    const [fullscreen, setFullscreenState] = useState(isFullscreen())
+    useEffect(() => onFullscreenChange(setFullscreenState), [])
     const [splitFlap, setSplitFlap] = useState(localStorage.getItem('splitFlap') !== 'false')
     const [nameInput, setNameInput] = useState(terminalName)
     const [nameSaved, setNameSaved] = useState(false)
@@ -328,6 +331,22 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     </div>
                 </div>
             </div>
+
+            {fullscreenSupported() && (
+                <div className="settings-section">
+                    <h2 className="settings-section-title">Display</h2>
+                    <div className="settings-row">
+                        <div className="settings-label">
+                            <span className="settings-label-title">Fullscreen</span>
+                            <span className="settings-label-desc">Fill the whole screen. Press Esc to leave fullscreen at any time. To make everything bigger or smaller, zoom the page with Ctrl and + or -.</span>
+                        </div>
+                        <div className="settings-options">
+                            <OptionBtn active={fullscreen} onClick={() => setFullscreen(true)}>On</OptionBtn>
+                            <OptionBtn active={!fullscreen} onClick={() => setFullscreen(false)}>Off</OptionBtn>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div className="settings-section">
                 <h2 className="settings-section-title">Graphics</h2>
