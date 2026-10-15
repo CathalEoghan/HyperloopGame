@@ -19,7 +19,7 @@ import constructionIcon from '../assets/misc/construction.png'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
-function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onUpgradeBuilt, topOffset = 113 }) {
+function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onRename, onRemove, onUpgradeBuilt, topOffset = 113 }) {
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [activeCategory, setActiveCategory] = usePersistedChoice('developmentsCategory', CATEGORIES, 'All')
@@ -167,6 +167,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         if (!canConfirm || !progressionManager.renameDevelopment(dev, clean)) { playNotEnoughFundsSound(); return }
                         playFarewellAcceptSound()
                         onSave()
+                        onRename?.(dev)
                         closeModal()
                     }
                     return (
@@ -374,6 +375,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                             if (!progressionManager.removeDevelopment(selectedDevelopment, now.repCost, now.refund)) { playNotEnoughFundsSound(); return }
                                                             playClickSound2()
                                                             onSave()
+                                                            onRemove?.(selectedDevelopment)
                                                             closeModal()
                                                         }}
                                                     >

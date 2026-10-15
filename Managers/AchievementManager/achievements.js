@@ -26,6 +26,8 @@ export const ACHIEVEMENTS = [
     { id: 'developing', group: 'Developments', name: 'Developing', description: 'Construct your first development.', check: atLeast('builds', 1) },
     { id: 'developed', group: 'Developments', name: 'Developed', description: 'Construct 10 developments.', check: atLeast('builds', 10) },
     { id: 'neverADullMoment', group: 'Developments', name: 'Never a Dull Moment', description: 'Construct 100 developments.', check: atLeast('builds', 100) },
+    { id: 'underNewManagement', group: 'Developments', name: 'Under New Management', description: 'Rename a development.' },
+    { id: 'hereTodayGoneTomorrow', group: 'Developments', name: 'Here Today, Gone Tomorrow', description: 'Remove a development.' },
     { id: 'upgraded', group: 'Developments', name: 'Upgraded', description: 'Upgrade a development for the first time.', check: atLeast('devUpgrades', 1) },
     { id: 'renovator', group: 'Developments', name: 'Renovator', description: 'Upgrade a development 10 times.', check: atLeast('devUpgrades', 10) },
     { id: 'bigSpender', group: 'Developments', name: 'Big Spender', description: 'Construct 10 Shopping-category developments.', check: built('Shopping', 10) },
@@ -42,9 +44,12 @@ export const ACHIEVEMENTS = [
 
     // Farewells
     { id: 'veryImportantPerson', group: 'Farewells', name: 'Very Important Person', description: 'Give a farewell to a VIP passenger.' },
-    { id: 'niceManager', group: 'Farewells', name: 'Nice Manager', description: 'Give a farewell.', check: atLeast('farewells', 1) },
-    { id: 'greatManager', group: 'Farewells', name: 'Great Manager', description: 'Give a total of 10 farewells.', check: atLeast('farewells', 10) },
-    { id: 'bestManagerEver', group: 'Farewells', name: 'Best Manager Ever', description: 'Give a total of 100 farewells.', check: atLeast('farewells', 100) },
+    // (The id niceManager is kept so it stays unlocked for players who have it)
+    { id: 'niceManager', group: 'Farewells', name: 'Goodbye!', description: 'Give a farewell.', check: atLeast('farewells', 1) },
+    { id: 'welcome', group: 'Farewells', name: 'Welcome!', description: 'Greet the passengers of an arriving loop.', check: atLeast('greetings', 1) },
+    // The bigger totals count farewells and greetings together
+    { id: 'greatManager', group: 'Farewells', name: 'Great Manager', description: 'Give a total of 10 farewells and greetings.', check: atLeast('farewellsAndGreetings', 10) },
+    { id: 'bestManagerEver', group: 'Farewells', name: 'Best Manager Ever', description: 'Give a total of 100 farewells and greetings.', check: atLeast('farewellsAndGreetings', 100) },
 
     // Reputation
     { id: 'wellLiked', group: 'Reputation', name: 'Well-Liked', description: 'Have 1000 Reputation at any given time.', check: atLeast('reputation', 1000) },

@@ -115,6 +115,8 @@ export class AchievementManager {
             balance: progressionManager.balance,
             likes,
             farewells: this.counter('farewells'),
+            greetings: this.counter('greetings'),
+            farewellsAndGreetings: this.counter('farewells') + this.counter('greetings'),
             work: this.counter('work'),
             prestigeEarned: prestige.points > 0 || prestige.owned.length > 0 || PrestigeManager.getHistory().length > 0,
             prestigeOwned: prestige.owned.length,

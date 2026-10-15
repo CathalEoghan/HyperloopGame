@@ -1435,6 +1435,8 @@ function App() {
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           economyManager={economyManager}
           onSave={triggerSave}
+          onRename={() => unlockAchievement('underNewManagement')}
+          onRemove={() => unlockAchievement('hereTodayGoneTomorrow')}
           onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
             if (success) {
