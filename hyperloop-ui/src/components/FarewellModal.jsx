@@ -6,6 +6,7 @@ import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
 import { flagSrc } from '../utils/flagSrc.js'
+import { farewellWindowMinutes } from '../utils/loops.js'
 
 const secondsUntil = expiresAt => Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000))
 
@@ -13,9 +14,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const [secondsLeft, setSecondsLeft] = useState(() => {
         if (departure.expiresAt) return secondsUntil(departure.expiresAt);
         if (departure.secondsRemaining) return departure.secondsRemaining;
-        const extensionCount = economyManager?.progressionManager.purchasedUpgrades
-            .filter(u => u.effectType === 'farewellWindowExtension').length || 0
-        return (5 + extensionCount * 5) * 60
+        return farewellWindowMinutes(economyManager?.progressionManager.purchasedUpgrades) * 60
     })
 
     useEffect(() => {

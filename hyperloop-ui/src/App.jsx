@@ -50,7 +50,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
-import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, ARRIVAL_DELAY_MAX_MINUTES } from './utils/loops.js'
+import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -1024,9 +1024,7 @@ function App() {
       }
       const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
 
-      const farewellExtensions = progressionManager.purchasedUpgrades
-        .filter(u => u.effectType === 'farewellWindowExtension').length;
-      const windowMinutes = 5 + (farewellExtensions * 5);
+      const windowMinutes = farewellWindowMinutes(progressionManager.purchasedUpgrades);
 
         setDepartureQueue(queue => {
         if (queue.every(stillOpen)) return queue;
@@ -1548,6 +1546,7 @@ function App() {
             <DepartureBoard
               purchasedCities={progressionManager.purchasedCities}
               homeCity={progressionManager.purchasedCities[0]}
+              purchasedUpgrades={progressionManager.purchasedUpgrades}
               preSelectedCity={preSelectedCity}
               onPreSelectedCityHandled={() => setPreSelectedCity(null)}
               onClose={() => {

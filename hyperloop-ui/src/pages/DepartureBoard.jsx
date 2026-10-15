@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import './DepartureBoard.css'
 import { playSplitFlapLong, playSplitFlapShort, playClickSound2, playHoverSound } from '../utils/sound.js'
 import { minutesUntilDeparture } from '../utils/time.js'
-import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus } from '../utils/loops.js'
+import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus, farewellWindowMinutes } from '../utils/loops.js'
 
 const TAB_KEY = 'terminalBoardTab'
 
@@ -60,7 +60,10 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
     )
 })
 
-function DepartureBoard({ purchasedCities, homeCity, onClose }) {
+function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose }) {
+    // How long an arrival stays lit as ARRIVED on the board — matches how long its greeting window actually
+    // stays open, rather than assuming every farewell-window upgrade is owned (bug #183)
+    const litMinutes = farewellWindowMinutes(purchasedUpgrades)
     const [schedule, setSchedule] = useState([])
     const [arrivals, setArrivals] = useState([])
     // Arrivals or Departures, remembered for next time
@@ -154,7 +157,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
             deps.forEach(e => note(`dep|${e.name}`, getStatus(e.hour, e.minute, e.delayed, lm[`dep|${e.name}`] || 0).label, !onArrivals))
             arrs.forEach(e => {
                 // Fading out counts as a change too, though the label stays ARRIVED
-                const st = getArrivalStatus(e, homeName, Date.now(), lm[`arr|${e.name}`] || 0)
+                const st = getArrivalStatus(e, homeName, Date.now(), lm[`arr|${e.name}`] || 0, litMinutes)
                 note(`arr|${e.name}`, st.label + (st.gone ? '|gone' : ''), onArrivals)
             })
             if (shownChanged && splitFlapEnabled()) playSplitFlapShort()
@@ -164,7 +167,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
             if (anyChanged) setRenderTick(t => t + 1)
         }, 1000)
         return () => clearInterval(interval)
-    }, [purchasedCities])
+    }, [purchasedCities, litMinutes])
 
     const now = new Date()
     const weekday = now.toLocaleDateString('en-GB', { weekday: 'long' })
@@ -198,7 +201,7 @@ function DepartureBoard({ purchasedCities, homeCity, onClose }) {
         )
         const lag = lagMap[`${isArrivals ? 'arr' : 'dep'}|${entry.name}`] || 0
         const status = isArrivals
-            ? getArrivalStatus(entry, homeName, undefined, lag)
+            ? getArrivalStatus(entry, homeName, undefined, lag, litMinutes)
             : getStatus(entry.hour, entry.minute, entry.delayed, lag)
         const isGone = isArrivals ? !!status.gone : status.label === 'DEPARTED'
         // An arrival's gate goes up as it gets close, like a departure's when it's time to go to the gate

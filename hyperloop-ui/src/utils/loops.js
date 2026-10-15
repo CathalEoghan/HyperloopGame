@@ -20,9 +20,13 @@ export const NUM_GATES = 30
 export const ARRIVAL_DELAY_MAX_MINUTES = 60
 // The board shows ARRIVING for the last few minutes before a loop gets in
 export const ARRIVING_MINUTES = 10
-// An arrival stays lit on the board as long as its greeting can be open: 5 minutes, plus 5 for each of the
-// three farewell window upgrades
-export const ARRIVED_LIT_MINUTES = 20
+
+// How long a farewell or greeting window stays open: 5 minutes, plus 5 for each of the three farewell
+// window upgrades owned
+export function farewellWindowMinutes(purchasedUpgrades) {
+    const extensions = (purchasedUpgrades || []).filter(u => u.effectType === 'farewellWindowExtension').length
+    return 5 + extensions * 5
+}
 
 const EARTH_RADIUS_MILES = 3958.8
 const DAY_KINDS = { departure: 'departures_', arrival: 'arrivals_' }
@@ -274,12 +278,14 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
 // ---- What's happening now ----
 
 // The board status of an arrival. `lag` (seconds) lets each row flip a moment apart, like a real board.
-export function getArrivalStatus(entry, homeName, nowMs = Date.now(), lag = 0) {
+// `litMinutes` is how long it stays lit as ARRIVED — as long as its greeting can still be open, i.e. the
+// player's actual farewell window (farewellWindowMinutes), not a fixed one that assumes every upgrade is owned.
+export function getArrivalStatus(entry, homeName, nowMs = Date.now(), lag = 0, litMinutes = 5) {
     const t = nowMs - lag * 1000
     const arriveTs = entryTimestamp(entry, t)
     const startTs = arriveTs - entryDuration(entry, 'arrival', homeName, t) * 60000
     const minutesLeft = (arriveTs - t) / 60000
-    if (minutesLeft <= -ARRIVED_LIT_MINUTES) return { label: 'ARRIVED', color: '#666', gone: true }
+    if (minutesLeft <= -litMinutes) return { label: 'ARRIVED', color: '#666', gone: true }
     if (minutesLeft <= 0) return { label: 'ARRIVED', color: 'limegreen' }
     if (minutesLeft <= ARRIVING_MINUTES) return { label: 'ARRIVING', color: '#f5a623' }
     if (entry.delayed) return { label: 'DELAYED', color: '#e74c3c' }
