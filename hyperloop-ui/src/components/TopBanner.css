@@ -17,7 +17,7 @@
 font-size: 1rem;
     font-family: 'Inter', sans-serif;
     font-weight: bold;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     letter-spacing: 0.5px;
     flex-shrink: 0;
     align-self: center;
@@ -95,7 +95,7 @@ font-size: 1rem;
     position: relative;
     overflow: hidden;
     padding: 0;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 
 /* The photo sits on its own layer so it can zoom slowly on hover without moving the label */
@@ -286,7 +286,7 @@ font-size: 1rem;
     font-family: 'Inter', sans-serif;
     font-size: 0.78rem;
     font-weight: 600;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     transition: background 0.15s ease, color 0.15s ease;
 }
 .ShopButton:hover { background: var(--ui-accent, #f5a623); color: white; }

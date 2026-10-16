@@ -32,7 +32,7 @@
     flex-direction: column;
     gap: 6px;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
-    cursor: default;
+    cursor: var(--cursor-default, default);
 }
 
 .stat-card:hover {
@@ -67,7 +67,7 @@
 
 /* Collapsible sections: a full-width dark bar that clearly reads as a button */
 .progress-section-toggle {
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     user-select: none;
     -webkit-user-select: none;
     background: #333;
@@ -201,7 +201,7 @@
     padding: 5px 14px;
     font-family: 'Inter', sans-serif;
     font-size: 0.8rem;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     color: white;
     transition: background 0.15s ease;
 }
@@ -217,7 +217,7 @@
     font-weight: bold;
     padding: 8px 0 4px;
     border-bottom: 1px solid #ddd;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     user-select: none;
     margin: 12px 0 8px;
 }
@@ -400,14 +400,14 @@
 .progress-country-unlocked:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 
 .progress-city-connected:hover,
 .progress-city-unlocked:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 
 .progress-city-grid {
@@ -433,7 +433,7 @@
     background: rgba(255, 215, 0, 0.2) !important;
     box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.7) !important;
     border: 2px solid #FFD700 !important;
-    cursor: pointer !important;
+    cursor: var(--cursor-pointer, pointer) !important;
     animation: gold-pulse 2s ease-in-out infinite;
 }
 

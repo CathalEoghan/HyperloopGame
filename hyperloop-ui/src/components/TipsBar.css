@@ -47,7 +47,7 @@
     border: none;
     color: #666;
     font-size: 0.7rem;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     padding: 0 4px;
     flex-shrink: 0;
     line-height: 1;

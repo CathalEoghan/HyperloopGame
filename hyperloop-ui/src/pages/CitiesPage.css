@@ -13,7 +13,7 @@
 .background .modal .constructionButton {
     background: none;
     border: none;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     font-family: "Inter", sans-serif;
     font-weight: bold;
     display: flex;
@@ -108,7 +108,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     user-select: none;
 }
 
@@ -161,7 +161,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
     background: white;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     color: #555;
     outline: none;
 }
@@ -183,7 +183,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
     font-weight: normal;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     color: #555;
     transition: all 0.15s ease;
 }
@@ -273,7 +273,7 @@
     padding: 5px 14px !important;
     font-family: 'Inter', sans-serif !important;
     font-size: 0.8rem !important;
-    cursor: pointer !important;
+    cursor: var(--cursor-pointer, pointer) !important;
     color: white !important;
     flex-direction: unset !important;
     align-items: unset !important;
@@ -352,7 +352,7 @@
     background: white !important;
     color: black !important;
     padding: 10px 16px !important;
-    cursor: pointer !important;
+    cursor: var(--cursor-pointer, pointer) !important;
     flex-direction: unset !important;
     align-items: unset !important;
 }
@@ -374,7 +374,7 @@
     border: 2px solid black !important;
     background: white !important;
     padding: 10px 16px !important;
-    cursor: pointer !important;
+    cursor: var(--cursor-pointer, pointer) !important;
 }
 
 .modal .constructionButton:hover {

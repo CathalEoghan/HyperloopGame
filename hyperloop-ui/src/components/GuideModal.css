@@ -54,7 +54,7 @@
 }
 
 .guide-section {
-    cursor: default;
+    cursor: var(--cursor-default, default);
     border-radius: 8px;
     padding: 8px;
     transition: background 0.15s ease;

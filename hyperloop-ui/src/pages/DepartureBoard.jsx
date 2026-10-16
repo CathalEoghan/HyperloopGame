@@ -261,7 +261,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
                     <button onClick={() => { playClickSound2(); onClose() }} style={{
                         background: 'none', border: '1px solid #444', color: '#888',
                         fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
-                        padding: '4px 12px', borderRadius: '4px', cursor: 'pointer',
+                        padding: '4px 12px', borderRadius: '4px', cursor: 'var(--cursor-pointer, pointer)',
                         letterSpacing: '1px', transition: 'color 0.2s, border-color 0.2s'
                     }}
                     onMouseEnter={e => { playHoverSound(); e.target.style.color = '#f5a623'; e.target.style.borderColor = '#f5a623' }}

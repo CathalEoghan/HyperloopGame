@@ -156,7 +156,7 @@
     border-radius: 50%;
     width: 28px;
     height: 28px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     font-size: 1rem;
     display: flex;
     align-items: center;
@@ -291,7 +291,7 @@
     background: rgba(10,10,10,0.75);
     border: 2px solid var(--hl-accent, #f5a623);
     border-radius: 12px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -373,7 +373,7 @@
 .hyperlink-replies {
     font-size: 0.75rem;
     color: #aaa;
-    cursor: default;
+    cursor: var(--cursor-default, default);
     user-select: none;
 }
 

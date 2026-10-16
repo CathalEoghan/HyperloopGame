@@ -12,7 +12,7 @@
 .background .constructionButton {
   background: none;
   border: none;
-  cursor: pointer;
+  cursor: var(--cursor-pointer, pointer);
   font-family: "Inter", sans-serif;
   font-weight: bold;
   display: flex;
@@ -64,7 +64,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
   background-color: white;
-  cursor: pointer;
+  cursor: var(--cursor-pointer, pointer);
   color: #555;
   outline: none;
 }
@@ -85,7 +85,7 @@
   font-family: 'Inter', sans-serif;
   font-size: 0.85rem;
   font-weight: normal;
-  cursor: pointer;
+  cursor: var(--cursor-pointer, pointer);
   color: #555;
   transition: all 0.15s ease;
 }
@@ -304,7 +304,7 @@
   border: 2px solid black;
   padding: 6px 20px;
   border-radius: 6px;
-  cursor: pointer;
+  cursor: var(--cursor-pointer, pointer);
 }
 
 .modal .closeButton {
@@ -315,7 +315,7 @@
   border-radius: 8px !important;
   padding: 8px 20px !important;
   margin: 8px auto 0 !important;
-  cursor: pointer !important;
+  cursor: var(--cursor-pointer, pointer) !important;
   font-family: 'Inter', sans-serif !important;
   font-weight: bold !important;
   flex-direction: unset !important;

@@ -101,7 +101,7 @@
     font-size: 1rem;
     letter-spacing: 1px;
     padding: 14px 32px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     transition: background 0.2s, color 0.2s;
     border-radius: 4px;
     animation: buttonPulse 2s infinite;

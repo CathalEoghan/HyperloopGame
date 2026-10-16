@@ -141,7 +141,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                         key={post.id}
                                         className={`hyperlink-post${post.isOfficial ? ' hyperlink-post-official' : ''}`}
                                         onClick={() => handlePostTap(post.id)}
-                                        style={{ position: 'relative', cursor: 'pointer' }}
+                                        style={{ position: 'relative', cursor: 'var(--cursor-pointer, pointer)' }}
                                     >
                                         {likeAnimating === post.id && (
                                             <div className="hyperlink-like-animation">❤</div>

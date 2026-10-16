@@ -66,7 +66,7 @@
 
 .dev-portrait-clickable {
     animation: devPortraitPulse 2s ease-in-out infinite;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     transition: transform 0.15s ease;
 }
 
@@ -76,7 +76,7 @@
 
 .dev-portrait-claimed {
     box-shadow: 0 0 12px rgba(245,166,35,0.2) !important;
-    cursor: default;
+    cursor: var(--cursor-default, default);
 }
 
 .dev-bonus-toast {

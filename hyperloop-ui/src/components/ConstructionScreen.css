@@ -30,7 +30,7 @@
 }
 
 .construction-screen.construction-clickable {
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 
 .construction-logo {

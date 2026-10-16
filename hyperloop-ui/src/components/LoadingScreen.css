@@ -77,7 +77,7 @@
 }
 
 .loading-clickable {
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 
 .loading-enter {

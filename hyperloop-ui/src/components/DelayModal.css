@@ -82,7 +82,7 @@
     font-size: 1rem;
     letter-spacing: 1px;
     padding: 14px 24px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     border-radius: 4px;
     transition: background 0.2s, color 0.2s;
 }
@@ -99,7 +99,7 @@
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.85rem;
     padding: 10px 24px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     border-radius: 4px;
     transition: background 0.2s, color 0.2s;
 }

@@ -55,7 +55,7 @@
     padding: 4px 10px;
     font-family: inherit;
     font-size: 0.75rem;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 .shop-close:hover { background: #f3f3f3; }
 
@@ -74,7 +74,7 @@
     font-family: inherit;
     font-weight: 600;
     font-size: 0.8rem;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     transition: background 0.15s ease, color 0.15s ease;
 }
 .shop-tab:hover, .shop-tab-active { background: var(--ui-accent, #f5a623); color: white; }
@@ -123,7 +123,7 @@
     font-family: inherit;
     font-weight: bold;
     font-size: 0.8rem;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 .shop-btn:hover { filter: brightness(1.08); }
 .shop-btn-ghost { background: white; color: #444; border: 1px solid #bbb; }

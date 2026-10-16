@@ -118,7 +118,7 @@
     padding: 6px 14px;
     font-family: 'Courier New', monospace;
     font-size: 0.75rem;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     letter-spacing: 1px;
     pointer-events: all;
     transition: background 0.2s, transform 0.1s;
@@ -196,7 +196,7 @@
     font-size: 0.75rem;
     letter-spacing: 1px;
     padding: 6px 12px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     display: inline-flex;
     align-items: center;
     gap: 6px;
@@ -215,7 +215,7 @@
 .globe-view-btn-active:hover {
     background: #f5a623;
     color: #0a0a1a;
-    cursor: default;
+    cursor: var(--cursor-default, default);
 }
 
 .globe-view-count {
@@ -255,7 +255,7 @@
     font-size: 0.78rem;
     letter-spacing: 1px;
     padding: 8px 10px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     text-align: left;
     flex-shrink: 0;
 }
@@ -318,7 +318,7 @@
 .loop-row {
     padding: 8px 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     --loop-color: #f5a623;
 }
 

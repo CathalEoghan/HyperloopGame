@@ -241,7 +241,7 @@
     font-size: 1rem;
     letter-spacing: 1px;
     padding: 14px 32px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     transition: background 0.2s, color 0.2s;
     border-radius: 4px;
     animation: buttonPulse 2s infinite;
@@ -298,7 +298,7 @@
     font-size: 0.8rem;
     letter-spacing: 2px;
     padding: 7px 16px;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     transition: color 0.2s, background 0.2s;
 }
 
@@ -313,7 +313,7 @@
 .board-tab-active {
     background: var(--board-accent, #f5a623);
     color: #0a0a0a;
-    cursor: default;
+    cursor: var(--cursor-default, default);
 }
 
 .board-tab-active:hover {

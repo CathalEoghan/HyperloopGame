@@ -47,7 +47,7 @@
     color: #333;
     font-size: 0.8rem;
     font-weight: 600;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 
 .citypicker-tier-on { background: #f5a623; color: #fff; }
@@ -78,7 +78,7 @@
     font-family: inherit;
     font-size: 0.9rem;
     text-align: left;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 
 .citypicker-row:hover { background: #ffeccc; }
@@ -102,7 +102,7 @@
     font-family: inherit;
     font-size: 0.95rem;
     font-weight: 700;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
 }
 
 .citypicker-back { background: #fff; color: #333; }

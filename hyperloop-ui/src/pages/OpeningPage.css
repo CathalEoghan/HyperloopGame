@@ -123,7 +123,7 @@
     font-family: 'Inter', sans-serif;
     font-weight: bold;
     font-size: 1rem;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     transition: background 0.15s, transform 0.1s;
     letter-spacing: 0.5px;
 }
@@ -153,7 +153,7 @@
     border-radius: 16px;
     width: 280px;
     overflow: hidden;
-    cursor: pointer;
+    cursor: var(--cursor-pointer, pointer);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
     transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }

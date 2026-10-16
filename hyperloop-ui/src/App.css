@@ -3,6 +3,18 @@ body, html {
     padding: 0;
 }
 
+/* The game's cursor: a slim gold arrow, and a hotter orange one over anything clickable. They are small SVGs written
+   into the stylesheet (no image files). Every `cursor: pointer` / `cursor: default` in the game's CSS points at these
+   two variables, so to restyle the cursor change just the two images here. The numbers are the click point (x y). */
+:root {
+    --cursor-default: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffd86b'/%3E%3Cstop offset='1' stop-color='%23f5a623'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.5 2.2 L3.5 19.4 L7.9 15.3 L11 22 L13.7 20.8 L10.6 14.2 L16.6 14.2 Z' fill='url(%23g)' stroke='%232b1a00' stroke-width='1.1' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2, default;
+    --cursor-pointer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffb23f'/%3E%3Cstop offset='1' stop-color='%23ff7a12'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.5 2.2 L3.5 19.4 L7.9 15.3 L11 22 L13.7 20.8 L10.6 14.2 L16.6 14.2 Z' fill='url(%23g)' stroke='%232b1a00' stroke-width='1.1' stroke-linejoin='round'/%3E%3Cpath d='M5.2 5.6 L5.2 15.1 L7.4 13' fill='none' stroke='white' stroke-opacity='.65' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2, pointer;
+}
+html, body { cursor: var(--cursor-default); }
+/* Browsers give buttons and links their own cursor, which would beat the one inherited from the page */
+:where(button, select, summary, label, input[type="button"], input[type="submit"], input[type="checkbox"], input[type="radio"], input[type="range"]) { cursor: var(--cursor-default); }
+:where(a[href]) { cursor: var(--cursor-pointer); }
+
 /* Nothing in the game scrolls sideways. If something ever pokes out (the sliding ticker text, a floating "+£"),
    it must not make the page grow a horizontal scrollbar: that bar is amber now, and it squeezes the bottom bar upwards. */
 html {
