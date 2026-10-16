@@ -219,7 +219,7 @@
 }
 
 .globe-view-count {
-    background: #4fc3f7;
+    background: #b3b3b3;   /* neutral grey: blue read as "arrival" */
     color: #0a0a1a;
     border-radius: 8px;
     padding: 0 6px;

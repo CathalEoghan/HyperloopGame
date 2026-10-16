@@ -13,7 +13,8 @@ import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import './HomePage.css'
 import { flagSrc } from '../utils/flagSrc.js'
-import { getActiveLoops, formatClock, formatDuration } from '../utils/loops.js'
+import { getActiveLoops, formatClock, formatDuration, distanceMiles } from '../utils/loops.js'
+import { formatDistance } from '../utils/units.js'
 import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
 
 // Departures are drawn in the game's gold, arrivals in blue
@@ -851,6 +852,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                     {loops.map(loop => {
                                         const progress = Math.min(100, Math.max(0, ((nowMs - loop.startTs) / Math.max(1, loop.endTs - loop.startTs)) * 100))
                                         const fromFlag = countryFlags[loop.fromCountry], toFlag = countryFlags[loop.toCountry]
+                                        // Distance still to go: the route's length, less the share of the trip already travelled
+                                        const routeMiles = distanceMiles(loop.from, loop.to)
+                                        const milesLeft = routeMiles === null ? null : routeMiles * (1 - progress / 100)
                                         return (
                                             <li
                                                 key={loop.id}
@@ -872,7 +876,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                     {loop.delayed && <span className="loop-delayed">DELAYED · </span>}
                                                     Expected {formatClock(loop.endTs)} · {formatDuration(loop.endTs - nowMs)} left
                                                 </div>
-                                                <div className="loop-pax">{loop.passengers.toLocaleString('en-GB')} {loop.passengers === 1 ? 'passenger' : 'passengers'} onboard</div>
+                                                <div className="loop-pax">{loop.passengers.toLocaleString('en-GB')} {loop.passengers === 1 ? 'passenger' : 'passengers'} onboard{milesLeft !== null && <> · {formatDistance(milesLeft)} left</>}</div>
                                             </li>
                                         )
                                     })}
