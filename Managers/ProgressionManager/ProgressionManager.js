@@ -5,6 +5,8 @@ import { Development } from "../../DevelopmentManager/Development.js";
 // Renaming a development, and removing one (it goes back to Available to build), each cost this much Reputation
 export const DEV_RENAME_REP_COST = 20;
 export const DEV_REMOVE_REP_COST = 20;
+// Legal Loopholes: renaming costs half (rounded up)
+export const getRenameRepCost = () => PrestigeManager.owns('legalLoopholes') ? Math.ceil(DEV_RENAME_REP_COST / 2) : DEV_RENAME_REP_COST;
 // The longest custom name a development can have, so it fits on its card
 export const DEV_NAME_MAX_LENGTH = 20;
 
@@ -101,6 +103,8 @@ export class ProgressionManager {
             this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u !== development);
         } else {
             this.purchasedDevelopments.push(development);
+            // Colour Theory: a development that earns money opens at Level 1, with no cash or Reputation paid
+            if (development.revenue && PrestigeManager.owns('colourTheory') && !this.developmentUpgradeLevels[development.name]) this.developmentUpgradeLevels[development.name] = 1;
             this.unlockedDevelopments = this.unlockedDevelopments.filter(d => d !== development);
         }
         this.unlockedRewards = this.unlockedRewards.filter(r => r !== development);
@@ -176,14 +180,14 @@ export class ProgressionManager {
         return this.purchasedDevelopments.includes(development);
     }
 
-    // Gives a built development a new name for DEV_RENAME_REP_COST Reputation. Typing its original name back removes
+    // Gives a built development a new name for getRenameRepCost() Reputation. Typing its original name back removes
     // the custom name; that costs the same. Nothing is charged when the name wouldn't change, or can't be afforded.
     renameDevelopment(development, rawName) {
         if (!this.canRenameDevelopment(development)) return false;
         const name = resolveDevelopmentName(development, rawName);
         if (!name) return false;
         if (name === this.getDevelopmentName(development)) return false;
-        if (!this.spendReputation(DEV_RENAME_REP_COST)) return false;
+        if (!this.spendReputation(getRenameRepCost())) return false;
         if (name === development.name) delete this.developmentNames[development.name];
         else this.developmentNames[development.name] = name;
         return true;

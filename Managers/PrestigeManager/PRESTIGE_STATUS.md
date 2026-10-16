@@ -6,19 +6,21 @@ delete its line from `NOT_IMPLEMENTED` and move it to the live table below.
 
 The income, Work, farewell and Progress perks are true multipliers: they apply after the normal boosts have been added up, and multiply each other (bug #147). Their strengths live in `PRESTIGE_VALUES`, prestigeUpgrades.js, and the descriptions are built from them.
 
-## Live (30 of 30)
+## Live (32 of 32)
 
 | Layer | Upgrade | Effect in the game | Where |
 |---|---|---|---|
 | 1 | Staff Feedback Forms | x2 city and development income | EconomyManager `prestigeMultipliers`, `getPrestigeDevMultiplier` / `getPrestigeCityMultiplier` |
 | 1 | Livestream Everything | Guaranteed +5 Reputation every 100 manual Work clicks in a run (Best P.A. Ever's auto-clicks don't count; the count starts again with each run) | `livestream.js` (`livestreamRepFor`), App.jsx `performWork` |
+| 1 | Amicable Breakups | Disconnect costs nothing and refunds half the connection cost | App.jsx `onDisconnect`, CitiesPage |
+| 1 | Legal Loopholes | Renaming a development costs 10 Reputation instead of 20 | ProgressionManager `getRenameRepCost`, DevelopmentPage |
 | 1 | Sign-On Bonus | +£1,000,000 when a new run's starter city connects (added to the balance directly, so it is not earned cash and gives no XP) | App.jsx `signOnPending` |
+| 2 | Colour Theory | A development that earns money opens at Level 1 (no cash or Reputation paid; not applied to developments already built) | ProgressionManager `purchaseDevelopment` |
 | 2 | Oral Hygiene | x6 farewell Reputation (x12 with the x2 upgrade) | `getFarewellRepGain` |
 | 2 | Better Interest Rates | Daily bonus cash x10 | App.jsx `checkDailyLogin` |
 | 2 | Elite Accountants | Offline "double" becomes x4, same 20 Rep | OfflineModal `bonusFactor` |
 | 2 | Cult of Celebrity | +1 Rep for each Hyper-Link post liked (likes are permanent) | HyperLink `onLikeReward` |
 | 2 | Good Standing | Developments upgrade for 0 Rep | ProgressionManager `getDevelopmentUpgradeCostInfo` |
-| 2 | Amicable Breakups | Disconnect costs nothing and refunds half the connection cost | App.jsx `onDisconnect`, CitiesPage |
 | 2 | Advanced Engineering | Cities and developments build immediately (finish on the next tick) | ConstructionManager |
 | 2 | Video Message | Farewell is sent automatically after 2.5 s | FarewellModal |
 | 2 | Viral Superstar | x3 Progress rewards (x6 with the x2 upgrade) | ProgressPage `handleCardClick` |

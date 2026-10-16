@@ -12,7 +12,7 @@ import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.j
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
-import { DEV_NAME_MAX_LENGTH, DEV_RENAME_REP_COST, resolveDevelopmentName } from 'Managers/ProgressionManager/ProgressionManager.js'
+import { DEV_NAME_MAX_LENGTH, getRenameRepCost, resolveDevelopmentName } from 'Managers/ProgressionManager/ProgressionManager.js'
 import poorIcon from '../assets/misc/poor.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
@@ -161,7 +161,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     const isOriginal = clean === dev.name
                     const unchanged = clean === nameOf(dev)
                     // The real Reputation, not the on-screen figure, which can be a second old (bug #170)
-                    const tooPoor = progressionManager.reputation < DEV_RENAME_REP_COST
+                    const tooPoor = progressionManager.reputation < getRenameRepCost()
                     const canConfirm = clean !== '' && !unchanged && !tooPoor
                     const confirm = () => {
                         if (!canConfirm || !progressionManager.renameDevelopment(dev, clean)) { playNotEnoughFundsSound(); return }
@@ -196,7 +196,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <button className="closeButton" style={{ opacity: renameText === dev.name ? 0.5 : 1 }} onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setRenameText(dev.name) }}>Reset</button>
                                     <button className="closeButton" style={{ opacity: canConfirm ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={confirm}>
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                            Confirm ({DEV_RENAME_REP_COST} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                            Confirm ({getRenameRepCost()} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
                                         </span>
                                     </button>
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowRenameModal(false) }}>Cancel</button>
@@ -410,7 +410,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 {canEdit && (
                                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); openRename(selectedDevelopment) }}>
                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                                            Rename ({DEV_RENAME_REP_COST} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                            Rename ({getRenameRepCost()} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
                                                         </span>
                                                     </button>
                                                 )}
