@@ -3,6 +3,7 @@ import departureBoardImg from '../assets/misc/DepartureBoard.jpg'
 import './TopBanner.css'
 import clockIcon from '../assets/misc/clock.png'
 import cashIcon from '../assets/misc/cash.png'
+import shoppingIcon from '../assets/misc/shopping.png'
 import starIcon from '../assets/misc/star.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import pinIcon from '../assets/misc/pin.png'
@@ -220,9 +221,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                 <>
                     <div className="work-divider" />
                     <button className="ShopButton" onClick={() => { playClickSound2(); onOpenShop() }} onMouseEnter={() => playHoverSound()} aria-label="Open the Shop">
-                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                            <path d="M6 7h12l1 13H5L6 7z" /><path d="M9 7a3 3 0 0 1 6 0" />
-                        </svg>
+                        <img src={shoppingIcon} alt="" className="ShopButtonIcon" />
                         <span>Shop</span>
                     </button>
                 </>
