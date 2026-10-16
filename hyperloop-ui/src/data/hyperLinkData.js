@@ -629,9 +629,10 @@ export const POSTS = {
     developmentUpgraded: [
         '{developmentName} here got a proper upgrade, looking way better now 😎',
         'not {developmentName} getting renovated right in front of me 😵',
-        'The new improved {developmentName} is actually really nice!',
-        'wow anyone been to the new and improved {developmentName} recently? looks really good',
+        'The new and improved version of {developmentName} is actually really nice!',
+        'wow anyone been to {developmentName} recently? looks really good',
         'I didn\'t even recognise {developmentName}! Looks so great now!',
+        'Gonna call down to {developmentName} at some point, heard they rly renovated it',
         'they spent some money on {developmentName} lol it defo shows',
         'anyone seen {developmentName} since it stopped renovations? is it actually better now?',
         '{developmentName} looking real pretty'
@@ -694,7 +695,7 @@ export const POSTS = {
         'they compensated us so i cant even be that mad',
         'Anyone else delayed but got compensated?',
         'wait i wasnt listening is the compensation automatic or what',
-        'everyone who was delayed go to the recreation trust me time will pass so quickly lol',
+        'everyone who was delayed go to the recreational area trust me time will pass so quickly lol',
         'Things happen guys. Just be thankful we were compensated #GoodStuff',
     ],
 
