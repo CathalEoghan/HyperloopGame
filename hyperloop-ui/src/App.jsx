@@ -63,6 +63,9 @@ import openingAudio from './assets/sounds/openingAudio.mp3'
 import monitorIcon from './assets/misc/monitor.png'
 import "./App.css";
 
+// Random events (Under the Weather, bonuses and so on) only start from this Rank, so a new player isn't interrupted before they have found their feet
+const EVENT_MIN_RANK = 3
+
 const OFFLINE_RATE = 1.0;
 // A brand-new game is "onboarding pending" from the moment the home city is picked until the welcome popup is closed.
 // Nothing is earned in that time (income, offline pay, daily bonus, Work clicks), so no rank-up or reward popup can
@@ -1163,10 +1166,10 @@ function App() {
       // Sync active event to EconomyManager
       economyManager.activeEvent = activeEventRef.current;
 
-      // Event trigger — rank 2+, 1 min into game, 3 min after modals, guaranteed every 5 min
+      // Event trigger — rank 3+, 1 min into game, 3 min after modals, guaranteed every 5 min
       const timeSinceLastEvent = Date.now() - lastEventTime.current;
       const forceEvent = timeSinceLastEvent > 300000;
-      if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= 2 && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
+      if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
         lastEventTime.current = Date.now();
         const noNegatives = PrestigeManager.owns('crisisAvoidanceSpecialists');
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
