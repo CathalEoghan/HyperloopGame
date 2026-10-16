@@ -53,6 +53,8 @@ const AUX_KEYS = [
     'hyperloop_loop_counted',
     // This run's manual Work clicks, for Livestream Everything. Part of the run: a prestige starts it again.
     'hyperloop_livestream_clicks',
+    // What the player bought in the Shop and has equipped
+    'hyperloop_cosmetics',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -101,6 +103,8 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_last_farewell_date',
     // The credits portrait pays its Reputation once ever, not once per run
     'hyperloop_dev_portrait_bonus',
+    // Shop purchases are for keeps
+    'hyperloop_cosmetics',
 ]
 
 // Wipes the current run and leaves a note for the next start-up: keep the terminal name, and the starter
@@ -158,6 +162,8 @@ const AUX_SHAPES = {
     hyperloop_hyperlink_feed: listOf(p => isObj(p) && typeof p.id === 'string' && typeof p.text === 'string' && Number.isFinite(p.timestamp)),
     hyperloop_hyperlink_used_month_posts: listOf(e => isObj(e) && typeof e.id === 'string' && Number.isFinite(e.year)),
     hyperloop_prestige_history: listOf(isObj),
+    // { owned: ['workSound:soft', ...], equipped: { workSound: 'soft', ... } }
+    hyperloop_cosmetics: v => isObj(v) && listOfStrings(v.owned) && isObj(v.equipped) && Object.values(v.equipped).every(x => typeof x === 'string'),
 }
 const listOfStrings = listOf(x => typeof x === 'string')
 // These two hold a plain date string ("Tue Sep 29 2026"), not JSON.

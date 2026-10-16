@@ -9,6 +9,10 @@ import '@fontsource/b612-mono/700.css'
 import './index.css'
 import App from './App.jsx'
 import ErrorBoundary from './components/ErrorBoundary.jsx'
+import { applyCosmetics } from './utils/cosmetics.js'
+
+// The Shop's equipped themes go onto the page before the first paint, so there is no flash of the default look
+applyCosmetics()
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

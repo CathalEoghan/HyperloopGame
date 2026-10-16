@@ -43,7 +43,7 @@ const formatWorkAmount = (value, tilde = false) => {
     return `${scaled.toFixed(1)}${WORK_SUFFIXES[tier - 1]}${t}`
 }
 
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, autoWorkTick, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, workDisabled = false }) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, autoWorkTick, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, onOpenShop, workDisabled = false }) {
     const [floats, setFloats] = useState([])
     // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
     const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
@@ -213,6 +213,14 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                         <img src={flagSrc(countryFlags[homeCity.country])} alt={homeCity.country} style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '1px' }} />
                         <span>{homeCity.name}, {homeCity.country}</span>
                     </div>
+                )}
+                {onOpenShop && (
+                    <button className="ShopButton" onClick={() => { playClickSound2(); onOpenShop() }} onMouseEnter={() => playHoverSound()} aria-label="Open the Shop">
+                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                            <path d="M6 7h12l1 13H5L6 7z" /><path d="M9 7a3 3 0 0 1 6 0" />
+                        </svg>
+                        <span>Shop</span>
+                    </button>
                 )}
             </div>
            <button ref={btnRef} className={`work-banner-btn${autoWork ? ' work-banner-auto' : ''}`} onClick={handleWork} onKeyDown={e => { if (e.repeat) e.preventDefault() }} onMouseEnter={() => playHoverSound()}>

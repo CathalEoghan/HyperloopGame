@@ -20,6 +20,7 @@ import departureBoardSound from '../assets/sounds/departureBoard.mp3'
 import phoneNotificationSound from '../assets/sounds/phoneNotification.mp3'
 import splitFlapLong from '../assets/sounds/splitFlapLong.wav'
 import splitFlapShort from '../assets/sounds/splitFlapShort.wav'
+import { getEquippedItem } from './cosmetics.js'
 
 let audioUnlocked = false
 
@@ -67,7 +68,10 @@ function playHover() {
 
 export const playEventSound = () => play(eventSound)
 export const playDiceRollSound = () => play(diceRollSound)
-export function playWorkClickSound()            { play(workClickSound) }
+// The Work button's sound is whichever one is equipped in the Shop (the classic click by default)
+export function playWorkClickSound()            { play(getEquippedItem('workSound')?.src ?? workClickSound) }
+// Plays any sound file once (the Shop's Preview button)
+export function playPreviewSound(src)           { play(src) }
 export function playConstructionSound()         { play(constructionSound) }
 export function playBadNewsSound()              { play(badNewsSound) }
 export function playLeavingSound()              { play(leavingSound) }

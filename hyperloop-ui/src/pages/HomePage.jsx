@@ -14,15 +14,17 @@ import reputationIcon from '../assets/misc/reputation.png'
 import './HomePage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 import { getActiveLoops, formatClock, formatDuration } from '../utils/loops.js'
+import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
 
 // Departures are drawn in the game's gold, arrivals in blue
 // Every route is white; the ones being pointed at (on the globe or in the list) light up: gold for a departure, blue for an arrival
 const ARROW_COUNT = 5
 const LOOP_WHITE = 0xffffff
-const LOOP_GOLD = 0xf5a623
-// Arrivals light up in the same blue as the arrival bar and the arrival rows in the list
-const LOOP_BLUE = 0x4fc3f7
-const loopColor = (kind) => kind === 'arrival' ? LOOP_BLUE : LOOP_GOLD
+// The route colours come from the equipped general theme in the Shop: gold for departures and blue for arrivals by default
+// (the same blue as the arrival bar and the arrival rows in the list)
+let arcColors = getArcColors()
+if (typeof window !== 'undefined') window.addEventListener(COSMETICS_EVENT, () => { arcColors = getArcColors() })
+const loopColor = (kind) => kind === 'arrival' ? arcColors.arrival : arcColors.departure
 // How close (in pixels) the mouse must be to an arc to count as pointing at it
 const ARC_HIT_PX = 10
 const VIEW_KEY = 'globeView'
@@ -684,7 +686,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const o = loopObjects.get(id)
                 if (!o) return
                 const c = loopColor(o.loop.kind)
-                ;[o.loop.from, o.loop.to].forEach(n => { if (litCities.get(n) !== LOOP_GOLD) litCities.set(n, c) })
+                ;[o.loop.from, o.loop.to].forEach(n => { if (litCities.get(n) !== arcColors.departure) litCities.set(n, c) })
             })
             sprites.forEach(sprite => {
                 const facingCamera = sprite.userData.surfaceNormal.dot(camPos) > 0.1

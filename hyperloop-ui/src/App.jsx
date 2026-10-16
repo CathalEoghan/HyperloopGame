@@ -23,6 +23,8 @@ import LoadingScreen from "./components/LoadingScreen"
 import DevelopmentRevealModal from "./components/DevelopmentRevealModal"
 import FarewellModal from "./components/FarewellModal"
 import NotEnoughRepModal from "./components/NotEnoughRepModal"
+import ShopModal from "./components/ShopModal"
+import { readCosmetics, writeCosmetics, applyCosmetics, isOwned, withPurchase, withEquipped } from "./utils/cosmetics.js"
 import UpgradeRevealModal from "./components/UpgradeRevealModal"
 import EventModal from "./components/EventModal"
 import DailyLoginModal from "./components/DailyLoginModal"
@@ -367,6 +369,9 @@ function App() {
     localStorage.getItem('hyperloop_onboarding_pending') === '1' && progressionManager.purchasedCities.length > 0);
   const [hasFreeReroll, setHasFreeReroll] = useState(false);
   const [showNotEnoughRep, setShowNotEnoughRep] = useState(false);
+  // The Shop (opened from the top bar) and what the player owns and has equipped from it
+  const [showShop, setShowShop] = useState(false);
+  const [cosmetics, setCosmetics] = useState(() => readCosmetics());
   const [revealedUpgradeQueue, setRevealedUpgradeQueue] = useState([]);
   const [activeEvent, setActiveEvent] = useState(() => {
     const saved = localStorage.getItem('hyperloop_active_event')
@@ -1361,14 +1366,31 @@ function App() {
   }
 
   // True while any popup is, or is about to be, on screen. The globe and the Hyper-Link phone button ignore input then (bugs #80, #122).
-  const popupOpen = showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep
+  const popupOpen = showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
     || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
     || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)
 
+  // Shop: buying costs Reputation and equips the item straight away. Returns false when the player can't afford it.
+  const updateCosmetics = (next) => { writeCosmetics(next); setCosmetics(next); applyCosmetics(next); };
+  const handleShopBuy = (category, item) => {
+    if (isOwned(cosmetics, category, item.id)) return true;
+    if (!progressionManager.spendReputation(item.cost)) return false;
+    updateCosmetics(withEquipped(withPurchase(cosmetics, category, item.id), category, item.id));
+    setReputation(progressionManager.reputation);
+    triggerSave();
+    return true;
+  };
+  const handleShopEquip = (category, item) => {
+    if (!isOwned(cosmetics, category, item.id)) return;
+    updateCosmetics(withEquipped(cosmetics, category, item.id));
+    triggerSave();
+  };
+
   return (
     <div className="App">
       <TopBanner
+        onOpenShop={() => setShowShop(true)}
         terminalName={terminalName}
         balance={balance}
         rank={rankSet}
@@ -1689,6 +1711,9 @@ function App() {
         />
       )}
 
+      {showShop && (
+        <ShopModal reputation={reputation} cosmetics={cosmetics} onBuy={handleShopBuy} onEquip={handleShopEquip} onClose={() => setShowShop(false)} />
+      )}
       {showNotEnoughRep && (
         <NotEnoughRepModal onClose={() => setShowNotEnoughRep(false)} />
       )}

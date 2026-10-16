@@ -4,8 +4,8 @@
     left: 0;
     width: 100%;
     height: 36px;
-    background: #0a0a0a;
-    border-top: 1px solid #f5a623;
+    background: var(--ticker-bg, #0a0a0a);
+    border-top: 1px solid var(--ticker-text, #f5a623);
     overflow: hidden;
     contain: paint; /* the long sliding text can never add to the page's scrollable width */
     z-index: 50;
@@ -18,7 +18,7 @@
     white-space: nowrap;
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.85rem;
-    color: #f5a623;
+    color: var(--ticker-text, #f5a623);
     letter-spacing: 0.5px;
     will-change: transform;
     animation: ticker-scroll 60s linear infinite;

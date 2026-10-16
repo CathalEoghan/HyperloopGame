@@ -1,7 +1,7 @@
 
 .departure-board {
     background-color: #0a0a0a;
-    color: #f5a623;
+    color: var(--board-accent, #f5a623);
     font-family: 'B612 Mono', 'Courier New', monospace;
     padding: 16px;
     min-height: calc(100vh - 116px);
@@ -12,7 +12,7 @@
 }
 
 .board-title {
-    color: #f5a623;
+    color: var(--board-accent, #f5a623);
     font-family: 'Courier New', Courier, monospace;
     margin-bottom: 16px;
     font-size: 1.1rem;
@@ -99,7 +99,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #f5a623;
+    color: var(--board-accent, #f5a623);
     transform-origin: center top;
     animation: charFlipIn 0.5s ease-out both;
     animation-delay: var(--delay, 0ms);
@@ -153,7 +153,7 @@
 
 .farewell-modal {
     background: #0a0a0a;
-    border: 2px solid #f5a623;
+    border: 2px solid var(--board-accent, #f5a623);
     border-radius: 8px;
     padding: 40px 48px;
     text-align: center;
@@ -164,7 +164,7 @@
 }
 
 .farewell-attention {
-    color: #f5a623;
+    color: var(--board-accent, #f5a623);
     font-size: 1.8rem;
     font-weight: bold;
     letter-spacing: 12px;
@@ -172,7 +172,7 @@
 }
 
 .farewell-divider {
-    color: #f5a623;
+    color: var(--board-accent, #f5a623);
     opacity: 0.4;
     margin: 0 0 20px;
     font-size: 0.9rem;
@@ -210,7 +210,7 @@
 }
 
 .farewell-message strong {
-    color: #f5a623;
+    color: var(--board-accent, #f5a623);
     font-weight: bold;
 }
 
@@ -219,7 +219,7 @@
     font-weight: bold;
     letter-spacing: 6px;
     margin: 0 0 32px;
-    color: #f5a623;
+    color: var(--board-accent, #f5a623);
     transition: color 0.5s;
 }
 
@@ -235,8 +235,8 @@
 
 .farewell-button {
     background: none;
-    border: 2px solid #f5a623;
-    color: #f5a623;
+    border: 2px solid var(--board-accent, #f5a623);
+    color: var(--board-accent, #f5a623);
     font-family: 'Courier New', Courier, monospace;
     font-size: 1rem;
     letter-spacing: 1px;
@@ -248,7 +248,7 @@
 }
 
 .farewell-button:hover {
-    background: #f5a623;
+    background: var(--board-accent, #f5a623);
     color: #0a0a1a;
     animation: none;
 }
@@ -307,11 +307,11 @@
 }
 
 .board-tab:hover {
-    color: #f5a623;
+    color: var(--board-accent, #f5a623);
 }
 
 .board-tab-active {
-    background: #f5a623;
+    background: var(--board-accent, #f5a623);
     color: #0a0a0a;
     cursor: default;
 }
