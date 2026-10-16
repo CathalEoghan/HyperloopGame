@@ -174,7 +174,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                                 <span
                                                     className={`hyperlink-likes${isLiked ? ' hyperlink-likes-active' : ''}`}
                                                     onClick={(e) => likePost(post.id, e)}
-                                                    style={{ cursor: isLiked ? 'default' : 'pointer' }}
+                                                    style={{ cursor: isLiked ? 'var(--cursor-default, default)' : 'var(--cursor-pointer, pointer)' }}
                                                 >
                                                     ❤ {displayLikes}
                                                 </span>

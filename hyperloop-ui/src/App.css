@@ -11,9 +11,10 @@ body, html {
     --cursor-pointer: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ffb23f'/%3E%3Cstop offset='1' stop-color='%23ff7a12'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.5 2.2 L3.5 19.4 L7.9 15.3 L11 22 L13.7 20.8 L10.6 14.2 L16.6 14.2 Z' fill='url(%23g)' stroke='%232b1a00' stroke-width='1.1' stroke-linejoin='round'/%3E%3Cpath d='M5.2 5.6 L5.2 15.1 L7.4 13' fill='none' stroke='white' stroke-opacity='.65' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 3 2, pointer;
 }
 html, body { cursor: var(--cursor-default); }
-/* Browsers give buttons and links their own cursor, which would beat the one inherited from the page */
-:where(button, select, summary, label, input[type="button"], input[type="submit"], input[type="checkbox"], input[type="radio"], input[type="range"]) { cursor: var(--cursor-default); }
-:where(a[href]) { cursor: var(--cursor-pointer); }
+/* Anything clickable gets the orange cursor, even where the stylesheet never said so (browsers give buttons and links
+   their own cursor, which would beat the one inherited from the page). A class that sets its own cursor still wins. */
+:where(button, select, summary, a[href], [role="button"], input[type="button"], input[type="submit"], input[type="checkbox"], input[type="radio"], input[type="range"]) { cursor: var(--cursor-pointer); }
+:where(button:disabled, select:disabled, input:disabled) { cursor: var(--cursor-default); }
 
 /* Nothing in the game scrolls sideways. If something ever pokes out (the sliding ticker text, a floating "+£"),
    it must not make the page grow a horizontal scrollbar: that bar is amber now, and it squeezes the bottom bar upwards. */
