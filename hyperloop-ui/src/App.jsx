@@ -1513,6 +1513,7 @@ function App() {
       {activeTab === "Progress" && (
         <ProgressPage
           topOffset={topOffset}
+          onRefreshCounts={() => { if (!blockedRef.current) countLoops() }}
           purchasedCities={progressionManager.purchasedCities}
           unlockedCities={progressionManager.unlockedCities}
           economyManager={economyManager}

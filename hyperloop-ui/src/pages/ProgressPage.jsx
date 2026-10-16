@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
@@ -21,10 +21,16 @@ const CashValue = ({ amount, suffix = '' }) => (
     </span>
 )
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, topOffset = 113 }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
     const [, setTick] = useState(0)
+    // The game only tallies finished departures/arrivals/passengers every 10 seconds, so while this page is open
+    // it asks for a fresh tally on opening and every second, to keep those totals from lagging behind.
+    const refreshCounts = useRef(onRefreshCounts)
+    refreshCounts.current = onRefreshCounts
     useEffect(() => {
-        const interval = setInterval(() => setTick(t => t + 1), 1000)
+        refreshCounts.current?.()
+        setTick(t => t + 1)
+        const interval = setInterval(() => { refreshCounts.current?.(); setTick(t => t + 1) }, 1000)
         return () => clearInterval(interval)
     }, [])
 
