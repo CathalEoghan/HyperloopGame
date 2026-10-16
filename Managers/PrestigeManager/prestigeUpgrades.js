@@ -46,7 +46,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'amicableBreakups', icon: '🤝', layer: 1, name: 'Amicable Breakups', description: 'Disconnecting a city or removing a development costs nothing and refunds half the cost.' },
 
     // Layer 2
-    { id: 'colourTheory', icon: '🎨', layer: 2, name: 'Colour Theory', description: 'Developments start at Level 1: the first upgrade is already built when they open.' },
+    { id: 'colourTheory', icon: '🎨', layer: 2, name: 'Colour Theory', description: 'Developments start with a Level 1 upgrade when built.'},
     { id: 'oralHygiene', icon: '🦷', layer: 2, name: 'Oral Hygiene', description: `${mult(V.oralHygiene)} Reputation from farewells.` },
     { id: 'betterInterestRates', icon: '🏦', layer: 2, name: 'Better Interest Rates', description: 'x10 cash from the daily bonus.' },
     { id: 'eliteAccountants', icon: '🧮', layer: 2, name: 'Elite Accountants', description: 'The optional double bonus when claiming offline earnings becomes a quadruple bonus, for the same cost.' },

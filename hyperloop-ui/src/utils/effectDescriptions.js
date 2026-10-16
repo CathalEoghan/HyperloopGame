@@ -10,7 +10,7 @@ export const EFFECT_DESCRIPTIONS = {
     shoppingIncome: (v) => `+${pct(v)}% income from Shopping developments`,
     serviceIncome: (v) => `+${pct(v)}% income from Service developments`,
     developmentBoost: (v) => `+${pct(v)}% income from all developments`,
-    earlyRetirement: (v) => `Ready to pass it on? Purchasing this upgrade with ${v} Reputation will allow you to prestige.`,
+    earlyRetirement: (v) => `Ready to pass it on? Purchasing this upgrade with ${v} Reputation will allow you to prestige`,
     workPerAchievement: (v) => `+${pct(v)}% Work earnings for every unique achievement unlocked`,
     // What it really pays: Five-Star Researchers doubles it, then Fast Learner doubles the total
     prestigePoints: (v) => `Rewards ${v * (PrestigeManager.owns('fiveStarResearchers') ? 2 : 1) * (PrestigeManager.owns('fastLearner') ? 2 : 1)} Prestige Points`,
