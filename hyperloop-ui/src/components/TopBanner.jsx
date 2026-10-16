@@ -205,6 +205,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     return (
         <>
         <div className="TopBanner">
+            <div className="TopBannerLeft">
             <div className="TerminalNameBlock">
                 <h1 className="TerminalName">{terminalName}</h1>
                 {homeCity && (
@@ -214,14 +215,18 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                         <span>{homeCity.name}, {homeCity.country}</span>
                     </div>
                 )}
-                {onOpenShop && (
+            </div>
+            {onOpenShop && (
+                <>
+                    <div className="work-divider" />
                     <button className="ShopButton" onClick={() => { playClickSound2(); onOpenShop() }} onMouseEnter={() => playHoverSound()} aria-label="Open the Shop">
-                        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                             <path d="M6 7h12l1 13H5L6 7z" /><path d="M9 7a3 3 0 0 1 6 0" />
                         </svg>
                         <span>Shop</span>
                     </button>
-                )}
+                </>
+            )}
             </div>
            <button ref={btnRef} className={`work-banner-btn${autoWork ? ' work-banner-auto' : ''}`} onClick={handleWork} onKeyDown={e => { if (e.repeat) e.preventDefault() }} onMouseEnter={() => playHoverSound()}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>

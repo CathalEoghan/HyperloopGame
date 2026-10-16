@@ -246,8 +246,15 @@ font-size: 1rem;
     100% { opacity: 0; transform: translateY(-16px); }
 }
 
-.TerminalNameBlock {
+.TopBannerLeft {
     flex: 1;
+    display: flex;
+    align-items: stretch;
+    min-width: 0;
+}
+
+.TerminalNameBlock {
+    flex: 0 1 auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -272,19 +279,21 @@ font-size: 1rem;
     color: #666;
     letter-spacing: 0.3px;
 }
-/* The Shop button, under the home city */
+/* The Shop button: after the terminal name, with the same divider line that sits beside the Work button */
 .ShopButton {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    align-self: flex-start;
+    gap: 6px;
+    align-self: center;
+    flex-shrink: 0;
     background: white;
     color: #333;
-    border: 1.5px solid var(--ui-accent, #f5a623);
-    border-radius: 14px;
-    padding: 2px 10px;
+    border: 2px solid var(--ui-accent, #f5a623);
+    border-radius: 50px;
+    margin: 0 16px;
+    padding: 6px 16px;
     font-family: 'Inter', sans-serif;
-    font-size: 0.78rem;
+    font-size: 0.9rem;
     font-weight: 600;
     cursor: var(--cursor-pointer, pointer);
     transition: background 0.15s ease, color 0.15s ease;
