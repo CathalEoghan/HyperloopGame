@@ -62,7 +62,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'pizzaParties', icon: '🍕', layer: 3, name: 'Pizza Parties', description: 'Positive events are +200% stronger.' },
     { id: 'irresistibleDiscounts', icon: '🏷️', layer: 3, name: 'Irresistible Discounts', description: `${mult(V.irresistibleDiscounts)} development income.` },
     { id: 'bulletproofPlanning', icon: '🛡️', layer: 3, name: 'Bulletproof Planning', description: 'No more delays, ever.' },
-    { id: 'foundersHallExpansion', icon: '🏛️', layer: 3, name: 'Founders Hall Expansion', description: '+1% extra from the Founders Hall bonus.' },
+    { id: 'foundersHallExpansion', icon: '🏛️', layer: 3, name: 'Founders\' Hall Expansion', description: '+1% extra from the Founders\' Hall bonus.' },
     { id: 'personalFavours', icon: '🎁', layer: 3, name: 'Personal Favours', description: 'Choose any city in the world as your starting city every run.' },
     { id: 'vipPods', icon: '🚀', layer: 3, name: 'VIP Pods', description: 'x10 VIP chance.' },
 

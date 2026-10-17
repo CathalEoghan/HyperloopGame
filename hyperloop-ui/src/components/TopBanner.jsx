@@ -24,7 +24,8 @@ const WORK_PHRASES = [
     'Reviewed passenger feedback', 'Read a newspaper', 'Reflected on progress', 'Welcomed foreign investors',
     'Signed off on construction plans', 'Watered office plants', 'Ate a donut', 'Chatted with secretary',
     'Attended press briefing', 'Attended a function', 'Attended a gala', 'Attended a charity ball',
-    'Conducted staff training', 'Conducted interviews', 'Made a coffee', 'Argued with lawyers'
+    'Conducted staff training', 'Conducted interviews', 'Made a coffee', 'Argued with lawyers',
+    'Helped lost traveller', 'Played a game', 'Hid in the office', 'Left early', 'Wandered the terminal'
 ]
 
 let floatId = 0
