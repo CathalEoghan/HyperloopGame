@@ -16,7 +16,6 @@ import click_sound_3 from '../assets/sounds/click_sound_3.mp3'
 import rankUpSound from '../assets/sounds/rankUpSound.mp3'
 import leavingSound from '../assets/sounds/leavingSound.mp3'
 import farewellAcceptSound from '../assets/sounds/farewellAccept.mp3'
-import badNewsSound from '../assets/sounds/badNews.mp3'
 import constructionSound from '../assets/sounds/constructionSound.mp3'
 import workClickSound from '../assets/sounds/workClickSound.mp3'
 import hoverSound from '../assets/sounds/hoverSound.mp3'
@@ -33,7 +32,7 @@ const DURATION = 5000
 
 const SOUNDS = [
     click_sound_2, click_sound_3, rankUpSound, leavingSound,
-    farewellAcceptSound, badNewsSound, constructionSound,
+    farewellAcceptSound, constructionSound,
     workClickSound, hoverSound, reputationWorkBonus, bottomNavbarHover,
     openingAudio,
 ]
