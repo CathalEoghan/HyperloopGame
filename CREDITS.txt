@@ -57,7 +57,7 @@ Cologne.jpg - Photo by Miguel Andres Parra via Pexels
 Lagos.jpg - Photo by Caesar. via Pexels
 Madrid.jpg - Photo by Jo Kassis via Pexels
 Helsinki.jpg - Photo by Vish Pix via Pexels
-MexicoCity.js - Photo by Fernando Paleta via Pexels
+MexicoCity.jpg - Photo by Fernando Paleta via Pexels
 Miami.jpg - Photo by Antonio Cuellar via Pexels
 Singapore.jpg - Photo by Cyrill via Pexels
 Cork.jpg - Photo by Etka Kh via Pexels
@@ -101,7 +101,7 @@ Belgrade.jpg - Photo by Boris Hamer via Pexels
 HoChiMinhCity.jpg - Photo by Nguyên Đoàn via Pexels
 Belfast.jpg - Photo by Donovan Kelly via Pexels
 Oslo.jpg - Photo by @nomundodejr Jr. via Pexels
-Accra.jpg - Photo by Goldenwabbit via Wikimedia Commons ((Creative Commons Attribution-Share Alike 4.0 International license))
+Accra.jpg - Photo by Goldenwabbit via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, link: https://diq.wikipedia.org/wiki/Dosya:Accra_town.jpg)
 Jakarta.jpg - Photo by el jusuf via Pexels 
 Suva.jpg - Photo by Donovan Kelly via Pexels
 Kraków.jpg - Photo by Justyna Sieczka via Pexels
@@ -203,8 +203,8 @@ Bratislava.jpg - Photo by Lieke Boersma via Pexels
 Tirana.jpg - Photo by Valter Zhara via Pexels
 LaPaz.jpg - Photo by Julia Volk via Pexels
 Fortaleza.jpg - Photo by Vitor Milanez via Pexels
-PortAuPrince.jpg - Photo by Chief Mass Communication Specialist James G. Pinsky via Wikimedia Commons
-Tripoli.jpg - Photo by MrPanyGoff via Wikimedia Commons (GNU Free Documentation License)
+PortAuPrince.jpg - Photo by Chief Mass Communication Specialist James G. Pinsky via Wikimedia Commons (Public Domain Mark 1.0 Universal)
+Tripoli.jpg - Photo by MrPanyGoff via Wikimedia Commons (GNU Free Documentation License, link: https://commons.wikimedia.org/wiki/File:Tripoli_skyline_clear_day.JPG)
 Antananarivo.jpg - Photo by Chen EdisoN via Pexels
 Rotterdam.jpg - Photo by Jan van der Wolf via Pexels
 Sarajevo.jpg - Photo by Gökhan Baykal via Pexels
@@ -224,7 +224,7 @@ Tbilisi.jpg - Photo by Eyup Sayar via Pexels
 Hobart.jpg - Photo by MB via Pexels
 Wrocław.jpg - Photo by Kaiwalya Limaye via Pexels
 SantoDomingo.jpg - Photo by Anthony Camilo via Pexels
-SanJosé.jpg - Photo by Spicypepper999 via Pexels
+SanJosé.png - Photo by Spicypepper999 via Pexels
 Adelaide.jpg - Photo by Patrick McLachlan via Pexels
 Tianjin.jpg - Photo by 逐光 创梦 via Pexels
 Chihuahua.jpg - Photo by Comisión Mexicana de Filmaciones via Wikimedia Commons (Creative Commons Attribution - ShareAlike 2.0 Generic license)
@@ -235,7 +235,7 @@ Ljubljana.jpg - Photo by detait via Pexels
 Łódź.jpg - Photo by Jakub Zerdzicki via Pexels
 Inverness.jpg - Photo by Sinitta Leunen via Pexels
 Luanda.jpg - Photo by TUBARONES PHOTOGRAPHY via Pexels
-Montpellier.jpg - Photo by The Academy of Urbanism via Flickr
+Montpellier.jpg - Photo by G.Mannaerts via wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, https://commons.wikimedia.org/wiki/File:Montpellier_ecusson.jpg)
 Guadalajara.jpg - Photo by Aero Drone via Pexels
 Abuja.jpg - Photo by Abdullahi Santuraki via Pexels
 BeloHorizonte.jpg - Photo by Luiz Felipe via Pexels
@@ -243,11 +243,11 @@ Maputo.jpg - Photo by SINAL Multimédia via Pexels
 Monterrey.jpg - Photo by Dante Muñoz via Pexels
 Recife.jpg - Photo by Pedro Gonçalves via Pexels
 Birmingham.jpg - Photo by Richard Hunter-Rice via Pexels
-Dili.jpg - Photo by Bahnfrend via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
+Dili.jpg - Photo by Bahnfrend via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, link: https://commons.wikimedia.org/wiki/File:Government_Palace,_Dili,_2023_%2803%29.jpg)
 Daegu.jpg - Photo by Khan ishaan via Pexels
 Vilnius.jpg - Photo by Omar via Pexels
 Verona.jpg - Photo by Ensar * via Pexels
-Omsk.jpg - Photo by Ninara via Flickr
+Omsk.jpg - Photo by Ninara via Flickr (Attribution 2.0 Generic License, https://creativecommons.org/licenses/by/2.0/deed.en#ref-appropriate-credit)
 Nanjing.jpg - Photo by Cheng Shi Song via Pexels
 Astana.jpg - Photo by Valeria Drozdova via Pexels
 Chișinău.jpg - Photo by Anaghan Km via Pexels
@@ -255,7 +255,7 @@ Antwerp.jpg - Photo by Willy De Laet via Pexels
 Calgary.jpg - Photo by Donovan Kelly via Pexels
 Nuuk.jpg - Photo by Биљана via Pexels
 Bruges.jpg - Photo by Cristian Salinas Cisternas via Pexels
-Darwin.jpg - Photo by Hagai Agmon-Snir via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
+Darwin.jpg - Photo by Hagai Agmon-Snir via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, link: https://commons.wikimedia.org/wiki/File:DarwinOct172024_02.jpg)
 Hiroshima.jpg - Photo by Hoi Wai via Pexels
 Lyon.jpg - Photo by Luca Nardone via Pexels
 Lublin.jpg - Photo by Karolina Grabowska www.kaboompics.com via Pexels
@@ -264,22 +264,22 @@ Georgetown.jpg - Photo by amanderson2 via Wikimedia Commons (Creative Commons At
 Palermo.jpg - Photo by Elijah Cobb via Pexels
 Düsseldorf.jpg - Photo by Radwan Menzer via Pexels
 Christchurch.jpg - Photo by Michal Klajban via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
-Tucson.jpg - Photo by Daquella manera via Flickr
-Sapporo.jpg - Photo via Pixabay
+Tucson.jpg - Photo by Daquella manera via Wikimedia Commons (Creative Commons Attribution 2.0 Generic license, link: https://commons.wikimedia.org/wiki/File:Transamerica_Building,_Tucson,_AZ_(2007-04-02).jpg)
+Sapporo.jpg - Photo via Pixabay (Pixabay Content License)
 Wuhan.jpg - Photo by CHINA YU via Pexels
 PortOfSpain.jpg - Photo by Anderson Jagradatt Sonnysingh via Pexels
-George Town.jpg - Photo by Jun Lei Lim via Pexels
+George_Town.jpg - Photo by Jun Lei Lim via Pexels
 Kigali.jpg - Photo by Faustin NKURUNZIZA via Pexels
 Yerevan.jpg - Photo by Valeria Drozdova via Pexels
-Pretoria.jpg - Photo by South African Tourism via Flickr
-İzmir.jpg - Photo by Picasa via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
+Pretoria.jpg - Photo by South African Tourism via Flickr (Attribution 2.0 Generic, link: https://creativecommons.org/licenses/by/2.0/deed.en)
+İzmir.jpg - Photo by Picasa via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, link: https://mg.wikipedia.org/wiki/Sary:Skyscrapers_in_Izmir_-_Turkey.jpg)
 Bandung.jpg - Photo by Irma Sjachlan via Pexels
 Salzburg.jpg - Photo by Picryl via Pixabay
 Liverpool.jpg - Photo by Balázs Gábor via Pexels
 Nassau.jpg - Photo by Mikhail Nilov via Pexels
 Curitiba.jpg - Photo by Lenandro Melo via Pexels
 Bern.jpg - Photo by Vish Pix via Pexels
-Paramaribo.jpg - Photo by Jean-Pierre Ricardo Veira via Wikimedia Commons
+Paramaribo.jpg - Photo by Jean-Pierre Ricardo Veira via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, link: https://commons.wikimedia.org/wiki/File:Birds_eye_view_of_the_Cathedral-Basilica_of_Saint_Peter_in_Paramaribo,_Suriname.jpg)
 Bridgetown.jpg - Photo by Barry Haynes via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International)
 Bishkek.jpg - Photo by Jeremy Woodhouse via Wikimedia Commons ( Creative Commons CC0 1.0 Universal Public Domain Dedication)
 PortVila.jpg - Photo by Phillip Capper via Wikimedia Commons (Creative Commons Attribution 2.0 Generic license, link: https://commons.wikimedia.org/wiki/File:Port_Vila,_Vanuatu,_2_June_2006_-_Flickr_-_PhillipC.jpg)
@@ -287,7 +287,7 @@ Palikir.jpg - Photo by MaxMonaco via Wikimedia Commons (Creative Commons Attribu
 Pisa.jpg - Photo by Lucas Klein via Pexels
 Puebla.jpg - Photo by Sisgeo via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, link: https://commons.wikimedia.org/wiki/File:Angel%C3%B3polis_Puebla_M%C3%A9xico.jpg)
 Malmö.jpg - Photo by Nik Nikolla via Pexels
-Aberdeen.jpg - Photo by Bruce McAdam via NDLA
+Aberdeen.jpg - Photo by Bruce McAdam via Wikimedia Commons (Creative Commons Attribution-Share Alike 2.0 Generic license, link: https://commons.wikimedia.org/wiki/File:Aberdeen_Harbour_Scotland.jpg)
 Charleston.jpg - Photo by 1778011 via Pixabay
 Heraklion.jpg - Photo by Gintare K. via Pexels
 Alexandria.jpg - Photo by Moaz Ahmed Kamel via Pexels
@@ -303,10 +303,10 @@ Pittsburgh.jpg - Photo by Nicolas DeSarno via Pexels
 Kuching.jpg - Photo by Kevin T via Pexels
 PortMoresby.jpg  - Photo by Toktok No Maski Productions via Pexels
 CebuCity.jpg - Photo by HAVI3 via Pexels
-Lusaka.jpg - Photo by Mondoka via Large Norwegian Encyclopedia
+Lusaka.jpg - Photo by Mondoka Zambia via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license, link: https://commons.wikimedia.org/wiki/File:Kafue_round_about.jpg)
 Khartoum.jpg - Photo by Christopher Michel via Wikimedia Commons (Creative Commons Attribution 2.0 Generic license, link: https://commons.wikimedia.org/wiki/File:Khartoum,_Sudan_%2831764695924%29.jpg)
-Managua.jpg - Photo by hovedstad via Large Norwegian Encyclopedia
-Thimphu.jpg - Photo by Christopher Fynn via Wikimedia Commons
+Managua.jpg - Photo by Jairo Cajina via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International, link: https://commons.wikimedia.org/wiki/File:Rotonda_Ruben_Dario.jpg)
+Thimphu.jpg - Photo by Christopher Fynn via Wikimedia Commons (Creative Commons Attribution-Share Alike 3.0 Unported, link: https://commons.wikimedia.org/wiki/File:Thimphu_view_080907.JPG)
 Harbin.jpg - Photo by ainc T via Pexels
 Livingstone.jpg - Photo by YWAM Livingstone via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International license)
 Samarkand.jpg - Photo by AXP Photography via Pexels
@@ -322,7 +322,7 @@ Bari.jpg - Photo by K via Pexels
 Brasília.jpg - Photo by Governo do Brasil via Wikimedia Commons (Creative Commons Attribution 3.0 Brazil license, link: https://commons.wikimedia.org/wiki/File:Brasilia_aerea_eixo_monumental.jpg)
 Freetown.jpg - Photo by Tappiah Sesay via Pexels
 Cali.jpg - Photo by K via Pexels
-Monrovia.jpg - Photo by jbdodane via Flickr
+Monrovia.jpg - Photo by blk24ga via Wikimedia Commons (Creative Commons Attribution 3.0 Unported license, link: https://commons.wikimedia.org/wiki/File:Liberia,_Africa_-_panoramio_%28267%29.jpg)
 Bergen.jpg - Photo by mysurrogateband via Pexels
 Córdoba.jpg - Photo by Juan Coronel via Pexels
 Faro.jpg - Photo by Micheile Henderson via Pexels
@@ -360,7 +360,7 @@ HighEndBoutique.jpg - Photo by Masood Aslami via Pexels
 Florist.jpg - Photo by Mariya Eskina via Pexels
 NightLounge.jpg - Photo by Matheus Bertelli via Pexels
 TableTennisCourt.jpg - Photo by Haydar Acer via Pexels
-SodaMachines.jpg - Photo by Nihongraphy
+SodaMachines.jpg - Photo by Nihongraphy via Pexels
 Bank.jpg - Photo by Oscar Dominguez via Pexels
 PostalOffice.jpg - Photo by Polina Tankilevitch via Pexels
 Cinema.jpg - Photo by Tima Miroshnichenkovia via Pexels
@@ -394,7 +394,7 @@ BusTransfers.jpg - Photo by HONG SON via Pexels
 TrainStation.jpg - Photo by Markus Winkler via Pexels
 PhotoRoom.jpg - Photo by Michael Morse via Pexels
 PettingZoo.jpg - Photo by Michał Robak via Pexels
-Aquarium - Photo by Anastasiya Vragova via Pexels
+Aquarium.jpg - Photo by Anastasiya Vragova via Pexels
 WatchStore.jpg - Photo by Ushindi Namegabe via Pexels
 FragranceStore.jpg - Photo by Arda Kaykısız via Pexels
 BillboardDesignOverhauls.jpg - Photo by Roman Biernacki via Pexels
@@ -462,7 +462,7 @@ FastFoodJoint.jpg - Photo by Tharnisha Reddy via Pexels
 IntegratedMetroSystem.jpg - Photo by Enric Cruz López via Pexels
 SourdoughCafé.jpg - Photo by Merve via Pexels
 JazzLounge.jpg - Photo by cottonbro studio via Pexels
-HyperloopPodRefurbishments.jpg - Photo by Sameboat via Wikimedia Commons
+HyperloopPodRefurbishments.jpg - Photo by Sameboat via Wikimedia Commons (Creative Commons CC0 1.0 Universal Public Domain Dedication, link: https://commons.wikimedia.org/wiki/File:Hyperloop_capsule.svg)
 ToyStore.jpg - Photo by Harini Padmarajan via Pexels
 SkiStore.jpg - Photo by Патимат Магомедова via Pexels
 AncientHistoryExhibit.jpg - Photo by Jonathan Cooper via Pexels
@@ -508,8 +508,8 @@ BubbleTeaShop.jpg - Photo by 🇻🇳🇻🇳Nguyễn Tiến Thịnh 🇻🇳�
 CandleShop.jpg - Photo by Christina & Peter via Pexels
 PrayerRoom.jpg - Photo by Mehmet Guzel via Pexels
 HamburgerRestaurant.jpg - Photo by Robin Stickel via Pexels
-HyperloopMuseum.jpg - Photo by Neuhausengroup via Wikimedia Commons
-ArtificialIntelligenceImprovements - Photo by Tara Winstead via Pexels
+HyperloopMuseum.jpg - Photo by Neuhausengroup via Wikimedia Commons (Creative Commons Attribution 4.0 International license, link: https://commons.wikimedia.org/wiki/File:Hyperloop-Capsule.jpg)
+ArtificialIntelligenceImprovements.jpg - Photo by Tara Winstead via Pexels
 RecordsStore.jpg - Photo by Yelena from Pexels via Pexels
 EventHall.jpg - Photo by Atlantic Ambience via Pexels
 BeachThemedBar.jpg - Photo by Abdellah Benziane via Pexels
@@ -522,7 +522,7 @@ SuyaRestaurant.jpg - Photo by Zarerh via Pexels
 BarbecueRestaurant.jpg - Photo by RDNE Stock project via Pexels
 IrishBar.jpg - Photo by Darlene Alderson via Pexels
 BurritoRestaurant.jpg - Photo by Snappr via Pexels
-MarzipanCafé.jpg - Photo by Erich73 via Wikimedia Commons
+MarzipanCafé.jpg - Photo by Erich73 via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International, link: https://commons.wikimedia.org/wiki/File:MarzipanClassic.jpg)
 HatShop.jpg - Photo by RDNE Stock Project via Pexels
 SoupStall.jpg - Photo by Farhad Ibrahimzade via Pexels
 NecktieShop.jpg - Photo by Fer ID via Pexels
@@ -599,7 +599,7 @@ AdvertisingCampaignIreland.jpg - Photo by aboodi vesakaran via Pexels
 MayTicketDeals.jpg - Photo by Felix Mittermeier via Pexels
 ComplementaryAfternoonStaffMeals.jpg - Photo by Prosper Buka via Pexels
 AdvertisingCampaignGermany.jpg - Photo by Wolfgang Weiser via Pexels
-AdvertisingCampaignNewZealand.jpg - Photo by Tākuta / Edward Hyde via Wikimedia Commons
+AdvertisingCampaignNewZealand.jpg - Photo by Tākuta / Edward Hyde via Wikimedia Commons (Creative Commons Attribution-Share Alike 2.0 Generic license, link: https://commons.wikimedia.org/wiki/File:NZ_flag_Photo.jpg)
 WeekendGetawayDeals.jpg - Photo by Ron Lach via Pexels
 AugustTicketDeals.jpg - Photo by Valeria Nikitina via Pexels
 AdvertisingCampaignChina.jpg - Photo by aboodi vesakaran via Pexels
@@ -678,7 +678,6 @@ ExpandedDutyFree.jpg - Photo by Travelling Tourist via Pexels
 SleepingPods.jpg - Photo by cottonbro studio via Pexels
 CarRental.jpg - Photo by Negative Space via Pexels
 SimCardServices.jpg - Photo by Jacob via Pexels
-SocialMediaManagers.jpg - Photo by Burst via Pexels
 EarlyRetirement.jpg - Photo by Kampus Production via Pexels
 AnniversarySales.jpg - Photo by cottonbro studio via Pexels
 
@@ -746,6 +745,8 @@ kovac .soul, Hoài Nam, Los Muertos Crew, Maria Lourdes Peyregne, Suzy Hazelwood
 SOUNDS
 
 leavingSound.mp3 - Sound by GraceSoundProductions via Pixabay (Pixabay Content License)
+click_sound_2.mp3 - Sound by Vilkas_Sound via Freesound (CC by Attribution 4.0, link: VS Button Click 02.mp3 by Vilkas_Sound -- https://freesound.org/s/707039/ -- License: Attribution 4.0)
+click_sound_3.mp3 - Sound by Vilkas_Sound via Freesound (CC by Attribution 4.0, link: VS Button Click 01.mp3 by Vilkas_Sound -- https://freesound.org/s/707038/ -- License: Attribution 4.0)
 farewellAccept.mp3 - Sound by Universfield via Pixabay (Pixabay Content License)
 constructionSound.mp3 - Sound by freesound community via Pixabay (Pixabay Content License)
 workClickSound.mp3 - Sound by linhmitto via Pixabay (Pixabay Content License)
@@ -753,19 +754,109 @@ openingAudio.mp3 - Sound via Pixabay (Pixabay Content License)
 hoverSound.mp3 - Sound by tunetank via Pixabay (Pixabay Content License)
 developmentUnlocked.mp3 - Sound by freesound via Pixabay (Pixabay Content License)
 eventSound.mp3 - Sound by DRAGON-STUDIO via Pixabay (Pixabay Content License)
-dailyLogin.wav - Sound by rhodesmas via Freesound (CC by Attribution 4.0)
-notEnoughFunds.wav - Sound by rhodesmas via Freesound (CC by Attribution 4.0)
-DepartureBoard.mp3 - Sound by tilllt via Freesound (Attribution 4.0 License)
+dailyLogin.wav - Sound by rhodesmas via Freesound (CC by Attribution 4.0, link: Notification 02 by rhodesmas -- https://freesound.org/s/342755/ -- License: Attribution 4.0)
+notEnoughFunds.wav - Sound by rhodesmas via Freesound (CC by Attribution 4.0, link: Failure 01 by rhodesmas -- https://freesound.org/s/342756/ -- License: Attribution 4.0)
+departureBoard.mp3 - Sound by tilllt via Freesound (Attribution 4.0 License, link: Waiting Hall Venice Marco Polo Airport VCE by tilllt -- https://freesound.org/s/469609/ -- License: Attribution 4.0)
 phoneNotification.mp3 - Sound by nevak36 via Freesound (No attribution required)
 specialChime.mp3 - Sound by Olivia Parker via Pixabay (Pixabay Content License)
+bottomNavbarHover.mp3 - Sound available on Pixabay, no author (Pixabay Content License)
+reputationBonusWork.mp3 - Sound by DRAGON_STUDIO via Pixabay (Pixabay Content License)
+diceRoll.mp3 - Sound by u_ngsgp0r6zb via Pixabay (Pixabay Content License)
 
-MISC IMAGES
+ACHIEVEMENT LOGOS
 
-DepartureBoard.js - Photo by Neuhausengroup via Wikimedia Commons (Creative Commons Attribution 4.0 International license. Link: https://commons.wikimedia.org/wiki/File:Na19-Apr-Hyperloop.jpg)
+mindAndBody.jpg - <a href="https://www.flaticon.com/free-icons/positive-thinking" title="positive thinking icons">Positive thinking icons created by Magnific - Flaticon</a>
+feministBookstore.jpg - <a href="https://www.flaticon.com/free-icons/feminist" title="feminist icons">Feminist icons created by Magnific - Flaticon</a>
+sleepyInSeattle.jpg - <a href="https://www.flaticon.com/free-icons/fairytale" title="fairytale icons">Fairytale icons created by Magnific - Flaticon</a>
+bestCityInTheWorld.jpg - <a href="https://www.flaticon.com/free-icons/belfast" title="belfast icons">Belfast icons created by Magnific - Flaticon</a>
+trainspotting.jpg - <a href="https://www.flaticon.com/free-icons/train" title="train icons">Train icons created by Magnific - Flaticon</a>
+crazyRich.jpg - <a href="https://www.flaticon.com/free-icons/expensive" title="expensive icons">Expensive icons created by Magnific - Flaticon</a>
+soFancy.jpg - <a href="https://www.flaticon.com/free-icons/premiere" title="Premiere icons">Premiere icons created by Magnific - Flaticon</a>
+weDidntStartTheFire.jpg -<a href="https://www.flaticon.com/free-icons/fire" title="fire icons">Fire icons created by kosonicon - Flaticon</a>
+universalBrand.jpg - <a href="https://www.flaticon.com/free-icons/shopping-cart" title="shopping cart icons">Shopping cart icons created by Rashad - Flaticon</a>
+iLikeIt.jpg - <a href="https://www.flaticon.com/free-icons/good-job" title="good job icons">Good job icons created by Magnific - Flaticon</a>
+socialMediaAddict.jpg - <a href="https://www.flaticon.com/free-icons/good-job" title="good job icons">Good job icons created by Magnific - Flaticon</a>
+doomscroller.jpg - <a href="https://www.flaticon.com/free-icons/good-job" title="good job icons">Good job icons created by Magnific - Flaticon</a>
+hereTodayGoneTomorrow.jpg - <a href="https://www.flaticon.com/free-icons/close" title="close icons">Close icons created by Magnific - Flaticon</a>
+funTimes.jpg - <a href="https://www.flaticon.com/free-icons/celebrating" title="celebrating icons">Celebrating icons created by gravisio - Flaticon</a>
+islander.jpg - <a href="https://www.flaticon.com/free-icons/island" title="island icons">Island icons created by Magnific - Flaticon</a>
+happyRetirement.jpg - <a href="https://www.flaticon.com/free-icons/retirement" title="retirement icons">Retirement icons created by zero_wing - Flaticon</a>
+loathed.jpg - <a href="https://www.flaticon.com/free-icons/hate" title="hate icons">Hate icons created by Magnific - Flaticon</a>
+shutUp.jpg - <a href="https://www.flaticon.com/free-icons/shh" title="shh icons">Shh icons created by bukeicon - Flaticon</a>
+underNewManagement.jpg - <a href="https://www.flaticon.com/free-icons/blank" title="blank icons">Blank icons created by srip - Flaticon</a>
+toughLuck.jpg - <a href="https://www.flaticon.com/free-icons/shrug" title="shrug icons">Shrug icons created by Magnific - Flaticon</a>
+sorry.jpg - <a href="https://www.flaticon.com/free-icons/sorry" title="sorry icons">Sorry icons created by Iconjam - Flaticon</a>
+hardWorker.jpg - <a href="https://www.flaticon.com/free-icons/hammer" title="hammer icons">Hammer icons created by Magnific - Flaticon</a>
+industrious.jpg - <a href="https://www.flaticon.com/free-icons/hammer" title="hammer icons">Hammer icons created by Magnific - Flaticon</a>
+workaholic.jpg - <a href="https://www.flaticon.com/free-icons/hammer" title="hammer icons">Hammer icons created by Magnific - Flaticon</a>
+yourPoorHand.jpg - <a href="https://www.flaticon.com/free-icons/hammer" title="hammer icons">Hammer icons created by Magnific - Flaticon</a>
+inTheEastEnd.jpg - <a href="https://www.flaticon.com/free-icons/pub" title="pub icons">Pub icons created by Magnific - Flaticon</a>
+surprise.jpg - <a href="https://www.flaticon.com/free-icons/random" title="random icons">Random icons created by noomtah - Flaticon</a>
+engineer.jpg - <a href="https://www.flaticon.com/free-icons/engineer" title="engineer icons">Engineer icons created by the best icon - Flaticon</a>
+bestOfTheBest.jpg - <a href="https://www.flaticon.com/free-icons/quality" title="quality icons">Quality icons created by gungyoga04 - Flaticon</a>
+frequentLooper.jpg - <a href="https://www.flaticon.com/free-icons/money-bag" title="money bag icons">Money bag icons created by nawicon - Flaticon</a>
+loopToBusan.jpg - <a href="https://www.flaticon.com/free-icons/creepy" title="creepy icons">Creepy icons created by Magnific - Flaticon</a>
+nineMillionMotorcycles.jpg - <a href="https://www.flaticon.com/free-icons/motorcycles" title="motorcycles icons">Motorcycles icons created by photo3idea_studio - Flaticon</a>
+royalFlush.jpg - <a href="https://www.flaticon.com/free-icons/gambling" title="gambling icons">Gambling icons created by Eucalyp - Flaticon</a>
+cheers.jpg - <a href="https://www.flaticon.com/free-icons/oktoberfest" title="oktoberfest icons">Oktoberfest icons created by Dandy Ivan Anggriawan  - Flaticon</a>
+wellAlwaysHaveParis.jpg - <a href="https://www.flaticon.com/free-icons/france" title="france icons">France icons created by Magnific - Flaticon</a>
+warOfTheWoods.jpg - <a href="https://www.flaticon.com/free-icons/movies" title="movies icons">Movies icons created by Marz Gallery - Flaticon</a>
+theKims.jpg - <a href="https://www.flaticon.com/free-icons/supermarket" title="supermarket icons">Supermarket icons created by Magnific - Flaticon</a>
+bigSpender.jpg - <a href="https://www.flaticon.com/free-icons/expense" title="expense icons">Expense icons created by Sukma Aditia - Flaticon</a>
+absurdGains.jpg - <a href="https://www.flaticon.com/free-icons/build-muscle" title="build muscle icons">Build muscle icons created by DailyPm Studio - Flaticon</a>
+bossy.jpg - <a href="https://www.flaticon.com/free-icons/boss" title="boss icons">Boss icons created by Magnific - Flaticon</a>
+veryImportantPassenger.jpg - <a href="https://www.flaticon.com/free-icons/vip" title="vip icons">Vip icons created by Magnific - Flaticon</a>
+serviced.jpg - <a href="https://www.flaticon.com/free-icons/technical-support" title="technical Support icons">Technical Support icons created by Magnific - Flaticon</a>
+foodie.jpg - <a href="https://www.flaticon.com/free-icons/burger" title="burger icons">Burger icons created by Smashicons - Flaticon</a>
+goodbye.jpg - <a href="https://www.flaticon.com/free-icons/goodbye" title="Goodbye icons">Goodbye icons created by Magnific - Flaticon</a>
+welcome.jpg -  <a href="https://www.flaticon.com/free-icons/hey" title="hey icons">Hey icons created by Three musketeers - Flaticon</a>
+firstSteps.jpg - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
+connected.jpg - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
+wellConnected.jpg - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
+trulyGlobal.jpg - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
+greatManager.jpg - <a href="https://www.flaticon.com/free-icons/integrity" title="integrity icons">Integrity icons created by logisstudio - Flaticon</a>
+amazingManager.jpg - <a href="https://www.flaticon.com/free-icons/integrity" title="integrity icons">Integrity icons created by logisstudio - Flaticon</a>
+bestManagerEver.jpg - <a href="https://www.flaticon.com/free-icons/integrity" title="integrity icons">Integrity icons created by logisstudio - Flaticon</a>
+welcomeToMadagascar.jpg - <a href="https://www.flaticon.com/free-icons/lion" title="lion icons">Lion icons created by Magnific - Flaticon</a>
+clubObiWan.jpg - <a href="https://www.flaticon.com/free-icons/snake" title="snake icons">Snake icons created by Magnific - Flaticon</a>
+diverse.jpg - <a href="https://www.flaticon.com/free-icons/diversity" title="diversity icons">Diversity icons created by Magnific - Flaticon</a>
+moreDiverse.jpg - <a href="https://www.flaticon.com/free-icons/diversity" title="diversity icons">Diversity icons created by Magnific - Flaticon</a>
+evenMoreDiverse.jpg - <a href="https://www.flaticon.com/free-icons/diversity" title="diversity icons">Diversity icons created by Magnific - Flaticon</a>
+noConnectionForYou.jpg - <a href="https://www.flaticon.com/free-icons/url" title="url icons">Url icons created by Fragneel - Flaticon</a>
+prestigious.jpg - <a href="https://www.flaticon.com/free-icons/likelihood" title="likelihood icons">Likelihood icons created by Three musketeers - Flaticon</a>
+topSecret.jpg - <a href="https://www.flaticon.com/free-icons/confidential" title="confidential icons">Confidential icons created by Magnific - Flaticon</a>
+wellLiked.jpg - <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Magnific - Flaticon</a>
+upgraded.jpg - <a href="https://www.flaticon.com/free-icons/upgrade" title="upgrade icons">Upgrade icons created by Smashicons - Flaticon</a>
+renovator.jpg - <a href="https://www.flaticon.com/free-icons/upgrade" title="upgrade icons">Upgrade icons created by Smashicons - Flaticon</a>
+starArchitect.jpg - <a href="https://www.flaticon.com/free-icons/upgrade" title="upgrade icons">Upgrade icons created by Smashicons - Flaticon</a>
+firstMillion.jpg - <a href="https://www.flaticon.com/free-icons/money" title="money icons">Money icons created by Magnific - Flaticon</a>
+billionaire.jpg - <a href="https://www.flaticon.com/free-icons/money" title="money icons">Money icons created by Magnific - Flaticon</a>
+trillionaire.jpg - <a href="https://www.flaticon.com/free-icons/money" title="money icons">Money icons created by Magnific - Flaticon</a>
+developing.jpg - <a href="https://www.flaticon.com/free-icons/growth" title="growth icons">Growth icons created by Magnific - Flaticon</a>
+developed.jpg - <a href="https://www.flaticon.com/free-icons/growth" title="growth icons">Growth icons created by Magnific - Flaticon</a>
+wellDeveloped.jpg - <a href="https://www.flaticon.com/free-icons/growth" title="growth icons">Growth icons created by Magnific - Flaticon</a>
+neverADullMoment.jpg - <a href="https://www.flaticon.com/free-icons/growth" title="growth icons">Growth icons created by Magnific - Flaticon</a>
+continentalSpan.jpg - <a href="https://www.flaticon.com/free-icons/map" title="map icons">Map icons created by Magnific - Flaticon</a>
+makingProgress.jpg - <a href="https://www.flaticon.com/free-icons/roadmap" title="roadmap icons">Roadmap icons created by Magnific - Flaticon</a>
+gettingThere.jpg - <a href="https://www.flaticon.com/free-icons/roadmap" title="roadmap icons">Roadmap icons created by Magnific - Flaticon</a>
+establishedTerminal.jpg - <a href="https://www.flaticon.com/free-icons/roadmap" title="roadmap icons">Roadmap icons created by Magnific - Flaticon</a>
+famousTerminal.jpg - <a href="https://www.flaticon.com/free-icons/roadmap" title="roadmap icons">Roadmap icons created by Magnific - Flaticon</a>
+carriedAway.jpg - <a href="https://www.flaticon.com/free-icons/auto" title="auto icons">Auto icons created by Magnific - Flaticon</a>
+theLongHaul.jpg - <a href="https://www.flaticon.com/free-icons/tired" title="tired icons">Tired icons created by Magnific - Flaticon</a>
+waterPark.jpg - <a href="https://www.flaticon.com/free-icons/water-park" title="water park icons">Water park icons created by Magnific - Flaticon</a>
+gardener.jpg - <a href="https://www.flaticon.com/free-icons/cultivate" title="cultivate icons">Cultivate icons created by Smashicons - Flaticon</a>
+animalLover.jpg - <a href="https://www.flaticon.com/free-icons/pet-care" title="pet care icons">Pet care icons created by Magnific - Flaticon</a>
+expressMail.jpg - <a href="https://www.flaticon.com/free-icons/postal-service" title="postal service icons">Postal service icons created by Upnow Graphic - Flaticon</a>
+cameo.jpg - <a href="https://www.flaticon.com/free-icons/beard" title="beard icons">Beard icons created by pojok d - Flaticon</a>
+couchPotato.jpg - <a href="https://www.flaticon.com/free-icons/lazy" title="lazy icons">Lazy icons created by Magnific - Flaticon</a>
+allYearRound.jpg - <a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by pojok d - Flaticon</a>
+42wallabyway.jpg - <a href="https://www.flaticon.com/free-icons/clownfish" title="clownfish icons">Clownfish icons created by Magnific - Flaticon</a>
+
+DepartureBoard.jpg - Photo by Neuhausengroup via Wikimedia Commons (Creative Commons Attribution 4.0 International license. Link: https://commons.wikimedia.org/wiki/File:Na19-Apr-Hyperloop.jpg)
 reputation.png - <a href="https://www.flaticon.com/free-icons/clean" title="clean icons">Clean icons created by Smashicons - Flaticon</a>
 globeIcon.png - Photo by pngtree via pngtree
 hello.png - Photo by Magnific via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/hello" title="hello icons">Hello icons created by Kalashnyk - Flaticon</a>
-pin.jpg - Photo by Vitaly Gorbachev via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by Vitaly Gorbachev - Flaticon</a>
+pin.png - Photo by Vitaly Gorbachev via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/location" title="location icons">Location icons created by Vitaly Gorbachev - Flaticon</a>
 construction.png - Photo by Magnific via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/construction" title="construction icons">Construction icons created by Magnific - Flaticon</a>
 monitor.png - Photo by xnimrodx via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/computer" title="computer icons">Computer icons created by xnimrodx - Flaticon</a>
 fireworks.png - Photo by Icon Mela via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/fireworks" title="fireworks icons">Fireworks icons created by Design Circle - Flaticon</a>

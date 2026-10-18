@@ -43,7 +43,7 @@ export const ACHIEVEMENTS = [
     { id: 'shutUp', group: 'Hyper-Link', name: 'Shut Up!', description: 'Mute Hyper-Link.' },
 
     // Farewells
-    { id: 'veryImportantPerson', group: 'Farewells', name: 'Very Important Person', description: 'Give a farewell or a greeting to a VIP passenger.' },
+    { id: 'veryImportantPassenger', group: 'Farewells', name: 'Very Important Person', description: 'Give a farewell or a greeting to a VIP passenger.' },
     // (The id niceManager is kept so it stays unlocked for players who have it)
     { id: 'niceManager', group: 'Farewells', name: 'Goodbye!', description: 'Give a farewell.', check: atLeast('farewells', 1) },
     { id: 'welcome', group: 'Farewells', name: 'Welcome!', description: 'Greet the passengers of an arriving loop.', check: atLeast('greetings', 1) },
