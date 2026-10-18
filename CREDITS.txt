@@ -858,6 +858,8 @@ littleCity.jpg - <a href="https://www.flaticon.com/free-icons/people" title="peo
 areWeThereYet.jpg - <a href="https://www.flaticon.com/free-icons/emoji" title="emoji icons">Emoji icons created by muh zakaria - Flaticon</a>
 justTakeTheBus.jpg - <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">Bus icons created by FauzIDEA - Flaticon</a>
 
+MISC ICONS
+
 DepartureBoard.jpg - Photo by Neuhausengroup via Wikimedia Commons (Creative Commons Attribution 4.0 International license. Link: https://commons.wikimedia.org/wiki/File:Na19-Apr-Hyperloop.jpg)
 reputation.png - <a href="https://www.flaticon.com/free-icons/clean" title="clean icons">Clean icons created by Smashicons - Flaticon</a>
 globeIcon.png - Photo by pngtree via pngtree
