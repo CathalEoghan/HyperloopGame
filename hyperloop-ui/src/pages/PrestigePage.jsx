@@ -36,7 +36,8 @@ function UpgradeArt({ upgrade, className }) {
 }
 
 // Ticker bar plus bottom navigation, fixed at the bottom of the screen
-const BOTTOM_BARS = 102
+// The page tucks 2px behind the ticker (which sits on top of it), so rounding or a late banner resize can never leave a gap
+const BOTTOM_BARS = 100
 
 function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, onPrestige = () => {} }) {
     const pageRef = useRef(null)
@@ -48,7 +49,12 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
         }
         fit()
         window.addEventListener('resize', fit)
-        return () => window.removeEventListener('resize', fit)
+        // The banner can change height after mount (fonts loading, a long name wrapping), so re-fit whenever the layout moves
+        const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(fit) : null
+        if (ro && pageRef.current?.parentElement) ro.observe(pageRef.current.parentElement)
+        if (ro) ro.observe(document.body)
+        document.fonts?.ready?.then(fit)
+        return () => { window.removeEventListener('resize', fit); ro?.disconnect() }
     }, [])
     const [prestige] = useState(() => new PrestigeManager())
     const [, setTick] = useState(0)
