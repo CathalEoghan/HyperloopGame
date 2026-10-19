@@ -212,7 +212,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const generalStats = [
         { label: 'Terminal age', value: terminalAge() },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
-        { label: 'Total revenue', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
+        { label: 'Total income per day', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
         { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.totalCashEarned || 0} /> },
         { label: 'Farewells given', value: farewellsGiven ?? 0 },
         { label: 'Greets given', value: economyManager.progressionManager.greetingsGiven ?? 0 },
