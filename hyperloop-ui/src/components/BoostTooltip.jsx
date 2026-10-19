@@ -4,9 +4,10 @@ import { createPortal } from 'react-dom'
 // The income boost breakdown. Drawn on the page itself (not inside the popup) and placed from the badge's position, so
 // a long list - 18 lines late in a run - always fits: above the badge if there is room, otherwise below, otherwise
 // beside it, and scrollable only if it is taller than the whole window.
+// text: plain sentences instead of a breakdown, so they wrap (at most 260px wide) and none is bold (an upgrade's effect).
 const EDGE = 8
 
-function BoostTooltip({ anchor, lines }) {
+function BoostTooltip({ anchor, lines, text = false }) {
     const ref = useRef(null)
     const [pos, setPos] = useState(null)
 
@@ -39,13 +40,13 @@ function BoostTooltip({ anchor, lines }) {
                 visibility: pos ? 'visible' : 'hidden',
                 maxHeight: pos ? pos.maxH : undefined, overflowY: 'auto',
                 background: '#222', color: 'white', borderRadius: '6px', padding: '6px 10px',
-                fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', whiteSpace: 'nowrap', fontWeight: 'normal', textAlign: 'left',
+                fontFamily: 'Inter, sans-serif', fontSize: '0.75rem', whiteSpace: text ? 'normal' : 'nowrap', maxWidth: text ? '260px' : undefined, fontWeight: 'normal', textAlign: 'left',
                 zIndex: 100000, pointerEvents: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
             }}
         >
             {lines.map((line, i) => (
                 <div key={i} style={{
-                    ...(i === 0 ? { fontWeight: 'bold', marginBottom: '2px' } : {}),
+                    ...(i === 0 && !text ? { fontWeight: 'bold', marginBottom: '2px' } : {}),
                     ...(line.startsWith('Total:') ? { fontWeight: 'bold', borderTop: '1px solid #666', marginTop: '3px', paddingTop: '3px' } : {}),
                 }}>{line}</div>
             ))}

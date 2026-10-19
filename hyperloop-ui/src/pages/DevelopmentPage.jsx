@@ -28,6 +28,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [showUpgradeModal, setShowUpgradeModal] = useState(false)
     const [showBoostTooltip, setShowBoostTooltip] = useState(null) // the badge being hovered
+    // The upgrade card being hovered and what it does, so the player does not have to open it to find out
+    const [upgradeTip, setUpgradeTip] = useState(null)
+    const showUpgradeTip = (e, development) => {
+        const describe = !development.revenue && EFFECT_DESCRIPTIONS[development.effectType]
+        setUpgradeTip(describe ? { anchor: e.currentTarget, text: describe(development.effectValue, development) } : null)
+    }
     const [showRenameModal, setShowRenameModal] = useState(false)
     const [renameText, setRenameText] = useState('')
     const [confirmRemove, setConfirmRemove] = useState(false)
@@ -450,8 +456,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 const level = getLevel(development)
                                 return (
                                     <button className="development" key={development.name}
-                                        onClick={() => { playClickSound2(); setSelectedDevelopment(development) }}
-                                        onMouseEnter={() => playHoverSound()}>
+                                        onClick={() => { playClickSound2(); setUpgradeTip(null); setSelectedDevelopment(development) }}
+                                        onMouseEnter={(e) => { playHoverSound(); showUpgradeTip(e, development) }}
+                                        onMouseLeave={() => setUpgradeTip(null)}>
                                         <div className="city-image-wrapper">
                                             <img
                                                 className={isUnderConstruction ? "unavailable" : "development-image"}
@@ -490,8 +497,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 <div className="development-row">
                     {sortedAvailable.map(development => (
                         <button className="development" key={development.name}
-                            onClick={() => { playClickSound2(); setSelectedDevelopment(development) }}
-                            onMouseEnter={() => playHoverSound()}>
+                            onClick={() => { playClickSound2(); setUpgradeTip(null); setSelectedDevelopment(development) }}
+                            onMouseEnter={(e) => { playHoverSound(); showUpgradeTip(e, development) }}
+                            onMouseLeave={() => setUpgradeTip(null)}>
                             <div className="city-image-wrapper">
                                 <img className="unavailable"
                                     src={developmentThumbnails[development.name] || developmentImages[development.name]}
@@ -506,6 +514,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         </button>
                     ))}
                 </div>
+                {upgradeTip && <BoostTooltip anchor={upgradeTip.anchor} lines={[upgradeTip.text]} text />}
             </div>
         </div>
     )
