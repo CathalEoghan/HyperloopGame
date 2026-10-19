@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { createPortal } from 'react-dom'
 import './DepartureBoard.css'
-import { playSplitFlapLong, playSplitFlapShort, playClickSound2, playHoverSound, playAutomatedScheduleSound } from '../utils/sound.js'
+import { playSplitFlapLong, playSplitFlapShort, playClickSound2, playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { minutesUntilDeparture } from '../utils/time.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
 import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable } from '../utils/timetable.js'
@@ -161,6 +161,8 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
     }
 
     const automate = () => {
+        // Nothing to automate: the button is greyed out, and says so with the "not enough" sound
+        if (purchasedCities.length > 1 && scheduledCount >= purchasedCities.length - 1) { playNotEnoughFundsSound(); return }
         playAutomatedScheduleSound()
         const waiting = unscheduledCities(purchasedCities).length
         const { added, skipped } = automateTimetable(purchasedCities)
@@ -296,7 +298,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
                             <button className="board-action" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowSchedule(true) }}>SCHEDULE LOOP</button>
                             <button
                                 className="board-action"
-                                disabled={everyCityScheduled}
+                                aria-disabled={everyCityScheduled}
                                 title={everyCityScheduled ? 'Every city already has a departure' : undefined}
                                 onMouseEnter={() => { if (!everyCityScheduled) playHoverSound() }}
                                 onClick={automate}
