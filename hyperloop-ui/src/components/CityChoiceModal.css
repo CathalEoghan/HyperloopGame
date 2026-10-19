@@ -66,10 +66,11 @@
 
 .citychoice-image { width: 144px; height: 144px; object-fit: cover; border-radius: 8px; border: 2px solid black; }
 .citychoice-name { font-weight: 700; font-size: 1rem; text-align: center; margin-top: 4px; }
-/* Room for two lines, so a long country name does not make its card taller than the others */
-.citychoice-meta { display: flex; align-items: center; gap: 5px; min-height: 2.4em; font-size: 0.78rem; line-height: 1.2; color: #888; text-align: center; }
+/* The flag sits above the country name, centred, so a long name that wraps (United States of America) lines up with the others.
+   Room for two lines of name, so a long one does not make its card taller than the others. */
+.citychoice-meta { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 46px; font-size: 0.78rem; line-height: 1.2; color: #888; text-align: center; }
 .citychoice-card-on .citychoice-meta { color: #ccc; }
-.citychoice-flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
+.citychoice-flag { width: 20px; height: 13px; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
 .citychoice-tier { margin-top: auto; font-family: 'Courier New', monospace; font-size: 0.78rem; color: #b36b00; }
 .citychoice-card-on .citychoice-tier { color: #f5a623; }
 
