@@ -428,15 +428,20 @@ function App() {
   const hyperLinkOpenRef = useRef(false)
   const nextPostTick = useRef(60 + Math.floor(Math.random() * 120))
   const secretCityTriggered = useRef(false);
+  // Claims are remembered by the upgrade's name. Saves from before Early Retirement and Founders' Hall swapped ranks
+  // remember them by rank (rank_50 was Founders' Hall, rank_100 was Early Retirement), so those are turned into names.
+  const LEGACY_MILESTONE_CLAIMS = { rank_10: 'Commemorative Displays', rank_25: 'Anniversary Sales', rank_50: "Founders' Hall", rank_100: 'Early Retirement' };
+  const milestoneKey = (milestone) => `milestone_${milestone.upgradeName}`;
   const claimedMilestones = useRef(new Set(
     JSON.parse(localStorage.getItem('hyperloop_claimed_milestones') || '[]')
+      .flatMap(key => LEGACY_MILESTONE_CLAIMS[key] ? [key, `milestone_${LEGACY_MILESTONE_CLAIMS[key]}`] : [key])
   ));
   const MILESTONES = [
     { rank: 10, upgradeName: 'Commemorative Displays' },
     { rank: 25, upgradeName: 'Anniversary Sales' },
-    { rank: 50, upgradeName: "Founders' Hall" },
     // Not handed over: it is unlocked, and bought with 250 Reputation (Development > Upgrades)
     { rank: PRESTIGE_MIN_RANK, upgradeName: 'Early Retirement' },
+    { rank: 100, upgradeName: "Founders' Hall" },
   ];
   // A milestone can be noticed by more than one path (the load check, a rank-up while playing, a skipped rank), so it
   // goes into the queue once however often it is asked for: a second entry handed the reward over twice.
@@ -546,7 +551,7 @@ function App() {
     localStorage.setItem('hyperloop_shown_reveals', JSON.stringify([...seen]));
     // The milestone upgrades for the ranks skipped (Rank 10 and 25)
     MILESTONES.forEach(milestone => {
-      if (milestone.rank <= rankManager.rank && !claimedMilestones.current.has(`rank_${milestone.rank}`)) {
+      if (milestone.rank <= rankManager.rank && !claimedMilestones.current.has(milestoneKey(milestone))) {
         setMilestoneQueue(prev => prev.some(m => m.rank === milestone.rank) ? prev : [...prev, milestone]);
       }
     });
@@ -650,7 +655,7 @@ function App() {
     // Queue every milestone at or below the current rank that hasn't been claimed yet —
     // not just ones reached since the last save — so a reload can't lose one.
     MILESTONES.forEach(milestone => {
-      if (milestone.rank <= rankManager.rank && !claimedMilestones.current.has(`rank_${milestone.rank}`)) {
+      if (milestone.rank <= rankManager.rank && !claimedMilestones.current.has(milestoneKey(milestone))) {
         queueMilestone(milestone);
       }
     });
@@ -833,7 +838,7 @@ function App() {
         // Check for milestone ranks
         for (let r = previousRank + 1; r <= rankManager.rank; r++) {
           const milestone = MILESTONES.find(m => m.rank === r);
-          if (milestone && !claimedMilestones.current.has(`rank_${r}`)) {
+          if (milestone && !claimedMilestones.current.has(milestoneKey(milestone))) {
             queueMilestone(milestone);
           }
         }
@@ -1879,8 +1884,8 @@ function App() {
             const milestone = milestoneQueue[0];
             const upgrade = allUpgrades.find(u => u.name === milestone.upgradeName);
             // Already handed over (a duplicate in the queue, say): drop it without paying out again
-            if (claimedMilestones.current.has(`rank_${milestone.rank}`) || (upgrade && progressionManager.purchasedUpgrades.some(u => u.name === upgrade.name))) {
-              claimedMilestones.current.add(`rank_${milestone.rank}`);
+            if (claimedMilestones.current.has(milestoneKey(milestone)) || (upgrade && progressionManager.purchasedUpgrades.some(u => u.name === upgrade.name))) {
+              claimedMilestones.current.add(milestoneKey(milestone));
               localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
               setMilestoneQueue(prev => prev.filter(m => m.rank !== milestone.rank));
               return;
@@ -1896,7 +1901,7 @@ function App() {
               // It is an upgrade the player now owns, so it gets the upgrade popup with its effect (bug #172)
               setRevealedUpgradeQueue(prev => [...prev, upgrade]);
             }
-            claimedMilestones.current.add(`rank_${milestone.rank}`);
+            claimedMilestones.current.add(milestoneKey(milestone));
             localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
             setMilestoneQueue(prev => prev.filter(m => m.rank !== milestone.rank));
             triggerSave();

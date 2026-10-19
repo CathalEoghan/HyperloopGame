@@ -14,7 +14,7 @@ const VERSION_LOG = [
         major: true,
         date: 'October 2026',
         notes: [
-            'Prestige: at Rank 100, buy Early Retirement (250 Reputation) and retire from the new Prestige tab to earn Prestige Points',
+            'Prestige: at Rank 50, buy Early Retirement (250 Reputation) and retire from the new Prestige tab to earn Prestige Points',
             '30 permanent Prestige upgrades in four layers, kept in every future run',
             '51 achievements, kept for good, with a trophy button on the home screen',
             '"Claim all" buttons for waiting rank-ups and development reveals',

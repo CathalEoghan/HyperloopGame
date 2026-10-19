@@ -49,7 +49,7 @@ None: all 30 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 
 ## Milestone upgrades
 
-- **Early Retirement** (Rank 100, built): arrives unlocked under Development > Upgrades and costs 250 Reputation (no cash, no build time). Owning it enables **Retire** on the Prestige page. Re-earned every run.
+- **Early Retirement** (Rank 50, built): arrives unlocked under Development > Upgrades and costs 250 Reputation (no cash, no build time). Owning it enables **Retire** on the Prestige page. Re-earned every run.
 - **Anniversary Sales** (Rank 25, built, live): +5% Work earnings per unique achievement (additive).
 
 ## Prestige runs

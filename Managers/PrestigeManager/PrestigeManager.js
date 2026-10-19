@@ -4,7 +4,7 @@ export const PRESTIGE_KEY = 'hyperloop_prestige'
 export const PRESTIGE_HISTORY_KEY = 'hyperloop_prestige_history'
 // Prestige Points for ending a run: 1 for every 50 ranks reached (2 at Rank 100)
 export const RANKS_PER_PRESTIGE_POINT = 50
-export const PRESTIGE_MIN_RANK = 100
+export const PRESTIGE_MIN_RANK = 50
 // Past runs kept for the history list and the Retirement count (a run takes hours, so this is never reached in practice)
 const HISTORY_LIMIT = 1000
 

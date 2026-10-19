@@ -198,7 +198,7 @@ const OWNED_POSTS_WEIGHT = 4
 // Ranks that have their own milestone posts (the list is `milestone<rank>` in hyperLinkData.js). To add one, add the
 // rank here and the list there. A milestone shows from that rank until MILESTONE_WINDOW ranks after it; the weight is
 // higher than the old 1 so that the short window is reliably seen.
-const MILESTONE_RANKS = [10, 50]
+const MILESTONE_RANKS = [10, 50, 100]
 const MILESTONE_WINDOW = 4
 const MILESTONE_WEIGHT = 4
 

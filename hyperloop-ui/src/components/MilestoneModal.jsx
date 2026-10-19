@@ -3,7 +3,7 @@ import { playClickSound2, playRankUpSound, playHoverSound } from '../utils/sound
 import fireworksIcon from '../assets/misc/fireworks.png'
 import './MilestoneModal.css'
 
-// The rank of the milestone after each one. Rank 100 (Early Retirement) is the last, so it shows none.
+// The rank of the milestone after each one. Rank 100 (Founders' Hall) is the last, so it shows none.
 const NEXT_MILESTONE_RANK = { 10: 25, 25: 50, 50: 100 }
 
 function MilestoneModal({ milestone, onContinue }) {

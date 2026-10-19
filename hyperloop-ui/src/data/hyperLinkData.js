@@ -783,7 +783,15 @@ export const POSTS = {
         'did anyone see the fireworks?? so good'
     ],
 
+    // Rank 50 is when Early Retirement unlocks
     milestone50: [
+        'Is it just me or is the manager already looking at retirement brochures??',
+        'Rank 50 and the boss is quietly eyeing the exit. Who runs this place after?',
+        'Saw retirement leaflets on the manager\'s desk. Not saying anything. Just saying',
+    ],
+
+    // Rank 100 is when the Founders' Hall opens
+    milestone100: [
         'The terminal has really grown since it started. The new founders hall is amaze',
         'Anyone been to the new founders hall? Defo worth a visit',
         'The founders hall is nice but like that self portrait of the manager is a bit 😬😬',

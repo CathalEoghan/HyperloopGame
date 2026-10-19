@@ -149,7 +149,7 @@ export class ProgressionManager {
         });
     }
 
-    // Early Retirement is unlocked at Rank 100 and paid for with Reputation, not cash, and it is not built
+    // Early Retirement is unlocked at Rank 50 and paid for with Reputation, not cash, and it is not built
     // (no construction time). Owning it lets the player prestige.
     hasEarlyRetirement() {
         return this.purchasedUpgrades.some(u => u.effectType === 'earlyRetirement');
