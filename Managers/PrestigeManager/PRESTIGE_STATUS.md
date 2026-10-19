@@ -24,7 +24,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 2 | Advanced Engineering | Cities and developments build immediately (finish on the next tick) | ConstructionManager |
 | 2 | Video Message | Farewell is sent automatically after 2.5 s | FarewellModal |
 | 2 | Viral Superstar | x3 Progress rewards (x6 with the x2 upgrade) | ProgressPage `handleCardClick` |
-| 3 | Automated Scheduling | No cap on offline earnings | `calculateOfflineCap` returns Infinity |
+| 3 | Skeleton Staff | No cap on offline earnings | `calculateOfflineCap` returns Infinity |
 | 3 | Personal Favours | After a prestige you choose your starter city from the six starters or any city in the world (city picker); without it the city is drawn for you | OpeningPage `runStart` |
 | 3 | Pizza Parties | Positive events +200% stronger (effect tripled, instant cash x3) | App.jsx event trigger |
 | 3 | Irresistible Discounts | x3 development income | `getPrestigeDevMultiplier` |

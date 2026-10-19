@@ -57,7 +57,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'viralSuperstar', icon: '🌟', layer: 2, name: 'Viral Superstar', description: `${mult(V.viralSuperstar)} cash and Reputation from Progress rewards.` },
 
     // Layer 3
-    { id: 'automatedScheduling', icon: '🗓️', layer: 3, name: 'Automated Scheduling', description: 'No cap on offline earnings.' },
+    { id: 'automatedScheduling', icon: '🗓️', layer: 3, name: 'Skeleton Staff', description: 'No cap on offline earnings.' },
     { id: 'trophyCabinet', icon: '🏆', layer: 3, name: 'Trophy Cabinet', description: `City and development income multiplied by an extra ${pct(V.trophyCabinetPerAchievement)} for each unique achievement unlocked (x${1 + 50 * V.trophyCabinetPerAchievement} at 50).` },
     { id: 'pizzaParties', icon: '🍕', layer: 3, name: 'Pizza Parties', description: 'Positive events are +200% stronger.' },
     { id: 'irresistibleDiscounts', icon: '🏷️', layer: 3, name: 'Irresistible Discounts', description: `${mult(V.irresistibleDiscounts)} development income.` },
