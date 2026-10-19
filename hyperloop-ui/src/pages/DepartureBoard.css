@@ -342,7 +342,8 @@
     cursor: var(--cursor-pointer, pointer);
     transition: color 0.2s, background 0.2s;
 }
-.board-action:hover { background: var(--board-accent, #f5a623); color: #0a0a0a; }
+.board-action:hover:not(:disabled) { background: var(--board-accent, #f5a623); color: #0a0a0a; }
+.board-action:disabled { opacity: 0.35; cursor: var(--cursor-default, default); }
 
 .board-sched-status { font-size: 0.72rem; letter-spacing: 1px; color: #777; }
 .board-sched-status-low { color: #f5a623; }

@@ -10,6 +10,7 @@ import hoverSound from '../assets/sounds/hoverSound.mp3'
 import reputationWorkBonus from '../assets/sounds/reputationBonusWork.mp3'
 import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
 import openingAudio from '../assets/sounds/openingAudio.mp3'
+import automatedScheduleSound from '../assets/sounds/automatedSchedule.mp3'
 import developmentUnlocked from '../assets/sounds/developmentUnlocked.mp3'
 import eventSound from '../assets/sounds/eventSound.mp3'
 import diceRollSound from '../assets/sounds/diceRoll.mp3'
@@ -93,6 +94,7 @@ export function playHoverSound()                { playHover() }
 export function playReputationWorkBonusSound()  { play(reputationWorkBonus) }
 export function playBottomNavbarHoverSound()    { play(bottomNavbarHover) }
 export function playOpeningAudio()              { play(openingAudio) }
+export function playAutomatedScheduleSound()    { play(automatedScheduleSound) }
 export function playDevelopmentUnlockedSound()  { play(developmentUnlocked) }
 export function playDailyLoginSound()           { play(dailyLoginSound) }
 export function playNotEnoughFundsSound()       { play(notEnoughFundsSound) }

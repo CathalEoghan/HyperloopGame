@@ -76,6 +76,12 @@ export function unscheduledCities(purchasedCities, timetable = readTimetable()) 
 
 // ---- Rules ----
 
+// Minutes between two times of day. The timetable repeats every day, so 23:40 and 00:05 are 25 minutes apart.
+const gapBetween = (a, b) => {
+    const d = Math.abs(a - b)
+    return Math.min(d, 24 * 60 - d)
+}
+
 // null when the slot is allowed, otherwise a sentence saying why not. `name` may already be on the timetable
 // (moving it): its own entry is ignored.
 export function slotProblem(timetable, { name, minuteOfDay, gate }, nowMs = Date.now()) {
@@ -86,9 +92,9 @@ export function slotProblem(timetable, { name, minuteOfDay, gate }, nowMs = Date
     if (!Number.isInteger(gate) || gate < 1 || gate > NUM_GATES) return `Gates are numbered 1 to ${NUM_GATES}.`
     const others = timetable.filter(e => e.name !== name)
     if (others.length >= SCHEDULE_CAP) return `A timetable holds at most ${SCHEDULE_CAP} departures.`
-    const tooClose = others.find(e => Math.abs(e.minuteOfDay - minuteOfDay) < MIN_SPACING)
+    const tooClose = others.find(e => gapBetween(e.minuteOfDay, minuteOfDay) < MIN_SPACING)
     if (tooClose) return `Too close to ${tooClose.name} at ${timeString(tooClose.minuteOfDay)}: departures need ${MIN_SPACING} minutes between them.`
-    const gateClash = others.find(e => e.gate === gate && Math.abs(e.minuteOfDay - minuteOfDay) < GATE_COOLDOWN)
+    const gateClash = others.find(e => e.gate === gate && gapBetween(e.minuteOfDay, minuteOfDay) < GATE_COOLDOWN)
     if (gateClash) return `Gate ${gate} is in use for ${gateClash.name} at ${timeString(gateClash.minuteOfDay)}. A gate needs ${GATE_COOLDOWN} minutes between loops.`
     return null
 }
@@ -97,7 +103,7 @@ export function slotProblem(timetable, { name, minuteOfDay, gate }, nowMs = Date
 export function busyGates(timetable, name, minuteOfDay) {
     const busy = {}
     timetable.filter(e => e.name !== name).forEach(e => {
-        if (Math.abs(e.minuteOfDay - minuteOfDay) < GATE_COOLDOWN) busy[e.gate] = `${e.name} at ${timeString(e.minuteOfDay)}`
+        if (gapBetween(e.minuteOfDay, minuteOfDay) < GATE_COOLDOWN) busy[e.gate] = `${e.name} at ${timeString(e.minuteOfDay)}`
     })
     return busy
 }
@@ -154,8 +160,8 @@ function syncToday(name, slot, purchasedCities, nowMs) {
     if (slot) {
         const due = entryTimestamp({ hour: Math.floor(slot.minuteOfDay / 60), minute: slot.minuteOfDay % 60 }, nowMs)
         // Today's list can differ from the timetable (a delay moves a loop), so it is checked too
-        const clash = list.some(e => Math.abs(e.minuteOfDay - slot.minuteOfDay) < MIN_SPACING
-            || (e.gate === slot.gate && Math.abs(e.minuteOfDay - slot.minuteOfDay) < GATE_COOLDOWN))
+        const clash = list.some(e => gapBetween(e.minuteOfDay, slot.minuteOfDay) < MIN_SPACING
+            || (e.gate === slot.gate && gapBetween(e.minuteOfDay, slot.minuteOfDay) < GATE_COOLDOWN))
         if (due - nowMs >= MIN_LEAD * 60000 && !clash && isRealMinute(slot.minuteOfDay, nowMs)) {
             list.push(entryFor(slot, home, nowMs))
             applied = true
