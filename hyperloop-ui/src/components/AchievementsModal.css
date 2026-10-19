@@ -82,10 +82,46 @@
 .achievements-body .achievement-grid { margin-bottom: 0; }
 
 /* Cards */
-.achievement-bonus-note {
-    margin: 0 0 10px;
-    font-size: 0.85rem;
-    color: #555;
+/* What the achievements are currently worth: one banner per bonus */
+.achievement-bonuses {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.achievement-bonus {
+    flex: 1 1 260px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    background: #222;
+    border: 1px solid #f5a623;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.achievement-bonus-icon {
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    box-sizing: border-box;
+    background: #ffe9c7;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.achievement-bonus-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.achievement-bonus-name { font-weight: 700; font-size: 0.9rem; }
+.achievement-bonus-what { font-size: 0.72rem; color: #ccc; }
+
+.achievement-bonus-value {
+    font-family: 'Courier New', monospace;
+    font-weight: 700;
+    font-size: 1.3rem;
+    color: #f5a623;
 }
 
 .achievement-grid {
@@ -104,7 +140,7 @@
     padding: 10px 12px;
     border-radius: 8px;
     background: #eaeaea;
-    border: 1px solid #d0d0d0;
+    border: 1px solid #444;
     opacity: 0.75;
     box-sizing: border-box;
     transition: transform 0.15s ease, box-shadow 0.15s ease;
@@ -122,7 +158,7 @@
 
 .achievement-card.achievement-done {
     background: #333;
-    border-color: #f5a623;
+    border: 1px solid #f5a623;
     color: white;
     opacity: 1;
 }

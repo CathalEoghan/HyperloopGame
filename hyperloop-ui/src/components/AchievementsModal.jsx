@@ -40,12 +40,12 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
     useEffect(() => { firstUnseenRef.current?.scrollIntoView({ block: 'center' }) }, [])
     const firstUnseenId = SORTED_ACHIEVEMENTS.find(a => achievementManager.has(a.id) && achievementManager.isUnseen(a.id))?.id
     // What the achievements are worth, once the Anniversary Sales / Trophy Cabinet upgrades that use them are owned
-    const bonusLines = []
+    const bonuses = []
     if (count > 0 && (purchasedUpgrades || []).some(u => u.effectType === 'workPerAchievement')) {
-        bonusLines.push(`Anniversary Sales: +${count * 5}% Work earnings`)
+        bonuses.push({ name: 'Anniversary Sales', value: `+${count * 5}%`, what: 'Work earnings' })
     }
     if (count > 0 && PrestigeManager.owns('trophyCabinet')) {
-        bonusLines.push(`Trophy Cabinet: ×${(1 + count * PRESTIGE_VALUES.trophyCabinetPerAchievement).toFixed(2)} city and development income`)
+        bonuses.push({ name: 'Trophy Cabinet', value: `×${(1 + count * PRESTIGE_VALUES.trophyCabinetPerAchievement).toFixed(2)}`, what: 'city and development income' })
     }
 
     return (
@@ -60,7 +60,20 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                     <button className="achievements-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close">✕</button>
                 </div>
                 <div className="achievements-body">
-                    {bonusLines.length > 0 && <p className="achievement-bonus-note">{bonusLines.join(' · ')}</p>}
+                    {bonuses.length > 0 && (
+                        <div className="achievement-bonuses">
+                            {bonuses.map(b => (
+                                <div key={b.name} className="achievement-bonus">
+                                    <img src={trophyIcon} alt="" className="achievement-bonus-icon" />
+                                    <div className="achievement-bonus-text">
+                                        <span className="achievement-bonus-name">{b.name}</span>
+                                        <span className="achievement-bonus-what">{b.what}</span>
+                                    </div>
+                                    <span className="achievement-bonus-value">{b.value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
                     <div className="achievement-grid">
                         {SORTED_ACHIEVEMENTS.map(a => {
                             const done = achievementManager.has(a.id)
