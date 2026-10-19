@@ -431,8 +431,10 @@
 }
 .progress-card-unclaimed {
     background: rgba(255, 215, 0, 0.2) !important;
-    box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.7) !important;
-    border: 2px solid #FFD700 !important;
+    /* The border stays 1px like every other card, so a glowing card is exactly the same size and nothing shifts when it is
+       claimed. The second pixel of gold is a ring in the shadow, which takes up no room. */
+    box-shadow: 0 0 0 1px #FFD700, 0 0 10px 3px rgba(255, 215, 0, 0.7) !important;
+    border: 1px solid #FFD700 !important;
     cursor: var(--cursor-pointer, pointer) !important;
     animation: gold-pulse 2s ease-in-out infinite;
 }
@@ -442,16 +444,16 @@
 }
 
 .progress-card-unclaimed:hover {
-    box-shadow: 0 0 18px 6px rgba(255, 215, 0, 0.9) !important;
+    box-shadow: 0 0 0 1px #FFD700, 0 0 18px 6px rgba(255, 215, 0, 0.9) !important;
 }
 
 @keyframes gold-pulse {
-    0%, 100% { box-shadow: 0 0 8px 2px rgba(255, 215, 0, 0.5); }
-    50% { box-shadow: 0 0 16px 6px rgba(255, 215, 0, 0.85); }
+    0%, 100% { box-shadow: 0 0 0 1px #FFD700, 0 0 8px 2px rgba(255, 215, 0, 0.5); }
+    50% { box-shadow: 0 0 0 1px #FFD700, 0 0 16px 6px rgba(255, 215, 0, 0.85); }
 }
 
 @keyframes gold-fade-out {
-    from { background: rgba(255, 215, 0, 0.2); box-shadow: 0 0 10px 3px rgba(255, 215, 0, 0.7); border-color: #FFD700; }
+    from { background: rgba(255, 215, 0, 0.2); box-shadow: 0 0 0 1px #FFD700, 0 0 10px 3px rgba(255, 215, 0, 0.7); border-color: #FFD700; }
     to   { background: white; box-shadow: none; border-color: #ccc; }
 }
 
