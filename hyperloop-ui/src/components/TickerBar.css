@@ -3,9 +3,12 @@
     bottom: 65px;
     left: 0;
     width: 100%;
-    height: 36px;
+    /* The same 37px in all as before (36 + a 1px line), so nothing around it moves. The gold bar along the top is
+       3px: a 1px line vanished against the cream pages and only showed on the dark Prestige page. */
+    box-sizing: border-box;
+    height: 37px;
     background: var(--ticker-bg, #0a0a0a);
-    border-top: 1px solid var(--ticker-text, #f5a623);
+    border-top: 3px solid var(--ticker-text, #f5a623);
     overflow: hidden;
     contain: paint; /* the long sliding text can never add to the page's scrollable width */
     z-index: 50;
