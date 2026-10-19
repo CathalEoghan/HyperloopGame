@@ -293,7 +293,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
                             >{label}{id === 'departures' && nothingScheduled && <span className="board-tab-dot" title="Nothing is scheduled for departure" />}</button>
                         ))}
                     </div>
-                    {canSchedule && (
+                    {canSchedule && !isArrivals && (
                         <div className="board-actions">
                             <button className="board-action" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowSchedule(true) }}>SCHEDULE LOOP</button>
                             <button
@@ -306,11 +306,13 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
                         </div>
                     )}
                   </div>
-                    {canSchedule && (
+                    {canSchedule && (isArrivals ? (
+                        <div className="board-sched-status">Arrival times are handled by other terminals automatically</div>
+                    ) : (
                         <div className={`board-sched-status${scheduledCount < totalCities ? ' board-sched-status-low' : ''}`}>
                             {scheduledCount} of {totalCities} {totalCities === 1 ? 'city' : 'cities'} scheduled for departure{notice ? ` · ${notice}` : ''}
                         </div>
-                    )}
+                    ))}
                     <h2 className="board-title" style={{ margin: 0 }}>{isArrivals ? 'Arrivals' : 'Departures'} {today}</h2>
                 </div>
                 {onClose && (
