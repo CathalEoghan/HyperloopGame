@@ -127,8 +127,9 @@
 .achievement-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    grid-auto-rows: 1fr; /* every box as tall as the tallest */
-    gap: 10px;
+    /* Each row is as tall as its tallest card (the cards in a row match), not as the tallest in the whole list */
+    grid-auto-rows: auto;
+    gap: 8px;
     margin-bottom: 24px;
 }
 
@@ -136,8 +137,8 @@
     position: relative;
     display: flex;
     align-items: flex-start;   /* logo and text start at the top, so every card reads the same way */
-    gap: 12px;
-    padding: 12px;
+    gap: 10px;
+    padding: 9px 10px;
     border-radius: 8px;
     background: #eaeaea;
     border: 1px solid #444;
@@ -163,7 +164,7 @@
     opacity: 1;
 }
 
-.achievement-card-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.achievement-card-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 
 .achievement-card-name { font-weight: 700; font-size: 0.88rem; line-height: 1.2; }
 
@@ -202,8 +203,8 @@
 .achievement-card-logo {
     position: relative;
     flex-shrink: 0;
-    width: 54px;
-    height: 54px;
+    width: 48px;
+    height: 48px;
     box-sizing: border-box;
     border: 1px solid #f5a623;
     border-radius: 11px;
@@ -220,7 +221,7 @@
     object-fit: cover;
     border-radius: 10px;
 }
-.achievement-card-emoji { font-size: 1.5rem; line-height: 1; }
+.achievement-card-emoji { font-size: 1.35rem; line-height: 1; }
 .achievement-card-logo-locked img { filter: grayscale(1) brightness(0.9); opacity: 0.6; }
 .achievement-card-lock {
     position: absolute;
