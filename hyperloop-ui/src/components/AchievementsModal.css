@@ -10,7 +10,7 @@
 }
 
 .achievements-panel {
-    width: 760px;
+    width: 880px;
     max-width: 100%;
     max-height: 85vh;
     display: flex;
@@ -135,9 +135,9 @@
 .achievement-card {
     position: relative;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 12px;
+    align-items: flex-start;   /* logo and text start at the top, so every card reads the same way */
+    gap: 12px;
+    padding: 12px;
     border-radius: 8px;
     background: #eaeaea;
     border: 1px solid #444;
@@ -163,13 +163,11 @@
     opacity: 1;
 }
 
-.achievement-card-icon { font-size: 1.4rem; }
+.achievement-card-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 
-.achievement-card-text { display: flex; flex-direction: column; gap: 2px; }
+.achievement-card-name { font-weight: 700; font-size: 0.88rem; line-height: 1.2; }
 
-.achievement-card-name { font-weight: 700; font-size: 0.85rem; }
-
-.achievement-card-desc { font-size: 0.72rem; color: #666; }
+.achievement-card-desc { font-size: 0.72rem; line-height: 1.35; color: #666; }
 
 .achievement-done .achievement-card-desc { color: #ccc; }
 
@@ -200,20 +198,29 @@
 }
 
 /* The achievement's logo: a rounded square. Locked ones are greyed out with a small lock in the corner. */
+/* A thin border round the logo: gold once unlocked, grey until then */
 .achievement-card-logo {
     position: relative;
     flex-shrink: 0;
-    width: 52px;
-    height: 52px;
+    width: 54px;
+    height: 54px;
+    box-sizing: border-box;
+    border: 1px solid #f5a623;
+    border-radius: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #444;
 }
+.achievement-card-logo-locked { border-color: #9a9a9a; background: #d8d8d8; }
 .achievement-card-logo img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
+.achievement-card-emoji { font-size: 1.5rem; line-height: 1; }
 .achievement-card-logo-locked img { filter: grayscale(1) brightness(0.9); opacity: 0.6; }
 .achievement-card-lock {
     position: absolute;

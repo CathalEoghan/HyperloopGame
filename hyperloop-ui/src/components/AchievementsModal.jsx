@@ -88,12 +88,13 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                                     onClick={() => { if (isNew) onSeen(a.id) }}
                                 >
                                     {isNew && <span className="achievement-new-dot" aria-label="New" />}
-                                    {logo
-                                        ? <span className={`achievement-card-logo${done ? '' : ' achievement-card-logo-locked'}`}>
-                                            <img src={logo} alt="" loading="lazy" />
-                                            {!done && <span className="achievement-card-lock" aria-hidden="true">🔒</span>}
-                                          </span>
-                                        : <span className="achievement-card-icon">{done ? '🏆' : '🔒'}</span>}
+                                    {/* The same box whether or not the achievement has a logo yet, so every card lines up */}
+                                    <span className={`achievement-card-logo${done ? '' : ' achievement-card-logo-locked'}`}>
+                                        {logo
+                                            ? <img src={logo} alt="" loading="lazy" />
+                                            : <span className="achievement-card-emoji" aria-hidden="true">{done ? '🏆' : '🔒'}</span>}
+                                        {logo && !done && <span className="achievement-card-lock" aria-hidden="true">🔒</span>}
+                                    </span>
                                     <div className="achievement-card-text">
                                         <span className="achievement-card-name">{a.name}</span>
                                         <span className="achievement-card-desc">{a.description}</span>
