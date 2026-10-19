@@ -75,7 +75,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
         setTimeout(() => setLikeAnimating(null), 800)
         setLikedPosts(newLiked)
         localStorage.setItem('hyperloop_hyperlink_liked', JSON.stringify([...newLiked]))
-        if (onLikeReward) onLikeReward()
+        if (onLikeReward) onLikeReward(postId)
     }
 
     const handlePostTap = (postId) => {

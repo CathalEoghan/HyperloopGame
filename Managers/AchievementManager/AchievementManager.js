@@ -2,6 +2,8 @@ import { ACHIEVEMENTS, ACHIEVEMENT_IDS, ACHIEVEMENT_BY_ID } from './achievements
 import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_UPGRADES } from '../PrestigeManager/prestigeUpgrades.js'
 import { allCities } from '../../CityManager/CityRegistry.js'
+import { allUpgrades } from '../../UpgradeManager/UpgradeRegistry.js'
+import { readLivestreamClicks } from '../PrestigeManager/livestream.js'
 
 export const ACHIEVEMENTS_KEY = 'hyperloop_achievements'
 export const COUNTERS_KEY = 'hyperloop_achievement_counters'
@@ -12,6 +14,8 @@ const REGULAR_CITIES = allCities.filter(c => c.continent !== 'Antarctica')
 const REGULAR_CONTINENTS = new Set(REGULAR_CITIES.map(c => c.continent)).size
 // Upgrades handed out as milestone rewards (or Early Retirement) aren't "constructed" by the player
 const NOT_BUILT = new Set(['dailyLoginMultiplier', 'terminalAgeBoost', 'workPerAchievement', 'earlyRetirement'])
+// One Advertising Campaign upgrade for each country: Universal Brand wants them all
+const AD_CAMPAIGN_TOTAL = allUpgrades.filter(u => u.effectType === 'countryAdvertisingBoost').length
 
 // Unlocked achievements and running totals (Work presses, farewells). Stored apart from the run, so a prestige
 // keeps them: an achievement is earned once, for good.
@@ -28,6 +32,10 @@ export class AchievementManager {
             const list = JSON.parse(localStorage.getItem(ACHIEVEMENTS_KEY))
             if (Array.isArray(list)) this.unlocked = new Set(list.filter(id => ACHIEVEMENT_IDS.has(id)))
         } catch { /* nothing saved yet */ }
+        // Even More Diverse used to be 50 countries, and More Diverse is now the 50-country one: anyone who has the
+        // first earned the second. It gets a red dot, so they see it.
+        const needsMoreDiverse = this.unlocked.has('evenMoreDiverse') && !this.unlocked.has('moreDiverse')
+        if (needsMoreDiverse) this.unlocked.add('moreDiverse')
         try {
             const list = JSON.parse(localStorage.getItem(UNSEEN_KEY))
             if (Array.isArray(list)) this.unseen = new Set(list.filter(id => this.unlocked.has(id)))
@@ -38,6 +46,7 @@ export class AchievementManager {
                 Object.entries(c).forEach(([k, v]) => { if (Number.isFinite(v) && v >= 0) this.counters[k] = Math.floor(v) })
             }
         } catch { /* nothing saved yet */ }
+        if (needsMoreDiverse) { this.unseen.add('moreDiverse'); this.save() }
     }
 
     save() {
@@ -93,8 +102,9 @@ export class AchievementManager {
         this.save()
     }
 
-    // A snapshot of the game for the state achievements.
-    buildContext(progressionManager, rankManager) {
+    // A snapshot of the game for the state achievements. `extra.activeLoopKm` lists the length of every loop
+    // travelling right now, which only the game screen knows.
+    buildContext(progressionManager, rankManager, extra = {}) {
         const prestige = new PrestigeManager()
         const categories = {}
         let builds = 0
@@ -104,6 +114,12 @@ export class AchievementManager {
         let likes = 0
         try { likes = (JSON.parse(localStorage.getItem('hyperloop_hyperlink_liked')) || []).length } catch { likes = 0 }
         const cities = progressionManager.purchasedCities
+        // Everything built, by name (developments and upgrades alike)
+        const builtNames = [
+            ...progressionManager.purchasedDevelopments.map(d => d.name),
+            ...progressionManager.purchasedUpgrades.filter(u => !NOT_BUILT.has(u.effectType)).map(u => u.name),
+        ]
+        const loopKm = extra.activeLoopKm || []
         return {
             cities: cities.length,
             regularConnected: cities.filter(c => c.continent !== 'Antarctica').length,
@@ -117,6 +133,13 @@ export class AchievementManager {
             dailyBonus: this.counter('dailyBonus'),
             devUpgrades: this.counter('devUpgrades'),
             builds,
+            builtNames,
+            adCampaignsOwned: progressionManager.purchasedUpgrades.filter(u => u.effectType === 'countryAdvertisingBoost').length,
+            adCampaignsTotal: AD_CAMPAIGN_TOTAL,
+            passengers: this.counter('passengers'),
+            playtime: this.counter('playtime'),
+            longestLoopKm: loopKm.length ? Math.max(...loopKm) : 0,
+            shortestLoopKm: loopKm.length ? Math.min(...loopKm) : null,
             categories,
             rank: rankManager.rank,
             balance: progressionManager.balance,
@@ -125,6 +148,8 @@ export class AchievementManager {
             greetings: this.counter('greetings'),
             farewellsAndGreetings: this.counter('farewells') + this.counter('greetings'),
             work: this.counter('work'),
+            // Manual Work clicks in this run only: it is cleared by a new game or a prestige
+            runWork: readLivestreamClicks(),
             prestigeEarned: prestige.points > 0 || prestige.owned.length > 0 || PrestigeManager.getHistory().length > 0,
             prestigeOwned: prestige.owned.length,
             prestigeTotal: PRESTIGE_UPGRADES.length,
@@ -132,8 +157,8 @@ export class AchievementManager {
     }
 
     // Runs every state achievement against the game. Returns the ids unlocked just now.
-    evaluate(progressionManager, rankManager) {
-        const ctx = this.buildContext(progressionManager, rankManager)
+    evaluate(progressionManager, rankManager, extra = {}) {
+        const ctx = this.buildContext(progressionManager, rankManager, extra)
         const fresh = []
         ACHIEVEMENTS.forEach(a => {
             if (a.check && !this.unlocked.has(a.id) && a.check(ctx)) { this.unlocked.add(a.id); this.unseen.add(a.id); fresh.push(a.id) }

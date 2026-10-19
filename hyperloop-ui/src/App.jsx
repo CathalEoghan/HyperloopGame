@@ -36,6 +36,7 @@ import SecretCityModal from "./components/SecretCityModal"
 import MilestoneModal from "./components/MilestoneModal"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
+import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
 import { POSTS } from "./data/hyperLinkData.js"
 import { playPhoneNotificationSound } from "./utils/sound.js"
 import { RankManager } from "Managers/RankManager/RankManager.js";
@@ -55,7 +56,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
-import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES } from './utils/loops.js'
+import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, distanceMiles } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -310,7 +311,7 @@ function App() {
       }
       achievements.addCounter('greetings');
       progressionManager.greetingsGiven += 1;
-      if (dep?.vip) { achievements.addCounter('vips'); unlockAchievement('veryImportantPerson'); }
+      if (dep?.vip) { achievements.addCounter('vips'); unlockAchievement('veryImportantPassenger'); }
       triggerSave();
       finishDeparture(dep);
       return;
@@ -334,7 +335,9 @@ function App() {
     const newCount = farewellsRef.current + 1;
     farewellsRef.current = newCount;
     achievements.addCounter('farewells');
-    if (dep?.vip) { achievements.addCounter('vips'); unlockAchievement('veryImportantPerson'); }
+    if (dep?.vip) { achievements.addCounter('vips'); unlockAchievement('veryImportantPassenger'); }
+    // A farewell to a loop leaving Casablanca for Paris
+    if (dep?.name === 'Paris' && progressionManager.purchasedCities[0]?.name === 'Casablanca') unlockAchievement('wellAlwaysHaveParis');
     setFarewellsGiven(newCount);
     triggerSave(newCount);
     finishDeparture(dep);
@@ -1257,7 +1260,11 @@ function App() {
 
       // Achievements: check the game once a second (balance and the like change between the events that trigger a save)
       if (progressionManager.purchasedCities.length > 0) {
-        const fresh = achievements.evaluate(progressionManager, rankManager);
+        // How long each loop travelling right now is, for Are We There Yet? and Just Take the Bus
+        const activeLoopKm = getActiveLoops(progressionManager.purchasedCities)
+          .map(l => (distanceMiles(l.from, l.to) || 0) * 1.609344)
+          .filter(km => km > 0);
+        const fresh = achievements.evaluate(progressionManager, rankManager, { activeLoopKm });
         if (fresh.length) announceAchievements(fresh);
       }
     }, 1000);
@@ -1409,6 +1416,7 @@ function App() {
   const handleShopBuy = (category, item) => {
     if (isOwned(cosmetics, category, item.id)) return true;
     if (!progressionManager.spendReputation(item.cost)) return false;
+    unlockAchievement('shoppingSpree');
     updateCosmetics(withEquipped(withPurchase(cosmetics, category, item.id), category, item.id));
     setReputation(progressionManager.reputation);
     triggerSave();
@@ -1596,6 +1604,7 @@ function App() {
           purchasedCities={progressionManager.purchasedCities}
           onSchedule={() => { setShowFirstLoop(false); setBoardOpensSchedule(true); openBoardFromPrompt(); }}
           onViewBoard={() => { setShowFirstLoop(false); openBoardFromPrompt(); }}
+          onAutomated={() => unlockAchievement('beepBoop')}
           onClose={() => { setShowFirstLoop(false); triggerSave(); }}
         />
       )}
@@ -1633,6 +1642,7 @@ function App() {
               homeCity={progressionManager.purchasedCities[0]}
               purchasedUpgrades={progressionManager.purchasedUpgrades}
               openScheduleOnMount={boardOpensSchedule}
+              onAutomated={() => unlockAchievement('beepBoop')}
               preSelectedCity={preSelectedCity}
               onPreSelectedCityHandled={() => setPreSelectedCity(null)}
               onClose={() => {
@@ -2006,7 +2016,12 @@ function App() {
           muted={hyperLinkMuted}
           onToggleMute={toggleHyperLinkMute}
           // Cult of Celebrity: liking a post gives 1 Reputation (likes are permanent, so it can't be farmed)
-          onLikeReward={() => {
+          onLikeReward={(postId) => {
+            // A post from the account with the developer's photo: liking it is the Cameo achievement
+            try {
+              const liked = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]').find(p => p.id === postId);
+              if (liked?.usedPfpId === CAMEO_PFP_ID) unlockAchievement('cameo');
+            } catch { /* feed unreadable: no cameo this time */ }
             if (!PrestigeManager.owns('cultOfCelebrity')) return;
             progressionManager.addReputation(1);
             setReputation(progressionManager.reputation);

@@ -63,7 +63,7 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
     )
 })
 
-function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openScheduleOnMount = false, onClose }) {
+function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openScheduleOnMount = false, onAutomated = () => {}, onClose }) {
     // How long an arrival stays lit as ARRIVED on the board — matches how long its greeting window actually
     // stays open, rather than assuming every farewell-window upgrade is owned (bug #183)
     const litMinutes = farewellWindowMinutes(purchasedUpgrades)
@@ -167,6 +167,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
         const waiting = unscheduledCities(purchasedCities).length
         const { added, skipped } = automateTimetable(purchasedCities)
         afterScheduleChange()
+        if (added.length > 0) onAutomated()
         if (waiting === 0) setNotice('Every city already has a departure.')
         else if (added.length === 0) setNotice('There was no room left on the timetable.')
         else setNotice(`Scheduled ${added.length} loop${added.length === 1 ? '' : 's'}.${skipped > 0 ? ` ${skipped} could not be fitted in.` : ''}`)

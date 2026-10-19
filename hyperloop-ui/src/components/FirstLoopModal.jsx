@@ -6,12 +6,14 @@ import { automateTimetable } from '../utils/timetable.js'
 
 // Shown after the first city is connected: nothing runs until a departure is scheduled, so this points the player at
 // both ways of doing it. `onSchedule` opens the board on the Schedule loop screen; `onViewBoard` opens it as it is.
-export default function FirstLoopModal({ purchasedCities, onSchedule, onViewBoard, onClose }) {
+export default function FirstLoopModal({ purchasedCities, onSchedule, onViewBoard, onAutomated = () => {}, onClose }) {
     const [result, setResult] = useState(null)
 
     const automate = () => {
         playClickSound2()
-        setResult(automateTimetable(purchasedCities))
+        const outcome = automateTimetable(purchasedCities)
+        if (outcome.added.length > 0) onAutomated()
+        setResult(outcome)
     }
 
     return (
