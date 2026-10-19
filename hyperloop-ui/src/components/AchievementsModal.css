@@ -10,7 +10,7 @@
 }
 
 .achievements-panel {
-    width: 880px;
+    width: 1040px;
     max-width: 100%;
     max-height: 85vh;
     display: flex;
@@ -126,9 +126,10 @@
 
 .achievement-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    /* Each row is as tall as its tallest card (the cards in a row match), not as the tallest in the whole list */
-    grid-auto-rows: auto;
+    grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+    /* Every card the same height. The panel is wide enough that no description runs past three lines, so the tallest
+       card is a tidy size and nothing is left with a lot of empty space. */
+    grid-auto-rows: 1fr;
     gap: 8px;
     margin-bottom: 24px;
 }
