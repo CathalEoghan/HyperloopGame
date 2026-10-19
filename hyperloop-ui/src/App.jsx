@@ -179,7 +179,7 @@ function App() {
     if (!ids.length) return;
     const items = ids.length > 3
       ? [{ key: `batch-${Date.now()}`, title: `${ids.length} achievements unlocked!`, subtitle: 'Open the trophy button at the bottom right to see them.' }]
-      : ids.map(id => ({ key: id, title: AchievementManager.byId(id).name, subtitle: AchievementManager.byId(id).description }));
+      : ids.map(id => ({ key: id, id, title: AchievementManager.byId(id).name, subtitle: AchievementManager.byId(id).description }));
     setAchievementQueue(prev => [...prev, ...items]);
     // Same indications as the Hyper-Link button: pulse and red count (from the unseen total), and a bubble for 3 seconds
     setUnseenAchievements(achievements.unseenCount);

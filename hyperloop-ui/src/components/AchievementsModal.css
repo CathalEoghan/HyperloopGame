@@ -162,3 +162,31 @@
     left: auto;
     right: 0;
 }
+
+/* The achievement's logo: a rounded square. Locked ones are greyed out with a small lock in the corner. */
+.achievement-card-logo {
+    position: relative;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+}
+.achievement-card-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+.achievement-card-logo-locked img { filter: grayscale(1) brightness(0.9); opacity: 0.6; }
+.achievement-card-lock {
+    position: absolute;
+    right: -5px;
+    bottom: -5px;
+    font-size: 0.8rem;
+    line-height: 1;
+    padding: 2px;
+    border-radius: 50%;
+    background: #eaeaea;
+    border: 1px solid #d0d0d0;
+}

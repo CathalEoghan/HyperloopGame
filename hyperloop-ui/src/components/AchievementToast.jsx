@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { playSpecialChime } from '../utils/sound.js'
+import { achievementLogo } from '../utils/achievementLogos.js'
 import './AchievementToast.css'
 
 const SHOW_MS = 4500
@@ -14,9 +15,12 @@ function AchievementToast({ queue, onShift }) {
         return () => clearTimeout(timer)
     }, [current?.key])
     if (!current) return null
+    const logo = current.id ? achievementLogo(current.id) : null
     return (
         <div className="achievement-toast" key={current.key} role="status" aria-live="polite">
-            <span className="achievement-toast-icon">🏆</span>
+            {logo
+                ? <img className="achievement-toast-logo" src={logo} alt="" />
+                : <span className="achievement-toast-icon">🏆</span>}
             <div className="achievement-toast-text">
                 <span className="achievement-toast-label">Achievement unlocked</span>
                 <span className="achievement-toast-title">{current.title}</span>

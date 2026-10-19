@@ -6,6 +6,7 @@ import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { ACHIEVEMENTS } from 'Managers/AchievementManager/achievements.js'
+import { achievementLogo } from '../utils/achievementLogos.js'
 
 // The bottom-right counterpart of the Hyper-Link button. It reuses that button's styling and notification
 // indications (pulse, red count, bubble above it) so the two match.
@@ -64,6 +65,7 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                         {SORTED_ACHIEVEMENTS.map(a => {
                             const done = achievementManager.has(a.id)
                             const isNew = done && achievementManager.isUnseen(a.id)
+                            const logo = achievementLogo(a.id)
                             return (
                                 <div
                                     key={a.id}
@@ -73,7 +75,12 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                                     onClick={() => { if (isNew) onSeen(a.id) }}
                                 >
                                     {isNew && <span className="achievement-new-dot" aria-label="New" />}
-                                    <span className="achievement-card-icon">{done ? '🏆' : '🔒'}</span>
+                                    {logo
+                                        ? <span className={`achievement-card-logo${done ? '' : ' achievement-card-logo-locked'}`}>
+                                            <img src={logo} alt="" loading="lazy" />
+                                            {!done && <span className="achievement-card-lock" aria-hidden="true">🔒</span>}
+                                          </span>
+                                        : <span className="achievement-card-icon">{done ? '🏆' : '🔒'}</span>}
                                     <div className="achievement-card-text">
                                         <span className="achievement-card-name">{a.name}</span>
                                         <span className="achievement-card-desc">{a.description}</span>
