@@ -120,10 +120,10 @@ export function loopPassengers(cityName, seed) {
 // A loop's id: the same one the Active Loops list uses, so the list and the passenger total agree
 export const loopId = (kind, dayMs, entry) => `${kind === 'arrival' ? 'arr' : 'dep'}|${dayKey(dayMs)}|${entry.time}|${entry.name}`
 
-// What a loop's passenger count is drawn from: its id at the time it was first scheduled, so a delay (which moves
-// the loop to a new time) doesn't change who is on board
-const passengersOf = (kind, dayMs, entry) =>
-    loopPassengers(entry.name, loopId(kind, dayMs, entry.originalTime ? { ...entry, time: entry.originalTime } : entry))
+// A loop's passengers depend on the city and the day only, never the time it leaves, so the Schedule loop preview is
+// exactly what runs, and moving a loop or a delay doesn't change who is on board
+export const stablePassengers = (kind, dayMs, name) => loopPassengers(name, `${kind}|${dayKey(dayMs)}|${name}`)
+const passengersOf = (kind, dayMs, entry) => stablePassengers(kind, dayMs, entry.name)
 
 export function loopSpeedMph(seed) {
     return LOOP_MPH_MIN + (hashString(seed) % (LOOP_MPH_MAX - LOOP_MPH_MIN + 1))
@@ -170,7 +170,7 @@ export function formatDuration(ms) {
 
 // ---- Making schedules ----
 
-function makeEntry(city, minuteOfDay, gate, durationMin) {
+export function makeEntry(city, minuteOfDay, gate, durationMin) {
     return {
         name: city.name, country: city.country,
         time: timeString(minuteOfDay), hour: Math.floor(minuteOfDay / 60), minute: minuteOfDay % 60,
@@ -220,11 +220,11 @@ export function generateSchedule(purchasedCities, kind, dayMs = Date.now()) {
     return entries.sort((a, b) => a.minuteOfDay - b.minuteOfDay)
 }
 
-// Makes today's departures and arrivals, and tomorrow's arrivals, where they don't exist yet
+// Makes today's arrivals, and tomorrow's, where they don't exist yet. Other terminals manage those, so they are
+// automatic. Departures come from the player's timetable instead (ensureDepartures, in timetable.js).
 export function ensureSchedules(purchasedCities, nowMs = Date.now()) {
     if (!purchasedCities || purchasedCities.length <= 1) return
     const wanted = [
-        ['departure', nowMs],
         ['arrival', nowMs],
         ['arrival', shiftDays(nowMs, 1)],
     ]
@@ -236,10 +236,9 @@ export function ensureSchedules(purchasedCities, nowMs = Date.now()) {
     })
 }
 
-// A city connected during the day gets a departure 30-60 minutes from now, and a loop that sets off from it in
-// 30-60 minutes and arrives today if the trip is short enough to get back before the day's cutoff — otherwise
-// the arrival rolls onto tomorrow's board instead, rather than vanishing (bug #182: a late-connected or
-// long-haul city's loop used to depart but never show up as having arrived anywhere, today or any other day).
+// A city connected during the day gets a loop that sets off from it in 30-60 minutes and arrives today if the trip
+// is short enough to get back before the day's cutoff — otherwise the arrival rolls onto tomorrow's board instead,
+// rather than vanishing (bug #182). Its departure is not added: the player schedules that.
 export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now()) {
     const homeCity = purchasedCities[0]
     if (!homeCity || city.name === homeCity.name) return
@@ -267,7 +266,6 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
         writeSchedule(key, [...schedule, makeEntry(city, mins, gate, durationMin)].sort((a, b) => a.minuteOfDay - b.minuteOfDay))
     }
 
-    place('departure', currentMins + 30, tripMinutes(homeCity.name, city.name, `${dayKey(nowMs)}|departure`))
     const inbound = tripMinutes(city.name, homeCity.name, `${dayKey(nowMs)}|arrival`)
     place('arrival', currentMins + 30 + inbound, inbound)
     // With no arrivals today yet (the first city connected on a new game), an empty list is kept, so the board

@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react"
+import { createPortal } from 'react-dom'
 import './DepartureBoard.css'
 import { playSplitFlapLong, playSplitFlapShort, playClickSound2, playHoverSound } from '../utils/sound.js'
 import { minutesUntilDeparture } from '../utils/time.js'
+import ScheduleModal from '../components/ScheduleModal.jsx'
+import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable } from '../utils/timetable.js'
 import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus, farewellWindowMinutes } from '../utils/loops.js'
 
 const TAB_KEY = 'terminalBoardTab'
@@ -60,7 +63,7 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
     )
 })
 
-function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose }) {
+function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openScheduleOnMount = false, onClose }) {
     // How long an arrival stays lit as ARRIVED on the board — matches how long its greeting window actually
     // stays open, rather than assuming every farewell-window upgrade is owned (bug #183)
     const litMinutes = farewellWindowMinutes(purchasedUpgrades)
@@ -78,6 +81,10 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
     const longFlapRef = useRef(null)
     const lagMapRef = useRef({})
     const [boardInitialized, setBoardInitialized] = useState(false)
+    // The Schedule loop screen, how many connected cities are on the departure timetable, and the last Automate result
+    const [showSchedule, setShowSchedule] = useState(openScheduleOnMount)
+    const [scheduledCount, setScheduledCount] = useState(0)
+    const [notice, setNotice] = useState('')
 
     const splitFlapEnabled = () => localStorage.getItem('splitFlap') !== 'false'
     const homeName = homeCity?.name
@@ -132,13 +139,36 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
         }
     }
 
+    const countScheduled = () => {
+        const names = new Set(purchasedCities.map(c => c.name))
+        return readTimetable().filter(e => names.has(e.name) && e.name !== homeName).length
+    }
+
     useEffect(() => {
         if (!purchasedCities || purchasedCities.length === 0) return
         ensureSchedules(purchasedCities)
+        ensureDepartures(purchasedCities)
         const { deps, arrs } = readLists()
         setSchedule(deps)
         setArrivals(arrs)
+        setScheduledCount(countScheduled())
     }, [purchasedCities])
+
+    // After the timetable changes, today's departures are redrawn at once
+    const afterScheduleChange = () => {
+        setSchedule(readLists().deps)
+        setScheduledCount(countScheduled())
+    }
+
+    const automate = () => {
+        playClickSound2()
+        const waiting = unscheduledCities(purchasedCities).length
+        const { added, skipped } = automateTimetable(purchasedCities)
+        afterScheduleChange()
+        if (waiting === 0) setNotice('Every city already has a departure.')
+        else if (added.length === 0) setNotice('There was no room left on the timetable.')
+        else setNotice(`Scheduled ${added.length} loop${added.length === 1 ? '' : 's'}.${skipped > 0 ? ` ${skipped} could not be fitted in.` : ''}`)
+    }
 
     useEffect(() => {
         const sameList = (next, prev) => next.length === prev.length && next.every((e, i) =>
@@ -166,6 +196,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
             // The stored schedule is the truth: a delay, a city connected or disconnected, or a new day all show straight away (bug #166)
             setSchedule(prev => sameList(deps, prev) ? prev : deps)
             setArrivals(prev => sameList(arrs, prev) ? prev : arrs)
+            setScheduledCount(countScheduled())
             if (anyChanged) setRenderTick(t => t + 1)
         }, 1000)
         return () => clearInterval(interval)
@@ -178,6 +209,9 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
     const year = now.getFullYear()
     const today = `for ${weekday}, ${day} ${month} ${year}`
     const isArrivals = tab === 'arrivals'
+    const totalCities = Math.max(0, purchasedCities.length - 1)
+    const canSchedule = totalCities > 0
+    const nothingScheduled = canSchedule && scheduledCount === 0
     const list = isArrivals ? arrivals : schedule
 
     const { pairs, destWidth } = React.useMemo(() => {
@@ -243,6 +277,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
         <div className="departure-board">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', gap: '12px', flexWrap: 'wrap' }}>
                 <div className="board-heading">
+                  <div className="board-tabrow">
                     <div className="board-tabs" role="tablist" aria-label="Terminal Board">
                         {[['arrivals', 'ARRIVALS'], ['departures', 'DEPARTURES']].map(([id, label]) => (
                             <button
@@ -252,9 +287,21 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
                                 className={`board-tab${tab === id ? ' board-tab-active' : ''}`}
                                 onMouseEnter={() => { if (tab !== id) playHoverSound() }}
                                 onClick={() => chooseTab(id)}
-                            >{label}</button>
+                            >{label}{id === 'departures' && nothingScheduled && <span className="board-tab-dot" title="Nothing is scheduled for departure" />}</button>
                         ))}
                     </div>
+                    {canSchedule && (
+                        <div className="board-actions">
+                            <button className="board-action" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowSchedule(true) }}>SCHEDULE LOOP</button>
+                            <button className="board-action" onMouseEnter={() => playHoverSound()} onClick={automate}>AUTOMATE SCHEDULE</button>
+                        </div>
+                    )}
+                  </div>
+                    {canSchedule && (
+                        <div className={`board-sched-status${scheduledCount < totalCities ? ' board-sched-status-low' : ''}`}>
+                            {scheduledCount} of {totalCities} {totalCities === 1 ? 'city' : 'cities'} scheduled for departure{notice ? ` · ${notice}` : ''}
+                        </div>
+                    )}
                     <h2 className="board-title" style={{ margin: 0 }}>{isArrivals ? 'Arrivals' : 'Departures'} {today}</h2>
                 </div>
                 {onClose && (
@@ -275,7 +322,13 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
                         Connect more cities to unlock {isArrivals ? 'arrivals' : 'departures'}!
                     </p>
                 ) : (
-                    <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>{isArrivals ? 'No arrivals today. New loops will arrive tomorrow.' : 'Loading departures...'}</p>
+                    <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>
+                        {isArrivals
+                            ? 'No arrivals today. New loops will arrive tomorrow.'
+                            : nothingScheduled
+                                ? 'No departures are scheduled, so no loops will leave. Use Schedule loop or Automate schedule to start serving passengers.'
+                                : 'No departures left today. Your timetable runs again tomorrow.'}
+                    </p>
                 )
             ) : (
                 <table className="board-table" key={tab}>
@@ -302,6 +355,15 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, onClose 
                         ))}
                     </tbody>
                 </table>
+            )}
+            {/* In the page itself, not the board: the board's pop-in animation would otherwise pin a fixed overlay to it */}
+            {showSchedule && createPortal(
+                <ScheduleModal
+                    purchasedCities={purchasedCities}
+                    onChange={afterScheduleChange}
+                    onClose={() => setShowSchedule(false)}
+                />,
+                document.body
             )}
         </div>
     )

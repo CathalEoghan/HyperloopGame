@@ -319,3 +319,43 @@
 .board-tab-active:hover {
     color: #0a0a0a;
 }
+
+/* Tabs on the left, then a gap, then the Schedule loop and Automate schedule buttons */
+.board-tabrow {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+}
+
+.board-actions { display: inline-flex; gap: 10px; }
+
+.board-action {
+    background: #111;
+    color: var(--board-accent, #f5a623);
+    border: 1px solid var(--board-accent, #f5a623);
+    border-radius: 6px;
+    font-family: 'B612 Mono', 'Courier New', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    padding: 7px 14px;
+    cursor: var(--cursor-pointer, pointer);
+    transition: color 0.2s, background 0.2s;
+}
+.board-action:hover { background: var(--board-accent, #f5a623); color: #0a0a0a; }
+
+.board-sched-status { font-size: 0.72rem; letter-spacing: 1px; color: #777; }
+.board-sched-status-low { color: #f5a623; }
+
+/* Nothing is scheduled to depart: a small blinking dot on the Departures tab */
+.board-tab-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    margin-left: 8px;
+    border-radius: 50%;
+    background: #e74c3c;
+    animation: board-dot-blink 1.2s ease-in-out infinite;
+}
+@keyframes board-dot-blink { 50% { opacity: 0.2; } }
+@media (prefers-reduced-motion: reduce) { .board-tab-dot { animation: none; } }

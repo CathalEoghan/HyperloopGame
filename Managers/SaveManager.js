@@ -55,6 +55,9 @@ const AUX_KEYS = [
     'hyperloop_livestream_clicks',
     // What the player bought in the Shop and has equipped
     'hyperloop_cosmetics',
+    // The departure timetable (city, time, gate), and whether the first-loop prompt has been shown
+    'hyperloop_timetable',
+    'hyperloop_first_loop_prompt',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -163,6 +166,8 @@ const AUX_SHAPES = {
     hyperloop_hyperlink_used_month_posts: listOf(e => isObj(e) && typeof e.id === 'string' && Number.isFinite(e.year)),
     hyperloop_prestige_history: listOf(isObj),
     // { owned: ['workSound:soft', ...], equipped: { workSound: 'soft', ... } }
+    hyperloop_timetable: listOf(e => isObj(e) && typeof e.name === 'string' && Number.isFinite(e.minuteOfDay) && Number.isFinite(e.gate)),
+    hyperloop_first_loop_prompt: v => v === 1,
     hyperloop_cosmetics: v => isObj(v) && listOfStrings(v.owned) && isObj(v.equipped) && Object.values(v.equipped).every(x => typeof x === 'string'),
 }
 const listOfStrings = listOf(x => typeof x === 'string')

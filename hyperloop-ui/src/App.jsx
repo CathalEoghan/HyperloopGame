@@ -13,6 +13,8 @@ import CitiesPage from "./pages/CitiesPage"
 import HomePage from "./pages/HomePage"
 import ProgressPage from './pages/ProgressPage.jsx'
 import DepartureBoard from "./pages/DepartureBoard"
+import FirstLoopModal from './components/FirstLoopModal.jsx'
+import { ensureDepartures, readTimetable, dropCityFromTimetable } from './utils/timetable.js'
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
 import SettingsPage from './pages/SettingsPage'
@@ -104,6 +106,7 @@ function claimTabLock(id, force = false) {
 // Departures whose farewell window is open wait in a queue, so one opening while another is on
 // screen waits its turn instead of replacing it. Stored under the old key (as a list).
 const DEPARTURE_KEY = 'hyperloop_active_departure';
+const FIRST_LOOP_PROMPT_KEY = 'hyperloop_first_loop_prompt';
 // Arrivals share the queue (their greeting uses the same popup), so their ids are kept apart from departures'.
 const departureId = dep => `${dep.kind === 'arrival' ? 'arr_' : ''}${dep.time}_${dep.name}`;
 // A farewell whose window closed more than a minute ago is dropped, however it got left behind.
@@ -398,6 +401,11 @@ function App() {
   const [milestoneQueue, setMilestoneQueue] = useState([]);
   const [cityClaimPending, setCityClaimPending] = useState(false);
   const [showDepartureBoard, setShowDepartureBoard] = useState(false)
+  // The prompt after the first city is connected (nothing departs until it is scheduled), and whether the board opens
+  // straight onto the Schedule loop screen
+  const [showFirstLoop, setShowFirstLoop] = useState(false)
+  const [boardOpensSchedule, setBoardOpensSchedule] = useState(false)
+  useEffect(() => { if (!showDepartureBoard) setBoardOpensSchedule(false); }, [showDepartureBoard]);
   const topOffset = activeEvent ? 145 : 113
   // Posts older than two days are dropped as soon as the game loads, so after days away the phone
   // doesn't show week-old posts or an old unread count (bug #135).
@@ -617,6 +625,7 @@ function App() {
   function ensureTodaySchedule() {
     if (blockedRef.current) return;
     ensureSchedules(progressionManager.purchasedCities);
+    ensureDepartures(progressionManager.purchasedCities);
     countLoops();
   }
   // Adds the departures and arrivals that have happened since the last count (including while the game was closed)
@@ -905,6 +914,13 @@ function App() {
         newCities.forEach(city => {
           if (homeCity && city.name === homeCity.name) return;
           injectCityIntoSchedule(city);
+          // The first city connected: nothing leaves until a departure is scheduled, so say so once
+          try {
+            if (localStorage.getItem(FIRST_LOOP_PROMPT_KEY) === null && readTimetable().length === 0) {
+              localStorage.setItem(FIRST_LOOP_PROMPT_KEY, '1');
+              setShowFirstLoop(true);
+            }
+          } catch { /* storage blocked: no prompt */ }
           const newCityTrigger = { type: city.tier === 1 ? 'newCityTier1' : city.tier === 3 ? 'newCityTier3' : 'newCity', data: { city: city.name } }
           hyperLinkTriggerRef.current = newCityTrigger
           setHyperLinkTrigger(newCityTrigger)
@@ -1376,7 +1392,14 @@ function App() {
   }
 
   // True while any popup is, or is about to be, on screen. The globe and the Hyper-Link phone button ignore input then (bugs #80, #122).
-  const popupOpen = showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
+  // Opens the Terminal Board the way its own button does, with the board's background sound
+  const openBoardFromPrompt = () => {
+    if (departureBoardAudioRef.current === null) departureBoardAudioRef.current = playDepartureBoardSound();
+    setShowDepartureBoard(true);
+  };
+  const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs
+    && !activeDeparture && pendingRankUps === 0 && milestoneQueue.length === 0;
+  const popupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
     || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
     || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)
@@ -1488,6 +1511,7 @@ function App() {
               progressionManager.addReputation(-20);
             }
             progressionManager.disconnectCity(city);
+            dropCityFromTimetable(city.name);
             if (achievements.unlock('noConnectionForYou')) announceAchievements(['noConnectionForYou']);
             // Its loops still to come are taken off the timetable: today's departures, and today's and tomorrow's
             // arrivals (otherwise the ticker still announced them, and reconnecting today brought the old ones back)
@@ -1567,6 +1591,14 @@ function App() {
           }}
         />
       )}
+      {firstLoopVisible && (
+        <FirstLoopModal
+          purchasedCities={progressionManager.purchasedCities}
+          onSchedule={() => { setShowFirstLoop(false); setBoardOpensSchedule(true); openBoardFromPrompt(); }}
+          onViewBoard={() => { setShowFirstLoop(false); openBoardFromPrompt(); }}
+          onClose={() => { setShowFirstLoop(false); triggerSave(); }}
+        />
+      )}
       {showDepartureBoard && (
         <div style={{
           position: 'fixed', inset: 0, zIndex: 250,
@@ -1600,6 +1632,7 @@ function App() {
               purchasedCities={progressionManager.purchasedCities}
               homeCity={progressionManager.purchasedCities[0]}
               purchasedUpgrades={progressionManager.purchasedUpgrades}
+              openScheduleOnMount={boardOpensSchedule}
               preSelectedCity={preSelectedCity}
               onPreSelectedCityHandled={() => setPreSelectedCity(null)}
               onClose={() => {
