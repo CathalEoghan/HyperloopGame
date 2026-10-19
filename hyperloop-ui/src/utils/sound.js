@@ -37,10 +37,21 @@ function canPlay() {
     return localStorage.getItem('soundEnabled') !== 'false'
 }
 
+// The same sound asked for twice within a few milliseconds is one sound, not two on top of each other. Two copies at the same
+// instant are twice as loud, and clip: React's StrictMode runs an effect twice in development, which made the development
+// reveal sound piercing there (a production build was fine). Nothing ever wants a double play that close together, so the
+// second request just gets the first one's audio back (some callers keep it to stop it later).
+const SAME_SOUND_GAP_MS = 40
+const lastPlayed = new Map()   // src -> { at, audio }
+
 function play(src) {
     if (!canPlay()) return null
+    const now = performance.now()
+    const last = lastPlayed.get(src)
+    if (last && now - last.at < SAME_SOUND_GAP_MS) return last.audio
     const audio = new Audio(src)
     audio.play().catch(() => {})
+    lastPlayed.set(src, { at: now, audio })
     return audio
 }
 
