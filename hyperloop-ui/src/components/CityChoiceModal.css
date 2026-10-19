@@ -14,50 +14,63 @@
 .citychoice-panel {
     background-color: rgb(255, 239, 224);
     border: 2px solid black;
-    border-radius: 12px;
-    padding: 20px;
+    border-radius: 14px;
+    padding: 28px 32px;
     max-width: 100%;
     max-height: 100%;
     overflow-y: auto;
     box-sizing: border-box;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 12px;
+    gap: 20px;
 }
 
-.citychoice-title { margin: 0; font-size: 1.3rem; font-weight: normal; color: #222; text-align: center; }
-.citychoice-sub { margin: 0; font-size: 0.85rem; color: #666; text-align: center; }
+.citychoice-title { margin: 0; font-size: 1.5rem; font-weight: 800; color: #222; text-align: center; }
+.citychoice-sub { margin: -10px 0 0; font-size: 0.85rem; color: #666; text-align: center; }
 
 .citychoice-cards {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px;
+    align-items: stretch;
+    gap: 18px;
+    padding: 4px 0 6px;
 }
 
 .citychoice-card {
-    width: 150px;
+    width: 170px;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
-    padding: 10px;
+    gap: 6px;
+    padding: 12px;
     background: #fff;
     border: 2px solid black;
-    border-radius: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     font-family: "Inter", sans-serif;
     cursor: var(--cursor-pointer, pointer);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
-.citychoice-card:hover { background: #ffeccc; }
-.citychoice-card-on, .citychoice-card-on:hover { background: #333; color: #fff; border-color: #f5a623; }
+.citychoice-card:hover { background: #ffeccc; transform: translateY(-3px); box-shadow: 0 9px 18px rgba(0, 0, 0, 0.28); }
+.citychoice-card-on, .citychoice-card-on:hover {
+    background: #333;
+    color: #fff;
+    border-color: #f5a623;
+    transform: translateY(-3px);
+    box-shadow: 0 9px 20px rgba(0, 0, 0, 0.4), 0 0 14px rgba(245, 166, 35, 0.55);
+}
 
-.citychoice-image { width: 130px; height: 130px; object-fit: cover; border-radius: 8px; border: 2px solid black; }
-.citychoice-name { font-weight: 700; font-size: 0.95rem; text-align: center; }
-.citychoice-meta { display: flex; align-items: center; gap: 5px; font-size: 0.75rem; color: #888; text-align: center; }
+.citychoice-image { width: 144px; height: 144px; object-fit: cover; border-radius: 8px; border: 2px solid black; }
+.citychoice-name { font-weight: 700; font-size: 1rem; text-align: center; margin-top: 4px; }
+/* Room for two lines, so a long country name does not make its card taller than the others */
+.citychoice-meta { display: flex; align-items: center; gap: 5px; min-height: 2.4em; font-size: 0.78rem; line-height: 1.2; color: #888; text-align: center; }
 .citychoice-card-on .citychoice-meta { color: #ccc; }
-.citychoice-flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; }
-.citychoice-tier { font-family: 'Courier New', monospace; font-size: 0.75rem; color: #b36b00; }
+.citychoice-flag { width: 18px; height: 12px; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
+.citychoice-tier { margin-top: auto; font-family: 'Courier New', monospace; font-size: 0.78rem; color: #b36b00; }
 .citychoice-card-on .citychoice-tier { color: #f5a623; }
 
 .citychoice-reroll {
@@ -77,15 +90,18 @@
 .citychoice-reroll:hover { border-color: #888; color: #333; }
 .citychoice-rep { width: 14px; height: 14px; vertical-align: middle; margin: 0 0 1px 3px; }
 
-.citychoice-actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; width: 100%; }
+.citychoice-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; width: 100%; }
 .citychoice-back, .citychoice-confirm {
-    padding: 10px 16px;
+    padding: 11px 18px;
     border: 2px solid black;
     border-radius: 8px;
+    background: #fff;
+    color: #222;
     font-family: "Inter", sans-serif;
     font-weight: bold;
     cursor: var(--cursor-pointer, pointer);
+    transition: background-color 0.15s ease;
 }
-.citychoice-back { background: #fff; color: #333; }
-.citychoice-confirm { background: #f5a623; color: #fff; flex: 1; min-width: 180px; }
+.citychoice-confirm { flex: 1; min-width: 180px; }
+.citychoice-back:hover, .citychoice-confirm:hover:not(:disabled) { background: #f5a623; }
 .citychoice-confirm:disabled { opacity: 0.5; cursor: not-allowed; }

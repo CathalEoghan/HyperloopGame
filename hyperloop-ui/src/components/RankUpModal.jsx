@@ -9,7 +9,7 @@ function RankUpModal({ onClaim, choose = false, waiting = 0, onClaimAll }) {
   return (
     <div className="modal-overlay">
       <div className="modal">
-        <h2 className="reveal-heading">You've ranked up!</h2>
+        <h2 className="reveal-heading rankup-heading">You've ranked up!</h2>
         <div className="rankup-actions">
           <button
             onMouseEnter={() => playHoverSound()}
