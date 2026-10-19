@@ -70,7 +70,7 @@
    Room for two lines of name, so a long one does not make its card taller than the others. */
 .citychoice-meta { display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 46px; font-size: 0.78rem; line-height: 1.2; color: #888; text-align: center; }
 .citychoice-card-on .citychoice-meta { color: #ccc; }
-.citychoice-flag { width: 20px; height: 13px; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
+.citychoice-flag { width: 20px; height: 13px; object-fit: cover; border-radius: 2px; flex-shrink: 0; box-shadow: 0 0 0 1px #000; /* a thin black edge, so white flags show on the cream card */ }
 .citychoice-tier { margin-top: auto; font-family: 'Courier New', monospace; font-size: 0.78rem; color: #b36b00; }
 .citychoice-card-on .citychoice-tier { color: #f5a623; }
 

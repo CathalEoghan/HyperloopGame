@@ -85,7 +85,7 @@
 .citypicker-row-on { background: #333; color: #fff; border-color: #f5a623; }
 .citypicker-row-on:hover { background: #333; }
 
-.citypicker-flag { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; flex-shrink: 0; }
+.citypicker-flag { width: 24px; height: 16px; object-fit: cover; border-radius: 2px; flex-shrink: 0; box-shadow: 0 0 0 1px #000; }
 .citypicker-name { font-weight: 700; }
 .citypicker-country { color: #888; font-size: 0.8rem; flex: 1; }
 .citypicker-row-on .citypicker-country { color: #ccc; }
