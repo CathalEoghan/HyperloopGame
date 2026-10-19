@@ -1404,8 +1404,10 @@ function App() {
     if (departureBoardAudioRef.current === null) departureBoardAudioRef.current = playDepartureBoardSound();
     setShowDepartureBoard(true);
   };
+  // Waits for the reveal popups (a development or upgrade the new city unlocked) and the other popups to be done first
   const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs
-    && !activeDeparture && pendingRankUps === 0 && milestoneQueue.length === 0;
+    && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !dailyLoginData && !(showOfflineModal && !!offlineData)
+    && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0;
   const popupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
     || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
