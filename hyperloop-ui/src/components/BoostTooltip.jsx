@@ -5,9 +5,11 @@ import { createPortal } from 'react-dom'
 // a long list - 18 lines late in a run - always fits: above the badge if there is room, otherwise below, otherwise
 // beside it, and scrollable only if it is taller than the whole window.
 // text: plain sentences instead of a breakdown, so they wrap (at most 260px wide) and none is bold (an upgrade's effect).
+// liftTo: how many px higher than its resting place the anchor ends up (a card that lifts on hover), so the tooltip goes where
+// the anchor is about to be rather than where it is as the mouse arrives, and never has to move afterwards.
 const EDGE = 8
 
-function BoostTooltip({ anchor, lines, text = false }) {
+function BoostTooltip({ anchor, lines, text = false, liftTo = 0 }) {
     const ref = useRef(null)
     const [pos, setPos] = useState(null)
     // A card lifts on hover (a transition), so where it is when the mouse arrives is not where it ends up: measure again
@@ -23,7 +25,13 @@ function BoostTooltip({ anchor, lines, text = false }) {
     useLayoutEffect(() => {
         const el = ref.current
         if (!el || !anchor) return
-        const a = anchor.getBoundingClientRect()
+        const r = anchor.getBoundingClientRect()
+        let dy = 0
+        if (liftTo) {
+            const t = getComputedStyle(anchor).transform
+            dy = -liftTo - (t && t !== 'none' ? new DOMMatrixReadOnly(t).m42 : 0)   // how much further it still has to move
+        }
+        const a = { top: r.top + dy, bottom: r.bottom + dy, left: r.left, right: r.right, width: r.width, height: r.height }
         const vw = window.innerWidth, vh = window.innerHeight
         const maxH = vh - EDGE * 2
         const h = Math.min(el.scrollHeight, maxH), w = el.offsetWidth
@@ -36,7 +44,7 @@ function BoostTooltip({ anchor, lines, text = false }) {
         else if (a.left - 8 - w >= EDGE) { top = clampTop(a.top + a.height / 2 - h / 2); left = a.left - 8 - w }       // beside, left
         else { top = clampTop(a.bottom + 6); left = clampLeft(a.left + a.width / 2 - w / 2) }                          // tiny window: best effort
         setPos({ top, left, maxH })
-    }, [anchor, lines, settled])
+    }, [anchor, lines, settled, liftTo])
 
     // A badge from a popup that has since closed is gone from the page: show nothing for it
     if (!anchor || !anchor.isConnected || !lines || lines.length === 0) return null

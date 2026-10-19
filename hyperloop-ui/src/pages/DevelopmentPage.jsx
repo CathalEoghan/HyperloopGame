@@ -514,7 +514,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         </button>
                     ))}
                 </div>
-                {upgradeTip && <BoostTooltip anchor={upgradeTip.anchor} lines={[upgradeTip.text]} text />}
+                {upgradeTip && <BoostTooltip anchor={upgradeTip.anchor} lines={[upgradeTip.text]} text liftTo={4} />}
             </div>
         </div>
     )
