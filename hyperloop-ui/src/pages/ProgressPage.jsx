@@ -312,7 +312,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Free Reroll on Rank Up', value: has('freeRerollOnRankUp') ? 'Active' : '—' },
             { label: 'Free Rep on Rank Up', value: sum('freeRepOnRankUp') > 0 ? `+${sum('freeRepOnRankUp')} rep` : '—' },
             { label: 'Positive Event Preference', value: has('positiveEventBoost') ? 'Active' : '—' },
-            { label: 'Skilled Negotiation Teams', value: has('skilledNegotiationTeams') ? 'Active' : '—' },
+            { label: 'Extra City Choices on Rank Up', value: sum('skilledNegotiationTeams') > 0 ? `+${sum('skilledNegotiationTeams')} choices` : '—' },
             {
                 label: 'Special Day Bonus', value: (() => {
                     const days = { christmasBoost: 'Christmas Day', valentinesBoost: "Valentine's Day", halloweenBoost: 'Halloween', fourthOfJulyBoost: '4th of July', easterBoost: 'Easter Sunday', newYearsBoost: "New Year's Day" }

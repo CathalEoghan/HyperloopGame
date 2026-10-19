@@ -738,9 +738,9 @@ export class EconomyManager {
         return Math.floor(dailyIncome * 0.1);
     }
 
-    getMinCityTierOnRankUp() {
-        if (this.hasUpgrade('skilledNegotiationTeams')) return 2;
-        return 1;
+    // How many cities a rank-up offers to choose from: 3, and Skilled Negotiation Teams adds its effect value (+2).
+    getCityChoiceCount() {
+        return 3 + this.getUpgradeSum('skilledNegotiationTeams');
     }
 
     getFoundersHallMultiplier(createdAt = this.createdAt) {

@@ -4,7 +4,7 @@ import { playClickSound2, playHoverSound } from '../utils/sound.js'
 
 const TIPS = [
     "Connect more cities to increase your daily income — Tier 3 cities earn the most.",
-    "Rank up to unlock new cities. Re-roll an unwanted city for 15 Reputation.",
+    "Rank up to choose a new city. Re-roll your choices for 15 Reputation.",
     "Build developments to boost your revenue beyond city income alone.",
     "Upgrade your developments up to 3 times for up to a 100% income boost.",
     "Give personal farewells at the Terminal Board to earn +5 Reputation.",

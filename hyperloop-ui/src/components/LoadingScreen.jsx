@@ -41,7 +41,7 @@ const TIPS = [
     "Connect more cities to increase your daily income.",
     "Rank up to unlock new cities to connect.",
     "Build developments to boost your revenue beyond city income.",
-    "Re-roll unlocked cities for reputation if the choices don't suit you.",
+    "Re-roll your city choices for reputation if none of them suit you.",
     "When a departure or arrival is announced, give a personal farewell or greeting to earn reputation.",
     "Upgrade your developments up to 3 times for a 100% income boost.",
     "Disconnecting a city costs half the connection fee and 20 reputation.",

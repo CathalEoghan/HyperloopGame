@@ -120,13 +120,29 @@ export class ProgressionManager {
     }
 
         // exclude: a city that must not come back, e.g. the one being re-rolled away (bug #106).
-        getRandomUnlockedCity(allCities, exclude = null, minTier = 1) {
+        getRandomUnlockedCity(allCities, exclude = null) {
         const eligible = this.getUnlockableCities(allCities).filter(city => city !== exclude);
         if (eligible.length === 0) return null;
-        // Skilled Negotiation Teams: prefer cities of at least minTier, fall back to any city if none are left.
-        const preferred = minTier > 1 ? eligible.filter(city => city.tier >= minTier) : eligible;
-        const pool = preferred.length > 0 ? preferred : eligible;
-        return pool[Math.floor(Math.random() * pool.length)];
+        return eligible[Math.floor(Math.random() * eligible.length)];
+    }
+
+    // The cities a rank-up offers to choose from: `count` random cities from the unlockable pool, or fewer when
+    // fewer are left. `exclude` is the previous offer when re-rolling: those cities only come back to fill the
+    // offer if there are not enough others.
+    getCityChoices(allCities, count, exclude = []) {
+        const pool = this.getUnlockableCities(allCities);
+        const shuffle = (list) => {
+            const a = [...list];
+            for (let i = a.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        };
+        const fresh = shuffle(pool.filter(city => !exclude.includes(city)));
+        const offer = fresh.slice(0, count);
+        if (offer.length < count) offer.push(...shuffle(pool.filter(city => exclude.includes(city))).slice(0, count - offer.length));
+        return offer;
     }
 
     removeUnlockedCity(city) {

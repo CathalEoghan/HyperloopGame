@@ -8,7 +8,7 @@ const TIPS = [
     "Connect more cities to increase your daily income.",
     "Rank up to unlock new cities to connect.",
     "Build developments to boost your revenue beyond city income.",
-    "Re-roll an unlocked city for 15 reputation if it doesn't suit you.",
+    "Re-roll your city choices for 15 reputation if none of them suit you.",
     "Give personal farewells and greet arrivals at the Terminal Board to earn reputation.",
     "Upgrade your developments up to 3 times for a 100% income boost.",
     "Disconnecting a city costs half the connection fee and 20 reputation.",

@@ -7,6 +7,7 @@ import RankUpModal from "./components/RankUpModal";
 import ClaimedCitiesModal from "./components/ClaimedCitiesModal";
 import ClaimedDevelopmentsModal from "./components/ClaimedDevelopmentsModal";
 import CityPickerModal from "./components/CityPickerModal";
+import CityChoiceModal from "./components/CityChoiceModal";
 import CityRevealModal from "./components/CityRevealModal"
 import CitiesPage from "./pages/CitiesPage"
 import HomePage from "./pages/HomePage"
@@ -494,6 +495,8 @@ function App() {
   // Lobbying Suavity turns the rank-up's random city into a choice
   const lobbying = PrestigeManager.owns('lobbyingSuavity');
   const [showCityPicker, setShowCityPicker] = useState(false);
+  // The cities a rank-up currently offers to choose from (null when none is on offer)
+  const [cityChoices, setCityChoices] = useState(null);
   const [claimedByChoice, setClaimedByChoice] = useState(false);
   // Takes the rank-up: unlocks the city (drawn at random, or chosen) and pays the rank-up bonuses.
   const claimRankUp = (newCity, chosen) => {
@@ -519,10 +522,9 @@ function App() {
   // of the ranks still pay their Reputation.
   const claimAllRankUps = () => {
     if (claimedCityRef.current || pendingRankUps < 1) return;
-    const minTier = economyManager.getMinCityTierOnRankUp();
     const gained = [];
     for (let i = 0; i < pendingRankUps; i++) {
-      const city = progressionManager.getRandomUnlockedCity(allCities, null, minTier);
+      const city = progressionManager.getRandomUnlockedCity(allCities);
       if (!city) break;
       progressionManager.unlockCity(city);
       gained.push(city);
@@ -1781,12 +1783,16 @@ function App() {
       )}
 
       {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && (
-        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={lobbying && !showCityPicker && progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
+        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={!showCityPicker && !cityChoices && progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
          // Lobbying Suavity: the player picks the city (once none are left to unlock, there is nothing to pick)
          if (lobbying && progressionManager.getUnlockableCities(allCities).length > 0) { setShowCityPicker(true); return; }
-         claimRankUp(progressionManager.getRandomUnlockedCity(allCities, null, economyManager.getMinCityTierOnRankUp()), false);
+         // Otherwise the rank-up offers a few random cities to choose from (one free re-roll with Advanced Terminal Planning)
+         const offer = progressionManager.getCityChoices(allCities, economyManager.getCityChoiceCount());
+         if (offer.length === 0) { claimRankUp(null, false); return; }
+         setHasFreeReroll(economyManager.hasUpgrade('freeRerollOnRankUp'));
+         setCityChoices(offer);
         }} />
       )}
 
@@ -1801,6 +1807,30 @@ function App() {
           onPick={(city) => { setShowCityPicker(false); claimRankUp(city, true); }}
         />
       )}
+
+      {cityChoices && pendingRankUps > 0 && !claimedCity && (() => {
+        const canReroll = progressionManager.getUnlockableCities(allCities).length > cityChoices.length;
+        const rerollCost = hasFreeReroll ? 0 : economyManager.getRerollRepCost(15);
+        return (
+          <CityChoiceModal
+            // Hidden, not removed, while another popup is on top, so the offer survives it
+            hidden={!!dailyLoginData || showOfflineModal || !!activeDelay || !!activeDeparture || devRevealQueue.length > 0}
+            cities={cityChoices}
+            waiting={pendingRankUps}
+            reputation={reputation}
+            rerollCost={rerollCost}
+            onReroll={canReroll ? () => {
+              if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
+              progressionManager.addReputation(-rerollCost);
+              setHasFreeReroll(false);
+              setCityChoices(progressionManager.getCityChoices(allCities, economyManager.getCityChoiceCount(), cityChoices));
+              triggerSave();
+            } : undefined}
+            onClaimAll={() => { setCityChoices(null); claimAllRankUps(); }}
+            onPick={(city) => { setCityChoices(null); claimRankUp(city, true); }}
+          />
+        );
+      })()}
 
       {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && !claimAllCities && !claimAllDevs && (
         <DevelopmentRevealModal
@@ -1829,7 +1859,6 @@ function App() {
           key={claimedCity.name}
           city={claimedCity}
           reputation={reputation}
-          rerollCost={hasFreeReroll ? 0 : economyManager.getRerollRepCost(15)}
           onClose={() => {
             if (progressionManager.purchasedCities.length > 1) {
               const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
@@ -1849,22 +1878,6 @@ function App() {
             setClaimedByChoice(false);
             setCityClaimPending(false);
             setClaimedCity(null)
-          }}
-                    // No re-roll button when the offered city is the only one left to unlock.
-          onReroll={claimedByChoice || !progressionManager.getRandomUnlockedCity(allCities, claimedCity) ? undefined : () => {
-            const rerollCost = hasFreeReroll ? 0 : economyManager.getRerollRepCost(15);
-            if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
-            // Pick the replacement first, never the city being re-rolled away, and only then charge
-            // and swap, so a re-roll can't return the same city or cost reputation for nothing (bug #106).
-            const newCity = progressionManager.getRandomUnlockedCity(allCities, claimedCity, economyManager.getMinCityTierOnRankUp());
-            if (!newCity) return;
-            progressionManager.addReputation(-rerollCost);
-            setHasFreeReroll(false);
-            progressionManager.removeUnlockedCity(claimedCity);
-            progressionManager.unlockCity(newCity);
-            triggerSave();
-            setClaimedCity(null);
-            setTimeout(() => setClaimedCity(newCity), 300);
           }}
         />
       )}
