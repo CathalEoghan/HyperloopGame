@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 // The income boost breakdown. Drawn on the page itself (not inside the popup) and placed from the badge's position, so
@@ -10,6 +10,15 @@ const EDGE = 8
 function BoostTooltip({ anchor, lines, text = false }) {
     const ref = useRef(null)
     const [pos, setPos] = useState(null)
+    // A card lifts on hover (a transition), so where it is when the mouse arrives is not where it ends up: measure again
+    // when its transition finishes, instead of leaving the tooltip where it first went until something else redraws it.
+    const [settled, setSettled] = useState(0)
+    useEffect(() => {
+        if (!anchor) return
+        const remeasure = () => setSettled(n => n + 1)
+        anchor.addEventListener('transitionend', remeasure)
+        return () => anchor.removeEventListener('transitionend', remeasure)
+    }, [anchor])
 
     useLayoutEffect(() => {
         const el = ref.current
@@ -27,7 +36,7 @@ function BoostTooltip({ anchor, lines, text = false }) {
         else if (a.left - 8 - w >= EDGE) { top = clampTop(a.top + a.height / 2 - h / 2); left = a.left - 8 - w }       // beside, left
         else { top = clampTop(a.bottom + 6); left = clampLeft(a.left + a.width / 2 - w / 2) }                          // tiny window: best effort
         setPos({ top, left, maxH })
-    }, [anchor, lines])
+    }, [anchor, lines, settled])
 
     // A badge from a popup that has since closed is gone from the page: show nothing for it
     if (!anchor || !anchor.isConnected || !lines || lines.length === 0) return null
