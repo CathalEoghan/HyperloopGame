@@ -4,7 +4,7 @@ import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
 import countryFlags from '../data/countryFlags.js'
 import cashIcon from '../assets/misc/cash.png'
-import { playHoverSound, playFarewellAcceptSound, playReputationWorkBonusSound } from '../utils/sound.js'
+import { playHoverSound, playClickSound2, playFarewellAcceptSound, playReputationWorkBonusSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
@@ -42,7 +42,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         } catch { return {} }
     })
     const toggleSection = (key) => {
-        playHoverSound()
+        playClickSound2()
         setCollapsed(prev => {
             const next = { ...prev, [key]: !prev[key] }
             try { localStorage.setItem('hyperloop_progress_collapsed', JSON.stringify(next)) } catch { /* storage full */ }
@@ -60,6 +60,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             aria-expanded={!collapsed[id]}
             title={collapsed[id] ? 'Click to show' : 'Click to hide'}
             onClick={() => toggleSection(id)}
+            onMouseEnter={() => playHoverSound()}
             onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSection(id) } }}
         >
             <span className="progress-chevron" aria-hidden="true">
