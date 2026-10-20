@@ -368,15 +368,26 @@
     color: white !important;
 }
 
-/* The reputation icon's source art fills its whole square canvas, while the cash icon's art sits in the middle of
-   a lot of transparent padding (a wide banknote shape padded top/bottom to a square). At the same box size the
-   two end up looking very mismatched in visual weight when shown side by side in a "Cost:" row, so this shrinks
-   just that pairing rather than the icon everywhere it's used (which stays at its usual size elsewhere). The extra
-   class plus the specificity beats the global ".modal .rep-icon" !important rule in CityRevealModal.css. */
-.modal .rep-icon.cost-rep-icon,
-.modal-overlay .rep-icon.cost-rep-icon {
-    width: 11px !important;
-    height: 11px !important;
+/* cash.png's actual banknote art only fills the middle ~59% of its square canvas (padded top/bottom so the wide
+   note fits a square), while reputation.png's trophy fills its canvas edge to edge. Scaling both images to the
+   same box size therefore makes the trophy look much heavier than the cash note when the two sit side by side in
+   a "Cost:" row. Rather than shrinking the trophy (which would make it inconsistent with every other place it's
+   used at its normal size), this crops the empty padding out of just the cash icon here: the wrapper clips to a
+   box sized to the note's actual content, and the image inside is shifted up so that content fills the box. */
+.cost-cash-icon-wrap {
+    display: inline-block;
+    width: 17px;
+    height: 10px;
+    overflow: hidden;
+    position: relative;
+    vertical-align: middle;
+}
+.cost-cash-icon-wrap img {
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    top: -3.5px;
+    left: 0;
 }
 
 .modal .lineUpgradeButton {
