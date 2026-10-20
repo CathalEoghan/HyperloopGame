@@ -58,6 +58,8 @@ const AUX_KEYS = [
     // The departure timetable (city, time, gate), and whether the first-loop prompt has been shown
     'hyperloop_timetable',
     'hyperloop_first_loop_prompt',
+    // Set once an older game's cities have been put on the timetable (income needs a scheduled departure)
+    'hyperloop_timetable_autofilled',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -168,6 +170,7 @@ const AUX_SHAPES = {
     // { owned: ['workSound:soft', ...], equipped: { workSound: 'soft', ... } }
     hyperloop_timetable: listOf(e => isObj(e) && typeof e.name === 'string' && Number.isFinite(e.minuteOfDay) && Number.isFinite(e.gate)),
     hyperloop_first_loop_prompt: v => v === 1,
+    hyperloop_timetable_autofilled: v => v === 1,
     hyperloop_cosmetics: v => isObj(v) && listOfStrings(v.owned) && isObj(v.equipped) && Object.values(v.equipped).every(x => typeof x === 'string'),
 }
 const listOfStrings = listOf(x => typeof x === 'string')

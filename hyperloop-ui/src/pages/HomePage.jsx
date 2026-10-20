@@ -15,6 +15,7 @@ import './HomePage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 import { getActiveLoops, formatClock, formatDuration, distanceMiles } from '../utils/loops.js'
 import { formatDistance } from '../utils/units.js'
+import { formatPerHour } from '../utils/income.js'
 import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
 
 // Departures are drawn in the game's gold, arrivals in blue
@@ -904,11 +905,15 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                             const coords = cityCoordinates[selectedGlobeCity.name]
                             const coordsMap = coords ? { [selectedGlobeCity.name]: coords } : null
                             const income = economyManager.withFoundersHall(economyManager.calculateCityIncome(selectedGlobeCity, coordsMap))
+                            const earning = economyManager.isCityEarning(selectedGlobeCity)
                             return (
-                                <p>Earning <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                    <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />
-                                    {income.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
-                                </strong> per day</p>
+                                <>
+                                    <p>{earning ? 'Earning' : 'Would earn'} <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />
+                                        {formatPerHour(income)}
+                                    </strong> per hour</p>
+                                    {!earning && <p style={{ color: '#c0392b', fontWeight: 'bold' }}>Not on the timetable: it earns nothing until it has a scheduled departure.</p>}
+                                </>
                             )
                         })()}
                         <p><em>{selectedGlobeCity.fact}</em></p>

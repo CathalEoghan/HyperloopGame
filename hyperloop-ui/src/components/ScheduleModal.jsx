@@ -93,7 +93,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                 </div>
                 <div className="sched-body">
                     <p className="sched-intro">
-                        Each city can leave once a day, at least 10 minutes after the last, and a gate can't be reused for 30 minutes.
+                        Each city can leave once a day. Loops can leave at the same time from different gates, but a gate can't be reused for 30 minutes.
                         Your timetable is saved and repeats every day.
                     </p>
 

@@ -85,6 +85,10 @@
     filter: grayscale(100%);
 }
 
+.city-income-strip-off {
+    color: #c0392b;
+}
+
 .city-income-strip {
     position: absolute;
     bottom: 0;

@@ -8,6 +8,7 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
+import { formatPerHour } from '../utils/income.js'
 import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.js'
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
@@ -117,7 +118,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                             <span>Total development income:</span>
                             <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                 <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                {totalRevenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
+                                {formatPerHour(totalRevenue)}/hr
                             </strong>
                         </div>
                     </div>
@@ -365,7 +366,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             const canAfford = removal.amicable || progressionManager.reputation >= removal.repCost
                                             // What removing it costs you, listed in plain terms rather than lumping a future rebuild cost in as if it were also "lost"
                                             const losses = []
-                                            if (income > 0) losses.push(<><strong>£{Math.round(income).toLocaleString('en-GB')}/day</strong> income</>)
+                                            if (income > 0) losses.push(<><strong>£{formatPerHour(income)}/hr</strong> income</>)
                                             if (level > 0) losses.push(<>its upgrade level (<strong>LVL {level}</strong>)</>)
                                             if (isRenamed(selectedDevelopment)) losses.push(<>its name</>)
                                             return (
@@ -477,7 +478,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             {!isUnderConstruction && (
                                                 <div className="dev-revenue-strip">
                                                     {development.revenue
-                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)).toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</>
+                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{formatPerHour(economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)))}/hr</>
                                                         : 'UPGRADE'}
                                                 </div>
                                             )}
@@ -506,7 +507,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     style={{ width: '100%', height: '180px' }}
                                 />
                                 <div className="dev-revenue-strip" style={{ color: '#aaa' }}>
-                                    {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.revenue.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</> : 'UPGRADE'}
+                                    {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{formatPerHour(development.revenue)}/hr</> : 'UPGRADE'}
                                 </div>
                             </div>
                             <div>{development.name}</div>

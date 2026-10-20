@@ -21,8 +21,9 @@ const TIER_INCOME = {
 };
 
 // A Work click is worth this many seconds of the player's BASE income: tier and population income of every connected
-// city plus the (levelled) revenue of every development, before any boost, event or Prestige perk. Work only grows by
-// connecting and building, by the Work upgrades, or by Prestige Work perks, so passive boosts never inflate it.
+// city on the departure timetable (and the home city) plus the (levelled) revenue of every development, before any
+// boost, event or Prestige perk. Work only grows by connecting, scheduling and building, by the Work upgrades, or by
+// Prestige Work perks, so passive boosts never inflate it. A city off the timetable adds nothing, as it earns nothing.
 // The minimum keeps the very first clicks worthwhile.
 const WORK_SECONDS_OF_INCOME = 10;
 const WORK_MIN_CLICK = 250;
@@ -167,6 +168,33 @@ export class EconomyManager {
         const effectType = effectTypeMap[category];
         if (!effectType) return 1;
         return 1 + this.getUpgradeSum(effectType);
+    }
+
+    // Which connected cities are on the departure timetable. A city only earns while it has a scheduled departure; the
+    // home city is the terminal itself and always earns. Read from the saved timetable (see utils/timetable.js) and
+    // kept for a moment, since the income is worked out for every city on every tick.
+    getScheduledNames() {
+        const now = Date.now();
+        if (this._scheduledCache && now - this._scheduledCache.at < 100) return this._scheduledCache.names;
+        let names = new Set();
+        try {
+            const list = JSON.parse(localStorage.getItem('hyperloop_timetable'));
+            if (Array.isArray(list)) names = new Set(list.filter(e => e && typeof e.name === 'string').map(e => e.name));
+        } catch { /* no timetable yet: nothing is scheduled */ }
+        this._scheduledCache = { at: now, names };
+        return names;
+    }
+
+    isCityEarning(city) {
+        const home = this.progressionManager.purchasedCities[0];
+        if (!city) return false;
+        return (!!home && city.name === home.name) || this.getScheduledNames().has(city.name);
+    }
+
+    // What a city earns right now: its full income while it is on the timetable, nothing while it isn't.
+    // (calculateCityIncome is what the city could earn, for the cards and the bonuses that go by it.)
+    calculateCityEarning(city, coordinates = null) {
+        return this.isCityEarning(city) ? this.calculateCityIncome(city, coordinates) : 0;
     }
 
     // What a city earns per day before any boost (tier plus population): the first line of the city card.
@@ -598,7 +626,7 @@ export class EconomyManager {
 
     calculatePopulationIncome(coordinates = null) {
         return this.progressionManager.purchasedCities
-            .reduce((sum, city) => sum + this.calculateCityIncome(city, coordinates), 0);
+            .reduce((sum, city) => sum + this.calculateCityEarning(city, coordinates), 0);
     }
 
     calculateDailyIncome(coordinates = null, createdAt = null) {
@@ -651,6 +679,7 @@ export class EconomyManager {
         const now = Date.now();
         if (this._passiveCache && now - this._passiveCache.at < 250) return this._passiveCache.value;
         const cities = this.progressionManager.purchasedCities
+            .filter(c => this.isCityEarning(c))
             .reduce((sum, c) => sum + (TIER_INCOME[c.tier] || 0) + c.population * POPULATION_INCOME_MODIFIER, 0);
         const developments = this.progressionManager.purchasedDevelopments
             .reduce((sum, d) => sum + this.getEffectiveDevRevenue(d), 0);

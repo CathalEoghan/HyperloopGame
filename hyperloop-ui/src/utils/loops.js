@@ -13,8 +13,7 @@ import { skipMissingMinutes, isRealMinute } from './time.js'
 
 export const LOOP_MPH_MIN = 700
 export const LOOP_MPH_MAX = 760
-// At most this many departures, and this many arrivals, a day. Fewer cities than that means one of each per city.
-export const SCHEDULE_CAP = 50
+// Gates a loop can use. A gate isn't reused within 30 minutes of its last loop.
 export const NUM_GATES = 30
 // An arrival's delay is shorter than a departure's: the loop is already on its way
 export const ARRIVAL_DELAY_MAX_MINUTES = 60
@@ -178,27 +177,22 @@ export function makeEntry(city, minuteOfDay, gate, durationMin) {
     }
 }
 
-// One day's departures or arrivals: up to SCHEDULE_CAP cities picked at random, spread through the day at least
-// 10 minutes apart, each at a gate not used in the 30 minutes before.
+// One day's arrivals: every connected city once, spread through the day. Loops can arrive at the same time as
+// long as they use different gates, and a gate isn't reused within 30 minutes of its last use.
 export function generateSchedule(purchasedCities, kind, dayMs = Date.now()) {
     const homeCity = purchasedCities[0]
     const cities = purchasedCities.filter(c => !homeCity || c.name !== homeCity.name)
-    const picked = [...cities].sort(() => Math.random() - 0.5).slice(0, Math.min(SCHEDULE_CAP, cities.length))
+    const picked = [...cities].sort(() => Math.random() - 0.5)
     if (!homeCity || picked.length === 0) return []
     const totalMinutes = 24 * 60
-    const slotSize = Math.floor(totalMinutes / picked.length)
     const gateLastUsed = new Array(NUM_GATES + 1).fill(-Infinity)
     const entries = []
     picked.forEach((city, i) => {
-        const slotStart = i * slotSize
-        const slotEnd = Math.min(slotStart + slotSize, totalMinutes - 1)
-        let minuteOfDay = Math.floor((slotStart + Math.floor(Math.random() * (slotEnd - slotStart))) / 5) * 5
+        const slotStart = Math.floor(i * totalMinutes / picked.length)
+        const slotEnd = Math.min(Math.floor((i + 1) * totalMinutes / picked.length), totalMinutes - 1)
+        let minuteOfDay = Math.floor((slotStart + Math.floor(Math.random() * Math.max(1, slotEnd - slotStart))) / 5) * 5
         // Never exactly 00:00: its farewell window would start on the previous day, so no farewell would open
         minuteOfDay = Math.max(5, minuteOfDay)
-        if (entries.length > 0) {
-            const lastTime = entries[entries.length - 1].minuteOfDay
-            if (minuteOfDay - lastTime < 10) minuteOfDay = Math.ceil((lastTime + 10) / 5) * 5
-        }
         minuteOfDay = skipMissingMinutes(minuteOfDay, dayMs)
         // A slot pushed past the end of the day is left out rather than wrapping round to the morning
         if (minuteOfDay > 23 * 60 + 55) return
@@ -255,14 +249,14 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
         const schedule = readSchedule(key)
         if (schedule.some(e => e.name === city.name)) return
         for (let attempts = 0; attempts < 24; attempts++) {
-            const clash = schedule.some(e => Math.abs((e.hour * 60 + e.minute) - mins) < 10)
-            if (!clash && mins <= lastMins && isRealMinute(mins, dayMs)) break
+            if (mins <= lastMins && isRealMinute(mins, dayMs)) break
             mins += 5
         }
         if (mins > lastMins) return
-        const usedGates = new Set(schedule.map(e => e.gate))
-        let gate = Math.floor(Math.random() * NUM_GATES) + 1
-        for (let g = 1; g <= NUM_GATES; g++) if (!usedGates.has(g)) { gate = g; break }
+        // A gate that hasn't been used within 30 minutes of this time (any gate, if the board is that full)
+        const busyGates = new Set(schedule.filter(e => Math.abs((e.hour * 60 + e.minute) - mins) < 30).map(e => e.gate))
+        const free = Array.from({ length: NUM_GATES }, (_, i) => i + 1).filter(g => !busyGates.has(g))
+        const gate = free.length > 0 ? free[Math.floor(Math.random() * free.length)] : Math.floor(Math.random() * NUM_GATES) + 1
         writeSchedule(key, [...schedule, makeEntry(city, mins, gate, durationMin)].sort((a, b) => a.minuteOfDay - b.minuteOfDay))
     }
 
@@ -360,7 +354,14 @@ export function tallyLoops(purchasedCities, nowMs = Date.now()) {
     try { state = JSON.parse(localStorage.getItem(COUNTED_KEY) || '{}') || {} } catch { state = {} }
     const hasLoops = !!purchasedCities && purchasedCities.length > 1
     const today = dayKey(nowMs)
-    const perDay = hasLoops ? Math.min(SCHEDULE_CAP, purchasedCities.length - 1) : 0
+    const perDay = hasLoops ? purchasedCities.length - 1 : 0
+    // Arrivals come from every connected city; departures only from the ones on the player's timetable
+    let departuresPerDay = perDay
+    try {
+        const names = new Set((purchasedCities || []).map(c => c.name))
+        const table = JSON.parse(localStorage.getItem('hyperloop_timetable') || '[]')
+        if (Array.isArray(table)) departuresPerDay = hasLoops ? table.filter(e => e && names.has(e.name) && e.name !== purchasedCities[0].name).length : 0
+    } catch { /* keep the estimate */ }
     // For days whose schedule is gone: the passengers an average loop to one of the connected cities would carry
     const others = hasLoops ? purchasedCities.slice(1) : []
     const averagePassengers = others.length
@@ -386,7 +387,7 @@ export function tallyLoops(purchasedCities, nowMs = Date.now()) {
                     result.miles += day.miles
                 } else if (!isToday) {
                     // The schedule is gone: what was left of it when last seen, or a full day's worth
-                    const loops = isLastDay ? (Number.isFinite(previous.left) ? previous.left : 0) : perDay
+                    const loops = isLastDay ? (Number.isFinite(previous.left) ? previous.left : 0) : (kind === 'departure' ? departuresPerDay : perDay)
                     gained += loops
                     result.passengers += Math.round(loops * averagePassengers)
                     result.miles += loops * averageMiles

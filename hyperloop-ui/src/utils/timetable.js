@@ -8,14 +8,14 @@
 // A timetable entry is { name, country, minuteOfDay, gate }: one departure a day per city.
 
 import {
-    NUM_GATES, SCHEDULE_CAP, dayKey, departuresKey, readSchedule, writeSchedule, entryTimestamp, tripMinutes,
+    NUM_GATES, dayKey, departuresKey, readSchedule, writeSchedule, entryTimestamp, tripMinutes,
     makeEntry, timeString, formatClock, stablePassengers,
 } from './loops.js'
 import { isRealMinute } from './time.js'
 
 export const TIMETABLE_KEY = 'hyperloop_timetable'
-// Departures are at least this many minutes apart, and a gate can't be used again within GATE_COOLDOWN of its last use
-export const MIN_SPACING = 10
+// Departures can overlap, as at a real airport, as long as they use different gates: a gate can't be used again
+// within GATE_COOLDOWN of its last use. There is no limit on how many cities the timetable holds.
 export const GATE_COOLDOWN = 30
 // A loop that is due in less than this long is locked for today (it is boarding): changes to it start tomorrow
 export const MIN_LEAD = 15
@@ -91,9 +91,6 @@ export function slotProblem(timetable, { name, minuteOfDay, gate }, nowMs = Date
     if (!isRealMinute(minuteOfDay, nowMs)) return "That time doesn't exist today, as the clocks change."
     if (!Number.isInteger(gate) || gate < 1 || gate > NUM_GATES) return `Gates are numbered 1 to ${NUM_GATES}.`
     const others = timetable.filter(e => e.name !== name)
-    if (others.length >= SCHEDULE_CAP) return `A timetable holds at most ${SCHEDULE_CAP} departures.`
-    const tooClose = others.find(e => gapBetween(e.minuteOfDay, minuteOfDay) < MIN_SPACING)
-    if (tooClose) return `Too close to ${tooClose.name} at ${timeString(tooClose.minuteOfDay)}: departures need ${MIN_SPACING} minutes between them.`
     const gateClash = others.find(e => e.gate === gate && gapBetween(e.minuteOfDay, minuteOfDay) < GATE_COOLDOWN)
     if (gateClash) return `Gate ${gate} is in use for ${gateClash.name} at ${timeString(gateClash.minuteOfDay)}. A gate needs ${GATE_COOLDOWN} minutes between loops.`
     return null
@@ -160,8 +157,7 @@ function syncToday(name, slot, purchasedCities, nowMs) {
     if (slot) {
         const due = entryTimestamp({ hour: Math.floor(slot.minuteOfDay / 60), minute: slot.minuteOfDay % 60 }, nowMs)
         // Today's list can differ from the timetable (a delay moves a loop), so it is checked too
-        const clash = list.some(e => gapBetween(e.minuteOfDay, slot.minuteOfDay) < MIN_SPACING
-            || (e.gate === slot.gate && gapBetween(e.minuteOfDay, slot.minuteOfDay) < GATE_COOLDOWN))
+        const clash = list.some(e => e.gate === slot.gate && gapBetween(e.minuteOfDay, slot.minuteOfDay) < GATE_COOLDOWN)
         if (due - nowMs >= MIN_LEAD * 60000 && !clash && isRealMinute(slot.minuteOfDay, nowMs)) {
             list.push(entryFor(slot, home, nowMs))
             applied = true
@@ -212,7 +208,8 @@ const shuffle = list => {
     return a
 }
 
-// A random free time and gate for a city, preferring the rest of today over tomorrow
+// A random free time and gate for a city, always later today (at least MIN_LEAD from now) so every loop starts today.
+// A time earlier in the day, which only starts tomorrow, is used only when nothing is free for the rest of today.
 function pickSlot(timetable, name, nowMs) {
     const now = new Date(nowMs)
     const earliestToday = now.getHours() * 60 + now.getMinutes() + MIN_LEAD
@@ -247,4 +244,22 @@ export function automateTimetable(purchasedCities, nowMs = Date.now()) {
         added.forEach(slot => syncToday(slot.name, slot, purchasedCities, nowMs))
     }
     return { added, skipped }
+}
+
+// ---- Existing games ----
+
+const AUTOFILL_KEY = 'hyperloop_timetable_autofilled'
+
+// Income now needs a city to be on the timetable. A game from before that has cities that were earning without
+// one, so once, every connected city that isn't scheduled is put on it, and nobody's income drops. A game that is
+// already on the new rules (a new game, a new prestige run, or any city connected while playing) is marked instead
+// and left alone: its cities are the player's to schedule.
+export function markTimetableAutofilled() {
+    try { if (localStorage.getItem(AUTOFILL_KEY) === null) localStorage.setItem(AUTOFILL_KEY, '1') } catch { /* storage blocked */ }
+}
+
+export function autoScheduleExisting(purchasedCities, nowMs = Date.now()) {
+    try { if (localStorage.getItem(AUTOFILL_KEY) !== null) return } catch { return }
+    markTimetableAutofilled()
+    if (purchasedCities && purchasedCities.length > 1) automateTimetable(purchasedCities, nowMs)
 }

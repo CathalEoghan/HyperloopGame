@@ -14,7 +14,7 @@ import HomePage from "./pages/HomePage"
 import ProgressPage from './pages/ProgressPage.jsx'
 import DepartureBoard from "./pages/DepartureBoard"
 import FirstLoopModal from './components/FirstLoopModal.jsx'
-import { ensureDepartures, readTimetable, dropCityFromTimetable } from './utils/timetable.js'
+import { ensureDepartures, readTimetable, dropCityFromTimetable, autoScheduleExisting, markTimetableAutofilled } from './utils/timetable.js'
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
 import SettingsPage from './pages/SettingsPage'
@@ -628,6 +628,7 @@ function App() {
   function ensureTodaySchedule() {
     if (blockedRef.current) return;
     ensureSchedules(progressionManager.purchasedCities);
+    autoScheduleExisting(progressionManager.purchasedCities);
     ensureDepartures(progressionManager.purchasedCities);
     countLoops();
   }
@@ -914,6 +915,7 @@ function App() {
       if (progressionManager.purchasedCities.length > prevPurchasedCount.current) {
         const newCities = progressionManager.purchasedCities.slice(prevPurchasedCount.current);
         const homeCity = progressionManager.purchasedCities[0];
+        markTimetableAutofilled();
         newCities.forEach(city => {
           if (homeCity && city.name === homeCity.name) return;
           injectCityIntoSchedule(city);

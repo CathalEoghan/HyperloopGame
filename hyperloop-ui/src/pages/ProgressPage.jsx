@@ -184,7 +184,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const cityIncomes = new Map(purchasedCities.map(c => [c, economyManager.calculateCityIncome(c)]))
     const totalPopulation = purchasedCities.reduce((sum, c) => sum + c.population, 0)
     const totalRevenue = (() => {
-        const cityIncome = [...cityIncomes.values()].reduce((sum, v) => sum + v, 0)
+        // What the cities earn at the moment: only the ones on the timetable (and the home city) count, so this
+        // dips when a loop is taken off and rises when one is added
+        const cityIncome = purchasedCities.reduce((sum, c) => sum + economyManager.calculateCityEarning(c), 0)
         const devIncome = (purchasedDevelopments || []).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0)
         return economyManager.withFoundersHall(cityIncome + devIncome)
     })()
@@ -212,7 +214,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const generalStats = [
         { label: 'Terminal age', value: terminalAge() },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
-        { label: 'Total income per day', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
+        { label: 'Income per day (at current rate)', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
         { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.totalCashEarned || 0} /> },
         { label: 'Farewells given', value: farewellsGiven ?? 0 },
         { label: 'Greets given', value: economyManager.progressionManager.greetingsGiven ?? 0 },

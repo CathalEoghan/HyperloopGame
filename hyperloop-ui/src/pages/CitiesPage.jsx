@@ -9,6 +9,7 @@ import countryFlags from '../data/countryFlags.js'
 import { matchesSearch } from '../utils/search.js'
 import cityCoordinates from '../data/cityCoordinates.js'
 import cashIcon from '../assets/misc/cash.png'
+import { formatPerHour } from '../utils/income.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import poorIcon from '../assets/misc/poor.png'
@@ -58,12 +59,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     )
     const connectedAndBuilding = [...purchased, ...underConstruction]
 
-    // Each city's income is worked out once per render and reused. Sorting by income used to
+    // Each city's income (what it earns now: nothing while it is off the timetable) is worked out once per render and reused. Sorting by income used to
     // recalculate it inside every comparison, which froze the page every second in a late
     // game (bug #90).
     const incomeCache = new Map()
     const cityIncome = (city) => {
-        if (!incomeCache.has(city)) incomeCache.set(city, economyManager.withFoundersHall(economyManager.calculateCityIncome(city)))
+        if (!incomeCache.has(city)) incomeCache.set(city, economyManager.withFoundersHall(economyManager.calculateCityEarning(city)))
         return incomeCache.get(city)
     }
 
@@ -153,6 +154,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const renderCityCard = (city, isAvailable = false, showFlag = false) => {
         const isUnderConstruction = underConstruction.some(c => c.name === city.name)
         const dailyIncome = cityIncome(city)
+        const offTimetable = !isUnderConstruction && !isAvailable && !economyManager.isCityEarning(city)
         return (
             <button
                 className="city"
@@ -173,8 +175,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         </div>
                     )}
                     {!isUnderConstruction && !isAvailable && (
-                        <div className="city-income-strip">
-                            <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle', marginBottom: '1px' }} />{dailyIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day
+                        <div className={`city-income-strip${offTimetable ? ' city-income-strip-off' : ''}`}
+                            title={offTimetable ? 'Not on the timetable: it earns nothing until it has a scheduled departure' : undefined}>
+                            <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle', marginBottom: '1px' }} />{formatPerHour(dailyIncome)}/hr{offTimetable ? ' · off timetable' : ''}
                         </div>
                     )}
                 </div>
@@ -322,8 +325,14 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         const { lines, totalBoost } = economyManager.getCityBoostBreakdown(selectedCity, coordsMap)
                                         const boostPct = Math.round(totalBoost * 100)
                                         const baseIncome = economyManager.getCityBaseIncome(selectedCity)
+                                        const earning = economyManager.isCityEarning(selectedCity)
                                         return (
                                             <div style={{ width: '100%', margin: '8px 0' }}>
+                                                {!earning && (
+                                                    <p style={{ margin: '0 0 6px', color: '#c0392b', fontSize: '0.82rem', fontWeight: 'bold' }}>
+                                                        Not on the timetable: earning nothing until it has a scheduled departure. The income below is what it earns once it does.
+                                                    </p>
+                                                )}
                                                 <IncomeRow label="Base income" amount={baseIncome} last={boostPct <= 0} />
                                                 {boostPct > 0 && (
                                                     <IncomeRow label="Boosted income" amount={effectiveIncome} last>
@@ -430,7 +439,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             </div>
                             <div className="city-stat-box">
                                 <span className="city-stat-label">City income</span>
-                                <strong><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />{totalIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}/day</strong>
+                                <strong><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />{formatPerHour(totalIncome)}/hr</strong>
                             </div>
                         </div>
                         {flatList
