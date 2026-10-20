@@ -38,8 +38,8 @@ function CityRevealModal({ city, onClose, onReroll, reputation, rerollCost = 15 
                                                 {rerollCost === 0
                             ? <span>Free re-roll</span>
                             : canReroll
-                            ? <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0' }}>Re-roll ({rerollCost}<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', margin: '0 0 1px 3px' }} />)</span>
-                            : <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0' }}>Need {rerollCost}<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', margin: '0 0 1px 3px' }} /> to re-roll (you have {reputation})</span>
+                            ? <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0' }}>Re-roll (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', margin: '0 3px 1px 0' }} />{rerollCost})</span>
+                            : <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0' }}>Need <img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', margin: '0 3px 1px 0' }} />{rerollCost} to re-roll (you have {reputation})</span>
                         }
                     </button>
                 )}

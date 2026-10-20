@@ -970,7 +970,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                             playClickSound2(); playFarewellAcceptSound(); onConnectCity?.(); setSelectedUnlockedCity(null)
                                         }}>
                                             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                Build instantly ({skipCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                Build instantly (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{skipCost})
                                             </span>
                                         </button>
                                     )

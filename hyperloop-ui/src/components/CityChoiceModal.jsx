@@ -54,7 +54,7 @@ function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rero
                     >
                         {rerollCost === 0
                             ? <span>Free re-roll</span>
-                            : <span>{canReroll ? 'Re-roll choices' : 'Need'} ({rerollCost}<img className="citychoice-rep" src={reputationIcon} alt="rep" />){!canReroll && ` to re-roll (you have ${reputation})`}</span>}
+                            : <span>{canReroll ? 'Re-roll choices' : 'Need'} (<img className="citychoice-rep" src={reputationIcon} alt="rep" />{rerollCost}){!canReroll && ` to re-roll (you have ${reputation})`}</span>}
                     </button>
                 )}
                 <div className="citychoice-actions">

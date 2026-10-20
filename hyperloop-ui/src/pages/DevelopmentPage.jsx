@@ -144,7 +144,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
                                     {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
                                 </p>
-                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></>}</p>
+                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} />{info.repCost}</span></strong></>}</p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
@@ -203,7 +203,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <button className="closeButton" style={{ opacity: renameText === dev.name ? 0.5 : 1 }} onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setRenameText(dev.name) }}>Reset</button>
                                     <button className="closeButton" style={{ opacity: canConfirm ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={confirm}>
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                            Confirm ({getRenameRepCost()} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                            Confirm (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
                                         </span>
                                     </button>
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowRenameModal(false) }}>Cancel</button>
@@ -233,7 +233,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 playClickSound2(); playFarewellAcceptSound(); onSave(); closeModal()
                                             }}>
                                                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                    Build instantly ({skipCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                    Build instantly (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{skipCost})
                                                 </span>
                                             </button>
                                         )
@@ -267,7 +267,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             closeModal();
                                         }}>
                                             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                Purchase ({selectedDevelopment.effectValue} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                Purchase (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{selectedDevelopment.effectValue})
                                             </span>
                                         </button>
                                     ) : (
@@ -399,7 +399,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
                                                             {removal.amicable
                                                                 ? (removal.refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{removal.refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>)
-                                                                : <>Confirm ({removal.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)</>}
+                                                                : <>Confirm (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{removal.repCost})</>}
                                                         </span>
                                                     </button>
                                                     {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough Reputation</p>}
@@ -417,7 +417,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 {canEdit && (
                                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); openRename(selectedDevelopment) }}>
                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                                            Rename ({getRenameRepCost()} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                            Rename (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
                                                         </span>
                                                     </button>
                                                 )}

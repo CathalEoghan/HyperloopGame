@@ -284,7 +284,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                 playClickSound2(); playFarewellAcceptSound(); onSave(); closeModal()
                                             }}>
                                                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                    Build instantly ({skipCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />)
+                                                    Build instantly (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{skipCost})
                                                 </span>
                                             </button>
                                         )
@@ -413,7 +413,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     }}
                                                 >
                                                     <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                        {amicable ? (refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>) : <>Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })} + 20<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 0 1px 3px', border: 'none' }} />)</>}
+                                                        {amicable ? (refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>) : <>Confirm (<img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{disconnectCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })} + <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', margin: '0 3px 1px 0', border: 'none' }} />20)</>}
                                                     </span>
                                                 </button>
                                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '4px 0' }}>Not enough funds or reputation</p>}
@@ -464,7 +464,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
                                     {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
                                 </p>
-                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} /></span></strong></>}</p>
+                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} />{info.repCost}</span></strong></>}</p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {

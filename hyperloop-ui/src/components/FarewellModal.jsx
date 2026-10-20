@@ -100,7 +100,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 </p>
                 {autoSend ? (
                     <p className="farewell-message" data-testid="video-message">
-                        🎥 Sending your video {isArrival ? 'welcome' : 'message'}… (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
+                        🎥 Sending your video {isArrival ? 'welcome' : 'message'}… (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
                     </p>
                 ) : (
                     <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={() => {
@@ -110,7 +110,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                     }}>
                         {isArrival
                             ? (departure.vip ? 'Give a VIP welcome' : 'Greet the passengers')
-                            : (departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell')} (+{repGain} <img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />)
+                            : (departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell')} (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
                     </button>
                 )}
             </div>

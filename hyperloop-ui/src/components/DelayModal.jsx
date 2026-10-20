@@ -52,7 +52,7 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
                         onMouseEnter={() => playHoverSound()}
                         onClick={() => { playClickSound2(); onDismiss(adjustedRepCost) }}>
                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                            Refuse compensation (-{adjustedRepCost} <img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />)
+                            Refuse compensation (-<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedRepCost})
                         </span>
                     </button>
                 </div>
