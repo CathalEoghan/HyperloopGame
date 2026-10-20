@@ -368,6 +368,17 @@
     color: white !important;
 }
 
+/* The reputation icon's source art fills its whole square canvas, while the cash icon's art sits in the middle of
+   a lot of transparent padding (a wide banknote shape padded top/bottom to a square). At the same box size the
+   two end up looking very mismatched in visual weight when shown side by side in a "Cost:" row, so this shrinks
+   just that pairing rather than the icon everywhere it's used (which stays at its usual size elsewhere). The extra
+   class plus the specificity beats the global ".modal .rep-icon" !important rule in CityRevealModal.css. */
+.modal .rep-icon.cost-rep-icon,
+.modal-overlay .rep-icon.cost-rep-icon {
+    width: 11px !important;
+    height: 11px !important;
+}
+
 .modal .lineUpgradeButton {
     /* Several other modals' CSS files define a global, unscoped ".modal button" rule (they all reuse the plain
        "modal" class name), which otherwise leaks a stray margin-top onto any button in any modal. Reset margin
