@@ -795,7 +795,7 @@ inTheEastEnd.jpg - <a href="https://www.flaticon.com/free-icons/pub" title="pub 
 surprise.jpg - <a href="https://www.flaticon.com/free-icons/random" title="random icons">Random icons created by noomtah - Flaticon</a>
 engineer.jpg - <a href="https://www.flaticon.com/free-icons/engineer" title="engineer icons">Engineer icons created by the best icon - Flaticon</a>
 bestOfTheBest.jpg - <a href="https://www.flaticon.com/free-icons/quality" title="quality icons">Quality icons created by gungyoga04 - Flaticon</a>
-frequentLooper.jpg - <a href="https://www.flaticon.com/free-icons/suitcase" title="suitcase icons">Suitcase icons created by Magnific - Flaticon</a>
+frequentLooper.jpg - <a href="https://www.flaticon.com/free-icons/pass" title="pass icons">Pass icons created by Icons_Field - Flaticon</a>
 loopToBusan.jpg - <a href="https://www.flaticon.com/free-icons/creepy" title="creepy icons">Creepy icons created by Magnific - Flaticon</a>
 nineMillionMotorcycles.jpg - <a href="https://www.flaticon.com/free-icons/motorcycles" title="motorcycles icons">Motorcycles icons created by photo3idea_studio - Flaticon</a>
 royalFlush.jpg - <a href="https://www.flaticon.com/free-icons/gambling" title="gambling icons">Gambling icons created by Eucalyp - Flaticon</a>
