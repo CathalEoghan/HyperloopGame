@@ -369,6 +369,10 @@
 }
 
 .modal .lineUpgradeButton {
+    /* Several other modals' CSS files define a global, unscoped ".modal button" rule (they all reuse the plain
+       "modal" class name), which otherwise leaks a stray margin-top onto any button in any modal. Reset margin
+       explicitly here so this button isn't pushed out of line with the text next to it. */
+    margin: 0;
     font-family: "Inter", sans-serif;
     font-weight: bold;
     font-size: 0.78rem;
