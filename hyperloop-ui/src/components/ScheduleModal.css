@@ -64,6 +64,8 @@
 .sched-error { margin: 0; font-size: 0.75rem; color: #e74c3c; }
 .sched-notice { margin: 0; font-size: 0.78rem; color: limegreen; }
 .sched-done, .sched-empty { margin: 0; font-size: 0.78rem; color: #888; }
+/* Nothing left to schedule: in the same gold as the times, so it stands out */
+.sched-done { color: #f5a623; font-weight: bold; }
 
 .sched-actions { display: flex; gap: 8px; }
 .sched-btn {

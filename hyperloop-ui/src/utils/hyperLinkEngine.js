@@ -233,7 +233,7 @@ const OWNED_POST_WINDOWS = {
 function buildEligibleCategories(gameState) {
     const {
         purchasedCities, purchasedDevelopments, purchasedUpgrades,
-        activeEvent, schedule, trigger, rankSet,
+        activeEvent, schedule, arrivals, trigger, rankSet,
     } = gameState
 
     const cats = []
@@ -248,15 +248,27 @@ function buildEligibleCategories(gameState) {
 
     if (trigger) add(trigger.type, 25, trigger.data || {})
 
-    if (schedule?.length) {
-        schedule.forEach(entry => {
-            const diff = minutesUntilDeparture(entry)
-            if (diff > 10 && diff <= 30) add('boarding', 4, { boardingCity: entry.name, gateNumber: entry.gate })
-            if (diff > 5 && diff <= 10) add('finalCall', 6, { finalCallCity: entry.name, gateNumber: entry.gate })
-            if (diff > 0 && diff <= 45 && diff > 30) add('goToGate', 3, { goToGateCity: entry.name, gateNumber: entry.gate })
-            if (diff < 0 && diff > -60) add('departed', 3, { departedCity: entry.name })
-        })
-    }
+    // Posts about what is on the boards right now. A big timetable has many loops in each window, so each kind of post
+    // is drawn once, about one of them picked at random, and counts for at most three loops' worth of weight: otherwise
+    // the boards would drown out every other kind of post.
+    const onBoard = {}
+    const note = (category, weight, data) => { (onBoard[category] ||= { weight, list: [] }).list.push(data) }
+    ;(schedule || []).forEach(entry => {
+        const diff = minutesUntilDeparture(entry)
+        if (diff > 10 && diff <= 30) note('boarding', 4, { boardingCity: entry.name, gateNumber: entry.gate })
+        if (diff > 5 && diff <= 10) note('finalCall', 6, { finalCallCity: entry.name, gateNumber: entry.gate })
+        if (diff > 0 && diff <= 45 && diff > 30) note('goToGate', 3, { goToGateCity: entry.name, gateNumber: entry.gate })
+        if (diff < 0 && diff > -60) note('departed', 3, { departedCity: entry.name })
+    })
+    // Loops that have arrived in the last hour (only from cities still connected): passengers in the terminal
+    const connectedNames = new Set((purchasedCities || []).map(c => c.name))
+    ;(arrivals || []).filter(entry => connectedNames.has(entry.name)).forEach(entry => {
+        const diff = minutesUntilDeparture(entry)
+        if (diff < 0 && diff > -60) note('arrived', 3, { city: entry.name })
+    })
+    Object.entries(onBoard).forEach(([category, { weight, list }]) => {
+        add(category, weight * Math.min(list.length, 3), list[Math.floor(Math.random() * list.length)])
+    })
 
     if (activeEvent?.type === 'positive') add('positiveEvent', 4)
     if (activeEvent?.type === 'negative') add('negativeEvent', 4)

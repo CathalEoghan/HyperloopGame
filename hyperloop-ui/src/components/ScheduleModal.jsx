@@ -150,7 +150,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                             </div>
                         </div>
                     ) : (
-                        <p className="sched-done">Every connected city has a departure.</p>
+                        <p className="sched-done">Every connected city has a departure. No more departures may be added.</p>
                     )}
                     {notice && <p className="sched-notice">{notice}</p>}
 

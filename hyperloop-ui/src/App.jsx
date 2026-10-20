@@ -124,18 +124,29 @@ function takeOverAndReload() {
   window.location.reload();
 }
 
-// Reads like a ref: .current is the oldest waiting trigger, assigning one queues it, assigning null
-// removes the oldest. At most 6 wait; the oldest is dropped beyond that.
+// Reads like a ref: .current is the oldest waiting trigger that is ready, assigning one queues it, assigning null
+// removes the one that was read. At most 6 wait; the oldest is dropped beyond that. A trigger with a `readyAt` time
+// (a farewell or greeting, which should be posted about a little later) isn't ready until then.
 function makeTriggerQueue() {
   const queue = []
+  let served = null
+  const isReady = t => !t.readyAt || t.readyAt <= Date.now()
   return {
-    get current() { return queue[0] ?? null },
+    get current() { served = queue.find(isReady) ?? null; return served },
+    // A trigger that was waiting for its time and is ready now
+    get hasDue() { return queue.some(t => t.readyAt && isReady(t)) },
     set current(value) {
-      if (value === null || value === undefined) queue.shift()
-      else { queue.push(value); if (queue.length > 6) queue.shift() }
+      if (value === null || value === undefined) {
+        const i = served ? queue.indexOf(served) : queue.findIndex(isReady)
+        if (i >= 0) queue.splice(i, 1)
+        served = null
+      } else { queue.push(value); if (queue.length > 6) queue.shift() }
     },
   }
 }
+
+// Passengers don't post about a farewell or a greeting the moment it happens: between 1 and 5 minutes later
+const socialPostDelay = () => Date.now() + 60000 + Math.floor(Math.random() * 240000)
 
 function App() {
     // One id per page. It's kept on window rather than in state, so a hot reload while developing
@@ -300,7 +311,7 @@ function App() {
   // it straight from the tick so a popup that is open (the daily bonus overnight, say) can't make the farewell expire.
   function giveFarewell(dep, repGain) {
     // Greeting an arrival pays the same Reputation (and VIP bonus, and Personal Image Branding cash) as a farewell.
-    // It doesn't count as the day's first farewell, towards the farewell total, or set off farewell posts.
+    // It doesn't count as the day's first farewell or towards the farewell total, and it sets off its own kind of post.
     if (dep?.kind === 'arrival') {
       progressionManager.addReputation(repGain ?? 5);
       const arrivalCity = allCities.find(c => c.name === dep.name);
@@ -314,6 +325,9 @@ function App() {
       if (dep?.vip) { achievements.addCounter('vips'); unlockAchievement('veryImportantPassenger'); }
       triggerSave();
       finishDeparture(dep);
+      const greetingPost = { type: 'arrivalGiven', data: { city: dep?.name }, readyAt: socialPostDelay() };
+      hyperLinkTriggerRef.current = greetingPost;
+      setHyperLinkTrigger(greetingPost);
       return;
     }
     const today = new Date().toDateString();
@@ -341,8 +355,9 @@ function App() {
     setFarewellsGiven(newCount);
     triggerSave(newCount);
     finishDeparture(dep);
-    hyperLinkTriggerRef.current = { type: 'farewellGiven', data: { city: dep?.name } };
-    setHyperLinkTrigger({ type: 'farewellGiven', data: { city: dep?.name } });
+    const farewellPost = { type: 'farewellGiven', data: { city: dep?.name }, readyAt: socialPostDelay() };
+    hyperLinkTriggerRef.current = farewellPost;
+    setHyperLinkTrigger(farewellPost);
   }
   // The tick is set up once, so it calls the newest copy through this
   const giveFarewellRef = useRef(null);
@@ -439,6 +454,9 @@ function App() {
   const [hyperLinkTriggerRef] = useState(makeTriggerQueue)
   const hyperLinkOpenRef = useRef(false)
   const nextPostTick = useRef(60 + Math.floor(Math.random() * 120))
+  // When a farewell or greeting post comes due it goes out at once, not at the next scheduled post. If nothing could be
+  // posted, this holds it back for 30 seconds so it isn't retried every second.
+  const dueRetryTick = useRef(0)
   const secretCityTriggered = useRef(false);
   // Claims are remembered by the upgrade's name. Saves from before Early Retirement and Founders' Hall swapped ranks
   // remember them by rank (rank_50 was Founders' Hall, rank_100 was Early Retirement), so those are turned into names.
@@ -961,7 +979,8 @@ function App() {
 
       // Hyper-Link post generation every 1-3 minutes, from the first connected city on (it used to wait for a second city,
       // which left a one-city network with only the official account's posts)
-      if (tickCount.current >= nextPostTick.current && tickCount.current > 0 && progressionManager.purchasedCities.length > 0) {
+      const postDue = tickCount.current >= nextPostTick.current || (hyperLinkTriggerRef.hasDue && tickCount.current >= dueRetryTick.current)
+      if (postDue && tickCount.current > 0 && progressionManager.purchasedCities.length > 0) {
         // Clean up posts older than 2 days
         const twoDaysAgo = Date.now() - 172800000
         const storedFeed = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
@@ -991,6 +1010,7 @@ function App() {
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]').filter(id => feedPfpIds.has(id))
         const todayKey = new Date().toDateString()
         const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
+        const todaysArrivals = JSON.parse(localStorage.getItem(`arrivals_${todayKey}`) || '[]')
         // When each template and picture was last shown, so the engine can pick the one used longest ago
         const templateLastUsed = {}, pfpLastUsed = {}
         cleanFeed.forEach(p => {
@@ -1007,6 +1027,7 @@ function App() {
           rankSet: rankManager.rank,
           reputation: progressionManager.reputation,
           schedule: sched,
+          arrivals: todaysArrivals,
           usedPostIds,
           usedMonthPostIds,
           usedPfps,
@@ -1046,6 +1067,7 @@ function App() {
         } else {
           // Nothing could be generated: try again in 30 seconds, not every second (bug #71)
           nextPostTick.current = tickCount.current + 30
+          dueRetryTick.current = tickCount.current + 30
         }
       }
 
@@ -1825,7 +1847,7 @@ function App() {
           departure={activeDeparture}
           economyManager={economyManager}
           onFarewell={(repGain) => giveFarewell(activeDeparture, repGain)}
-          onMiss={() => { finishDeparture(activeDeparture); if (activeDeparture.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'farewellMissed' }; setHyperLinkTrigger({ type: 'farewellMissed' }); } }}
+          onMiss={() => { finishDeparture(activeDeparture); if (activeDeparture.kind !== 'arrival') { const missedPost = { type: 'farewellMissed', readyAt: socialPostDelay() }; hyperLinkTriggerRef.current = missedPost; setHyperLinkTrigger(missedPost); } }}
         />
       )}
 
