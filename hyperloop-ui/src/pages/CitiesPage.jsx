@@ -364,7 +364,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         const lineLevel = pm.getCityLineLevel(selectedCity)
                                         const lineInfo = pm.getCityLineUpgradeCostInfo(selectedCity)
                                         return (
-                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '2px 0 8px' }}>
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '8px 0' }}>
                                                 <span style={{ fontSize: '0.85rem', color: '#888' }}>Line upgrade</span>
                                                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                     <span style={{ fontWeight: 'bold' }}>{lineLevel} / 10</span>
