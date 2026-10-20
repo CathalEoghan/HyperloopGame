@@ -883,5 +883,9 @@ me.jpg - Photo by Cathal Eoghan (all rights reserved)
 shopping.png - Photo by Sergei Kokota (Flaticon license), <a href="https://www.flaticon.com/free-icons/paper-bag" title="paper bag icons">Paper bag icons created by Sergei Kokota - Flaticon</a>
 
 WORK CLICK SOUNDS
-poltergeist1, poltergeist2, poltergeist3 - Universfield (Pixabay Content License)
-poltergeist4, poltergeist5 - freesound_community
+poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
+poltergeist4.mp3, poltergeist5.mp3 - freesound_community
+
+kitty1.mp3, kitty3.mp3, kitty4.mp3 - freesound community (Pixabay Content License)
+kitty2.mp3 - u_6ekfl947a2 (Pixabay Content License)
+kitty5.mp3 - Virtual Vibes (Pixabay Content License)
