@@ -84,11 +84,18 @@ function playHover(src = hoverSound) {
 export const playEventSound = () => play(eventSound)
 export const playDiceRollSound = () => play(diceRollSound)
 // The Work button's sound is whichever one is equipped in the Shop (the classic click by default). A 'special'-tier
-// work sound can equip several samples (srcs) instead of one; this picks a different one at random each click.
+// work sound can equip several samples (srcs) instead of one; this picks a different one at random each click -
+// never the same sample twice in a row. Clicking fast enough for two picks to overlap is normal (that's fine when
+// they're different clips), but two overlapping copies of the exact same clip are the same waveform summed with
+// itself a few hundred ms out of phase, which reads as a single harsh, piercing spike rather than two clicks.
+let lastWorkClickSrc = null
 export function playWorkClickSound() {
     const item = getEquippedItem('workSound')
-    if (item?.srcs?.length) { play(item.srcs[Math.floor(Math.random() * item.srcs.length)]); return }
-    play(item?.src ?? workClickSound)
+    const pool = item?.srcs?.length ? item.srcs : [item?.src ?? workClickSound]
+    const choices = pool.length > 1 ? pool.filter(src => src !== lastWorkClickSrc) : pool
+    const pick = choices[Math.floor(Math.random() * choices.length)]
+    lastWorkClickSrc = pick
+    play(pick)
 }
 // Plays any sound file once (the Shop's Preview button). Given an item with several samples, plays one at random.
 export function playPreviewSound(src)           { play(Array.isArray(src) ? src[Math.floor(Math.random() * src.length)] : src) }
