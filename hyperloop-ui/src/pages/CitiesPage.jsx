@@ -369,7 +369,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                                     <span style={{ fontWeight: 'bold' }}>{lineLevel} / 10</span>
                                                     {lineInfo && (
-                                                        <button className="closeButton" style={{ padding: '3px 10px', fontSize: '0.78rem' }}
+                                                        <button className="lineUpgradeButton"
                                                             onMouseEnter={() => playHoverSound()}
                                                             onClick={(e) => { e.stopPropagation(); playClickSound2(); setShowLineUpgradeModal(true) }}>
                                                             Upgrade
