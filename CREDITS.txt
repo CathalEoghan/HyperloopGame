@@ -852,12 +852,16 @@ cameo.jpg - <a href="https://www.flaticon.com/free-icons/beard" title="beard ico
 couchPotato.jpg - <a href="https://www.flaticon.com/free-icons/lazy" title="lazy icons">Lazy icons created by Magnific - Flaticon</a>
 allYearRound.jpg - <a href="https://www.flaticon.com/free-icons/calendar" title="calendar icons">Calendar icons created by pojok d - Flaticon</a>
 42wallabyway.jpg - <a href="https://www.flaticon.com/free-icons/clownfish" title="clownfish icons">Clownfish icons created by Magnific - Flaticon</a>
-gettingBusy.jpg - <a href="https://www.flaticon.com/free-icons/people" title="people icons">People icons created by Magnific - Flaticon</a>
-crowded.jpg - <a href="https://www.flaticon.com/free-icons/people" title="people icons">People icons created by Magnific - Flaticon</a>
-jamPacked.jpg - <a href="https://www.flaticon.com/free-icons/people" title="people icons">People icons created by Magnific - Flaticon</a>
-littleCity.jpg - <a href="https://www.flaticon.com/free-icons/people" title="people icons">People icons created by Magnific - Flaticon</a>
-areWeThereYet.jpg - <a href="https://www.flaticon.com/free-icons/emoji" title="emoji icons">Emoji icons created by muh zakaria - Flaticon</a>
-justTakeTheBus.jpg - <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">Bus icons created by FauzIDEA - Flaticon</a>
+gettingBusy.jpg - <a href="https://www.flaticon.com/free-icons/crowd" title="crowd icons">Crowd icons created by Magnific - Flaticon</a>
+crowded.jpg - <a href="https://www.flaticon.com/free-icons/crowd" title="crowd icons">Crowd icons created by Magnific - Flaticon</a>
+jamPacked.jpg - <a href="https://www.flaticon.com/free-icons/crowd" title="crowd icons">Crowd icons created by Magnific - Flaticon</a>
+littleCity.jpg - <a href="https://www.flaticon.com/free-icons/crowd" title="crowd icons">Crowd icons created by Magnific - Flaticon</a>
+areWeThereYet.jpg - <a href="https://www.flaticon.com/free-icons/time-and-date" title="time and date icons">Time and date icons created by Magnific - Flaticon</a>
+justTakeTheBus.jpg - <a href="https://www.flaticon.com/free-icons/bus" title="bus icons">Bus icons created by Magnific - Flaticon</a>
+welcomeBack.png - <a href="https://www.flaticon.com/free-icons/welcome" title="welcome icons">Welcome icons created by Afian Rochmah Afif - Flaticon</a>
+touchGrass.png - <a href="https://www.flaticon.com/free-icons/grass" title="grass icons">Grass icons created by Magnific - Flaticon</a>
+stirCrazy.png - <a href="https://www.flaticon.com/free-icons/crazy" title="crazy icons">Crazy icons created by kmg design - Flaticon</a>
+beepBoop.jpg - <a href="https://www.flaticon.com/free-icons/robot" title="robot icons">Robot icons created by Magnific - Flaticon</a>
 
 MISC ICONS
 

@@ -759,6 +759,32 @@ export const POSTS = {
         'sad i missed the manager. dont they usually come down and say bye?',
     ],
 
+    arrivalGiven: [
+        'So cute how the manager welcomed us after we got off our loop from {city}!',
+        'Thanks manager for the warm welcome!! ❤️❤️',
+        'Yay! We got a welcome from the manager!',
+        'lmao the manager came down and welcomed us',
+        'Thanks manager for the welcome!!',
+        'I\'ll defo loop back here! The manager welcoming us to to the terminal was so sweet',
+        'The manager welcomes us! So thoughtful 💞',
+        'Our trip to {homeCity} is off to a good start - the manager just welcomed us!',
+        'lol the manager welcomed me to {homeCity}',
+    ],
+
+    arrived: [
+        'Just arrived in {homeCity} anyone know where baggage claim is? 🧳',
+        'my legs so stiff after that loop from {city} ugh',
+        'Just got to {homeCity} from {city} - anyone have any suggestions for things to do here?',
+        'Arrived here for a layover - this day has literally been so long 😴',
+        'Guys just be patient the baggage will come out soon omg',
+        'Anyone else travelled in from {city}? Solo traveller here seeking new friends ✌️',
+        'first day in {homeCity}!! so excited!!',
+        'where the hell is baggage claim',
+        'no i do not have anything to declare!',
+        'Can someone explain what customs is 😂',
+        'Do I have to declare my travel pillow?',
+    ],
+
     positiveEvent: [
         'Everything just feeling right today #StayPositive',
         'Good vibes all across the terminal #Peace',
