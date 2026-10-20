@@ -27,7 +27,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                         <img src={cashIcon} alt="cash" className="daily-login-icon" />
                         <span className="daily-login-reward-text">
                             £{displayBonus.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
-                            {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×2</span>}
+                            {doubled && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×2</span>}
                         </span>
                     </div>
                     {repBonus > 0 && (
@@ -45,7 +45,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                         style={{
                             marginTop: '12px',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
-                            background: doubleHovered && canDouble ? '#f5a623' : 'white',
+                            background: doubleHovered && canDouble ? 'var(--ui-accent, #f5a623)' : 'white',
                             color: doubleHovered && canDouble ? 'white' : canDouble ? 'black' : '#aaa',
                             border: `2px solid ${canDouble ? 'black' : '#ccc'}`,
                             borderRadius: '8px', padding: '8px 16px',

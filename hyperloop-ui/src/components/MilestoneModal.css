@@ -18,7 +18,7 @@
     font-family: 'Courier New', monospace;
     font-size: 0.75rem;
     letter-spacing: 3px;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
     font-weight: bold;
     margin: 0;
 }
@@ -40,7 +40,7 @@
 
 .milestone-reward-box {
     background: white;
-    border: 2px solid #f5a623;
+    border: 2px solid var(--ui-accent, #f5a623);
     border-radius: 10px;
     padding: 12px 24px;
     display: flex;
@@ -55,7 +55,7 @@
     font-size: 0.7rem;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
     font-weight: bold;
 }
 

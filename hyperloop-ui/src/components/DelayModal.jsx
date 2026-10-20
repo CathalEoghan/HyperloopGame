@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { playClickSound2, playHoverSound, playEventSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playEventSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import warningIcon from '../assets/misc/warning.png'

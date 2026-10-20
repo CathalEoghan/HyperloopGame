@@ -28,9 +28,12 @@ export function writeCosmetics(state) {
     window.dispatchEvent(new Event(COSMETICS_EVENT))
 }
 
+// A tier:'supporter' item is never free-owned even though its cost is 0 - it's locked until the Supporter's Set
+// DLC exists and grants it some other way (see the TIERS note at the top of shopCatalog.js).
 export function isOwned(state, category, id) {
     const item = getItem(category, id)
     if (!item) return false
+    if (item.tier === 'supporter') return state.owned.includes(ownedKey(category, id))
     return item.cost === 0 || state.owned.includes(ownedKey(category, id))
 }
 
@@ -41,6 +44,28 @@ export function withPurchase(state, category, id) {
 
 export function withEquipped(state, category, id) {
     return { ...state, equipped: { ...state.equipped, [category]: id } }
+}
+
+// ── Bundles ──────────────────────────────────────────────────────────────────────────────────────────────────
+// A bundle (SHOP_BUNDLES in shopCatalog.js) just references one item id per category - these three helpers are
+// the only bundle-specific logic: which pieces it actually has, whether all of them are owned, and what's left
+// to pay for the ones that aren't (20% off the sum of their normal costs). Buying/equipping a whole bundle is
+// just calling withPurchase/withEquipped once per not-yet-owned piece - see handleBundleBuy in App.jsx.
+export function bundlePieces(bundle) {
+    return Object.entries(bundle.items)
+        .map(([category, id]) => ({ category, id, item: getItem(category, id) }))
+        .filter(p => p.item)
+}
+
+export function isBundleOwned(state, bundle) {
+    return bundlePieces(bundle).every(p => isOwned(state, p.category, p.id))
+}
+
+export function bundlePrice(state, bundle) {
+    const total = bundlePieces(bundle)
+        .filter(p => !isOwned(state, p.category, p.id))
+        .reduce((sum, p) => sum + (p.item.cost || 0), 0)
+    return Math.round(total * 0.8)
 }
 
 // The item currently equipped in a category: the saved choice if it still exists and is owned, otherwise the default

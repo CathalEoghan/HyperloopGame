@@ -161,8 +161,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         if (!window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) {
             btn.animate(
                 [
-                    { boxShadow: '0 0 0 0 rgba(245, 166, 35, 0.7)', transform: 'scale(1.04)' },
-                    { boxShadow: '0 0 0 10px rgba(245, 166, 35, 0)', transform: 'scale(1)' },
+                    { boxShadow: '0 0 0 0 color-mix(in srgb, var(--ui-accent, #f5a623) 70%, transparent)', transform: 'scale(1.04)' },
+                    { boxShadow: '0 0 0 10px color-mix(in srgb, var(--ui-accent, #f5a623) 0%, transparent)', transform: 'scale(1)' },
                 ],
                 { duration: 450, easing: 'ease-out' }
             )

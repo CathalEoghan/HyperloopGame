@@ -4,6 +4,9 @@ export const PRESTIGE_KEY = 'hyperloop_prestige'
 export const PRESTIGE_HISTORY_KEY = 'hyperloop_prestige_history'
 // Prestige Points for ending a run: 1 for every 50 ranks reached (2 at Rank 100)
 export const RANKS_PER_PRESTIGE_POINT = 50
+// ...plus 1 for every £50M earned this run. Rank caps out at 341 (one point per city), but cash never does, so
+// this is what keeps a run worth ending even once every rank-up has already happened.
+export const CASH_PER_PRESTIGE_POINT = 50000000
 export const PRESTIGE_MIN_RANK = 50
 // Past runs kept for the history list and the Retirement count (a run takes hours, so this is never reached in practice)
 const HISTORY_LIMIT = 1000
@@ -76,11 +79,22 @@ export class PrestigeManager {
         this.save()
     }
 
-    // Points a run is worth if it ends at this rank. Fast Learner doubles them (Five-Star Researchers does not:
+    // Points a run is worth from rank alone. Fast Learner doubles them (Five-Star Researchers does not:
     // it only changes what Experimental Technology pays).
     static pointsForRank(rank) {
         const base = Math.floor(rank / RANKS_PER_PRESTIGE_POINT)
         return PrestigeManager.owns('fastLearner') ? base * 2 : base
+    }
+
+    // Points a run is worth from lifetime cash earned this run alone, same Fast Learner doubling.
+    static pointsForCash(totalCashEarned) {
+        const base = Math.floor((totalCashEarned || 0) / CASH_PER_PRESTIGE_POINT)
+        return PrestigeManager.owns('fastLearner') ? base * 2 : base
+    }
+
+    // The full payout for ending a run right now: rank points plus cash points.
+    static pointsForRun(rank, totalCashEarned) {
+        return PrestigeManager.pointsForRank(rank) + PrestigeManager.pointsForCash(totalCashEarned)
     }
 
     static getHistory() {
@@ -92,7 +106,7 @@ export class PrestigeManager {
 
     // Ends a run: pays out the points and writes the run into the history. Returns the points paid.
     static completeRun(stats) {
-        const points = PrestigeManager.pointsForRank(stats.rank)
+        const points = PrestigeManager.pointsForRun(stats.rank, stats.cash)
         const manager = new PrestigeManager()
         manager.addPoints(points)
         const history = PrestigeManager.getHistory()

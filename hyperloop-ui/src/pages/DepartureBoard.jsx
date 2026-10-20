@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { createPortal } from 'react-dom'
 import './DepartureBoard.css'
-import { playSplitFlapLong, playSplitFlapShort, playClickSound2, playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { playSplitFlapLong, playSplitFlapShort, playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { minutesUntilDeparture } from '../utils/time.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
 import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable } from '../utils/timetable.js'
@@ -28,7 +28,7 @@ function getStatus(hour, minute, delayed, lag = 0) {
     if (diff <= 5)  return { label: 'GATE CLOSED', color: '#e74c3c' }
     if (diff <= 10) return { label: 'FINAL CALL',  color: 'red' }
     if (diff <= 30) return { label: 'BOARDING',    color: 'limegreen' }
-    if (diff <= 45) return { label: 'GO TO GATE',  color: '#f5a623' }
+    if (diff <= 45) return { label: 'GO TO GATE',  color: 'var(--board-accent, #f5a623)' }
     if (delayed)    return { label: 'DELAYED',      color: '#e74c3c' }
     return              { label: 'SCHEDULED',    color: '#aaa' }
 }
@@ -323,18 +323,18 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
                         padding: '4px 12px', borderRadius: '4px', cursor: 'var(--cursor-pointer, pointer)',
                         letterSpacing: '1px', transition: 'color 0.2s, border-color 0.2s'
                     }}
-                    onMouseEnter={e => { playHoverSound(); e.target.style.color = '#f5a623'; e.target.style.borderColor = '#f5a623' }}
+                    onMouseEnter={e => { playHoverSound(); e.target.style.color = 'var(--board-accent, #f5a623)'; e.target.style.borderColor = 'var(--board-accent, #f5a623)' }}
                     onMouseLeave={e => { e.target.style.color = '#888'; e.target.style.borderColor = '#444' }}
                     >✕ CLOSE</button>
                 )}
             </div>
             {list.length === 0 ? (
                 purchasedCities.length <= 1 ? (
-                    <p style={{ color: '#f5a623', fontFamily: 'Courier New', marginTop: '24px' }}>
+                    <p style={{ color: 'var(--board-accent, #f5a623)', fontFamily: 'Courier New', marginTop: '24px' }}>
                         Connect more cities to unlock {isArrivals ? 'arrivals' : 'departures'}!
                     </p>
                 ) : (
-                    <p style={{ color: '#f5a623', fontFamily: 'Courier New' }}>
+                    <p style={{ color: 'var(--board-accent, #f5a623)', fontFamily: 'Courier New' }}>
                         {isArrivals
                             ? 'No arrivals today. New loops will arrive tomorrow.'
                             : nothingScheduled

@@ -62,13 +62,13 @@
 }
 
 .onboarding-modal .opening-btn {
-    background: #f5a623;
+    background: var(--ui-accent, #f5a623);
     color: white;
     border: 2px solid white;
 }
 
 .onboarding-modal .opening-btn:hover {
-    background: #e8890a;
+    background: color-mix(in srgb, var(--ui-accent, #f5a623) 85%, black);
     box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
 }
 

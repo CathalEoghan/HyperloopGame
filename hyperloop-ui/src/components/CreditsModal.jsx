@@ -67,7 +67,7 @@ function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
                             width: '140px',
                             height: '140px',
                             objectFit: 'cover',
-                            border: '3px solid #f5a623',
+                            border: '3px solid var(--ui-accent, #f5a623)',
                             borderRadius: '4px',
                             marginBottom: '10px',
                         }}

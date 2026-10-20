@@ -91,7 +91,7 @@
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.85);
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
     font-family: 'Courier New', monospace;
     font-size: 0.7rem;
     text-align: center;
@@ -265,7 +265,7 @@
     letter-spacing: 0.5px;
 }
 
-.city-stat-box strong { color: #f5a623; }
+.city-stat-box strong { color: var(--ui-accent, #f5a623); }
 .city-stat-label { color: #aaa; }
 
 /* Collapse controls */
@@ -384,7 +384,7 @@
 }
 
 .modal .constructionButton:hover {
-    background: #f5a623 !important;
+    background: var(--ui-accent, #f5a623) !important;
     color: #333 !important;
     border-color: black !important;
 }

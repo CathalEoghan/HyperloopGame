@@ -132,10 +132,10 @@ const VERSION_LOG = [
 const OptionBtn = ({ active, onClick, children }) => {
     const [hovered, setHovered] = useState(false)
     const bg = active
-        ? (hovered ? '#e8890a' : '#f5a623')
-        : (hovered ? '#f5a623' : '')
+        ? (hovered ? 'color-mix(in srgb, var(--ui-accent, #f5a623) 85%, black)' : 'var(--ui-accent, #f5a623)')
+        : (hovered ? 'var(--ui-accent, #f5a623)' : '')
     const color = active || hovered ? 'white' : ''
-    const border = active || hovered ? '#f5a623' : ''
+    const border = active || hovered ? 'var(--ui-accent, #f5a623)' : ''
     return (
         <button
             className={`settings-option-btn ${active ? 'settings-option-active' : ''}`}

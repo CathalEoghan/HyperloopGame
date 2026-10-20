@@ -1,5 +1,5 @@
 import { useState, useRef, useLayoutEffect, useEffect } from 'react'
-import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT, CASH_PER_PRESTIGE_POINT } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { MAX_RANK } from 'Managers/RankManager/RankManager.js'
 import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialChime, playNotEnoughFundsSound } from '../utils/sound.js'
@@ -75,11 +75,16 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     const [confirming, setConfirming] = useState(false)
     const [showRuns, setShowRuns] = useState(false)
     const canRetire = hasEarlyRetirement && rank >= PRESTIGE_MIN_RANK
-    const retirePoints = PrestigeManager.pointsForRank(rank)
+    const rankPoints = PrestigeManager.pointsForRank(rank)
+    const cashPoints = PrestigeManager.pointsForCash(runStats?.cash ?? 0)
+    const retirePoints = rankPoints + cashPoints
     // How the payout adds up, and how far away the next step is (worth knowing before retiring)
     const pointsPerStep = PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)
     const payoutSteps = Math.floor(rank / RANKS_PER_PRESTIGE_POINT)
     const nextStepRank = (payoutSteps + 1) * RANKS_PER_PRESTIGE_POINT
+    // The next £50M milestone, the cash equivalent of nextStepRank above
+    const cashSteps = Math.floor((runStats?.cash ?? 0) / CASH_PER_PRESTIGE_POINT)
+    const nextCashStep = (cashSteps + 1) * CASH_PER_PRESTIGE_POINT
     // Retiring wipes the run, so it takes a second click; closing the dialog disarms it
     const [armed, setArmed] = useState(false)
     const closeConfirm = () => { setArmed(false); setConfirming(false) }
@@ -102,7 +107,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 <div className="prestige-retire-text">
                     <b>Early Retirement</b>
                     {canRetire
-                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)} per {RANKS_PER_PRESTIGE_POINT} ranks, you are Rank {rank}). Your run resets.</span>
+                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)} per {RANKS_PER_PRESTIGE_POINT} ranks, 1 per £{(CASH_PER_PRESTIGE_POINT / 1e6)}M earned - you are Rank {rank}). Your run resets.</span>
                         : rank >= PRESTIGE_MIN_RANK
                             ? <span>Early Retirement is waiting under Development, Upgrades. Purchase it for 250 Reputation to prestige.</span>
                             : <span>Reach Rank {PRESTIGE_MIN_RANK} and purchase Early Retirement (250 Reputation) to prestige. You are Rank {rank}.</span>}
@@ -126,13 +131,17 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                             <span className="prestige-reward-label">You will earn</span>
                             <span className="prestige-reward-value">+{retirePoints}</span>
                             <span className="prestige-reward-sub">
-                                Rank {rank}: {payoutSteps} block{payoutSteps === 1 ? '' : 's'} of {RANKS_PER_PRESTIGE_POINT} ranks × {pointsPerStep} point{pointsPerStep === 1 ? '' : 's'}
+                                Rank {rank}: {payoutSteps} block{payoutSteps === 1 ? '' : 's'} of {RANKS_PER_PRESTIGE_POINT} ranks × {pointsPerStep} point{pointsPerStep === 1 ? '' : 's'} (+{rankPoints})
+                            </span>
+                            <span className="prestige-reward-sub">
+                                {fmtCash(runStats?.cash ?? 0)} earned: {cashSteps} block{cashSteps === 1 ? '' : 's'} of £{CASH_PER_PRESTIGE_POINT / 1e6}M (+{cashPoints})
                             </span>
                             <span className="prestige-reward-balance">Prestige Points: {prestige.points} → <b>{prestige.points + retirePoints}</b></span>
                         </div>
-                        {nextStepRank <= MAX_RANK && (
-                            <p className="prestige-reward-next">{nextStepRank - rank} more rank{nextStepRank - rank === 1 ? '' : 's'} (Rank {nextStepRank}) would earn <b>+{pointsPerStep} more</b>.</p>
-                        )}
+                        <p className="prestige-reward-next">
+                            {nextStepRank <= MAX_RANK && <>{nextStepRank - rank} more rank{nextStepRank - rank === 1 ? '' : 's'} (Rank {nextStepRank}) would earn <b>+{pointsPerStep} more</b>. </>}
+                            Another {fmtCash(nextCashStep - (runStats?.cash ?? 0))} earned would earn <b>+1 more</b>.
+                        </p>
 
                         <div className="prestige-modal-stats">
                             <span>Total cash earned</span><b>{fmtCash(runStats.cash)}</b>

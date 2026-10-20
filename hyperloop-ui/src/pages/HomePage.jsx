@@ -67,16 +67,26 @@ function formatPopulation(pop) {
     return pop.toLocaleString('en-GB', { maximumFractionDigits: 0 })
 }
 
-function loadGrayscaleTexture(url, onLoad) {
+// Every flag sprite on the globe is drawn through here (not THREE.TextureLoader directly), so it can get a thin
+// black outline the same way the flag in the City Picker modal does (.citypicker-flag's box-shadow: 0 0 0 1px
+// #000) - a flat colour swatch like a flag needs that edge to read clearly against the globe/ocean/space behind
+// it. `grayscale: true` is the "offered but not bought" look, same as before.
+function loadFlagTexture(url, { grayscale = false } = {}, onLoad) {
     const img = new Image()
     img.crossOrigin = 'anonymous'
     img.onload = () => {
+        const w = img.naturalWidth || 40, h = img.naturalHeight || 28
+        const outline = 2 // px, on the source image's own resolution - thin at any sprite scale
         const canvas = document.createElement('canvas')
-        canvas.width = img.naturalWidth || 40
-        canvas.height = img.naturalHeight || 28
+        canvas.width = w + outline * 2
+        canvas.height = h + outline * 2
         const ctx = canvas.getContext('2d')
-        ctx.filter = 'grayscale(100%)'
-        ctx.drawImage(img, 0, 0)
+        if (grayscale) ctx.filter = 'grayscale(100%)'
+        ctx.drawImage(img, outline, outline, w, h)
+        ctx.filter = 'none'
+        ctx.strokeStyle = '#000'
+        ctx.lineWidth = outline
+        ctx.strokeRect(outline, outline, w, h)
         onLoad(new THREE.CanvasTexture(canvas))
     }
     img.onerror = () => onLoad(null)
@@ -198,7 +208,6 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         if (!sprites.length) return
         const purchasedNames = new Set(purchasedCities.map(c => c.name))
         const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
-        const textureLoader = new THREE.TextureLoader()
 
         sprites.forEach(sprite => {
             const { city } = sprite.userData
@@ -208,7 +217,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             if (nowPurchased && !sprite.userData.isPurchased) {
                 // Was unlocked/dimmed → full colour
                 const flagCode = countryFlags[city.country]
-                sprite.material.map = textureLoader.load(flagSrc(flagCode))
+                loadFlagTexture(flagSrc(flagCode), {}, (tex) => {
+                    if (tex) { sprite.material.map = tex; sprite.material.needsUpdate = true }
+                })
                 sprite.material.color.set(1, 1, 1)
                 sprite.material.needsUpdate = true
                 sprite.userData.isPurchased = true
@@ -216,7 +227,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             } else if (nowUnlocked && !sprite.userData.isUnlocked) {
                 // Was grayscale → dimmed colour
                 const flagCode = countryFlags[city.country]
-                sprite.material.map = textureLoader.load(flagSrc(flagCode))
+                loadFlagTexture(flagSrc(flagCode), {}, (tex) => {
+                    if (tex) { sprite.material.map = tex; sprite.material.needsUpdate = true }
+                })
                 sprite.material.color.set(0.1, 0.1, 0.1)
                 sprite.material.needsUpdate = true
                 sprite.userData.isUnlocked = true
@@ -229,7 +242,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 sprite.userData.isUnlocked = true
             } else if (!nowPurchased && !nowUnlocked && !city.underConstruction && (sprite.userData.isUnlocked || sprite.userData.isPurchased)) {
                 // No longer on offer (for example it was re-rolled away) → back to grayscale
-                loadGrayscaleTexture(flagSrc(countryFlags[city.country]), (greyTex) => {
+                loadFlagTexture(flagSrc(countryFlags[city.country]), { grayscale: true }, (greyTex) => {
                     if (greyTex) { sprite.material.map = greyTex; sprite.material.needsUpdate = true }
                 })
                 sprite.material.color.set(1, 1, 1)
@@ -379,11 +392,17 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             const surfaceNormal = latLngToVector3(coords.lat, coords.lng, 1)
             const flagUrl = flagSrc(flagCode)
             const spriteMat = new THREE.SpriteMaterial({
-                map: (isPurchased || isUnlocked) ? textureLoader.load(flagUrl) : null,
+                map: null,
                 transparent: true, depthTest: true, depthWrite: false,
             })
+            if (isPurchased || isUnlocked) {
+                loadFlagTexture(flagUrl, {}, (tex) => {
+                    if (disposed) { tex?.dispose(); return }
+                    if (tex) { spriteMat.map = tex; spriteMat.needsUpdate = true }
+                })
+            }
             if (!isPurchased && !isUnlocked) {
-                loadGrayscaleTexture(flagUrl, (greyTex) => {
+                loadFlagTexture(flagUrl, { grayscale: true }, (greyTex) => {
                     if (disposed) { greyTex?.dispose(); return }
                     if (greyTex) { spriteMat.map = greyTex; spriteMat.needsUpdate = true }
                 })

@@ -115,13 +115,16 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const [floats, setFloats] = useState([])
     const [fading, setFading] = useState(new Set())
 
+    // Cash tiers halved from their original 2500/5000/10000/25000/50000 - with a city/country card to claim for
+    // every city you connect, these were stacking into the dominant source of early-game income (bug report:
+    // "I can make most money by just building cities"). Same odds, same shape, roughly half the payout.
     const getRandomReward = () => {
         const roll = Math.random() * 100
-        if (roll < 25) return { type: 'cash', amount: 2500 * INCOME_SCALE }
-        if (roll < 47) return { type: 'cash', amount: 5000 * INCOME_SCALE }
-        if (roll < 65) return { type: 'cash', amount: 10000 * INCOME_SCALE }
-        if (roll < 75) return { type: 'cash', amount: 25000 * INCOME_SCALE }
-        if (roll < 80) return { type: 'cash', amount: 50000 * INCOME_SCALE }
+        if (roll < 25) return { type: 'cash', amount: 1250 * INCOME_SCALE }
+        if (roll < 47) return { type: 'cash', amount: 2500 * INCOME_SCALE }
+        if (roll < 65) return { type: 'cash', amount: 5000 * INCOME_SCALE }
+        if (roll < 75) return { type: 'cash', amount: 12500 * INCOME_SCALE }
+        if (roll < 80) return { type: 'cash', amount: 25000 * INCOME_SCALE }
         if (roll < 92) return { type: 'rep', amount: 5 }
         if (roll < 98) return { type: 'rep', amount: 10 }
         return { type: 'rep', amount: 20 }
@@ -462,7 +465,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     animation: 'progress-float-up 1.5s ease-out forwards',
                     display: 'flex', alignItems: 'center', gap: '4px',
                     fontFamily: 'Courier New, monospace', fontWeight: 'bold',
-                    fontSize: '1rem', color: f.reward.type === 'cash' ? '#f5a623' : '#e74c3c',
+                    fontSize: '1rem', color: f.reward.type === 'cash' ? 'var(--ui-accent, #f5a623)' : '#e74c3c',
                     background: 'rgba(0,0,0,0.75)', borderRadius: '20px', padding: '4px 12px',
                     whiteSpace: 'nowrap',
                 }}>

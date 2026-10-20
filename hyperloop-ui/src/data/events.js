@@ -44,14 +44,14 @@ export const EVENTS = [
         duration: () => 0,
     },
 
-    // POSITIVE — Passive income boost (100% for 30s-3min)
+    // POSITIVE — Passive income boost (+500% for 30s-3min)
     {
         id: 'profits_surge',
         type: 'positive',
         effectType: 'passiveBoost',
         title: 'Profits Through the Roof',
         description: (terminalName) => `Passenger numbers at ${terminalName} are surging beyond all projections. Revenue is significantly elevated.`,
-        effect: { target: 'passive', multiplier: 2.0 },
+        effect: { target: 'passive', multiplier: 6.0 },
         duration: () => Math.floor(Math.random() * 150 + 30),
     },
     {
@@ -60,7 +60,7 @@ export const EVENTS = [
         effectType: 'passiveBoost',
         title: 'Going Viral',
         description: (terminalName) => `A video of ${terminalName} has gone viral overnight. Curious visitors are flooding in and revenue is through the roof.`,
-        effect: { target: 'passive', multiplier: 2.0 },
+        effect: { target: 'passive', multiplier: 6.0 },
         duration: () => Math.floor(Math.random() * 150 + 30),
     },
     {
@@ -69,7 +69,7 @@ export const EVENTS = [
         effectType: 'passiveBoost',
         title: 'Celebrity Sighting',
         description: (terminalName) => `A major celebrity was spotted travelling through ${terminalName}. The media coverage is bringing in passengers from across the network.`,
-        effect: { target: 'passive', multiplier: 2.0 },
+        effect: { target: 'passive', multiplier: 6.0 },
         duration: () => Math.floor(Math.random() * 150 + 30),
     },
     {
@@ -78,7 +78,7 @@ export const EVENTS = [
         effectType: 'passiveBoost',
         title: 'Tourism Surge',
         description: (terminalName, event) => `With ${event?.occasion || TOURISM_OCCASIONS[0]} taking place nearby, huge numbers of visitors are travelling through ${terminalName}. Earnings are significantly elevated.`,
-        effect: { target: 'passive', multiplier: 2.0 },
+        effect: { target: 'passive', multiplier: 6.0 },
         duration: () => Math.floor(Math.random() * 150 + 30),
     },
     {
@@ -87,7 +87,7 @@ export const EVENTS = [
         effectType: 'passiveBoost',
         title: 'Record Passenger Day',
         description: (terminalName) => `Today is shaping up to be the busiest day in ${terminalName}'s history. Every route is fully booked and revenue is flowing.`,
-        effect: { target: 'passive', multiplier: 2.0 },
+        effect: { target: 'passive', multiplier: 6.0 },
         duration: () => Math.floor(Math.random() * 150 + 30),
     },
 

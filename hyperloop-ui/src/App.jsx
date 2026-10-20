@@ -27,7 +27,7 @@ import DevelopmentRevealModal from "./components/DevelopmentRevealModal"
 import FarewellModal from "./components/FarewellModal"
 import NotEnoughRepModal from "./components/NotEnoughRepModal"
 import ShopModal from "./components/ShopModal"
-import { readCosmetics, writeCosmetics, applyCosmetics, isOwned, withPurchase, withEquipped } from "./utils/cosmetics.js"
+import { readCosmetics, writeCosmetics, applyCosmetics, isOwned, withPurchase, withEquipped, bundlePieces, isBundleOwned, bundlePrice } from "./utils/cosmetics.js"
 import UpgradeRevealModal from "./components/UpgradeRevealModal"
 import EventModal from "./components/EventModal"
 import DailyLoginModal from "./components/DailyLoginModal"
@@ -1379,7 +1379,7 @@ function App() {
     return (
       <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
         <div style={{ background: 'rgb(255, 239, 224)', border: '2px solid black', borderRadius: '12px', padding: '32px 24px', maxWidth: '380px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
-          <h2 style={{ fontFamily: 'Courier New, monospace', color: '#f5a623', margin: '0 0 12px' }}>Open in another tab</h2>
+          <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>Open in another tab</h2>
           <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
             Hyperloop Empire is already running in another tab. Only one tab can play at a time, so your progress isn&#39;t overwritten.
           </p>
@@ -1444,6 +1444,9 @@ function App() {
   const updateCosmetics = (next) => { writeCosmetics(next); setCosmetics(next); applyCosmetics(next); };
   const handleShopBuy = (category, item) => {
     if (isOwned(cosmetics, category, item.id)) return true;
+    // Supporter-tier items aren't for sale with Reputation (0 cost or not) - they unlock with the Supporter's
+    // Set DLC. The Shop never shows a Buy button for them, but refuse here too in case anything ever calls this.
+    if (item.tier === 'supporter') return false;
     if (!progressionManager.spendReputation(item.cost)) return false;
     unlockAchievement('shoppingSpree');
     updateCosmetics(withEquipped(withPurchase(cosmetics, category, item.id), category, item.id));
@@ -1454,6 +1457,32 @@ function App() {
   const handleShopEquip = (category, item) => {
     if (!isOwned(cosmetics, category, item.id)) return;
     updateCosmetics(withEquipped(cosmetics, category, item.id));
+    triggerSave();
+  };
+
+  // Bundles: buy/equip every not-yet-owned piece at once, at bundlePrice()'s already-discounted total. A
+  // 'premium' bundle (future Supporter's Set DLC) can't be bought with Reputation - same rule as a tier:'supporter' item.
+  const handleBundleBuy = (bundle) => {
+    if (isBundleOwned(cosmetics, bundle)) return true;
+    if (bundle.tier === 'premium') return false;
+    const price = bundlePrice(cosmetics, bundle);
+    if (!progressionManager.spendReputation(price)) return false;
+    unlockAchievement('shoppingSpree');
+    let next = cosmetics;
+    bundlePieces(bundle).forEach(({ category, id }) => {
+      if (!isOwned(next, category, id)) next = withPurchase(next, category, id);
+      next = withEquipped(next, category, id);
+    });
+    updateCosmetics(next);
+    setReputation(progressionManager.reputation);
+    triggerSave();
+    return true;
+  };
+  const handleBundleEquip = (bundle) => {
+    if (!isBundleOwned(cosmetics, bundle)) return;
+    let next = cosmetics;
+    bundlePieces(bundle).forEach(({ category, id }) => { next = withEquipped(next, category, id); });
+    updateCosmetics(next);
     triggerSave();
   };
 
@@ -1559,6 +1588,11 @@ function App() {
             });
             triggerSave();
           }}
+          onUpgradeCityLine={(city) => {
+            const success = progressionManager.upgradeCityLine(city);
+            if (success) triggerSave();
+            return success;
+          }}
         />
       )}
       {activeTab === "Development" && (
@@ -1655,13 +1689,13 @@ function App() {
         >
           <div style={{
             background: '#0a0a0a',
-            border: '2px solid #f5a623',
+            border: '2px solid var(--board-accent, #f5a623)',
             borderRadius: '12px',
             width: '100%',
             maxWidth: '98vw',
             maxHeight: 'calc(100vh - 100px)', // at least as tall as the board's own minimum height, so it only scrolls when the list is longer (bug #122)
             overflowY: 'auto',
-            boxShadow: '0 0 60px rgba(245,166,35,0.15), 0 24px 80px rgba(0,0,0,0.9)',
+            boxShadow: '0 0 60px color-mix(in srgb, var(--board-accent, #f5a623) 15%, transparent), 0 24px 80px rgba(0,0,0,0.9)',
             animation: 'boardModalIn 0.25s ease-out',
           }}
             onClick={e => e.stopPropagation()}
@@ -1743,7 +1777,7 @@ function App() {
       {showSaved && (
         <div style={{
           position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
-          background: '#222', color: '#f5a623',
+          background: '#222', color: 'var(--ui-accent, #f5a623)',
           fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
           padding: '4px 12px', borderRadius: '6px',
           zIndex: 200, pointerEvents: 'none',
@@ -1795,7 +1829,8 @@ function App() {
       )}
 
       {showShop && (
-        <ShopModal reputation={reputation} cosmetics={cosmetics} onBuy={handleShopBuy} onEquip={handleShopEquip} onClose={() => setShowShop(false)} />
+        <ShopModal reputation={reputation} cosmetics={cosmetics} onBuy={handleShopBuy} onEquip={handleShopEquip}
+          onBuyBundle={handleBundleBuy} onEquipBundle={handleBundleEquip} onClose={() => setShowShop(false)} />
       )}
       {showNotEnoughRep && (
         <NotEnoughRepModal onClose={() => setShowNotEnoughRep(false)} />
@@ -2063,7 +2098,7 @@ function App() {
       {activeEvent && localStorage.getItem('hyperloop_event_tint') !== 'false' && (
         <div style={{
           position: 'fixed', inset: 0, pointerEvents: 'none', zIndex: 15,
-          background: activeEvent.type === 'positive' ? 'rgba(245,166,35,0.1)' : 'rgba(192,57,43,0.18)',
+          background: activeEvent.type === 'positive' ? 'color-mix(in srgb, var(--ui-accent, #f5a623) 10%, transparent)' : 'rgba(192,57,43,0.18)',
           transition: 'background 0.5s ease',
         }} />
       )}
@@ -2082,7 +2117,7 @@ function App() {
             boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
           }}>
             <img src={monitorIcon} alt="monitor" style={{ width: '48px', height: '48px', marginBottom: '12px', border: 'none', borderRadius: '0' }} />
-            <h2 style={{ fontFamily: 'Courier New, monospace', color: '#f5a623', margin: '0 0 12px' }}>
+            <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>
               Desktop Recommended
             </h2>
             <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>

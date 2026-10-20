@@ -142,7 +142,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
                                 <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
-                                    {info.totalPct === 100 && ' 🎉 Maximum reached!'}
+                                    {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
                                 </p>
                                 <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></>}</p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
@@ -287,7 +287,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                                                 {(() => {
                                                     const discount = economyManager.getUpgradeSum('developmentDiscount')
-                                                    return discount > 0 ? <span style={{ color: '#f5a623', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
+                                                    return discount > 0 ? <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
                                                 })()})
                                             </span>
                                         </button>
@@ -322,7 +322,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                         {totalBoostPct > 0 && (
                                                             <IncomeRow label="Boosted revenue" amount={selectedDevelopment.revenue * (1 + totalBoost)}>
                                                                 <span
-                                                                    style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
+                                                                    style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
                                                                     onMouseEnter={(e) => setShowBoostTooltip(e.currentTarget)}
                                                                     onMouseLeave={() => setShowBoostTooltip(null)}
                                                                 >
@@ -341,7 +341,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             })()}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
                                                 <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgrade Level</span>
-                                                <span style={{ fontWeight: 'bold' }}>{getLevel(selectedDevelopment)} / 3</span>
+                                                <span style={{ fontWeight: 'bold' }}>{getLevel(selectedDevelopment)} / 10</span>
                                             </div>
                                         </div>
                                     ) : (
@@ -409,7 +409,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         }
                                         return (
                                             <div className="modal-button-row" style={{ marginTop: '12px' }}>
-                                                {selectedDevelopment.revenue && getLevel(selectedDevelopment) < 3 && (
+                                                {selectedDevelopment.revenue && getLevel(selectedDevelopment) < 10 && (
                                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowUpgradeModal(true) }}>
                                                         Upgrade
                                                     </button>

@@ -31,9 +31,10 @@ const CONTINENT_COLOURS = {
     'All': '#444'
 }
 
-function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, topOffset = 113 }) {
+function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, onUpgradeCityLine, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, topOffset = 113 }) {
     const [selectedCity, setSelectedCity] = useState(() => preSelectedCity || null)
     const [showNoFunds, setShowNoFunds] = useState(false)
+    const [showLineUpgradeModal, setShowLineUpgradeModal] = useState(false)
     const [search, setSearch] = useState('')
     const [activeContinent, setActiveContinent] = usePersistedChoice('citiesContinent', CONTINENTS, 'All')
     const [sortBy, setSortBy] = usePersistedChoice('citiesSort', ['alphabetical', 'income-high', 'income-low', 'population-high', 'tier'], 'alphabetical')
@@ -152,7 +153,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
             return next
         })
     }
-    const closeModal = () => { setSelectedCity(null); setConfirmDisconnect(false) }
+    const closeModal = () => { setSelectedCity(null); setConfirmDisconnect(false); setShowLineUpgradeModal(false) }
 
     // One city card. In the flat list (any sort except A–Z) there's no country heading above
     // it, so the card shows the country's flag itself.
@@ -160,6 +161,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         const isUnderConstruction = underConstruction.some(c => c.name === city.name)
         const dailyIncome = cityIncome(city)
         const offTimetable = !isUnderConstruction && !isAvailable && !economyManager.isCityEarning(city)
+        const lineLevel = constructionManager.progressionManager.getCityLineLevel(city)
         return (
             <button
                 className="city"
@@ -173,6 +175,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         src={cityThumbnails[city.name] || cityImages[city.name]}
                         style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', filter: isAvailable ? 'grayscale(100%)' : 'none' }}
                     />
+                    {!isUnderConstruction && !isAvailable && lineLevel > 0 && (
+                        <div className="dev-level-strip">LVL {lineLevel}</div>
+                    )}
                     {isUnderConstruction && (
                         <div className="construction-overlay">
                             <p>UNDER CONSTRUCTION</p>
@@ -342,7 +347,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                 {boostPct > 0 && (
                                                     <IncomeRow label="Boosted income" amount={effectiveIncome} last>
                                                         <span
-                                                            style={{ color: '#f5a623', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
+                                                            style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
                                                             onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
                                                             onMouseLeave={() => setShowCityBoostTip(null)}
                                                         >
@@ -351,6 +356,26 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                         </span>
                                                     </IncomeRow>
                                                 )}
+                                            </div>
+                                        )
+                                    })()}
+                                    {(() => {
+                                        const pm = constructionManager.progressionManager
+                                        const lineLevel = pm.getCityLineLevel(selectedCity)
+                                        const lineInfo = pm.getCityLineUpgradeCostInfo(selectedCity)
+                                        return (
+                                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '2px 0 8px' }}>
+                                                <span style={{ fontSize: '0.85rem', color: '#888' }}>Line upgrade</span>
+                                                <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                    <span style={{ fontWeight: 'bold' }}>{lineLevel} / 10</span>
+                                                    {lineInfo && (
+                                                        <button className="closeButton" style={{ padding: '3px 10px', fontSize: '0.78rem' }}
+                                                            onMouseEnter={() => playHoverSound()}
+                                                            onClick={(e) => { e.stopPropagation(); playClickSound2(); setShowLineUpgradeModal(true) }}>
+                                                            Upgrade
+                                                        </button>
+                                                    )}
+                                                </span>
                                             </div>
                                         )
                                     })()}
@@ -421,6 +446,40 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         </div>
                     </div>
                 )}
+
+                {/* Line upgrade modal - a per-city, 10-level investment (see ProgressionManager.getCityLineUpgradeCostInfo),
+                    steeper every level, with no cap on how far the game can keep going once everything else is bought. */}
+                {showLineUpgradeModal && selectedCity && (() => {
+                    const pm = constructionManager.progressionManager
+                    const info = pm.getCityLineUpgradeCostInfo(selectedCity)
+                    if (!info) return null
+                    // The real balance, not the on-screen one, which can be up to a second old (bug #170)
+                    const canAfford = pm.balance >= info.cashCost && pm.reputation >= info.repCost
+                    return (
+                        <div className="modal-overlay" onClick={() => setShowLineUpgradeModal(false)}>
+                            <div className="modal" onClick={e => e.stopPropagation()}>
+                                <h3>Upgrade the line to {selectedCity.name}</h3>
+                                <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
+                                <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
+                                    Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
+                                    {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
+                                </p>
+                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong>{info.repCost} <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /></strong></>}</p>
+                                {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
+                                <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
+                                    <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
+                                        if (!canAfford || !onUpgradeCityLine(selectedCity)) { playNotEnoughFundsSound(); return; }
+                                        playFarewellAcceptSound();
+                                        setShowLineUpgradeModal(false);
+                                    }}>
+                                        Upgrade
+                                    </button>
+                                    <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowLineUpgradeModal(false) }}>Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                    )
+                })()}
 
                 {sortedPurchasedCountries.length > 0 && (
                     <div className="cities-connected-section">

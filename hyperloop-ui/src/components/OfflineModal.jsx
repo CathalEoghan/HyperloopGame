@@ -35,7 +35,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                     <span className="offline-earnings-amount" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                         <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '22px', height: '22px', border: 'none', borderRadius: '0', objectFit: 'contain', marginTop: '3px' }} />
                         {displayIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
-                        {doubled && <span style={{ color: '#f5a623', fontSize: '0.8rem', fontWeight: 'bold' }}>×{bonusFactor}</span>}
+                        {doubled && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold' }}>×{bonusFactor}</span>}
                     </span>
                     <span className="offline-earnings-note">{Number.isFinite(capHours) ? `Capped at ${capHours} hours` : 'No cap on offline earnings'}</span>
                 </div>
@@ -44,7 +44,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                         style={{
                             marginTop: '12px',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
-                            background: doubleHovered && canDouble ? '#f5a623' : 'white',
+                            background: doubleHovered && canDouble ? 'var(--ui-accent, #f5a623)' : 'white',
                             color: doubleHovered && canDouble ? 'white' : canDouble ? 'black' : '#aaa',
                             border: `2px solid ${canDouble ? 'black' : '#ccc'}`,
                             borderRadius: '8px', padding: '8px 16px',

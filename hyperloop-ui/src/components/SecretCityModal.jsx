@@ -16,7 +16,7 @@ function SecretCityModal({ onContinue }) {
                     className="closeButton"
                     style={{
                         marginTop: '24px',
-                        background: hovered ? '#f5a623' : 'white',
+                        background: hovered ? 'var(--ui-accent, #f5a623)' : 'white',
                         color: hovered ? 'white' : 'black',
                         transition: 'background 0.15s, color 0.15s',
                     }}

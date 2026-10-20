@@ -279,7 +279,7 @@ export function getArrivalStatus(entry, homeName, nowMs = Date.now(), lag = 0, l
     const minutesLeft = (arriveTs - t) / 60000
     if (minutesLeft <= -litMinutes) return { label: 'ARRIVED', color: '#666', gone: true }
     if (minutesLeft <= 0) return { label: 'ARRIVED', color: 'limegreen' }
-    if (minutesLeft <= ARRIVING_MINUTES) return { label: 'ARRIVING', color: '#f5a623' }
+    if (minutesLeft <= ARRIVING_MINUTES) return { label: 'ARRIVING', color: 'var(--board-accent, #f5a623)' }
     if (entry.delayed) return { label: 'DELAYED', color: '#e74c3c' }
     if (t >= startTs) return { label: 'ON TIME', color: '#7fd4ff' }
     return { label: 'SCHEDULED', color: '#aaa' }

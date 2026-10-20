@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './ScheduleModal.css'
-import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 import { NUM_GATES, timeString, entryTimestamp, formatDuration } from '../utils/loops.js'
 import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, busyGates, previewLoop, MIN_LEAD } from '../utils/timetable.js'
 

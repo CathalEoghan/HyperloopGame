@@ -105,7 +105,7 @@
 }
 
 .opening-input:focus {
-    border-color: #f5a623;
+    border-color: var(--ui-accent, #f5a623);
 }
 
 .opening-hint {
@@ -115,7 +115,7 @@
 }
 
 .opening-btn {
-    background: #f5a623;
+    background: var(--ui-accent, #f5a623);
     color: white;
     border: none;
     border-radius: 10px;
@@ -129,7 +129,7 @@
 }
 
 .opening-btn:hover:not(:disabled) {
-    background: #e8890a;
+    background: color-mix(in srgb, var(--ui-accent, #f5a623) 85%, black);
     transform: translateY(-1px);
 }
 
@@ -161,7 +161,7 @@
 .starter-city-card:hover {
     transform: translateY(-6px);
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
-    border-color: #f5a623;
+    border-color: var(--ui-accent, #f5a623);
 }
 
 .starter-city-image {
@@ -213,7 +213,7 @@
 .starter-city-tier {
     font-size: 0.75rem;
     font-weight: bold;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: 4px;

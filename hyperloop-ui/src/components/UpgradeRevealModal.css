@@ -14,7 +14,7 @@
     font-weight: bold;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
     margin: 0 0 16px;
 }
 

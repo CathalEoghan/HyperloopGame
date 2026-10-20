@@ -31,7 +31,12 @@ const WORK_MIN_CLICK = 250;
 const WORK_ROLL_MIN = 1 / 3;
 const WORK_ROLL_SPREAD = 4 / 3;
 
-const UPGRADE_MULTIPLIERS = [1.0, 1.15, 1.50, 2.00];
+// Levels 1-3 are the original curve; 4-10 each add a further flat +50% (see UPGRADE_CASH_PCTS in
+// ProgressionManager.js for the steadily steeper cost that pays for them).
+const UPGRADE_MULTIPLIERS = [1.0, 1.15, 1.50, 2.00, 2.50, 3.00, 3.50, 4.00, 4.50, 5.00, 5.50];
+// A city's own "line upgrade" levels (see getCityLineUpgradeCostInfo in ProgressionManager.js): +40% income per
+// level, flat, for all 10 levels - the cost side is what makes each level progressively less worth it.
+const LINE_LEVEL_INCOME_PCT = 0.40;
 
 // Home-country bonus per local-transport upgrade. The six starter cities set their own value; any other home city
 // (Personal Favours) gets one from the same idea, smaller for countries with more cities: 24% / sqrt(cities in the
@@ -133,12 +138,14 @@ export class EconomyManager {
 
     // The breakdown popups: a "Modifiers:" heading, the + lines (added together), then the x lines (multiplied), then the
     // total, which is the (+X%) shown beside the income. The symbols and the order carry the maths.
-    finishBreakdown(lines, additive, kind) {
+    finishBreakdown(lines, additive, kind, extra = null) {
         const mults = this.prestigeBoostLines(kind);
         const founders = this.foundersHallLine();
         if (founders) mults.push(founders);
+        if (extra?.label) mults.push(extra.label);
         const prestige = kind === 'dev' ? this.getPrestigeDevMultiplier() : this.getPrestigeCityMultiplier();
-        const totalBoost = (1 + additive) * prestige * this.getFoundersHallMultiplier() - 1;
+        const extraMult = extra?.mult ?? 1;
+        const totalBoost = (1 + additive) * prestige * extraMult * this.getFoundersHallMultiplier() - 1;
         const out = [...lines, ...mults];
         if (out.length === 0) return { lines: out, totalBoost };
         return { lines: ['Modifiers:', ...out, ...(out.length > 1 ? [`Total: +${Math.round(totalBoost * 100).toLocaleString('en-GB')}%`] : [])], totalBoost };
@@ -202,7 +209,14 @@ export class EconomyManager {
         return (TIER_INCOME[city.tier] || 0) + city.population * POPULATION_INCOME_MODIFIER;
     }
 
-    // The multiplier a development's upgrade level gives (x1, x1.15, x1.5, x2), shown on the development card.
+    // The multiplier a city's own line-upgrade level gives (x1, x1.4, x1.8, ... up to x5 at level 10).
+    getCityLineMultiplier(city) {
+        const rawLevel = Math.floor(Number(this.progressionManager.cityLineLevels[city.name])) || 0;
+        const level = Math.max(0, Math.min(10, rawLevel));
+        return 1 + LINE_LEVEL_INCOME_PCT * level;
+    }
+
+    // The multiplier a development's upgrade level gives (x1 up to x5.5 at level 10), shown on the development card.
     getDevLevelMultiplier(development) {
         const rawLevel = Math.floor(Number(this.progressionManager.developmentUpgradeLevels[development.name])) || 0;
         return UPGRADE_MULTIPLIERS[Math.max(0, Math.min(UPGRADE_MULTIPLIERS.length - 1, rawLevel))];
@@ -210,7 +224,7 @@ export class EconomyManager {
 
     getEffectiveDevRevenue(development) {
         const base = development.revenue || 0;
-        // A level outside 0-3 (a hand-edited save) is treated as the nearest real level, never NaN (bug #82)
+        // A level outside 0-10 (a hand-edited save) is treated as the nearest real level, never NaN (bug #82)
         const rawLevel = Math.floor(Number(this.progressionManager.developmentUpgradeLevels[development.name])) || 0;
         const level = Math.max(0, Math.min(UPGRADE_MULTIPLIERS.length - 1, rawLevel));
         return Math.floor(base * UPGRADE_MULTIPLIERS[level]);
@@ -500,8 +514,15 @@ export class EconomyManager {
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
 
+        // Line upgrade: a straight ×multiplier (not an additive % like the lines above), shown as its own
+        // "Modifiers:" line the same way a Prestige city perk would be.
+        const lineLevel = this.progressionManager.getCityLineLevel(city);
+        const lineExtra = lineLevel > 0
+            ? { mult: this.getCityLineMultiplier(city), label: `Line upgrade (Lv.${lineLevel}): ×${this.getCityLineMultiplier(city).toFixed(2).replace(/0$/, '').replace(/\.$/, '')}` }
+            : null;
+
         // totalBoost covers everything paid over the base, Founders' Hall included, as shown next to the income
-        return this.finishBreakdown(lines, totalBoost, 'city');
+        return this.finishBreakdown(lines, totalBoost, 'city', lineExtra);
     }
 
     calculateDevelopmentIncome() {
@@ -619,7 +640,7 @@ export class EconomyManager {
         totalBoost += this.getSpecialDayBonus();
         totalBoost += this.getTimeOfDayBonus();
 
-        income *= (1 + totalBoost) * this.getPrestigeCityMultiplier();
+        income *= (1 + totalBoost) * this.getPrestigeCityMultiplier() * this.getCityLineMultiplier(city);
 
         return income;
     }

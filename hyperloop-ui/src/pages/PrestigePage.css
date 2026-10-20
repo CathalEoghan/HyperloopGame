@@ -3,8 +3,8 @@
     --pt-bg: #0a0a0a;
     --pt-panel: #141414;
     --pt-card: #1c1c1c;
-    --pt-gold: #f5a623;
-    --pt-gold-soft: rgba(245, 166, 35, 0.16);
+    --pt-gold: var(--ui-accent, #f5a623);
+    --pt-gold-soft: color-mix(in srgb, var(--ui-accent, #f5a623) 16%, transparent);
     --pt-text: #f2f2f2;
     --pt-muted: #9a9a9a;
     background: radial-gradient(ellipse at 50% 0%, #1e1e1e 0%, var(--pt-bg) 55%);
@@ -21,7 +21,7 @@
     justify-content: space-between;
     gap: 16px;
     padding: 16px 28px 12px;
-    border-bottom: 1px solid rgba(245, 166, 35, 0.25);
+    border-bottom: 1px solid color-mix(in srgb, var(--ui-accent, #f5a623) 25%, transparent);
 }
 
 .prestige-title {
@@ -47,7 +47,7 @@
     border: 2px solid var(--pt-gold);
     border-radius: 12px;
     padding: 6px 18px;
-    box-shadow: 0 0 18px rgba(245, 166, 35, 0.25);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--ui-accent, #f5a623) 25%, transparent);
 }
 
 .prestige-points-label {
@@ -113,7 +113,7 @@
 .prestige-conduit-open .prestige-gate {
     border-color: var(--pt-gold);
     color: var(--pt-gold);
-    box-shadow: 0 0 14px rgba(245, 166, 35, 0.35);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--ui-accent, #f5a623) 35%, transparent);
 }
 
 .prestige-layer {
@@ -126,8 +126,8 @@
 
 /* glowing top edge when a layer is open */
 .prestige-layer-open {
-    border-color: rgba(245, 166, 35, 0.45);
-    box-shadow: 0 -2px 0 var(--pt-gold) inset, 0 0 26px rgba(245, 166, 35, 0.08);
+    border-color: color-mix(in srgb, var(--ui-accent, #f5a623) 45%, transparent);
+    box-shadow: 0 -2px 0 var(--pt-gold) inset, 0 0 26px color-mix(in srgb, var(--ui-accent, #f5a623) 8%, transparent);
 }
 
 
@@ -242,7 +242,7 @@
 /* Can buy right now */
 .prestige-node-available {
     border-color: var(--pt-gold);
-    box-shadow: 0 0 14px rgba(245, 166, 35, 0.4);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--ui-accent, #f5a623) 40%, transparent);
     animation: prestige-pulse 2.2s ease-in-out infinite;
 }
 
@@ -256,8 +256,8 @@
 }
 
 @keyframes prestige-pulse {
-    0%, 100% { box-shadow: 0 0 8px rgba(245, 166, 35, 0.3); }
-    50% { box-shadow: 0 0 20px rgba(245, 166, 35, 0.6); }
+    0%, 100% { box-shadow: 0 0 8px color-mix(in srgb, var(--ui-accent, #f5a623) 30%, transparent); }
+    50% { box-shadow: 0 0 20px color-mix(in srgb, var(--ui-accent, #f5a623) 60%, transparent); }
 }
 
 /* Layer is open but not enough points */
@@ -281,10 +281,10 @@
 
 /* Bought */
 .prestige-node-owned {
-    background: linear-gradient(160deg, #f7b53c 0%, #d98b0d 100%);
-    border-color: #ffd37a;
+    background: linear-gradient(160deg, color-mix(in srgb, var(--ui-accent, #f5a623) 85%, white) 0%, color-mix(in srgb, var(--ui-accent, #f5a623) 90%, black) 100%);
+    border-color: color-mix(in srgb, var(--ui-accent, #f5a623) 55%, white);
     color: #111111;
-    box-shadow: 0 0 18px rgba(245, 166, 35, 0.35);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--ui-accent, #f5a623) 35%, transparent);
 }
 
 .prestige-node-owned .prestige-node-desc {
@@ -427,7 +427,7 @@
     background: #000000;
     border: 2px solid var(--pt-gold);
     border-radius: 12px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px rgba(245, 166, 35, 0.3);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 18px color-mix(in srgb, var(--ui-accent, #f5a623) 30%, transparent);
     animation: prestige-pop-in 0.14s ease-out;
 }
 
@@ -505,13 +505,13 @@
     font-size: 0.92rem;
     font-family: 'Inter', sans-serif;
     cursor: var(--cursor-pointer, pointer);
-    box-shadow: 0 0 14px rgba(245, 166, 35, 0.45);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--ui-accent, #f5a623) 45%, transparent);
     transition: transform 0.12s, background 0.2s;
 }
 
 .prestige-buy-btn:hover {
     transform: scale(1.04);
-    background: #ffb83d;
+    background: color-mix(in srgb, var(--ui-accent, #f5a623) 75%, white);
 }
 
 .prestige-buy-btn-disabled {
@@ -539,15 +539,15 @@
     padding: 2px 8px;
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.6);
-    color: #f5a623;
-    border: 1px solid rgba(245, 166, 35, 0.6);
+    color: var(--ui-accent, #f5a623);
+    border: 1px solid color-mix(in srgb, var(--ui-accent, #f5a623) 60%, transparent);
     backdrop-filter: blur(3px);
 }
 
 .prestige-pop-soon {
     font-size: 0.78rem;
     line-height: 1.35;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
 }
 
 /* Early Retirement bar, confirm screen and run history */
@@ -558,7 +558,7 @@
     gap: 16px;
     padding: 10px 28px;
     background: rgba(0, 0, 0, 0.22);
-    border-bottom: 1px solid rgba(245, 166, 35, 0.18);
+    border-bottom: 1px solid color-mix(in srgb, var(--ui-accent, #f5a623) 18%, transparent);
     font-size: 0.82rem;
     color: var(--pt-muted);
 }
@@ -591,7 +591,7 @@
 .prestige-retire-btn.prestige-buy-btn-disabled {
     background: transparent;
     color: var(--pt-muted);
-    border-color: rgba(245, 166, 35, 0.3);
+    border-color: color-mix(in srgb, var(--ui-accent, #f5a623) 30%, transparent);
     cursor: not-allowed;
 }
 
@@ -619,7 +619,7 @@
     border: 2px solid var(--pt-gold);
     border-radius: 14px;
     padding: 20px 24px;
-    box-shadow: 0 0 30px rgba(245, 166, 35, 0.25);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--ui-accent, #f5a623) 25%, transparent);
     color: var(--pt-text);
     font-family: 'Inter', sans-serif;
 }
@@ -649,7 +649,7 @@
 .prestige-modal-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
 
 .prestige-runs { display: flex; flex-direction: column; font-size: 0.82rem; max-height: 50vh; overflow-y: auto; }
-.prestige-runs-row { display: grid; grid-template-columns: 0.5fr 0.6fr 0.7fr 1.6fr 1fr; gap: 8px; padding: 6px 4px; border-bottom: 1px solid rgba(245, 166, 35, 0.12); }
+.prestige-runs-row { display: grid; grid-template-columns: 0.5fr 0.6fr 0.7fr 1.6fr 1fr; gap: 8px; padding: 6px 4px; border-bottom: 1px solid color-mix(in srgb, var(--ui-accent, #f5a623) 12%, transparent); }
 .prestige-runs-head { color: var(--pt-muted); font-family: 'Courier New', monospace; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; position: sticky; top: 0; background: var(--pt-panel); }
 
 @media (max-width: 900px) {
@@ -668,7 +668,7 @@
     border: 2px solid var(--pt-gold);
     border-radius: 12px;
     padding: 10px 16px;
-    box-shadow: 0 0 18px rgba(245, 166, 35, 0.25);
+    box-shadow: 0 0 18px color-mix(in srgb, var(--ui-accent, #f5a623) 25%, transparent);
 }
 .prestige-reward-label { color: var(--pt-muted); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1.6px; font-family: 'Courier New', monospace; }
 .prestige-reward-value { color: var(--pt-gold); font-size: 2.4rem; font-weight: 800; line-height: 1.1; font-family: 'Courier New', monospace; }
@@ -681,7 +681,7 @@
 .prestige-reset-keep { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
 .prestige-reset-keep > div { border-radius: 10px; padding: 8px 12px; }
 .prestige-reset { background: rgba(231, 76, 60, 0.1); border: 1px solid rgba(231, 76, 60, 0.45); }
-.prestige-keep { background: rgba(245, 166, 35, 0.08); border: 1px solid rgba(245, 166, 35, 0.4); }
+.prestige-keep { background: color-mix(in srgb, var(--ui-accent, #f5a623) 8%, transparent); border: 1px solid color-mix(in srgb, var(--ui-accent, #f5a623) 40%, transparent); }
 .prestige-reset-keep h4 { margin: 0 0 4px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.4px; font-family: 'Courier New', monospace; }
 .prestige-reset h4 { color: #e74c3c; }
 .prestige-keep h4 { color: var(--pt-gold); }

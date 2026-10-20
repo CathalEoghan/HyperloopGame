@@ -1,7 +1,6 @@
 import { useState } from 'react'
-import { SHOP_CATEGORIES, SHOP_ITEMS } from '../data/shopCatalog.js'
-import { isOwned } from '../utils/cosmetics.js'
-import { fullVarsFor } from '../data/shopCatalog.js'
+import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor } from '../data/shopCatalog.js'
+import { isOwned, isBundleOwned, bundlePieces, bundlePrice } from '../utils/cosmetics.js'
 import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import './ShopModal.css'
@@ -39,18 +38,29 @@ function ThemePreview({ categoryId, item }) {
                     <div className="pv-gen-tabs"><span>Cities</span><span className="pv-gen-tab-on">Development</span><span>Progress</span></div>
                 </div>
             )}
+            {categoryId === 'cursorTheme' && (
+                <div className="pv-cursor" style={{ cursor: 'var(--cursor-pointer)' }}>Hover to try it</div>
+            )}
         </div>
     )
 }
+
+// Short chip labels for a bundle's pieces - SHOP_CATEGORIES' own names ("General themes") read fine as a tab but
+// are too long next to four others on one card, so a bundle piece gets a shorter one instead.
+const PIECE_LABELS = { generalTheme: 'General', boardTheme: 'Board', hyperLinkTheme: 'Hyper-Link', workSound: 'Work sound', cursorTheme: 'Cursor' }
+const BUNDLES_TAB = { id: 'bundles', name: 'Bundles', blurb: 'One item from every category, under a single theme - buy the pieces you don’t have yet for 20% off their combined price.' }
 
 // The Shop. It only shows things and reports clicks: App does the buying (it owns Reputation) and the equipping.
 //   cosmetics: { owned, equipped } as read by utils/cosmetics.js
 //   onBuy(category, item) -> true when it was bought (and equipped)
 //   onEquip(category, item)
-function ShopModal({ reputation, cosmetics, onBuy, onEquip, onClose }) {
+//   onBuyBundle(bundle) -> true when every not-yet-owned piece was bought (and all equipped)
+//   onEquipBundle(bundle)
+function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquipBundle, onClose }) {
     const [categoryId, setCategoryId] = useState(SHOP_CATEGORIES[0].id)
     const [shaking, setShaking] = useState(null)
-    const category = SHOP_CATEGORIES.find(c => c.id === categoryId)
+    const isBundlesTab = categoryId === 'bundles'
+    const category = isBundlesTab ? BUNDLES_TAB : SHOP_CATEGORIES.find(c => c.id === categoryId)
     const items = SHOP_ITEMS[categoryId] || []
     const equippedId = cosmetics.equipped[categoryId] && isOwned(cosmetics, categoryId, cosmetics.equipped[categoryId]) ? cosmetics.equipped[categoryId] : 'default'
 
@@ -58,6 +68,12 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onClose }) {
         if (onBuy(categoryId, item)) { playClickSound2(); return }
         playNotEnoughFundsSound()
         setShaking(item.id)
+        setTimeout(() => setShaking(null), 400)
+    }
+    const handleBundleBuy = (bundle) => {
+        if (onBuyBundle(bundle)) { playClickSound2(); return }
+        playNotEnoughFundsSound()
+        setShaking(bundle.id)
         setTimeout(() => setShaking(null), 400)
     }
 
@@ -71,7 +87,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onClose }) {
                 </div>
 
                 <div className="shop-tabs">
-                    {SHOP_CATEGORIES.map(c => (
+                    {[...SHOP_CATEGORIES, BUNDLES_TAB].map(c => (
                         <button key={c.id} className={`shop-tab${c.id === categoryId ? ' shop-tab-active' : ''}`}
                             onClick={() => { if (c.id !== categoryId) { playClickSound2(); setCategoryId(c.id) } }}
                             onMouseEnter={() => playHoverSound()}>{c.name}</button>
@@ -79,33 +95,91 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onClose }) {
                 </div>
                 <p className="shop-blurb">{category.blurb}</p>
 
-                <div className="shop-grid">
-                    {items.map(item => {
-                        const owned = isOwned(cosmetics, categoryId, item.id)
-                        const equipped = owned && equippedId === item.id
+                {isBundlesTab ? (
+                    <div className="shop-groups">
+                        <div className="shop-grid shop-bundle-grid">
+                            {SHOP_BUNDLES.map(bundle => {
+                                const owned = isBundleOwned(cosmetics, bundle)
+                                const locked = bundle.tier === 'premium' && !owned
+                                const price = bundlePrice(cosmetics, bundle)
+                                return (
+                                    <div key={bundle.id} className={`shop-item shop-bundle-card${locked ? ' shop-item-locked' : ''}${shaking === bundle.id ? ' shop-item-shake' : ''}`}>
+                                        <div className="shop-item-name">
+                                            {bundle.name}
+                                            <span className={`shop-bundle-badge shop-bundle-badge-${bundle.tier}`}>{bundle.tier === 'premium' ? 'Premium' : 'Special'}</span>
+                                            {locked && <span className="shop-item-lock" aria-hidden="true">🔒</span>}
+                                        </div>
+                                        <div className="shop-item-desc">{bundle.blurb}</div>
+                                        <div className="shop-bundle-pieces">
+                                            {bundlePieces(bundle).map(({ category: pc, id, item }) => (
+                                                <span key={pc} className={`shop-bundle-piece${isOwned(cosmetics, pc, id) ? ' shop-bundle-piece-owned' : ''}`}>
+                                                    {PIECE_LABELS[pc]}: {item.name}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <div className="shop-item-actions">
+                                            {locked ? (
+                                                <span className="shop-locked-note">Coming with the Supporter's Set</span>
+                                            ) : owned ? (
+                                                <button className="shop-btn" onClick={() => { playClickSound2(); onEquipBundle(bundle) }} onMouseEnter={() => playHoverSound()}>Equip all</button>
+                                            ) : (
+                                                <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} onClick={() => handleBundleBuy(bundle)} onMouseEnter={() => playHoverSound()}>
+                                                    <img src={reputationIcon} alt="" /> {price}
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    </div>
+                ) : (
+                <div className="shop-groups">
+                    {TIERS.map(tier => {
+                        const tierItems = items.filter(item => (item.tier || 'standard') === tier.id)
+                        if (tierItems.length === 0) return null
                         return (
-                            <div key={item.id} className={`shop-item${equipped ? ' shop-item-equipped' : ''}${shaking === item.id ? ' shop-item-shake' : ''}`}>
-                                <div className="shop-item-name">{item.name}</div>
-                                {item.vars && <ThemePreview categoryId={categoryId} item={item} />}
-                                {item.description && <div className="shop-item-desc">{item.description}</div>}
-                                <div className="shop-item-actions">
-                                    {item.src && (
-                                        <button className="shop-btn shop-btn-ghost" onClick={() => playPreviewSound(item.src)} onMouseEnter={() => playHoverSound()}>▶ Preview</button>
-                                    )}
-                                    {equipped ? (
-                                        <span className="shop-equipped">Equipped</span>
-                                    ) : owned ? (
-                                        <button className="shop-btn" onClick={() => { playClickSound2(); onEquip(categoryId, item) }} onMouseEnter={() => playHoverSound()}>Equip</button>
-                                    ) : (
-                                        <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} onClick={() => handleBuy(item)} onMouseEnter={() => playHoverSound()}>
-                                            <img src={reputationIcon} alt="" /> {item.cost}
-                                        </button>
-                                    )}
+                            <div key={tier.id} className="shop-tier-group">
+                                <div className={`shop-tier-heading shop-tier-heading-${tier.id}`}>{tier.name}</div>
+                                <div className="shop-grid">
+                                    {tierItems.map(item => {
+                                        const locked = tier.id === 'supporter' && !isOwned(cosmetics, categoryId, item.id)
+                                        const owned = isOwned(cosmetics, categoryId, item.id)
+                                        const equipped = owned && equippedId === item.id
+                                        return (
+                                            <div key={item.id} className={`shop-item${equipped ? ' shop-item-equipped' : ''}${locked ? ' shop-item-locked' : ''}${shaking === item.id ? ' shop-item-shake' : ''}`}>
+                                                <div className="shop-item-name">{item.name}{locked && <span className="shop-item-lock" aria-hidden="true">🔒</span>}</div>
+                                                {item.vars && <ThemePreview categoryId={categoryId} item={item} />}
+                                                {item.description && <div className="shop-item-desc">{item.description}</div>}
+                                                <div className="shop-item-actions">
+                                                    {locked ? (
+                                                        <span className="shop-locked-note">Coming with the Supporter's Set</span>
+                                                    ) : (
+                                                        <>
+                                                            {(item.src || item.srcs) && (
+                                                                <button className="shop-btn shop-btn-ghost" onClick={() => playPreviewSound(item.srcs || item.src)} onMouseEnter={() => playHoverSound()}>▶ Preview</button>
+                                                            )}
+                                                            {equipped ? (
+                                                                <span className="shop-equipped">Equipped</span>
+                                                            ) : owned ? (
+                                                                <button className="shop-btn" onClick={() => { playClickSound2(); onEquip(categoryId, item) }} onMouseEnter={() => playHoverSound()}>Equip</button>
+                                                            ) : (
+                                                                <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} onClick={() => handleBuy(item)} onMouseEnter={() => playHoverSound()}>
+                                                                    <img src={reputationIcon} alt="" /> {item.cost}
+                                                                </button>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
                                 </div>
                             </div>
                         )
                     })}
                 </div>
+                )}
             </div>
         </div>
     )

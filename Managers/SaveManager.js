@@ -233,6 +233,7 @@ function validateSave(save) {
     if (save.farewellsGiven !== undefined && !(Number.isFinite(save.farewellsGiven) && save.farewellsGiven >= 0)) return false
     if (save.greetingsGiven !== undefined && !(Number.isFinite(save.greetingsGiven) && save.greetingsGiven >= 0)) return false
     if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
+    if (save.cityLineLevels !== undefined && (save.cityLineLevels === null || typeof save.cityLineLevels !== 'object' || Array.isArray(save.cityLineLevels))) return false
     // No upper limit on balance or reputation: the game has none, so a long-running save must import (bug #114).
     // Custom development names must be text. Which developments they belong to isn't checked here: a development renamed
     // in an update has its old name in the save (mapped on load), and names for anything not built are dropped on load.
@@ -241,8 +242,10 @@ function validateSave(save) {
         if (names === null || typeof names !== 'object' || Array.isArray(names)) return false
         if (Object.values(names).some(value => typeof value !== 'string')) return false
     }
-    // Every development upgrade level must be a whole number from 0 to 3 (bug #82)
-    if (save.developmentUpgradeLevels && Object.values(save.developmentUpgradeLevels).some(v => !Number.isInteger(v) || v < 0 || v > 3)) return false
+    // Every development upgrade level, and every city line-upgrade level, must be a whole number from 0 to 10
+    // (bug #82; raised from a max of 3 when levels 4-10 were added)
+    if (save.developmentUpgradeLevels && Object.values(save.developmentUpgradeLevels).some(v => !Number.isInteger(v) || v < 0 || v > 10)) return false
+    if (save.cityLineLevels && Object.values(save.cityLineLevels).some(v => !Number.isInteger(v) || v < 0 || v > 10)) return false
     if (save.balance < 0) return false
     if (save.reputation < 0) return false
     if (save.rank < 1 || save.rank > MAX_RANK) return false
@@ -289,6 +292,7 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
         unlockedDevelopments: progressionManager.unlockedDevelopments.map(d => d.name),
         unlockedUpgrades: progressionManager.unlockedUpgrades.map(u => u.name),
         developmentUpgradeLevels: progressionManager.developmentUpgradeLevels,
+        cityLineLevels: progressionManager.cityLineLevels,
         developmentNames: progressionManager.developmentNames,
         citiesUnderConstruction: progressionManager.citiesUnderConstruction.map(c => ({
             name: c.name,
@@ -321,6 +325,11 @@ export function loadGame(progressionManager, rankManager) {
         if (save.developmentUpgradeLevels) {
             save.developmentUpgradeLevels = Object.fromEntries(
                 Object.entries(save.developmentUpgradeLevels).map(([name, level]) => [currentName(name), level])
+            )
+        }
+        if (save.cityLineLevels) {
+            save.cityLineLevels = Object.fromEntries(
+                Object.entries(save.cityLineLevels).map(([name, level]) => [currentName(name), level])
             )
         }
         if (save.developmentNames && typeof save.developmentNames === 'object' && !Array.isArray(save.developmentNames)) {
@@ -398,6 +407,7 @@ export function loadGame(progressionManager, rankManager) {
         })
 
         progressionManager.developmentUpgradeLevels = save.developmentUpgradeLevels || {}
+        progressionManager.cityLineLevels = save.cityLineLevels || {}
         progressionManager.greetingsGiven = Number.isFinite(save.greetingsGiven) && save.greetingsGiven >= 0 ? Math.floor(save.greetingsGiven) : 0
 
         // Custom names only count for developments that are built, and are cleaned the same way as when typed

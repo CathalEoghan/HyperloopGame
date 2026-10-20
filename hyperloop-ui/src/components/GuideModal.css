@@ -15,7 +15,7 @@
     font-size: 0.75rem;
     font-weight: bold;
     letter-spacing: 3px;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
     text-transform: uppercase;
     text-align: center;
     margin: 0 0 16px;
@@ -61,10 +61,10 @@
 }
 
 .guide-section:hover {
-    background: rgba(245, 166, 35, 0.1);
+    background: color-mix(in srgb, var(--ui-accent, #f5a623) 10%, transparent);
 }
 
 .closeButton:hover {
-    background: #f5a623 !important;
+    background: var(--ui-accent, #f5a623) !important;
     color: white !important;
 }

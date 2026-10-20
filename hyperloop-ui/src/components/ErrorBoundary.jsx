@@ -31,7 +31,7 @@ class ErrorBoundary extends Component {
     return (
       <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
         <div style={{ background: 'rgb(255, 239, 224)', border: '2px solid black', borderRadius: '12px', padding: '32px 24px', maxWidth: '400px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
-          <h2 style={{ fontFamily: 'Courier New, monospace', color: '#f5a623', margin: '0 0 12px' }}>Something went wrong</h2>
+          <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>Something went wrong</h2>
           <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
             {confirmReset
               ? 'This deletes your terminal and all progress on this browser. It can\'t be undone. Download your save first if you might want it back.'

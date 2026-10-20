@@ -62,16 +62,20 @@ function play(src) {
 const HOVER_MIN_GAP_MS = 90
 const HOVER_VOLUME = 0.5
 let hoverAudio = null
+let hoverAudioSrc = null
 let lastHoverAt = 0
 
-function playHover() {
+// src lets a caller (the Terminal Board, with a custom board theme) use a different hover tick. The default
+// hover sound is used when none is given, same as before.
+function playHover(src = hoverSound) {
     if (!canPlay()) return
     const now = performance.now()
     if (now - lastHoverAt < HOVER_MIN_GAP_MS) return
     lastHoverAt = now
-    if (!hoverAudio) {
-        hoverAudio = new Audio(hoverSound)
+    if (!hoverAudio || hoverAudioSrc !== src) {
+        hoverAudio = new Audio(src)
         hoverAudio.volume = HOVER_VOLUME
+        hoverAudioSrc = src
     }
     hoverAudio.currentTime = 0
     hoverAudio.play().catch(() => {})
@@ -79,10 +83,19 @@ function playHover() {
 
 export const playEventSound = () => play(eventSound)
 export const playDiceRollSound = () => play(diceRollSound)
-// The Work button's sound is whichever one is equipped in the Shop (the classic click by default)
-export function playWorkClickSound()            { play(getEquippedItem('workSound')?.src ?? workClickSound) }
-// Plays any sound file once (the Shop's Preview button)
-export function playPreviewSound(src)           { play(src) }
+// The Work button's sound is whichever one is equipped in the Shop (the classic click by default). A 'special'-tier
+// work sound can equip several samples (srcs) instead of one; this picks a different one at random each click.
+export function playWorkClickSound() {
+    const item = getEquippedItem('workSound')
+    if (item?.srcs?.length) { play(item.srcs[Math.floor(Math.random() * item.srcs.length)]); return }
+    play(item?.src ?? workClickSound)
+}
+// Plays any sound file once (the Shop's Preview button). Given an item with several samples, plays one at random.
+export function playPreviewSound(src)           { play(Array.isArray(src) ? src[Math.floor(Math.random() * src.length)] : src) }
+// The Terminal Board's own buttons (schedule, automate, the board tabs, Farewell, Delay) use these instead of the
+// generic click/hover, so an equipped board theme's own sounds (if it sets any) are heard there and nowhere else.
+export function playBoardClickSound()           { play(getEquippedItem('boardTheme')?.clickSource ?? click_sound_2) }
+export function playBoardHoverSound()           { playHover(getEquippedItem('boardTheme')?.hoverSound ?? hoverSound) }
 export function playConstructionSound()         { play(constructionSound) }
 export function playLeavingSound()              { play(leavingSound) }
 export function playFarewellAcceptSound()       { play(farewellAcceptSound) }

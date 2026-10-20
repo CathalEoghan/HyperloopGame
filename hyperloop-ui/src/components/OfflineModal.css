@@ -24,7 +24,7 @@
 
 .offline-earnings-box {
     background: #f8f8f8;
-    border: 2px solid #f5a623;
+    border: 2px solid var(--ui-accent, #f5a623);
     border-radius: 12px;
     padding: 16px 24px;
     display: flex;
@@ -44,7 +44,7 @@
 .offline-earnings-amount {
     font-size: 2rem;
     font-weight: bold;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
     font-family: 'Courier New', monospace;
     font-variant-numeric: tabular-nums;
 }

@@ -17,7 +17,7 @@
     font-size: 0.75rem;
     font-weight: bold;
     letter-spacing: 3px;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
     text-transform: uppercase;
     margin: 0 0 12px;
 }
@@ -70,7 +70,7 @@
     font-family: 'Courier New', monospace;
     font-size: 1.3rem;
     font-weight: bold;
-    color: #f5a623;
+    color: var(--ui-accent, #f5a623);
 }
 
 .daily-login-note {

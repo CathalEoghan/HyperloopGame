@@ -43,7 +43,7 @@ function formatTimestamp(ts) {
 function formatPostText(text) {
     return text.split(/(#\S+)/g).map((part, i) =>
         part.startsWith('#')
-            ? <span key={i} style={{ color: '#f5a623', fontWeight: 600 }}>{part}</span>
+            ? <span key={i} style={{ color: 'var(--hl-accent, #f5a623)', fontWeight: 600 }}>{part}</span>
             : part
     )
 }

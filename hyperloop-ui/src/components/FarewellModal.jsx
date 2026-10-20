@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
-import { playLeavingSound, playSpecialChime, playFarewellAcceptSound, playHoverSound } from '../utils/sound.js'
+import { playLeavingSound, playSpecialChime, playFarewellAcceptSound, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'

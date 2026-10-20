@@ -46,7 +46,7 @@
 }
 
 .modal button:hover {
-    background-color: #f5a623;
+    background-color: var(--ui-accent, #f5a623);
 }
 
 .reveal-heading {
