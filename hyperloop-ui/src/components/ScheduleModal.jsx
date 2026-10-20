@@ -29,8 +29,11 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
     const timetable = readTimetable().filter(e => purchasedCities.some(c => c.name === e.name))
     const open = unscheduledCities(purchasedCities, timetable).sort((x, y) => x.name.localeCompare(y.name))
     const [editing, setEditing] = useState(null)       // the city being moved, or null when adding
-    const [city, setCity] = useState(() => open[0]?.name || '')
+    const [cityPick, setCity] = useState(() => open[0]?.name || '')
     const [slot, setSlot] = useState(() => suggestSlot(timetable, open[0]?.name || ''))
+    // The city being added. When the one picked is no longer on offer (the form was hidden because every city was
+    // scheduled, then one was removed), the first city on offer is the one the form shows, so it is the one used.
+    const city = editing ? editing : (open.some(c => c.name === cityPick) ? cityPick : (open[0]?.name || ''))
     const [error, setError] = useState('')
     const [notice, setNotice] = useState('')
     void version

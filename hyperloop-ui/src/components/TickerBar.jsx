@@ -57,10 +57,13 @@ function TickerBar({ terminalName }) {
 
     const displayMessages = messages.length > 0 ? messages : idleMessages
     const text = displayMessages.join('     ✦     ') + '     ✦     '
+    // The text moves at the same speed however long it is: a busy timetable can have a dozen announcements at once,
+    // and squeezing them all into the usual 60 seconds made them race past too fast to read
+    const scrollSeconds = Math.max(60, Math.round(text.length * 0.16))
 
     return (
         <div className="ticker-bar">
-            <div className="ticker-inner">
+            <div className="ticker-inner" style={{ animationDuration: `${scrollSeconds}s` }}>
                 {text}
             </div>
         </div>

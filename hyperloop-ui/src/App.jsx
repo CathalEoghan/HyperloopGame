@@ -254,6 +254,9 @@ function App() {
     // Finish any builds that completed while the player was away, so they count towards
     // offline income instead of being treated as unbuilt for the whole absence (bug #85).
     constructionManager.update();
+    // A game from before cities needed a scheduled departure to earn gets its timetable filled in first, so its
+    // offline income isn't worked out from an empty timetable (only the home city earning)
+    autoScheduleExisting(progressionManager.purchasedCities);
     const savedCreatedAt = savedData?.createdAt || Date.now();
     const savedEvent = economyManager.activeEvent;
     economyManager.activeEvent = null;

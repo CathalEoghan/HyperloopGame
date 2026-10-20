@@ -36,8 +36,9 @@ export default function FirstLoopModal({ purchasedCities, onSchedule, onViewBoar
                 ) : (
                     <>
                         <p className="firstloop-text">
-                            No loops run until you schedule them. Pick a time and gate for its departure yourself,
-                            or automate it and the game picks for you, so passengers can start travelling.
+                            No loops run until you schedule them, and a city earns nothing until it has a departure.
+                            Pick a time and gate for it yourself, or automate it and the game picks for you, so
+                            passengers can start travelling.
                         </p>
                         <p className="firstloop-tip"><b>Tip:</b> be at the terminal when a loop departs to say farewell and earn Reputation.</p>
                         <div className="firstloop-actions">

@@ -492,6 +492,11 @@ export function importSave(file) {
                 if (auxState) {
                     removeKeys(AUX_KEYS)
                     restoreAuxState(auxState)
+                } else {
+                    // The departure timetable always belongs to the game it was made for: the current one's would
+                    // leave the imported game's cities off it, earning nothing. Without it, the imported cities are
+                    // all put on a fresh timetable when the game starts.
+                    removeKeys(['hyperloop_timetable', 'hyperloop_timetable_autofilled', 'hyperloop_first_loop_prompt'])
                 }
 
                 resolve()

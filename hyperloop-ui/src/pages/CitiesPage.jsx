@@ -59,12 +59,17 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     )
     const connectedAndBuilding = [...purchased, ...underConstruction]
 
-    // Each city's income (what it earns now: nothing while it is off the timetable) is worked out once per render and reused. Sorting by income used to
+    // Each city's income is worked out once per render and reused. Sorting by income used to
     // recalculate it inside every comparison, which froze the page every second in a late
-    // game (bug #90).
+    // game (bug #90). A connected city counts what it earns now (nothing while it is off the timetable); a city that
+    // isn't connected yet, or is still being built, counts what it would earn, so the income sorts still mean something.
+    const connectedNames = new Set(purchasedCities.map(c => c.name))
     const incomeCache = new Map()
     const cityIncome = (city) => {
-        if (!incomeCache.has(city)) incomeCache.set(city, economyManager.withFoundersHall(economyManager.calculateCityEarning(city)))
+        if (!incomeCache.has(city)) {
+            const amount = connectedNames.has(city.name) ? economyManager.calculateCityEarning(city) : economyManager.calculateCityIncome(city)
+            incomeCache.set(city, economyManager.withFoundersHall(amount))
+        }
         return incomeCache.get(city)
     }
 
