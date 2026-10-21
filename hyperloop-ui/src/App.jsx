@@ -58,12 +58,11 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, distanceMiles } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
-import openingAudio from './assets/sounds/openingAudio.mp3'
 import monitorIcon from './assets/misc/monitor.png'
 import "./App.css";
 
@@ -1418,7 +1417,7 @@ function App() {
       city={pickedCity}
       isComplete={progressionManager.purchasedCities.length > 0}
       onEnter={() => {
-        if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => { })
+        playOpeningAudio()
         setConstructionReady(true)
         setShowOnboarding(!runStart)
       }}

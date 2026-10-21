@@ -81,9 +81,15 @@ import kitty2 from '../assets/work-click-sounds/kitty2.mp3'
 import kitty3 from '../assets/work-click-sounds/kitty3.mp3'
 import kitty4 from '../assets/work-click-sounds/kitty4.mp3'
 import kitty5 from '../assets/work-click-sounds/kitty5.mp3'
+import classicOpeningAudio from '../assets/sounds/openingAudio.mp3'
+import kittyOpening from '../assets/opening-intros/kitty.mp3'
+import fairyOpening from '../assets/opening-intros/fairy.mp3'
+import poltergeistOpening from '../assets/opening-intros/poltergeist.mp3'
+import pirateOpening from '../assets/opening-intros/pirate.mp3'
 
 export const SHOP_CATEGORIES = [
     { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
+    { id: 'openingAudio', name: 'Opening audios', blurb: "The sound that plays when you step into the terminal." },
     { id: 'boardTheme', name: 'Board themes', blurb: 'The look (and, for some, the sound) of the Terminal Board.' },
     { id: 'hyperLinkTheme', name: 'Hyper-Link themes', blurb: 'The look of the Hyper-Link phone.' },
     { id: 'generalTheme', name: 'General themes', blurb: 'The top and bottom bars, ticker, Work button and route colours.' },
@@ -167,6 +173,10 @@ const boardTheme = (id, name, cost, props = {}, description = '', tier = 'standa
 const workSound = (id, name, cost, fileOrFiles, description = '', tier = 'standard') =>
     ({ id, name, description, cost, tier, ...(Array.isArray(fileOrFiles) ? { srcs: fileOrFiles } : { src: fileOrFiles }) })
 
+// Same shape as workSound (one file, or several to pick a different one from) - reused for Opening audios, the
+// sound that plays when you first click through the loading screen and when you finish building your first city.
+const openingSound = workSound
+
 // Builds a complete cursor set (default/pointer/grab/grabbing) by recolouring the same shapes the Ocean cursor
 // above uses - give it five hex colours and get a full, working cursor theme with no SVG-writing. Every
 // bundle's cursor piece below is built this way: a real recolour to start from, not a redrawn shape. Swap in a
@@ -207,6 +217,16 @@ export const SHOP_ITEMS = {
         workSound('buccaneer', 'Buccaneer click', 25, workClickSound, 'TEMPLATE - swap for a real "arr"/parrot sample. Part of the Buccaneer bundle.'),
         workSound('princess', 'Princess click', 25, clickSound2, 'TEMPLATE - swap for a real sparkle/harp sample. Part of the Princess bundle.'),
         workSound('jazz', 'Jazz click', 25, clickSound3, 'TEMPLATE - swap for a real saxophone-note sample. Part of the Jazz bundle.'),
+    ],
+    openingAudio: [
+        openingSound('default', 'Classic arrival', 0, classicOpeningAudio, 'The original.'),
+
+        // One opening audio per themed bundle, same as the work-click sounds above - added as the real
+        // recordings come in, so there's no placeholder list to keep in sync here.
+        openingSound('kitty', 'Kitty arrival', 25, kittyOpening, 'Part of the Kitty bundle.'),
+        openingSound('fairy', 'Fairy arrival', 25, fairyOpening, 'Part of the Fairy bundle.'),
+        openingSound('poltergeist', 'Poltergeist arrival', 25, poltergeistOpening, 'Part of the Poltergeist bundle.'),
+        openingSound('pirate', 'Pirate arrival', 25, pirateOpening, 'Part of the Buccaneer bundle.'),
     ],
 
     boardTheme: [

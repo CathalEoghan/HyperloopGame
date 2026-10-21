@@ -113,7 +113,13 @@ export function playRankUpSound()               { play(rankUpSound) }
 export function playHoverSound()                { playHover() }
 export function playReputationWorkBonusSound()  { play(reputationWorkBonus) }
 export function playBottomNavbarHoverSound()    { play(bottomNavbarHover) }
-export function playOpeningAudio()              { play(openingAudio) }
+// The sound that plays the two times you "arrive": clicking through the loading screen, and finishing
+// construction on your first city. Whichever one is equipped in the Shop's Opening audios (the classic chime
+// by default).
+export function playOpeningAudio() {
+    const item = getEquippedItem('openingAudio')
+    play(item?.src ?? openingAudio)
+}
 export function playAutomatedScheduleSound()    { play(automatedScheduleSound) }
 export function playDevelopmentUnlockedSound()  { play(developmentUnlocked) }
 export function playDailyLoginSound()           { play(dailyLoginSound) }

@@ -22,6 +22,11 @@ import hoverSound from '../assets/sounds/hoverSound.mp3'
 import reputationWorkBonus from '../assets/sounds/reputationBonusWork.mp3'
 import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
 import openingAudio from '../assets/sounds/openingAudio.mp3'
+import kittyOpening from '../assets/opening-intros/kitty.mp3'
+import fairyOpening from '../assets/opening-intros/fairy.mp3'
+import poltergeistOpening from '../assets/opening-intros/poltergeist.mp3'
+import pirateOpening from '../assets/opening-intros/pirate.mp3'
+import { playOpeningAudio } from '../utils/sound.js'
 import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
@@ -34,7 +39,9 @@ const SOUNDS = [
     click_sound_2, click_sound_3, rankUpSound, leavingSound,
     farewellAcceptSound, constructionSound,
     workClickSound, hoverSound, reputationWorkBonus, bottomNavbarHover,
-    openingAudio,
+    // All the Opening audio options, not just the equipped one, so whichever one plays on Enter is already warm
+    // regardless of what's equipped (this component doesn't know the equipped choice - playOpeningAudio() does).
+    openingAudio, kittyOpening, fairyOpening, poltergeistOpening, pirateOpening,
 ]
 
 const TIPS = [
@@ -135,7 +142,7 @@ function LoadingScreen({ onComplete }) {
     const handleEnter = () => {
         if (!ready || enteredRef.current) return
         enteredRef.current = true
-        if (localStorage.getItem('soundEnabled') !== 'false') new Audio(openingAudio).play().catch(() => {})
+        playOpeningAudio()
         setFading(true)
         setTimeout(onComplete, 600)
     }
