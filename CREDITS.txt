@@ -740,6 +740,12 @@ Matheus Bertelli, karolina vnuk, Sydney Sang, Zehra Gör, Nadin Romanova, Mohit 
 iddea photo, Kateryna Naidenko, Lisa Fotios, Vikesh zen, Анастасія, Alexsandra_zh, Milada Vigerova, Rina Islam, Wavy.revolution, Abiola Femi,
 kovac .soul, Hoài Nam, Los Muertos Crew, Maria Lourdes Peyregne, Suzy Hazelwood, Alina Skazka,
 
+THEME PICTURES
+kitty.jpg - Photo by Pixabay via Pexels
+starlight.jpg - Photo by Rafael Cerqueira via Pexels
+playtime.jpg - Photo by Cup of Couple via Pexels
+
+
 
 
 SOUNDS
@@ -901,3 +907,9 @@ fairy.mp3 - The_Mountain (Pixabay Content License)
 kitty.mp3 - GoldenSoundLabs (Pixabay Content License)
 poltergeist.mp3 - Hot Dope (Pixabay Content License)
 pirate.mp3 - Ebunny (Pixabay Content License)
+jazz.mp3 - MFCC (Pixabay Content License)
+princess.mp3 - TheoJT (Pixabay Content License)
+starlight.mp3 - The Mountain (Pixabay Content License)
+duck.mp3 - PaoloArgento.mp3 (Pixabay Content License)
+
+
