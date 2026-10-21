@@ -28,6 +28,9 @@ import poltergeistOpening from '../assets/opening-intros/poltergeist.mp3'
 import pirateOpening from '../assets/opening-intros/pirate.mp3'
 import princessOpening from '../assets/opening-intros/princess.mp3'
 import jazzOpening from '../assets/opening-intros/jazz.mp3'
+import playroomOpening from '../assets/opening-intros/playtime.mp3'
+import starlightOpening from '../assets/opening-intros/starlight.mp3'
+import duckOpening from '../assets/opening-intros/duck.mp3'
 import { playOpeningAudio } from '../utils/sound.js'
 import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
@@ -44,6 +47,7 @@ const SOUNDS = [
     // All the Opening audio options, not just the equipped one, so whichever one plays on Enter is already warm
     // regardless of what's equipped (this component doesn't know the equipped choice - playOpeningAudio() does).
     openingAudio, kittyOpening, fairyOpening, poltergeistOpening, pirateOpening, princessOpening, jazzOpening,
+    playroomOpening, starlightOpening, duckOpening,
 ]
 
 const TIPS = [

@@ -96,6 +96,9 @@ import poltergeistOpening from '../assets/opening-intros/poltergeist.mp3'
 import pirateOpening from '../assets/opening-intros/pirate.mp3'
 import princessOpening from '../assets/opening-intros/princess.mp3'
 import jazzOpening from '../assets/opening-intros/jazz.mp3'
+import playroomOpening from '../assets/opening-intros/playtime.mp3'
+import starlightOpening from '../assets/opening-intros/starlight.mp3'
+import duckOpening from '../assets/opening-intros/duck.mp3'
 
 export const SHOP_CATEGORIES = [
     { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
@@ -239,6 +242,11 @@ export const SHOP_ITEMS = {
         openingSound('pirate', 'Pirate arrival', 25, pirateOpening, 'Part of the Buccaneer bundle.'),
         openingSound('princess', 'Princess arrival', 25, princessOpening, 'Part of the Princess bundle.'),
         openingSound('jazz', 'Jazz arrival', 25, jazzOpening, 'Part of the Jazz bundle.'),
+        openingSound('playroom', 'Playroom arrival', 25, playroomOpening, 'Part of the Playroom bundle.'),
+        openingSound('starlight', 'Starlight arrival', 25, starlightOpening, 'Part of the Starlight bundle.'),
+        // No 'duck' bundle exists yet (it's still just this one piece) - a plain description until the rest
+        // of the theme is built, same as the other categories' TEMPLATE placeholders above.
+        openingSound('duck', 'Duck arrival', 25, duckOpening, 'A quack to start your shift.'),
     ],
 
     boardTheme: [
