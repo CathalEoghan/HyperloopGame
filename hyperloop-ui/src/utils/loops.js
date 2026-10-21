@@ -11,6 +11,7 @@ import cityCoordinates from '../data/cityCoordinates.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import { skipMissingMinutes, isRealMinute } from './time.js'
 import { getPassengerCount } from '../../../Managers/EconomyManager/capacityCurve.js'
+import { DEPARTURE_FOOTFALL_HOURS, ARRIVAL_FOOTFALL_MINUTES } from '../../../Managers/EconomyManager/EconomyManager.js'
 
 export const LOOP_MPH_MIN = 700
 export const LOOP_MPH_MAX = 760
@@ -308,10 +309,9 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
     return loops.sort((a, b) => a.endTs - b.endTs)
 }
 
-// How long before a departure, and after an arrival, its passengers are physically standing in the terminal
-// (not sealed in a pod mid-flight, where they can't shop) - see getTerminalFootfallCount.
-export const DEPARTURE_FOOTFALL_HOURS = 3
-export const ARRIVAL_FOOTFALL_MINUTES = 60
+// DEPARTURE_FOOTFALL_HOURS and ARRIVAL_FOOTFALL_MINUTES (imported above) live in EconomyManager.js, since
+// getDevelopmentBusyExplanation spells them out in the busy-status tooltip - this keeps one source of truth
+// instead of two copies that could drift apart.
 
 // How many loops are putting people in the home terminal right now, for the development busy bonus, split by
 // which side of the board they're on - so the UI can explain the number (e.g. "2 loops nearing departure, 1 just

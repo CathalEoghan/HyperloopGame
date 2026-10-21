@@ -6,6 +6,13 @@ import { allCities } from '../../CityManager/CityRegistry.js';
 import { DEV_REMOVE_REP_COST } from '../ProgressionManager/ProgressionManager.js';
 import { getCapacityMultiplier, getCapacityPercent, getTierCapacity, getDemandBand } from './capacityCurve.js';
 
+// How long before a departure, and after an arrival, its passengers are physically standing in the terminal
+// (not sealed in a pod mid-flight, where they can't shop) - shared with the UI's footfall count
+// (see hyperloop-ui/src/utils/loops.js, which imports these) and spelled out in getDevelopmentBusyExplanation
+// below so the player can learn the rule rather than just seeing a bare count.
+export const DEPARTURE_FOOTFALL_HOURS = 3;
+export const ARRIVAL_FOOTFALL_MINUTES = 60;
+
 // Cached against the raw stored string: income maths asks for this once per city, every second
 let achievementCache = { raw: undefined, n: 0 };
 
@@ -277,11 +284,15 @@ export class EconomyManager {
     }
 
     // The plain-English reason behind the busy%, for a tooltip on the status itself: how many loops in the
-    // departures/arrivals breakdown (see boardLoopBreakdown, set by setBoardLoopCount) are actually contributing.
+    // departures/arrivals breakdown (see boardLoopBreakdown, set by setBoardLoopCount) are actually contributing,
+    // with the footfall windows spelled out so the player can learn the rule, not just see a number.
     getDevelopmentBusyExplanation() {
         const { departures: dep, arrivals: arr } = this.boardLoopBreakdown;
-        return `${dep} loop${dep === 1 ? '' : 's'} ${dep === 1 ? 'is' : 'are'} nearing departure, `
-            + `${arr} loop${arr === 1 ? '' : 's'} ${arr === 1 ? 'has' : 'have'} just arrived.`;
+        // "in the last hour" reads better than "(within 60m)" for the common case; anything else falls
+        // back to minutes so this still makes sense if ARRIVAL_FOOTFALL_MINUTES is ever tuned.
+        const arrivalWindow = ARRIVAL_FOOTFALL_MINUTES === 60 ? 'in the last hour' : `within ${ARRIVAL_FOOTFALL_MINUTES}m`;
+        return `${dep} loop${dep === 1 ? '' : 's'} ${dep === 1 ? 'is' : 'are'} nearing departure (within ${DEPARTURE_FOOTFALL_HOURS}h), `
+            + `${arr} loop${arr === 1 ? '' : 's'} ${arr === 1 ? 'has' : 'have'} just arrived (${arrivalWindow}).`;
     }
 
     // The four-band read-out shown on the Development page and in each development's tooltip.
