@@ -94,6 +94,8 @@ import kittyOpening from '../assets/opening-intros/kitty.mp3'
 import fairyOpening from '../assets/opening-intros/fairy.mp3'
 import poltergeistOpening from '../assets/opening-intros/poltergeist.mp3'
 import pirateOpening from '../assets/opening-intros/pirate.mp3'
+import princessOpening from '../assets/opening-intros/princess.mp3'
+import jazzOpening from '../assets/opening-intros/jazz.mp3'
 
 export const SHOP_CATEGORIES = [
     { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
@@ -235,6 +237,8 @@ export const SHOP_ITEMS = {
         openingSound('fairy', 'Fairy arrival', 25, fairyOpening, 'Part of the Fairy bundle.'),
         openingSound('poltergeist', 'Poltergeist arrival', 25, poltergeistOpening, 'Part of the Poltergeist bundle.'),
         openingSound('pirate', 'Pirate arrival', 25, pirateOpening, 'Part of the Buccaneer bundle.'),
+        openingSound('princess', 'Princess arrival', 25, princessOpening, 'Part of the Princess bundle.'),
+        openingSound('jazz', 'Jazz arrival', 25, jazzOpening, 'Part of the Jazz bundle.'),
     ],
 
     boardTheme: [

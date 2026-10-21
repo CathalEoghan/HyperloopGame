@@ -26,6 +26,8 @@ import kittyOpening from '../assets/opening-intros/kitty.mp3'
 import fairyOpening from '../assets/opening-intros/fairy.mp3'
 import poltergeistOpening from '../assets/opening-intros/poltergeist.mp3'
 import pirateOpening from '../assets/opening-intros/pirate.mp3'
+import princessOpening from '../assets/opening-intros/princess.mp3'
+import jazzOpening from '../assets/opening-intros/jazz.mp3'
 import { playOpeningAudio } from '../utils/sound.js'
 import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
@@ -41,7 +43,7 @@ const SOUNDS = [
     workClickSound, hoverSound, reputationWorkBonus, bottomNavbarHover,
     // All the Opening audio options, not just the equipped one, so whichever one plays on Enter is already warm
     // regardless of what's equipped (this component doesn't know the equipped choice - playOpeningAudio() does).
-    openingAudio, kittyOpening, fairyOpening, poltergeistOpening, pirateOpening,
+    openingAudio, kittyOpening, fairyOpening, poltergeistOpening, pirateOpening, princessOpening, jazzOpening,
 ]
 
 const TIPS = [
