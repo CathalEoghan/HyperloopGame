@@ -81,6 +81,14 @@ import kitty2 from '../assets/work-click-sounds/kitty2.mp3'
 import kitty3 from '../assets/work-click-sounds/kitty3.mp3'
 import kitty4 from '../assets/work-click-sounds/kitty4.mp3'
 import kitty5 from '../assets/work-click-sounds/kitty5.mp3'
+import fairy1 from '../assets/work-click-sounds/fairy1.mp3'
+import fairy2 from '../assets/work-click-sounds/fairy2.mp3'
+import fairy3 from '../assets/work-click-sounds/fairy3.mp3'
+import fairy4 from '../assets/work-click-sounds/fairy4.mp3'
+import pirate1 from '../assets/work-click-sounds/pirate1.mp3'
+import pirate2 from '../assets/work-click-sounds/pirate2.mp3'
+import pirate3 from '../assets/work-click-sounds/pirate3.mp3'
+import pirate4 from '../assets/work-click-sounds/pirate4.mp3'
 import classicOpeningAudio from '../assets/sounds/openingAudio.mp3'
 import kittyOpening from '../assets/opening-intros/kitty.mp3'
 import fairyOpening from '../assets/opening-intros/fairy.mp3'
@@ -210,11 +218,11 @@ export const SHOP_ITEMS = {
         // ── Bundle template pieces (see "ADDING A BUNDLE" above) - reused existing samples as stand-ins. Swap
         // each src for a real themed sample (a meow, a chime, a parrot squawk...) whenever you get to it.
         workSound('kitty', 'Kitty click', 25, [kitty1, kitty2, kitty3, kitty4, kitty5], 'A meow, a purr, a curious chirp - a different kitty sound every click. Part of the Kitty bundle.'),
-        workSound('fairy', 'Fairy click', 25, clickSound3, 'TEMPLATE - swap for a real chime/sparkle sample. Part of the Fairy bundle.'),
+        workSound('fairy', 'Fairy click', 25, [fairy1, fairy2, fairy3, fairy4], 'A chime, a sparkle, a tiny giggle - a different fairy sound every click. Part of the Fairy bundle.'),
         workSound('poltergeist', 'Poltergeist click', 25, [poltergeist1, poltergeist2, poltergeist3, poltergeist4, poltergeist5], 'A creak, a whisper, a rattling chain - a different ghostly sound every click. Part of the Poltergeist bundle.'),
         workSound('playroom', 'Playroom click', 25, clickSound2, 'TEMPLATE - swap for a real xylophone-note sample. Part of the Playroom bundle.'),
         workSound('starlight', 'Starlight click', 25, clickSound3, 'TEMPLATE - swap for a real sci-fi blip sample. Part of the Starlight bundle.'),
-        workSound('buccaneer', 'Buccaneer click', 25, workClickSound, 'TEMPLATE - swap for a real "arr"/parrot sample. Part of the Buccaneer bundle.'),
+        workSound('buccaneer', 'Buccaneer click', 25, [pirate1, pirate2, pirate3, pirate4], 'A creaking plank, a parrot squawk, a distant "arr" - a different pirate sound every click. Part of the Buccaneer bundle.'),
         workSound('princess', 'Princess click', 25, clickSound2, 'TEMPLATE - swap for a real sparkle/harp sample. Part of the Princess bundle.'),
         workSound('jazz', 'Jazz click', 25, clickSound3, 'TEMPLATE - swap for a real saxophone-note sample. Part of the Jazz bundle.'),
     ],
