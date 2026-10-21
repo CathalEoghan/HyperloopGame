@@ -1226,9 +1226,9 @@ function App() {
         const noNegatives = PrestigeManager.owns('crisisAvoidanceSpecialists');
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
         let event = getRandomEvent(positiveOnly);
-        // Pizza Parties: positive events are +200% stronger (the effect is tripled)
+        // Pizza Parties: positive events are twice as strong (the bonus above baseline is doubled)
         const pizza = PrestigeManager.owns('pizzaParties') && event.type === 'positive';
-        if (pizza && event.effect) event = { ...event, effect: { ...event.effect, multiplier: 1 + (event.effect.multiplier - 1) * 3 } };
+        if (pizza && event.effect) event = { ...event, effect: { ...event.effect, multiplier: 1 + (event.effect.multiplier - 1) * PRESTIGE_VALUES.pizzaParties } };
 
         const skipEvent = event.type === 'negative' && (noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('negativeEventReduction')));
         if (!skipEvent) {
@@ -1238,7 +1238,7 @@ function App() {
           const durationSeconds = Math.floor(event.duration() * bonusExtension);
 
           if (event.effectType === 'instantCash') {
-            const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? 3 : 1);
+            const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
             progressionManager.addCash(bonus);
             const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
             activeEventRef.current = fullEvent;

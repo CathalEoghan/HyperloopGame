@@ -30,6 +30,7 @@ export const PRESTIGE_VALUES = {
     streamingMasteryFactor: 2,         // Streaming Mastery: the bonus is doubled ...
     streamingMasteryEvery: 50,         // ... and paid every this many clicks instead
     signOnBonus: 1000000,              // Sign-On Bonus: extra cash at the start of every new run
+    pizzaParties: 2,                   // x2 positive event strength
 }
 const mult = v => `x${v}`
 const pct = v => `${Math.round(v * 100)}%`
@@ -59,7 +60,7 @@ export const PRESTIGE_UPGRADES = [
     // Layer 3
     { id: 'automatedScheduling', icon: '🗓️', layer: 3, name: 'Skeleton Staff', description: 'No cap on offline earnings.' },
     { id: 'trophyCabinet', icon: '🏆', layer: 3, name: 'Trophy Cabinet', description: `City and development income multiplied by an extra ${pct(V.trophyCabinetPerAchievement)} for each unique achievement unlocked (x${1 + 50 * V.trophyCabinetPerAchievement} at 50).` },
-    { id: 'pizzaParties', icon: '🍕', layer: 3, name: 'Pizza Parties', description: 'Positive events are +200% stronger.' },
+    { id: 'pizzaParties', icon: '🍕', layer: 3, name: 'Pizza Parties', description: 'Positive events are twice as strong.' },
     { id: 'irresistibleDiscounts', icon: '🏷️', layer: 3, name: 'Irresistible Discounts', description: `${mult(V.irresistibleDiscounts)} development income.` },
     { id: 'bulletproofPlanning', icon: '🛡️', layer: 3, name: 'Bulletproof Planning', description: 'No more delays, ever.' },
     { id: 'foundersHallExpansion', icon: '🏛️', layer: 3, name: 'Founders\' Hall Expansion', description: '+1% extra from the Founders\' Hall bonus.' },
