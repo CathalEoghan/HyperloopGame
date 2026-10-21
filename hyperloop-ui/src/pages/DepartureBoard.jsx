@@ -6,6 +6,8 @@ import { minutesUntilDeparture } from '../utils/time.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
 import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable } from '../utils/timetable.js'
 import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus, farewellWindowMinutes } from '../utils/loops.js'
+import { AUTOMATE_SCHEDULE_REP_COST } from 'Managers/ProgressionManager/ProgressionManager.js'
+import reputationIcon from '../assets/misc/reputation.png'
 
 const TAB_KEY = 'terminalBoardTab'
 
@@ -63,7 +65,7 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
     )
 })
 
-function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openScheduleOnMount = false, onAutomated = () => {}, onClose }) {
+function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openScheduleOnMount = false, reputation = 0, progressionManager = null, onSave = () => {}, onAutomated = () => {}, onClose }) {
     // How long an arrival stays lit as ARRIVED on the board — matches how long its greeting window actually
     // stays open, rather than assuming every farewell-window upgrade is owned (bug #183)
     const litMinutes = farewellWindowMinutes(purchasedUpgrades)
@@ -160,17 +162,29 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
         setScheduledCount(countScheduled())
     }
 
+    // The real Reputation, not the prop, which can be a second old (bug #170) - matches the convention the rest of
+    // the game uses for every other spend.
+    const canAffordAutomate = () => !progressionManager || progressionManager.reputation >= AUTOMATE_SCHEDULE_REP_COST
+
     const automate = () => {
         // Nothing to automate: the button is greyed out, and says so with the "not enough" sound
         if (purchasedCities.length > 1 && scheduledCount >= purchasedCities.length - 1) { playNotEnoughFundsSound(); return }
+        if (!canAffordAutomate()) { playNotEnoughFundsSound(); return }
         playAutomatedScheduleSound()
         const waiting = unscheduledCities(purchasedCities).length
         const { added, skipped } = automateTimetable(purchasedCities)
         afterScheduleChange()
-        if (added.length > 0) onAutomated()
+        let costNote = ''
+        if (added.length > 0) {
+            // Only actually scheduling something costs Reputation - a click that does nothing isn't charged for.
+            progressionManager?.addReputation(-AUTOMATE_SCHEDULE_REP_COST)
+            onSave()
+            onAutomated()
+            costNote = ` (−${AUTOMATE_SCHEDULE_REP_COST} Reputation)`
+        }
         if (waiting === 0) setNotice('Every city already has a departure.')
         else if (added.length === 0) setNotice('There was no room left on the timetable.')
-        else setNotice(`Scheduled ${added.length} loop${added.length === 1 ? '' : 's'}.${skipped > 0 ? ` ${skipped} could not be fitted in.` : ''}`)
+        else setNotice(`Scheduled ${added.length} loop${added.length === 1 ? '' : 's'}.${skipped > 0 ? ` ${skipped} could not be fitted in.` : ''}${costNote}`)
     }
 
     useEffect(() => {
@@ -294,18 +308,34 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
                             >{label}{id === 'departures' && nothingScheduled && <span className="board-tab-dot" title="Nothing is scheduled for departure" />}</button>
                         ))}
                     </div>
-                    {canSchedule && !isArrivals && (
-                        <div className="board-actions">
-                            <button className="board-action" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowSchedule(true) }}>SCHEDULE LOOP</button>
-                            <button
-                                className="board-action"
-                                aria-disabled={everyCityScheduled}
-                                title={everyCityScheduled ? 'Every city already has a departure' : undefined}
-                                onMouseEnter={() => { if (!everyCityScheduled) playHoverSound() }}
-                                onClick={automate}
-                            >AUTOMATE SCHEDULE</button>
-                        </div>
-                    )}
+                    {canSchedule && !isArrivals && (() => {
+                        const tooPoor = reputation < AUTOMATE_SCHEDULE_REP_COST
+                        const automateDisabled = everyCityScheduled || tooPoor
+                        const automateTitle = everyCityScheduled
+                            ? 'Every city already has a departure'
+                            : tooPoor
+                                ? `Costs ${AUTOMATE_SCHEDULE_REP_COST} Reputation - not enough`
+                                : `Costs ${AUTOMATE_SCHEDULE_REP_COST} Reputation`
+                        return (
+                            <div className="board-actions">
+                                <button className="board-action" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowSchedule(true) }}>SCHEDULE LOOP</button>
+                                <button
+                                    className="board-action"
+                                    aria-disabled={automateDisabled}
+                                    title={automateTitle}
+                                    onMouseEnter={() => { if (!automateDisabled) playHoverSound() }}
+                                    onClick={automate}
+                                >
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                                        AUTOMATE SCHEDULE
+                                        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px', fontSize: '0.78rem', opacity: 0.85 }}>
+                                            (<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', border: 'none', verticalAlign: 'middle' }} />{AUTOMATE_SCHEDULE_REP_COST})
+                                        </span>
+                                    </span>
+                                </button>
+                            </div>
+                        )
+                    })()}
                   </div>
                     {canSchedule && (isArrivals ? (
                         <div className="board-sched-status">Arrival times are handled by other terminals automatically</div>

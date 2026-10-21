@@ -160,7 +160,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const renderCityCard = (city, isAvailable = false, showFlag = false) => {
         const isUnderConstruction = underConstruction.some(c => c.name === city.name)
         const dailyIncome = cityIncome(city)
-        const offTimetable = !isUnderConstruction && !isAvailable && !economyManager.isCityEarning(city)
+        const isHome = !isUnderConstruction && !isAvailable && economyManager.isHomeCity(city)
+        const offTimetable = !isUnderConstruction && !isAvailable && !isHome && !economyManager.isCityEarning(city)
         const lineLevel = constructionManager.progressionManager.getCityLineLevel(city)
         return (
             <button
@@ -185,9 +186,11 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         </div>
                     )}
                     {!isUnderConstruction && !isAvailable && (
-                        <div className={`city-income-strip${offTimetable ? ' city-income-strip-off' : ''}`}
-                            title={offTimetable ? 'Not on the timetable: it earns nothing until it has a scheduled departure' : undefined}>
-                            <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle', marginBottom: '1px' }} />{formatPerHour(dailyIncome)}/hr{offTimetable ? ' · off timetable' : ''}
+                        <div className={`city-income-strip${(offTimetable || isHome) ? ' city-income-strip-off' : ''}`}
+                            title={isHome ? 'Your home terminal: it earns no income of its own' : offTimetable ? 'Not on the timetable: it earns nothing until it has a scheduled departure' : undefined}>
+                            {isHome
+                                ? 'HOME TERMINAL'
+                                : <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle', marginBottom: '1px' }} />{formatPerHour(dailyIncome)}/hr{offTimetable ? ' · off timetable' : ''}</>}
                         </div>
                     )}
                 </div>
@@ -335,31 +338,45 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         const { lines, totalBoost } = economyManager.getCityBoostBreakdown(selectedCity, coordsMap)
                                         const boostPct = Math.round(totalBoost * 100)
                                         const baseIncome = economyManager.getCityBaseIncome(selectedCity)
+                                        const isHome = economyManager.isHomeCity(selectedCity)
                                         const earning = economyManager.isCityEarning(selectedCity)
+                                        const capacity = !isHome && earning ? economyManager.getConnectionCapacityInfo(selectedCity) : null
                                         return (
                                             <div style={{ width: '100%', margin: '8px 0' }}>
-                                                {!earning && (
+                                                {isHome ? (
+                                                    <p style={{ margin: '0 0 6px', color: '#555', fontSize: '0.82rem', fontWeight: 'bold' }}>
+                                                        This is your home terminal: you don't depart to where you already are, so it earns no income of its own.
+                                                    </p>
+                                                ) : !earning ? (
                                                     <p style={{ margin: '0 0 6px', color: '#c0392b', fontSize: '0.82rem', fontWeight: 'bold' }}>
                                                         Not on the timetable: earning nothing until it has a scheduled departure. The income below is what it earns once it does.
                                                     </p>
+                                                ) : capacity && (
+                                                    <p style={{ margin: '0 0 6px', color: '#555', fontSize: '0.82rem' }}>
+                                                        Running at <strong>{Math.round(capacity.percent)}% capacity</strong> ({capacity.band}) · about <strong>{capacity.passengers} / {capacity.capacity}</strong> passengers
+                                                    </p>
                                                 )}
-                                                <IncomeRow label="Base income" amount={baseIncome} last={boostPct <= 0} />
-                                                {boostPct > 0 && (
-                                                    <IncomeRow label="Boosted income" amount={effectiveIncome} last>
-                                                        <span
-                                                            style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
-                                                            onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
-                                                            onMouseLeave={() => setShowCityBoostTip(null)}
-                                                        >
-                                                            (+{boostPct.toLocaleString('en-GB')}%)
-                                                            <BoostTooltip anchor={showCityBoostTip} lines={lines} />
-                                                        </span>
-                                                    </IncomeRow>
+                                                {!isHome && (
+                                                    <>
+                                                        <IncomeRow label="Base income" amount={baseIncome} last={boostPct <= 0} />
+                                                        {boostPct > 0 && (
+                                                            <IncomeRow label="Boosted income" amount={effectiveIncome} last>
+                                                                <span
+                                                                    style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
+                                                                    onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
+                                                                    onMouseLeave={() => setShowCityBoostTip(null)}
+                                                                >
+                                                                    (+{boostPct.toLocaleString('en-GB')}%)
+                                                                    <BoostTooltip anchor={showCityBoostTip} lines={lines} />
+                                                                </span>
+                                                            </IncomeRow>
+                                                        )}
+                                                    </>
                                                 )}
                                             </div>
                                         )
                                     })()}
-                                    {(() => {
+                                    {!economyManager.isHomeCity(selectedCity) && (() => {
                                         const pm = constructionManager.progressionManager
                                         const lineLevel = pm.getCityLineLevel(selectedCity)
                                         const lineInfo = pm.getCityLineUpgradeCostInfo(selectedCity)

@@ -5,6 +5,9 @@ import { Development } from "../../DevelopmentManager/Development.js";
 // Renaming a development, and removing one (it goes back to Available to build), each cost this much Reputation
 export const DEV_RENAME_REP_COST = 20;
 export const DEV_REMOVE_REP_COST = 20;
+// Automate schedule (the Departure Board's "fill every unscheduled city in for me" button) costs this much
+// Reputation per use, so there's a reason to place departures by hand instead of always letting it pick for you.
+export const AUTOMATE_SCHEDULE_REP_COST = 10;
 // Legal Loopholes: renaming costs half (rounded up)
 export const getRenameRepCost = () => PrestigeManager.owns('legalLoopholes') ? Math.ceil(DEV_RENAME_REP_COST / 2) : DEV_RENAME_REP_COST;
 // The longest custom name a development can have, so it fits on its card

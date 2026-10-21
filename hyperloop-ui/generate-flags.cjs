@@ -11,6 +11,15 @@ const codes = [...new Set([...fs.readFileSync('./src/data/countryFlags.js', 'utf
 const flagDir = path.join('node_modules', 'flag-icons', 'flags', '4x3')
 const WIDTHS = [40, 80]
 
+// Every flag in the set is a plain rectangle, filled edge to edge with colour - except Nepal ("np"), the one
+// country whose real flag isn't a rectangle (two stacked pennants). flag-icons still ships it inside the same
+// 4:3 box every other flag uses, but leaves the area outside the pennants genuinely transparent rather than
+// filling it in. On the globe (and everywhere else a flag gets its thin black outline drawn around the full
+// canvas in HomePage.jsx) that showed through as a see-through gap around the pennants instead of the white
+// backing real-world printed Nepali flags are given when shown on a rectangular card. Filling that transparent
+// area in white before resizing - same white a physical rectangular rendering of the flag uses - fixes that
+// while keeping Nepal's image the same 4:3 size and shape as every other flag. This only ever touches 'np':
+// every other flag keeps the exact same single sharp(svg).resize(w)... pipeline as before, untouched.
 async function main() {
     if (!fs.existsSync(flagDir)) { console.error('flag-icons is not installed. Run: npm install --no-save flag-icons'); process.exit(1) }
     const missing = []
@@ -19,7 +28,9 @@ async function main() {
         const svg = path.join(flagDir, `${code}.svg`)
         if (!fs.existsSync(svg)) { missing.push(code); continue }
         for (const w of WIDTHS) {
-            const png = await sharp(svg, { density: 300 }).resize(w).png({ palette: true, compressionLevel: 9 }).toBuffer()
+            let pipeline = sharp(svg, { density: 300 })
+            if (code === 'np') pipeline = pipeline.flatten({ background: '#ffffff' })
+            const png = await pipeline.resize(w).png({ palette: true, compressionLevel: 9 }).toBuffer()
             out[w][code] = `data:image/png;base64,${png.toString('base64')}`
         }
     }

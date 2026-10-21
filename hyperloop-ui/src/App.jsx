@@ -56,7 +56,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
-import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, distanceMiles } from './utils/loops.js'
+import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallCount, distanceMiles } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -254,7 +254,7 @@ function App() {
     // offline income instead of being treated as unbuilt for the whole absence (bug #85).
     constructionManager.update();
     // A game from before cities needed a scheduled departure to earn gets its timetable filled in first, so its
-    // offline income isn't worked out from an empty timetable (only the home city earning)
+    // offline income isn't worked out from an empty timetable.
     autoScheduleExisting(progressionManager.purchasedCities);
     const savedCreatedAt = savedData?.createdAt || Date.now();
     const savedEvent = economyManager.activeEvent;
@@ -741,6 +741,9 @@ function App() {
     // The official post about an event waits until the event popup has closed, then arrives a
   // moment later, so its notification sound doesn't play on top of the event sound.
   const pendingEventPostRef = useRef(null);
+  // Free Wi-Fi: set true by onLikeReward below when a like's roll succeeds, consumed by the tick loop so the
+  // resulting event still goes through the normal active-event/rank/modal guards rather than firing mid-click.
+  const likeEventPendingRef = useRef(false);
   useEffect(() => {
     if (showEventModal || !pendingEventPostRef.current) return;
     const timer = setTimeout(() => {
@@ -776,6 +779,63 @@ function App() {
       }
     }
   }
+
+  // Fires an already-chosen event (Pizza Parties strength doubling, duration, the three effectType branches,
+  // and the event popup/sound/post-trigger bookkeeping). Shared by the regular random-interval trigger below
+  // and by Free Wi-Fi's like-triggered roll, so both go through the exact same logic - including Improved
+  // Accessibility Services' flat reputation bonus on every positive event, regardless of what triggered it.
+  const fireEvent = (rawEvent) => {
+    const pizza = PrestigeManager.owns('pizzaParties') && rawEvent.type === 'positive';
+    const event = (pizza && rawEvent.effect)
+      ? { ...rawEvent, effect: { ...rawEvent.effect, multiplier: 1 + (rawEvent.effect.multiplier - 1) * PRESTIGE_VALUES.pizzaParties } }
+      : rawEvent;
+    const bonusExtension = event.type === 'positive'
+      ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
+      : 1;
+    const durationSeconds = Math.floor(event.duration() * bonusExtension);
+
+    if (event.effectType === 'instantCash') {
+      const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
+      progressionManager.addCash(bonus);
+      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
+      activeEventRef.current = fullEvent;
+      localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+      playEventSound();
+      setActiveEvent(fullEvent);
+      setShowEventModal(true);
+      if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
+      setTimeout(() => { activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event'); }, 8000);
+    } else if (event.effectType === 'instantCashLoss') {
+      const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
+      progressionManager.addCash(-loss);
+      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
+      activeEventRef.current = fullEvent;
+      playEventSound();
+      setActiveEvent(fullEvent);
+      setShowEventModal(true);
+      if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
+      setTimeout(() => { activeEventRef.current = null; }, 8000);
+    } else {
+      const fullEvent = { ...event, durationSeconds, expiresAt: Date.now() + durationSeconds * 1000 };
+      activeEventRef.current = fullEvent;
+      localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+      playEventSound();
+      setActiveEvent(fullEvent);
+      setShowEventModal(true);
+      if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion }, until: fullEvent.expiresAt };
+      setTimeout(() => {
+        activeEventRef.current = null;
+        setActiveEvent(null);
+        setShowEventModal(false);
+        localStorage.removeItem('hyperloop_active_event');
+      }, durationSeconds * 1000);
+    }
+
+    if (event.type === 'positive' && economyManager.hasUpgrade('positiveEventReputationBonus')) {
+      progressionManager.addReputation(economyManager.getUpgradeSum('positiveEventReputationBonus'));
+      setReputation(progressionManager.reputation);
+    }
+  };
 
   useState(() => {
     if (!savedData) {
@@ -816,6 +876,13 @@ function App() {
       }
       localStorage.setItem(TAB_LOCK_KEY, JSON.stringify({ id: tabId, at: Date.now() }));
       tickCount.current += 1;
+
+      // Loops literally in the air right now, read once per tick and reused below for the achievements check.
+      const activeLoopsNow = getActiveLoops(progressionManager.purchasedCities);
+      // Terminal footfall for development income: people actually standing in the building - a loop counts from
+      // 3 hours before it departs until it leaves, or for an hour after it lands, but not while mid-flight (see
+      // getTerminalFootfallCount) - so this is deliberately not activeLoopsNow.length.
+      economyManager.setBoardLoopCount(getTerminalFootfallCount(progressionManager.purchasedCities));
 
             const now2 = Date.now();
       const gap = Math.max(0, (now2 - lastTickTimeRef.current) / 1000);
@@ -1225,55 +1292,19 @@ function App() {
         lastEventTime.current = Date.now();
         const noNegatives = PrestigeManager.owns('crisisAvoidanceSpecialists');
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
-        let event = getRandomEvent(positiveOnly);
-        // Pizza Parties: positive events are twice as strong (the bonus above baseline is doubled)
-        const pizza = PrestigeManager.owns('pizzaParties') && event.type === 'positive';
-        if (pizza && event.effect) event = { ...event, effect: { ...event.effect, multiplier: 1 + (event.effect.multiplier - 1) * PRESTIGE_VALUES.pizzaParties } };
+        const event = getRandomEvent(positiveOnly);
 
         const skipEvent = event.type === 'negative' && (noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('negativeEventReduction')));
-        if (!skipEvent) {
-          const bonusExtension = event.type === 'positive'
-            ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
-            : 1;
-          const durationSeconds = Math.floor(event.duration() * bonusExtension);
+        if (!skipEvent) fireEvent(event);
+      }
 
-          if (event.effectType === 'instantCash') {
-            const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
-            progressionManager.addCash(bonus);
-            const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
-            activeEventRef.current = fullEvent;
-            localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
-            playEventSound();
-            setActiveEvent(fullEvent);
-            setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
-            setTimeout(() => { activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event'); }, 8000);
-          } else if (event.effectType === 'instantCashLoss') {
-            const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
-            progressionManager.addCash(-loss);
-            const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
-            activeEventRef.current = fullEvent;
-            playEventSound();
-            setActiveEvent(fullEvent);
-            setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
-            setTimeout(() => { activeEventRef.current = null; }, 8000);
-          } else {
-            const fullEvent = { ...event, durationSeconds, expiresAt: Date.now() + durationSeconds * 1000 };
-            activeEventRef.current = fullEvent;
-            localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
-            playEventSound();
-            setActiveEvent(fullEvent);
-            setShowEventModal(true);
-            if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion }, until: fullEvent.expiresAt };
-            setTimeout(() => {
-              activeEventRef.current = null;
-              setActiveEvent(null);
-              setShowEventModal(false);
-              localStorage.removeItem('hyperloop_active_event');
-            }, durationSeconds * 1000);
-          }
-        }
+      // Free Wi-Fi (Vientiane): liking a Hyper-Link post has a small chance of triggering a positive event of
+      // its own, independent of the regular random-interval roll above - queued by onLikeReward below and
+      // picked up here on the next tick, so it still goes through the same rank/cooldown/active-event guards.
+      if (likeEventPendingRef.current && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK) {
+        likeEventPendingRef.current = false;
+        lastEventTime.current = Date.now();
+        fireEvent(getRandomEvent(true));
       }
 
       setWorkRange(economyManager.calculateWorkClickRange());
@@ -1287,7 +1318,7 @@ function App() {
       // Achievements: check the game once a second (balance and the like change between the events that trigger a save)
       if (progressionManager.purchasedCities.length > 0) {
         // How long each loop travelling right now is, for Are We There Yet? and Just Take the Bus
-        const activeLoopKm = getActiveLoops(progressionManager.purchasedCities)
+        const activeLoopKm = activeLoopsNow
           .map(l => (distanceMiles(l.from, l.to) || 0) * 1.609344)
           .filter(km => km > 0);
         const fresh = achievements.evaluate(progressionManager, rankManager, { activeLoopKm });
@@ -1704,6 +1735,9 @@ function App() {
               homeCity={progressionManager.purchasedCities[0]}
               purchasedUpgrades={progressionManager.purchasedUpgrades}
               openScheduleOnMount={boardOpensSchedule}
+              reputation={reputation}
+              progressionManager={progressionManager}
+              onSave={triggerSave}
               onAutomated={() => unlockAchievement('beepBoop')}
               preSelectedCity={preSelectedCity}
               onPreSelectedCityHandled={() => setPreSelectedCity(null)}
@@ -2020,6 +2054,15 @@ function App() {
               // It is an upgrade the player now owns, so it gets the upgrade popup with its effect (bug #172)
               setRevealedUpgradeQueue(prev => [...prev, upgrade]);
             }
+            // Expanded Family Rooms (Bologna): every milestone also pays a flat reputation bonus on top of
+            // its usual special-unlock reward.
+            if (progressionManager.purchasedUpgrades.some(u => u.effectType === 'milestoneReputationBonus')) {
+              const bonus = progressionManager.purchasedUpgrades
+                .filter(u => u.effectType === 'milestoneReputationBonus')
+                .reduce((sum, u) => sum + u.effectValue, 0);
+              progressionManager.addReputation(bonus);
+              setReputation(progressionManager.reputation);
+            }
             claimedMilestones.current.add(milestoneKey(milestone));
             localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
             setMilestoneQueue(prev => prev.filter(m => m.rank !== milestone.rank));
@@ -2085,6 +2128,11 @@ function App() {
               const liked = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]').find(p => p.id === postId);
               if (liked?.usedPfpId === CAMEO_PFP_ID) unlockAchievement('cameo');
             } catch { /* feed unreadable: no cameo this time */ }
+            // Free Wi-Fi: this like is now in the running for a positive event (a post won't trigger one on
+            // its own - liking is what gives it a chance). Likes are permanent, so this can't be farmed either.
+            if (economyManager.hasUpgrade('likePositiveEventChance') && Math.random() < economyManager.getUpgradeSum('likePositiveEventChance')) {
+              likeEventPendingRef.current = true;
+            }
             if (!PrestigeManager.owns('cultOfCelebrity')) return;
             progressionManager.addReputation(1);
             setReputation(progressionManager.reputation);

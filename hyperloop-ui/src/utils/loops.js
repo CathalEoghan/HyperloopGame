@@ -10,6 +10,7 @@
 import cityCoordinates from '../data/cityCoordinates.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import { skipMissingMinutes, isRealMinute } from './time.js'
+import { getPassengerCount } from '../../../Managers/EconomyManager/capacityCurve.js'
 
 export const LOOP_MPH_MIN = 700
 export const LOOP_MPH_MAX = 760
@@ -90,39 +91,24 @@ function hashString(str) {
 
 // ---- Passengers ----
 
-// Passengers on board a loop, by the tier of the city that isn't the home city (where they are coming from or going
-// to). The secret Antarctic Peninsula (tier 0) only ever has a few researchers.
-const PASSENGER_RANGES = { 0: [8, 20], 1: [50, 150], 2: [250, 500], 3: [500, 1000] }
 const CITY_BY_NAME = new Map(allCities.map(c => [c.name, c]))
-// Each tier's smallest and largest population, so a big city leans towards the top of its tier's range
-const TIER_POPULATION = {}
-allCities.forEach(c => {
-    const t = TIER_POPULATION[c.tier] || (TIER_POPULATION[c.tier] = [Infinity, 0])
-    t[0] = Math.min(t[0], c.population); t[1] = Math.max(t[1], c.population)
-})
 
-// The same loop always has the same number: it comes from the loop itself (`seed`), half by chance and half by how
-// big the city is within its tier.
-export function loopPassengers(cityName, seed) {
+// Passengers on board a loop: the destination's tier capacity, at whatever percentage that hour's demand curve
+// gives (see capacityCurve.js - the same curve that decides how much the connection actually earns, so the number
+// shown here is never out of step with the income it implies).
+export function loopPassengers(cityName, hour, seed) {
     const city = CITY_BY_NAME.get(cityName)
-    const tier = city && PASSENGER_RANGES[city.tier] ? city.tier : 1
-    const [lo, hi] = PASSENGER_RANGES[tier]
-    const [pMin, pMax] = TIER_POPULATION[tier] || [0, 0]
-    const size = city && city.population > 0 && pMax > pMin
-        ? (Math.log(city.population) - Math.log(Math.max(1, pMin))) / (Math.log(pMax) - Math.log(Math.max(1, pMin)))
-        : 0.5
-    const chance = hashString(`${seed}|passengers`) / 4294967296
-    const mix = Math.min(1, Math.max(0, 0.5 * size + 0.5 * chance))
-    return Math.round(lo + mix * (hi - lo))
+    const tier = city ? city.tier : 1
+    return getPassengerCount(tier, hour, seed)
 }
 
 // A loop's id: the same one the Active Loops list uses, so the list and the passenger total agree
 export const loopId = (kind, dayMs, entry) => `${kind === 'arrival' ? 'arr' : 'dep'}|${dayKey(dayMs)}|${entry.time}|${entry.name}`
 
-// A loop's passengers depend on the city and the day only, never the time it leaves, so the Schedule loop preview is
-// exactly what runs, and moving a loop or a delay doesn't change who is on board
-export const stablePassengers = (kind, dayMs, name) => loopPassengers(name, `${kind}|${dayKey(dayMs)}|${name}`)
-const passengersOf = (kind, dayMs, entry) => stablePassengers(kind, dayMs, entry.name)
+// A loop's passengers depend on the city, the day and its hour only, never its exact minute, so the Schedule loop
+// preview is exactly what runs, and moving a loop within the hour or delaying it doesn't change who is on board
+export const stablePassengers = (kind, dayMs, name, hour) => loopPassengers(name, hour, `${kind}|${dayKey(dayMs)}|${name}`)
+const passengersOf = (kind, dayMs, entry) => stablePassengers(kind, dayMs, entry.name, entry.hour)
 
 export function loopSpeedMph(seed) {
     return LOOP_MPH_MIN + (hashString(seed) % (LOOP_MPH_MAX - LOOP_MPH_MIN + 1))
@@ -322,6 +308,41 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
     return loops.sort((a, b) => a.endTs - b.endTs)
 }
 
+// How long before a departure, and after an arrival, its passengers are physically standing in the terminal
+// (not sealed in a pod mid-flight, where they can't shop) - see getTerminalFootfallCount.
+export const DEPARTURE_FOOTFALL_HOURS = 3
+export const ARRIVAL_FOOTFALL_MINUTES = 60
+
+// How many loops are putting people in the home terminal right now, for the development busy bonus. A departure
+// counts from DEPARTURE_FOOTFALL_HOURS before it leaves (people arriving early, going through security) up to the
+// moment it leaves; an arrival counts for ARRIVAL_FOOTFALL_MINUTES after it lands (collecting bags, deciding where
+// to go). A loop actually in transit between the two counts for neither - its passengers aren't in the building.
+export function getTerminalFootfallCount(purchasedCities, nowMs = Date.now()) {
+    const homeCity = purchasedCities?.[0]
+    if (!homeCity) return 0
+    const connected = new Map(purchasedCities.map(c => [c.name, c]))
+    let count = 0
+    const departureWindowMs = DEPARTURE_FOOTFALL_HOURS * 60 * 60000
+    ;[0, 1].forEach(offset => {
+        const dayMs = offset === 0 ? nowMs : shiftDays(nowMs, offset)
+        readSchedule(departuresKey(dayMs)).forEach(e => {
+            if (!connected.has(e.name)) return
+            const departTs = entryTimestamp(e, dayMs)
+            if (departTs >= nowMs && departTs - nowMs <= departureWindowMs) count++
+        })
+    })
+    const arrivalWindowMs = ARRIVAL_FOOTFALL_MINUTES * 60000
+    ;[-1, 0].forEach(offset => {
+        const dayMs = offset === 0 ? nowMs : shiftDays(nowMs, offset)
+        readSchedule(arrivalsKey(dayMs)).forEach(e => {
+            if (!connected.has(e.name)) return
+            const arriveTs = entryTimestamp(e, dayMs)
+            if (arriveTs <= nowMs && nowMs - arriveTs <= arrivalWindowMs) count++
+        })
+    })
+    return count
+}
+
 
 // ---- Totals ----
 
@@ -364,8 +385,11 @@ export function tallyLoops(purchasedCities, nowMs = Date.now()) {
     } catch { /* keep the estimate */ }
     // For days whose schedule is gone: the passengers an average loop to one of the connected cities would carry
     const others = hasLoops ? purchasedCities.slice(1) : []
+    // A day whose schedule is gone has no real hour to look up, so this estimate uses noon (a representative,
+    // roughly-average hour) rather than the exact one any particular vanished loop actually ran at.
+    const estimateHour = 12
     const averagePassengers = others.length
-        ? others.reduce((sum, c) => sum + loopPassengers(c.name, `estimate|${c.name}`), 0) / others.length : 0
+        ? others.reduce((sum, c) => sum + loopPassengers(c.name, estimateHour, `estimate|${c.name}`), 0) / others.length : 0
     const homeName = hasLoops ? purchasedCities[0].name : ''
     const connected = new Set((purchasedCities || []).map(c => c.name))
     const averageMiles = others.length

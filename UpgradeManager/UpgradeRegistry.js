@@ -1,5 +1,10 @@
 
 // Upgrade Registry
+import { socialMediaManagers } from './SocialMediaManagers.js'
+import { freeWiFi } from './FreeWiFi.js'
+import { improvedAccessibilityServices } from './ImprovedAccessibilityServices.js'
+import { lostAndFoundOffice } from './LostAndFoundOffice.js'
+import { expandedFamilyRooms } from './ExpandedFamilyRooms.js'
 import { sodaMachines } from './SodaMachines.js'
 import { bank } from './Bank.js'
 import { postalOffice } from './PostalOffice.js'
@@ -327,8 +332,13 @@ export const allUpgrades = [
     expandedDutyFree,
     anniversarySales,
     earlyRetirement,
+    socialMediaManagers,
+    freeWiFi,
+    improvedAccessibilityServices,
+    lostAndFoundOffice,
+    expandedFamilyRooms,
 
-    
+
 
 
 ]

@@ -1,4 +1,8 @@
 
+import { rideShareKiosks } from './RideShareKiosks.js'
+import { supermarket } from './Supermarket.js'
+import { observationDeck } from './ObservationDeck.js'
+import { electronicsStore } from './ElectronicsStore.js'
 import { bakery } from './Bakery.js'
 import { cupcakeStore } from './CupcakeStore.js'
 import { hotDogRestaurant } from './HotDogRestaurant.js'
@@ -373,6 +377,10 @@ export const allDevelopments = [
     sleepingPods,
     simCardServices,
     carRental,
+    rideShareKiosks,
+    supermarket,
+    observationDeck,
+    electronicsStore,
 
 
 ]

@@ -1,4 +1,13 @@
 
+import { Cardiff } from './Cardiff.js'
+import { Vientiane } from './Vientiane.js'
+import { KuwaitCity } from './KuwaitCity.js'
+import { PortLouis } from './PortLouis.js'
+import { Yokohama } from './Yokohama.js'
+import { Agra } from './Agra.js'
+import { Xian } from './Xian.js'
+import { Novosibirsk } from './Novosibirsk.js'
+import { Bologna } from './Bologna.js'
 import { Atlanta } from './Atlanta.js'
 import { Brussels } from './Brussels.js'
 import { Busan } from './Busan.js'
@@ -684,6 +693,15 @@ export const allCities = [
     Memphis,
     Jeddah,
     Rhodes,
+    Cardiff,
+    Vientiane,
+    KuwaitCity,
+    PortLouis,
+    Yokohama,
+    Agra,
+    Xian,
+    Novosibirsk,
+    Bologna,
 
 
 

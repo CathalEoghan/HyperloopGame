@@ -151,7 +151,10 @@ const countryFlags = {
     "Puerto Rico": "pr",
     "Guinea": "gn",
     "Antarctica": "aq",
-    
+    "Wales": "gb-wls",
+    "Laos": "la",
+    "Kuwait": "kw",
+    "Mauritius": "mu",
 
 
 

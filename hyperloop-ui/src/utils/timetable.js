@@ -12,6 +12,11 @@ import {
     makeEntry, timeString, formatClock, stablePassengers,
 } from './loops.js'
 import { isRealMinute } from './time.js'
+import { allCities } from '../../../CityManager/CityRegistry.js'
+import { baseCityIncome } from '../../../Managers/EconomyManager/EconomyManager.js'
+import { getCapacityPercent, getCapacityMultiplier, getTierCapacity, getDemandBand } from '../../../Managers/EconomyManager/capacityCurve.js'
+
+const CITY_BY_NAME = new Map(allCities.map(c => [c.name, c]))
 
 export const TIMETABLE_KEY = 'hyperloop_timetable'
 // Departures can overlap, as at a real airport, as long as they use different gates: a gate can't be used again
@@ -107,18 +112,29 @@ export function busyGates(timetable, name, minuteOfDay) {
 
 // ---- What a loop would do ----
 
-// Used by the Schedule loop screen: when it should arrive (leaving out any delay) and how many passengers to expect.
-// Both are worked out the way the real loop's are, so the preview is what happens.
+// Used by the Schedule loop screen: when it should arrive (leaving out any delay), how many passengers to expect,
+// how full that is out of its tier's capacity, and roughly what the day would bring in at that capacity. All of it
+// comes from the one demand curve (capacityCurve.js), so picking a different hour here previews exactly what the
+// connection would actually earn once scheduled.
 export function previewLoop(homeName, name, minuteOfDay, nowMs = Date.now()) {
+    const hour = Math.floor(minuteOfDay / 60)
     const durationMin = tripMinutes(homeName, name, `${dayKey(nowMs)}|departure`)
-    const departTs = entryTimestamp({ hour: Math.floor(minuteOfDay / 60), minute: minuteOfDay % 60 }, nowMs)
+    const departTs = entryTimestamp({ hour, minute: minuteOfDay % 60 }, nowMs)
     const arriveTs = departTs + durationMin * 60000
     const nextDay = new Date(arriveTs).getDate() !== new Date(departTs).getDate()
+    const city = CITY_BY_NAME.get(name)
+    const seed = `departure|${dayKey(nowMs)}|${name}`
+    const capacityPercent = city ? getCapacityPercent(hour, seed) : null
+    const estimatedDailyIncome = city ? baseCityIncome(city) * getCapacityMultiplier(hour, seed) : null
     return {
         durationMin,
         arriveClock: formatClock(arriveTs),
         nextDay,
-        passengers: stablePassengers('departure', nowMs, name),
+        passengers: stablePassengers('departure', nowMs, name, hour),
+        capacity: city ? getTierCapacity(city.tier) : null,
+        capacityPercent,
+        band: getDemandBand(hour).name,
+        estimatedDailyIncome,
     }
 }
 

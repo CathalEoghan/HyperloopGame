@@ -112,17 +112,27 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
             </div>
 
             <div className="dev-content">
-                {purchased.length > 0 && (
-                    <div className="dev-sticky-header">
-                        <div className="total-revenue-banner">
-                            <span>Total development income:</span>
-                            <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                {formatPerHour(totalRevenue)}/hr
-                            </strong>
+                {purchased.length > 0 && (() => {
+                    const busy = economyManager.getDevelopmentBusyStatus()
+                    const busyPct = economyManager.getDevelopmentBusyPercent()
+                    return (
+                        <div className="dev-sticky-header">
+                            <div className="total-revenue-banner">
+                                <span>Total development income:</span>
+                                <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                    <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
+                                    {formatPerHour(totalRevenue)}/hr
+                                </strong>
+                                <span
+                                    title="How busy the terminal is right now: every development's income scales with this."
+                                    style={{ marginLeft: '12px', fontSize: '0.78rem', fontWeight: 'bold', color: busy.color, cursor: 'help' }}
+                                >
+                                    {busy.label} ({busyPct}%)
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )
+                })()}
 
                 {enlargedImage && (
                     <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
@@ -310,6 +320,18 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <p><strong>Category</strong>: {selectedDevelopment.category}</p>
                                     {selectedDevelopment.revenue ? (
                                         <div style={{ width: '100%', margin: '8px 0' }}>
+                                            {(() => {
+                                                const busy = economyManager.getDevelopmentBusyStatus()
+                                                const busyPct = economyManager.getDevelopmentBusyPercent()
+                                                return (
+                                                    <p
+                                                        title="How busy the terminal is right now (10% floor, +5% per loop in the air, capped at 100%) - this scales every development's income, including this one's."
+                                                        style={{ margin: '0 0 8px', fontSize: '0.8rem', fontWeight: 'bold', color: busy.color, cursor: 'help' }}
+                                                    >
+                                                        {busy.label}: {busyPct}% footfall
+                                                    </p>
+                                                )
+                                            })()}
                                             {(() => {
                                                 // Base revenue, then boosted (all the + and x modifiers), then upgraded (the level's multiplier)
                                                 const { lines: tooltipLines, totalBoost } = economyManager.getDevBoostBreakdown(selectedDevelopment)

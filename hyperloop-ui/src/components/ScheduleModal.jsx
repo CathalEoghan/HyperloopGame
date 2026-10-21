@@ -2,6 +2,7 @@ import { useState } from 'react'
 import './ScheduleModal.css'
 import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 import { NUM_GATES, timeString, entryTimestamp, formatDuration } from '../utils/loops.js'
+import { formatPerHour } from '../utils/income.js'
 import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, busyGates, previewLoop, MIN_LEAD } from '../utils/timetable.js'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
@@ -137,7 +138,10 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                             {preview && (
                                 <div className="sched-preview">
                                     <div><span>Should arrive</span><b>{preview.arriveClock}{preview.nextDay ? ' (next day)' : ''}</b><em>{formatDuration(preview.durationMin * 60000)} trip, not counting delays</em></div>
-                                    <div><span>Expected passengers</span><b>about {preview.passengers}</b><em>for today</em></div>
+                                    <div><span>Expected passengers</span><b>about {preview.passengers}{preview.capacity ? ` / ${preview.capacity}` : ''}</b><em>{preview.band} · {Math.round(preview.capacityPercent)}% capacity</em></div>
+                                    {Number.isFinite(preview.estimatedDailyIncome) && (
+                                        <div><span>Estimated income</span><b>about £{formatPerHour(preview.estimatedDailyIncome)}/hr</b><em>before any boosts you own</em></div>
+                                    )}
                                 </div>
                             )}
                             {tooSoonToday && !problem && <p className="sched-hint">That's too soon for today, so this loop starts tomorrow.</p>}
