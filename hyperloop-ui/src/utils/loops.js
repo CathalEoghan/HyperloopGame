@@ -313,34 +313,43 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
 export const DEPARTURE_FOOTFALL_HOURS = 3
 export const ARRIVAL_FOOTFALL_MINUTES = 60
 
-// How many loops are putting people in the home terminal right now, for the development busy bonus. A departure
-// counts from DEPARTURE_FOOTFALL_HOURS before it leaves (people arriving early, going through security) up to the
-// moment it leaves; an arrival counts for ARRIVAL_FOOTFALL_MINUTES after it lands (collecting bags, deciding where
-// to go). A loop actually in transit between the two counts for neither - its passengers aren't in the building.
-export function getTerminalFootfallCount(purchasedCities, nowMs = Date.now()) {
+// How many loops are putting people in the home terminal right now, for the development busy bonus, split by
+// which side of the board they're on - so the UI can explain the number (e.g. "2 loops nearing departure, 1 just
+// arrived") rather than just showing a bare count. A departure counts from DEPARTURE_FOOTFALL_HOURS before it
+// leaves (people arriving early, going through security) up to the moment it leaves; an arrival counts for
+// ARRIVAL_FOOTFALL_MINUTES after it lands (collecting bags, deciding where to go). A loop actually in transit
+// between the two counts for neither - its passengers aren't in the building.
+export function getTerminalFootfallBreakdown(purchasedCities, nowMs = Date.now()) {
     const homeCity = purchasedCities?.[0]
-    if (!homeCity) return 0
+    if (!homeCity) return { departures: 0, arrivals: 0, total: 0 }
     const connected = new Map(purchasedCities.map(c => [c.name, c]))
-    let count = 0
+    let departures = 0
     const departureWindowMs = DEPARTURE_FOOTFALL_HOURS * 60 * 60000
     ;[0, 1].forEach(offset => {
         const dayMs = offset === 0 ? nowMs : shiftDays(nowMs, offset)
         readSchedule(departuresKey(dayMs)).forEach(e => {
             if (!connected.has(e.name)) return
             const departTs = entryTimestamp(e, dayMs)
-            if (departTs >= nowMs && departTs - nowMs <= departureWindowMs) count++
+            if (departTs >= nowMs && departTs - nowMs <= departureWindowMs) departures++
         })
     })
+    let arrivals = 0
     const arrivalWindowMs = ARRIVAL_FOOTFALL_MINUTES * 60000
     ;[-1, 0].forEach(offset => {
         const dayMs = offset === 0 ? nowMs : shiftDays(nowMs, offset)
         readSchedule(arrivalsKey(dayMs)).forEach(e => {
             if (!connected.has(e.name)) return
             const arriveTs = entryTimestamp(e, dayMs)
-            if (arriveTs <= nowMs && nowMs - arriveTs <= arrivalWindowMs) count++
+            if (arriveTs <= nowMs && nowMs - arriveTs <= arrivalWindowMs) arrivals++
         })
     })
-    return count
+    return { departures, arrivals, total: departures + arrivals }
+}
+
+// How many loops are putting people in the home terminal right now, for the development busy bonus (see
+// getTerminalFootfallBreakdown for the departure/arrival split behind this number).
+export function getTerminalFootfallCount(purchasedCities, nowMs = Date.now()) {
+    return getTerminalFootfallBreakdown(purchasedCities, nowMs).total
 }
 
 

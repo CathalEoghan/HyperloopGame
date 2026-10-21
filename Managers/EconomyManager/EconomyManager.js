@@ -74,14 +74,18 @@ export class EconomyManager {
         this.coordinates = null;
         // When this save was created, set by the UI. Lets the figures shown on screen include the Founders' Hall bonus.
         this.createdAt = null;
-        // How many loops are currently putting people in the home terminal (see getTerminalFootfallCount in
+        // How many loops are currently putting people in the home terminal (see getTerminalFootfallBreakdown in
         // utils/loops.js) - not loops literally in the air, whose passengers can't shop. Set once by the UI each
         // tick, since this manager has no access to the schedule storage that lives in the UI layer.
         this.boardLoopCount = 0;
+        // The same count, split into departures-about-to-leave vs. arrivals-just-landed, so the busy status can
+        // explain itself (e.g. "2 loops nearing departure, 1 just arrived") instead of just showing a bare number.
+        this.boardLoopBreakdown = { departures: 0, arrivals: 0 };
     }
 
-    setBoardLoopCount(count) {
+    setBoardLoopCount(count, breakdown = null) {
         this.boardLoopCount = Math.max(0, count || 0);
+        if (breakdown) this.boardLoopBreakdown = { departures: Math.max(0, breakdown.departures || 0), arrivals: Math.max(0, breakdown.arrivals || 0) };
     }
 
     getUpgradeSum(effectType) {
@@ -261,9 +265,9 @@ export class EconomyManager {
         return getCapacityMultiplier(hour, seed);
     }
 
-    // Terminal footfall: 10% floor, +5% per loop currently in the air, capped at 100%. Drives every development's
-    // income (see calculateDevelopmentIncome / getEffectiveDevIncomeWithBoosts) - set each tick by the UI via
-    // setBoardLoopCount, since this manager has no access to the schedule storage itself.
+    // Terminal footfall: 10% floor, +5% per loop currently putting people in the terminal, capped at 100%. Drives
+    // every development's income (see calculateDevelopmentIncome / getEffectiveDevIncomeWithBoosts) - set each
+    // tick by the UI via setBoardLoopCount, since this manager has no access to the schedule storage itself.
     getDevelopmentBusyPercent() {
         return Math.min(100, DEV_BUSY_FLOOR_PCT + DEV_BUSY_PCT_PER_LOOP * this.boardLoopCount);
     }
@@ -272,13 +276,22 @@ export class EconomyManager {
         return this.getDevelopmentBusyPercent() / 100;
     }
 
+    // The plain-English reason behind the busy%, for a tooltip on the status itself: how many loops in the
+    // departures/arrivals breakdown (see boardLoopBreakdown, set by setBoardLoopCount) are actually contributing.
+    getDevelopmentBusyExplanation() {
+        const { departures: dep, arrivals: arr } = this.boardLoopBreakdown;
+        return `${dep} loop${dep === 1 ? '' : 's'} ${dep === 1 ? 'is' : 'are'} nearing departure, `
+            + `${arr} loop${arr === 1 ? '' : 's'} ${arr === 1 ? 'has' : 'have'} just arrived.`;
+    }
+
     // The four-band read-out shown on the Development page and in each development's tooltip.
     getDevelopmentBusyStatus() {
         const pct = this.getDevelopmentBusyPercent();
-        if (pct >= 100) return { label: 'Very busy', color: '#1e7e34' };
-        if (pct >= 75) return { label: 'Busy', color: '#27ae60' };
-        if (pct >= 45) return { label: 'Not very busy', color: '#d4ac0d' };
-        return { label: 'Not busy', color: '#c0392b' };
+        const explanation = this.getDevelopmentBusyExplanation();
+        if (pct >= 100) return { label: 'Very busy', color: '#1e7e34', explanation };
+        if (pct >= 75) return { label: 'Busy', color: '#27ae60', explanation };
+        if (pct >= 45) return { label: 'Not very busy', color: '#d4ac0d', explanation };
+        return { label: 'Not busy', color: '#c0392b', explanation };
     }
 
     // What a city earns right now: its full income while it is on the timetable, scaled by how busy that connection

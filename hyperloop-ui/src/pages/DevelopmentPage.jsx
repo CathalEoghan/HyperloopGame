@@ -124,7 +124,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     {formatPerHour(totalRevenue)}/hr
                                 </strong>
                                 <span
-                                    title="How busy the terminal is right now: every development's income scales with this."
+                                    title={`How busy the terminal is right now: every development's income scales with this. ${busy.explanation}`}
                                     style={{ marginLeft: '12px', fontSize: '0.78rem', fontWeight: 'bold', color: busy.color, cursor: 'help' }}
                                 >
                                     {busy.label} ({busyPct}%)
@@ -325,7 +325,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 const busyPct = economyManager.getDevelopmentBusyPercent()
                                                 return (
                                                     <p
-                                                        title="How busy the terminal is right now (10% floor, +5% per loop in the air, capped at 100%) - this scales every development's income, including this one's."
+                                                        title={`How busy the terminal is right now (10% floor, +5% per loop nearing departure or just arrived, capped at 100%) - this scales every development's income, including this one's. ${busy.explanation}`}
                                                         style={{ margin: '0 0 8px', fontSize: '0.8rem', fontWeight: 'bold', color: busy.color, cursor: 'help' }}
                                                     >
                                                         {busy.label}: {busyPct}% footfall

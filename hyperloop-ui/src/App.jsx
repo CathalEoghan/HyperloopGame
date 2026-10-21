@@ -56,7 +56,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
-import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallCount, distanceMiles } from './utils/loops.js'
+import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, distanceMiles } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -881,8 +881,9 @@ function App() {
       const activeLoopsNow = getActiveLoops(progressionManager.purchasedCities);
       // Terminal footfall for development income: people actually standing in the building - a loop counts from
       // 3 hours before it departs until it leaves, or for an hour after it lands, but not while mid-flight (see
-      // getTerminalFootfallCount) - so this is deliberately not activeLoopsNow.length.
-      economyManager.setBoardLoopCount(getTerminalFootfallCount(progressionManager.purchasedCities));
+      // getTerminalFootfallBreakdown) - so this is deliberately not activeLoopsNow.length.
+      const footfall = getTerminalFootfallBreakdown(progressionManager.purchasedCities);
+      economyManager.setBoardLoopCount(footfall.total, footfall);
 
             const now2 = Date.now();
       const gap = Math.max(0, (now2 - lastTickTimeRef.current) / 1000);
@@ -1695,6 +1696,9 @@ function App() {
       {firstLoopVisible && (
         <FirstLoopModal
           purchasedCities={progressionManager.purchasedCities}
+          reputation={reputation}
+          progressionManager={progressionManager}
+          onSave={triggerSave}
           onSchedule={() => { setShowFirstLoop(false); setBoardOpensSchedule(true); openBoardFromPrompt(); }}
           onViewBoard={() => { setShowFirstLoop(false); openBoardFromPrompt(); }}
           onAutomated={() => unlockAchievement('beepBoop')}
