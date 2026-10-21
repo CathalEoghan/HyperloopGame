@@ -886,9 +886,15 @@ WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
 poltergeist4.mp3, poltergeist5.mp3 - freesound_community
 
-kitty1.mp3, kitty3.mp3, kitty4.mp3 - freesound community (Pixabay Content License)
+kitty1.mp3, kitty3.mp3, kitty4.mp3 - freesound_community (Pixabay Content License)
 kitty2.mp3 - u_6ekfl947a2 (Pixabay Content License)
 kitty5.mp3 - Virtual Vibes (Pixabay Content License)
+
+fairy1.mp3 - freesound_community (Pixabay Content License)
+fairy2.mp3, fairy3.mp3 - Universfield (Pixabay Content License)
+fairy4.mp3 - SergeQuadrado (Pixabay Content License)
+
+pirate1.mp3, pirate2.mp3, pirate3.mp3, pirate4.mp3 - freesound_community (Pixabay Content License)
 
 OPENING INTROS
 fairy.mp3 - The_Mountain (Pixabay Content License)
