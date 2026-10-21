@@ -339,6 +339,16 @@ Rhodes.jpg - Photo by George Alex via Pexels
 Jeddah.jpg - Photo by dalya Al via Pexels
 JejuCity.jpg - Photo by J. Patrick Fischer via Pexels
 Memphis.jpg - Photo by Gavin Young via Pexels
+Cardiff.jpg - Photo by Esslam Abouelela via Pexels
+PortLouis.jpg - Photo by Thierry via Wikimedia Commons (Creative Commons Attribution-Share Alike 3.0 Unported license, link: https://commons.wikimedia.org/wiki/File:Port_Louis_Skyline.JPG)
+Novosibirsk.jpg - Photo by Sergei Skrynnik via Pexels
+Agra.jpg - Photo by Mahmut Yilmaz via Pexels
+Bologna.jpg - Photo by Warren Noronha via Pexels
+Vientiane.jpg - Photo by Jakub Halun via Pexels (Creative Commons Attribution-Share Alike 4.0 International license, link: https://commons.wikimedia.org/wiki/File:20171118_Vientiane_3220_DxO.jpg)
+Xian.jpg - Photo by 征宇 郑 via Pexels
+Yokohama.jpg - Photo by reitetsu Mountain
+KuwaitCity.jpg - Photo by Tayssir Kadamany via Pexels
+
 
 
 
@@ -680,6 +690,9 @@ CarRental.jpg - Photo by Negative Space via Pexels
 SimCardServices.jpg - Photo by Jacob via Pexels
 EarlyRetirement.jpg - Photo by Kampus Production via Pexels
 AnniversarySales.jpg - Photo by cottonbro studio via Pexels
+RideShareKiosks.jpg - Photo by Erik Mclean via Pexels
+Supermarket.jpg - Photo by Gustavo Fring via Pexels
+
 
 PRESTIGE UPGRADES
 CultOfCelebrity.jpg - Photo by Pavel Danilyuk via Pexels
