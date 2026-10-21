@@ -83,24 +83,38 @@ function playHover(src = hoverSound) {
 
 export const playEventSound = () => play(eventSound)
 export const playDiceRollSound = () => play(diceRollSound)
-// The Work button's sound is whichever one is equipped in the Shop (the classic click by default). A 'special'-tier
-// work sound can equip several samples (srcs) instead of one; this picks a different one at random each click -
-// never the same sample twice in a row. Clicking fast enough for two picks to overlap is normal (that's fine when
-// they're different clips), but two overlapping copies of the exact same clip are the same waveform summed with
-// itself a few hundred ms out of phase, which reads as a single harsh, piercing spike rather than two clicks.
-let lastWorkClickSrc = null
-export function playWorkClickSound() {
-    const item = getEquippedItem('workSound')
-    const pool = item?.srcs?.length ? item.srcs : [item?.src ?? workClickSound]
-    const choices = pool.length > 1 ? pool.filter(src => src !== lastWorkClickSrc) : pool
+// Picks a random sample from a pool, excluding whichever one `lastRef` says played last time (unless the pool
+// is down to one sample), plays it, and updates `lastRef`. Used for any click sound that's meant to be mashed
+// fast - clicking fast enough for two picks to overlap is fine (that's normal, even desirable, variety) as long
+// as it's never the exact same clip twice in a row: two overlapping copies of the same waveform a few hundred ms
+// out of phase read as one harsh, piercing spike rather than two clicks.
+function playRandomNoRepeat(pool, lastRef) {
+    const choices = pool.length > 1 ? pool.filter(src => src !== lastRef.src) : pool
     const pick = choices[Math.floor(Math.random() * choices.length)]
-    lastWorkClickSrc = pick
+    lastRef.src = pick
     play(pick)
 }
-// The Shop's Preview button. Given an item with several samples, plays one at random. Only one preview ever
-// plays at a time: clicking Preview again - on the same item or a different one - stops whatever preview is
-// already going first, rather than layering a new copy on top of it (two overlapping copies of the same sample
-// in particular turn into a harsh, droning din rather than two clean plays).
+
+// The Work button's sound is whichever one is equipped in the Shop (the classic click by default). A 'special'-tier
+// work sound can equip several samples (srcs) instead of one.
+const lastWorkClick = { src: null }
+export function playWorkClickSound() {
+    const item = getEquippedItem('workSound')
+    playRandomNoRepeat(item?.srcs?.length ? item.srcs : [item?.src ?? workClickSound], lastWorkClick)
+}
+
+// The Shop's Preview button for a Work sound: sounds the same as actually mashing the Work button (see
+// playRandomNoRepeat above) rather than cutting itself off, since that's exactly the behaviour the player is
+// trying to judge by previewing it.
+const lastWorkPreview = { src: null }
+export function playWorkSoundPreview(src) {
+    if (!canPlay()) return
+    playRandomNoRepeat(Array.isArray(src) ? src : [src], lastWorkPreview)
+}
+
+// The Shop's Preview button for anything else (Opening audios and the like) - a sound meant to play once, not
+// be mashed, so only one preview ever plays at a time: clicking Preview again, on the same item or a different
+// one, stops whatever preview is already going first rather than layering a new copy on top of it.
 let previewAudio = null
 export function playPreviewSound(src) {
     if (!canPlay()) return

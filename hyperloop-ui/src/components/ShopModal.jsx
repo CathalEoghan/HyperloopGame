@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor } from '../data/shopCatalog.js'
 import { isOwned, isBundleOwned, bundlePieces, bundlePrice } from '../utils/cosmetics.js'
-import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkSoundPreview } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import './ShopModal.css'
 
@@ -157,7 +157,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                     ) : (
                                                         <>
                                                             {(item.src || item.srcs) && (
-                                                                <button className="shop-btn shop-btn-ghost" onClick={() => playPreviewSound(item.srcs || item.src)} onMouseEnter={() => playHoverSound()}>▶ Preview</button>
+                                                                <button className="shop-btn shop-btn-ghost" onClick={() => (categoryId === 'workSound' ? playWorkSoundPreview : playPreviewSound)(item.srcs || item.src)} onMouseEnter={() => playHoverSound()}>▶ Preview</button>
                                                             )}
                                                             {equipped ? (
                                                                 <span className="shop-equipped">Equipped</span>
