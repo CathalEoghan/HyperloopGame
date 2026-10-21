@@ -97,8 +97,17 @@ export function playWorkClickSound() {
     lastWorkClickSrc = pick
     play(pick)
 }
-// Plays any sound file once (the Shop's Preview button). Given an item with several samples, plays one at random.
-export function playPreviewSound(src)           { play(Array.isArray(src) ? src[Math.floor(Math.random() * src.length)] : src) }
+// The Shop's Preview button. Given an item with several samples, plays one at random. Only one preview ever
+// plays at a time: clicking Preview again - on the same item or a different one - stops whatever preview is
+// already going first, rather than layering a new copy on top of it (two overlapping copies of the same sample
+// in particular turn into a harsh, droning din rather than two clean plays).
+let previewAudio = null
+export function playPreviewSound(src) {
+    if (!canPlay()) return
+    if (previewAudio) { previewAudio.pause(); previewAudio.currentTime = 0 }
+    previewAudio = new Audio(Array.isArray(src) ? src[Math.floor(Math.random() * src.length)] : src)
+    previewAudio.play().catch(() => {})
+}
 // The Terminal Board's own buttons (schedule, automate, the board tabs, Farewell, Delay) use these instead of the
 // generic click/hover, so an equipped board theme's own sounds (if it sets any) are heard there and nowhere else.
 export function playBoardClickSound()           { play(getEquippedItem('boardTheme')?.clickSource ?? click_sound_2) }
