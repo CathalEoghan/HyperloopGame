@@ -1,7 +1,7 @@
 // What the player owns and has equipped from the Shop. Kept in localStorage under one key, which is part of the
 // save file (SaveManager's AUX_KEYS) and survives a prestige. Shape: { owned: ['workSound:soft', ...], equipped: { workSound: 'soft' } }
 // The free 'default' item of each category is always owned, so it is never listed.
-import { SHOP_CATEGORIES, SHOP_ITEMS } from '../data/shopCatalog.js'
+import { SHOP_CATEGORIES, SHOP_ITEMS, THEME_PICS } from '../data/shopCatalog.js'
 
 export const COSMETICS_KEY = 'hyperloop_cosmetics'
 export const COSMETICS_EVENT = 'hyperloop-cosmetics-changed'
@@ -87,6 +87,11 @@ export function applyCosmetics(state = readCosmetics()) {
         const item = getEquippedItem(category, state)
         Object.entries(item?.vars || {}).forEach(([name, value]) => root.style.setProperty(name, value))
     })
+    // A themed General theme's own photo takes the Terminal Board's background over whatever Board theme is
+    // equipped (bug request: "theme-pics... replace the terminal board image when their general theme is
+    // purchased" - equipped in practice, since only one photo can show at a time).
+    const generalPic = THEME_PICS[getEquippedItem('generalTheme', state)?.id]
+    if (generalPic) root.style.setProperty('--board-bg-image', `url(${generalPic})`)
 }
 
 // The globe's route colours as numbers for three.js, from the equipped general theme (gold departures, blue arrivals by default)

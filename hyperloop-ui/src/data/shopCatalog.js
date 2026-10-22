@@ -99,6 +99,22 @@ import jazzOpening from '../assets/opening-intros/jazz.mp3'
 import playroomOpening from '../assets/opening-intros/playtime.mp3'
 import starlightOpening from '../assets/opening-intros/starlight.mp3'
 import duckOpening from '../assets/opening-intros/duck.mp3'
+import princess1 from '../assets/work-click-sounds/princess1.mp3'
+import princess2 from '../assets/work-click-sounds/princess2.mp3'
+import princess3 from '../assets/work-click-sounds/princess3.mp3'
+import princess4 from '../assets/work-click-sounds/princess4.mp3'
+import fairyThemePic from '../assets/theme-pics/fairy.jpg'
+import poltergeistThemePic from '../assets/theme-pics/poltergeist.jpg'
+
+// A theme's photo, shown dimmed in the background of every Shop card for that theme (work click, opening audio,
+// board/Hyper-Link/general theme, cursor...) and, once its General theme is equipped, as the Terminal Board's own
+// background image too (see applyCosmetics() in utils/cosmetics.js) - in front of whatever Board theme the
+// player has equipped, since it's the General theme that owns the photo. Keyed by the same id every piece of
+// that bundle shares. Add an entry here as each theme's photo comes in - nothing else needs to change.
+export const THEME_PICS = {
+    fairy: fairyThemePic,
+    poltergeist: poltergeistThemePic,
+}
 
 export const SHOP_CATEGORIES = [
     { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
@@ -228,7 +244,7 @@ export const SHOP_ITEMS = {
         workSound('playroom', 'Playroom click', 25, clickSound2, 'TEMPLATE - swap for a real xylophone-note sample. Part of the Playroom bundle.'),
         workSound('starlight', 'Starlight click', 25, clickSound3, 'TEMPLATE - swap for a real sci-fi blip sample. Part of the Starlight bundle.'),
         workSound('buccaneer', 'Buccaneer click', 25, [pirate1, pirate2, pirate3, pirate4], 'A creaking plank, a parrot squawk, a distant "arr" - a different pirate sound every click. Part of the Buccaneer bundle.'),
-        workSound('princess', 'Princess click', 25, clickSound2, 'TEMPLATE - swap for a real sparkle/harp sample. Part of the Princess bundle.'),
+        workSound('princess', 'Princess click', 25, [princess1, princess2, princess3, princess4], 'A harp glissando, a regal little flourish, a soft giggle - a different princess sound every click. Part of the Princess bundle.'),
         workSound('jazz', 'Jazz click', 25, clickSound3, 'TEMPLATE - swap for a real saxophone-note sample. Part of the Jazz bundle.'),
     ],
     openingAudio: [

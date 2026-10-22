@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor } from '../data/shopCatalog.js'
+import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PICS } from '../data/shopCatalog.js'
 import { isOwned, isBundleOwned, bundlePieces, bundlePrice } from '../utils/cosmetics.js'
 import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkSoundPreview, stopPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
@@ -43,6 +43,22 @@ function ThemePreview({ categoryId, item }) {
             )}
         </div>
     )
+}
+
+// Every piece of a themed bundle shares one id (the Fairy work sound, Fairy board, Fairy general theme... are
+// all id 'fairy'), so a card's own item.id is also the key into THEME_PICS. When that theme has a photo, the
+// card gets it dimmed into its background, with a border in that theme's own General-theme accent colour (e.g.
+// Poltergeist's spooky green) - a plain accent recolour (no THEME_PICS entry) is left exactly as it looks today.
+function themedCardStyle(id) {
+    const pic = THEME_PICS[id]
+    if (!pic) return {}
+    const accent = SHOP_ITEMS.generalTheme.find(i => i.id === id)?.vars?.['--ui-accent']
+    return {
+        backgroundImage: `linear-gradient(rgba(255, 250, 244, 0.86), rgba(255, 250, 244, 0.86)), url(${pic})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        ...(accent ? { borderColor: accent } : {}),
+    }
 }
 
 // Short chip labels for a bundle's pieces - SHOP_CATEGORIES' own names ("General themes") read fine as a tab but
@@ -106,7 +122,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                 const locked = bundle.tier === 'premium' && !owned
                                 const price = bundlePrice(cosmetics, bundle)
                                 return (
-                                    <div key={bundle.id} className={`shop-item shop-bundle-card${locked ? ' shop-item-locked' : ''}${shaking === bundle.id ? ' shop-item-shake' : ''}`}>
+                                    <div key={bundle.id} className={`shop-item shop-bundle-card${locked ? ' shop-item-locked' : ''}${shaking === bundle.id ? ' shop-item-shake' : ''}`} style={themedCardStyle(bundle.id)}>
                                         <div className="shop-item-name">
                                             {bundle.name}
                                             <span className={`shop-bundle-badge shop-bundle-badge-${bundle.tier}`}>{bundle.tier === 'premium' ? 'Premium' : 'Special'}</span>
@@ -150,7 +166,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                         const owned = isOwned(cosmetics, categoryId, item.id)
                                         const equipped = owned && equippedId === item.id
                                         return (
-                                            <div key={item.id} className={`shop-item${equipped ? ' shop-item-equipped' : ''}${locked ? ' shop-item-locked' : ''}${shaking === item.id ? ' shop-item-shake' : ''}`}>
+                                            <div key={item.id} className={`shop-item${equipped ? ' shop-item-equipped' : ''}${locked ? ' shop-item-locked' : ''}${shaking === item.id ? ' shop-item-shake' : ''}`} style={themedCardStyle(item.id)}>
                                                 <div className="shop-item-name">{item.name}{locked && <span className="shop-item-lock" aria-hidden="true">🔒</span>}</div>
                                                 {item.vars && <ThemePreview categoryId={categoryId} item={item} />}
                                                 {item.description && <div className="shop-item-desc">{item.description}</div>}
