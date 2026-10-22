@@ -73,7 +73,6 @@
 //     utils/cosmetics.js. A fully-owned bundle has nothing left to buy, so the Shop shows "Equip all" instead.
 // ──────────────────────────────────────────────────────────────────────────────────────────────────────────────
 import workClickSound from '../assets/sounds/workClickSound.mp3'
-import clickSound2 from '../assets/sounds/click_sound_2.mp3'
 import clickSound3 from '../assets/sounds/click_sound_3.mp3'
 import hoverSoundAsset from '../assets/sounds/hoverSound.mp3'
 import poltergeist1 from '../assets/work-click-sounds/poltergeist1.mp3'
@@ -110,6 +109,11 @@ import princess1 from '../assets/work-click-sounds/princess1.mp3'
 import princess2 from '../assets/work-click-sounds/princess2.mp3'
 import princess3 from '../assets/work-click-sounds/princess3.mp3'
 import princess4 from '../assets/work-click-sounds/princess4.mp3'
+import playroom1 from '../assets/work-click-sounds/playroom1.mp3'
+import playroom2 from '../assets/work-click-sounds/playroom2.mp3'
+import playroom3 from '../assets/work-click-sounds/playroom3.mp3'
+import playroom4 from '../assets/work-click-sounds/playroom4.mp3'
+import playroom5 from '../assets/work-click-sounds/playroom5.mp3'
 import duck1 from '../assets/work-click-sounds/duck1.mp3'
 import duck2 from '../assets/work-click-sounds/duck2.mp3'
 import duck3 from '../assets/work-click-sounds/duck3.mp3'
@@ -200,9 +204,9 @@ export const THEME_PICS_BOARD = {
 // one setting to change for a future promo rather than anything in the component itself. Only meaningful for an
 // id that actually has a piece in every category, so the Featured group has something to show on every tab.
 export const FEATURED_THEME_ID = 'poltergeist'
-// The short line shown under the "★ Featured" heading - change it alongside FEATURED_THEME_ID so a future
-// promo reads as a reason, not just a label.
-export const FEATURED_TAGLINE = "This season's spotlight"
+// The short line shown under the "★ Featured" heading - left blank for now (no promo/seasonal copy to commit
+// to yet). Give it a value alongside FEATURED_THEME_ID when there's a real reason to show, not just a label.
+export const FEATURED_TAGLINE = null
 
 export const SHOP_CATEGORIES = [
     { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
@@ -299,7 +303,7 @@ const openingSound = workSound
 // Builds a complete cursor set (default/pointer/grab/grabbing) by recolouring the same shapes the Ocean cursor
 // above uses - give it five hex colours and get a full, working cursor theme with no SVG-writing. Every
 // bundle's cursor piece below is built this way: a real recolour to start from, not a redrawn shape. Swap in a
-// genuinely new shape instead (see 'pod' above) for something more special, or just tweak these five colours.
+// genuinely new shape instead for something more special, or just tweak these five colours.
 const CURSOR_TEMPLATE = {
     default: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='{{A}}'/%3E%3Cstop offset='1' stop-color='{{B}}'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.5 2.2 L3.5 19.4 L7.9 15.3 L11 22 L13.7 20.8 L10.6 14.2 L16.6 14.2 Z' fill='url(%23g)' stroke='{{STROKE}}' stroke-width='1.1' stroke-linejoin='round'/%3E%3C/svg%3E\") 3 2, default",
     pointer: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='{{STROKE}}' stroke='{{STROKE}}' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='10' y='2.5' width='5.2' height='15' rx='2.6'/%3E%3Crect x='15' y='10.5' width='4.6' height='9' rx='2.3'/%3E%3Crect x='19.2' y='11.8' width='4.4' height='9' rx='2.2'/%3E%3Crect x='23' y='13.6' width='3.8' height='8.4' rx='1.9'/%3E%3Crect x='8' y='15' width='18.8' height='11.5' rx='5.5'/%3E%3Cellipse cx='8.4' cy='18' rx='2.7' ry='5' transform='rotate(-28 8.4 18)'/%3E%3C/g%3E%3Cg fill='{{FILL}}'%3E%3Crect x='10' y='2.5' width='5.2' height='15' rx='2.6'/%3E%3Crect x='15' y='10.5' width='4.6' height='9' rx='2.3'/%3E%3Crect x='19.2' y='11.8' width='4.4' height='9' rx='2.2'/%3E%3Crect x='23' y='13.6' width='3.8' height='8.4' rx='1.9'/%3E%3Crect x='8' y='15' width='18.8' height='11.5' rx='5.5'/%3E%3Cellipse cx='8.4' cy='18' rx='2.7' ry='5' transform='rotate(-28 8.4 18)'/%3E%3C/g%3E%3Cpath d='M12.6 5 L12.6 13' stroke='{{HILITE}}' stroke-width='1.2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E\") 13 3, pointer",
@@ -324,7 +328,7 @@ export const SHOP_ITEMS = {
         workSound('kitty', 'Kitty click', 25, [kitty1, kitty2, kitty3, kitty4, kitty5], 'A meow, a purr, a curious chirp - a different kitty sound every click. Part of the Kitty bundle.'),
         workSound('fairy', 'Fairy click', 25, [fairy1, fairy2, fairy3, fairy4], 'A chime, a sparkle, a tiny giggle - a different fairy sound every click. Part of the Fairy bundle.'),
         workSound('poltergeist', 'Poltergeist click', 25, [poltergeist1, poltergeist2, poltergeist3, poltergeist4, poltergeist5], 'A creak, a whisper, a rattling chain - a different ghostly sound every click. Part of the Poltergeist bundle.'),
-        workSound('playroom', 'Playroom click', 25, clickSound2, 'TEMPLATE - swap for a real xylophone-note sample. Part of the Playroom bundle.'),
+        workSound('playroom', 'Playroom click', 25, [playroom1, playroom2, playroom3, playroom4, playroom5], 'A xylophone note, a toy squeak, a little giggle - a different playroom sound every click. Part of the Playroom bundle.'),
         workSound('starlight', 'Starlight click', 25, [starlight1, starlight2, starlight3, starlight4, starlight5], 'A blip, a synth pulse, a soft sci-fi chime - a different starlight sound every click. Part of the Starlight bundle.'),
         workSound('buccaneer', 'Buccaneer click', 25, [pirate1, pirate2, pirate3, pirate4], 'A creaking plank, a parrot squawk, a distant "arr" - a different pirate sound every click. Part of the Buccaneer bundle.'),
         workSound('princess', 'Princess click', 25, [princess1, princess2, princess3, princess4], 'A harp glissando, a regal little flourish, a soft giggle - a different princess sound every click. Part of the Princess bundle.'),
@@ -354,11 +358,9 @@ export const SHOP_ITEMS = {
     ],
 
     boardTheme: [
-        boardTheme('default', 'Amber', 0, {}, 'The classic amber-on-black board.'),
+        boardTheme('default', 'Classic', 0, {}, 'The classic amber-on-black board.'),
         // PLACEHOLDER
         boardTheme('ocean', 'Ocean', 40, { accent: '#4fc3f7' }, 'Cool blue lettering.'),
-        // PLACEHOLDER
-        boardTheme('terminal', 'Terminal green', 40, { accent: '#39ff14' }, 'Old-school green phosphor.'),
 
         // Moved to 'standard' tier at the user's request (used to be 'special' - a custom background image plus
         // its own hover/click sounds, not just a recoloured accent, which is otherwise what makes something 'special').
@@ -385,9 +387,9 @@ export const SHOP_ITEMS = {
     ],
 
     hyperLinkTheme: [
-        hyperLinkTheme('default', 'Sunrise', 0, {}, 'The classic amber Hyper-Link.'),
+        hyperLinkTheme('default', 'Classic Hyper-Link', 0, {}, 'The classic amber Hyper-Link.'),
         // PLACEHOLDER
-        hyperLinkTheme('ocean', 'Ocean', 40, { accent: '#3b82f6', accentDark: '#2563eb' }, 'A blue Hyper-Link.'),
+        hyperLinkTheme('ocean', 'Ocean Hyper-Link', 40, { accent: '#3b82f6', accentDark: '#2563eb' }, 'A blue Hyper-Link.'),
 
         // PLACEHOLDER - 'supporter' tier
         hyperLinkTheme('neon', 'Neon', 0, { accent: '#39ffc9', accentDark: '#00c2a8' }, 'Part of the Supporter’s Set.', 'supporter'),
@@ -406,7 +408,7 @@ export const SHOP_ITEMS = {
     ],
 
     generalTheme: [
-        generalTheme('default', 'Golden hour', 0, {}, 'The classic look.'),
+        generalTheme('default', 'Classic', 0, {}, 'The classic look.'),
         // PLACEHOLDER
         generalTheme('ocean', 'Ocean', 75, {
             barBg: 'rgb(228, 240, 255)', accent: '#3b82f6',
@@ -475,23 +477,15 @@ export const SHOP_ITEMS = {
     ],
 
     cursorTheme: [
-        cursorTheme('default', 'Classic', 0, {}, 'The original gold hand and arrow.'),
+        cursorTheme('default', 'Classic cursor', 0, {}, 'The original gold hand and arrow.'),
 
         // PLACEHOLDER - 'standard' tier: a recolour of the same shapes
-        cursorTheme('ocean', 'Ocean', 20, {
+        cursorTheme('ocean', 'Ocean cursor', 20, {
             cursorDefault: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2399d6ff'/%3E%3Cstop offset='1' stop-color='%233b82f6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.5 2.2 L3.5 19.4 L7.9 15.3 L11 22 L13.7 20.8 L10.6 14.2 L16.6 14.2 Z' fill='url(%23g)' stroke='%230d1b2e' stroke-width='1.1' stroke-linejoin='round'/%3E%3C/svg%3E\") 3 2, default",
             cursorPointer: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%230d1b2e' stroke='%230d1b2e' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='10' y='2.5' width='5.2' height='15' rx='2.6'/%3E%3Crect x='15' y='10.5' width='4.6' height='9' rx='2.3'/%3E%3Crect x='19.2' y='11.8' width='4.4' height='9' rx='2.2'/%3E%3Crect x='23' y='13.6' width='3.8' height='8.4' rx='1.9'/%3E%3Crect x='8' y='15' width='18.8' height='11.5' rx='5.5'/%3E%3Cellipse cx='8.4' cy='18' rx='2.7' ry='5' transform='rotate(-28 8.4 18)'/%3E%3C/g%3E%3Cg fill='%234fc3f7'%3E%3Crect x='10' y='2.5' width='5.2' height='15' rx='2.6'/%3E%3Crect x='15' y='10.5' width='4.6' height='9' rx='2.3'/%3E%3Crect x='19.2' y='11.8' width='4.4' height='9' rx='2.2'/%3E%3Crect x='23' y='13.6' width='3.8' height='8.4' rx='1.9'/%3E%3Crect x='8' y='15' width='18.8' height='11.5' rx='5.5'/%3E%3Cellipse cx='8.4' cy='18' rx='2.7' ry='5' transform='rotate(-28 8.4 18)'/%3E%3C/g%3E%3Cpath d='M12.6 5 L12.6 13' stroke='%23e0f4ff' stroke-width='1.2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E\") 13 3, pointer",
             cursorGrab: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%230d1b2e' stroke='%230d1b2e' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='8.2' y='7' width='4.2' height='14' rx='2.1'/%3E%3Crect x='12.6' y='4.5' width='4.2' height='15' rx='2.1'/%3E%3Crect x='17' y='5.5' width='4.2' height='14' rx='2.1'/%3E%3Crect x='21.4' y='8.5' width='4' height='12' rx='2'/%3E%3Crect x='8' y='14' width='17.4' height='12.5' rx='6'/%3E%3Cellipse cx='7.2' cy='19' rx='2.6' ry='4.6' transform='rotate(-32 7.2 19)'/%3E%3C/g%3E%3Cg fill='%234fc3f7'%3E%3Crect x='8.2' y='7' width='4.2' height='14' rx='2.1'/%3E%3Crect x='12.6' y='4.5' width='4.2' height='15' rx='2.1'/%3E%3Crect x='17' y='5.5' width='4.2' height='14' rx='2.1'/%3E%3Crect x='21.4' y='8.5' width='4' height='12' rx='2'/%3E%3Crect x='8' y='14' width='17.4' height='12.5' rx='6'/%3E%3Cellipse cx='7.2' cy='19' rx='2.6' ry='4.6' transform='rotate(-32 7.2 19)'/%3E%3C/g%3E%3Cpath d='M10.3 10 L10.3 15 M14.7 8 L14.7 14 M19.1 9 L19.1 14' stroke='%23e0f4ff' stroke-width='1' stroke-linecap='round' fill='none'/%3E%3C/svg%3E\") 16 16, grab",
             cursorGrabbing: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%230d1b2e' stroke='%230d1b2e' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='7.5' y='11' width='4.6' height='9' rx='2.3'/%3E%3Crect x='12' y='9.5' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='16.5' y='9.8' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='21' y='11.5' width='4.4' height='8.5' rx='2.2'/%3E%3Crect x='7.5' y='15' width='17.9' height='11' rx='5.5'/%3E%3Cellipse cx='13' cy='21.5' rx='5.5' ry='2.6'/%3E%3C/g%3E%3Cg fill='%234fc3f7'%3E%3Crect x='7.5' y='11' width='4.6' height='9' rx='2.3'/%3E%3Crect x='12' y='9.5' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='16.5' y='9.8' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='21' y='11.5' width='4.4' height='8.5' rx='2.2'/%3E%3Crect x='7.5' y='15' width='17.9' height='11' rx='5.5'/%3E%3Cellipse cx='13' cy='21.5' rx='5.5' ry='2.6'/%3E%3C/g%3E%3C/svg%3E\") 16 16, grabbing",
         }, 'The same shapes, recoloured blue.'),
-
-        // PLACEHOLDER - 'special' tier: a genuinely new shape (a little hyperloop pod), not just a recolour
-        cursorTheme('pod', 'Hyperloop Pod', 65, {
-            cursorDefault: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23ede9fe'/%3E%3Cstop offset='1' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.5 2.2 L3.5 19.4 L7.9 15.3 L11 22 L13.7 20.8 L10.6 14.2 L16.6 14.2 Z' fill='url(%23g)' stroke='%232a1033' stroke-width='1.1' stroke-linejoin='round'/%3E%3C/svg%3E\") 3 2, default",
-            cursorPointer: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%232a1033' stroke='%232a1033' stroke-width='1.8' stroke-linejoin='round'%3E%3Crect x='3' y='10' width='21' height='12' rx='6'/%3E%3Cpath d='M24 12 L30 16 L24 20 Z'/%3E%3C/g%3E%3Cg fill='%238b5cf6'%3E%3Crect x='4.3' y='11.3' width='18.4' height='9.4' rx='4.7'/%3E%3Cpath d='M24.5 13 L28.5 16 L24.5 19 Z'/%3E%3C/g%3E%3Ccircle cx='9.5' cy='16' r='2' fill='%23f5f3ff'/%3E%3Ccircle cx='15.5' cy='16' r='2' fill='%23f5f3ff'/%3E%3C/svg%3E\") 4 16, pointer",
-            cursorGrab: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%232a1033' stroke='%232a1033' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='8.2' y='7' width='4.2' height='14' rx='2.1'/%3E%3Crect x='12.6' y='4.5' width='4.2' height='15' rx='2.1'/%3E%3Crect x='17' y='5.5' width='4.2' height='14' rx='2.1'/%3E%3Crect x='21.4' y='8.5' width='4' height='12' rx='2'/%3E%3Crect x='8' y='14' width='17.4' height='12.5' rx='6'/%3E%3Cellipse cx='7.2' cy='19' rx='2.6' ry='4.6' transform='rotate(-32 7.2 19)'/%3E%3C/g%3E%3Cg fill='%23c4b5fd'%3E%3Crect x='8.2' y='7' width='4.2' height='14' rx='2.1'/%3E%3Crect x='12.6' y='4.5' width='4.2' height='15' rx='2.1'/%3E%3Crect x='17' y='5.5' width='4.2' height='14' rx='2.1'/%3E%3Crect x='21.4' y='8.5' width='4' height='12' rx='2'/%3E%3Crect x='8' y='14' width='17.4' height='12.5' rx='6'/%3E%3Cellipse cx='7.2' cy='19' rx='2.6' ry='4.6' transform='rotate(-32 7.2 19)'/%3E%3C/g%3E%3Cpath d='M10.3 10 L10.3 15 M14.7 8 L14.7 14 M19.1 9 L19.1 14' stroke='%23f5f3ff' stroke-width='1' stroke-linecap='round' fill='none'/%3E%3C/svg%3E\") 16 16, grab",
-            cursorGrabbing: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%232a1033' stroke='%232a1033' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='7.5' y='11' width='4.6' height='9' rx='2.3'/%3E%3Crect x='12' y='9.5' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='16.5' y='9.8' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='21' y='11.5' width='4.4' height='8.5' rx='2.2'/%3E%3Crect x='7.5' y='15' width='17.9' height='11' rx='5.5'/%3E%3Cellipse cx='13' cy='21.5' rx='5.5' ry='2.6'/%3E%3C/g%3E%3Cg fill='%23c4b5fd'%3E%3Crect x='7.5' y='11' width='4.6' height='9' rx='2.3'/%3E%3Crect x='12' y='9.5' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='16.5' y='9.8' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='21' y='11.5' width='4.4' height='8.5' rx='2.2'/%3E%3Crect x='7.5' y='15' width='17.9' height='11' rx='5.5'/%3E%3Cellipse cx='13' cy='21.5' rx='5.5' ry='2.6'/%3E%3C/g%3E%3C/svg%3E\") 16 16, grabbing",
-        }, 'A little hyperloop pod instead of a hand, for the pointer cursor.', 'special'),
 
         // PLACEHOLDER - 'supporter' tier (reuses the Ocean shapes recoloured gold, as a stand-in until real art exists)
         cursorTheme('vip', 'VIP', 0, {
@@ -499,8 +493,8 @@ export const SHOP_ITEMS = {
         }, 'Part of the Supporter’s Set.', 'supporter'),
 
         // ── Bundle template pieces (see "ADDING A BUNDLE" above) - built with recolorCursor(), so each one is a
-        // real working recolour already. Give any of them a genuinely new shape (like 'pod' above) later if
-        // you want that bundle's cursor to feel more special.
+        // real working recolour already. Give any of them a genuinely new shape later if you want that bundle's
+        // cursor to feel more special.
         cursorTheme('kitty', 'Kitty cursor', 20, recolorCursor({ a: '#ffd6e8', b: '#ff8fab', stroke: '#5a1a2e', fill: '#ff8fab', hilite: '#fff0f5' }), 'TEMPLATE - part of the Kitty bundle.'),
         cursorTheme('fairy', 'Fairy cursor', 20, recolorCursor({ a: '#e9d8ff', b: '#b794f6', stroke: '#2e1a4d', fill: '#b794f6', hilite: '#f5f0ff' }), 'TEMPLATE - part of the Fairy bundle.'),
         cursorTheme('poltergeist', 'Poltergeist cursor', 20, recolorCursor({ a: '#d4ffd0', b: '#5fdb5a', stroke: '#0d140d', fill: '#5fdb5a', hilite: '#eafff0' }), 'TEMPLATE - part of the Poltergeist bundle.'),

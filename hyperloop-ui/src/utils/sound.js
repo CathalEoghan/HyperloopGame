@@ -97,19 +97,35 @@ function playRandomNoRepeat(pool, lastRef) {
 
 // The Work button's sound is whichever one is equipped in the Shop (the classic click by default). A 'special'-tier
 // work sound can equip several samples (srcs) instead of one.
+//
+// playRandomNoRepeat's "different sample each time" already stops the exact same clip doubling up on itself,
+// but mashing the button fast enough still starts a new copy on every single click with nothing to stop them
+// piling up - three or four different samples all ringing at once reads as one harsh overlapping screech
+// rather than a flourish, most noticeable on samples with a longer sustain (Princess's harp glissandos ring
+// much longer than, say, a quack). A short minimum gap between plays caps how many copies can stack without
+// affecting normal, human-paced tapping (it's well under even a fast double-tap).
+const WORK_CLICK_MIN_GAP_MS = 70
 const lastWorkClick = { src: null }
+let lastWorkClickAt = 0
 export function playWorkClickSound() {
+    const now = performance.now()
+    if (now - lastWorkClickAt < WORK_CLICK_MIN_GAP_MS) return
+    lastWorkClickAt = now
     const item = getEquippedItem('workSound')
     playRandomNoRepeat(item?.srcs?.length ? item.srcs : [item?.src ?? workClickSound], lastWorkClick)
 }
 
 // The Shop's Preview button for a Work sound: sounds the same as actually mashing the Work button (see
-// playRandomNoRepeat above) rather than cutting itself off, since that's exactly the behaviour the player is
-// trying to judge by previewing it.
+// playRandomNoRepeat and WORK_CLICK_MIN_GAP_MS above) rather than cutting itself off, since that's exactly the
+// behaviour the player is trying to judge by previewing it.
 const lastWorkPreview = { src: null }
+let lastWorkPreviewAt = 0
 let workPreviewAudio = null
 export function playWorkSoundPreview(src) {
     if (!canPlay()) return
+    const now = performance.now()
+    if (now - lastWorkPreviewAt < WORK_CLICK_MIN_GAP_MS) return
+    lastWorkPreviewAt = now
     workPreviewAudio = playRandomNoRepeat(Array.isArray(src) ? src : [src], lastWorkPreview)
 }
 
