@@ -48,12 +48,10 @@
 }
 
 .onboarding-step-icon {
-    width: 22px;
-    height: 22px;
+    /* Width/height/object-fit/border are set inline instead (see OnboardingModal.jsx) - the generic
+       ".modal img" rule elsewhere in the app outranks a plain class selector here. */
     flex-shrink: 0;
     margin-top: 1px;
-    object-fit: contain;
-    border: none;
 }
 
 .onboarding-hint {
