@@ -48,9 +48,12 @@
 }
 
 .onboarding-step-icon {
-    font-size: 1.1rem;
+    width: 22px;
+    height: 22px;
     flex-shrink: 0;
     margin-top: 1px;
+    object-fit: contain;
+    border: none;
 }
 
 .onboarding-hint {
