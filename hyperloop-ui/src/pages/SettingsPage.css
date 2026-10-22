@@ -278,3 +278,53 @@
     overflow: hidden;
     min-height: 0;
 }
+
+/* Sound volumes */
+.sound-volumes-list {
+    display: flex;
+    flex-direction: column;
+    padding: 4px 20px 16px;
+}
+
+.sound-volume-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 10px 0;
+    border-top: 1px solid #e8d8c8;
+}
+
+.sound-volume-row:first-child {
+    border-top: none;
+}
+
+.sound-volume-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    color: #333;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.sound-volume-slider {
+    flex: 0 0 160px;
+    accent-color: var(--ui-accent, #f5a623);
+    cursor: var(--cursor-pointer, pointer);
+}
+
+.sound-volume-mute {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    color: #888;
+    flex: 0 0 auto;
+    cursor: var(--cursor-pointer, pointer);
+    white-space: nowrap;
+}
+
+.sound-volume-mute input[type="checkbox"] {
+    accent-color: var(--ui-accent, #f5a623);
+    cursor: var(--cursor-pointer, pointer);
+}

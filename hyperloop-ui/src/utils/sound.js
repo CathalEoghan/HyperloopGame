@@ -38,6 +38,72 @@ function canPlay() {
     return localStorage.getItem('soundEnabled') !== 'false'
 }
 
+// Every distinct sound in the game belongs to one of these categories, each with its own volume slider and mute
+// switch in Settings, on top of the overall Master Sound slider/mute that scales all of them together. Order
+// here is the order they're shown in Settings.
+export const SOUND_CATEGORIES = [
+    { key: 'master', label: 'Master Sound' },
+    { key: 'opening', label: 'Opening Audio' },
+    { key: 'workClicks', label: 'Work Clicks' },
+    { key: 'hover', label: 'Hover Sound Effect' },
+    { key: 'hyperlink', label: 'Hyper-Link Notification' },
+    { key: 'departureBoard', label: 'Departure Board Flaps' },
+    { key: 'event', label: 'Event Notification' },
+    { key: 'dailyBonus', label: 'Daily Bonus Notification' },
+    { key: 'progressClaim', label: 'Progress Claim' },
+    { key: 'clickSounds', label: 'Click Sounds' },
+    { key: 'construction', label: 'Construction Sound' },
+    { key: 'saveSound', label: 'Save Sound' },
+    { key: 'farewellGreeting', label: 'Farewell/Greeting Notification' },
+]
+
+const VOLUME_KEY = 'soundVolumes'
+const MUTE_KEY = 'soundMuted'
+
+function readMap(key) {
+    try {
+        const raw = localStorage.getItem(key)
+        const parsed = raw ? JSON.parse(raw) : null
+        return parsed && typeof parsed === 'object' ? parsed : {}
+    } catch { return {} }
+}
+
+function writeMap(key, map) {
+    try { localStorage.setItem(key, JSON.stringify(map)) } catch {}
+}
+
+export function getCategoryVolume(category) {
+    const v = readMap(VOLUME_KEY)[category]
+    return typeof v === 'number' && v >= 0 && v <= 1 ? v : 1
+}
+
+export function setCategoryVolume(category, volume) {
+    const map = readMap(VOLUME_KEY)
+    map[category] = Math.max(0, Math.min(1, volume))
+    writeMap(VOLUME_KEY, map)
+}
+
+export function isCategoryMuted(category) {
+    return readMap(MUTE_KEY)[category] === true
+}
+
+export function setCategoryMuted(category, muted) {
+    const map = readMap(MUTE_KEY)
+    map[category] = !!muted
+    writeMap(MUTE_KEY, map)
+}
+
+// The volume a sound in `category` should actually play at: Master Sound's own slider/mute always applies, on
+// top of that category's own slider/mute. A category of null (a Shop preview, where the player is deliberately
+// testing a clip) only goes through Master, not any specific category.
+function categoryMultiplier(category) {
+    if (isCategoryMuted('master')) return 0
+    const master = getCategoryVolume('master')
+    if (!category) return master
+    if (isCategoryMuted(category)) return 0
+    return master * getCategoryVolume(category)
+}
+
 // The same sound asked for twice within a few milliseconds is one sound, not two on top of each other. Two copies at the same
 // instant are twice as loud, and clip: React's StrictMode runs an effect twice in development, which made the development
 // reveal sound piercing there (a production build was fine). Nothing ever wants a double play that close together, so the
@@ -45,12 +111,15 @@ function canPlay() {
 const SAME_SOUND_GAP_MS = 40
 const lastPlayed = new Map()   // src -> { at, audio }
 
-function play(src) {
+function play(src, category) {
     if (!canPlay()) return null
+    const volume = categoryMultiplier(category)
+    if (volume <= 0) return null
     const now = performance.now()
     const last = lastPlayed.get(src)
     if (last && now - last.at < SAME_SOUND_GAP_MS) return last.audio
     const audio = new Audio(src)
+    audio.volume = volume
     audio.play().catch(() => {})
     lastPlayed.set(src, { at: now, audio })
     return audio
@@ -69,41 +138,59 @@ let lastHoverAt = 0
 // hover sound is used when none is given, same as before.
 function playHover(src = hoverSound) {
     if (!canPlay()) return
+    const volume = categoryMultiplier('hover')
+    if (volume <= 0) return
     const now = performance.now()
     if (now - lastHoverAt < HOVER_MIN_GAP_MS) return
     lastHoverAt = now
     if (!hoverAudio || hoverAudioSrc !== src) {
         hoverAudio = new Audio(src)
-        hoverAudio.volume = HOVER_VOLUME
         hoverAudioSrc = src
     }
+    hoverAudio.volume = HOVER_VOLUME * volume
     hoverAudio.currentTime = 0
     hoverAudio.play().catch(() => {})
 }
 
-export const playEventSound = () => play(eventSound)
-export const playDiceRollSound = () => play(diceRollSound)
+export const playEventSound = () => play(eventSound, 'event')
+export const playDiceRollSound = () => play(diceRollSound, 'clickSounds')
 // Picks a random sample from a pool, excluding whichever one `lastRef` says played last time (unless the pool
 // is down to one sample), plays it, and updates `lastRef`. Used for any click sound that's meant to be mashed
 // fast - clicking fast enough for two picks to overlap is fine (that's normal, even desirable, variety) as long
 // as it's never the exact same clip twice in a row: two overlapping copies of the same waveform a few hundred ms
 // out of phase read as one harsh, piercing spike rather than two clicks.
-function playRandomNoRepeat(pool, lastRef) {
+function playRandomNoRepeat(pool, lastRef, category) {
     const choices = pool.length > 1 ? pool.filter(src => src !== lastRef.src) : pool
     const pick = choices[Math.floor(Math.random() * choices.length)]
     lastRef.src = pick
-    return play(pick)
+    return play(pick, category)
+}
+
+// Mashing the Work button fast enough starts a new copy on every single click, with nothing to stop them piling
+// up - three or four different samples all ringing at once reads as one harsh overlapping screech rather than a
+// flourish, most noticeable on samples with a longer sustain (Princess's harp glissandos ring much longer than,
+// say, a quack). So at most MAX_CONCURRENT_WORK_CLICKS copies are ever sounding at once: once that cap is hit,
+// the oldest one is faded out quickly (rather than cut off instantly, which itself clicks/pops) to make room for
+// the new one. Normal, human-paced tapping never gets anywhere near the cap.
+const MAX_CONCURRENT_WORK_CLICKS = 2
+const WORK_CLICK_FADE_OUT_MS = 60
+let activeWorkClickAudios = []
+
+function fadeOutAndStop(audio) {
+    const startVolume = audio.volume
+    const start = performance.now()
+    const step = () => {
+        if (audio.paused) return
+        const t = (performance.now() - start) / WORK_CLICK_FADE_OUT_MS
+        if (t >= 1) { audio.pause(); return }
+        audio.volume = startVolume * (1 - t)
+        requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
 }
 
 // The Work button's sound is whichever one is equipped in the Shop (the classic click by default). A 'special'-tier
 // work sound can equip several samples (srcs) instead of one.
-//
-// playRandomNoRepeat's "different sample each time" already stops the exact same clip doubling up on itself,
-// but mashing the button fast enough still starts a new copy on every single click with nothing to stop them
-// piling up - three or four different samples all ringing at once reads as one harsh overlapping screech
-// rather than a flourish, most noticeable on samples with a longer sustain (Princess's harp glissandos ring
-// much longer than, say, a quack). A short minimum gap between plays caps how many copies can stack without
-// affecting normal, human-paced tapping (it's well under even a fast double-tap).
 const WORK_CLICK_MIN_GAP_MS = 70
 const lastWorkClick = { src: null }
 let lastWorkClickAt = 0
@@ -112,11 +199,16 @@ export function playWorkClickSound() {
     if (now - lastWorkClickAt < WORK_CLICK_MIN_GAP_MS) return
     lastWorkClickAt = now
     const item = getEquippedItem('workSound')
-    playRandomNoRepeat(item?.srcs?.length ? item.srcs : [item?.src ?? workClickSound], lastWorkClick)
+    activeWorkClickAudios = activeWorkClickAudios.filter(a => !a.ended && !a.paused)
+    while (activeWorkClickAudios.length >= MAX_CONCURRENT_WORK_CLICKS) {
+        fadeOutAndStop(activeWorkClickAudios.shift())
+    }
+    const audio = playRandomNoRepeat(item?.srcs?.length ? item.srcs : [item?.src ?? workClickSound], lastWorkClick, 'workClicks')
+    if (audio) activeWorkClickAudios.push(audio)
 }
 
 // The Shop's Preview button for a Work sound: sounds the same as actually mashing the Work button (see
-// playRandomNoRepeat and WORK_CLICK_MIN_GAP_MS above) rather than cutting itself off, since that's exactly the
+// playRandomNoRepeat above) rather than cutting itself off, since that's exactly the
 // behaviour the player is trying to judge by previewing it.
 const lastWorkPreview = { src: null }
 let lastWorkPreviewAt = 0
@@ -126,19 +218,23 @@ export function playWorkSoundPreview(src) {
     const now = performance.now()
     if (now - lastWorkPreviewAt < WORK_CLICK_MIN_GAP_MS) return
     lastWorkPreviewAt = now
-    workPreviewAudio = playRandomNoRepeat(Array.isArray(src) ? src : [src], lastWorkPreview)
+    workPreviewAudio = playRandomNoRepeat(Array.isArray(src) ? src : [src], lastWorkPreview, 'workClicks')
 }
 
 // The Shop's Preview button for anything else (Opening audios and the like) - a sound meant to play once, not
 // be mashed, so only one preview ever plays at a time: clicking Preview again, on the same item or a different
-// one, stops whatever preview is already going first rather than layering a new copy on top of it.
+// one, stops whatever preview is already going first rather than layering a new copy on top of it. A preview is
+// a deliberate, explicit test of a clip, so it only follows Master Sound, not whichever category it belongs to.
 let previewAudio = null
 // Returns the Audio it started (or null if sound is off), so the Shop can show a playing/stopped state on its
 // own Preview button and know when the clip finishes on its own (the 'ended' event).
 export function playPreviewSound(src) {
     if (!canPlay()) return null
+    const volume = categoryMultiplier(null)
+    if (volume <= 0) return null
     if (previewAudio) { previewAudio.pause(); previewAudio.currentTime = 0 }
     previewAudio = new Audio(Array.isArray(src) ? src[Math.floor(Math.random() * src.length)] : src)
+    previewAudio.volume = volume
     previewAudio.play().catch(() => {})
     return previewAudio
 }
@@ -150,30 +246,40 @@ export function stopPreviewSound() {
 }
 // The Terminal Board's own buttons (schedule, automate, the board tabs, Farewell, Delay) use these instead of the
 // generic click/hover, so an equipped board theme's own sounds (if it sets any) are heard there and nowhere else.
-export function playBoardClickSound()           { play(getEquippedItem('boardTheme')?.clickSource ?? click_sound_2) }
+export function playBoardClickSound()           { play(getEquippedItem('boardTheme')?.clickSource ?? click_sound_2, 'departureBoard') }
 export function playBoardHoverSound()           { playHover(getEquippedItem('boardTheme')?.hoverSound ?? hoverSound) }
-export function playConstructionSound()         { play(constructionSound) }
-export function playLeavingSound()              { play(leavingSound) }
-export function playFarewellAcceptSound()       { play(farewellAcceptSound) }
-export function playSpecialChime()              { play(specialChime) }
-export function playClickSound2()               { play(click_sound_2) }
-export function playClickSound3()               { play(click_sound_3) }
-export function playRankUpSound()               { play(rankUpSound) }
+export function playConstructionSound()         { play(constructionSound, 'construction') }
+// The non-VIP sound for a Farewell/Greeting popup opening.
+export function playLeavingSound()              { play(leavingSound, 'farewellGreeting') }
+// The generic "confirmed" click heard across most of the game's confirm buttons (upgrades, purchases, skipping
+// construction, and so on) - grouped under Click Sounds. Farewell/Greeting and Save have their own dedicated
+// sounds below instead, even though they currently reuse the same clip.
+export function playFarewellAcceptSound()       { play(farewellAcceptSound, 'clickSounds') }
+// The Farewell/Greeting popup's own Accept button.
+export function playFarewellConfirmSound()      { play(farewellAcceptSound, 'farewellGreeting') }
+// The Settings page's manual Save button.
+export function playSaveConfirmSound()          { play(farewellAcceptSound, 'saveSound') }
+export function playSpecialChime()              { play(specialChime, 'progressClaim') }
+// The VIP sound for a Farewell/Greeting popup opening.
+export function playFarewellVipSound()          { play(specialChime, 'farewellGreeting') }
+export function playClickSound2()               { play(click_sound_2, 'clickSounds') }
+export function playClickSound3()               { play(click_sound_3, 'clickSounds') }
+export function playRankUpSound()               { play(rankUpSound, 'progressClaim') }
 export function playHoverSound()                { playHover() }
-export function playReputationWorkBonusSound()  { play(reputationWorkBonus) }
-export function playBottomNavbarHoverSound()    { play(bottomNavbarHover) }
+export function playReputationWorkBonusSound()  { play(reputationWorkBonus, 'progressClaim') }
+export function playBottomNavbarHoverSound()    { play(bottomNavbarHover, 'hover') }
 // The sound that plays the two times you "arrive": clicking through the loading screen, and finishing
 // construction on your first city. Whichever one is equipped in the Shop's Opening audios (the classic chime
 // by default).
 export function playOpeningAudio() {
     const item = getEquippedItem('openingAudio')
-    play(item?.src ?? openingAudio)
+    play(item?.src ?? openingAudio, 'opening')
 }
-export function playAutomatedScheduleSound()    { play(automatedScheduleSound) }
-export function playDevelopmentUnlockedSound()  { play(developmentUnlocked) }
-export function playDailyLoginSound()           { play(dailyLoginSound) }
-export function playNotEnoughFundsSound()       { play(notEnoughFundsSound) }
-export function playSplitFlapLong()  { return play(splitFlapLong) }
+export function playAutomatedScheduleSound()    { play(automatedScheduleSound, 'departureBoard') }
+export function playDevelopmentUnlockedSound()  { play(developmentUnlocked, 'progressClaim') }
+export function playDailyLoginSound()           { play(dailyLoginSound, 'dailyBonus') }
+export function playNotEnoughFundsSound()       { play(notEnoughFundsSound, 'clickSounds') }
+export function playSplitFlapLong()  { return play(splitFlapLong, 'departureBoard') }
 
 // One shared clack, reused and restarted from the top on every call. Switching tabs on the Terminal Board fires
 // this a lot in quick succession; a fresh Audio() each time used to leave the old copies playing underneath,
@@ -181,14 +287,20 @@ export function playSplitFlapLong()  { return play(splitFlapLong) }
 let shortFlapAudio = null
 export function playSplitFlapShort() {
     if (!canPlay()) return
+    const volume = categoryMultiplier('departureBoard')
+    if (volume <= 0) return
     if (!shortFlapAudio) shortFlapAudio = new Audio(splitFlapShort)
+    shortFlapAudio.volume = volume
     shortFlapAudio.currentTime = 0
     shortFlapAudio.play().catch(() => {})
 }
-export function playPhoneNotificationSound() { play(phoneNotificationSound) }
+export function playPhoneNotificationSound() { play(phoneNotificationSound, 'hyperlink') }
 export function playDepartureBoardSound() {
     if (!canPlay()) return null
+    const volume = categoryMultiplier('departureBoard')
+    if (volume <= 0) return null
     const audio = new Audio(departureBoardSound)
+    audio.volume = volume
     audio.play().catch(() => {})
     return audio
 }

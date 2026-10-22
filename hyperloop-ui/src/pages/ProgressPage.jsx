@@ -240,7 +240,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Unique countries connected', value: new Set(purchasedCities.map(c => c.country)).size },
         { label: 'Unique continents connected', value: new Set(purchasedCities.map(c => c.continent)).size },
         { label: 'Hyper-Link posts liked', value: likedCount },
-        { label: 'Developments upgraded', value: achievementManager?.counter('devUpgrades') ?? 0 },
+        { label: 'Cities and developments upgraded', value: (achievementManager?.counter('devUpgrades') ?? 0) + (achievementManager?.counter('cityUpgrades') ?? 0) },
         { label: 'Retirement count', value: PrestigeManager.getHistory().length },
         { label: 'Highest rank reached', value: highestRank },
         { label: 'Work button clicks', value: (achievementManager?.counter('work') ?? 0).toLocaleString('en-GB') },

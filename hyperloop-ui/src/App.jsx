@@ -180,6 +180,7 @@ function App() {
     am.raiseCounter('highestRank', Math.max(rankManager.rank, ...PrestigeManager.getHistory().map(r => Number(r.rank) || 0)));
     // Upgrades already made in this run count too (a game from before this achievement)
     am.seedCounter('devUpgrades', Object.values(progressionManager.developmentUpgradeLevels || {}).reduce((sum, n) => sum + (Number(n) || 0), 0));
+    am.seedCounter('cityUpgrades', Object.values(progressionManager.cityLineLevels || {}).reduce((sum, n) => sum + (Number(n) || 0), 0));
     return am;
   });
   const [achievementQueue, setAchievementQueue] = useState([]);
@@ -1644,7 +1645,10 @@ function App() {
           }}
           onUpgradeCityLine={(city) => {
             const success = progressionManager.upgradeCityLine(city);
-            if (success) triggerSave();
+            if (success) {
+              achievements.addCounter('cityUpgrades');
+              triggerSave();
+            }
             return success;
           }}
         />

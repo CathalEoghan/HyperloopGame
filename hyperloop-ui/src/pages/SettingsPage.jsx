@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import { getDistanceUnit, setDistanceUnit } from '../utils/units.js'
 import { fullscreenSupported, isFullscreen, setFullscreen, onFullscreenChange } from '../utils/display.js'
-import { playHoverSound, playClickSound2, playFarewellAcceptSound } from '../utils/sound.js'
+import { playHoverSound, playClickSound2, playSaveConfirmSound, SOUND_CATEGORIES, getCategoryVolume, setCategoryVolume, isCategoryMuted, setCategoryMuted } from '../utils/sound.js'
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
 import { GLOBE_QUALITY_KEY, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
@@ -187,6 +187,9 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const [globeQuality, setGlobeQuality] = useState(savedGlobeQuality() || 'auto')
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
+    const [soundVolOpen, setSoundVolOpen] = useState(false)
+    const [soundVolumes, setSoundVolumes] = useState(() => Object.fromEntries(SOUND_CATEGORIES.map(c => [c.key, getCategoryVolume(c.key)])))
+    const [soundMutes, setSoundMutes] = useState(() => Object.fromEntries(SOUND_CATEGORIES.map(c => [c.key, isCategoryMuted(c.key)])))
     const [eventTint, setEventTint] = useState(localStorage.getItem('hyperloop_event_tint') !== 'false')
     const [distanceUnit, setDistanceUnitState] = useState(getDistanceUnit())
     const [fullscreen, setFullscreenState] = useState(isFullscreen())
@@ -219,6 +222,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleSoundToggle = (enabled) => {
         setSoundEnabled(enabled)
         localStorage.setItem('soundEnabled', enabled)
+    }
+
+    const handleCategoryVolume = (key, value) => {
+        setCategoryVolume(key, value)
+        setSoundVolumes(v => ({ ...v, [key]: value }))
+    }
+
+    const handleCategoryMute = (key, muted) => {
+        setCategoryMuted(key, muted)
+        setSoundMutes(m => ({ ...m, [key]: muted }))
     }
 
     const handleEventTintToggle = (enabled) => {
@@ -316,6 +329,44 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <OptionBtn active={!soundEnabled} onClick={() => handleSoundToggle(false)}>Off</OptionBtn>
                     </div>
                 </div>
+
+                <button
+                    className={`version-log-toggle ${soundVolOpen ? 'version-log-toggle-open' : ''}`}
+                    aria-expanded={soundVolOpen}
+                    onMouseEnter={() => playHoverSound()}
+                    onClick={() => { playClickSound2(); setSoundVolOpen(o => !o) }}
+                >
+                    <span className="version-log-toggle-title">Sound Volumes</span>
+                    <span className="version-log-toggle-arrow">▾</span>
+                </button>
+                <div className={`version-log-drop ${soundVolOpen ? 'version-log-drop-open' : ''}`}>
+                <div className="version-log-drop-inner">
+                <div className="sound-volumes-list">
+                    {SOUND_CATEGORIES.map(({ key, label }) => (
+                        <div className="sound-volume-row" key={key}>
+                            <span className="sound-volume-label">{label}</span>
+                            <input
+                                className="sound-volume-slider"
+                                type="range"
+                                min={0}
+                                max={100}
+                                value={Math.round((soundVolumes[key] ?? 1) * 100)}
+                                disabled={soundMutes[key]}
+                                onChange={e => handleCategoryVolume(key, Number(e.target.value) / 100)}
+                            />
+                            <label className="sound-volume-mute">
+                                <input
+                                    type="checkbox"
+                                    checked={!!soundMutes[key]}
+                                    onChange={e => { playClickSound2(); handleCategoryMute(key, e.target.checked) }}
+                                />
+                                Mute
+                            </label>
+                        </div>
+                    ))}
+                </div>
+                </div>
+                </div>
             </div>
 
             <div className="settings-section">
@@ -401,7 +452,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <span className="settings-label-title">Last Saved</span>
                         <span className="settings-label-desc">{formatLastSaved()}</span>
                     </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playFarewellAcceptSound(); handleManualSave(); }}>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playSaveConfirmSound(); handleManualSave(); }}>
                         {manualSaved ? '✓ Saved' : 'Save now'}
                     </button>
                 </div>

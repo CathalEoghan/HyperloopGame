@@ -132,6 +132,8 @@ export class AchievementManager {
             reputation: progressionManager.reputation,
             dailyBonus: this.counter('dailyBonus'),
             devUpgrades: this.counter('devUpgrades'),
+            cityUpgrades: this.counter('cityUpgrades'),
+            citiesAndDevUpgrades: this.counter('devUpgrades') + this.counter('cityUpgrades'),
             builds,
             builtNames,
             adCampaignsOwned: progressionManager.purchasedUpgrades.filter(u => u.effectType === 'countryAdvertisingBoost').length,

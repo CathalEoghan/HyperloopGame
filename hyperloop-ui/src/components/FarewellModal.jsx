@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
-import { playLeavingSound, playSpecialChime, playFarewellAcceptSound, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
+import { playLeavingSound, playFarewellVipSound, playFarewellConfirmSound, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'
@@ -19,7 +19,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
 
     useEffect(() => {
         // A VIP gets its own chime
-        if (departure.vip) playSpecialChime(); else playLeavingSound()
+        if (departure.vip) playFarewellVipSound(); else playLeavingSound()
         // The fallback count is kept here, not inside a state update, so onMiss never runs during one (bug #175)
         let fallbackLeft = secondsLeft
         const timer = setInterval(() => {
@@ -50,7 +50,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const repGain = economyManager ? economyManager.getFarewellRepGain(5, !!departure.vip) : 5
 
     const accept = () => {
-        playFarewellAcceptSound()
+        playFarewellConfirmSound()
         onFarewell(repGain)
     }
 
