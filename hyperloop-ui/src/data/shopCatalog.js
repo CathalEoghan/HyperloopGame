@@ -105,15 +105,30 @@ import princess3 from '../assets/work-click-sounds/princess3.mp3'
 import princess4 from '../assets/work-click-sounds/princess4.mp3'
 import fairyThemePic from '../assets/theme-pics/fairy.jpg'
 import poltergeistThemePic from '../assets/theme-pics/poltergeist.jpg'
+import kittyThemePic from '../assets/theme-pics/kitty.jpg'
+import playroomThemePic from '../assets/theme-pics/playroom.jpg'
+import starlightThemePic from '../assets/theme-pics/starlight.jpg'
+import buccaneerThemePic from '../assets/theme-pics/buccaneer.jpg'
+import jazzThemePic from '../assets/theme-pics/jazz.jpg'
+import duckThemePic from '../assets/theme-pics/duck.jpg'
 
 // A theme's photo, shown dimmed in the background of every Shop card for that theme (work click, opening audio,
 // board/Hyper-Link/general theme, cursor...) and, once its General theme is equipped, as the Terminal Board's own
 // background image too (see applyCosmetics() in utils/cosmetics.js) - in front of whatever Board theme the
 // player has equipped, since it's the General theme that owns the photo. Keyed by the same id every piece of
 // that bundle shares. Add an entry here as each theme's photo comes in - nothing else needs to change.
+// ('duck' has no bundle yet - just its Opening audio piece and a photo - so its card gets the dimmed background
+// with no themed border, since there's no 'duck' General theme to take an accent colour from. 'princess' doesn't
+// have a photo yet, so its cards and the Terminal Board stay exactly as they look today.)
 export const THEME_PICS = {
     fairy: fairyThemePic,
     poltergeist: poltergeistThemePic,
+    kitty: kittyThemePic,
+    playroom: playroomThemePic,
+    starlight: starlightThemePic,
+    buccaneer: buccaneerThemePic,
+    jazz: jazzThemePic,
+    duck: duckThemePic,
 }
 
 export const SHOP_CATEGORIES = [
