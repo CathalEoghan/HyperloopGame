@@ -282,6 +282,12 @@ function App() {
   const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
+  // Tracks whether the player has actually pressed "click anywhere to enter" on the Construction screen, as
+  // opposed to merely having picked a city. Read inside the tick interval (whose closure is set up once on
+  // mount, so a plain state variable would be stale there) to stop income, random events, Hyper-Link posts
+  // and their sounds from running in the background while the Opening/Construction screens are still up -
+  // starts true because a returning player with an existing city skips both of those screens entirely.
+  const hasEnteredRef = useRef(true);
   const [pendingRankUps, setPendingRankUps] = useState(() => parseInt(localStorage.getItem('hyperloop_pending_rankups') || '0') || 0);
   // Persist unclaimed rank-ups so a reload before pressing Claim doesn't lose them.
   useEffect(() => { if (!blockedRef.current) localStorage.setItem('hyperloop_pending_rankups', pendingRankUps) }, [pendingRankUps]);
@@ -759,8 +765,10 @@ function App() {
   }, [showEventModal]);
 
   const fireOfficialHyperLinkPost = (trigger) => {
-    // No updates at all for the phone until a city is connected
-    if (progressionManager.purchasedCities.length === 0) return
+    // No updates at all for the phone until a city is connected, or before the player has actually entered
+    // (construction can finish, and purchasedCities go non-empty, while they're still on the "click
+    // anywhere to enter" screen).
+    if (progressionManager.purchasedCities.length === 0 || !hasEnteredRef.current) return
     const post = generateOfficialEventPost({
       terminalName: terminalNameRef.current,
       homeCity: progressionManager.purchasedCities[0],
@@ -896,7 +904,10 @@ function App() {
       // is offline time instead: it's paid through the offline popup, capped like offline
       // income, and added to any offline reward that's still waiting (bug #57).
       // Nothing is earned until the welcome popup has been closed; the time in between is simply not counted.
-      const onboarding = onboardingPending();
+      // Also true before the player has pressed "enter" at all (a prestige run skips the onboarding-pending
+      // flag, but must not start earning - or triggering rank-ups, events, etc. below - while still on the
+      // Construction screen).
+      const onboarding = onboardingPending() || !hasEnteredRef.current;
       let elapsed = onboarding ? 0 : gap;
       // Total playtime: the time the game is open, kept for good (a long gap is the game being closed, not played).
       // Written every 10 seconds rather than every tick.
@@ -1288,10 +1299,12 @@ function App() {
       // Sync active event to EconomyManager
       economyManager.activeEvent = activeEventRef.current;
 
-      // Event trigger — rank 3+, 1 min into game, 3 min after modals, guaranteed every 5 min
+      // Event trigger — rank 3+, 1 min into game, 3 min after modals, guaranteed every 5 min. Also nothing
+      // before the player has actually entered (see hasEnteredRef above) - a returning, high-rank player can
+      // easily sit on the Construction screen past the 1-minute mark otherwise.
       const timeSinceLastEvent = Date.now() - lastEventTime.current;
       const forceEvent = timeSinceLastEvent > 300000;
-      if ((Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
+      if (hasEnteredRef.current && (Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
         lastEventTime.current = Date.now();
         const noNegatives = PrestigeManager.owns('crisisAvoidanceSpecialists');
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
@@ -1442,6 +1455,9 @@ function App() {
       // A prestige run skips the first-time walkthrough
       if (!runStart) localStorage.setItem('hyperloop_onboarding_pending', '1');
       if (city?.name === 'Palikir' || city?.name === 'Apia') unlockAchievement('islander');
+      // The Construction screen is up from here until onEnter below - nothing should run or make noise
+      // behind it, even for a prestige run (which skips the onboarding-pending flag above).
+      hasEnteredRef.current = false;
       setPickedCity(city);
     }} setTerminalName={setTerminalName} />;
   }
@@ -1454,6 +1470,11 @@ function App() {
         playOpeningAudio()
         setConstructionReady(true)
         setShowOnboarding(!runStart)
+        hasEnteredRef.current = true;
+        // Restart the "quiet period" before random events can fire from the moment the player actually
+        // enters, instead of from whenever this component happened to mount while they were still reading
+        // the Opening/Construction screens.
+        gameStartTime.current = Date.now();
       }}
     />;
   }
