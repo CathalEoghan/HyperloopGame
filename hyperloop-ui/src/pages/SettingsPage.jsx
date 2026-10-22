@@ -353,12 +353,13 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Globe Texture Quality</span>
-                        <span className="settings-label-desc">Higher quality requires more loading time. Auto picks for your device: Ultra on capable computers, Standard on slower ones. Changes take effect on next visit to the home screen.</span>
+                        <span className="settings-label-desc">Higher quality requires more loading time. Auto picks for your device: Max on the most capable computers, Ultra on other capable ones, Standard on slower ones. Changes take effect on next visit to the home screen.</span>
                     </div>
                     <div className="settings-options">
-                        <OptionBtn active={globeQuality === 'auto'} onClick={() => handleQualityChange('auto')}>Auto ({autoGlobeQuality() === '8k' ? 'Ultra' : 'Standard'})</OptionBtn>
+                        <OptionBtn active={globeQuality === 'auto'} onClick={() => handleQualityChange('auto')}>Auto ({{ '2k': 'Standard', '8k': 'Ultra', '16k': 'Max' }[autoGlobeQuality()]})</OptionBtn>
                         <OptionBtn active={globeQuality === '2k'} onClick={() => handleQualityChange('2k')}>Standard (2K)</OptionBtn>
                         <OptionBtn active={globeQuality === '8k'} onClick={() => handleQualityChange('8k')}>Ultra (8K)</OptionBtn>
+                        <OptionBtn active={globeQuality === '16k'} onClick={() => handleQualityChange('16k')}>Max (16K)</OptionBtn>
                     </div>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>

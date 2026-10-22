@@ -6,6 +6,8 @@ import earthDay2k from '../assets/misc/2k_earth_daymap.jpg'
 import earthNight2k from '../assets/misc/2k_earth_nightmap.jpg'
 import earthDay8k from '../assets/misc/8k_earth_daymap.jpg'
 import earthNight8k from '../assets/misc/8k_earth_nightmap.jpg'
+import earthDay16k from '../assets/misc/16k_earth_daymap.jpg'
+import earthNight16k from '../assets/misc/16k_earth_nightmap.jpg'
 import cashIcon from '../assets/misc/cash.png'
 import clockIcon from '../assets/misc/clock.png'
 import reputationIcon from '../assets/misc/reputation.png'
@@ -85,9 +87,11 @@ function LoadingScreen({ onComplete }) {
 
     useEffect(() => {
         const quality = getGlobeQuality()
-        const globeTextures = quality === '8k'
-            ? [earthDay8k, earthNight8k]
-            : [earthDay2k, earthNight2k]
+        const globeTextures = quality === '16k'
+            ? [earthDay16k, earthNight16k]
+            : quality === '8k'
+                ? [earthDay8k, earthNight8k]
+                : [earthDay2k, earthNight2k]
 
                const imageSrcs = [
             ...Object.values(cityThumbnails),
