@@ -92,7 +92,7 @@ function playRandomNoRepeat(pool, lastRef) {
     const choices = pool.length > 1 ? pool.filter(src => src !== lastRef.src) : pool
     const pick = choices[Math.floor(Math.random() * choices.length)]
     lastRef.src = pick
-    play(pick)
+    return play(pick)
 }
 
 // The Work button's sound is whichever one is equipped in the Shop (the classic click by default). A 'special'-tier
@@ -107,9 +107,10 @@ export function playWorkClickSound() {
 // playRandomNoRepeat above) rather than cutting itself off, since that's exactly the behaviour the player is
 // trying to judge by previewing it.
 const lastWorkPreview = { src: null }
+let workPreviewAudio = null
 export function playWorkSoundPreview(src) {
     if (!canPlay()) return
-    playRandomNoRepeat(Array.isArray(src) ? src : [src], lastWorkPreview)
+    workPreviewAudio = playRandomNoRepeat(Array.isArray(src) ? src : [src], lastWorkPreview)
 }
 
 // The Shop's Preview button for anything else (Opening audios and the like) - a sound meant to play once, not
@@ -121,6 +122,12 @@ export function playPreviewSound(src) {
     if (previewAudio) { previewAudio.pause(); previewAudio.currentTime = 0 }
     previewAudio = new Audio(Array.isArray(src) ? src[Math.floor(Math.random() * src.length)] : src)
     previewAudio.play().catch(() => {})
+}
+// Stops whichever Shop preview (Preview button sound, or a Work sound preview) is currently playing. Called when
+// the Shop closes, so a preview doesn't keep playing on top of the game once the player has left it.
+export function stopPreviewSound() {
+    if (previewAudio) { previewAudio.pause(); previewAudio.currentTime = 0; previewAudio = null }
+    if (workPreviewAudio) { workPreviewAudio.pause(); workPreviewAudio.currentTime = 0; workPreviewAudio = null }
 }
 // The Terminal Board's own buttons (schedule, automate, the board tabs, Farewell, Delay) use these instead of the
 // generic click/hover, so an equipped board theme's own sounds (if it sets any) are heard there and nowhere else.

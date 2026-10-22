@@ -1,7 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor } from '../data/shopCatalog.js'
 import { isOwned, isBundleOwned, bundlePieces, bundlePrice } from '../utils/cosmetics.js'
-import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkSoundPreview } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkSoundPreview, stopPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import './ShopModal.css'
 
@@ -59,6 +59,9 @@ const BUNDLES_TAB = { id: 'bundles', name: 'Bundles', blurb: 'One item from ever
 function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquipBundle, onClose }) {
     const [categoryId, setCategoryId] = useState(SHOP_CATEGORIES[0].id)
     const [shaking, setShaking] = useState(null)
+    // Whatever Preview sound is playing shouldn't keep going once the Shop is gone, however it closed
+    // (the Close button, clicking outside, or switching tabs away from Home).
+    useEffect(() => () => stopPreviewSound(), [])
     const isBundlesTab = categoryId === 'bundles'
     const category = isBundlesTab ? BUNDLES_TAB : SHOP_CATEGORIES.find(c => c.id === categoryId)
     const items = SHOP_ITEMS[categoryId] || []

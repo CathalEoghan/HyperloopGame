@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './ScheduleModal.css'
-import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
+import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playSplitFlapShort } from '../utils/sound.js'
 import { NUM_GATES, timeString, entryTimestamp, formatDuration } from '../utils/loops.js'
 import { formatPerHour } from '../utils/income.js'
 import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, busyGates, previewLoop, MIN_LEAD } from '../utils/timetable.js'
@@ -67,11 +67,15 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
     }
     const submit = () => {
         playClickSound2()
+        const wasAdd = !editing
         const result = saveSlot({ name: city, ...slot }, purchasedCities)
         if (!result.ok) { setError(result.error); return }
         const verb = editing ? 'Moved' : 'Scheduled'
         setNotice(`${verb} ${city} to ${timeString(slot.minuteOfDay)}, Gate ${slot.gate}. ${result.today ? 'It leaves today.' : 'It starts tomorrow.'}`)
         setError('')
+        // A newly added loop gets its own little flap, like the board's columns flipping to show it -
+        // whichever column (SCHEDULED, or the gate if it's leaving soon enough to show one already).
+        if (wasAdd && localStorage.getItem('splitFlap') !== 'false') playSplitFlapShort()
         resetForm()
         refresh()
     }
@@ -141,7 +145,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                                     <div><span>Should arrive</span><b>{preview.arriveClock}{preview.nextDay ? ' (next day)' : ''}</b><em>{formatDuration(preview.durationMin * 60000)} trip, not counting delays</em></div>
                                     <div><span>Expected passengers</span><b>about {preview.passengers}{preview.capacity ? ` / ${preview.capacity}` : ''}</b><em>{preview.band} · {Math.round(preview.capacityPercent)}% capacity</em></div>
                                     {Number.isFinite(preview.estimatedDailyIncome) && (
-                                        <div><span>Estimated income</span><b style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>about <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0' }} />{formatPerHour(preview.estimatedDailyIncome)}/hr</b><em>before any boosts you own</em></div>
+                                        <div><span>Estimated income</span><b style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><span>about</span><span style={{ display: 'inline-flex', alignItems: 'center' }}><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0' }} />{formatPerHour(preview.estimatedDailyIncome)}/hr</span></b><em>before any boosts you own</em></div>
                                     )}
                                 </div>
                             )}
