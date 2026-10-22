@@ -917,6 +917,8 @@ music.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.
 palette.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/palette" title="palette icons">Palette icons created by Magnific - Flaticon</a>
 board.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/airport" title="airport icons">Airport icons created by Magnific - Flaticon</a>
 chat.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by flatart_icons - Flaticon</a>
+click.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/left-click" title="left click icons">Left click icons created by Magnific - Flaticon</a>
+gift.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/gift" title="gift icons">Gift icons created by Magnific - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
@@ -933,6 +935,8 @@ fairy4.mp3 - SergeQuadrado (Pixabay Content License)
 pirate1.mp3, pirate2.mp3, pirate3.mp3, pirate4.mp3 - freesound_community (Pixabay Content License)
 princess1.mp3, princess2.mp3, princess3.mp3, princess4.mp3 - freesound_community (Pixabay Content License)
 
+duck1.mp3, duck2.mp3 - freesound_community (Pixabay Content License)
+duck2.mp3 - iedurodrigues (Pixabay Content License)
 OPENING INTROS
 fairy.mp3 - The_Mountain (Pixabay Content License)
 kitty.mp3 - GoldenSoundLabs (Pixabay Content License)
