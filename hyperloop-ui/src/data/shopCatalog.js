@@ -111,6 +111,7 @@ import starlightThemePic from '../assets/theme-pics/starlight.jpg'
 import buccaneerThemePic from '../assets/theme-pics/buccaneer.jpg'
 import jazzThemePic from '../assets/theme-pics/jazz.jpg'
 import duckThemePic from '../assets/theme-pics/duck.jpg'
+import princessThemePic from '../assets/theme-pics/princess.jpg'
 
 // A theme's photo, shown dimmed in the background of every Shop card for that theme (work click, opening audio,
 // board/Hyper-Link/general theme, cursor...) and, once its General theme is equipped, as the Terminal Board's own
@@ -118,8 +119,7 @@ import duckThemePic from '../assets/theme-pics/duck.jpg'
 // player has equipped, since it's the General theme that owns the photo. Keyed by the same id every piece of
 // that bundle shares. Add an entry here as each theme's photo comes in - nothing else needs to change.
 // ('duck' has no bundle yet - just its Opening audio piece and a photo - so its card gets the dimmed background
-// with no themed border, since there's no 'duck' General theme to take an accent colour from. 'princess' doesn't
-// have a photo yet, so its cards and the Terminal Board stay exactly as they look today.)
+// with no themed border, since there's no 'duck' General theme to take an accent colour from.)
 export const THEME_PICS = {
     fairy: fairyThemePic,
     poltergeist: poltergeistThemePic,
@@ -129,6 +129,7 @@ export const THEME_PICS = {
     buccaneer: buccaneerThemePic,
     jazz: jazzThemePic,
     duck: duckThemePic,
+    princess: princessThemePic,
 }
 
 export const SHOP_CATEGORIES = [
