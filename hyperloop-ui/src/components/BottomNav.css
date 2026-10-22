@@ -14,6 +14,7 @@ font-family: 'Inter', sans-serif;
     flex: 1;
     height: 100%;
     background-color: var(--ui-bar-bg, rgb(255, 240, 224));
+    color: var(--ui-bar-text, #222);
     font-family: 'Inter', sans-serif;
     font-weight: bold;
     font-size:larger;

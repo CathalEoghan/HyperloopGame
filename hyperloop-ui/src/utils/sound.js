@@ -117,11 +117,14 @@ export function playWorkSoundPreview(src) {
 // be mashed, so only one preview ever plays at a time: clicking Preview again, on the same item or a different
 // one, stops whatever preview is already going first rather than layering a new copy on top of it.
 let previewAudio = null
+// Returns the Audio it started (or null if sound is off), so the Shop can show a playing/stopped state on its
+// own Preview button and know when the clip finishes on its own (the 'ended' event).
 export function playPreviewSound(src) {
-    if (!canPlay()) return
+    if (!canPlay()) return null
     if (previewAudio) { previewAudio.pause(); previewAudio.currentTime = 0 }
     previewAudio = new Audio(Array.isArray(src) ? src[Math.floor(Math.random() * src.length)] : src)
     previewAudio.play().catch(() => {})
+    return previewAudio
 }
 // Stops whichever Shop preview (Preview button sound, or a Work sound preview) is currently playing. Called when
 // the Shop closes, so a preview doesn't keep playing on top of the game once the player has left it.

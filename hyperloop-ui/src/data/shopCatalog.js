@@ -27,6 +27,11 @@
 //     cursorTheme('lime', 'Lime', 20, { cursorDefault: '...', cursorPointer: '...', cursorGrab: '...', cursorGrabbing: '...' }),
 //     workSound('chime', 'Chime', 25, chimeSound, 'A little bell.'),
 //
+//     A generalTheme with a dark barBg MUST also set barText (and usually barTextMuted) - the top bar/bottom tabs'
+//     text otherwise stays the default dark colour and becomes unreadable on a dark bar (see noir/prestige/
+//     poltergeist/starlight/jazz below for examples):
+//     generalTheme('midnight', 'Midnight', 75, { barBg: 'rgb(16, 16, 24)', barText: '#eee8ff', barTextMuted: '#a79fc0', accent: '#8b5cf6' }),
+//
 // A theme item defaults to tier: 'standard' - pass 'special' or 'supporter' as the last argument to change it
 // (see the examples further down). A workSound can take an array of files instead of one, for a click that
 // cycles between several samples each time (a 'special'-tier thing - see 'medley' below).
@@ -103,34 +108,69 @@ import princess1 from '../assets/work-click-sounds/princess1.mp3'
 import princess2 from '../assets/work-click-sounds/princess2.mp3'
 import princess3 from '../assets/work-click-sounds/princess3.mp3'
 import princess4 from '../assets/work-click-sounds/princess4.mp3'
-import fairyThemePic from '../assets/theme-pics/fairy.jpg'
-import poltergeistThemePic from '../assets/theme-pics/poltergeist.jpg'
-import kittyThemePic from '../assets/theme-pics/kitty.jpg'
-import playroomThemePic from '../assets/theme-pics/playroom.jpg'
-import starlightThemePic from '../assets/theme-pics/starlight.jpg'
-import buccaneerThemePic from '../assets/theme-pics/buccaneer.jpg'
-import jazzThemePic from '../assets/theme-pics/jazz.jpg'
-import duckThemePic from '../assets/theme-pics/duck.jpg'
-import princessThemePic from '../assets/theme-pics/princess.jpg'
+// Each theme photo ships as two pre-resized files rather than one full-resolution original scaled down by the
+// browser: a small one for the Shop's own little cards (shop/, ~480px wide) and a bigger one for the Terminal
+// Board's full-bleed, heavily-dimmed background (board/, ~1600px wide) - both already sharp at the size they're
+// actually shown at, so the Shop no longer has to download a multi-megabyte photo just to paint a 200px-wide card.
+import fairyThemePicShop from '../assets/theme-pics/shop/fairy.jpg'
+import fairyThemePicBoard from '../assets/theme-pics/board/fairy.jpg'
+import poltergeistThemePicShop from '../assets/theme-pics/shop/poltergeist.jpg'
+import poltergeistThemePicBoard from '../assets/theme-pics/board/poltergeist.jpg'
+import kittyThemePicShop from '../assets/theme-pics/shop/kitty.jpg'
+import kittyThemePicBoard from '../assets/theme-pics/board/kitty.jpg'
+import playroomThemePicShop from '../assets/theme-pics/shop/playroom.jpg'
+import playroomThemePicBoard from '../assets/theme-pics/board/playroom.jpg'
+import starlightThemePicShop from '../assets/theme-pics/shop/starlight.jpg'
+import starlightThemePicBoard from '../assets/theme-pics/board/starlight.jpg'
+import buccaneerThemePicShop from '../assets/theme-pics/shop/buccaneer.jpg'
+import buccaneerThemePicBoard from '../assets/theme-pics/board/buccaneer.jpg'
+import jazzThemePicShop from '../assets/theme-pics/shop/jazz.jpg'
+import jazzThemePicBoard from '../assets/theme-pics/board/jazz.jpg'
+import duckThemePicShop from '../assets/theme-pics/shop/duck.jpg'
+import duckThemePicBoard from '../assets/theme-pics/board/duck.jpg'
+import princessThemePicShop from '../assets/theme-pics/shop/princess.jpg'
+import princessThemePicBoard from '../assets/theme-pics/board/princess.jpg'
 
 // A theme's photo, shown dimmed in the background of every Shop card for that theme (work click, opening audio,
 // board/Hyper-Link/general theme, cursor...) and, once its General theme is equipped, as the Terminal Board's own
 // background image too (see applyCosmetics() in utils/cosmetics.js) - in front of whatever Board theme the
 // player has equipped, since it's the General theme that owns the photo. Keyed by the same id every piece of
-// that bundle shares. Add an entry here as each theme's photo comes in - nothing else needs to change.
-// ('duck' has no bundle yet - just its Opening audio piece and a photo - so its card gets the dimmed background
-// with no themed border, since there's no 'duck' General theme to take an accent colour from.)
+// that bundle shares. Add an entry here (both sizes - see the import comment above) as each theme's photo comes
+// in - nothing else needs to change.
+// ('woof' has no photo yet, so its cards and the Terminal Board stay exactly as they look today until one is added.)
 export const THEME_PICS = {
-    fairy: fairyThemePic,
-    poltergeist: poltergeistThemePic,
-    kitty: kittyThemePic,
-    playroom: playroomThemePic,
-    starlight: starlightThemePic,
-    buccaneer: buccaneerThemePic,
-    jazz: jazzThemePic,
-    duck: duckThemePic,
-    princess: princessThemePic,
+    fairy: fairyThemePicShop,
+    poltergeist: poltergeistThemePicShop,
+    kitty: kittyThemePicShop,
+    playroom: playroomThemePicShop,
+    starlight: starlightThemePicShop,
+    buccaneer: buccaneerThemePicShop,
+    jazz: jazzThemePicShop,
+    duck: duckThemePicShop,
+    princess: princessThemePicShop,
 }
+
+// The bigger variant of the same photos, used only for the Terminal Board's own background (see applyCosmetics()
+// in utils/cosmetics.js) - same keys as THEME_PICS above.
+export const THEME_PICS_BOARD = {
+    fairy: fairyThemePicBoard,
+    poltergeist: poltergeistThemePicBoard,
+    kitty: kittyThemePicBoard,
+    playroom: playroomThemePicBoard,
+    starlight: starlightThemePicBoard,
+    buccaneer: buccaneerThemePicBoard,
+    jazz: jazzThemePicBoard,
+    duck: duckThemePicBoard,
+    princess: princessThemePicBoard,
+}
+
+// The theme id the Shop spotlights in a "Featured" group at the top of every category tab (see ShopModal.jsx) -
+// one setting to change for a future promo rather than anything in the component itself. Only meaningful for an
+// id that actually has a piece in every category, so the Featured group has something to show on every tab.
+export const FEATURED_THEME_ID = 'poltergeist'
+// The short line shown under the "★ Featured" heading - change it alongside FEATURED_THEME_ID so a future
+// promo reads as a reason, not just a label.
+export const FEATURED_TAGLINE = "This season's spotlight"
 
 export const SHOP_CATEGORIES = [
     { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
@@ -154,6 +194,8 @@ export const TIERS = [
 export const THEME_PROPS = {
     generalTheme: {
         barBg:        { cssVar: '--ui-bar-bg',    default: 'rgb(255, 240, 224)', note: 'top bar and bottom tabs' },
+        barText:      { cssVar: '--ui-bar-text',       default: '#111',  note: 'terminal name and top-bar readouts (time/rank/balance/reputation) and bottom-tab labels - set this alongside a dark barBg so the text stays readable' },
+        barTextMuted: { cssVar: '--ui-bar-text-muted', default: '#666',  note: 'the softer home-city line under the terminal name - set alongside barText for a dark barBg' },
         accent:       { cssVar: '--ui-accent',    default: '#f5a623',            note: 'Work button, tab hover, board button, Shop buttons' },
         tickerBg:     { cssVar: '--ticker-bg',    default: '#0a0a0a',            note: 'ticker bar background' },
         tickerText:   { cssVar: '--ticker-text',  default: '#f5a623',            note: 'ticker bar text and top line' },
@@ -262,23 +304,26 @@ export const SHOP_ITEMS = {
         workSound('buccaneer', 'Buccaneer click', 25, [pirate1, pirate2, pirate3, pirate4], 'A creaking plank, a parrot squawk, a distant "arr" - a different pirate sound every click. Part of the Buccaneer bundle.'),
         workSound('princess', 'Princess click', 25, [princess1, princess2, princess3, princess4], 'A harp glissando, a regal little flourish, a soft giggle - a different princess sound every click. Part of the Princess bundle.'),
         workSound('jazz', 'Jazz click', 25, clickSound3, 'TEMPLATE - swap for a real saxophone-note sample. Part of the Jazz bundle.'),
+        workSound('duck', 'Duck click', 25, clickSound2, 'TEMPLATE - swap for a real quack sample. Part of the Duck bundle.'),
+        workSound('woof', 'Woof click', 25, clickSound3, 'TEMPLATE - swap for a real bark/paw-tap sample. Part of the Woof bundle.'),
     ],
     openingAudio: [
-        openingSound('default', 'Classic arrival', 0, classicOpeningAudio, 'The original.'),
+        openingSound('default', 'Classic opening', 0, classicOpeningAudio, 'The original.'),
 
         // One opening audio per themed bundle, same as the work-click sounds above - added as the real
         // recordings come in, so there's no placeholder list to keep in sync here.
-        openingSound('kitty', 'Kitty arrival', 25, kittyOpening, 'Part of the Kitty bundle.'),
-        openingSound('fairy', 'Fairy arrival', 25, fairyOpening, 'Part of the Fairy bundle.'),
-        openingSound('poltergeist', 'Poltergeist arrival', 25, poltergeistOpening, 'Part of the Poltergeist bundle.'),
-        openingSound('pirate', 'Pirate arrival', 25, pirateOpening, 'Part of the Buccaneer bundle.'),
-        openingSound('princess', 'Princess arrival', 25, princessOpening, 'Part of the Princess bundle.'),
-        openingSound('jazz', 'Jazz arrival', 25, jazzOpening, 'Part of the Jazz bundle.'),
-        openingSound('playroom', 'Playroom arrival', 25, playroomOpening, 'Part of the Playroom bundle.'),
-        openingSound('starlight', 'Starlight arrival', 25, starlightOpening, 'Part of the Starlight bundle.'),
-        // No 'duck' bundle exists yet (it's still just this one piece) - a plain description until the rest
-        // of the theme is built, same as the other categories' TEMPLATE placeholders above.
-        openingSound('duck', 'Duck arrival', 25, duckOpening, 'A quack to start your shift.'),
+        openingSound('kitty', 'Kitty opening', 25, kittyOpening, 'Part of the Kitty bundle.'),
+        openingSound('fairy', 'Fairy opening', 25, fairyOpening, 'Part of the Fairy bundle.'),
+        openingSound('poltergeist', 'Poltergeist opening', 25, poltergeistOpening, 'Part of the Poltergeist bundle.'),
+        // id matches every other Buccaneer piece ('buccaneer', not 'pirate') so this card picks up the
+        // Buccaneer theme photo (THEME_PICS is keyed by id) the same way its other pieces do.
+        openingSound('buccaneer', 'Buccaneer opening', 25, pirateOpening, 'Part of the Buccaneer bundle.'),
+        openingSound('princess', 'Princess opening', 25, princessOpening, 'Part of the Princess bundle.'),
+        openingSound('jazz', 'Jazz opening', 25, jazzOpening, 'Part of the Jazz bundle.'),
+        openingSound('playroom', 'Playroom opening', 25, playroomOpening, 'Part of the Playroom bundle.'),
+        openingSound('starlight', 'Starlight opening', 25, starlightOpening, 'Part of the Starlight bundle.'),
+        openingSound('duck', 'Duck opening', 25, duckOpening, 'A quack to start your shift. Part of the Duck bundle.'),
+        openingSound('woof', 'Woof opening', 25, classicOpeningAudio, 'TEMPLATE - swap for a real happy-bark sample. Part of the Woof bundle.'),
     ],
 
     boardTheme: [
@@ -308,6 +353,8 @@ export const SHOP_ITEMS = {
         boardTheme('buccaneer', 'Buccaneer board', 40, { accent: '#c9972a' }, 'TEMPLATE - old-gold lettering. Part of the Buccaneer bundle.'),
         boardTheme('princess', 'Princess board', 40, { accent: '#f0a8d0' }, 'TEMPLATE - rose-gold lettering. Part of the Princess bundle.'),
         boardTheme('jazz', 'Jazz board', 40, { accent: '#b8860b' }, 'TEMPLATE - smoky goldenrod lettering. Part of the Jazz bundle.'),
+        boardTheme('duck', 'Duck board', 40, { accent: '#ffcc33' }, 'TEMPLATE - sunny-yellow lettering. Part of the Duck bundle.'),
+        boardTheme('woof', 'Woof board', 40, { accent: '#4a7fc9' }, 'TEMPLATE - denim-blue lettering. Part of the Woof bundle.'),
     ],
 
     hyperLinkTheme: [
@@ -332,6 +379,8 @@ export const SHOP_ITEMS = {
         hyperLinkTheme('buccaneer', 'Buccaneer Hyper-Link', 40, { accent: '#c9972a', accentDark: '#a87a1c' }, 'TEMPLATE - part of the Buccaneer bundle.'),
         hyperLinkTheme('princess', 'Princess Hyper-Link', 40, { accent: '#f0a8d0', accentDark: '#d4af37' }, 'TEMPLATE - part of the Princess bundle.'),
         hyperLinkTheme('jazz', 'Jazz Hyper-Link', 40, { accent: '#b8860b', accentDark: '#8b0000' }, 'TEMPLATE - part of the Jazz bundle.'),
+        hyperLinkTheme('duck', 'Duck Hyper-Link', 40, { accent: '#ffcc33', accentDark: '#e0a800' }, 'TEMPLATE - part of the Duck bundle.'),
+        hyperLinkTheme('woof', 'Woof Hyper-Link', 40, { accent: '#4a7fc9', accentDark: '#2e5a99' }, 'TEMPLATE - part of the Woof bundle.'),
     ],
 
     generalTheme: [
@@ -345,14 +394,14 @@ export const SHOP_ITEMS = {
 
         // PLACEHOLDER - 'special' tier
         generalTheme('noir', 'Noir', 95, {
-            barBg: 'rgb(24, 22, 28)', accent: '#c4b5fd',
+            barBg: 'rgb(24, 22, 28)', barText: '#f1ecfb', barTextMuted: '#b3a8ce', accent: '#c4b5fd',
             tickerBg: '#000000', tickerText: '#c4b5fd',
             departureArc: '#c4b5fd', arrivalArc: '#39ffc9',
         }, 'A dark top and bottom bar with violet accents, for a sleeker look than the cream default.', 'special'),
 
         // PLACEHOLDER - 'supporter' tier
         generalTheme('prestige', 'Prestige', 0, {
-            barBg: 'rgb(20, 18, 14)', accent: '#ffd86b',
+            barBg: 'rgb(20, 18, 14)', barText: '#fbf1d9', barTextMuted: '#c7b989', accent: '#ffd86b',
             tickerBg: '#000000', tickerText: '#ffd86b',
             departureArc: '#ffd86b', arrivalArc: '#c4b5fd',
         }, 'Part of the Supporter’s Set.', 'supporter'),
@@ -369,7 +418,7 @@ export const SHOP_ITEMS = {
             departureArc: '#b794f6', arrivalArc: '#6ee7b7',
         }, 'TEMPLATE - lavender and mint. Part of the Fairy bundle.'),
         generalTheme('poltergeist', 'Poltergeist', 75, {
-            barBg: 'rgb(18, 20, 18)', accent: '#7cff6b',
+            barBg: 'rgb(18, 20, 18)', barText: '#e9ffe6', barTextMuted: '#a8d6a0', accent: '#7cff6b',
             tickerBg: '#000000', tickerText: '#9fffb0',
             departureArc: '#7cff6b', arrivalArc: '#c4b5fd',
         }, 'TEMPLATE - sickly green on near-black. Part of the Poltergeist bundle.'),
@@ -379,7 +428,7 @@ export const SHOP_ITEMS = {
             departureArc: '#ff6b6b', arrivalArc: '#4ecdc4',
         }, 'TEMPLATE - crayon-box colours. Part of the Playroom bundle.'),
         generalTheme('starlight', 'Starlight', 75, {
-            barBg: 'rgb(10, 10, 20)', accent: '#c4b5fd',
+            barBg: 'rgb(10, 10, 20)', barText: '#ece8fb', barTextMuted: '#a79fc9', accent: '#c4b5fd',
             tickerBg: '#000000', tickerText: '#39ffc9',
             departureArc: '#c4b5fd', arrivalArc: '#39ffc9',
         }, 'TEMPLATE - indigo and cyan, to match the Starlight board. Part of the Starlight bundle.'),
@@ -394,10 +443,20 @@ export const SHOP_ITEMS = {
             departureArc: '#f0a8d0', arrivalArc: '#d4af37',
         }, 'TEMPLATE - rose and gold. Part of the Princess bundle.'),
         generalTheme('jazz', 'Jazz', 75, {
-            barBg: 'rgb(30, 20, 22)', accent: '#b8860b',
+            barBg: 'rgb(30, 20, 22)', barText: '#fbead9', barTextMuted: '#cba98e', accent: '#b8860b',
             tickerBg: '#000000', tickerText: '#e0b25c',
             departureArc: '#b8860b', arrivalArc: '#8b0000',
         }, 'TEMPLATE - smoky goldenrod and burgundy. Part of the Jazz bundle.'),
+        generalTheme('duck', 'Duck', 75, {
+            barBg: 'rgb(255, 248, 224)', accent: '#ffcc33',
+            tickerBg: '#1a1506', tickerText: '#ffe08a',
+            departureArc: '#ffcc33', arrivalArc: '#2e8b8b',
+        }, 'TEMPLATE - sunny yellow and pond teal. Part of the Duck bundle.'),
+        generalTheme('woof', 'Woof', 75, {
+            barBg: 'rgb(230, 238, 250)', accent: '#4a7fc9',
+            tickerBg: '#0d1a2e', tickerText: '#9acd32',
+            departureArc: '#4a7fc9', arrivalArc: '#9acd32',
+        }, 'TEMPLATE - denim blue and tennis-ball green. Part of the Woof bundle.'),
     ],
 
     cursorTheme: [
@@ -435,6 +494,8 @@ export const SHOP_ITEMS = {
         cursorTheme('buccaneer', 'Buccaneer cursor', 20, recolorCursor({ a: '#ffe6a8', b: '#c9972a', stroke: '#2e1c05', fill: '#c9972a', hilite: '#fff6e0' }), 'TEMPLATE - part of the Buccaneer bundle.'),
         cursorTheme('princess', 'Princess cursor', 20, recolorCursor({ a: '#ffe3f0', b: '#f0a8d0', stroke: '#3a0d22', fill: '#f0a8d0', hilite: '#fff5fb' }), 'TEMPLATE - part of the Princess bundle.'),
         cursorTheme('jazz', 'Jazz cursor', 20, recolorCursor({ a: '#f0d890', b: '#b8860b', stroke: '#1a0c0c', fill: '#b8860b', hilite: '#fff6dc' }), 'TEMPLATE - part of the Jazz bundle.'),
+        cursorTheme('duck', 'Duck cursor', 20, recolorCursor({ a: '#fff3c4', b: '#ffcc33', stroke: '#1a1506', fill: '#ffcc33', hilite: '#fffdf0' }), 'TEMPLATE - part of the Duck bundle.'),
+        cursorTheme('woof', 'Woof cursor', 20, recolorCursor({ a: '#cfe0f7', b: '#4a7fc9', stroke: '#0d1a2e', fill: '#4a7fc9', hilite: '#f0f6ff' }), 'TEMPLATE - part of the Woof bundle.'),
     ],
 }
 
@@ -482,5 +543,15 @@ export const SHOP_BUNDLES = [
         id: 'jazz', name: 'Jazz', tier: 'special',
         blurb: 'Smoky and musical: goldenrod and burgundy, a saxophone note on every click.',
         items: { generalTheme: 'jazz', boardTheme: 'jazz', hyperLinkTheme: 'jazz', workSound: 'jazz', cursorTheme: 'jazz' },
+    },
+    {
+        id: 'duck', name: 'Duck', tier: 'special',
+        blurb: 'Pond-themed: sunny yellow and teal, a quack on every click.',
+        items: { generalTheme: 'duck', boardTheme: 'duck', hyperLinkTheme: 'duck', workSound: 'duck', cursorTheme: 'duck' },
+    },
+    {
+        id: 'woof', name: 'Woof', tier: 'special',
+        blurb: 'Dog-themed: denim blue and tennis-ball green, a bark on every click.',
+        items: { generalTheme: 'woof', boardTheme: 'woof', hyperLinkTheme: 'woof', workSound: 'woof', cursorTheme: 'woof' },
     },
 ]

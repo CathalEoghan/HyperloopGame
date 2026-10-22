@@ -76,7 +76,7 @@ font-size: 1rem;
     gap: 6px;
     font-size: 0.85rem;
     font-family: 'Inter', sans-serif;
-    color: #333;
+    color: var(--ui-bar-text, #333);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
 }
@@ -84,7 +84,7 @@ font-size: 1rem;
 .time {
     font-weight: bold;
     font-size: 1rem;
-    color: #111;
+    color: var(--ui-bar-text, #111);
 }
 
 .MysterySpot {
@@ -268,6 +268,7 @@ font-size: 1rem;
     font-size: 1.7rem;
     margin: 0;
     padding: 0;
+    color: var(--ui-bar-text, #111);
 }
 
 .HomeCity {
@@ -276,7 +277,7 @@ font-size: 1rem;
     gap: 5px;
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
-    color: #666;
+    color: var(--ui-bar-text-muted, #666);
     letter-spacing: 0.3px;
 }
 /* The Shop button: after the terminal name, with the same divider line that sits beside the Work button */
