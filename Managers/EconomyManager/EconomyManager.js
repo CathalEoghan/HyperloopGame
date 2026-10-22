@@ -34,6 +34,12 @@ const TIER_INCOME = {
 // EconomyManager.setBoardLoopCount, set by the UI each tick from that count).
 const DEV_BUSY_FLOOR_PCT = 10;
 const DEV_BUSY_PCT_PER_LOOP = 5;
+const DEV_BUSY_CEILING_PCT = 100;
+// A live passive-income event nudges how busy the terminal looks, not just the headline income figure: a Profits
+// Surge/Viral Coverage/etc. shifts the busy% up, a Sickness Outbreak/Bad Press/etc. shifts it down. This stacks on
+// top of (doesn't replace) the flat passive multiplier calculateDailyIncome applies for the same event - the event
+// both scales development income directly and makes the busy status itself visibly reflect what's going on.
+const DEV_BUSY_EVENT_SHIFT_PCT = 20;
 
 // A city's own base income (tier plus population), with no boosts: used for the city card, for the Work
 // calculation, and for the Schedule loop preview's estimated daily income - all from the one formula.
@@ -276,7 +282,11 @@ export class EconomyManager {
     // every development's income (see calculateDevelopmentIncome / getEffectiveDevIncomeWithBoosts) - set each
     // tick by the UI via setBoardLoopCount, since this manager has no access to the schedule storage itself.
     getDevelopmentBusyPercent() {
-        return Math.min(100, DEV_BUSY_FLOOR_PCT + DEV_BUSY_PCT_PER_LOOP * this.boardLoopCount);
+        const base = DEV_BUSY_FLOOR_PCT + DEV_BUSY_PCT_PER_LOOP * this.boardLoopCount;
+        let shift = 0;
+        if (this.activeEvent?.effectType === 'passiveBoost') shift = DEV_BUSY_EVENT_SHIFT_PCT;
+        else if (this.activeEvent?.effectType === 'passivePenalty') shift = -DEV_BUSY_EVENT_SHIFT_PCT;
+        return Math.max(DEV_BUSY_FLOOR_PCT, Math.min(DEV_BUSY_CEILING_PCT, base + shift));
     }
 
     getDevelopmentBusyMultiplier() {
@@ -291,8 +301,11 @@ export class EconomyManager {
         // "in the last hour" reads better than "(within 60m)" for the common case; anything else falls
         // back to minutes so this still makes sense if ARRIVAL_FOOTFALL_MINUTES is ever tuned.
         const arrivalWindow = ARRIVAL_FOOTFALL_MINUTES === 60 ? 'in the last hour' : `within ${ARRIVAL_FOOTFALL_MINUTES}m`;
-        return `${dep} loop${dep === 1 ? '' : 's'} ${dep === 1 ? 'is' : 'are'} nearing departure (within ${DEPARTURE_FOOTFALL_HOURS}h), `
+        let explanation = `${dep} loop${dep === 1 ? '' : 's'} ${dep === 1 ? 'is' : 'are'} nearing departure (within ${DEPARTURE_FOOTFALL_HOURS}h), `
             + `${arr} loop${arr === 1 ? '' : 's'} ${arr === 1 ? 'has' : 'have'} just arrived (${arrivalWindow}).`;
+        if (this.activeEvent?.effectType === 'passiveBoost') explanation += ` ${this.activeEvent.title} is also drawing in more passengers.`;
+        else if (this.activeEvent?.effectType === 'passivePenalty') explanation += ` ${this.activeEvent.title} is also keeping passengers away.`;
+        return explanation;
     }
 
     // The four-band read-out shown on the Development page and in each development's tooltip.

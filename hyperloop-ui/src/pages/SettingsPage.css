@@ -279,6 +279,42 @@
     min-height: 0;
 }
 
+/* Sound volumes toggle: the plain text arrow used for Update History reads as decoration more than a control, so
+   this one gets its own filled, circular badge - same accent colour as everywhere else on the page, just impossible
+   to miss as something you click. */
+.sound-volumes-toggle {
+    background: color-mix(in srgb, var(--ui-accent, #f5a623) 6%, transparent);
+}
+
+.sound-volumes-toggle-badge {
+    margin-left: auto;
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--ui-accent, #f5a623);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 1px 4px color-mix(in srgb, var(--ui-accent, #f5a623) 50%, transparent);
+    transition: transform 0.25s, background 0.15s;
+}
+
+.sound-volumes-toggle:hover .sound-volumes-toggle-badge {
+    background: color-mix(in srgb, var(--ui-accent, #f5a623) 85%, black);
+}
+
+.sound-volumes-toggle-open .sound-volumes-toggle-badge {
+    transform: rotate(180deg);
+}
+
+.sound-volumes-toggle-arrow {
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1;
+}
+
 /* Sound volumes */
 .sound-volumes-list {
     display: flex;

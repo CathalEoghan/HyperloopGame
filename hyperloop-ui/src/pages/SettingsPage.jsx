@@ -331,13 +331,15 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
 
                 <button
-                    className={`version-log-toggle ${soundVolOpen ? 'version-log-toggle-open' : ''}`}
+                    className={`version-log-toggle sound-volumes-toggle ${soundVolOpen ? 'version-log-toggle-open sound-volumes-toggle-open' : ''}`}
                     aria-expanded={soundVolOpen}
                     onMouseEnter={() => playHoverSound()}
                     onClick={() => { playClickSound2(); setSoundVolOpen(o => !o) }}
                 >
                     <span className="version-log-toggle-title">Sound Volumes</span>
-                    <span className="version-log-toggle-arrow">▾</span>
+                    <span className="sound-volumes-toggle-badge">
+                        <span className="sound-volumes-toggle-arrow">▾</span>
+                    </span>
                 </button>
                 <div className={`version-log-drop ${soundVolOpen ? 'version-log-drop-open' : ''}`}>
                 <div className="version-log-drop-inner">

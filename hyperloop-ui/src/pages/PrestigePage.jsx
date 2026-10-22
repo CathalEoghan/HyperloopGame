@@ -203,6 +203,13 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 </div>
             )}
 
+            <div className={`prestige-tree-wrap ${history.length === 0 ? 'prestige-tree-wrap-locked' : ''}`}>
+            {history.length === 0 && (
+                <div className="prestige-tree-lock-overlay">
+                    <span className="prestige-tree-lock-icon">🔒</span>
+                    <span className="prestige-tree-lock-text">PRESTIGE UPGRADES LOCKED.<br />RETIRE AT RANK {PRESTIGE_MIN_RANK} TO UNLOCK PRESTIGE UPGRADES.</span>
+                </div>
+            )}
             <div className="prestige-tree">
                 {PRESTIGE_LAYERS.map(({ layer, cost }) => {
                     const unlocked = prestige.layerUnlocked(layer)
@@ -281,6 +288,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                         </div>
                     )
                 })}
+            </div>
             </div>
 
         </div>

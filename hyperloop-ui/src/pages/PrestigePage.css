@@ -66,6 +66,49 @@
     font-family: 'Courier New', monospace;
 }
 
+.prestige-tree-wrap {
+    position: relative;
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.prestige-tree-wrap-locked .prestige-tree {
+    filter: grayscale(1) brightness(0.4);
+    pointer-events: none;
+    user-select: none;
+}
+
+.prestige-tree-lock-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 24px;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.72);
+}
+
+.prestige-tree-lock-icon {
+    font-size: 2.6rem;
+    filter: grayscale(0.3);
+}
+
+.prestige-tree-lock-text {
+    font-family: 'Courier New', monospace;
+    font-weight: 800;
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+    line-height: 1.6;
+    color: var(--pt-gold);
+    text-shadow: 0 0 14px color-mix(in srgb, var(--ui-accent, #f5a623) 55%, transparent);
+    max-width: 480px;
+}
+
 .prestige-tree {
     flex: 1;
     overflow-y: auto;
