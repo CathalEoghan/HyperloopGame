@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PICS, FEATURED_THEME_ID, FEATURED_TAGLINE } from '../data/shopCatalog.js'
 import { isOwned, isBundleOwned, bundlePieces, bundlePrice, getEquippedItem } from '../utils/cosmetics.js'
 import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkSoundPreview, stopPreviewSound } from '../utils/sound.js'
@@ -104,6 +105,14 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
     const [search, setSearch] = useState('')
     const [viewMode, setViewMode] = useState('shop') // 'shop' (everything) or 'owned' (collection only)
     const [lightbox, setLightbox] = useState(null) // { categoryId, item } for the enlarged preview, or null
+    // Hover tooltip for a bundle piece chip - { text, left, top } in viewport coordinates, or null. Rendered
+    // through a portal to document.body so it can't be clipped by the scrollable shop-content column it sits in
+    // (that column's overflow-y:auto forces overflow-x to clip too, which cut off the tooltip for edge-column chips).
+    const [chipTooltip, setChipTooltip] = useState(null)
+    const showChipTooltip = (e, text) => {
+        const r = e.currentTarget.getBoundingClientRect()
+        setChipTooltip({ text, left: Math.min(Math.max(r.left + r.width / 2, 70), window.innerWidth - 70), top: r.top })
+    }
     // Which card's non-Work-sound Preview is currently audible (its shakeKey) - toggles that one button to a
     // Stop state, and is cleared automatically when the clip ends on its own, not just when Stop is clicked.
     const [previewingKey, setPreviewingKey] = useState(null)
@@ -277,8 +286,15 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                 <div className="shop-bundle-pieces">
                                                     {bundlePieces(bundle).map(({ category: pc, id, item }) => {
                                                         const pieceOwned = isOwned(cosmetics, pc, id)
+                                                        const tooltipText = `${PIECE_LABELS[pc]}${pieceOwned ? ' (owned)' : ' (not owned)'}`
                                                         return (
-                                                            <span key={pc} className={`shop-bundle-chip${pieceOwned ? ' shop-bundle-chip-owned' : ''}`} title={`${PIECE_LABELS[pc]}: ${item.name}${pieceOwned ? ' (owned)' : ''}`}>
+                                                            <span
+                                                                key={pc}
+                                                                className={`shop-bundle-chip${pieceOwned ? ' shop-bundle-chip-owned' : ''}`}
+                                                                onMouseEnter={(e) => showChipTooltip(e, tooltipText)}
+                                                                onMouseLeave={() => setChipTooltip(null)}
+                                                            >
+                                                                {pieceOwned && <span className="shop-bundle-chip-check" aria-hidden="true">✓</span>}
                                                                 {PIECE_CHIPS[pc]}
                                                             </span>
                                                         )
@@ -341,6 +357,12 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                     <ThemePreview categoryId={lightbox.categoryId} item={lightbox.item} />
                 </div>
             </div>
+        )}
+        {chipTooltip && createPortal(
+            <div className="shop-chip-tooltip" style={{ left: chipTooltip.left, top: chipTooltip.top }}>
+                {chipTooltip.text}
+            </div>,
+            document.body
         )}
         </>
     )

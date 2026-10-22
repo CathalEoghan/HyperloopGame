@@ -328,6 +328,7 @@
    status is still there, just as a hover tooltip (the span's title attribute) rather than printed out. */
 .shop-bundle-pieces { display: flex; flex-wrap: wrap; gap: 4px; margin: 2px 0; }
 .shop-bundle-chip {
+    position: relative;
     font-size: 0.64rem;
     font-weight: 700;
     letter-spacing: 0.3px;
@@ -339,6 +340,34 @@
     cursor: default;
 }
 .shop-bundle-chip-owned { color: #4a8f3c; border-color: #4a8f3c; background: color-mix(in srgb, #4a8f3c 12%, white); }
+.shop-bundle-chip-check { margin-right: 2px; }
+
+/* Hover tooltip for a bundle piece chip - shows its full category name and owned state. Rendered through a
+   React portal straight onto document.body (see ShopModal.jsx) and positioned with `left`/`top` in viewport
+   coordinates, so it can't get clipped by the scrollable shop-content column the chips themselves sit in. */
+.shop-chip-tooltip {
+    position: fixed;
+    transform: translate(-50%, calc(-100% - 10px));
+    background: #222;
+    color: white;
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 2000;
+}
+.shop-chip-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #222;
+}
 
 @media (prefers-reduced-motion: reduce) { .shop-item-shake { animation: none; } }
 
