@@ -174,11 +174,12 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                             {timetable.map(e => {
                                 const p = previewLoop(home.name, e.name, e.minuteOfDay)
                                 const left = entryTimestamp({ hour: Math.floor(e.minuteOfDay / 60), minute: e.minuteOfDay % 60 }, Date.now()) <= Date.now()
+                                const arrived = p.arriveTs <= Date.now()
                                 return (
                                     <li key={e.name} className={`sched-row${editing === e.name ? ' sched-row-editing' : ''}`}>
                                         <span className="sched-row-time">{timeString(e.minuteOfDay)}</span>
                                         <span className="sched-row-city">{e.name}{left && <small> · left today</small>}</span>
-                                        <span className="sched-row-detail">Gate {e.gate} · arrives {p.arriveClock} · about {p.passengers}</span>
+                                        <span className="sched-row-detail">Gate {e.gate} · {arrived ? 'arrived' : 'arrives'} {p.arriveClock} · {p.passengers} passengers {left ? 'onboard' : 'expected'}</span>
                                         <span className="sched-row-actions">
                                             <button className="sched-btn sched-btn-small" onMouseEnter={() => playHoverSound()} onClick={() => startEdit(e)}>Move</button>
                                             <button className="sched-btn sched-btn-small sched-btn-danger" onMouseEnter={() => playHoverSound()} onClick={() => remove(e)}>Remove</button>

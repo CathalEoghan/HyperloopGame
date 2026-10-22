@@ -1,0 +1,51 @@
+.pageintro-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    font-family: 'Inter', sans-serif;
+    z-index: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.pageintro-panel {
+    background-color: rgb(255, 239, 224);
+    border: 2px solid black;
+    border-radius: 14px;
+    padding: 28px 32px;
+    width: 480px;
+    max-width: 100%;
+    box-sizing: border-box;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    text-align: center;
+}
+
+.pageintro-title { margin: 0; font-size: 1.4rem; font-weight: 800; color: #222; }
+
+.pageintro-text { display: flex; flex-direction: column; gap: 10px; }
+.pageintro-text p { margin: 0; font-size: 0.9rem; line-height: 1.5; color: #444; }
+.pageintro-text strong { color: #222; }
+
+.pageintro-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+.pageintro-btn {
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 9px 18px;
+    background: #fff;
+    color: #222;
+    border: 2px solid black;
+    border-radius: 10px;
+    cursor: var(--cursor-pointer, pointer);
+    transition: background-color 0.15s, color 0.15s, transform 0.15s;
+}
+.pageintro-btn:hover { background: #333; color: #fff; transform: translateY(-2px); }
+.pageintro-btn-primary { background: var(--ui-accent, #f5a623); }
+.pageintro-btn-primary:hover { background: #333; }

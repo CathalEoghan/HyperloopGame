@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import BoostTooltip from '../components/BoostTooltip.jsx'
 import IncomeRow from '../components/IncomeRow.jsx'
+import PageIntroModal from '../components/PageIntroModal.jsx'
 import './CitiesPage.css'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
@@ -42,6 +43,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)
     const [showCityBoostTip, setShowCityBoostTip] = useState(null) // the badge being hovered
+    // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
+    // then they already know how connecting and scheduling works.
+    const [showIntro, setShowIntro] = useState(() =>
+        PrestigeManager.getHistory().length === 0 && localStorage.getItem('hyperloop_cities_intro_seen') !== 'true'
+    )
+    const closeIntro = () => { localStorage.setItem('hyperloop_cities_intro_seen', 'true'); setShowIntro(false) }
 
     useEffect(() => {
         if (preSelectedCity) {
@@ -229,6 +236,13 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
 
     return (
         <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
+            {showIntro && (
+                <PageIntroModal title="Welcome to Cities" onClose={closeIntro}>
+                    <p>Connect a city, then schedule a departure for it from the Terminal Board - a city earns nothing until it has a scheduled departure.</p>
+                    <p>Afternoon departures are the most lucrative. Late nights and early mornings typically earn less.</p>
+                    <p>Upgrade a connected city's line to increase its ticket revenue.</p>
+                </PageIntroModal>
+            )}
             <div className="cities-toolbar-strip">
                 <div className="city-toolbar">
                     <input

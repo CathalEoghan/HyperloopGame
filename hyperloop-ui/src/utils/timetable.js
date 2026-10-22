@@ -129,6 +129,9 @@ export function previewLoop(homeName, name, minuteOfDay, nowMs = Date.now()) {
     return {
         durationMin,
         arriveClock: formatClock(arriveTs),
+        // The raw timestamp, not just the formatted clock - lets a caller tell "arrives" from "arrived" (the
+        // Schedule screen's own timetable list, which shows real departures rather than a hypothetical preview).
+        arriveTs,
         nextDay,
         passengers: stablePassengers('departure', nowMs, name, hour),
         capacity: city ? getTierCapacity(city.tier) : null,

@@ -1,6 +1,8 @@
 import { useState, useMemo, Fragment } from 'react'
 import BoostTooltip from '../components/BoostTooltip.jsx'
 import IncomeRow from '../components/IncomeRow.jsx'
+import PageIntroModal from '../components/PageIntroModal.jsx'
+import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
 import { matchesSearch } from '../utils/search.js'
 import './DevelopmentPage.css'
@@ -39,6 +41,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [showRenameModal, setShowRenameModal] = useState(false)
     const [renameText, setRenameText] = useState('')
     const [confirmRemove, setConfirmRemove] = useState(false)
+    // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
+    // then they already know how developments and the busy meter work.
+    const [showIntro, setShowIntro] = useState(() =>
+        PrestigeManager.getHistory().length === 0 && localStorage.getItem('hyperloop_development_intro_seen') !== 'true'
+    )
+    const closeIntro = () => { localStorage.setItem('hyperloop_development_intro_seen', 'true'); setShowIntro(false) }
 
     const progressionManager = constructionManager.progressionManager
     const allItems = [...allDevelopments, ...allUpgrades]
@@ -90,6 +98,13 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
     return (
         <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
+            {showIntro && (
+                <PageIntroModal title="Welcome to Developments" onClose={closeIntro}>
+                    <p>Developments can add flat income of their own, or powerful modifiers that influence other areas of gameplay instead.</p>
+                    <p>Every development's income scales with how busy the terminal is right now - the busy meter rises as loops near departure or have just arrived, and falls when things are quiet, between a 10% floor and 100%.</p>
+                    <p>Flat-income developments can also be upgraded to improve their base revenue.</p>
+                </PageIntroModal>
+            )}
             <div className="dev-toolbar-strip">
                 <div className="dev-toolbar">
                     <input className="dev-search" type="text" placeholder="Search developments..." value={search} onChange={e => setSearch(e.target.value)} />
