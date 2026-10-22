@@ -344,6 +344,10 @@ import ExpandedDutyFree from '../assets/developments-thumb/ExpandedDutyFree.jpg'
 import CarRental from '../assets/developments-thumb/CarRental.jpg'
 import LuggageStorage from '../assets/developments-thumb/LuggageStorage.jpg'
 import SimCardServices from '../assets/developments-thumb/SimCardServices.jpg'
+import ElectronicsStore from '../assets/developments-thumb/ElectronicsStore.jpg'
+import ObservationDeck from '../assets/developments-thumb/ObservationDeck.jpg'
+import RideShareKiosks from '../assets/developments-thumb/rideShareKiosks.jpg'
+import Supermarket from '../assets/developments-thumb/Supermarket.jpg'
 
 
 const developmentImages = {
@@ -692,7 +696,10 @@ const developmentImages = {
     "Expanded Duty-Free": ExpandedDutyFree,
     "Car Rental": CarRental,
     "Luggage Storage": LuggageStorage,
-
+    "Electronics Store": ElectronicsStore,
+    "Observation Deck": ObservationDeck,
+    "Ride Share Kiosks": RideShareKiosks,
+    "Supermarket": Supermarket,
 
 
 

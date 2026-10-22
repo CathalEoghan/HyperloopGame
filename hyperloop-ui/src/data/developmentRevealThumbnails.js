@@ -343,6 +343,10 @@ import CarRental from '../assets/developments-reveal/CarRental.jpg'
 import LuggageStorage from '../assets/developments-reveal/LuggageStorage.jpg'
 import ExpandedDutyFree from '../assets/developments-reveal/ExpandedDutyFree.jpg'
 import SimCardServices from '../assets/developments-reveal/SimCardServices.jpg'
+import ElectronicsStore from '../assets/developments-reveal/ElectronicsStore.jpg'
+import ObservationDeck from '../assets/developments-reveal/ObservationDeck.jpg'
+import RideShareKiosks from '../assets/developments-reveal/rideShareKiosks.jpg'
+import Supermarket from '../assets/developments-reveal/Supermarket.jpg'
 
 
 const developmentRevealImages = {
@@ -691,6 +695,10 @@ const developmentRevealImages = {
     "Luggage Storage": LuggageStorage,
     "Expanded Duty-Free": ExpandedDutyFree,
     "Sim Card Services": SimCardServices,
+    "Electronics Store": ElectronicsStore,
+    "Observation Deck": ObservationDeck,
+    "Ride Share Kiosks": RideShareKiosks,
+    "Supermarket": Supermarket,
 }
 
 export default developmentRevealImages

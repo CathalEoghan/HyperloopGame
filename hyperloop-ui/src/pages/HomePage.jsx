@@ -937,7 +937,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                         })()}
                         <p><em>{selectedGlobeCity.fact}</em></p>
                         <img
-                            src={cityImages[selectedGlobeCity.name]}
+                            // Falls back to the thumbnail for a city that hasn't made it to the Cloudinary host yet.
+                            src={cityImages[selectedGlobeCity.name] || cityThumbnails[selectedGlobeCity.name]}
                             alt={selectedGlobeCity.name}
                             style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', marginTop: '8px' }}
                         />

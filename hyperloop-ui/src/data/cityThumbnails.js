@@ -339,6 +339,15 @@ import Memphis from '../assets/cities-thumb/Memphis.jpg'
 import Jeddah from '../assets/cities-thumb/Jeddah.jpg'
 import Rhodes from '../assets/cities-thumb/Rhodes.jpg'
 import Ibiza from '../assets/cities-thumb/Ibiza.jpg'
+import Agra from '../assets/cities-thumb/Agra.jpg'
+import Bologna from '../assets/cities-thumb/Bologna.jpg'
+import Cardiff from '../assets/cities-thumb/Cardiff.jpg'
+import KuwaitCity from '../assets/cities-thumb/KuwaitCity.jpg'
+import Novosibirsk from '../assets/cities-thumb/Novosibirsk.jpg'
+import PortLouis from '../assets/cities-thumb/PortLouis.jpg'
+import Vientiane from '../assets/cities-thumb/Vientiane.jpg'
+import Xian from '../assets/cities-thumb/Xian.jpg'
+import Yokohama from '../assets/cities-thumb/Yokohama.jpg'
 
 
 
@@ -687,6 +696,15 @@ const cityImages = {
     Memphis: Memphis,
     Jeddah: Jeddah,
     Rhodes: Rhodes,
+    Agra: Agra,
+    Bologna: Bologna,
+    Cardiff: Cardiff,
+    "Kuwait City": KuwaitCity,
+    Novosibirsk: Novosibirsk,
+    "Port Louis": PortLouis,
+    Vientiane: Vientiane,
+    "Xi'an": Xian,
+    Yokohama: Yokohama,
 
     
 

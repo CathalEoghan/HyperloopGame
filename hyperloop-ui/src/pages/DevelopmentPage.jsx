@@ -253,8 +253,10 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                             ) : available.some(d => d.name === selectedDevelopment.name) ? (
                                 <>
                                     <h3>{selectedDevelopment.effectType === 'earlyRetirement' ? `Purchase ${selectedDevelopment.name}?` : `Build ${selectedDevelopment.name}?`}</h3>
-                                    <img className="modal-city-image" src={developmentImages[selectedDevelopment.name]} alt={selectedDevelopment.name}
-                                        onClick={(e) => { e.stopPropagation(); setEnlargedImage(developmentImages[selectedDevelopment.name]) }}
+                                    {/* Falls back to the (lower-res, but locally bundled) thumbnail for a development that
+                                        hasn't made it to the Cloudinary host yet, instead of a broken image. */}
+                                    <img className="modal-city-image" src={developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]} alt={selectedDevelopment.name}
+                                        onClick={(e) => { e.stopPropagation(); setEnlargedImage(developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]) }}
                                         style={{ cursor: 'zoom-in' }} />
                                     {(() => {
                                         const sourceCity = purchasedCities.find(city => city.rewards.some(r => r.name === selectedDevelopment.name))
@@ -307,8 +309,10 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 </>
                             ) : (
                                 <>
-                                    <img className="modal-city-image" src={developmentImages[selectedDevelopment.name]} alt={selectedDevelopment.name}
-                                        onClick={(e) => { e.stopPropagation(); setEnlargedImage(developmentImages[selectedDevelopment.name]) }}
+                                    {/* Falls back to the (lower-res, but locally bundled) thumbnail for a development that
+                                        hasn't made it to the Cloudinary host yet, instead of a broken image. */}
+                                    <img className="modal-city-image" src={developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]} alt={selectedDevelopment.name}
+                                        onClick={(e) => { e.stopPropagation(); setEnlargedImage(developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]) }}
                                         style={{ cursor: 'zoom-in' }} />
                                     <h3>{nameOf(selectedDevelopment)}</h3>
                                     {isRenamed(selectedDevelopment) && <p className="dev-original-name">{selectedDevelopment.name}</p>}

@@ -399,9 +399,11 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <p><em>{selectedCity.fact}</em></p>
                                     <img
                                         className="modal-city-image"
-                                        src={cityImages[selectedCity.name]}
+                                        // Falls back to the (lower-res, but locally bundled) thumbnail for a city that hasn't
+                                        // made it to the Cloudinary host yet, instead of a broken image (bug #91 follow-up).
+                                        src={cityImages[selectedCity.name] || cityThumbnails[selectedCity.name]}
                                         alt={selectedCity.name}
-                                        onClick={(e) => { e.stopPropagation(); setEnlargedImage(cityImages[selectedCity.name]) }}
+                                        onClick={(e) => { e.stopPropagation(); setEnlargedImage(cityImages[selectedCity.name] || cityThumbnails[selectedCity.name]) }}
                                         style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', cursor: 'zoom-in' }}
                                     />
                                     {homeCity && selectedCity.name !== homeCity.name && (() => {
