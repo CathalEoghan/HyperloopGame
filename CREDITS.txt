@@ -939,6 +939,19 @@ princess1.mp3, princess2.mp3, princess3.mp3, princess4.mp3 - freesound_community
 duck1.mp3, duck2.mp3 - freesound_community (Pixabay Content License)
 duck2.mp3 - iedurodrigues (Pixabay Content License)
 
+playroom1.mp3, playroom2.mp3, playroom3.mp3, playroom4.mp3, playroom5.mp3 - freesound_community (Pixabay Content License)
+
+jazz1.mp3, jazz2.mp3, jazz3.mp3, jazz4.mp3, jazz5.mp3 - freesound_community (Pixabay Content License)
+
+woof1.mp3 , woof2.mp3, woof3.mp3, woof4.mp3, woof5.mp3 - DRAGON_STUDIO (Pixabay Content License)
+
+starlight1.mp3 - Ahmed_Abdulaal (Pixabay Content License)
+starlight2.mp3 - DRAGON_STUDIO (Pixabay Content License)
+starlight3.mp3 - SoundReality (Pixabay Content License)
+starlight4.mp3, starlight5.mp3 - freesound_community (Pixabay Content License)
+
+ocean1.mp3, ocean2.mp3, ocean3.mp3, ocean4.mp3, ocean5.mp3 - Universfield (Pixabay Content license)
+
 OPENING INTROS
 fairy.mp3 - The_Mountain (Pixabay Content License)
 kitty.mp3 - GoldenSoundLabs (Pixabay Content License)
