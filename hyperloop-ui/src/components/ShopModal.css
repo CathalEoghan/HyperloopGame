@@ -181,7 +181,7 @@
 
 .shop-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(205px, 1fr));
     gap: 12px;
 }
 
@@ -208,7 +208,9 @@
 .shop-item-name { font-weight: bold; font-size: 0.92rem; }
 .shop-item-desc { font-size: 0.78rem; color: #666; }
 
-.shop-item-actions { display: flex; align-items: center; justify-content: flex-end; gap: 6px; margin-top: auto; padding-top: 4px; }
+/* flex-wrap so a narrow card (more categories now have 4+ items per row than when this was written) wraps its
+   Preview/Equip/Buy buttons onto their own line instead of overflowing the card's right edge into the next one. */
+.shop-item-actions { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 6px; margin-top: auto; padding-top: 4px; }
 
 .shop-btn {
     display: inline-flex;
@@ -229,7 +231,9 @@
 .shop-btn-buy { background: white; color: #333; border: 2px solid var(--ui-accent, #f5a623); }
 .shop-btn-poor { opacity: 0.55; }
 .shop-equipped { font-size: 0.78rem; font-weight: bold; color: #4a8f3c; }
-.shop-need-more { font-size: 0.68rem; color: #b9541a; white-space: nowrap; }
+/* Its own full-width line above the Buy button (flex-basis: 100%, inside the now-wrapping .shop-item-actions)
+   rather than squeezed onto the same line as Preview/Buy, which is what overflowed in the first place. */
+.shop-need-more { font-size: 0.68rem; color: #b9541a; white-space: nowrap; flex-basis: 100%; text-align: right; }
 
 /* The preview mock, wrapped in a plain button so it can be clicked open into the lightbox - reset to look
    exactly like the un-clickable div it used to be, with just a pointer cursor and a focus ring to show it's

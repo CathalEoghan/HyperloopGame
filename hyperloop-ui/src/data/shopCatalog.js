@@ -283,13 +283,6 @@ const recolorCursor = ({ a, b, stroke, fill, hilite }) => {
 export const SHOP_ITEMS = {
     workSound: [
         workSound('default', 'Classic click', 0, workClickSound, 'The original.'),
-        // PLACEHOLDER
-        workSound('soft', 'Soft click', 25, clickSound2, 'A gentler tap.'),
-        // PLACEHOLDER
-        workSound('crisp', 'Crisp click', 25, clickSound3, 'Short and sharp.'),
-
-        // PLACEHOLDER - 'special' tier: a new asset (here, cycling between existing samples), not just a recolour
-        workSound('medley', 'Medley', 60, [workClickSound, clickSound2, clickSound3], 'Cycles between three different clicks, so Work never sounds quite the same twice.', 'special'),
 
         // PLACEHOLDER - 'supporter' tier: locked until the Supporter's Set DLC exists (see TIERS above)
         workSound('fanfare', 'Fanfare', 0, workClickSound, 'A little flourish on every click. Part of the Supporter’s Set.', 'supporter'),
@@ -361,8 +354,6 @@ export const SHOP_ITEMS = {
         hyperLinkTheme('default', 'Sunrise', 0, {}, 'The classic amber Hyper-Link.'),
         // PLACEHOLDER
         hyperLinkTheme('ocean', 'Ocean', 40, { accent: '#3b82f6', accentDark: '#2563eb' }, 'A blue Hyper-Link.'),
-        // PLACEHOLDER
-        hyperLinkTheme('rose', 'Rose', 40, { accent: '#ec6a9c', accentDark: '#d94c82' }, 'A pink Hyper-Link.'),
 
         // PLACEHOLDER - 'special' tier
         hyperLinkTheme('prism', 'Prism', 65, { accent: '#a855f7', accentDark: '#ec4899' }, 'A bolder violet-to-pink gradient.', 'special'),

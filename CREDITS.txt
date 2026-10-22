@@ -912,6 +912,11 @@ signal.png - Photo by Andrejs Kirma via flaticon.com (Flaticon license), <a href
 wifi.png - Photo by Prosymbols Premium via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/wifi" title="wifi icons">Wifi icons created by Magnific - Flaticon</a>
 me.jpg - Photo by Cathal Eoghan (all rights reserved)
 shopping.png - Photo by Sergei Kokota (Flaticon license), <a href="https://www.flaticon.com/free-icons/paper-bag" title="paper bag icons">Paper bag icons created by Sergei Kokota - Flaticon</a>
+briefcase.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/briefcase" title="briefcase icons">Briefcase icons created by Magnific - Flaticon</a>
+music.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/music-note" title="music note icons">Music note icons created by Magnific - Flaticon</a>
+palette.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/palette" title="palette icons">Palette icons created by Magnific - Flaticon</a>
+board.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/airport" title="airport icons">Airport icons created by Magnific - Flaticon</a>
+chat.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by flatart_icons - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
