@@ -104,10 +104,15 @@ import jazzOpening from '../assets/opening-intros/jazz.mp3'
 import playroomOpening from '../assets/opening-intros/playtime.mp3'
 import starlightOpening from '../assets/opening-intros/starlight.mp3'
 import duckOpening from '../assets/opening-intros/duck.mp3'
+import woofOpening from '../assets/opening-intros/woof.mp3'
+import oceanOpening from '../assets/opening-intros/ocean.mp3'
 import princess1 from '../assets/work-click-sounds/princess1.mp3'
 import princess2 from '../assets/work-click-sounds/princess2.mp3'
 import princess3 from '../assets/work-click-sounds/princess3.mp3'
 import princess4 from '../assets/work-click-sounds/princess4.mp3'
+import duck1 from '../assets/work-click-sounds/duck1.mp3'
+import duck2 from '../assets/work-click-sounds/duck2.mp3'
+import duck3 from '../assets/work-click-sounds/duck3.mp3'
 // Each theme photo ships as two pre-resized files rather than one full-resolution original scaled down by the
 // browser: a small one for the Shop's own little cards (shop/, ~480px wide) and a bigger one for the Terminal
 // Board's full-bleed, heavily-dimmed background (board/, ~1600px wide) - both already sharp at the size they're
@@ -130,6 +135,10 @@ import duckThemePicShop from '../assets/theme-pics/shop/duck.jpg'
 import duckThemePicBoard from '../assets/theme-pics/board/duck.jpg'
 import princessThemePicShop from '../assets/theme-pics/shop/princess.jpg'
 import princessThemePicBoard from '../assets/theme-pics/board/princess.jpg'
+import woofThemePicShop from '../assets/theme-pics/shop/woof.jpg'
+import woofThemePicBoard from '../assets/theme-pics/board/woof.jpg'
+import oceanThemePicShop from '../assets/theme-pics/shop/ocean.jpg'
+import oceanThemePicBoard from '../assets/theme-pics/board/ocean.jpg'
 
 // A theme's photo, shown dimmed in the background of every Shop card for that theme (work click, opening audio,
 // board/Hyper-Link/general theme, cursor...) and, once its General theme is equipped, as the Terminal Board's own
@@ -137,7 +146,6 @@ import princessThemePicBoard from '../assets/theme-pics/board/princess.jpg'
 // player has equipped, since it's the General theme that owns the photo. Keyed by the same id every piece of
 // that bundle shares. Add an entry here (both sizes - see the import comment above) as each theme's photo comes
 // in - nothing else needs to change.
-// ('woof' has no photo yet, so its cards and the Terminal Board stay exactly as they look today until one is added.)
 export const THEME_PICS = {
     fairy: fairyThemePicShop,
     poltergeist: poltergeistThemePicShop,
@@ -148,6 +156,8 @@ export const THEME_PICS = {
     jazz: jazzThemePicShop,
     duck: duckThemePicShop,
     princess: princessThemePicShop,
+    woof: woofThemePicShop,
+    ocean: oceanThemePicShop,
 }
 
 // The bigger variant of the same photos, used only for the Terminal Board's own background (see applyCosmetics()
@@ -162,6 +172,8 @@ export const THEME_PICS_BOARD = {
     jazz: jazzThemePicBoard,
     duck: duckThemePicBoard,
     princess: princessThemePicBoard,
+    woof: woofThemePicBoard,
+    ocean: oceanThemePicBoard,
 }
 
 // The theme id the Shop spotlights in a "Featured" group at the top of every category tab (see ShopModal.jsx) -
@@ -297,7 +309,7 @@ export const SHOP_ITEMS = {
         workSound('buccaneer', 'Buccaneer click', 25, [pirate1, pirate2, pirate3, pirate4], 'A creaking plank, a parrot squawk, a distant "arr" - a different pirate sound every click. Part of the Buccaneer bundle.'),
         workSound('princess', 'Princess click', 25, [princess1, princess2, princess3, princess4], 'A harp glissando, a regal little flourish, a soft giggle - a different princess sound every click. Part of the Princess bundle.'),
         workSound('jazz', 'Jazz click', 25, clickSound3, 'TEMPLATE - swap for a real saxophone-note sample. Part of the Jazz bundle.'),
-        workSound('duck', 'Duck click', 25, clickSound2, 'TEMPLATE - swap for a real quack sample. Part of the Duck bundle.'),
+        workSound('duck', 'Duck click', 25, [duck1, duck2, duck3], 'A quack, a splash, a happy little paddle - a different duck sound every click. Part of the Duck bundle.'),
         workSound('woof', 'Woof click', 25, clickSound3, 'TEMPLATE - swap for a real bark/paw-tap sample. Part of the Woof bundle.'),
     ],
     openingAudio: [
@@ -316,7 +328,8 @@ export const SHOP_ITEMS = {
         openingSound('playroom', 'Playroom opening', 25, playroomOpening, 'Part of the Playroom bundle.'),
         openingSound('starlight', 'Starlight opening', 25, starlightOpening, 'Part of the Starlight bundle.'),
         openingSound('duck', 'Duck opening', 25, duckOpening, 'A quack to start your shift. Part of the Duck bundle.'),
-        openingSound('woof', 'Woof opening', 25, classicOpeningAudio, 'TEMPLATE - swap for a real happy-bark sample. Part of the Woof bundle.'),
+        openingSound('woof', 'Woof opening', 25, woofOpening, 'A happy bark to start your shift. Part of the Woof bundle.'),
+        openingSound('ocean', 'Ocean opening', 25, oceanOpening, 'Waves and gulls to start your shift.'),
     ],
 
     boardTheme: [
