@@ -1674,7 +1674,7 @@ export const POSTS = {
         'when my friends said that we\'re using THIS place i was like... ugh. it has a bad #reputation for a reason.',
         'using this terminal bc i have to, not because i want to',
         'My mum said this place is known for being terrible hope I survive 🤞',
-        'The manager\'s reputation isn\t great...',
+        'The manager\'s reputation isn\'t great...',
         'Was livestreaming my journey through here earlier and my followers were asking why the HELL i chose this over flying... lol didnt know it had a rly bad reputation 🤣',
         'This place is known for being a bit rough, hopefully all goes well',
         'My friends advised me not to travel through here... they said it has a bit of a bad reputation. What do you guys think?',
