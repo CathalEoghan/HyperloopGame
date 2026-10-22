@@ -115,13 +115,13 @@ export const ACHIEVEMENTS = [
     { id: 'justTakeTheBus', group: 'Loops', name: 'Just Take the Bus', description: `Have an active loop line shorter than ${SHORT_LOOP_KM}km.`, check: ctx => ctx.shortestLoopKm !== null && ctx.shortestLoopKm < SHORT_LOOP_KM },
     { id: 'beepBoop', group: 'Loops', name: 'Beep Boop', description: 'Automate a loop schedule.' },
     { id: 'wellAlwaysHaveParis', group: 'Loops', name: "We'll Always Have Paris", description: 'Give a farewell to a loop going to Paris from Casablanca.' },
+    { id: 'soFancy', group: 'Loops', name: 'So Fancy', description: 'Give a farewell to a loop going to Tokyo from Los Angeles.' },
     { id: 'stirCrazy', group: 'Time', name: 'Stir Crazy', description: 'Play for a total of 24 hours.', check: atLeast('playtime', 24 * 3600) },
     { id: 'touchGrass', group: 'Time', name: 'Touch Grass', description: 'Play for a total of 168 hours.', check: atLeast('playtime', 168 * 3600) },
     { id: 'shoppingSpree', group: 'Shop', name: 'Shopping Spree', description: 'Buy something from the Shop.' },
 
     // Combinations: all of these at any one time
     { id: 'loopToBusan', group: 'Combinations', name: 'Loop to Busan', description: 'Have both Seoul and Busan connected at any one time.', check: connected('Seoul', 'Busan') },
-    { id: 'soFancy', group: 'Combinations', name: 'So Fancy', description: 'Have both Tokyo and Los Angeles connected at any one time.', check: connected('Tokyo', 'Los Angeles') },
     { id: 'weDidntStartTheFire', group: 'Combinations', name: "We Didn't Start the Fire", description: 'Have New York, Budapest and Berlin connected at any one time.', check: connected('New York', 'Budapest', 'Berlin') },
     { id: 'passengerConfusion', group: 'Combinations', name: 'Passenger Confusion', description: 'Have San Jose and San José connected at any one time.', check: connected('San Jose', 'San José') },
     { id: 'royalFlush', group: 'Combinations', name: 'Royal Flush', description: 'Have Las Vegas, Macau and Monte Carlo connected at any one time.', check: connected('Las Vegas', 'Macau', 'Monte Carlo') },

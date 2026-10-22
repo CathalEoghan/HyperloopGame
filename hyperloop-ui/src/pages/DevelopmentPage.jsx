@@ -29,6 +29,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [enlargedImage, setEnlargedImage] = useState(null)
     const [showUpgradeModal, setShowUpgradeModal] = useState(false)
     const [showBoostTooltip, setShowBoostTooltip] = useState(null) // the badge being hovered
+    const [showBusyTooltip, setShowBusyTooltip] = useState(null) // the busy-status badge being hovered (banner or modal)
     // The upgrade card being hovered and what it does, so the player does not have to open it to find out
     const [upgradeTip, setUpgradeTip] = useState(null)
     const showUpgradeTip = (e, development) => {
@@ -124,8 +125,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     {formatPerHour(totalRevenue)}/hr
                                 </strong>
                                 <span
-                                    title={`How busy the terminal is right now: every development's income scales with this. ${busy.explanation}`}
                                     style={{ marginLeft: '12px', fontSize: '0.78rem', fontWeight: 'bold', color: busy.color, cursor: 'help' }}
+                                    onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `How busy the terminal is right now: every development's income scales with this. ${busy.explanation}` })}
+                                    onMouseLeave={() => setShowBusyTooltip(null)}
                                 >
                                     {busy.label} ({busyPct}%)
                                 </span>
@@ -133,6 +135,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         </div>
                     )
                 })()}
+                {showBusyTooltip && <BoostTooltip anchor={showBusyTooltip.anchor} lines={[showBusyTooltip.text]} text />}
 
                 {enlargedImage && (
                     <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
@@ -329,8 +332,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 const busyPct = economyManager.getDevelopmentBusyPercent()
                                                 return (
                                                     <p
-                                                        title={`How busy the terminal is right now (10% floor, +5% per loop nearing departure or just arrived, capped at 100%) - this scales every development's income, including this one's. ${busy.explanation}`}
                                                         style={{ margin: '0 0 8px', fontSize: '0.8rem', fontWeight: 'bold', color: busy.color, cursor: 'help' }}
+                                                        onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `How busy the terminal is right now (10% floor, +5% per loop nearing departure or just arrived, capped at 100%) - this scales every development's income, including this one's. ${busy.explanation}` })}
+                                                        onMouseLeave={() => setShowBusyTooltip(null)}
                                                     >
                                                         {busy.label}: {busyPct}% footfall
                                                     </p>

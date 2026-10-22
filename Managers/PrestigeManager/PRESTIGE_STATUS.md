@@ -15,12 +15,12 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 1 | Amicable Breakups | Disconnect costs nothing and refunds half the connection cost | App.jsx `onDisconnect`, CitiesPage |
 | 1 | Legal Loopholes | Renaming a development costs 10 Reputation instead of 20 | ProgressionManager `getRenameRepCost`, DevelopmentPage |
 | 1 | Sign-On Bonus | +£1,000,000 when a new run's starter city connects (added to the balance directly, so it is not earned cash and gives no XP) | App.jsx `signOnPending` |
-| 2 | Colour Theory | A development that earns money opens at Level 1 (no cash or Reputation paid; not applied to developments already built) | ProgressionManager `purchaseDevelopment` |
+| 2 | Colour Theory | A development that earns money, or a newly connected city, opens at Level 1 (no cash or Reputation paid; not applied to developments/cities already built) | ProgressionManager `purchaseDevelopment`, `purchaseCity` |
 | 2 | Oral Hygiene | x6 farewell Reputation (x12 with the x2 upgrade) | `getFarewellRepGain` |
 | 2 | Better Interest Rates | Daily bonus cash x10 | App.jsx `checkDailyLogin` |
 | 2 | Elite Accountants | Offline "double" becomes x4, same 20 Rep | OfflineModal `bonusFactor` |
 | 2 | Cult of Celebrity | +1 Rep for each Hyper-Link post liked (likes are permanent) | HyperLink `onLikeReward` |
-| 2 | Good Standing | Developments upgrade for 0 Rep | ProgressionManager `getDevelopmentUpgradeCostInfo` |
+| 2 | Good Standing | Developments and cities upgrade for half the Rep | ProgressionManager `getDevelopmentUpgradeCostInfo`, `getCityLineUpgradeCostInfo` |
 | 2 | Advanced Engineering | Cities and developments build immediately (finish on the next tick) | ConstructionManager |
 | 2 | Video Message | Farewell is sent automatically after 2.5 s | FarewellModal |
 | 2 | Viral Superstar | x3 Progress rewards (x6 with the x2 upgrade) | ProgressPage `handleCardClick` |

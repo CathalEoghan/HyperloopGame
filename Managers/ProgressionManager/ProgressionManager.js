@@ -115,6 +115,8 @@ export class ProgressionManager {
         city.rewards.forEach(reward => this.unlockReward(reward));
         this.purchasedCities.push(city);
         this.unlockedCities = this.unlockedCities.filter(c => c !== city);
+        // Colour Theory: a newly connected city opens at Line Level 1, with no cash or Reputation paid
+        if (PrestigeManager.owns('colourTheory') && !this.cityLineLevels[city.name]) this.cityLineLevels[city.name] = 1;
     }
 
     purchaseDevelopment(development) {
@@ -127,7 +129,7 @@ export class ProgressionManager {
             this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u !== development);
         } else {
             this.purchasedDevelopments.push(development);
-            // Colour Theory: a development that earns money opens at Level 1, with no cash or Reputation paid
+            // Colour Theory: a development that earns money opens at Upgrade Level 1, with no cash or Reputation paid
             if (development.revenue && PrestigeManager.owns('colourTheory') && !this.developmentUpgradeLevels[development.name]) this.developmentUpgradeLevels[development.name] = 1;
             this.unlockedDevelopments = this.unlockedDevelopments.filter(d => d !== development);
         }
@@ -260,8 +262,8 @@ export class ProgressionManager {
             nextLevel,
             // The tiny tolerance stops decimal rounding knocking £1 off a round price (£61,249 for 35% of £175,000)
             cashCost: Math.floor(development.cost * UPGRADE_CASH_PCTS[nextLevel] * upgradeDiscountMultiplier + 1e-6),
-            // Good Standing: upgrading developments costs no Reputation
-            repCost: PrestigeManager.owns('goodStanding') ? 0 : UPGRADE_REP_COSTS[nextLevel],
+            // Good Standing: upgrading developments and cities costs half the Reputation
+            repCost: PrestigeManager.owns('goodStanding') ? Math.floor(UPGRADE_REP_COSTS[nextLevel] / 2) : UPGRADE_REP_COSTS[nextLevel],
             boostPct: UPGRADE_BOOST_PCTS[nextLevel],
             totalPct: UPGRADE_TOTAL_PCTS[nextLevel],
         };
@@ -293,7 +295,7 @@ export class ProgressionManager {
         return {
             nextLevel,
             cashCost: Math.floor(baseCost * LINE_LEVEL_CASH_MULT * Math.pow(LINE_LEVEL_CASH_GROWTH, nextLevel - 1) + 1e-6),
-            repCost: PrestigeManager.owns('goodStanding') ? 0 : LINE_LEVEL_REP_COST,
+            repCost: PrestigeManager.owns('goodStanding') ? Math.floor(LINE_LEVEL_REP_COST / 2) : LINE_LEVEL_REP_COST,
             boostPct: LINE_LEVEL_INCOME_PCT,
             totalPct: LINE_LEVEL_INCOME_PCT * nextLevel,
         };

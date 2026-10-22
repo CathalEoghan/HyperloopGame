@@ -345,7 +345,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                             <div style={{ width: '100%', margin: '8px 0' }}>
                                                 {isHome ? (
                                                     <p style={{ margin: '0 0 6px', color: '#555', fontSize: '0.82rem', fontWeight: 'bold' }}>
-                                                        This is your home terminal: you don't depart to where you already are, so it earns no income of its own.
+                                                        This is your home terminal. It earns no departure income.
                                                     </p>
                                                 ) : !earning ? (
                                                     <p style={{ margin: '0 0 6px', color: '#c0392b', fontSize: '0.82rem', fontWeight: 'bold' }}>

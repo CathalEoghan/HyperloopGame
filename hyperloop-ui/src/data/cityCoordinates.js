@@ -340,6 +340,15 @@ const cityCoordinates = {
 "Memphis":  { lat: 35.1495, lng: -90.0490 },
 "Jeju City":{ lat: 33.5097, lng: 126.5220 },
 "Ibiza":    { lat: 38.9490, lng:   1.3930 },
+"Agra":        { lat: 27.1767, lng:  78.0081 },
+"Bologna":     { lat: 44.4949, lng:  11.3426 },
+"Cardiff":     { lat: 51.4816, lng:  -3.1791 },
+"Kuwait City": { lat: 29.3759, lng:  47.9774 },
+"Novosibirsk": { lat: 55.0084, lng:  82.9357 },
+"Port Louis":  { lat:-20.1609, lng:  57.5012 },
+"Vientiane":   { lat: 17.9757, lng: 102.6331 },
+"Xi'an":       { lat: 34.3416, lng: 108.9398 },
+"Yokohama":    { lat: 35.4437, lng: 139.6380 },
 
 
 

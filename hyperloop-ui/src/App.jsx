@@ -354,6 +354,8 @@ function App() {
     if (dep?.vip) { achievements.addCounter('vips'); unlockAchievement('veryImportantPassenger'); }
     // A farewell to a loop leaving Casablanca for Paris
     if (dep?.name === 'Paris' && progressionManager.purchasedCities[0]?.name === 'Casablanca') unlockAchievement('wellAlwaysHaveParis');
+    // A farewell to a loop leaving Los Angeles for Tokyo
+    if (dep?.name === 'Tokyo' && progressionManager.purchasedCities[0]?.name === 'Los Angeles') unlockAchievement('soFancy');
     setFarewellsGiven(newCount);
     triggerSave(newCount);
     finishDeparture(dep);

@@ -4,6 +4,7 @@ import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHove
 import { NUM_GATES, timeString, entryTimestamp, formatDuration } from '../utils/loops.js'
 import { formatPerHour } from '../utils/income.js'
 import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, busyGates, previewLoop, MIN_LEAD } from '../utils/timetable.js'
+import cashIcon from '../assets/misc/cash.png'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5)
@@ -98,7 +99,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                 <div className="sched-body">
                     <p className="sched-intro">
                         Each city can leave once a day. Loops can leave at the same time from different gates, but a gate can't be reused for 30 minutes.
-                        Your timetable is saved and repeats every day.
+                        Your timetable is saved and repeats every day at no extra cost, though passenger counts and income will vary from day to day.
                     </p>
 
                     {formVisible ? (
@@ -140,7 +141,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                                     <div><span>Should arrive</span><b>{preview.arriveClock}{preview.nextDay ? ' (next day)' : ''}</b><em>{formatDuration(preview.durationMin * 60000)} trip, not counting delays</em></div>
                                     <div><span>Expected passengers</span><b>about {preview.passengers}{preview.capacity ? ` / ${preview.capacity}` : ''}</b><em>{preview.band} · {Math.round(preview.capacityPercent)}% capacity</em></div>
                                     {Number.isFinite(preview.estimatedDailyIncome) && (
-                                        <div><span>Estimated income</span><b>about £{formatPerHour(preview.estimatedDailyIncome)}/hr</b><em>before any boosts you own</em></div>
+                                        <div><span>Estimated income</span><b style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>about <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0' }} />{formatPerHour(preview.estimatedDailyIncome)}/hr</b><em>before any boosts you own</em></div>
                                     )}
                                 </div>
                             )}

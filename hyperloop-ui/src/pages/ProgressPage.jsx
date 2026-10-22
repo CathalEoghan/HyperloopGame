@@ -156,6 +156,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     const antarcticaUnlocked = purchasedCities.some(p => p.continent === 'Antarctica')
     const visibleCities = allCities.filter(c => c.continent !== 'Antarctica' || antarcticaUnlocked)
+    // The collection totals count the Antarctic Peninsula and Antarctica from the start (350 cities, 155 countries
+    // reads better than 349/154) even though the city itself stays out of the grid - and out of the normal unlock
+    // pool - until it's earned the usual way, as the secret finale after every other city is claimed.
+    const totalCitiesCount = allCities.length
+    const totalCountriesCount = new Set(allCities.map(c => c.country)).size
     const purchasedNames = new Set(purchasedCities.map(c => c.name))
     const unlockedNames = new Set((unlockedCities || []).map(c => c.name))
     const sortedCities = [...visibleCities].sort((a, b) => a.name.localeCompare(b.name))
@@ -359,8 +364,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     }
 
     const upgradeStats = getUpgradeStats()
-    const cityProgress = (purchasedCities.length / visibleCities.length) * 100
-    const countryProgress = (purchasedCountries.size / sortedCountries.length) * 100
+    const cityProgress = (purchasedCities.length / totalCitiesCount) * 100
+    const countryProgress = (purchasedCountries.size / totalCountriesCount) * 100
 
     return (
         <>
@@ -392,7 +397,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                         </div>
                     )}
 
-                    {sectionHeader('countries', 'Countries collected', { marginTop: '24px' }, <span className="progress-fraction">{purchasedCountries.size} / {sortedCountries.length}</span>)}
+                    {sectionHeader('countries', 'Countries collected', { marginTop: '24px' }, <span className="progress-fraction">{purchasedCountries.size} / {totalCountriesCount}</span>)}
                     <div className="progress-bar-container">
                         <div className="progress-bar-fill" style={{ width: `${countryProgress}%` }} />
                         <span className="progress-bar-label">{Math.round(countryProgress)}%</span>
@@ -423,7 +428,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                         })}
                     </div>}
 
-                    {sectionHeader('cities', 'Cities collected', { marginTop: '24px' }, <span className="progress-fraction">{purchasedCities.length} / {visibleCities.length}</span>)}
+                    {sectionHeader('cities', 'Cities collected', { marginTop: '24px' }, <span className="progress-fraction">{purchasedCities.length} / {totalCitiesCount}</span>)}
                     <div className="progress-bar-container">
                         <div className="progress-bar-fill" style={{ width: `${cityProgress}%` }} />
                         <span className="progress-bar-label">{Math.round(cityProgress)}%</span>
