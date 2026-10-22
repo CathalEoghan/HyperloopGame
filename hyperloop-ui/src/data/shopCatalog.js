@@ -28,7 +28,7 @@
 //     workSound('chime', 'Chime', 25, chimeSound, 'A little bell.'),
 //
 //     A generalTheme with a dark barBg MUST also set barText (and usually barTextMuted) - the top bar/bottom tabs'
-//     text otherwise stays the default dark colour and becomes unreadable on a dark bar (see noir/prestige/
+//     text otherwise stays the default dark colour and becomes unreadable on a dark bar (see prestige/
 //     poltergeist/starlight/jazz below for examples):
 //     generalTheme('midnight', 'Midnight', 75, { barBg: 'rgb(16, 16, 24)', barText: '#eee8ff', barTextMuted: '#a79fc0', accent: '#8b5cf6' }),
 //
@@ -113,6 +113,26 @@ import princess4 from '../assets/work-click-sounds/princess4.mp3'
 import duck1 from '../assets/work-click-sounds/duck1.mp3'
 import duck2 from '../assets/work-click-sounds/duck2.mp3'
 import duck3 from '../assets/work-click-sounds/duck3.mp3'
+import jazz1 from '../assets/work-click-sounds/jazz1.mp3'
+import jazz2 from '../assets/work-click-sounds/jazz2.mp3'
+import jazz3 from '../assets/work-click-sounds/jazz3.mp3'
+import jazz4 from '../assets/work-click-sounds/jazz4.mp3'
+import jazz5 from '../assets/work-click-sounds/jazz5.mp3'
+import starlight1 from '../assets/work-click-sounds/starlight1.mp3'
+import starlight2 from '../assets/work-click-sounds/starlight2.mp3'
+import starlight3 from '../assets/work-click-sounds/starlight3.mp3'
+import starlight4 from '../assets/work-click-sounds/starlight4.mp3'
+import starlight5 from '../assets/work-click-sounds/starlight5.mp3'
+import ocean1 from '../assets/work-click-sounds/ocean1.mp3'
+import ocean2 from '../assets/work-click-sounds/ocean2.mp3'
+import ocean3 from '../assets/work-click-sounds/ocean3.mp3'
+import ocean4 from '../assets/work-click-sounds/ocean4.mp3'
+import ocean5 from '../assets/work-click-sounds/ocean5.mp3'
+import woof1 from '../assets/work-click-sounds/woof1.mp3'
+import woof2 from '../assets/work-click-sounds/woof2.mp3'
+import woof3 from '../assets/work-click-sounds/woof3.mp3'
+import woof4 from '../assets/work-click-sounds/woof4.mp3'
+import woof5 from '../assets/work-click-sounds/woof5.mp3'
 // Each theme photo ships as two pre-resized files rather than one full-resolution original scaled down by the
 // browser: a small one for the Shop's own little cards (shop/, ~480px wide) and a bigger one for the Terminal
 // Board's full-bleed, heavily-dimmed background (board/, ~1600px wide) - both already sharp at the size they're
@@ -305,12 +325,13 @@ export const SHOP_ITEMS = {
         workSound('fairy', 'Fairy click', 25, [fairy1, fairy2, fairy3, fairy4], 'A chime, a sparkle, a tiny giggle - a different fairy sound every click. Part of the Fairy bundle.'),
         workSound('poltergeist', 'Poltergeist click', 25, [poltergeist1, poltergeist2, poltergeist3, poltergeist4, poltergeist5], 'A creak, a whisper, a rattling chain - a different ghostly sound every click. Part of the Poltergeist bundle.'),
         workSound('playroom', 'Playroom click', 25, clickSound2, 'TEMPLATE - swap for a real xylophone-note sample. Part of the Playroom bundle.'),
-        workSound('starlight', 'Starlight click', 25, clickSound3, 'TEMPLATE - swap for a real sci-fi blip sample. Part of the Starlight bundle.'),
+        workSound('starlight', 'Starlight click', 25, [starlight1, starlight2, starlight3, starlight4, starlight5], 'A blip, a synth pulse, a soft sci-fi chime - a different starlight sound every click. Part of the Starlight bundle.'),
         workSound('buccaneer', 'Buccaneer click', 25, [pirate1, pirate2, pirate3, pirate4], 'A creaking plank, a parrot squawk, a distant "arr" - a different pirate sound every click. Part of the Buccaneer bundle.'),
         workSound('princess', 'Princess click', 25, [princess1, princess2, princess3, princess4], 'A harp glissando, a regal little flourish, a soft giggle - a different princess sound every click. Part of the Princess bundle.'),
-        workSound('jazz', 'Jazz click', 25, clickSound3, 'TEMPLATE - swap for a real saxophone-note sample. Part of the Jazz bundle.'),
+        workSound('jazz', 'Jazz click', 25, [jazz1, jazz2, jazz3, jazz4, jazz5], 'A saxophone note, a brush on a snare, a double-bass pluck - a different jazz sound every click. Part of the Jazz bundle.'),
         workSound('duck', 'Duck click', 25, [duck1, duck2, duck3], 'A quack, a splash, a happy little paddle - a different duck sound every click. Part of the Duck bundle.'),
-        workSound('woof', 'Woof click', 25, clickSound3, 'TEMPLATE - swap for a real bark/paw-tap sample. Part of the Woof bundle.'),
+        workSound('woof', 'Woof click', 25, [woof1, woof2, woof3, woof4, woof5], 'A bark, a pant, a happy paw-tap - a different woof sound every click. Part of the Woof bundle.'),
+        workSound('ocean', 'Ocean click', 25, [ocean1, ocean2, ocean3, ocean4, ocean5], 'A splash, a lapping wave, a distant gull - a different ocean sound every click.'),
     ],
     openingAudio: [
         openingSound('default', 'Classic opening', 0, classicOpeningAudio, 'The original.'),
@@ -339,12 +360,12 @@ export const SHOP_ITEMS = {
         // PLACEHOLDER
         boardTheme('terminal', 'Terminal green', 40, { accent: '#39ff14' }, 'Old-school green phosphor.'),
 
-        // PLACEHOLDER - 'special' tier: a custom background image (always under a dark scrim, so it stays
-        // readable) plus its own hover/click sounds, not just a recoloured accent
+        // Moved to 'standard' tier at the user's request (used to be 'special' - a custom background image plus
+        // its own hover/click sounds, not just a recoloured accent, which is otherwise what makes something 'special').
         boardTheme('starlight', 'Starlight', 90, {
             accent: '#c4b5fd',
             bgImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23030712'/%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='14' cy='18' r='1.1' opacity='0.8'/%3E%3Ccircle cx='40' cy='8' r='0.8' opacity='0.5'/%3E%3Ccircle cx='66' cy='26' r='1.3' opacity='0.9'/%3E%3Ccircle cx='92' cy='14' r='0.9' opacity='0.6'/%3E%3Ccircle cx='110' cy='40' r='1.1' opacity='0.7'/%3E%3Ccircle cx='22' cy='52' r='0.9' opacity='0.5'/%3E%3Ccircle cx='54' cy='60' r='1.2' opacity='0.8'/%3E%3Ccircle cx='80' cy='70' r='0.8' opacity='0.5'/%3E%3Ccircle cx='104' cy='84' r='1.3' opacity='0.9'/%3E%3Ccircle cx='10' cy='92' r='1' opacity='0.6'/%3E%3Ccircle cx='36' cy='104' r='0.9' opacity='0.5'/%3E%3Ccircle cx='62' cy='96' r='1.2' opacity='0.8'/%3E%3Ccircle cx='90' cy='110' r='1' opacity='0.6'/%3E%3Ccircle cx='116' cy='100' r='0.9' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E\")",
-        }, 'A starfield behind the board, with its own hover and click sounds.', 'special', { hoverSound: hoverSoundAsset, clickSource: clickSound3 }),
+        }, 'A starfield behind the board, with its own hover and click sounds.', 'standard', { hoverSound: hoverSoundAsset, clickSource: clickSound3 }),
 
         // PLACEHOLDER - 'supporter' tier
         boardTheme('aurora', 'Aurora', 0, { accent: '#39ffc9' }, 'Shifting aurora colours behind the board. Part of the Supporter’s Set.', 'supporter'),
@@ -367,9 +388,6 @@ export const SHOP_ITEMS = {
         hyperLinkTheme('default', 'Sunrise', 0, {}, 'The classic amber Hyper-Link.'),
         // PLACEHOLDER
         hyperLinkTheme('ocean', 'Ocean', 40, { accent: '#3b82f6', accentDark: '#2563eb' }, 'A blue Hyper-Link.'),
-
-        // PLACEHOLDER - 'special' tier
-        hyperLinkTheme('prism', 'Prism', 65, { accent: '#a855f7', accentDark: '#ec4899' }, 'A bolder violet-to-pink gradient.', 'special'),
 
         // PLACEHOLDER - 'supporter' tier
         hyperLinkTheme('neon', 'Neon', 0, { accent: '#39ffc9', accentDark: '#00c2a8' }, 'Part of the Supporter’s Set.', 'supporter'),
@@ -395,13 +413,6 @@ export const SHOP_ITEMS = {
             tickerBg: '#06101c', tickerText: '#4fc3f7',
             departureArc: '#3b82f6', arrivalArc: '#f5a623',
         }, 'Blue bars, ticker and Work button, with blue departure routes and gold arrival routes.'),
-
-        // PLACEHOLDER - 'special' tier
-        generalTheme('noir', 'Noir', 95, {
-            barBg: 'rgb(24, 22, 28)', barText: '#f1ecfb', barTextMuted: '#b3a8ce', accent: '#c4b5fd',
-            tickerBg: '#000000', tickerText: '#c4b5fd',
-            departureArc: '#c4b5fd', arrivalArc: '#39ffc9',
-        }, 'A dark top and bottom bar with violet accents, for a sleeker look than the cream default.', 'special'),
 
         // PLACEHOLDER - 'supporter' tier
         generalTheme('prestige', 'Prestige', 0, {
@@ -557,5 +568,10 @@ export const SHOP_BUNDLES = [
         id: 'woof', name: 'Woof', tier: 'special',
         blurb: 'Dog-themed: denim blue and tennis-ball green, a bark on every click.',
         items: { generalTheme: 'woof', boardTheme: 'woof', hyperLinkTheme: 'woof', workSound: 'woof', cursorTheme: 'woof' },
+    },
+    {
+        id: 'ocean', name: 'Ocean', tier: 'special',
+        blurb: 'Sea-themed: deep blue bars, a wave-blue Hyper-Link, a splash on every click.',
+        items: { generalTheme: 'ocean', boardTheme: 'ocean', hyperLinkTheme: 'ocean', workSound: 'ocean', cursorTheme: 'ocean' },
     },
 ]
