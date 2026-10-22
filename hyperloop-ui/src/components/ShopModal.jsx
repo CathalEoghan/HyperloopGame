@@ -3,7 +3,25 @@ import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PI
 import { isOwned, isBundleOwned, bundlePieces, bundlePrice, getEquippedItem } from '../utils/cosmetics.js'
 import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkSoundPreview, stopPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
+import paletteIcon from '../assets/misc/palette.png'
+import boardIcon from '../assets/misc/board.png'
+import portfolioIcon from '../assets/misc/portfolio.png'
+import chatIcon from '../assets/misc/chat.png'
+import musicIcon from '../assets/misc/music.png'
+import clickIcon from '../assets/misc/click.png'
+import giftIcon from '../assets/misc/gift.png'
 import './ShopModal.css'
+
+// One icon per sidebar entry, shown in its own square to the left of the category name.
+const NAV_ICONS = {
+    generalTheme: paletteIcon,
+    boardTheme: boardIcon,
+    workSound: portfolioIcon,
+    hyperLinkTheme: chatIcon,
+    openingAudio: musicIcon,
+    cursorTheme: clickIcon,
+    bundles: giftIcon,
+}
 
 // A small mock of whatever the theme changes, drawn with the theme's own colours. The colours are set as CSS variables on
 // the preview itself (every property filled in, see fullVarsFor), and the mock's CSS in ShopModal.css reads the same
@@ -215,8 +233,11 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                 <button key={c.id} className={`shop-nav-item${c.id === categoryId ? ' shop-nav-item-active' : ''}`}
                                     onClick={() => { if (c.id !== categoryId) { playClickSound2(); setCategoryId(c.id) } }}
                                     onMouseEnter={() => playHoverSound()}>
-                                    <span className="shop-nav-item-name">{c.name}</span>
-                                    {subtitle && <span className="shop-nav-item-sub">{subtitle}</span>}
+                                    <span className="shop-nav-item-icon-box"><img src={NAV_ICONS[c.id]} alt="" /></span>
+                                    <span className="shop-nav-item-text">
+                                        <span className="shop-nav-item-name">{c.name}</span>
+                                        {subtitle && <span className="shop-nav-item-sub">{subtitle}</span>}
+                                    </span>
                                 </button>
                             )
                         })}

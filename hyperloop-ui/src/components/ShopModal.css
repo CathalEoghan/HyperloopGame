@@ -81,9 +81,9 @@
 
 .shop-nav-item {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 2px;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
     background: white;
     border: 2px solid transparent;
     border-radius: 10px;
@@ -95,9 +95,29 @@
 }
 .shop-nav-item:hover { background: #fdf6ec; }
 .shop-nav-item-active { border-color: var(--ui-accent, #f5a623); background: color-mix(in srgb, var(--ui-accent, #f5a623) 10%, white); }
+.shop-nav-item-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
 .shop-nav-item-name { font-weight: 700; font-size: 0.86rem; color: #222; }
 .shop-nav-item-active .shop-nav-item-name { color: var(--ui-accent, #f5a623); }
 .shop-nav-item-sub { font-size: 0.68rem; color: #888; }
+
+/* The category icon: white square, grey border normally, glowing gold when its tab is the active one. */
+.shop-nav-item-icon-box {
+    flex: 0 0 auto;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border: 2px solid #ccc;
+    border-radius: 8px;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.shop-nav-item-icon-box img { width: 19px; height: 19px; object-fit: contain; }
+.shop-nav-item-active .shop-nav-item-icon-box {
+    border-color: #e8941a;
+    box-shadow: 0 0 0 1px #e8941a, 0 0 8px 1px rgba(232, 148, 26, 0.65);
+}
 
 .shop-content {
     flex: 1;
