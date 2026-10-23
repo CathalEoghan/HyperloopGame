@@ -60,6 +60,9 @@ const AUX_KEYS = [
     'hyperloop_first_loop_prompt',
     // Set once an older game's cities have been put on the timetable (income needs a scheduled departure)
     'hyperloop_timetable_autofilled',
+    // Whether the first-visit Cities/Development explainer modals have been shown and dismissed
+    'hyperloop_cities_intro_seen',
+    'hyperloop_development_intro_seen',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -172,6 +175,8 @@ const AUX_SHAPES = {
     hyperloop_first_loop_prompt: v => v === 1,
     hyperloop_timetable_autofilled: v => v === 1,
     hyperloop_cosmetics: v => isObj(v) && listOfStrings(v.owned) && isObj(v.equipped) && Object.values(v.equipped).every(x => typeof x === 'string'),
+    hyperloop_cities_intro_seen: v => typeof v === 'boolean',
+    hyperloop_development_intro_seen: v => typeof v === 'boolean',
 }
 const listOfStrings = listOf(x => typeof x === 'string')
 // These two hold a plain date string ("Tue Sep 29 2026"), not JSON.
