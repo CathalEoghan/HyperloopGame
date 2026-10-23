@@ -110,8 +110,8 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                     {canRetire
                         ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)} per {RANKS_PER_PRESTIGE_POINT} ranks, 1 per £{(CASH_PER_PRESTIGE_POINT / 1e6)}M earned - you are Rank {rank}). Your run resets.</span>
                         : rank >= PRESTIGE_MIN_RANK
-                            ? <span>Early Retirement is waiting under Development, Upgrades. Purchase it for 250 Reputation to prestige.</span>
-                            : <span>Reach Rank {PRESTIGE_MIN_RANK} and purchase Early Retirement (250 Reputation) to prestige. You are Rank {rank}.</span>}
+                            ? <span>Early Retirement is waiting under Development, Upgrades. Purchase it for 50 Reputation to prestige.</span>
+                            : <span>Reach Rank {PRESTIGE_MIN_RANK} and purchase Early Retirement (50 Reputation) to prestige. You are Rank {rank}.</span>}
                 </div>
                 <div className="prestige-retire-actions">
                     {history.length > 0 && <button className="prestige-retire-btn prestige-retire-btn-quiet" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowRuns(true) }}>Past runs ({history.length})</button>}
