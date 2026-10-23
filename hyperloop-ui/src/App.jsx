@@ -480,7 +480,7 @@ function App() {
   const MILESTONES = [
     { rank: 10, upgradeName: 'Commemorative Displays' },
     { rank: 25, upgradeName: 'Anniversary Sales' },
-    // Not handed over: it is unlocked, and bought with 250 Reputation (Development > Upgrades)
+    // Not handed over: it is unlocked, and bought with 50 Reputation (Development > Upgrades)
     { rank: PRESTIGE_MIN_RANK, upgradeName: 'Early Retirement' },
     { rank: 100, upgradeName: "Founders' Hall" },
   ];
