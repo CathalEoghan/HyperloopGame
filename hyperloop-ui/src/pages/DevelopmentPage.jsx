@@ -2,6 +2,8 @@ import { useState, useMemo, Fragment } from 'react'
 import BoostTooltip from '../components/BoostTooltip.jsx'
 import IncomeRow from '../components/IncomeRow.jsx'
 import PageIntroModal from '../components/PageIntroModal.jsx'
+import monitorIcon from '../assets/misc/monitor.png'
+import growthIcon from '../assets/misc/growth.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
 import { matchesSearch } from '../utils/search.js'
@@ -99,11 +101,11 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     return (
         <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
             {showIntro && (
-                <PageIntroModal title="Welcome to Developments" onClose={closeIntro}>
-                    <p>Developments can add flat income of their own, or powerful modifiers that influence other areas of gameplay instead.</p>
-                    <p>Every development's income scales with how busy the terminal is right now - the busy meter rises as loops near departure or have just arrived, and falls when things are quiet, between a 10% floor and 100%.</p>
-                    <p>Flat-income developments can also be upgraded to improve their base revenue.</p>
-                </PageIntroModal>
+                <PageIntroModal title="Welcome to Developments" onClose={closeIntro} points={[
+                    { icon: constructionIcon, text: "Developments can add flat income of their own, or powerful modifiers that influence other areas of gameplay instead." },
+                    { icon: monitorIcon, text: "Every development's income scales with how busy the terminal is right now - the busy meter rises as loops near departure or have just arrived, and falls when things are quiet, between a 10% floor and 100%." },
+                    { icon: growthIcon, text: "Flat-income developments can also be upgraded to improve their base revenue." },
+                ]} />
             )}
             <div className="dev-toolbar-strip">
                 <div className="dev-toolbar">

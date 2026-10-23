@@ -29,9 +29,29 @@
 
 .pageintro-title { margin: 0; font-size: 1.4rem; font-weight: 800; color: #222; }
 
-.pageintro-text { display: flex; flex-direction: column; gap: 10px; }
-.pageintro-text p { margin: 0; font-size: 0.9rem; line-height: 1.5; color: #444; }
-.pageintro-text strong { color: #222; }
+.pageintro-points {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    text-align: left;
+}
+
+.pageintro-point {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #f8f8f8;
+    border-radius: 10px;
+    padding: 12px 14px;
+}
+
+.pageintro-point-icon {
+    flex-shrink: 0;
+    margin-top: 1px;
+}
+
+.pageintro-point p { margin: 0; font-size: 0.88rem; line-height: 1.4; color: #333; }
 
 .pageintro-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
 .pageintro-btn {

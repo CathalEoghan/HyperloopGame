@@ -14,6 +14,9 @@ import { formatPerHour } from '../utils/income.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import poorIcon from '../assets/misc/poor.png'
+import boardIcon from '../assets/misc/board.png'
+import clockIcon from '../assets/misc/clock.png'
+import growthIcon from '../assets/misc/growth.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { isGrantedCity } from '../utils/grantedCities.js'
@@ -237,11 +240,11 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     return (
         <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
             {showIntro && (
-                <PageIntroModal title="Welcome to Cities" onClose={closeIntro}>
-                    <p>Connect a city, then schedule a departure for it from the Terminal Board - a city earns nothing until it has a scheduled departure.</p>
-                    <p>Afternoon departures are the most lucrative. Late nights and early mornings typically earn less.</p>
-                    <p>Upgrade a connected city's line to increase its ticket revenue.</p>
-                </PageIntroModal>
+                <PageIntroModal title="Welcome to Cities" onClose={closeIntro} points={[
+                    { icon: boardIcon, text: "Connect a city, then schedule a departure for it from the Terminal Board - a city earns nothing until it has a scheduled departure." },
+                    { icon: clockIcon, text: "Afternoon departures are the most lucrative. Late nights and early mornings typically earn less." },
+                    { icon: growthIcon, text: "Upgrade a connected city's line to increase its ticket revenue." },
+                ]} />
             )}
             <div className="cities-toolbar-strip">
                 <div className="city-toolbar">
