@@ -4,6 +4,7 @@ import { MAX_RANK } from 'Managers/RankManager/RankManager.js'
 import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialChime, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatBalance } from '../utils/formatBalance.js'
+import padlockIcon from '../assets/misc/padlock.png'
 import './PrestigePage.css'
 
 // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
@@ -206,7 +207,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
             <div className={`prestige-tree-wrap ${history.length === 0 ? 'prestige-tree-wrap-locked' : ''}`}>
             {history.length === 0 && (
                 <div className="prestige-tree-lock-overlay">
-                    <span className="prestige-tree-lock-icon">🔒</span>
+                    <img className="prestige-tree-lock-icon" src={padlockIcon} alt="" style={{ width: '42px', height: '42px', objectFit: 'contain', border: 'none' }} />
                     <span className="prestige-tree-lock-text">PRESTIGE UPGRADES LOCKED.<br />RETIRE AT RANK {PRESTIGE_MIN_RANK} TO UNLOCK PRESTIGE UPGRADES.</span>
                 </div>
             )}
