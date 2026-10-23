@@ -102,9 +102,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
             {showIntro && (
                 <PageIntroModal title="Welcome to Developments" onClose={closeIntro} points={[
-                    { icon: constructionIcon, text: "Developments can add flat income of their own, or powerful modifiers that influence other areas of gameplay instead." },
-                    { icon: monitorIcon, text: "Every development's income scales with how busy the terminal is right now - the busy meter rises as loops near departure or have just arrived, and falls when things are quiet, between a 10% floor and 100%." },
-                    { icon: growthIcon, text: "Flat-income developments can also be upgraded to improve their base revenue." },
+                    { icon: constructionIcon, text: <>Developments can add <strong>flat income</strong> of their own, or <strong>powerful modifiers</strong> that influence other areas of gameplay instead.</> },
+                    { icon: monitorIcon, text: <>Every development's income scales with how busy the terminal is right now - the busy meter rises as loops near departure or have just arrived, and falls when things are quiet, between a <strong>10% floor and 100%</strong>.</> },
+                    { icon: growthIcon, text: <>Flat-income developments can also be upgraded to <strong>improve their base revenue</strong>.</> },
                 ]} />
             )}
             <div className="dev-toolbar-strip">

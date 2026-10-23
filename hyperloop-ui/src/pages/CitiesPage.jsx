@@ -241,9 +241,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         <div className="background" style={{ height: `calc(100vh - ${topOffset + 177}px)` }}>
             {showIntro && (
                 <PageIntroModal title="Welcome to Cities" onClose={closeIntro} points={[
-                    { icon: boardIcon, text: "Connect a city, then schedule a departure for it from the Terminal Board - a city earns nothing until it has a scheduled departure." },
-                    { icon: clockIcon, text: "Afternoon departures are the most lucrative. Late nights and early mornings typically earn less." },
-                    { icon: growthIcon, text: "Upgrade a connected city's line to increase its ticket revenue." },
+                    { icon: boardIcon, text: <>Connect a city, then schedule a departure for it from the Terminal Board - <strong>a city earns nothing until it has a scheduled departure</strong>.</> },
+                    { icon: clockIcon, text: <><strong>Afternoon departures are the most lucrative.</strong> Late nights and early mornings typically earn less.</> },
+                    { icon: growthIcon, text: <>Upgrade a connected city's line to <strong>increase its ticket revenue</strong>.</> },
                 ]} />
             )}
             <div className="cities-toolbar-strip">

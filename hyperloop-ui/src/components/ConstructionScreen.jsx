@@ -10,7 +10,7 @@ const TIPS = [
     "Build developments to boost your revenue beyond city income.",
     "Re-roll your city choices for 15 reputation if none of them suit you.",
     "Give personal farewells and greet arrivals at the Terminal Board to earn reputation.",
-    "Upgrade your developments up to 3 times for a 100% income boost.",
+    "Upgrade your developments up to 10 times for up to a 450% income boost.",
     "Disconnecting a city costs half the connection fee and 20 reputation.",
     "Your terminal keeps earning while you're away.",
     "Tier 2 and 3 cities earn significantly more than Tier 1 cities.",
