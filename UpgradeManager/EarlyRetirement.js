@@ -1,8 +1,8 @@
 // Early Retirement: the Rank 50 milestone upgrade. It arrives unlocked rather than owned, and is
-// bought with 250 Reputation (not cash). Owning it lets the player prestige from the Prestige page.
+// bought with 50 Reputation (not cash). Owning it lets the player prestige from the Prestige page.
 import { Upgrade } from "./Upgrade.js";
 
-export const EARLY_RETIREMENT_REP_COST = 250;
+export const EARLY_RETIREMENT_REP_COST = 50;
 
 export const earlyRetirement = new Upgrade(
     "Early Retirement",
