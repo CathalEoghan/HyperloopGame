@@ -343,15 +343,6 @@ import CarRental from '../assets/developments-reveal/CarRental.jpg'
 import LuggageStorage from '../assets/developments-reveal/LuggageStorage.jpg'
 import ExpandedDutyFree from '../assets/developments-reveal/ExpandedDutyFree.jpg'
 import SimCardServices from '../assets/developments-reveal/SimCardServices.jpg'
-import ElectronicsStore from '../assets/developments-reveal/ElectronicsStore.jpg'
-import ObservationDeck from '../assets/developments-reveal/ObservationDeck.jpg'
-import RideShareKiosks from '../assets/developments-reveal/rideShareKiosks.jpg'
-import Supermarket from '../assets/developments-reveal/Supermarket.jpg'
-import BarberShop from '../assets/developments-reveal/BarberShop.jpg'
-import HairSalon from '../assets/developments-reveal/HairSalon.jpg'
-import BikeRental from '../assets/developments-reveal/BikeRental.jpg'
-import CoWorkingSpace from '../assets/developments-reveal/CoWorkingSpace.jpg'
-import LaundryRoom from '../assets/developments-reveal/LaundryRoom.jpg'
 
 
 const developmentRevealImages = {
@@ -700,15 +691,6 @@ const developmentRevealImages = {
     "Luggage Storage": LuggageStorage,
     "Expanded Duty-Free": ExpandedDutyFree,
     "Sim Card Services": SimCardServices,
-    "Electronics Store": ElectronicsStore,
-    "Observation Deck": ObservationDeck,
-    "Ride Share Kiosks": RideShareKiosks,
-    "Supermarket": Supermarket,
-    "Barber Shop": BarberShop,
-    "Hair Salon": HairSalon,
-    "Co-Working Space": CoWorkingSpace,
-    "Laundry Room": LaundryRoom,
-    "Bike Rental": BikeRental,
 }
 
 export default developmentRevealImages
