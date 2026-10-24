@@ -424,10 +424,11 @@ export const POSTS = {
         'Weekend is hereeee',
         'How is everyone\'s Friday going? Y\'all reday for the weekend? 🎉',
         'how is it friday already? this week flew by',
+        'Weekend is finally here 🎉',
     ],
 
     saturday: [
-        'Weekend is finally here 🎉',
+        'Happy saturday! 🎉',
         'nothing better than a saturday trip',
         'saturday loops are so busy lol',
         'How\'s everyone\'s weekend going so far?',
