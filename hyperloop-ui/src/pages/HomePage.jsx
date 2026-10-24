@@ -262,7 +262,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         let camLon = 0, camLat = 0, camDist = 2.5
 
         // Globe zoom limits (globe radius = 1)
-        const MIN_CAM_DIST = 1.15
+        const MIN_CAM_DIST = 1.25
         const MAX_CAM_DIST = 5
 
         function updateCamera() {
