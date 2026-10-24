@@ -346,7 +346,20 @@ const developmentImages = {
     "Luggage Storage": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LuggageStorage.jpg",
     "Expanded Duty-Free": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ExpandedDutyFree.jpg",
     "Sim Card Services": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SimCardServices.jpg",
-
+    "Barber Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BarberShop.jpg",
+    "Bike Rental": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/BikeRental.jpg",
+    "Co-Working Space": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CoWorkingSpace.jpg",
+    "Electronics Store": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ElectronicsStore.jpg",
+    "Expanded Family Rooms": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ExpandedFamilyRooms.jpg",
+    "Free Wi-Fi": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FreeWifi.jpg",
+    "Hair Salon": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/HairSalon.jpg",
+    "Improved Accessibility Services": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ImprovedAccessibilityServices.jpg",
+    "Laundry Room": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LaundryRoom.jpg",
+    "Lost & Found Office": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/LostAndFoundOffice.jpg",
+    "Observation Deck": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ObservationDeck.jpg",
+    "Ride Share Kiosks": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/RideShareKiosks.jpg",
+    "Social Media Managers": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SocialMediaManagers.jpg",
+    "Supermarket": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Supermarket.jpg",
 
 
 

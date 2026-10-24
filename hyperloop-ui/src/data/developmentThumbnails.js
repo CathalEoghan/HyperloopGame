@@ -346,13 +346,18 @@ import LuggageStorage from '../assets/developments-thumb/LuggageStorage.jpg'
 import SimCardServices from '../assets/developments-thumb/SimCardServices.jpg'
 import ElectronicsStore from '../assets/developments-thumb/ElectronicsStore.jpg'
 import ObservationDeck from '../assets/developments-thumb/ObservationDeck.jpg'
-import RideShareKiosks from '../assets/developments-thumb/rideShareKiosks.jpg'
+import RideShareKiosks from '../assets/developments-thumb/RideShareKiosks.jpg'
 import Supermarket from '../assets/developments-thumb/Supermarket.jpg'
 import BikeRental from '../assets/developments-thumb/BikeRental.jpg'
 import HairSalon from '../assets/developments-thumb/HairSalon.jpg'
 import CoWorkingSpace from '../assets/developments-thumb/CoWorkingSpace.jpg'
 import BarberShop from '../assets/developments-thumb/BarberShop.jpg'
 import LaundryRoom from '../assets/developments-thumb/LaundryRoom.jpg'
+import LostAndFoundOffice from '../assets/developments-thumb/LostAndFoundOffice.jpg'
+import SocialMediaManagers from '../assets/developments-thumb/SocialMediaManagers.jpg'
+import ExpandedFamilyRooms from '../assets/developments-thumb/ExpandedFamilyRooms.jpg'
+import FreeWifi from '../assets/developments-thumb/FreeWifi.jpg'
+import ImprovedAccessibilityServices from '../assets/developments-thumb/ImprovedAccessibilityServices.jpg'
 
 
 const developmentImages = {
@@ -710,7 +715,11 @@ const developmentImages = {
     "Hair Salon": HairSalon,
     "Co-Working Space": CoWorkingSpace,
     "Barber Shop": BarberShop,
-
+    "Expanded Family Rooms": ExpandedFamilyRooms,
+    "Lost & Found Office": LostAndFoundOffice,
+    "Free Wi-Fi": FreeWifi,
+    "Improved Accessibility Services": ImprovedAccessibilityServices,
+    "Social Media Managers": SocialMediaManagers,
 
 
 

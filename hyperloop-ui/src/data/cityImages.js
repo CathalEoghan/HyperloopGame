@@ -342,9 +342,20 @@ const cityImages = {
     "Ibiza": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ibiza.jpg",
     "Memphis": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Memphis.jpg",
     "Jeddah": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Jeddah.jpg",
-
-
-
+    "Agra": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Agra.jpg",
+    "Antalya": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Antalya.jpg",
+    "Bologna": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Bologna.jpg",
+    "Bristol": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Bristol.jpg",
+    "Cardiff": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Cardiff.jpg",
+    "Kuwait City": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/KuwaitCity.jpg",
+    "Leeds": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Leeds.jpg",
+    "Minneapolis": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Minneapolis.jpg",
+    "Novosibirsk": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Novosibirsk.jpg",
+    "Port Louis": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PortLouis.jpg",
+    "San Antonio": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SanAntonio.jpg",
+    "Vientiane": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Vientiane.jpg",
+    "Xi'an": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Xian.jpg",
+    "Yokohama": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Yokohama.jpg",
 
 
 
