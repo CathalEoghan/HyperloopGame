@@ -92,6 +92,12 @@
 }
 
 .city-hover-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
     color: #555;
     font-family: 'Inter', sans-serif;
     font-size: 0.7rem;
@@ -100,6 +106,14 @@
     margin: 10px 0 6px;
 }
 
+.city-hover-divider::before,
+.city-hover-divider::after {
+    content: "";
+    width: 35px;
+    height: 1px;
+    background: #555;
+    flex-shrink: 0;
+}
 .city-hover-fact {
     color: #333;
     font-family: 'Inter', sans-serif;

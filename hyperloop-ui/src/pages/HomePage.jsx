@@ -1037,7 +1037,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                             : 'Unknown location'
                         }
                     </div>
-                    <div className="city-hover-divider">── CITY FACT ──</div>
+                    <div className="city-hover-divider">
+    <span>CITY FACT</span>
+</div>
                     <p className="city-hover-fact">
                         {hoveredCity.isPurchased
                             ? hoveredCity.city.fact

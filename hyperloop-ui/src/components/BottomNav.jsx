@@ -1,4 +1,10 @@
-import { playClickSound2, playClickSound3, playBottomNavbarHoverSound } from '../utils/sound.js'
+
+import {
+    playClickSound2,
+    playClickSound3,
+    playBottomNavbarHoverSound
+} from '../utils/sound.js'
+
 import './BottomNav.css'
 
 function BottomNav({ activeTab, onSelect }) {
@@ -10,38 +16,58 @@ function BottomNav({ activeTab, onSelect }) {
 
     const handleClick = (currentTab, target) => {
         if (activeTab === currentTab) {
-            playClickSound3();
+            playClickSound3()
         } else {
-            playClickSound2();
+            playClickSound2()
         }
-        onSelect(target);
+
+        onSelect(target)
     }
 
     return (
         <div className="bottomNav">
-            <button className="Cities"
-                onMouseEnter={() => playBottomNavbarHoverSound()}
-                onClick={() => handleClick("Cities", targetCities)}>
+            <button
+                className={`Cities ${activeTab === "Cities" ? "active" : ""}`}
+                aria-current={activeTab === "Cities" ? "page" : undefined}
+                onMouseEnter={playBottomNavbarHoverSound}
+                onClick={() => handleClick("Cities", targetCities)}
+            >
                 Cities
             </button>
-            <button className="Development"
-                onMouseEnter={() => playBottomNavbarHoverSound()}
-                onClick={() => handleClick("Development", targetDevelopment)}>
+
+            <button
+                className={`Development ${activeTab === "Development" ? "active" : ""}`}
+                aria-current={activeTab === "Development" ? "page" : undefined}
+                onMouseEnter={playBottomNavbarHoverSound}
+                onClick={() => handleClick("Development", targetDevelopment)}
+            >
                 Development
             </button>
-            <button className="Progress"
-                onMouseEnter={() => playBottomNavbarHoverSound()}
-                onClick={() => handleClick("Progress", targetProgress)}>
+
+            <button
+                className={`Progress ${activeTab === "Progress" ? "active" : ""}`}
+                aria-current={activeTab === "Progress" ? "page" : undefined}
+                onMouseEnter={playBottomNavbarHoverSound}
+                onClick={() => handleClick("Progress", targetProgress)}
+            >
                 Progress
             </button>
-            <button className="Prestige"
-                onMouseEnter={() => playBottomNavbarHoverSound()}
-                onClick={() => handleClick("Prestige", targetPrestige)}>
+
+            <button
+                className={`Prestige ${activeTab === "Prestige" ? "active" : ""}`}
+                aria-current={activeTab === "Prestige" ? "page" : undefined}
+                onMouseEnter={playBottomNavbarHoverSound}
+                onClick={() => handleClick("Prestige", targetPrestige)}
+            >
                 Prestige
             </button>
-            <button className="Settings"
-                onMouseEnter={() => playBottomNavbarHoverSound()}
-                onClick={() => handleClick("Settings", targetSettings)}>
+
+            <button
+                className={`Settings ${activeTab === "Settings" ? "active" : ""}`}
+                aria-current={activeTab === "Settings" ? "page" : undefined}
+                onMouseEnter={playBottomNavbarHoverSound}
+                onClick={() => handleClick("Settings", targetSettings)}
+            >
                 Settings
             </button>
         </div>

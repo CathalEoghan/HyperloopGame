@@ -26,6 +26,52 @@ font-family: 'Inter', sans-serif;
     color: white;
 }
 
+
+/* Subtle indicator for the currently selected page */
+.bottomNav button {
+    flex: 1;
+    height: 100%;
+    background-color: var(--ui-bar-bg, rgb(255, 240, 224));
+    color: var(--ui-bar-text, #222);
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: larger;
+    position: relative;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+
+
+.bottomNav button.active {
+    background-color: var(--ui-active-bg, rgba(245, 166, 35, 0.12));
+}
+
+/* Small accent line along the top of the active tab */
+.bottomNav button.active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 25%;
+    width: 50%;
+    height: 3px;
+    background-color: var(--ui-accent, #f5a623);
+    border-radius: 0 0 3px 3px;
+}
+
+/* Currently active page */
+.bottomNav button.active {
+    background-color: var(--ui-accent, #f5a623);
+    color: white;
+    box-shadow: inset 0 -4px 0 rgba(0, 0, 0, 0.18);
+}
+
+/* Smooth transition between pages */
+.bottomNav button {
+    transition: background-color 0.25s ease,
+                color 0.25s ease;
+}
+
+
 /* Five tabs have to fit on a narrow screen */
 @media (max-width: 600px) {
     .bottomNav button {
