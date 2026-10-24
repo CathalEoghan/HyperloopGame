@@ -93,6 +93,11 @@ const DEV_KEY_MAP = {
     'Waffle House': 'waffleHouse',
     'Shoe Store': 'shoeStore',
     'Jewellery Shop': 'jewelleryStore',
+    'Barber Shop': 'barberShop',
+    'Hair Salon': 'hairSalon',
+    'Bike Rental': 'bikeRental',
+    'Laundry Room': 'laundryRoom',
+    'Co-Working Space': 'coWorkingSpace',
 }
 
 export const UPGRADE_KEY_MAP = {
