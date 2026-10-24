@@ -261,6 +261,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
         let camLon = 0, camLat = 0, camDist = 2.5
 
+        // Globe zoom limits (globe radius = 1)
+        const MIN_CAM_DIST = 1
+        const MAX_CAM_DIST = 5
+
         function updateCamera() {
             const lon = THREE.MathUtils.degToRad(camLon)
             const lat = THREE.MathUtils.degToRad(camLat)
@@ -588,7 +592,11 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             if (disabledRef.current) return
             if (pinching && pointers.size >= 2) {
                 const d = pointerDistance() || 1
-                camDist = Math.max(1.5, Math.min(5, camDist * (pinchDist / d)))
+                camDist = THREE.MathUtils.clamp(
+    camDist * (pinchDist / d),
+    MIN_CAM_DIST,
+    MAX_CAM_DIST
+)
                 pinchDist = d
                 updateCamera()
                 return
@@ -663,10 +671,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             if (pointers.size === 0) { isDragging = false; ignoreUntilAllUp = false }
         }
         const onWheel = (e) => {
-            e.preventDefault()
-            camDist = Math.max(1.5, Math.min(5, camDist + e.deltaY * 0.003))
-            updateCamera()
-        }
+         e.preventDefault()
+
+         camDist = THREE.MathUtils.clamp(
+        camDist + e.deltaY * 0.003,
+        MIN_CAM_DIST,
+        MAX_CAM_DIST
+    )
+
+    updateCamera()
+}
 
         // Leaving the globe (off the window, say) lets go of any routes the mouse was over
         const onPointerLeave = (e) => { if (e.pointerType === 'mouse' && hoverSourceRef.current === 'globe' && hoveredLoopsRef.current.size) hoverLoops([], 'globe') }
