@@ -1817,6 +1817,36 @@ export const POSTS = {
         'The old woman running the bed and breakfast is a delight. Would literally come back just for her lol',
     ],
 
+    hairSalon: [
+        'My girlfriend went to the hair salon here if she comes out with a perm im going home',
+        'Anyone tried the new hair salon? What are the stylists like? ✂️',
+        'Girlfriend has been getting her hair done for an hour! Think shes forgetting we have a loop to catch haha'
+    ],
+
+    barberShop: [
+        'Boyfriend is insisting he needs his fade topped up before this trip. Hes went into the barber shop and im waiting outside looking at the sky. No im not joking',
+        'Half the guys in the queue for the barber shop dont need their hair cut wth 😂',
+        'My guy friends all left me to get their hair cut @ the barber shop. Now what do i do',
+    ],
+
+    bikeRental: [
+        'Is there enough time in my transfer to rent a bike and cycle around town?? What do you guys and gals think 🚲',
+        'I cant even ride a bike ... just trying to impress my partner at the bike rental lol',
+        'BIKE RENTAL? NOPE. LAST TIME I GOT ON A BIKE I FELL AND SCRAPED MY ANKLE. 🙃'
+    ],
+
+    coWorkingSpace: [
+        'Holy. STOP TALKING AT THE COWORKING SPACE. SOME OF US HAVE 2 WORK.',
+        'Broke into the co working space to play a game where u build a hyperloop empire. So weird but im bored as hell',
+        'Thank goodness for the new co-working space! Can actually catch up on some things before my loop #ItsJustBusiness 💼'
+    ],
+
+    laundryRoom: [
+        'Eww who left their dirty underwear on the floor in the laundry room... actually disgusting 🤮',
+        'Spilled coffee on my shirt - thank the heavens for the laundry room! 🧺',
+        'wheres the laundry room i somehow got bird poo on my jeans and im not even outside',
+    ],
+
     officialGeneral: [
         'Welcome to {terminalName}! We hope you enjoy your journey 🚄',
         'Reminder: please keep the terminal tidy. Bins are located throughout the building 🗑️',

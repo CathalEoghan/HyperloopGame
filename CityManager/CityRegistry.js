@@ -349,6 +349,11 @@ import { Rhodes } from './Rhodes.js'
 import { Jeddah } from './Jeddah.js'
 import { JejuCity } from './JejuCity.js'
 import { Ibiza } from './Ibiza.js'
+import { Leeds } from './Leeds.js'
+import { Bristol } from './Bristol.js'
+import { SanAntonio } from './SanAntonio.js'
+import { Minneapolis } from './Minneapolis.js'
+import { Antalya } from './Antalya.js'
 
 
 export const allCities = [
@@ -702,6 +707,11 @@ export const allCities = [
     Xian,
     Novosibirsk,
     Bologna,
+    Leeds,
+    Bristol,
+    Antalya,
+    Minneapolis,
+    SanAntonio,
 
 
 

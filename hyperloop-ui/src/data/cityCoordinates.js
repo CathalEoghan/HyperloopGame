@@ -349,6 +349,11 @@ const cityCoordinates = {
 "Vientiane":   { lat: 17.9757, lng: 102.6331 },
 "Xi'an":       { lat: 34.3416, lng: 108.9398 },
 "Yokohama":    { lat: 35.4437, lng: 139.6380 },
+"San Antonio": { lat: 29.4241, lng: -98.4936 },
+"Bristol":     { lat: 51.4552, lng: -2.5966 },
+"Leeds": { lat: 53.7964, lng: -1.5478},
+"Minneapolis": { lat: 44.9799, lng: -93.2638},
+"Antalya": { lat: 36.9081, lng: 30.6955}
 
 
 

@@ -352,9 +352,9 @@ export const SHOP_ITEMS = {
         openingSound('jazz', 'Jazz opening', 25, jazzOpening, 'Part of the Jazz bundle.'),
         openingSound('playroom', 'Playroom opening', 25, playroomOpening, 'Part of the Playroom bundle.'),
         openingSound('starlight', 'Starlight opening', 25, starlightOpening, 'Part of the Starlight bundle.'),
-        openingSound('duck', 'Duck opening', 25, duckOpening, 'A quack to start your shift. Part of the Duck bundle.'),
-        openingSound('woof', 'Woof opening', 25, woofOpening, 'A happy bark to start your shift. Part of the Woof bundle.'),
-        openingSound('ocean', 'Ocean opening', 25, oceanOpening, 'Waves and gulls to start your shift.'),
+        openingSound('duck', 'Duck opening', 25, duckOpening, 'Part of the Duck bundle.'),
+        openingSound('woof', 'Woof opening', 25, woofOpening, 'Part of the Woof bundle.'),
+        openingSound('ocean', 'Ocean opening', 25, oceanOpening, 'Part of the Ocean bundle.'),
     ],
 
     boardTheme: [

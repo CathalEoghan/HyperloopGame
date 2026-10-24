@@ -348,6 +348,11 @@ import ElectronicsStore from '../assets/developments-thumb/ElectronicsStore.jpg'
 import ObservationDeck from '../assets/developments-thumb/ObservationDeck.jpg'
 import RideShareKiosks from '../assets/developments-thumb/rideShareKiosks.jpg'
 import Supermarket from '../assets/developments-thumb/Supermarket.jpg'
+import BikeRental from '../assets/developments-thumb/BikeRental.jpg'
+import HairSalon from '../assets/developments-thumb/HairSalon.jpg'
+import CoWorkingSpace from '../assets/developments-thumb/CoWorkingSpace.jpg'
+import BarberShop from '../assets/developments-thumb/BarberShop.jpg'
+import LaundryRoom from '../assets/developments-thumb/LaundryRoom.jpg'
 
 
 const developmentImages = {
@@ -700,6 +705,11 @@ const developmentImages = {
     "Observation Deck": ObservationDeck,
     "Ride Share Kiosks": RideShareKiosks,
     "Supermarket": Supermarket,
+    "Laundry Room": LaundryRoom,
+    "Bike Rental": BikeRental,
+    "Hair Salon": HairSalon,
+    "Co-Working Space": CoWorkingSpace,
+    "Barber Shop": BarberShop,
 
 
 

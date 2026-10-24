@@ -348,7 +348,11 @@ import PortLouis from '../assets/cities-thumb/PortLouis.jpg'
 import Vientiane from '../assets/cities-thumb/Vientiane.jpg'
 import Xian from '../assets/cities-thumb/Xian.jpg'
 import Yokohama from '../assets/cities-thumb/Yokohama.jpg'
-
+import Leeds from '../assets/cities-thumb/Leeds.jpg'
+import SanAntonio from '../assets/cities-thumb/SanAntonio.jpg'
+import Minneapolis from '../assets/cities-thumb/Minneapolis.jpg'
+import Bristol from '../assets/cities-thumb/Bristol.jpg'
+import Antalya from '../assets/cities-thumb/Antalya.jpg'
 
 
 
@@ -705,6 +709,11 @@ const cityImages = {
     Vientiane: Vientiane,
     "Xi'an": Xian,
     Yokohama: Yokohama,
+    Antalya: Antalya,
+    Bristol: Bristol,
+    Minneapolis: Minneapolis,
+    Leeds: Leeds,
+    "San Antonio": SanAntonio,
 
     
 

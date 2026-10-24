@@ -348,6 +348,11 @@ Vientiane.jpg - Photo by Jakub Halun via Pexels (Creative Commons Attribution-Sh
 Xian.jpg - Photo by 征宇 郑 via Pexels
 Yokohama.jpg - Photo by reitetsu Mountain
 KuwaitCity.jpg - Photo by Tayssir Kadamany via Pexels
+SanAntonio.jpg - Photo by jorge villarreal via Pexels
+Minneapolis.jpg - Photo by Jonathan Lassen via Pexels
+Antalya.jpg - Photo by Erik Karits via Pexels
+Bristol.jpg - Photo by Boys in Bristol Photography via Pexels
+Leeds.jpg - Photo by Manikuttan TK via Pexels
 
 
 
@@ -699,6 +704,11 @@ ImprovedAccessibilityServices.jpg - Photo by DΛVΞ GΛRCIΛ via Pexels
 ObservationDeck.jpg - Photo by @akb.ph via Pexels
 SocialMediaManagers.jpg - Photo by Plann via Pexels
 FreeWifi.jpg - Photo by Esra Afşar via Pexels
+BarberShop.jpg - Photo by Antoni Shkraba via Pexels
+HairSalon.jpg - Photo by RDNE Stock project via Pexels
+LaundryRoom.jpg - Photo by Mathias Reding via Pexels
+BikeRental.jpg - Photo by Ligin Lee via Pexels
+CoWorkingSpace.jpg - Photo by Kindel Media via Pexels
 
 
 PRESTIGE UPGRADES

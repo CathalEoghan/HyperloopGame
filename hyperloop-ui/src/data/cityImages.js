@@ -351,7 +351,6 @@ const cityImages = {
 
 
 
-
 }
 
 // The originals average 12 MP (up to 50 MP), but the game never shows a photo wider than

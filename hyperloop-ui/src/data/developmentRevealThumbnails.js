@@ -347,6 +347,11 @@ import ElectronicsStore from '../assets/developments-reveal/ElectronicsStore.jpg
 import ObservationDeck from '../assets/developments-reveal/ObservationDeck.jpg'
 import RideShareKiosks from '../assets/developments-reveal/rideShareKiosks.jpg'
 import Supermarket from '../assets/developments-reveal/Supermarket.jpg'
+import BarberShop from '../assets/developments-reveal/BarberShop.jpg'
+import HairSalon from '../assets/developments-reveal/HairSalon.jpg'
+import BikeRental from '../assets/developments-reveal/BikeRental.jpg'
+import CoWorkingSpace from '../assets/developments-reveal/CoWorkingSpace.jpg'
+import LaundryRoom from '../assets/developments-reveal/LaundryRoom.jpg'
 
 
 const developmentRevealImages = {
@@ -699,6 +704,11 @@ const developmentRevealImages = {
     "Observation Deck": ObservationDeck,
     "Ride Share Kiosks": RideShareKiosks,
     "Supermarket": Supermarket,
+    "Barber Shop": BarberShop,
+    "Hair Salon": HairSalon,
+    "Co-Working Space": CoWorkingSpace,
+    "Laundry Room": LaundryRoom,
+    "Bike Rental": BikeRental,
 }
 
 export default developmentRevealImages

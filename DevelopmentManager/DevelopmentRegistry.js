@@ -188,6 +188,11 @@ import { simCardServices } from './SimCardServices.js'
 import { sleepingPods } from './SleepingPods.js'
 import { carRental } from './CarRental.js'
 import { luggageStorage } from './LuggageStorage.js'
+import { coWorkingSpace } from './CoWorkingSpace.js'
+import { hairSalon } from './HairSalon.js'
+import { barberShop } from './BarberShop.js'
+import { bikeRental } from './BikeRental.js'
+import { laundryRoom } from './LaundryRoom.js'
 
 
 
@@ -381,6 +386,11 @@ export const allDevelopments = [
     supermarket,
     observationDeck,
     electronicsStore,
+    laundryRoom,
+    coWorkingSpace,
+    hairSalon,
+    barberShop,
+    bikeRental,
 
 
 ]
