@@ -358,16 +358,16 @@ export const SHOP_ITEMS = {
     ],
 
     boardTheme: [
-        boardTheme('default', 'Classic', 0, {}, 'The classic amber-on-black board.'),
+        boardTheme('default', 'Classic board', 0, {}, 'The classic amber-on-black board.'),
         // PLACEHOLDER
-        boardTheme('ocean', 'Ocean', 40, { accent: '#4fc3f7' }, 'Cool blue lettering.'),
+        boardTheme('ocean', 'Ocean board', 40, { accent: '#4fc3f7' }, 'Cool blue lettering. Part of the Ocean bundle.'),
 
         // Moved to 'standard' tier at the user's request (used to be 'special' - a custom background image plus
         // its own hover/click sounds, not just a recoloured accent, which is otherwise what makes something 'special').
-        boardTheme('starlight', 'Starlight', 90, {
+        boardTheme('starlight', 'Starlight board', 90, {
             accent: '#c4b5fd',
             bgImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23030712'/%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='14' cy='18' r='1.1' opacity='0.8'/%3E%3Ccircle cx='40' cy='8' r='0.8' opacity='0.5'/%3E%3Ccircle cx='66' cy='26' r='1.3' opacity='0.9'/%3E%3Ccircle cx='92' cy='14' r='0.9' opacity='0.6'/%3E%3Ccircle cx='110' cy='40' r='1.1' opacity='0.7'/%3E%3Ccircle cx='22' cy='52' r='0.9' opacity='0.5'/%3E%3Ccircle cx='54' cy='60' r='1.2' opacity='0.8'/%3E%3Ccircle cx='80' cy='70' r='0.8' opacity='0.5'/%3E%3Ccircle cx='104' cy='84' r='1.3' opacity='0.9'/%3E%3Ccircle cx='10' cy='92' r='1' opacity='0.6'/%3E%3Ccircle cx='36' cy='104' r='0.9' opacity='0.5'/%3E%3Ccircle cx='62' cy='96' r='1.2' opacity='0.8'/%3E%3Ccircle cx='90' cy='110' r='1' opacity='0.6'/%3E%3Ccircle cx='116' cy='100' r='0.9' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E\")",
-        }, 'A starfield behind the board, with its own hover and click sounds.', 'standard', { hoverSound: hoverSoundAsset, clickSource: clickSound3 }),
+        }, 'Lilac lettering. Part of the Starlight bundle.', 'standard', { hoverSound: hoverSoundAsset, clickSource: clickSound3 }),
 
         // PLACEHOLDER - 'supporter' tier
         boardTheme('aurora', 'Aurora', 0, { accent: '#39ffc9' }, 'Shifting aurora colours behind the board. Part of the Supporter’s Set.', 'supporter'),
@@ -389,7 +389,7 @@ export const SHOP_ITEMS = {
     hyperLinkTheme: [
         hyperLinkTheme('default', 'Classic Hyper-Link', 0, {}, 'The classic amber Hyper-Link.'),
         // PLACEHOLDER
-        hyperLinkTheme('ocean', 'Ocean Hyper-Link', 40, { accent: '#3b82f6', accentDark: '#2563eb' }, 'A blue Hyper-Link.'),
+        hyperLinkTheme('ocean', 'Ocean Hyper-Link', 40, { accent: '#3b82f6', accentDark: '#2563eb' }, 'Part of the Ocean bundle.'),
 
         // PLACEHOLDER - 'supporter' tier
         hyperLinkTheme('neon', 'Neon', 0, { accent: '#39ffc9', accentDark: '#00c2a8' }, 'Part of the Supporter’s Set.', 'supporter'),
@@ -414,7 +414,7 @@ export const SHOP_ITEMS = {
             barBg: 'rgb(228, 240, 255)', accent: '#3b82f6',
             tickerBg: '#06101c', tickerText: '#4fc3f7',
             departureArc: '#3b82f6', arrivalArc: '#f5a623',
-        }, 'Blue bars, ticker and Work button, with blue departure routes and gold arrival routes.'),
+        }, 'Light blue and gold. Part of the Ocean bundle.'),
 
         // PLACEHOLDER - 'supporter' tier
         generalTheme('prestige', 'Prestige', 0, {
@@ -435,7 +435,7 @@ export const SHOP_ITEMS = {
             departureArc: '#b794f6', arrivalArc: '#6ee7b7',
         }, 'Lavender and mint. Part of the Fairy bundle.'),
         generalTheme('poltergeist', 'Poltergeist', 75, {
-            barBg: 'rgb(18, 20, 18)', barText: '#a8d6a0', barTextMuted: '#a8d6a0', accent: '##9fffb0',
+            barBg: 'rgb(18, 20, 18)', barText: '#a8d6a0', barTextMuted: '#a8d6a0', accent: '#9fffb0',
             tickerBg: '#000000', tickerText: '#7cff6b',
             departureArc: '#9fffb0', arrivalArc: '#c4b5fd',
         }, 'Sickly green on near-black. Part of the Poltergeist bundle.'),
@@ -448,7 +448,7 @@ export const SHOP_ITEMS = {
             barBg: 'rgb(10, 10, 20)', barText: '#39ffc9', barTextMuted: '#a79fc9', accent: '#c4b5fd',
             tickerBg: '#000000', tickerText: '#39ffc9',
             departureArc: '#c4b5fd', arrivalArc: '#39ffc9',
-        }, 'Indigo and cyan, to match the Starlight board. Part of the Starlight bundle.'),
+        }, 'Indigo and cyan. Part of the Starlight bundle.'),
         generalTheme('buccaneer', 'Buccaneer', 75, {
             barBg: 'rgb(245, 235, 210)', accent: '#c9972a',
             tickerBg: '#1a1206', tickerText: '#e8c468',
@@ -485,7 +485,7 @@ export const SHOP_ITEMS = {
             cursorPointer: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%230d1b2e' stroke='%230d1b2e' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='10' y='2.5' width='5.2' height='15' rx='2.6'/%3E%3Crect x='15' y='10.5' width='4.6' height='9' rx='2.3'/%3E%3Crect x='19.2' y='11.8' width='4.4' height='9' rx='2.2'/%3E%3Crect x='23' y='13.6' width='3.8' height='8.4' rx='1.9'/%3E%3Crect x='8' y='15' width='18.8' height='11.5' rx='5.5'/%3E%3Cellipse cx='8.4' cy='18' rx='2.7' ry='5' transform='rotate(-28 8.4 18)'/%3E%3C/g%3E%3Cg fill='%234fc3f7'%3E%3Crect x='10' y='2.5' width='5.2' height='15' rx='2.6'/%3E%3Crect x='15' y='10.5' width='4.6' height='9' rx='2.3'/%3E%3Crect x='19.2' y='11.8' width='4.4' height='9' rx='2.2'/%3E%3Crect x='23' y='13.6' width='3.8' height='8.4' rx='1.9'/%3E%3Crect x='8' y='15' width='18.8' height='11.5' rx='5.5'/%3E%3Cellipse cx='8.4' cy='18' rx='2.7' ry='5' transform='rotate(-28 8.4 18)'/%3E%3C/g%3E%3Cpath d='M12.6 5 L12.6 13' stroke='%23e0f4ff' stroke-width='1.2' stroke-linecap='round' fill='none'/%3E%3C/svg%3E\") 13 3, pointer",
             cursorGrab: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%230d1b2e' stroke='%230d1b2e' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='8.2' y='7' width='4.2' height='14' rx='2.1'/%3E%3Crect x='12.6' y='4.5' width='4.2' height='15' rx='2.1'/%3E%3Crect x='17' y='5.5' width='4.2' height='14' rx='2.1'/%3E%3Crect x='21.4' y='8.5' width='4' height='12' rx='2'/%3E%3Crect x='8' y='14' width='17.4' height='12.5' rx='6'/%3E%3Cellipse cx='7.2' cy='19' rx='2.6' ry='4.6' transform='rotate(-32 7.2 19)'/%3E%3C/g%3E%3Cg fill='%234fc3f7'%3E%3Crect x='8.2' y='7' width='4.2' height='14' rx='2.1'/%3E%3Crect x='12.6' y='4.5' width='4.2' height='15' rx='2.1'/%3E%3Crect x='17' y='5.5' width='4.2' height='14' rx='2.1'/%3E%3Crect x='21.4' y='8.5' width='4' height='12' rx='2'/%3E%3Crect x='8' y='14' width='17.4' height='12.5' rx='6'/%3E%3Cellipse cx='7.2' cy='19' rx='2.6' ry='4.6' transform='rotate(-32 7.2 19)'/%3E%3C/g%3E%3Cpath d='M10.3 10 L10.3 15 M14.7 8 L14.7 14 M19.1 9 L19.1 14' stroke='%23e0f4ff' stroke-width='1' stroke-linecap='round' fill='none'/%3E%3C/svg%3E\") 16 16, grab",
             cursorGrabbing: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%230d1b2e' stroke='%230d1b2e' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='7.5' y='11' width='4.6' height='9' rx='2.3'/%3E%3Crect x='12' y='9.5' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='16.5' y='9.8' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='21' y='11.5' width='4.4' height='8.5' rx='2.2'/%3E%3Crect x='7.5' y='15' width='17.9' height='11' rx='5.5'/%3E%3Cellipse cx='13' cy='21.5' rx='5.5' ry='2.6'/%3E%3C/g%3E%3Cg fill='%234fc3f7'%3E%3Crect x='7.5' y='11' width='4.6' height='9' rx='2.3'/%3E%3Crect x='12' y='9.5' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='16.5' y='9.8' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='21' y='11.5' width='4.4' height='8.5' rx='2.2'/%3E%3Crect x='7.5' y='15' width='17.9' height='11' rx='5.5'/%3E%3Cellipse cx='13' cy='21.5' rx='5.5' ry='2.6'/%3E%3C/g%3E%3C/svg%3E\") 16 16, grabbing",
-        }, 'The same shapes, recoloured blue.'),
+        }, 'Part of the Ocean bundle.'),
 
         // PLACEHOLDER - 'supporter' tier (reuses the Ocean shapes recoloured gold, as a stand-in until real art exists)
         cursorTheme('vip', 'VIP', 0, {
