@@ -98,6 +98,7 @@ const DEV_KEY_MAP = {
     'Bike Rental': 'bikeRental',
     'Laundry Room': 'laundryRoom',
     'Co-Working Space': 'coWorkingSpace',
+    'Supermarket': 'supermarket',
 }
 
 export const UPGRADE_KEY_MAP = {

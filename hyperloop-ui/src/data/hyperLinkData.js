@@ -608,7 +608,7 @@ export const POSTS = {
         'lost my grandma in the new {store} 😭 if u see her tell her to get her ass to the entrance',
         'ok hear me out the cashier in the new {store} 😍',
         'The new {store} is everything i could shop in there for days',
-        'the queue outside the new {store}... man...',
+        'the queue outside the new {store} isnt acc too bad',
         'I went into the new {store} for 5 minutes and came out 2 hours later with a bag. No idea what happened lmao',
         'the new {store} has a sale on and i have never run faster',
         'Ok, who told my dad about the new {store}. Hes been in there since it opened haha',
@@ -643,7 +643,7 @@ export const POSTS = {
         'the new {service} saved my entire trip. i could cry',
         'someone tell the manager the new {service} is a real lifesaver 🙏',
         'ok the new {service} is the best thing to happen to {terminalName} all week',
-        'the line for the new {service} is long but honestly worth it',
+        'is the line for the new {service} long?',
     ],
 
     newDevelopmentFood: [
@@ -1322,7 +1322,7 @@ export const POSTS = {
     taxiDepot: [
         'the men at the taxi depot r so funny. i could listen to their stories for hours 🚕',
         'how much is a taxi into the city? from the depot?',
-        'queue at the taxi depot is like 10 miles long. guess im calling my mum',
+        'hate the small talk in taxis. guess im calling my mum',
     ],
 
     freeStaffBreakfasts: [
@@ -1852,6 +1852,12 @@ export const POSTS = {
         'wheres the laundry room i somehow got bird poo on my jeans and im not even outside',
     ],
 
+    supermarket: [
+        'gona run into the supermarket get some grapes and cheese for the loop 🍇🧀',
+        'When you see yourself in the security camera of the self-checkout 😒',
+        'anyone know what aisle the mops are at the supermarket dont ask why',
+    ],
+
     officialGeneral: [
         'Welcome to {terminalName}! We hope you enjoy your journey 🚄',
         'Reminder: please keep the terminal tidy. Bins are located throughout the building 🗑️',
@@ -1918,11 +1924,21 @@ export const POSTS = {
     officialDelay: [
         'We apologise for the delay to the {delayedCity} service. Thank you for your patience 🙏',
         'Update: the {delayedCity} loop is experiencing a delay. We are working to resolve this ⚠️',
+        'Service advisory: departures for {delayedCity} are currently delayed. Please check station monitors for updated timings ⏱️',
+        'We regret to inform passengers that the {delayedCity} service is running behind schedule. We appreciate your understanding ⏳',
+        'Delay update: the incoming service from {delayedCity} is held up. Our teams are doing everything to get it back on track 🧭',
+        'Notice for passengers travelling to {delayedCity}: your service has been delayed. We apologise for the disruption to your journey 🙇',
+        'Apologies for the inconvenience — the {delayedCity} departure is delayed. Live updates will follow shortly 📢',
     ],
 
     officialDelayCompensated: [
         'Passengers affected by the {delayedCity} delay have been compensated. We are sorry for the inconvenience 💛',
         'Compensation has been issued for the {delayedCity} delay. Thank you for your understanding 🙏',
+        'Update: automated compensation has been processed for all passengers impacted by the {delayedCity} delay 💳',
+        'We apologize for today\'s disruption to {delayedCity}. Fare adjustments/compensation have now been issued to affected travelers ✨',
+        'Compensation notice: accounts for passengers on the delayed {delayedCity} service have been credited. Thank you for your patience 🤝',
+        'We deeply value your time. Compensation for the {delayedCity} delay has been granted to all affected passengers 💵',
+        'In light of the delay on the {delayedCity} route, compensation has been distributed. Thank you for bearing with us 🛡️',
     ],
 
     officialEvent: {
@@ -1930,70 +1946,152 @@ export const POSTS = {
         award_won: [
             '🏆 We are honoured to announce that {terminalName} has been named Terminal of the Year by the Global Transit Authority!',
             'Incredible news — {terminalName} has won a Prestigious Award from the Global Transit Authority. Thank you to our passengers and team 🏆',
+            'We did it! 🎉 {terminalName} has officially been recognized with a top industry award. Thank you for travelling with us!',
+            'Proud moment for all of us at {terminalName}! We’re taking home gold in this year\'s Global Transit Excellence Awards 🥇',
+            'Honoured to receive this award for passenger service at {terminalName}. A huge thank you to our hardworking crew and wonderful passengers ⭐',
+            'Award alert! 🏆 {terminalName} was named Best Regional Transport Hub! We couldn\'t have done it without your ongoing support.',
+            'Celebrating a huge victory today — {terminalName} has been awarded top honours for operational excellence 🎖️',
         ],
         government_grant: [
             '{terminalName} has been awarded a Government Transport Innovation Grant. We will continue to invest in your experience 🙏',
             'We are pleased to announce {terminalName} has received a government grant to support continued growth and development ✅',
+            'Great news for our passengers! {terminalName} has secured government funding to upgrade terminal technology and passenger flow 🚀',
+            'Funding secured! 💼 New government grant support will help {terminalName} deliver faster, greener, and smarter travel.',
+            'We\'re excited to share that {terminalName} has been selected for a major government transit grant. Stay tuned for upcoming improvements! 🏗️',
+            'Investment in the future: {terminalName} has been awarded state development funds to enhance facility efficiency and capacity 📈',
+            'Official update: New government funding for {terminalName} will go directly into improving facilities and passenger comfort ✨',
         ],
 
         // Positive - passive boost
         viral_coverage: [
             'We\'ve seen the video going around — welcome to all our new visitors! We hope {terminalName} lives up to the hype 😄',
             'Overwhelmed by the response online! Thank you to everyone sharing their love for {terminalName} 🙏',
+            'Did someone say viral? 🤳 Thank you to everyone tagging {terminalName} in their posts today!',
+            'The internet has spoken, and it turns out you really like {terminalName}! Thanks for all the shoutouts ✨',
+            'We\'re trending! 🚀 Seeing {terminalName} all over our feeds today puts a huge smile on our faces.',
+            'To everyone arriving because of the clips online: welcome to {terminalName}! Enjoy your journey 🌟',
+            'Mind = blown 🤯 The love for {terminalName} online today is unbelievable. Thank you, everyone!',
         ],
         celebrity_visit: [
             'We can\'t say who, but {terminalName} may have had a very special passenger today 👀 Thank you for visiting!',
             'What a day at {terminalName}! We love welcoming all our passengers, famous or otherwise 😊',
+            'Star-spotted! ⭐ It\'s not every day a VIP rolls through {terminalName}. Hope you had a smooth trip!',
+            'If you felt a sudden burst of star power at {terminalName} today... you weren\'t imagining it! 🌟',
+            'Keeping our cool while passing a VIP through {terminalName} was the hardest part of our shift today 😎',
+            'No autographs requested, but we were definitely starstruck at {terminalName} earlier! ✨',
+            'Famous faces on the platform today! Thanks for choosing {terminalName} for your travel 📸',
         ],
         tourism_surge: [
             'Welcome to all visitors travelling through {terminalName} for {occasion} this week! We\'re delighted to have you 🌍',
             'Huge numbers travelling through {terminalName} today — welcome to everyone in town for {occasion}! ✈️',
+            'The energy at {terminalName} is electric today! Sending a warm welcome to everyone here for {occasion} 🎉',
+            'So many new faces at {terminalName}! If you\'re arriving for {occasion}, we hope you have an unforgettable time 🥳',
+            '{terminalName} is buzzing! It\'s amazing to see so many travelers coming together for {occasion} 🗺️',
+            'Welcome to the city! Starting your trip at {terminalName} for {occasion}? Ask our team if you need directions! 🧭',
+            'Packed concourses and bright smiles — welcome to all {occasion} attendees passing through {terminalName}! ✨',
         ],
         record_day: [
             'Today is shaping up to be a record-breaking day at {terminalName}! Thank you to every single passenger 🎉',
             'We\'re on track to break passenger records today at {terminalName}. Thank you for travelling with us 🚄',
+            'History in the making! 🏆 We\'ve never seen this many passengers pass through {terminalName} in a single day.',
+            'What a milestone! {terminalName} is officially handling record passenger volumes today. Thanks for being part of it 📈',
+            'Busiest day ever? Looks like it! Thank you to everyone helping {terminalName} set a new record! 📊',
+            'We\'re firing on all cylinders! So proud to set a new passenger traffic record today at {terminalName} 🏅',
+            'More passengers than ever before! Thanks for making {terminalName} your go-to hub today 🌟',
         ],
-        staff_motivated: [
+       staff_motivated: [
             'Shoutout to the incredible team at {terminalName} today — you\'re the reason we keep getting better 💛',
             'Our staff are going above and beyond today. {terminalName} is in great hands 🙌',
+            'Big smiles and high energy across all shifts at {terminalName} today. Our team truly rocks! ⚡',
+            'Behind every smooth journey at {terminalName} is a hard-working team giving 110%. Thank you, team! 👏',
+            'Morale is sky-high at {terminalName} today! Loving the positive vibes from our frontline crew 😊',
+            'Seeing our team at {terminalName} take such pride in their work today makes all the difference 🌟',
+            'Huge appreciation post for the crew at {terminalName} — working hard and staying smiling! 💪',
         ],
         efficiency_drive: [
             'Our new productivity initiative is live at {terminalName} today. Expect an even smoother experience 💪',
+            'We\'ve streamlined our processes at {terminalName}! Shorter queues and quicker boarding ahead ⏱️',
+            'Operations are running like clockwork at {terminalName} today thanks to our new efficiency upgrades ⚙️',
+            'Faster, smarter, smoother. Our latest operational refresh at {terminalName} is paying off! 🚀',
+            'We\'re cutting down wait times and speeding up service across {terminalName} today. Enjoy the breeze! 💨',
+            'Notice how quickly things are moving at {terminalName}? Our efficiency drive is in full swing! 📈',
+            'Optimizing every step of your journey — {terminalName} is operating at peak performance today ✨',
         ],
 
         // Negative - passive penalty
         sickness_outbreak: [
             'We are aware of a sickness affecting some staff today. Services are running but may be slower than usual. We apologise for any inconvenience 🙏',
             'Health advisory: a bug is circulating in the terminal. Please wash hands regularly and stay safe 🤧',
+            'A seasonal illness is currently affecting a number of our team members at {terminalName}. Expect minor delays as we adjust staff 🩺',
+            'Due to an unexpected surge in staff illness, some desks and facilities at {terminalName} may be temporarily unstaffed. Thank you for your patience 🙏',
+            'We are operating with reduced frontline crew today due to widespread illness. We appreciate your kindness toward working staff 💛',
+            'Health & safety notice: extra sanitization measures are underway at {terminalName} following a local bug outbreak 🧼',
+            'Staffing levels are lower than usual at {terminalName} today due to sudden sickness. We are working hard to cover shifts where possible ⏳',
         ],
         bad_press: [
             'We are aware of recent media coverage and take all feedback seriously. We remain committed to delivering the best experience possible 🙏',
             'In response to recent reports — we are listening, and we are working hard to address concerns at {terminalName} 💛',
+            'We hear your feedback following recent news reports. Improving our services at {terminalName} remains our absolute top priority 🛠️',
+            'We acknowledge the concerns raised in recent media stories and are taking immediate action to improve our standards at {terminalName} 🤝',
+            'Every passenger deserves a great experience at {terminalName}. We take recent criticism to heart and are actively working on solutions 💬',
+            'We know we have work to do following recent coverage. Thank you for holding us accountable as we make necessary changes 🛡️',
+            'In light of recent news, we want to reassure passengers that {terminalName} is taking concrete steps to address these issues promptly 📋',
         ],
         bad_weather: [
             'Weather advisory: severe conditions may affect some services today. Please allow extra time and check your loop status ⛈️',
             'Disruption warning: extreme weather is affecting the {terminalName} network. We are doing everything we can to keep you moving ⚠️',
+            'Adverse weather conditions are causing delays across the network today. Please stay safe and check live updates for {terminalName} 🌧️',
+            'Severe weather is currently impacting operations at {terminalName}. High winds/rain may cause temporary holds on services 💨',
+            'Due to storm conditions, safety protocols are active at {terminalName}. Thank you for your patience as we navigate the delays ☔',
+            'Weather update: travel times to and from {terminalName} are extended today due to poor visibility and track/road conditions 🌫️',
+            'Extreme weather has slowed down operations at {terminalName}. Our ground teams are working around the clock to clear disruptions ❄️',
         ],
         security_incident: [
             'Security notice: we are currently managing an incident at {terminalName}. Please follow staff instructions and allow extra time 🔒',
             'We are working with authorities to resolve an ongoing security situation. Thank you for your cooperation and patience 🙏',
+            'Attention passengers: a temporary security hold is active in certain zones of {terminalName}. Please stay calm and follow directions 🚨',
+            'Safety comes first. {terminalName} is experiencing a brief security delay while emergency teams attend to an incident 🛑',
+            'Part of {terminalName} has been temporarily cordoned off for a security check. We will resume normal operations as soon as cleared 🛡️',
+            'Security alert: expect additional checks and potential delays at {terminalName} today. Thank you for helping us keep everyone safe 🤝',
+            'We are supporting local emergency services with an ongoing situation at {terminalName}. Please avoid restricted areas ⚠️',
         ],
         staff_walkout: [
             'Service notice: some operations at {terminalName} are running at reduced capacity today. We apologise for any disruption 🙏',
             'We are aware of industrial action affecting {terminalName} and are doing our best to minimise disruption to passengers ⚠️',
+            'Due to organized walkouts, several services at {terminalName} may be delayed or cancelled today. Please plan ahead 📅',
+            'Unscheduled labor action is impacting staffing levels across {terminalName}. Expect longer wait times at check-in and boarding ⌛',
+            'Industrial action is currently affecting operations at {terminalName}. Contingency teams are deployed to assist where possible 🛠️',
+            'We regret to inform passengers that walkouts are causing widespread service changes at {terminalName} today. Check status before travelling 🔍',
+            'Passenger advisory: reduced staffing at {terminalName} today due to strike action. We sincerely apologize for the inconvenience caused 🙇',
         ],
 
         // Negative - equipment/systems
         equipment_damage: [
             'Emergency maintenance is underway at {terminalName}. Some services may be affected. We apologise for the inconvenience 🔧',
             'Maintenance notice: urgent repair works are taking place. Thank you for your patience while we get things back to normal 🛠️',
+            'Unexpected equipment failure at {terminalName} is causing minor delays. Our engineering team is already on-site repairing it ⚡',
+            'We are experiencing physical hardware issues at {terminalName}. Technicians are working rapidly to restore full operation 🧰',
+            'Apologies for the disruption — essential machinery at {terminalName} requires immediate servicing. Work is underway! 🏗️',
+            'Part of our infrastructure at {terminalName} is temporarily out of service for critical repairs. Thank you for bearing with us 🙏',
+            'Damage to key equipment at {terminalName} has been identified and is actively being repaired. Expect minor service holds ⚙️',
         ],
         system_issues: [
             'We are currently experiencing technical difficulties with some systems at {terminalName}. Our team is working on a fix ⚠️',
             'Technical notice: some management systems are offline. Manual operations are in place. We apologise for any delays 🔧',
+            'IT outage alert: processing systems at {terminalName} are running slowly. Our tech crew is investigating the issue 💻',
+            'We are encountering network glitches across {terminalName} today. Backup protocols have been activated to keep things moving 📡',
+            'System disruption notice: software issues may cause delays at check-in/gates in {terminalName}. We appreciate your patience ⏳',
+            'Our IT infrastructure at {terminalName} is currently undergoing emergency troubleshooting. We hope to be fully back online shortly 🔌',
+            'Data connection issues are affecting display boards and digital systems at {terminalName}. Please listen for PA announcements 📢',
         ],
         regulatory_fine: [
             'Following a recent inspection, we are implementing improvements across {terminalName} to meet regulatory standards. Thank you for your patience 🙏',
+            'We are actively upgrading operations at {terminalName} following updated regulatory guidelines. We appreciate your understanding 📋',
+            'Compliance update: {terminalName} is undergoing operational adjustments to align with strict new authority standards ⚖️',
+            'We take compliance seriously — work is currently underway at {terminalName} to address recent inspection feedback and elevate quality 🔍',
+            'Operational notice: safety and compliance audits at {terminalName} mean temporary workflow adjustments today. Thanks for your support 🤝',
+            'We are conducting an immediate review and overhaul of procedures at {terminalName} to meet full regulatory requirements 🛡️',
+            'Following official feedback, {terminalName} is rolling out enhanced protocols today to ensure top safety and operational compliance 📑',
         ],
     },
 
@@ -2011,13 +2109,19 @@ export const POSTS = {
         'anyone who hasnt seen the video come to arrivals i have it here',
         'SOMEONE SEND ME THE VIDEO',
         'can someone PLEASE sent me the video i havent seen it yet!!',
-        'Howd that go viral? not even funny'
+        'Howd that go viral? not even funny',
+        'pls tell me im not the only one who saw that video going around 💀',
+        'never expected {terminalName} to end up on my FYP today lmao',
+        'the clip doing numbers online right now is hilarious',
     ],
     event_celebrity_visit: [
             'wait is that who I think it is??',
             'Just walked past someone famous and I\'m pretending I didn\'t notice',
             'who even is that and why do we all care',
             'Lol i got an autograph from them earlier',
+            'why is everyone staring at that corner?? did someone famous just get here?',
+            'just made eye contact with a celeb at {terminalName} and forgot how to speak 🧍',
+            'security detail surrounding someone big today... who is it??',
         ],
     event_tourism_surge: [
             'anyone else in town for {occasion}?? this place is packed',
@@ -2040,7 +2144,13 @@ export const POSTS = {
         'Tissues, hand sanitiser, wipes... bring it on, sickness! #prepared',
         'yeah. theres definitely something going around. 🤒',
         'Not feeling the best but you just have to keep going #StayStrong',
-        'Glad I brought tissues! 🤧'
+        'Glad I brought tissues! 🤧',
+        'everyone in this line is coughing, I should\'ve worn a mask 😷',
+        'literally every second staff member looks sick today, stay safe out there guys',
+        'packed extra hand sanitizer just in case... definitely seeing a few sniffles around 🧼',
+        'Is it just me or is everyone at {terminalName} coming down with something today?',
+        'definitely picking up vitamins on my way home, something bug-like is in the air',
+        'stay safe if you\'re travelling today! keep washing those hands 🧴',
     ],
     event_bad_press: [
         'I\'m not sure if I believe all the bad press about the terminal! It\'s always been a good experience for me.',

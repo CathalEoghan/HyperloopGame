@@ -33,7 +33,7 @@ export function AchievementsButton({ unseen = 0, showBubble = false, bubbleKey =
 }
 
 // onSeen(id) is called when the player hovers over (or taps) an achievement they had not looked at yet.
-export default function AchievementsModal({ achievementManager, purchasedUpgrades, onSeen = () => {}, onClose }) {
+export default function AchievementsModal({ achievementManager, purchasedUpgrades, onSeen = () => { }, onClose }) {
     const count = achievementManager.count
     const firstUnseenRef = useRef(null)
     // Opening the page with something new on it: bring the first new achievement into view

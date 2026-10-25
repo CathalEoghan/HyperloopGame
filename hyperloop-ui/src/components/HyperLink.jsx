@@ -95,13 +95,13 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                         <div className="hyperlink-notch-pill" />
                     </div>
                     <div className="hyperlink-status-bar">
-    <span style={{ fontWeight: 700 }}>{timeStr}</span>
-    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-        <img src={signalIcon} alt="signal" style={{ width: '14px', height: '14px', border: 'none', borderRadius: 0 }} />
-        <img src={wifiIcon} alt="wifi" style={{ width: '14px', height: '14px', border: 'none', borderRadius: 0 }} />
-        <img src={batteryIcon} alt="battery" style={{ width: '20px', height: '14px', border: 'none', borderRadius: 0 }} />
-    </div>
-</div>
+                        <span style={{ fontWeight: 700 }}>{timeStr}</span>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <img src={signalIcon} alt="signal" style={{ width: '14px', height: '14px', border: 'none', borderRadius: 0 }} />
+                            <img src={wifiIcon} alt="wifi" style={{ width: '14px', height: '14px', border: 'none', borderRadius: 0 }} />
+                            <img src={batteryIcon} alt="battery" style={{ width: '20px', height: '14px', border: 'none', borderRadius: 0 }} />
+                        </div>
+                    </div>
                     <div className="hyperlink-header">
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             <img src={phoneIcon} alt="" style={{ width: '18px', height: '18px', border: 'none', borderRadius: '0', opacity: 0.9 }} />
@@ -197,7 +197,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
 
 export function HyperLinkButton({ unread, onClick, showBubble }) {
     return (
-       <div style={{ position: 'fixed', bottom: 110, left: 12, zIndex: 150 }}>
+        <div style={{ position: 'fixed', bottom: 110, left: 12, zIndex: 150 }}>
             {showBubble && (
                 <div className="hyperlink-notification-bubble">New notification!</div>
             )}

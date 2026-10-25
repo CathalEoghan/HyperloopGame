@@ -796,7 +796,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             const el = rightControlsRef.current
             const box = el?.parentElement?.getBoundingClientRect()
             if (!box) return
-            // Trophy: 112.5px up from the bottom of the window and about 78px tall, plus a little gap
+            // Trophy: 110px up from the bottom of the window and about 78px tall, plus a little gap
             const trophyTop = window.innerHeight - 200
             const bottom = `${Math.max(168, Math.ceil(box.bottom - trophyTop))}px`
             if (el.style.bottom !== bottom) el.style.bottom = bottom

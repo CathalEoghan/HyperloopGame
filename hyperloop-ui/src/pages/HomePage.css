@@ -167,7 +167,7 @@
     position: absolute;
     top: 2.5px;
     right: 16px;
-    /* Clear of the trophy button (fixed 112.5px up from the bottom of the screen, under this column) and the ticker */
+    /* Clear of the trophy button (fixed 110px up from the bottom of the screen, under this column) and the ticker */
     bottom: 168px;
     z-index: 10;
     display: flex;
