@@ -15,7 +15,7 @@ const SORTED_ACHIEVEMENTS = [...ACHIEVEMENTS].sort((a, b) => a.name.localeCompar
 
 export function AchievementsButton({ unseen = 0, showBubble = false, bubbleKey = 0, onClick }) {
     return (
-        <div style={{ position: 'fixed', bottom: 112.5, right: 12, zIndex: 150 }}>
+        <div style={{ position: 'fixed', bottom: 110, right: 12, zIndex: 150 }}>
             {showBubble && (
                 <div key={bubbleKey} className="hyperlink-notification-bubble hyperlink-notification-bubble-right">New achievement!</div>
             )}

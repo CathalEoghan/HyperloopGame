@@ -197,7 +197,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
 
 export function HyperLinkButton({ unread, onClick, showBubble }) {
     return (
-        <div style={{ position: 'fixed', bottom: 112.5, left: 12, zIndex: 150 }}>
+       <div style={{ position: 'fixed', bottom: 110, left: 12, zIndex: 150 }}>
             {showBubble && (
                 <div className="hyperlink-notification-bubble">New notification!</div>
             )}
