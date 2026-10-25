@@ -460,7 +460,7 @@ export const SHOP_ITEMS = {
             departureArc: '#f0a8d0', arrivalArc: '#d4af37',
         }, 'Rose and gold. Part of the Princess bundle.'),
         generalTheme('jazz', 'Jazz', 75, {
-            barBg: 'rgb(30, 20, 22)', barText: '#b8860b', barTextMuted: '#cba98e', accent: '#b8860b',
+            barBg: 'rgb(30, 20, 22)', barText: '#e0b25c', barTextMuted: '#e0b25c', accent: '#b8860b',
             tickerBg: '#000000', tickerText: '#e0b25c',
             departureArc: '#b8860b', arrivalArc: '#8b0000',
         }, 'Smoky goldenrod and burgundy. Part of the Jazz bundle.'),

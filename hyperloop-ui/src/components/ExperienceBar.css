@@ -28,3 +28,9 @@
 .fill {
     transition: width 0.8s ease-out;
 }
+
+/* The header above already ends in a 2px black line; without this the two stack into a 4px strip.
+   With an event banner in between they aren't adjacent, so the XP bar keeps its own top border. */
+.TopBanner + .ExperienceBar {
+    border-top: none;
+}

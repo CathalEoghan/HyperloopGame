@@ -10,6 +10,6 @@ export const SanAntonio = new City(
     "United States of America",
     "North America",
     2,
-    "San Antonio is home to the world's largest cowboy boots. Located outside the North Star Mall, this massive sculpture stands at 35 feet and 3 inches tall, weighs more than 10,000 pounds, and was created by artist Bob Wade in 1979.",
+    "San Antonio is home to the world's largest cowboy boots. Located outside the North Star Mall, this massive sculpture stands at 35 feet and 3 inches tall, weighs 10,000 pounds, and was created by artist Bob Wade in 1979.",
     false
 );
