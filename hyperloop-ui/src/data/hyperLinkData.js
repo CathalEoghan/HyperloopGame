@@ -1738,7 +1738,13 @@ export const POSTS = {
         'every review i read said this place is a mess. and look at that, its a mess',
         'does anyone know how a place gets this bad of a reputation? genuinely curious',
         'i would say i expected better but i read the reviews and i did not',
-        ],
+        'if bad reputation was an Olympic sport this place would take home the gold medal 🏅',
+        'told my group chat where I was and they all replied with emergency hotline numbers 💀',
+        'i knew the ratings were low but walking in here really confirms every single review lmao',
+        'the reviews said "avoid at all costs" and honestly... they weren\'t lying 😭',
+        'never booking through this hub again, the horror stories online were 100% accurate #neveragain',
+        'this place is proof that you really do get what you pay for 💀 #terrible',
+    ],
 
     highReputation: [
         'This terminal truly deserves its high reputation. ✨',
@@ -1748,6 +1754,12 @@ export const POSTS = {
         'This place is simply amazing...',
         'The terminal has a really good reputation, hopefully it lives up to it today!',
         'Gonna vlog my travels through here - this place has a really good reputation',
+        'Five stars across the board! Now I see why everyone hyped this place up ⭐⭐⭐⭐⭐',
+        '10/10 travel experience so far, the online reviews were NOT lying 🤩',
+        'Honestly every other hub needs to take notes from this place. Top tier 🙌',
+        'The manager really turned this place into a masterclass of efficiency #bestterminal',
+        'Traveling through here feels like a luxury upgrade. Absolutely love it 💖',
+        'Always a smooth journey through here. Best reputation in the business for a reason! 🚀',
     ],
 
     budgetHotel: [
