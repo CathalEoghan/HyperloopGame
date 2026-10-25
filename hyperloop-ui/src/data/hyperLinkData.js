@@ -242,7 +242,7 @@ export const POSTS = {
         'whats up',
         'Taking selfies in the {terminalName} bathroom!!',
         'ahh this place is so pretty',
-        'What\'s up guys',
+        'What\'s up guys xx',
         'what language does everyone speak as their primary',
         'whos that clown who keeps scaring people by the elevator is it for socials or something lol',
         'making funny faces in the bathroom mirror #dontjudge',
@@ -303,7 +303,7 @@ export const POSTS = {
         'Don\'t talk to me till I\'ve had my #morningcoffee! ☕️',
         'morning loops are the worst',
         'Such a beautiful morning ☀️',
-        'GOOD MORNING',
+        'GOOD MORNING XOXO',
         'still so tired this morning',
         'Full day ahead everyone!! #GoodMorning ☀️',
         'What a lovely morning',
@@ -335,7 +335,7 @@ export const POSTS = {
         'Gonna have dinner wheres good for someone fussy like me',
         'Happy eve 🌇',
         'Evening is my favourite time of the day here. I just like people-watching as the time draws to its close',
-        'Too late for lunch?',
+        'Too late for lunch? xx',
         'Can see some of the stars already beginning to emerge. Just magical ✨',
         'Anyone wanna join me for an evening meal? Doesnt have to be fancy or anything',
         'ik its evening idc im having a breakfast style meal I WAS IN THE AIR FOR LIKE TWELVE HOURS BEFORE I GOT HERE',
@@ -471,7 +471,7 @@ export const POSTS = {
     march: [
         'who named march after a parade',
         'Thank god for #moderntravel. Can\'t take this freezing cold any more ! #followthesun #march 🌅',
-        'lets just skip to april',
+        'lets just skip to april x',
         'march is an anagram of charm. may is an anagram of yam. #observations',
         'March is so underrated #spring 🍀'
     ],
@@ -616,7 +616,7 @@ export const POSTS = {
         'Queueing outside the new {store} like its a concert 😭',
         'the staff at the new {store} are SO nice. Spent way more than i planned because of them lol',
         'if my suitcase doesnt close its because of the new {store}. not my fault',
-        'Anyone got a spare suitcase? The new {store} got me',
+        'Anyone got a spare suitcase? The new {store} got me x',
     ],
 
     newDevelopmentRecreation: [
@@ -648,7 +648,7 @@ export const POSTS = {
 
     newDevelopmentFood: [
         'Thank goodness for the new {food}. My stomach was grumbling like crazy',
-        'Whos coming to get food with me at the new {food}??',
+        'Whos coming to get food with me at the new {food}?? x',
         'Lines for the new {food} are out the door! People be hungry',
         'anyone who has been to the new {food} - whats the best thing on the menu?',
         'the new {food} smells SO good. i just had lunch but im tempted haha',
@@ -676,7 +676,7 @@ export const POSTS = {
     boarding: [
         'Family making me go on this trip to {boardingCity} zzzz',
         'This boarding line is SO. LONG. #{boardingCity} 🫠',
-        'time to board! bye guys!',
+        'time to board! bye guys! xx',
         'so many butterflies in my stomach boarding this loop to {boardingCity} 🦋',
         'Any tips on staying sane for this long ass hyperloop journey to {boardingCity}?',
         'Some idiot just bunked the boarding queue…',
@@ -685,6 +685,12 @@ export const POSTS = {
         'First time boarding a hyperloop ! 💺',
         'anyone else check their passport constantly when boarding lol #paranoid #{boardingCity}',
         'WHY do people all rush to queue up when boarding is announced? Like sit down we\'re all getting on the loop regardless! #{boardingCity}',
+        'Finally stepping onto the loop for {boardingCity}! Vacation mode: ON 🌴',
+        'boarding now!! see you on the other side {boardingCity} 👋',
+        'the person in front of me has 3 huge carry-ons... how did staff even let that through 😭',
+        'ticket scanned, officially en route to {boardingCity}! xx',
+        'already tapped into my downloaded podcasts for the trip to {boardingCity} 🎧',
+        'boarding is super smooth today, gotta give credit to the staff at {terminalName} 👏',
     ],
 
     finalCall: [
@@ -697,6 +703,12 @@ export const POSTS = {
         'Rushed to get to the gate to {finalCallCity} in time... hopefully I didnt leave anything important behind #mess',
         'Yeah, I know it\'s final call to {finalCallCity}, but I\'ve literally got this latte to finish first #priorities',
         'so hyped now #{finalCallCity}',
+        'FINAL CALL to {finalCallCity}!! If you hear someone sprinting in squeaky shoes, that\'s me x',
+        'they just called my name on the loudspeaker for {finalCallCity} THE EMBARRASSMENT 😭💀',
+        'Sprinting to Gate {gateNumber} like I\'m in an action movie right now lmao #FinalCall',
+        'almost missed the loop to {finalCallCity} because i lost track of time staring at my phone 🤦‍♂️',
+        'Gate {gateNumber} is closing GET YOUR SKATES ON GUYS ⛸️',
+        'made it to the gate for {finalCallCity} with literally 10 seconds to spare... heart is POUNDING 💓',
     ],
 
     goToGate: [
@@ -707,7 +719,13 @@ export const POSTS = {
         'eeeee gate is open! trip to {goToGateCity} is finally beginning to feel real 🥹',
         'what gate number is it guys again i forgot and couldnt be bothered going back to the departure board lol',
         'go to the gate! its gate {gateNumber}. which is my lucky number coincidentally',
-        'omg i literally guessed that gate number #{gateNumber}'
+        'omg i literally guessed that gate number #{gateNumber}',
+        'Boarding call for {goToGateCity}! Everyone go now🏃💨',
+        'Gate {gateNumber} is finally live!!',
+        'YES!! Gate {gateNumber} for {goToGateCity} is officially open woo x',
+        'everybody sprint to gate {gateNumber} go go go!! 🏃‍♀️',
+        'gate {gateNumber} opened just as I finished my drink... immaculate timing lol',
+        'off to Gate {gateNumber} for the {goToGateCity} loop! catch you guys on the other side ✌️',
     ],
 
     departed: [
@@ -722,6 +740,12 @@ export const POSTS = {
         'Bon voyage! That\'s me off to {departedCity}!',
         'OMG... i just remembered my ex lives in {departedCity}. HOW DO I GET OFF THIS LOOP???',
         'Bye bye everyone!! #{departedCity}',
+        'Just boarded the loop to {departedCity}! Headphones on dont bother me 🎧',
+        'Heading to {departedCity}!! Drop your best food recommendations below',
+        'finally en route to {departedCity} after what felt like a 10-hour wait 😴',
+        'Window seat for the loop to {departedCity}... time for a quick nap 💤',
+        'off to {departedCity}! hopefully i make it back in one piece 🙈',
+        'on my way to {departedCity}! super smooth ride today, 10/10 experience',
     ],
 
     delayCompensated: [
@@ -755,6 +779,12 @@ export const POSTS = {
         'damn wish i got a selfie with the manager theyre so 😎',
         'my dad didnt believe me that the MANAGER just said bye to us lmao',
         'So thoughtful of the manager to say goodbye to us! #ThankYou',
+        'did the manager just personally wish us a safe trip to {city}?? main character energy ✨',
+        'i was not expecting a personal send-off from the manager today but here we are!! lol',
+        'The manager waving us off like we\'re royal family or something 👑😂',
+        'Just got a personal farewell from the manager... 10/10 customer service right there aha',
+        'wait the manager actually came out to say bye to everyone departing for {city}? wholesome content 💛',
+        'shoutout to the manager for making us feel like absolute VIPs on our way out 🚀',
     ],
 
     farewellMissed: [
@@ -762,6 +792,12 @@ export const POSTS = {
         'Lowkey wish the manager said bye to us #sad',
         'kind of wanted to be in one of those viral manager farewell videos but whatever lol',
         'sad i missed the manager. dont they usually come down and say bye?',
+        'saw the manager saying bye to the other gate... why not us 😭',
+        'waited around hoping for the manager send-off but no luck today 💔',
+        'guess we didn\'t get the VIP manager treatment this time around 😔',
+        'was literally scanning the crowd for the manager before boarding lol #missedopportunity',
+        'no manager farewell for our loop to {city}? my disappointment is immeasurable 😭',
+        'Really thought the manager was gonna pop out and wave us off... maybe next time 🤞',
     ],
 
     arrivalGiven: [
@@ -788,6 +824,12 @@ export const POSTS = {
         'no i do not have anything to declare!',
         'Can someone explain what customs is 😂',
         'Do I have to declare my travel pillow?',
+        'Finally touched down in {homeCity}! Time to find the exit and grab a coffee ☕',
+        'That trip from {city} felt like an eternity... so glad to finally be here 😴',
+        'standing at the baggage carousel praying my suitcase is the first one out 🤞',
+        'just stepped off the loop from {city}. {homeCity}, please be good to me! 🙏',
+        'made it to {homeCity} in one piece! now which way to ground transport?? 🚕',
+        'layover in {homeCity} for the next 4 hours... drop your best gaming recommendations! 📱',
     ],
 
     positiveEvent: [
@@ -855,6 +897,12 @@ export const POSTS = {
         'a food court would genuinely change my life right now',
         'every terminal ive ever been to has a coffee place at least 😔',
         'i would pay £20 for a bag of crisps. i would pay £20 for HALF a bag of crisps',
+        'i am currently convincing myself that paper napkins taste like bread 😭',
+        'my stomach is making noises that are alarming the passengers around me pls feed us',
+        'who designed this place without a single restaurant like honestly',
+        'at this point i will take a stale cracker. literally anything',
+        'would trade my kidney for a warm meal right now #starving',
+        'sitting in a foodless wasteland at {terminalName} contemplating my life choices !!',
     ],
 
     noShopping: [
