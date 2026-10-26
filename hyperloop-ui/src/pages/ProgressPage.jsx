@@ -202,14 +202,12 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     // Experimental Technology lives in the Upgrade registry (it's bought like any other city upgrade, not built
     // from a development slot), not the Development registry - folded in by hand so it still shows up here.
     const collectibleDevelopments = [...allDevelopments, experimentalTechnology]
-    const totalDevelopmentsCount = collectibleDevelopments.length
     const purchasedDevNames = new Set((purchasedDevelopments || []).map(d => d.name))
     const unlockedDevNames = new Set((unlockedDevelopments || []).map(d => d.name))
     // Instance equality works for Experimental Technology (the module export is a singleton, same object
     // reference wherever it's imported), but every other development is matched by name like cities/countries.
     const experimentalTechOwned = (purchasedUpgrades || []).includes(experimentalTechnology)
     const experimentalTechUnlocked = (unlockedUpgrades || []).includes(experimentalTechnology)
-    const sortedDevelopments = [...collectibleDevelopments].sort((a, b) => a.name.localeCompare(b.name))
 
     const getDevelopmentState = (dev) => {
         if (dev === experimentalTechnology) {
@@ -223,9 +221,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     }
     const ownedDevelopmentsCount = collectibleDevelopments.filter(d => getDevelopmentState(d) === 'connected').length
 
-    // Layer-locked rather than unlock/connect, but the same three-tier look: owned, buyable now, still locked.
-    const totalPrestigeUpgradesCount = PRESTIGE_UPGRADES.length
-    const sortedPrestigeUpgrades = [...PRESTIGE_UPGRADES].sort((a, b) => a.layer - b.layer || a.name.localeCompare(b.name))
+    // Prestige upgrades are layer-locked rather than unlock/connect, but the same three-tier look applies: owned,
+    // buyable now, still locked. They're still developments - a special kind that, unlike the rest, is never reset
+    // by a prestige - so they belong in the same "Developments collected" grid/total/progress-bar rather than a
+    // section of their own; only their claim (via claimedPrestige/hyperloop_prestige_upgrade_rewards, see
+    // makeClaimHandler above) stays permanently separate from the others', since the upgrade itself never resets.
     const getPrestigeUpgradeState = (upgrade) => {
         if (PrestigeManager.owns(upgrade.id)) return 'connected'
         if (prestige.layerUnlocked(upgrade.layer)) return 'unlocked'
@@ -233,12 +233,19 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     }
     const ownedPrestigeUpgradesCount = PRESTIGE_UPGRADES.filter(u => PrestigeManager.owns(u.id)).length
 
+    const totalDevelopmentsCount = collectibleDevelopments.length + PRESTIGE_UPGRADES.length
+    const combinedOwnedDevelopmentsCount = ownedDevelopmentsCount + ownedPrestigeUpgradesCount
+    const sortedDevelopments = [
+        ...collectibleDevelopments.map(item => ({ isPrestige: false, item })),
+        ...PRESTIGE_UPGRADES.map(item => ({ isPrestige: true, item })),
+    ].sort((a, b) => a.item.name.localeCompare(b.item.name))
+
     // Rewards still waiting on each grid, shown on its header while it's folded away so they aren't missed
     const claimable = {
         countries: [...purchasedCountries].filter(c => sortedCountries.includes(c) && !claimed.has('country:' + c)).length,
         cities: purchasedCities.filter(c => visibleCities.some(v => v.name === c.name) && !claimed.has('city:' + c.name)).length,
-        developments: collectibleDevelopments.filter(d => getDevelopmentState(d) === 'connected' && !claimed.has('dev:' + d.name)).length,
-        prestigeUpgrades: PRESTIGE_UPGRADES.filter(u => PrestigeManager.owns(u.id) && !claimedPrestige.has('prestige:' + u.id)).length,
+        developments: collectibleDevelopments.filter(d => getDevelopmentState(d) === 'connected' && !claimed.has('dev:' + d.name)).length
+            + PRESTIGE_UPGRADES.filter(u => PrestigeManager.owns(u.id) && !claimedPrestige.has('prestige:' + u.id)).length,
     }
 
     // Worked out on every render (the page re-renders each second). These lists are added to in place, so a memo
@@ -420,8 +427,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const upgradeStats = getUpgradeStats()
     const cityProgress = (purchasedCities.length / totalCitiesCount) * 100
     const countryProgress = (purchasedCountries.size / totalCountriesCount) * 100
-    const developmentProgress = (ownedDevelopmentsCount / totalDevelopmentsCount) * 100
-    const prestigeUpgradeProgress = (ownedPrestigeUpgradesCount / totalPrestigeUpgradesCount) * 100
+    const developmentProgress = (combinedOwnedDevelopmentsCount / totalDevelopmentsCount) * 100
 
     return (
         <>
@@ -517,53 +523,33 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                         })}
                     </div>}
 
-                    {sectionHeader('developments', 'Developments collected', { marginTop: '24px' }, <span className="progress-fraction">{ownedDevelopmentsCount} / {totalDevelopmentsCount}</span>)}
+                    {sectionHeader('developments', 'Developments collected', { marginTop: '24px' }, <span className="progress-fraction">{combinedOwnedDevelopmentsCount} / {totalDevelopmentsCount}</span>)}
                     <div className="progress-bar-container">
                         <div className="progress-bar-fill" style={{ width: `${developmentProgress}%` }} />
                         <span className="progress-bar-label">{Math.round(developmentProgress)}%</span>
                     </div>
                     {!collapsed.developments && <div className="progress-city-grid">
-                        {sortedDevelopments.map(dev => {
-                            const state = getDevelopmentState(dev)
-                            const key = 'dev:' + dev.name
+                        {sortedDevelopments.map(({ isPrestige, item }) => {
+                            const state = isPrestige ? getPrestigeUpgradeState(item) : getDevelopmentState(item)
+                            const key = isPrestige ? 'prestige:' + item.id : 'dev:' + item.name
+                            const claimedSet = isPrestige ? claimedPrestige : claimed
+                            const onCardClick = isPrestige ? handlePrestigeCardClick : handleCardClick
                             return (
-                                <div key={dev.name} className={`progress-city-card progress-city-${state}${state === 'connected' && !claimed.has(key) && !fading.has(key) ? ' progress-card-unclaimed' : ''}${fading.has(key) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimed.has(key) && handleCardClick(e, key)}>
+                                <div key={isPrestige ? 'p:' + item.id : 'd:' + item.name} className={`progress-city-card progress-city-${state}${state === 'connected' && !claimedSet.has(key) && !fading.has(key) ? ' progress-card-unclaimed' : ''}${fading.has(key) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimedSet.has(key) && onCardClick(e, key)}>
                                     {state === 'unknown' ? (
                                         <>
                                             <div className="progress-city-image-unknown">?</div>
-                                            <div className="progress-city-name unknown-name">Unknown Development</div>
+                                            <div className="progress-city-name unknown-name">{isPrestige ? 'Unknown Upgrade' : 'Unknown Development'}</div>
+                                        </>
+                                    ) : isPrestige ? (
+                                        <>
+                                            <div className={`progress-city-image progress-dev-icon-box ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{item.icon}</div>
+                                            <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{item.name}</div>
                                         </>
                                     ) : (
                                         <>
-                                            <img className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={developmentThumbnails[dev.name] || developmentImages[dev.name]} alt={dev.name} />
-                                            <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{dev.name}</div>
-                                        </>
-                                    )}
-                                </div>
-                            )
-                        })}
-                    </div>}
-
-                    {sectionHeader('prestigeUpgrades', 'Prestige upgrades collected', { marginTop: '24px' }, <span className="progress-fraction">{ownedPrestigeUpgradesCount} / {totalPrestigeUpgradesCount}</span>)}
-                    <div className="progress-bar-container">
-                        <div className="progress-bar-fill" style={{ width: `${prestigeUpgradeProgress}%` }} />
-                        <span className="progress-bar-label">{Math.round(prestigeUpgradeProgress)}%</span>
-                    </div>
-                    {!collapsed.prestigeUpgrades && <div className="progress-prestige-grid">
-                        {sortedPrestigeUpgrades.map(upgrade => {
-                            const state = getPrestigeUpgradeState(upgrade)
-                            const key = 'prestige:' + upgrade.id
-                            return (
-                                <div key={upgrade.id} className={`progress-prestige-card progress-prestige-${state}${state === 'connected' && !claimedPrestige.has(key) && !fading.has(key) ? ' progress-card-unclaimed' : ''}${fading.has(key) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimedPrestige.has(key) && handlePrestigeCardClick(e, key)}>
-                                    {state === 'unknown' ? (
-                                        <>
-                                            <div className="progress-prestige-icon-unknown">?</div>
-                                            <div className="progress-prestige-name unknown-name">Unknown Upgrade</div>
-                                        </>
-                                    ) : (
-                                        <>
-                                            <div className={`progress-prestige-icon ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{upgrade.icon}</div>
-                                            <div className={`progress-prestige-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{upgrade.name}</div>
+                                            <img className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={developmentThumbnails[item.name] || developmentImages[item.name]} alt={item.name} />
+                                            <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{item.name}</div>
                                         </>
                                     )}
                                 </div>
