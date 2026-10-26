@@ -10,14 +10,19 @@ import officialLogo from '../assets/misc/officialLogo.png'
 import './OpeningPage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 
-// runStart: set after a prestige. The terminal name carries over, and the starter city was drawn for the player
-// unless they own Personal Favours, which lets them choose it.
+// runStart: set after a prestige. The terminal name carries over, and the new run continues from the same home
+// city the retiring run had - "home" can be any city, not just one of the six usual starters, if Personal
+// Favours picked it last time. A "Change home terminal" button lets the player pick a different one of the six
+// instead, and Personal Favours owners can still pick any city in the world.
 function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runStart = null }) {
     const [step, setStep] = useState(runStart ? 2 : 1)
     const [localName, setLocalName] = useState(runStart?.terminalName || "")
-    const canChoose = !runStart || PrestigeManager.owns('personalFavours')
-    const drawn = runStart ? starterCities.find(c => c.name === runStart.city) : null
-    const offered = canChoose || !drawn ? starterCities : [drawn]
+    const home = runStart ? allCities.find(c => c.name === runStart.city) : null
+    const [changingHome, setChangingHome] = useState(false)
+    // Freely choosing from the six starters: always for a brand-new game, or a prestige run whose home city
+    // can't be found (corrupted/old save), or once the player asks to change it.
+    const choosingFreely = !runStart || !home || changingHome
+    const offered = choosingFreely ? starterCities : [home]
     const pickedRef = useRef(false) // a double-click on a city must not start it twice or play the sounds twice (bug #122)
     // Personal Favours: besides the six usual starters, any city in the world can be the new home city
     const canPickAny = !!runStart && PrestigeManager.owns('personalFavours')
@@ -81,9 +86,9 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                 <h1 className="opening-welcome">{runStart ? 'A fresh start.' : 'Good name.'}</h1>
                 {runStart ? (
                     <p className="opening-tagline">
-                        {canChoose
-                            ? <>Personal Favours: choose where <strong>{localName}</strong> begins its next chapter.</>
-                            : <>Your new home city for <strong>{localName}</strong> has been chosen for you.</>}
+                        {choosingFreely
+                            ? <>Choose where <strong>{localName}</strong> begins its next chapter.</>
+                            : <><strong>{localName}</strong> continues from {home.name}, its home city last time.</>}
                     </p>
                 ) : (
                     <p className="opening-tagline">
@@ -120,6 +125,11 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                         </div>
                     ))}
                 </div>
+                {runStart && !choosingFreely && (
+                    <button className="opening-btn starter-any-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setChangingHome(true) }}>
+                        Change home terminal
+                    </button>
+                )}
                 {canPickAny && (
                     <button className="opening-btn starter-any-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setPickerOpen(true) }}>
                         Or choose any city in the world

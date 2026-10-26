@@ -1409,8 +1409,11 @@ function App() {
       startedAt: createdAt,
       home: progressionManager.purchasedCities[0]?.name || null,
     });
-    const starter = starterCities[Math.floor(Math.random() * starterCities.length)];
-    startPrestigeRun(terminalNameRef.current, starter.name);
+    // Continue from the same home city the retiring run had, rather than handing the player a random one -
+    // OpeningPage still offers a "Change home terminal" button if they'd rather pick a different one.
+    const previousHome = progressionManager.purchasedCities[0]?.name;
+    const starterName = previousHome || starterCities[Math.floor(Math.random() * starterCities.length)].name;
+    startPrestigeRun(terminalNameRef.current, starterName);
     localStorage.removeItem('hyperloop_heartbeat_at');
     localStorage.removeItem('hyperloop_hidden_at');
     window.location.reload();
