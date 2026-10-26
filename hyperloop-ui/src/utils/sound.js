@@ -14,6 +14,7 @@ import automatedScheduleSound from '../assets/sounds/automatedSchedule.mp3'
 import developmentUnlocked from '../assets/sounds/developmentUnlocked.mp3'
 import eventSound from '../assets/sounds/eventSound.mp3'
 import diceRollSound from '../assets/sounds/diceRoll.mp3'
+import tier3CitySound from '../assets/sounds/tier3City.mp3'
 import dailyLoginSound from '../assets/sounds/dailyLogin.wav'
 import notEnoughFundsSound from '../assets/sounds/notEnoughFunds.wav'
 import departureBoardSound from '../assets/sounds/departureBoard.mp3'
@@ -277,6 +278,8 @@ export function playOpeningAudio() {
 }
 export function playAutomatedScheduleSound()    { play(automatedScheduleSound, 'departureBoard') }
 export function playDevelopmentUnlockedSound()  { play(developmentUnlocked, 'progressClaim') }
+// Plays once when a city-choice roll includes a Tier 3 city, so pulling one feels like a moment.
+export function playTier3CitySound()            { play(tier3CitySound, 'progressClaim') }
 export function playDailyLoginSound()           { play(dailyLoginSound, 'dailyBonus') }
 export function playNotEnoughFundsSound()       { play(notEnoughFundsSound, 'clickSounds') }
 export function playSplitFlapLong()  { return play(splitFlapLong, 'departureBoard') }

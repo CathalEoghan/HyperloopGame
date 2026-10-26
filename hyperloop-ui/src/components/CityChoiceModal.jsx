@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { flagSrc } from '../utils/flagSrc.js'
 import { CLAIM_ALL_FROM } from './RankUpModal.jsx'
-import { playClickSound2, playHoverSound, playDiceRollSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playDiceRollSound, playNotEnoughFundsSound, playTier3CitySound } from '../utils/sound.js'
 import './CityChoiceModal.css'
 
 // A rank-up offers a few random cities to choose from (3, or more with Skilled Negotiation Teams; fewer when
@@ -17,6 +17,13 @@ function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rero
     const chosen = cities.includes(selected) ? selected : null
     const canReroll = reputation >= rerollCost
 
+    // A Tier 3 city turning up in the roll is rare enough to get its own fanfare, so pulling one feels
+    // like a moment rather than just another option in the list. Fires once per roll (initial offer or
+    // re-roll both hand down a fresh cities array), not on every render.
+    useEffect(() => {
+        if (cities.some(city => city.tier === 3)) playTier3CitySound()
+    }, [cities])
+
     return (
         <div className="citychoice-overlay" style={hidden ? { display: 'none' } : undefined}>
             <div className="citychoice-panel" role="dialog" aria-label="Choose a city">
@@ -28,7 +35,7 @@ function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rero
                     {cities.map(city => (
                         <button
                             key={city.name}
-                            className={`citychoice-card${chosen === city ? ' citychoice-card-on' : ''}`}
+                            className={`citychoice-card${city.tier === 3 ? ' citychoice-card-tier3' : ''}${chosen === city ? ' citychoice-card-on' : ''}`}
                             onMouseEnter={() => playHoverSound()}
                             onClick={() => { playClickSound2(); setSelected(city) }}
                         >
