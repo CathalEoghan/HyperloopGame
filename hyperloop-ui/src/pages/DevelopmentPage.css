@@ -376,6 +376,11 @@
   padding: 0 !important;
   border: none !important;
 }
+/* A few spots (the disconnect/remove "refund" confirm button) put the word "refund" directly before
+   this icon - .cash-icon's own margin reset (above) is !important, so a small gap needs its own class. */
+.cash-icon-refund-gap {
+  margin-left: 3px !important;
+}
 /* Under an upgrade's Effect line: says a "+%" upgrade adds to the others rather than multiplying */
 .effect-stacking-note {
   font-size: 0.78rem;

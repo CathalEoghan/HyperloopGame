@@ -16,7 +16,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 1 | Legal Loopholes | Renaming a development costs 10 Reputation instead of 20 | ProgressionManager `getRenameRepCost`, DevelopmentPage |
 | 1 | Sign-On Bonus | +£1,000,000 when a new run's starter city connects (added to the balance directly, so it is not earned cash and gives no XP) | App.jsx `signOnPending` |
 | 2 | Colour Theory | A development that earns money, or a newly connected city, opens at Level 1 (no cash or Reputation paid; not applied to developments/cities already built) | ProgressionManager `purchaseDevelopment`, `purchaseCity` |
-| 2 | Oral Hygiene | x6 farewell Reputation (x12 with the x2 upgrade) | `getFarewellRepGain` |
+| 2 | Oral Hygiene | x2 farewell Reputation (x4 with the x2 upgrade) | `getFarewellRepGain` |
 | 2 | Better Interest Rates | Daily bonus cash x10 | App.jsx `checkDailyLogin` |
 | 2 | Elite Accountants | Offline "double" becomes x4, same 20 Rep | OfflineModal `bonusFactor` |
 | 2 | Cult of Celebrity | +1 Rep for each Hyper-Link post liked (likes are permanent) | HyperLink `onLikeReward` |

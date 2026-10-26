@@ -445,7 +445,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     >
                                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
                                                             {removal.amicable
-                                                                ? (removal.refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{removal.refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>)
+                                                                ? (removal.refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon cash-icon-refund-gap" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{removal.refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>)
                                                                 : <>Confirm (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{removal.repCost})</>}
                                                         </span>
                                                     </button>

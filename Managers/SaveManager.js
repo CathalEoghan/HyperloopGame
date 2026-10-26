@@ -113,6 +113,8 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_dev_portrait_bonus',
     // Shop purchases are for keeps
     'hyperloop_cosmetics',
+    // Seen it once, don't show "Your first city is connected!" again after a prestige
+    'hyperloop_first_loop_prompt',
 ]
 
 // Wipes the current run and leaves a note for the next start-up: keep the terminal name, and the starter

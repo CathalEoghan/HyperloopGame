@@ -23,7 +23,7 @@ export const PRESTIGE_VALUES = {
     trophyCabinetPerAchievement: 0.02, // x(1 + 2% per unique achievement)
     generationalWisdomPerPoint: 0.05,  // x(1 + 5% per Prestige Point held)
     speedyConveyorBelts: 2,            // x2 Work earnings
-    oralHygiene: 6,                    // x6 Reputation from farewells
+    oralHygiene: 2,                    // x2 Reputation from farewells
     viralSuperstar: 3,                 // x3 Progress rewards
     livestreamRep: 5,                  // Livestream Everything: Reputation paid ...
     livestreamEvery: 100,              // ... every this many manual Work clicks in a run
