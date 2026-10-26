@@ -239,16 +239,23 @@
   filter: grayscale(100%);
 }
 
-/* A fully upgraded development (level 10, the cap) gets a static gold glow around the whole card, instead of
+/* A fully upgraded development (level 10, the cap) gets the same clean gold frame as a maxed city - instead of
    the usual black border - deliberately not the pulsing glow used for an unclaimed reward elsewhere, since
    this marks something finished, not something waiting to be clicked. Lives on the wrapper (city-image-wrapper,
-   shared with CitiesPage) rather than the image itself, so the ring isn't hidden under the LVL/revenue strips
-   that sit on top of the image at its top and bottom edges. */
+   which also picks up CitiesPage.css's border/box-sizing/overflow here, since both pages share the class) rather
+   than the image itself, so the ring isn't hidden under the LVL/revenue strips drawn on top of the image. The
+   image's own border is cleared here too, so only this one gold line shows - matching the single clean border
+   a maxed city gets, instead of doubling it up with the image's separate black border. */
 .city-image-wrapper.dev-card-frame-maxed {
+  border-color: #D4AF37;
   box-shadow:
-    0 0 0 2px #D4AF37,
-    0 0 0 3px #8A6914,
+    inset 0 0 0 1px #F7E7A0,
+    0 0 0 2px #8A6914,
     0 0 8px 3px rgba(212, 175, 55, 0.5);
+}
+
+.dev-card-frame-maxed .development-image {
+  border-color: transparent;
 }
 
 .dev-revenue-strip {
