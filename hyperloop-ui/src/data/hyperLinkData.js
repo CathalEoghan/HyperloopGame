@@ -382,6 +382,9 @@ export const POSTS = {
         'trying to stay positive on this monday. but its hard. friday so far away',
         'good monday to everybody who celebrates it',
         'How do you guys keep upbeat on Mondays? Absolutely hate these days',
+        'my alarm ringing this morning was an absolute hate crime #MondayMood ⏰',
+        'need a coffee the size of a bucket to get through today #monday ☕',
+        'Monday again? I feel like I just put my phone down on Friday evening 😭',
     ],
 
     tuesday: [
@@ -393,7 +396,11 @@ export const POSTS = {
         'whats everyone up to on a tuesday',
         'Hot take but tuesdays are worse than Mondays. They just drag in omg',
         'Already making plans for the weekend lol',
-
+        'survived Monday, now just about surviving Tuesday :(',
+        'is it Tuesday already or still the 73rd hour of Monday? 🤔',
+        'Taco Tuesday is the only valid reason to acknowledge this day !!🌮',
+        'tuesdays drag on so slow like please fast forward xx',
+        'Least stressful travel day of the week, I\'ll give Tuesday that!',
     ],
 
     wednesday: [
@@ -404,7 +411,11 @@ export const POSTS = {
         'wensday is easier to say than spell',
         'wednesday. ive had enough',
         '2 more days until the weekend!! woo 🥳',
-        'Stay calm guys. Weekend is almost here. Just be patient! #postivity'
+        'Stay calm guys. Weekend is almost here. Just be patient! #postivity',
+        'we made it to the middle of the week!! 🎉',
+        'Hump day!! The weekend is finally within sight 🌄',
+        'happy wednesday! anyone have any weekend plans yet ✨',
+        'Over the mid-week hump! Starting the countdown to Friday ⏳',
     ],
 
     thursday: [
@@ -416,6 +427,11 @@ export const POSTS = {
         'right need to start making plans for the weekend its thursday and ive literally nothing',
         'excited to get this loop over and done with so i can have an easy weekend',
         'i can literally smell the weekend. or maybe its the leftover paella in my bag',
+        'almost weekend time!! Thursday is just Friday Eve 🎉',,
+        'we are SO close to the weekend guys, just hold on one more day! xx 🙌',
+        'happy Friday Jr 🥂',
+        'Thursday travel hits different knowing tomorrow is Friday 🥳',
+        'one more sleep until Friday! we can do this 💪',
     ],
 
     friday: [
@@ -434,20 +450,30 @@ export const POSTS = {
     saturday: [
         'Happy saturday! 🎉',
         'nothing better than a saturday trip',
+        'acc kind of hate saturday tbh. prefer keeping busy #nothingtodo',
         'saturday loops are so busy lol',
+        'any saturday parties??',
         'How\'s everyone\'s weekend going so far?',
         'taking a hyperloop somewhere random #saturday',
         'Best day of the week 😊 #saturday',
+        'Out and about on a Saturday!! hope everyone is having the best day! 💖',
+        'acc having the most impulsive saturday just randomly booking this weekend ticket lol 😂',
     ],
 
     sunday: [
-        'Sunday is the day of rest… unless ur catching a hyperloop',
+        'Sunday is a day of rest… unless ur catching a hyperloop',
         'i hate sunday',
         'Monday anxiety creeping in ... ',
         'Sundays aren\'t so bad when you work at the terminal! #lovemyjob',
         'Last day of the weekend 😔',
         'already thinking about monday lol',
         'happy sunday yall',
+        'the Sunday Scaries are officially kicking in 😭',
+        'trying to soak up every last second of Sunday before Monday arrives',
+        'Sunday travel is so chill until you realize tomorrow is Monday lol',
+        'smooth Sunday loop back home!! ready to collapse in bed 🛌',
+        'please stop time, i am not ready for Monday tomorrow !!!!!!',
+        'Ending the weekend on a high note! Happy Sunday everyone 🌅',
     ],
 
     january: [
@@ -465,15 +491,23 @@ export const POSTS = {
         'Wishing a freezing skin-piercing february to my northern hemisphere friends',
         'feel like moving to the southern hemisphere when february hits. so so cold 🥶',
         'happy february cant wait for next month #MarchVacation',
+        'is it a leap year this year?',
+        'February is literally just 28 days of wishing it was spring already 🌸',
+        'why is February so short yet feels like 800 days long??? 😭',
         'february is like ... a nothingness of a month damn',
+        'survived January just to get slapped in the face by February weather 🥶',
     ],
 
     march: [
         'who named march after a parade',
         'Thank god for #moderntravel. Can\'t take this freezing cold any more ! #followthesun #march 🌅',
         'lets just skip to april x',
+        'RIGHT its march lads i need to start working on my #summerbody',
+        'finally starting to see tiny bits of sun this March!! winter is almost over 🌞',
+        'in like a lion, out like a lamb... hopefully the lion leaves soon 🦁➡️🐑',
         'march is an anagram of charm. may is an anagram of yam. #observations',
-        'March is so underrated #spring 🍀'
+        'March is so underrated #spring 🍀',
+        'March can march on outta here',
     ],
 
     april: [
@@ -481,15 +515,18 @@ export const POSTS = {
         'Happy April!! Spent the morning yesterday sniffing flowers #notweird',
         'Books, bulbs and birdsong. #April #Bliss 📖🌷🎶',
         'So much pollen 🤧',
+        'my antihistamines working overtime this April, pollen count is insane 😷🌾',
         'April my beloved #spring',
+        'bring back the dark nights... hate these stupid bright positive days..',
         '🌻 month #april',
     ],
 
     may: [
-        'is may an anagram of anything like what does it stand for',
+        'is may an acronym of anything like what does it stand for',
         'May is my fave month its just perfect not too warm not too cold hbu guys',
         'summer is calling eeeee #may',
         'Any good concerts happening over summer? 🌡️',
+        'May weather hitting that sweet spot where you don\'t need a coat anymore ☀️🧥❌',
         'mays the best time to book those loops btw. so much cheaper than june or july #smart 😎',
         'hi may',
     ],
@@ -500,6 +537,7 @@ export const POSTS = {
         'Halfway through the year guys. How is everyone\'s resolutions coming along?',
         'So when does summer start? Cus rn its dreary and grey like every day 🙄',
         'where can i go for summer vacation time is running out TELL ME NOW',
+        'June my darling',
     ],
 
     july: [
@@ -507,6 +545,7 @@ export const POSTS = {
         'Can\'t wait to be poolside #july',
         'Nah i hate july actually 😂 Get me a ticket to Australia ASAP',
         'MELTING IN THIS HEAT #july',
+        'WHO IS HAVING A JULY BARBIE IN DEPARTURES??????',
         'need to buy one of those handheld fans honestly',
     ],
 
@@ -515,6 +554,7 @@ export const POSTS = {
         'It\'s definitely getting a lil colder recently but i like it #august',
         'omg guys its two showers to go until its christmas!!!',
         'August is a dream 💭',
+        'I used to have an ex called August ... august is my least fave month too what a coincidence !!',
         'Am I the only one who prefers the cold?',
         'Already mourning the end of summer 😔',
     ],
@@ -522,6 +562,7 @@ export const POSTS = {
     september: [
         'Thank god I\'m an adult and I don\'t have to go back to school #SeptemberTravels',
         'whats that song its like september something #stumped',
+        'Hmm starting to wonder why i brought a coat always forget september is still kinda warm lol',
         'might try and squeeze in one last trip while the sun is still around',
         'September is the best time to travel... a little cooler... and no BRAT children on the plane #blissful',
         'Hope everyones having a blessed september 🍃',
@@ -533,6 +574,7 @@ export const POSTS = {
         'whats everyones halloween costumes this year??',
         'Crisp air... orange and brown leaves... just beautiful!',
         'Pure autumn joy at the terminal #October 🍂',
+        'Cant believe november is next month where did time go!',
     ],
 
     november: [
@@ -540,6 +582,7 @@ export const POSTS = {
         'Off for a quick winter city break!😊',
         'Did some early Christmas shopping earlier, feels good to get it out of the way!',
         'A warm coffee and a quiet November day. #atpeace',
+        'eeeeee im so ready for xmas',
         'when is black friday again',
     ],
 
@@ -547,6 +590,7 @@ export const POSTS = {
         'The most wonderful time of the year ❄️',
         'so many beautiful lights around the terminal! #festive',
         'Winter vacation time 🎿',
+        'How is it almost the end of the year? Feel like I\'ve barely achieved anything this year. Lol.',
         'just passed a procession of elves #NormalForMe',
         'the fairy lights in the terminal r so pretty 🧚',
         'anywhere i can get a gingerbread latte here',
