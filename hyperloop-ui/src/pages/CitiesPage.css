@@ -70,8 +70,11 @@
    deliberately not the pulsing glow used for an unclaimed reward elsewhere, since this marks something
    finished, not something waiting to be clicked. Matches the same treatment on a maxed-out development. */
 .city-image-wrapper-maxed {
-    border-color: #FFD700;
-    box-shadow: 0 0 0 1px #FFD700, 0 0 6px 1px rgba(255, 215, 0, 0.6);
+    border-color: #D4AF37;
+    box-shadow:
+        inset 0 0 0 1px #F7E7A0,
+        0 0 0 1px #8A6914,
+        0 0 6px 1px rgba(212, 175, 55, 0.5);
 }
 
 .city-image {
