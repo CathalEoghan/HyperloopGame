@@ -515,57 +515,57 @@ export const SHOP_BUNDLES = [
     {
         id: 'kitty', name: 'Kitty', tier: 'special',
         blurb: 'Cat-themed: pink and cream everywhere, a meowing Work button, a paw-pink cursor.',
-        items: { generalTheme: 'kitty', boardTheme: 'kitty', hyperLinkTheme: 'kitty', workSound: 'kitty', cursorTheme: 'kitty' },
+        items: { generalTheme: 'kitty', boardTheme: 'kitty', hyperLinkTheme: 'kitty', workSound: 'kitty', cursorTheme: 'kitty', openingAudio: 'kitty' },
     },
     {
         id: 'fairy', name: 'Fairy', tier: 'special',
         blurb: 'Fantasy-themed: lavender and mint, a chiming Work button, a sparkling cursor.',
-        items: { generalTheme: 'fairy', boardTheme: 'fairy', hyperLinkTheme: 'fairy', workSound: 'fairy', cursorTheme: 'fairy' },
+        items: { generalTheme: 'fairy', boardTheme: 'fairy', hyperLinkTheme: 'fairy', workSound: 'fairy', cursorTheme: 'fairy', openingAudio: 'fairy' },
     },
     {
         id: 'poltergeist', name: 'Poltergeist', tier: 'special',
         blurb: 'Spooky-themed: sickly green on near-black, a creaking Work button.',
-        items: { generalTheme: 'poltergeist', boardTheme: 'poltergeist', hyperLinkTheme: 'poltergeist', workSound: 'poltergeist', cursorTheme: 'poltergeist' },
+        items: { generalTheme: 'poltergeist', boardTheme: 'poltergeist', hyperLinkTheme: 'poltergeist', workSound: 'poltergeist', cursorTheme: 'poltergeist', openingAudio: 'poltergeist' },
     },
     {
         id: 'playroom', name: 'Playroom', tier: 'special',
         blurb: 'Nursery-themed: crayon-box colours, a xylophone Work button.',
-        items: { generalTheme: 'playroom', boardTheme: 'playroom', hyperLinkTheme: 'playroom', workSound: 'playroom', cursorTheme: 'playroom' },
+        items: { generalTheme: 'playroom', boardTheme: 'playroom', hyperLinkTheme: 'playroom', workSound: 'playroom', cursorTheme: 'playroom', openingAudio: 'playroom' },
     },
     {
         // Reuses the Board theme already built above rather than duplicating it under a second id.
         id: 'starlight', name: 'Starlight', tier: 'special',
         blurb: 'Sci-fi-themed: a starfield board, indigo-and-cyan bars, a sci-fi blip Work button.',
-        items: { generalTheme: 'starlight', boardTheme: 'starlight', hyperLinkTheme: 'starlight', workSound: 'starlight', cursorTheme: 'starlight' },
+        items: { generalTheme: 'starlight', boardTheme: 'starlight', hyperLinkTheme: 'starlight', workSound: 'starlight', cursorTheme: 'starlight', openingAudio: 'starlight' },
     },
     {
         id: 'buccaneer', name: 'Buccaneer', tier: 'special',
         blurb: 'Pirate-themed: old gold and sea teal, an "arr" on every click.',
-        items: { generalTheme: 'buccaneer', boardTheme: 'buccaneer', hyperLinkTheme: 'buccaneer', workSound: 'buccaneer', cursorTheme: 'buccaneer' },
+        items: { generalTheme: 'buccaneer', boardTheme: 'buccaneer', hyperLinkTheme: 'buccaneer', workSound: 'buccaneer', cursorTheme: 'buccaneer', openingAudio: 'buccaneer' },
     },
     {
         id: 'princess', name: 'Princess', tier: 'special',
         blurb: 'Elegant and royal: rose and gold, a sparkling Work button.',
-        items: { generalTheme: 'princess', boardTheme: 'princess', hyperLinkTheme: 'princess', workSound: 'princess', cursorTheme: 'princess' },
+        items: { generalTheme: 'princess', boardTheme: 'princess', hyperLinkTheme: 'princess', workSound: 'princess', cursorTheme: 'princess', openingAudio: 'princess' },
     },
     {
         id: 'jazz', name: 'Jazz', tier: 'special',
         blurb: 'Smoky and musical: goldenrod and burgundy, a saxophone note on every click.',
-        items: { generalTheme: 'jazz', boardTheme: 'jazz', hyperLinkTheme: 'jazz', workSound: 'jazz', cursorTheme: 'jazz' },
+        items: { generalTheme: 'jazz', boardTheme: 'jazz', hyperLinkTheme: 'jazz', workSound: 'jazz', cursorTheme: 'jazz', openingAudio: 'jazz' },
     },
     {
         id: 'duck', name: 'Duck', tier: 'special',
         blurb: 'Pond-themed: sunny yellow and teal, a quack on every click.',
-        items: { generalTheme: 'duck', boardTheme: 'duck', hyperLinkTheme: 'duck', workSound: 'duck', cursorTheme: 'duck' },
+        items: { generalTheme: 'duck', boardTheme: 'duck', hyperLinkTheme: 'duck', workSound: 'duck', cursorTheme: 'duck', openingAudio: 'duck' },
     },
     {
         id: 'woof', name: 'Woof', tier: 'special',
         blurb: 'Dog-themed: denim blue and tennis-ball green, a bark on every click.',
-        items: { generalTheme: 'woof', boardTheme: 'woof', hyperLinkTheme: 'woof', workSound: 'woof', cursorTheme: 'woof' },
+        items: { generalTheme: 'woof', boardTheme: 'woof', hyperLinkTheme: 'woof', workSound: 'woof', cursorTheme: 'woof', openingAudio: 'woof' },
     },
     {
         id: 'ocean', name: 'Ocean', tier: 'special',
         blurb: 'Sea-themed: deep blue bars, a wave-blue Hyper-Link, a splash on every click.',
-        items: { generalTheme: 'ocean', boardTheme: 'ocean', hyperLinkTheme: 'ocean', workSound: 'ocean', cursorTheme: 'ocean' },
+        items: { generalTheme: 'ocean', boardTheme: 'ocean', hyperLinkTheme: 'ocean', workSound: 'ocean', cursorTheme: 'ocean', openingAudio: 'ocean' },
     },
 ]
