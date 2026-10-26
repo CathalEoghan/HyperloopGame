@@ -14,6 +14,12 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_VALUES, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import './ProgressPage.css'
+
+// Same thumbnail artwork and name-matching PrestigePage.jsx uses ("Cult of Celebrity" -> CultOfCelebrity.jpg),
+// so a Prestige upgrade's card here shows the real thumbnail rather than just its emoji.
+const PRESTIGE_IMAGES = import.meta.glob('../assets/prestige-upgrades-thumb/*.jpg', { eager: true, import: 'default' })
+const PRESTIGE_IMAGES_BY_NAME = Object.fromEntries(Object.entries(PRESTIGE_IMAGES).map(([path, src]) => [path.split('/').pop().replace('.jpg', '').toLowerCase(), src]))
+const prestigeImageFor = u => PRESTIGE_IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-9]/g, '').toLowerCase()]
 import { flagSrc } from '../utils/flagSrc.js'
 import { distanceMiles } from '../utils/loops.js'
 import { formatDistance } from '../utils/units.js'
@@ -543,7 +549,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                         </>
                                     ) : isPrestige ? (
                                         <>
-                                            <div className={`progress-city-image progress-dev-icon-box ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{item.icon}</div>
+                                            {prestigeImageFor(item) ? (
+                                                <img className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={prestigeImageFor(item)} alt={item.name} />
+                                            ) : (
+                                                <div className={`progress-city-image progress-dev-icon-box ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{item.icon}</div>
+                                            )}
                                             <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{item.name}</div>
                                         </>
                                     ) : (
