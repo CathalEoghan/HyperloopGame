@@ -1,13 +1,17 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { allCities } from '../../../CityManager/CityRegistry'
+import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry'
+import { experimentalTechnology } from '../../../UpgradeManager/ExperimentalTechnology.js'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
+import developmentThumbnails from '../data/developmentThumbnails.js'
+import developmentImages from '../data/developmentImages.js'
 import countryFlags from '../data/countryFlags.js'
 import cashIcon from '../assets/misc/cash.png'
 import { playHoverSound, playClickSound2, playFarewellAcceptSound, playReputationWorkBonusSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
-import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
+import { PRESTIGE_VALUES, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import './ProgressPage.css'
 import { flagSrc } from '../utils/flagSrc.js'
@@ -21,7 +25,7 @@ const CashValue = ({ amount, suffix = '' }) => (
     </span>
 )
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
     const [, setTick] = useState(0)
     // The game only tallies finished departures/arrivals/passengers every 10 seconds, so while this page is open
     // it asks for a fresh tally on opening and every second, to keep those totals from lagging behind.
@@ -112,29 +116,41 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const claimedRef = React.useRef(new Set(
         JSON.parse(localStorage.getItem('hyperloop_progress_rewards') || '[]')
     ))
+    // Prestige-upgrade claims live in their own key, kept through a prestige rather than reset by one (see
+    // SaveManager's PRESTIGE_KEEP_KEYS) - the upgrades themselves never go away, so neither should the claim.
+    const [claimedPrestige, setClaimedPrestige] = useState(() => new Set(
+        JSON.parse(localStorage.getItem('hyperloop_prestige_upgrade_rewards') || '[]')
+    ))
+    const claimedPrestigeRef = React.useRef(new Set(
+        JSON.parse(localStorage.getItem('hyperloop_prestige_upgrade_rewards') || '[]')
+    ))
+    const [prestige] = useState(() => new PrestigeManager())
     const [floats, setFloats] = useState([])
     const [fading, setFading] = useState(new Set())
 
-    // Cash tiers halved from their original 2500/5000/10000/25000/50000 - with a city/country card to claim for
-    // every city you connect, these were stacking into the dominant source of early-game income (bug report:
-    // "I can make most money by just building cities"). Same odds, same shape, roughly half the payout.
+    // Halved again from 1250/2500/5000/12500/25000 (themselves already halved once, see git history) now that
+    // Developments and Prestige upgrades have their own claimable cards alongside Cities and Countries: the
+    // claimable pool grew by roughly half, so the per-card payout comes back down to keep the total take roughly
+    // where it was. Same odds, same shape. Rep tiers rounded to clean numbers rather than left fractional.
     const getRandomReward = () => {
         const roll = Math.random() * 100
-        if (roll < 25) return { type: 'cash', amount: 1250 * INCOME_SCALE }
-        if (roll < 47) return { type: 'cash', amount: 2500 * INCOME_SCALE }
-        if (roll < 65) return { type: 'cash', amount: 5000 * INCOME_SCALE }
-        if (roll < 75) return { type: 'cash', amount: 12500 * INCOME_SCALE }
-        if (roll < 80) return { type: 'cash', amount: 25000 * INCOME_SCALE }
-        if (roll < 92) return { type: 'rep', amount: 5 }
-        if (roll < 98) return { type: 'rep', amount: 10 }
-        return { type: 'rep', amount: 20 }
+        if (roll < 25) return { type: 'cash', amount: 625 * INCOME_SCALE }
+        if (roll < 47) return { type: 'cash', amount: 1250 * INCOME_SCALE }
+        if (roll < 65) return { type: 'cash', amount: 2500 * INCOME_SCALE }
+        if (roll < 75) return { type: 'cash', amount: 6250 * INCOME_SCALE }
+        if (roll < 80) return { type: 'cash', amount: 12500 * INCOME_SCALE }
+        if (roll < 92) return { type: 'rep', amount: 3 }
+        if (roll < 98) return { type: 'rep', amount: 5 }
+        return { type: 'rep', amount: 10 }
     }
-    const handleCardClick = (e, key) => {
-        if (claimedRef.current.has(key)) return
-        claimedRef.current.add(key)
+    // Shared by every claimable grid (Cities, Countries, Developments, Prestige upgrades) - only the Set/ref/
+    // setState/localStorage key backing "claimed" differs, so that trio is passed in rather than duplicated.
+    const makeClaimHandler = (claimedSetRef, setClaimedState, storageKey) => (e, key) => {
+        if (claimedSetRef.current.has(key)) return
+        claimedSetRef.current.add(key)
         // Save the claim at the same moment the reward is paid, so leaving the page or reloading
         // during the fade-out can't make the card claimable again (bug #59).
-        localStorage.setItem('hyperloop_progress_rewards', JSON.stringify([...claimedRef.current]))
+        localStorage.setItem(storageKey, JSON.stringify([...claimedSetRef.current]))
         const hasBoost = (purchasedUpgrades || []).some(u => u.effectType === 'progressRewardBoost')
         const reward = getRandomReward()
         // The boost upgrade (x2) and Viral Superstar multiply each other
@@ -149,10 +165,12 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         else playFarewellAcceptSound()
         onCollectReward(reward)
         setTimeout(() => {
-            setClaimed(prev => new Set([...prev, key]))
+            setClaimedState(prev => new Set([...prev, key]))
             setFading(prev => { const s = new Set(prev); s.delete(key); return s; })
         }, 500)
     }
+    const handleCardClick = makeClaimHandler(claimedRef, setClaimed, 'hyperloop_progress_rewards')
+    const handlePrestigeCardClick = makeClaimHandler(claimedPrestigeRef, setClaimedPrestige, 'hyperloop_prestige_upgrade_rewards')
 
     const antarcticaUnlocked = purchasedCities.some(p => p.continent === 'Antarctica')
     const visibleCities = allCities.filter(c => c.continent !== 'Antarctica' || antarcticaUnlocked)
@@ -181,10 +199,46 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         return 'unknown'
     }
 
+    // Experimental Technology lives in the Upgrade registry (it's bought like any other city upgrade, not built
+    // from a development slot), not the Development registry - folded in by hand so it still shows up here.
+    const collectibleDevelopments = [...allDevelopments, experimentalTechnology]
+    const totalDevelopmentsCount = collectibleDevelopments.length
+    const purchasedDevNames = new Set((purchasedDevelopments || []).map(d => d.name))
+    const unlockedDevNames = new Set((unlockedDevelopments || []).map(d => d.name))
+    // Instance equality works for Experimental Technology (the module export is a singleton, same object
+    // reference wherever it's imported), but every other development is matched by name like cities/countries.
+    const experimentalTechOwned = (purchasedUpgrades || []).includes(experimentalTechnology)
+    const experimentalTechUnlocked = (unlockedUpgrades || []).includes(experimentalTechnology)
+    const sortedDevelopments = [...collectibleDevelopments].sort((a, b) => a.name.localeCompare(b.name))
+
+    const getDevelopmentState = (dev) => {
+        if (dev === experimentalTechnology) {
+            if (experimentalTechOwned) return 'connected'
+            if (experimentalTechUnlocked) return 'unlocked'
+            return 'unknown'
+        }
+        if (purchasedDevNames.has(dev.name)) return 'connected'
+        if (unlockedDevNames.has(dev.name)) return 'unlocked'
+        return 'unknown'
+    }
+    const ownedDevelopmentsCount = collectibleDevelopments.filter(d => getDevelopmentState(d) === 'connected').length
+
+    // Layer-locked rather than unlock/connect, but the same three-tier look: owned, buyable now, still locked.
+    const totalPrestigeUpgradesCount = PRESTIGE_UPGRADES.length
+    const sortedPrestigeUpgrades = [...PRESTIGE_UPGRADES].sort((a, b) => a.layer - b.layer || a.name.localeCompare(b.name))
+    const getPrestigeUpgradeState = (upgrade) => {
+        if (PrestigeManager.owns(upgrade.id)) return 'connected'
+        if (prestige.layerUnlocked(upgrade.layer)) return 'unlocked'
+        return 'unknown'
+    }
+    const ownedPrestigeUpgradesCount = PRESTIGE_UPGRADES.filter(u => PrestigeManager.owns(u.id)).length
+
     // Rewards still waiting on each grid, shown on its header while it's folded away so they aren't missed
     const claimable = {
         countries: [...purchasedCountries].filter(c => sortedCountries.includes(c) && !claimed.has('country:' + c)).length,
         cities: purchasedCities.filter(c => visibleCities.some(v => v.name === c.name) && !claimed.has('city:' + c.name)).length,
+        developments: collectibleDevelopments.filter(d => getDevelopmentState(d) === 'connected' && !claimed.has('dev:' + d.name)).length,
+        prestigeUpgrades: PRESTIGE_UPGRADES.filter(u => PrestigeManager.owns(u.id) && !claimedPrestige.has('prestige:' + u.id)).length,
     }
 
     // Worked out on every render (the page re-renders each second). These lists are added to in place, so a memo
@@ -366,6 +420,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const upgradeStats = getUpgradeStats()
     const cityProgress = (purchasedCities.length / totalCitiesCount) * 100
     const countryProgress = (purchasedCountries.size / totalCountriesCount) * 100
+    const developmentProgress = (ownedDevelopmentsCount / totalDevelopmentsCount) * 100
+    const prestigeUpgradeProgress = (ownedPrestigeUpgradesCount / totalPrestigeUpgradesCount) * 100
 
     return (
         <>
@@ -454,6 +510,60 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                                             ) : (
                                                 <div className="progress-city-flag-unknown">?</div>
                                             )}
+                                        </>
+                                    )}
+                                </div>
+                            )
+                        })}
+                    </div>}
+
+                    {sectionHeader('developments', 'Developments collected', { marginTop: '24px' }, <span className="progress-fraction">{ownedDevelopmentsCount} / {totalDevelopmentsCount}</span>)}
+                    <div className="progress-bar-container">
+                        <div className="progress-bar-fill" style={{ width: `${developmentProgress}%` }} />
+                        <span className="progress-bar-label">{Math.round(developmentProgress)}%</span>
+                    </div>
+                    {!collapsed.developments && <div className="progress-city-grid">
+                        {sortedDevelopments.map(dev => {
+                            const state = getDevelopmentState(dev)
+                            const key = 'dev:' + dev.name
+                            return (
+                                <div key={dev.name} className={`progress-city-card progress-city-${state}${state === 'connected' && !claimed.has(key) && !fading.has(key) ? ' progress-card-unclaimed' : ''}${fading.has(key) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimed.has(key) && handleCardClick(e, key)}>
+                                    {state === 'unknown' ? (
+                                        <>
+                                            <div className="progress-city-image-unknown">?</div>
+                                            <div className="progress-city-name unknown-name">Unknown Development</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <img className={`progress-city-image ${state === 'unlocked' ? 'progress-greyscale' : ''}`} src={developmentThumbnails[dev.name] || developmentImages[dev.name]} alt={dev.name} />
+                                            <div className={`progress-city-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{dev.name}</div>
+                                        </>
+                                    )}
+                                </div>
+                            )
+                        })}
+                    </div>}
+
+                    {sectionHeader('prestigeUpgrades', 'Prestige upgrades collected', { marginTop: '24px' }, <span className="progress-fraction">{ownedPrestigeUpgradesCount} / {totalPrestigeUpgradesCount}</span>)}
+                    <div className="progress-bar-container">
+                        <div className="progress-bar-fill" style={{ width: `${prestigeUpgradeProgress}%` }} />
+                        <span className="progress-bar-label">{Math.round(prestigeUpgradeProgress)}%</span>
+                    </div>
+                    {!collapsed.prestigeUpgrades && <div className="progress-prestige-grid">
+                        {sortedPrestigeUpgrades.map(upgrade => {
+                            const state = getPrestigeUpgradeState(upgrade)
+                            const key = 'prestige:' + upgrade.id
+                            return (
+                                <div key={upgrade.id} className={`progress-prestige-card progress-prestige-${state}${state === 'connected' && !claimedPrestige.has(key) && !fading.has(key) ? ' progress-card-unclaimed' : ''}${fading.has(key) ? ' progress-card-fading' : ''}`} onMouseEnter={() => state !== 'unknown' && playHoverSound()} onClick={(e) => state === 'connected' && !claimedPrestige.has(key) && handlePrestigeCardClick(e, key)}>
+                                    {state === 'unknown' ? (
+                                        <>
+                                            <div className="progress-prestige-icon-unknown">?</div>
+                                            <div className="progress-prestige-name unknown-name">Unknown Upgrade</div>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className={`progress-prestige-icon ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{upgrade.icon}</div>
+                                            <div className={`progress-prestige-name ${state === 'unlocked' ? 'progress-greyscale-text' : ''}`}>{upgrade.name}</div>
                                         </>
                                     )}
                                 </div>

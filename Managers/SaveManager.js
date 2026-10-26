@@ -21,6 +21,11 @@ const AUX_KEYS = [
     'hyperloop_shown_reveals',
     'hyperloop_claimed_milestones',
     'hyperloop_progress_rewards',
+    // Claimed Prestige-upgrade reward cards. Kept separate from hyperloop_progress_rewards (and also listed in
+    // PRESTIGE_KEEP_KEYS below) because Prestige upgrades themselves are never reset by a prestige, so a claim
+    // on one of their cards must not reset either - otherwise every retire would hand back 36 free claims for
+    // upgrades already owned.
+    'hyperloop_prestige_upgrade_rewards',
     'hyperloop_dev_portrait_bonus',
     'hyperloop_hyperlink_feed',
     'hyperloop_hyperlink_unread',
@@ -113,6 +118,8 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_dev_portrait_bonus',
     // Shop purchases are for keeps
     'hyperloop_cosmetics',
+    // Claimed Prestige-upgrade reward cards - the upgrades they belong to are kept too, so the claims stay kept
+    'hyperloop_prestige_upgrade_rewards',
     // Seen it once, don't show "Your first city is connected!" again after a prestige
     'hyperloop_first_loop_prompt',
 ]

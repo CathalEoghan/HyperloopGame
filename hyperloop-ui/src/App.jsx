@@ -1748,6 +1748,8 @@ function App() {
           economyManager={economyManager}
           purchasedDevelopments={progressionManager.purchasedDevelopments}
           purchasedUpgrades={progressionManager.purchasedUpgrades}
+          unlockedDevelopments={progressionManager.unlockedDevelopments}
+          unlockedUpgrades={progressionManager.unlockedUpgrades}
           farewellsGiven={farewellsGiven}
           achievementManager={achievements}
           createdAt={createdAt}
