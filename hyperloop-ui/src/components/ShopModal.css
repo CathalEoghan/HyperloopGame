@@ -337,7 +337,7 @@
     border: 1px solid #ccc;
     color: #999;
     background: white;
-    cursor: default;
+    cursor: var(--cursor-default, default);
 }
 .shop-bundle-chip-owned { color: #4a8f3c; border-color: #4a8f3c; background: color-mix(in srgb, #4a8f3c 12%, white); }
 .shop-bundle-chip-check { margin-right: 2px; }
