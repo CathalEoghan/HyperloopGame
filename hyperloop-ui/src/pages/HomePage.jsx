@@ -70,10 +70,23 @@ function formatPopulation(pop) {
 // Every flag sprite on the globe is drawn through here (not THREE.TextureLoader directly), so it can get a thin
 // black outline the same way the flag in the City Picker modal does (.citypicker-flag's box-shadow: 0 0 0 1px
 // #000) - a flat colour swatch like a flag needs that edge to read clearly against the globe/ocean/space behind
-// it. `grayscale: true` is the "offered but not bought" look, same as before - partial rather than full
-// desaturation: a few flags (Morocco's red and green are a close example) have near-identical luminance, so
-// a full grayscale collapses them into a flat, featureless swatch. Keeping a little of the original hue is
-// enough for those flags to still read while still looking clearly "muted"/unavailable.
+// it. `grayscale: true` is the "locked, not yet reached" look (distinct from "unlocked but not bought", which
+// stays full colour with a dark tint) - it needs to be a strong, fully-desaturated grey so the two states don't
+// start to blur together. The browser's own `grayscale()` filter uses perceptual luma weights (roughly
+// 0.21R + 0.72G + 0.07B), which barely count red at all - so colours that differ mostly in their red channel,
+// like Morocco's red field next to its green star, can end up at almost the same brightness and collapse into
+// a flat, featureless swatch. Converting with a plain average of the three channels instead keeps red and green
+// properly distinct while still landing on a fully muted grey.
+function toGrayscale(ctx, x, y, w, h) {
+    const imageData = ctx.getImageData(x, y, w, h)
+    const d = imageData.data
+    for (let i = 0; i < d.length; i += 4) {
+        const gray = (d[i] + d[i + 1] + d[i + 2]) / 3
+        d[i] = d[i + 1] = d[i + 2] = gray
+    }
+    ctx.putImageData(imageData, x, y)
+}
+
 function loadFlagTexture(url, { grayscale = false } = {}, onLoad) {
     const img = new Image()
     img.crossOrigin = 'anonymous'
@@ -84,9 +97,8 @@ function loadFlagTexture(url, { grayscale = false } = {}, onLoad) {
         canvas.width = w + outline * 2
         canvas.height = h + outline * 2
         const ctx = canvas.getContext('2d')
-        if (grayscale) ctx.filter = 'grayscale(70%)'
         ctx.drawImage(img, outline, outline, w, h)
-        ctx.filter = 'none'
+        if (grayscale) toGrayscale(ctx, outline, outline, w, h)
         ctx.strokeStyle = '#000'
         ctx.lineWidth = outline
         ctx.strokeRect(outline, outline, w, h)
