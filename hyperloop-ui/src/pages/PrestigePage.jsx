@@ -167,6 +167,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                 <h4>Kept</h4>
                                 <ul>
                                     <li>Prestige Points and upgrades</li>
+                                    <li>Shop purchases</li>
                                     <li>Achievements</li>
                                     <li>Terminal name</li>
                                     <li>Hyper-Link likes</li>
