@@ -70,7 +70,10 @@ function formatPopulation(pop) {
 // Every flag sprite on the globe is drawn through here (not THREE.TextureLoader directly), so it can get a thin
 // black outline the same way the flag in the City Picker modal does (.citypicker-flag's box-shadow: 0 0 0 1px
 // #000) - a flat colour swatch like a flag needs that edge to read clearly against the globe/ocean/space behind
-// it. `grayscale: true` is the "offered but not bought" look, same as before.
+// it. `grayscale: true` is the "offered but not bought" look, same as before - partial rather than full
+// desaturation: a few flags (Morocco's red and green are a close example) have near-identical luminance, so
+// a full grayscale collapses them into a flat, featureless swatch. Keeping a little of the original hue is
+// enough for those flags to still read while still looking clearly "muted"/unavailable.
 function loadFlagTexture(url, { grayscale = false } = {}, onLoad) {
     const img = new Image()
     img.crossOrigin = 'anonymous'
@@ -81,7 +84,7 @@ function loadFlagTexture(url, { grayscale = false } = {}, onLoad) {
         canvas.width = w + outline * 2
         canvas.height = h + outline * 2
         const ctx = canvas.getContext('2d')
-        if (grayscale) ctx.filter = 'grayscale(100%)'
+        if (grayscale) ctx.filter = 'grayscale(70%)'
         ctx.drawImage(img, outline, outline, w, h)
         ctx.filter = 'none'
         ctx.strokeStyle = '#000'
