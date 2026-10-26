@@ -190,7 +190,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', filter: isAvailable ? 'grayscale(100%)' : 'none' }}
                     />
                     {!isUnderConstruction && !isAvailable && lineLevel > 0 && (
-                        <div className="dev-level-strip">LVL {lineLevel}</div>
+                        <div className={`dev-level-strip${isMaxed ? ' dev-level-strip-maxed' : ''}`}>LVL {lineLevel}</div>
                     )}
                     {isUnderConstruction && (
                         <div className="construction-overlay">

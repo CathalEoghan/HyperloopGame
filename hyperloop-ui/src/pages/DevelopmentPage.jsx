@@ -514,14 +514,14 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         onClick={() => { playClickSound2(); setUpgradeTip(null); setSelectedDevelopment(development) }}
                                         onMouseEnter={(e) => { playHoverSound(); showUpgradeTip(e, development) }}
                                         onMouseLeave={() => setUpgradeTip(null)}>
-                                        <div className="city-image-wrapper">
+                                        <div className={`city-image-wrapper${isMaxed ? ' dev-card-frame-maxed' : ''}`}>
                                             <img
-                                                className={`${isUnderConstruction ? "unavailable" : "development-image"}${isMaxed ? ' development-image-maxed' : ''}`}
+                                                className={isUnderConstruction ? "unavailable" : "development-image"}
                                                 src={developmentThumbnails[development.name] || developmentImages[development.name]}
                                                 style={{ width: '100%', height: '180px' }}
                                             />
                                             {!isUnderConstruction && level > 0 && (
-                                                <div className="dev-level-strip">LVL {level}</div>
+                                                <div className={`dev-level-strip${isMaxed ? ' dev-level-strip-maxed' : ''}`}>LVL {level}</div>
                                             )}
                                             {isUnderConstruction && (
                                                 <div className="construction-overlay">
