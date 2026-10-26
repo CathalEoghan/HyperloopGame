@@ -506,6 +506,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                             {sortedPurchased.map(development => {
                                 const isUnderConstruction = underConstruction.some(d => d.name === development.name)
                                 const level = getLevel(development)
+                                // A gold frame marks a development fully upgraded (level 10, the cap - see MAX_DEV_LEVEL
+                                // in ProgressionManager.js) so it stands out from the row at a glance.
+                                const isMaxed = !isUnderConstruction && level === 10
                                 return (
                                     <button className="development" key={development.name}
                                         onClick={() => { playClickSound2(); setUpgradeTip(null); setSelectedDevelopment(development) }}
@@ -513,7 +516,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         onMouseLeave={() => setUpgradeTip(null)}>
                                         <div className="city-image-wrapper">
                                             <img
-                                                className={isUnderConstruction ? "unavailable" : "development-image"}
+                                                className={`${isUnderConstruction ? "unavailable" : "development-image"}${isMaxed ? ' development-image-maxed' : ''}`}
                                                 src={developmentThumbnails[development.name] || developmentImages[development.name]}
                                                 style={{ width: '100%', height: '180px' }}
                                             />

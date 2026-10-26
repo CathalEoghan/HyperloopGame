@@ -173,6 +173,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         const isHome = !isUnderConstruction && !isAvailable && economyManager.isHomeCity(city)
         const offTimetable = !isUnderConstruction && !isAvailable && !isHome && !economyManager.isCityEarning(city)
         const lineLevel = constructionManager.progressionManager.getCityLineLevel(city)
+        // A gold frame marks a city's line fully upgraded (level 10, the cap - see MAX_LINE_LEVEL in
+        // ProgressionManager.js), matching the same treatment a maxed-out development gets.
+        const isMaxed = !isUnderConstruction && !isAvailable && lineLevel === 10
         return (
             <button
                 className="city"
@@ -180,7 +183,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 onClick={() => { playClickSound2(); setSelectedCity(city) }}
                 onMouseEnter={() => playHoverSound()}
             >
-                <div className="city-image-wrapper">
+                <div className={`city-image-wrapper${isMaxed ? ' city-image-wrapper-maxed' : ''}`}>
                     <img
                         className={isUnderConstruction ? "unavailable" : "city-image"}
                         src={cityThumbnails[city.name] || cityImages[city.name]}

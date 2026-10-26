@@ -66,6 +66,14 @@
     flex-shrink: 0;
 }
 
+/* A fully upgraded city's line (level 10, the cap) gets a static gold frame instead of the usual black one -
+   deliberately not the pulsing glow used for an unclaimed reward elsewhere, since this marks something
+   finished, not something waiting to be clicked. Matches the same treatment on a maxed-out development. */
+.city-image-wrapper-maxed {
+    border-color: #FFD700;
+    box-shadow: 0 0 0 1px #FFD700, 0 0 6px 1px rgba(255, 215, 0, 0.6);
+}
+
 .city-image {
     width: 100%;
     height: 100%;
