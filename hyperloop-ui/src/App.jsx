@@ -468,6 +468,45 @@ function App() {
   // When a farewell or greeting post comes due it goes out at once, not at the next scheduled post. If nothing could be
   // posted, this holds it back for 30 seconds so it isn't retried every second.
   const dueRetryTick = useRef(0)
+  // Shared between every kind of post (the regular random-interval ones and the official reaction posts fired
+  // straight from delay/event handlers) so two of them can never land on top of each other: an official post used
+  // to go straight into the feed with no spacing at all, so handling two delays in quick succession (or a delay
+  // landing right as an event closes) could post twice within the same second. This holds the next moment a post
+  // is allowed to actually appear - each call reserves the next 5-second slot in order, so a burst of triggers
+  // queues up cleanly instead of racing to the same moment. Nothing about this changes the regular posts' own
+  // much coarser 60-180s cadence (nextPostTick, above) - it only stops the visible appearance of any two posts
+  // from being less than 5 seconds apart.
+  const MIN_POST_GAP_MS = 5000
+  const nextAllowedPostTimeRef = useRef(0)
+  // The single place any post - regular or official - is actually appended to the feed. Nothing about the sound,
+  // notification bubble or unread badge happens until the post actually lands (never for a delayed one in advance),
+  // so a queued post reads as arriving exactly when it appears, not when it was generated.
+  const pushHyperLinkPost = (post) => {
+    const now = Date.now()
+    const runAt = Math.max(now, nextAllowedPostTimeRef.current)
+    nextAllowedPostTimeRef.current = runAt + MIN_POST_GAP_MS
+    const run = () => {
+      post.timestamp = Date.now()
+      const newFeed = [...JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]'), post]
+      localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
+      setHyperLinkFeed(newFeed)
+      if (!hyperLinkOpenRef.current) {
+        setHyperLinkUnread(prev => {
+          const n = prev + 1
+          localStorage.setItem('hyperloop_hyperlink_unread', n)
+          return n
+        })
+        if (!hyperLinkMutedRef.current) {
+          playPhoneNotificationSound()
+          setHyperLinkBubble(true)
+          setTimeout(() => setHyperLinkBubble(false), 3000)
+        }
+      }
+    }
+    const wait = runAt - now
+    if (wait > 0) setTimeout(run, wait)
+    else run()
+  }
   const secretCityTriggered = useRef(false);
   // Claims are remembered by the upgrade's name. Saves from before Early Retirement and Founders' Hall swapped ranks
   // remember them by rank (rank_50 was Founders' Hall, rank_100 was Early Retirement), so those are turned into names.
@@ -779,19 +818,7 @@ function App() {
       purchasedCities: progressionManager.purchasedCities,
       trigger,
     })
-    if (post) {
-      const newFeed = [...JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]'), post]
-      localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
-      setHyperLinkFeed(newFeed)
-      if (!hyperLinkOpenRef.current) {
-        setHyperLinkUnread(prev => { const n = prev + 1; localStorage.setItem('hyperloop_hyperlink_unread', n); return n })
-        if (!hyperLinkMutedRef.current) {
-          playPhoneNotificationSound()
-          setHyperLinkBubble(true)
-          setTimeout(() => setHyperLinkBubble(false), 3000)
-        }
-      }
-    }
+    if (post) pushHyperLinkPost(post)
   }
 
   // Fires an already-chosen event (Pizza Parties strength doubling, duration, the three effectType branches,
@@ -1161,8 +1188,9 @@ function App() {
           trigger: hyperLinkTriggerRef.current,
         })
         if (post) {
-          const newFeed = [...cleanFeed, post]
-          localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
+          // The template/picture/month bookkeeping below is about content variety, not about when the post
+          // actually appears, so it's marked as used right away; only the visible feed entry itself (and its
+          // sound/bubble/unread badge) goes through pushHyperLinkPost's shared 5-second spacing.
           usedPostIds.push(post.usedPostId)
           localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(usedPostIds))
           if (post.usedPfpId && post.usedPfpId !== 'default' && post.usedPfpId !== 'official') {
@@ -1176,19 +1204,7 @@ function App() {
           hyperLinkTriggerRef.current = null
           setHyperLinkTrigger(null)
           nextPostTick.current = tickCount.current + 60 + Math.floor(Math.random() * 120)
-          setHyperLinkFeed(newFeed)
-          if (!hyperLinkOpenRef.current) {
-            setHyperLinkUnread(prev => {
-              const newCount = prev + 1
-              localStorage.setItem('hyperloop_hyperlink_unread', newCount)
-              return newCount
-            })
-            if (!hyperLinkMutedRef.current) {
-              playPhoneNotificationSound()
-              setHyperLinkBubble(true)
-              setTimeout(() => setHyperLinkBubble(false), 3000)
-            }
-          }
+          pushHyperLinkPost(post)
         } else {
           // Nothing could be generated: try again in 30 seconds, not every second (bug #71)
           nextPostTick.current = tickCount.current + 30
