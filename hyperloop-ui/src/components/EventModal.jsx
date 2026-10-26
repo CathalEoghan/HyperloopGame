@@ -22,13 +22,19 @@ function EventModal({ event, onContinue, terminalName }) {
 
     const isPositive = event.type === 'positive'
 
+    // Follows "for Ns" when a duration upgrade changed how long the event runs: "(+x% longer)" for a positive
+    // event's bonusDurationExtension upgrades, "(x% shorter)" when Resilience cut a negative event short.
+    const durationSuffix = event.durationModifier
+        ? ` (${event.durationModifier.direction === 'longer' ? '+' : ''}${event.durationModifier.percent}% ${event.durationModifier.direction})`
+        : ''
+
     const getEffectText = () => {
         if (event.effectType === 'instantCash') return `£${event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance`
         if (event.effectType === 'instantCashLoss') return `£${Math.abs(event.instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been deducted from your balance`
-        if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s`
-        if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s`
-        if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s`
-        if (event.effectType === 'workPenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% work earnings for ${secondsLeft}s`
+        if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s${durationSuffix}`
+        if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s${durationSuffix}`
+        if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s${durationSuffix}`
+        if (event.effectType === 'workPenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% work earnings for ${secondsLeft}s${durationSuffix}`
         return ''
     }
 

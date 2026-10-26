@@ -200,6 +200,12 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         return title
     }
 
+    // Shown next to the countdown on the persistent event banner: "(+x% longer)" when a positive event's
+    // duration upgrades stretched it, "(x% shorter)" when Resilience cut a negative one short.
+    const durationModifierText = activeEvent?.durationModifier
+        ? ` (${activeEvent.durationModifier.direction === 'longer' ? '+' : ''}${activeEvent.durationModifier.percent}% ${activeEvent.durationModifier.direction})`
+        : ''
+
     const isInstantEvent = activeEvent?.durationSeconds === 0
     const balanceColor = balanceFlash === 'down' ? '#e74c3c' : '#333'
     const repColor = repFlash === 'down' ? '#e74c3c' : '#333'
@@ -288,7 +294,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             <div className={`event-indicator ${activeEvent.type === 'positive' ? 'event-indicator-positive' : 'event-indicator-negative'}`}>
                 <span className="event-indicator-icon">{activeEvent.type === 'positive' ? '▲' : '▼'}</span>
                 <span className="event-indicator-text">{getEventIndicatorText()}</span>
-                {!isInstantEvent && <span className="event-indicator-timer">{eventSecondsLeft}s remaining</span>}
+                {!isInstantEvent && <span className="event-indicator-timer">{eventSecondsLeft}s remaining{durationModifierText}</span>}
             </div>
         )}
         </>

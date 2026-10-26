@@ -813,6 +813,14 @@ function App() {
     // to shorten) lasts half as long.
     const resilienceFactor = (event.type === 'negative' && PrestigeManager.owns('resilience')) ? PRESTIGE_VALUES.resilienceDurationFactor : 1;
     const durationSeconds = Math.floor(event.duration() * bonusExtension * resilienceFactor);
+    // What the event popup shows next to the countdown - "(+x% longer)" when a positive event's duration
+    // upgrades stretched it, "(x% shorter)" when Resilience cut a negative one short. Computed from the actual
+    // multiplier applied above, not a fixed number, so it stays correct however the two upgrades are stacked.
+    const durationModifier = bonusExtension > 1
+      ? { percent: Math.round((bonusExtension - 1) * 100), direction: 'longer' }
+      : resilienceFactor < 1
+        ? { percent: Math.round((1 - resilienceFactor) * 100), direction: 'shorter' }
+        : null;
 
     if (event.effectType === 'instantCash') {
       const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
@@ -842,7 +850,7 @@ function App() {
         activeEventRef.current = null;
       }, 8000);
     } else {
-      const fullEvent = { ...event, durationSeconds, expiresAt: Date.now() + durationSeconds * 1000 };
+      const fullEvent = { ...event, durationSeconds, durationModifier, expiresAt: Date.now() + durationSeconds * 1000 };
       activeEventRef.current = fullEvent;
       localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
       playEventSound();
