@@ -135,19 +135,23 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     const busyPct = economyManager.getDevelopmentBusyPercent()
                     return (
                         <div className="dev-sticky-header">
-                            <div className="total-revenue-banner">
-                                <span>Total development income:</span>
-                                <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                    <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                    {formatPerHour(totalRevenue)}/hr
-                                </strong>
-                                <span
-                                    style={{ marginLeft: '12px', fontSize: '0.78rem', fontWeight: 'bold', color: busy.color, cursor: 'help' }}
+                            <div className="dev-banner-row">
+                                <div className="total-revenue-banner">
+                                    <span>Total development income:</span>
+                                    <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+                                        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
+                                        {formatPerHour(totalRevenue)}/hr
+                                    </strong>
+                                </div>
+                                <div
+                                    className="total-revenue-banner"
+                                    style={{ cursor: 'help' }}
                                     onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `How busy the terminal is right now: every development's income scales with this. ${busy.explanation}` })}
                                     onMouseLeave={() => setShowBusyTooltip(null)}
                                 >
-                                    {busy.label} ({busyPct}%)
-                                </span>
+                                    <span>Live traffic:</span>
+                                    <strong style={{ color: busy.color }}>{busy.label} ({busyPct}%)</strong>
+                                </div>
                             </div>
                         </div>
                     )

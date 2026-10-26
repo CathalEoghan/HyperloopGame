@@ -126,6 +126,15 @@
   width: 100%;
 }
 
+/* Holds the income banner and the live-traffic banner side by side, wrapping onto its own line on narrow screens
+   rather than forcing the traffic banner to shrink or overflow */
+.dev-banner-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
 .total-revenue-banner {
   background: #222;
   color: white;
