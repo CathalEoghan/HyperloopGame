@@ -814,6 +814,8 @@ bottomNavbarHover.mp3 - Sound available on Pixabay, no author (Pixabay Content L
 reputationBonusWork.mp3 - Sound by DRAGON_STUDIO via Pixabay (Pixabay Content License)
 diceRoll.mp3 - Sound by u_ngsgp0r6zb via Pixabay (Pixabay Content License)
 automatedSchedule.mp3 - Sound by Universfield (Pixabay Content License)
+bigMoment.mp3 - Sound by Universfield (Pixabay Content License)
+tier3City.mp3 - Sound by BenKirb (Pixabay Content License)
 
 ACHIEVEMENT LOGOS
 
