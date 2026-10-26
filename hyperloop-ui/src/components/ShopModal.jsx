@@ -82,8 +82,8 @@ function themedCardStyle(id) {
 
 // Full names for a bundle's pieces (shown as a hover tooltip on its chip) and a short initial for the chip
 // itself - five lines of plain text per bundle card didn't scale, so a compact row of badges takes their place.
-const PIECE_LABELS = { generalTheme: 'General theme', boardTheme: 'Board theme', hyperLinkTheme: 'Hyper-Link theme', workSound: 'Work sound', cursorTheme: 'Cursor' }
-const PIECE_CHIPS = { generalTheme: 'Gen', boardTheme: 'Brd', hyperLinkTheme: 'HL', workSound: 'Wrk', cursorTheme: 'Cur' }
+const PIECE_LABELS = { generalTheme: 'General theme', boardTheme: 'Board theme', hyperLinkTheme: 'Hyper-Link theme', workSound: 'Work sound', openingAudio: 'Opening audio', cursorTheme: 'Cursor' }
+const PIECE_CHIPS = { generalTheme: 'Gen', boardTheme: 'Brd', hyperLinkTheme: 'HL', workSound: 'Wrk', openingAudio: 'Opn', cursorTheme: 'Cur' }
 const BUNDLES_TAB = { id: 'bundles', name: 'Bundles', blurb: 'One item from every category, under a single theme - buy the pieces you don’t have yet for 20% off their combined price.' }
 
 // How many more Reputation points are needed to afford something, for the "Need N more" note next to a Buy
