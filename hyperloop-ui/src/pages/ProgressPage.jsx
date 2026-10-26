@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { allCities } from '../../../CityManager/CityRegistry'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry'
-import { experimentalTechnology } from '../../../UpgradeManager/ExperimentalTechnology.js'
+import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import cityThumbnails from '../data/cityThumbnails.js'
 import cityImages from '../data/cityImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
@@ -205,22 +205,17 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         return 'unknown'
     }
 
-    // Experimental Technology lives in the Upgrade registry (it's bought like any other city upgrade, not built
-    // from a development slot), not the Development registry - folded in by hand so it still shows up here.
-    const collectibleDevelopments = [...allDevelopments, experimentalTechnology]
-    const purchasedDevNames = new Set((purchasedDevelopments || []).map(d => d.name))
-    const unlockedDevNames = new Set((unlockedDevelopments || []).map(d => d.name))
-    // Instance equality works for Experimental Technology (the module export is a singleton, same object
-    // reference wherever it's imported), but every other development is matched by name like cities/countries.
-    const experimentalTechOwned = (purchasedUpgrades || []).includes(experimentalTechnology)
-    const experimentalTechUnlocked = (unlockedUpgrades || []).includes(experimentalTechnology)
+    // allUpgrades (Bank, Experimental Technology, Advertising Campaigns, seasonal deals, and ~160 more) are bought
+    // the same way as any other development - DevelopmentPage.jsx itself treats allDevelopments and allUpgrades as
+    // one combined shop ("allItems"), and matches a purchase by name rather than by instance even for Upgrades
+    // (`purchasedUpgrades.some(p => p.name === item.name)`) - the Upgrade/Development split is purely an internal
+    // code distinction, so every item here is matched by name, same as cities/countries, and every one of them
+    // belongs in this collectible pool, not just Experimental Technology on its own.
+    const collectibleDevelopments = [...allDevelopments, ...allUpgrades]
+    const purchasedDevNames = new Set([...(purchasedDevelopments || []), ...(purchasedUpgrades || [])].map(d => d.name))
+    const unlockedDevNames = new Set([...(unlockedDevelopments || []), ...(unlockedUpgrades || [])].map(d => d.name))
 
     const getDevelopmentState = (dev) => {
-        if (dev === experimentalTechnology) {
-            if (experimentalTechOwned) return 'connected'
-            if (experimentalTechUnlocked) return 'unlocked'
-            return 'unknown'
-        }
         if (purchasedDevNames.has(dev.name)) return 'connected'
         if (unlockedDevNames.has(dev.name)) return 'unlocked'
         return 'unknown'
