@@ -31,6 +31,9 @@ export const PRESTIGE_VALUES = {
     streamingMasteryEvery: 50,         // ... and paid every this many clicks instead
     signOnBonus: 1000000,              // Sign-On Bonus: extra cash at the start of every new run
     pizzaParties: 2,                   // x2 positive event strength
+    newsColumnRep: 5,                  // News Column: +5 Reputation whenever a positive event fires
+    resilienceDurationFactor: 0.5,     // Resilience: negative events (the ones with a duration) last x0.5 as long
+    festiveFreakFactor: 2,             // Festive Freak: x2 season/month/special-day upgrade bonuses
 }
 const mult = v => `x${v}`
 const pct = v => `${Math.round(v * 100)}%`
@@ -45,6 +48,10 @@ export const PRESTIGE_UPGRADES = [
 
     { id: 'legalLoopholes', icon: '📑', layer: 1, name: 'Legal Loopholes', description: `Renaming a development costs half the Reputation.` },
     { id: 'amicableBreakups', icon: '🤝', layer: 1, name: 'Amicable Breakups', description: 'Disconnecting a city or removing a development costs nothing and refunds half the cost.' },
+    { id: 'openingParty', icon: '🎉', layer: 1, name: 'Opening Party', description: 'Connecting a Tier 3 city immediately clears any active event and starts a new positive one.' },
+    { id: 'newsColumn', icon: '📰', layer: 1, name: 'News Column', description: `Positive events grant a bonus +${V.newsColumnRep} Reputation.` },
+    { id: 'resilience', icon: '💪', layer: 1, name: 'Resilience', description: 'Negative events last half as long.' },
+    { id: 'festiveFreak', icon: '🎃', layer: 1, name: 'Festive Freak', description: 'Seasonal, month-specific and special-day upgrade effects are twice as strong.' },
 
     // Layer 2
     { id: 'colourTheory', icon: '🎨', layer: 2, name: 'Colour Theory', description: 'Developments and cities start with a Level 1 upgrade when built.'},

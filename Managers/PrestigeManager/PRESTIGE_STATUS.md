@@ -6,13 +6,17 @@ delete its line from `NOT_IMPLEMENTED` and move it to the live table below.
 
 The income, Work, farewell and Progress perks are true multipliers: they apply after the normal boosts have been added up, and multiply each other (bug #147). Their strengths live in `PRESTIGE_VALUES`, prestigeUpgrades.js, and the descriptions are built from them.
 
-## Live (32 of 32)
+## Live (36 of 36)
 
 | Layer | Upgrade | Effect in the game | Where |
 |---|---|---|---|
 | 1 | Staff Feedback Forms | x2 city and development income | EconomyManager `prestigeMultipliers`, `getPrestigeDevMultiplier` / `getPrestigeCityMultiplier` |
 | 1 | Livestream Everything | Guaranteed +5 Reputation every 100 manual Work clicks in a run (Best P.A. Ever's auto-clicks don't count; the count starts again with each run) | `livestream.js` (`livestreamRepFor`), App.jsx `performWork` |
 | 1 | Amicable Breakups | Disconnect costs nothing and refunds half the connection cost | App.jsx `onDisconnect`, CitiesPage |
+| 1 | Opening Party | Finishing construction on a Tier 3 city clears any active event (positive or negative) and starts a new positive one, ignoring the usual rank gate | App.jsx tick loop, around `constructionManager.update()` - calls `fireEvent(getRandomEvent(true))` |
+| 1 | News Column | +5 Reputation on every positive event, on top of anything Improved Accessibility Services gives | App.jsx `fireEvent` |
+| 1 | Resilience | A negative event with a duration (passivePenalty/workPenalty - the three instant-loss ones have none to shorten) lasts half as long | App.jsx `fireEvent` |
+| 1 | Festive Freak | Doubles the six single-day boosts (Halloween, July 4th, New Year's, Christmas, Valentine's, Easter) and the currently-active season/month `seasonBoost` upgrade's effect; does not touch weekday/weekend or time-of-day boosts | EconomyManager `getSpecialDayBonus`, `_applyFestiveFreak` (used by `getCurrentSeasonUpgrade`/`getCurrentMonthUpgrade`) |
 | 1 | Legal Loopholes | Renaming a development costs 10 Reputation instead of 20 | ProgressionManager `getRenameRepCost`, DevelopmentPage |
 | 1 | Sign-On Bonus | +£1,000,000 when a new run's starter city connects (added to the balance directly, so it is not earned cash and gives no XP) | App.jsx `signOnPending` |
 | 2 | Colour Theory | A development that earns money, or a newly connected city, opens at Level 1 (no cash or Reputation paid; not applied to developments/cities already built) | ProgressionManager `purchaseDevelopment`, `purchaseCity` |
@@ -45,7 +49,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 
 ## Not live yet
 
-None: all 30 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is empty; add an id there to show a new upgrade as "Coming soon".
+None: all 36 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is empty; add an id there to show a new upgrade as "Coming soon".
 
 ## Milestone upgrades
 

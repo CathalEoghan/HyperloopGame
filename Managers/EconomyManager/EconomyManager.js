@@ -363,14 +363,17 @@ export class EconomyManager {
     }
 
     getSpecialDayBonus() {
+        // Festive Freak doubles every one of these (and the season/month boosts below), so it's applied once
+        // here rather than at each `return 1.0`.
+        const festiveFreak = PrestigeManager.owns('festiveFreak') ? PV.festiveFreakFactor : 1;
         const now = new Date();
         const month = now.getMonth();
         const date = now.getDate();
-        if (month === 9  && date === 31 && this.hasUpgrade('halloweenBoost')) return 1.0;
-        if (month === 6  && date === 4  && this.hasUpgrade('fourthOfJulyBoost')) return 1.0;
-        if (month === 0  && date === 1  && this.hasUpgrade('newYearsBoost')) return 1.0;
-        if (month === 11 && date === 25 && this.hasUpgrade('christmasBoost')) return 1.0;
-        if (month === 1  && date === 14 && this.hasUpgrade('valentinesBoost')) return 1.0;
+        if (month === 9  && date === 31 && this.hasUpgrade('halloweenBoost')) return 1.0 * festiveFreak;
+        if (month === 6  && date === 4  && this.hasUpgrade('fourthOfJulyBoost')) return 1.0 * festiveFreak;
+        if (month === 0  && date === 1  && this.hasUpgrade('newYearsBoost')) return 1.0 * festiveFreak;
+        if (month === 11 && date === 25 && this.hasUpgrade('christmasBoost')) return 1.0 * festiveFreak;
+        if (month === 1  && date === 14 && this.hasUpgrade('valentinesBoost')) return 1.0 * festiveFreak;
         if (this.hasUpgrade('easterBoost')) {
             const y = now.getFullYear();
             const a = y % 19, b = Math.floor(y/100), c = y % 100;
@@ -380,7 +383,7 @@ export class EconomyManager {
             const m = Math.floor((a+11*h+22*l)/451);
             const easterMonth = Math.floor((h+l-7*m+114)/31) - 1;
             const easterDay = ((h+l-7*m+114) % 31) + 1;
-            if (month === easterMonth && date === easterDay) return 1.0;
+            if (month === easterMonth && date === easterDay) return 1.0 * festiveFreak;
         }
         return 0;
     }
@@ -403,6 +406,15 @@ export class EconomyManager {
         return 1 + this.getTimeOfDayBonus();
     }
 
+    // Doubles a season/month upgrade's effect under Festive Freak, without touching the purchased upgrade
+    // object itself - everything downstream (totalBoost math, the breakdown tooltip) just reads .effectValue
+    // off whatever this hands back, so doubling it here alone is enough.
+    _applyFestiveFreak(upgrade) {
+        if (!upgrade) return upgrade;
+        if (!PrestigeManager.owns('festiveFreak')) return upgrade;
+        return { ...upgrade, effectValue: upgrade.effectValue * PV.festiveFreakFactor };
+    }
+
     getCurrentSeasonUpgrade() {
         // The seasons follow the home city's hemisphere: when it is summer in London it is
         // winter in Sydney, so a southern home city's calendar is shifted by six months.
@@ -413,20 +425,20 @@ export class EconomyManager {
         const seasons = { Spring: [2,3,4], Summer: [5,6,7], Autumn: [8,9,10], Winter: [11,0,1] };
         const currentSeason = Object.entries(seasons).find(([, months]) => months.includes(month))?.[0];
         if (!currentSeason) return null;
-        return this.progressionManager.purchasedUpgrades.find(u =>
+        return this._applyFestiveFreak(this.progressionManager.purchasedUpgrades.find(u =>
             u.effectType === 'seasonBoost' &&
             u.name.toLowerCase().includes(currentSeason.toLowerCase()) &&
             !['january','february','march','april','may','june','july','august','september','october','november','december']
                 .some(m => u.name.toLowerCase().includes(m))
-        ) || null;
+        ) || null);
     }
 
     getCurrentMonthUpgrade() {
         const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
         const currentMonth = monthNames[new Date().getMonth()];
-        return this.progressionManager.purchasedUpgrades.find(u =>
+        return this._applyFestiveFreak(this.progressionManager.purchasedUpgrades.find(u =>
             u.effectType === 'seasonBoost' && u.name.includes(currentMonth)
-        ) || null;
+        ) || null);
     }
 
 

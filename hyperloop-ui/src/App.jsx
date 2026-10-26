@@ -498,6 +498,9 @@ function App() {
       return event
     } catch { return null }
   })());
+  // Bumped every time fireEvent starts a new event, so a still-pending expiry setTimeout from an event Opening
+  // Party cut short can tell it is no longer the current one and skip clearing the event that replaced it.
+  const eventGenerationRef = useRef(0);
 
   // Tracks which unlocked development/upgrade names have already been queued
   // for a reveal popup (whether or not the player has dismissed it yet).
@@ -796,6 +799,9 @@ function App() {
   // and by Free Wi-Fi's like-triggered roll, so both go through the exact same logic - including Improved
   // Accessibility Services' flat reputation bonus on every positive event, regardless of what triggered it.
   const fireEvent = (rawEvent) => {
+    // This event's own generation number, so its expiry setTimeout below can tell later whether it is still
+    // the current event by the time it fires (Opening Party can replace an event before its timer runs out).
+    const myGeneration = ++eventGenerationRef.current;
     const pizza = PrestigeManager.owns('pizzaParties') && rawEvent.type === 'positive';
     const event = (pizza && rawEvent.effect)
       ? { ...rawEvent, effect: { ...rawEvent.effect, multiplier: 1 + (rawEvent.effect.multiplier - 1) * PRESTIGE_VALUES.pizzaParties } }
@@ -803,7 +809,10 @@ function App() {
     const bonusExtension = event.type === 'positive'
       ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
       : 1;
-    const durationSeconds = Math.floor(event.duration() * bonusExtension);
+    // Resilience: a negative event with a duration (passivePenalty/workPenalty - the instant-loss ones have none
+    // to shorten) lasts half as long.
+    const resilienceFactor = (event.type === 'negative' && PrestigeManager.owns('resilience')) ? PRESTIGE_VALUES.resilienceDurationFactor : 1;
+    const durationSeconds = Math.floor(event.duration() * bonusExtension * resilienceFactor);
 
     if (event.effectType === 'instantCash') {
       const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
@@ -815,7 +824,10 @@ function App() {
       setActiveEvent(fullEvent);
       setShowEventModal(true);
       if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
-      setTimeout(() => { activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event'); }, 8000);
+      setTimeout(() => {
+        if (eventGenerationRef.current !== myGeneration) return;
+        activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event');
+      }, 8000);
     } else if (event.effectType === 'instantCashLoss') {
       const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
       progressionManager.addCash(-loss);
@@ -825,7 +837,10 @@ function App() {
       setActiveEvent(fullEvent);
       setShowEventModal(true);
       if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
-      setTimeout(() => { activeEventRef.current = null; }, 8000);
+      setTimeout(() => {
+        if (eventGenerationRef.current !== myGeneration) return;
+        activeEventRef.current = null;
+      }, 8000);
     } else {
       const fullEvent = { ...event, durationSeconds, expiresAt: Date.now() + durationSeconds * 1000 };
       activeEventRef.current = fullEvent;
@@ -835,6 +850,7 @@ function App() {
       setShowEventModal(true);
       if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion }, until: fullEvent.expiresAt };
       setTimeout(() => {
+        if (eventGenerationRef.current !== myGeneration) return;
         activeEventRef.current = null;
         setActiveEvent(null);
         setShowEventModal(false);
@@ -844,6 +860,12 @@ function App() {
 
     if (event.type === 'positive' && economyManager.hasUpgrade('positiveEventReputationBonus')) {
       progressionManager.addReputation(economyManager.getUpgradeSum('positiveEventReputationBonus'));
+      setReputation(progressionManager.reputation);
+    }
+    // News Column: every positive event (however it fired - the regular roll, Opening Party, a like-triggered
+    // roll) also pays a flat Reputation bonus, on top of anything Improved Accessibility Services gives.
+    if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) {
+      progressionManager.addReputation(PRESTIGE_VALUES.newsColumnRep);
       setReputation(progressionManager.reputation);
     }
   };
@@ -960,7 +982,18 @@ function App() {
           }
         }
       }
+      // Opening Party: which Tier 3 cities are mid-build right now, before this tick may finish one of them.
+      // Only a normal connection counts (not Government Grants' free bulk cities, which never go through
+      // construction at all).
+      const tier3BuildingBefore = PrestigeManager.owns('openingParty')
+        ? progressionManager.citiesUnderConstruction.filter(c => c.tier === 3 && c.underConstruction)
+        : [];
       constructionManager.update();
+      if (tier3BuildingBefore.some(c => !c.underConstruction)) {
+        // Cut short whatever event is running (positive or negative) and start a fresh positive one, ignoring
+        // the usual rank gate - this is a deliberate trigger, not the regular random roll.
+        fireEvent(getRandomEvent(true));
+      }
       if (grantPending.current && progressionManager.purchasedCities.length > 0) {
         grantPending.current = false;
         giveGovernmentGrant();
