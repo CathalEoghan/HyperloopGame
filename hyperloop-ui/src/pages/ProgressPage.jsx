@@ -232,9 +232,15 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     // by a prestige - so they belong in the same "Developments collected" grid/total/progress-bar rather than a
     // section of their own; only their claim (via claimedPrestige/hyperloop_prestige_upgrade_rewards, see
     // makeClaimHandler above) stays permanently separate from the others', since the upgrade itself never resets.
+    // prestige.layerUnlocked(1) is always true by itself (it only checks the PREVIOUS layer is complete), which is
+    // right for the Prestige page's own tree - Layer 1 has no previous layer to require. But the Prestige page
+    // wraps that whole tree in its own lock until the player has retired at least once (PrestigeManager.getHistory()
+    // .length === 0 shows its "PRESTIGE UPGRADES LOCKED" overlay), and this page must respect that same gate -
+    // otherwise Layer 1 upgrades show up named here before the player has ever unlocked the Prestige page at all.
+    const prestigeTreeUnlocked = PrestigeManager.getHistory().length > 0
     const getPrestigeUpgradeState = (upgrade) => {
         if (PrestigeManager.owns(upgrade.id)) return 'connected'
-        if (prestige.layerUnlocked(upgrade.layer)) return 'unlocked'
+        if (prestigeTreeUnlocked && prestige.layerUnlocked(upgrade.layer)) return 'unlocked'
         return 'unknown'
     }
     const ownedPrestigeUpgradesCount = PRESTIGE_UPGRADES.filter(u => PrestigeManager.owns(u.id)).length
