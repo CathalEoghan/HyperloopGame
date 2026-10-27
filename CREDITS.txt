@@ -790,6 +790,9 @@ poltergeist.jpg - Photo by Fidan Nazim qizi via Pexels
 duck.jpg - Photo by Jan Wright via Pexels
 ocean.jpg - Photo by Amélie Vialla via Pexels
 woof.jpg - Photo by Barnabas Davoti via Pexels
+western.jpg - Photo by Temperate Sage via Pixabay (Pixabay Content License)
+paradise.jpg - Photo by Pexels via Pixabay (Pixabay Content License)
+rockstar.jpg - Photo by Pexels via Pixabay (Pixabay Content License)
 
 
 
@@ -974,6 +977,14 @@ starlight4.mp3, starlight5.mp3 - freesound_community (Pixabay Content License)
 
 ocean1.mp3, ocean2.mp3, ocean3.mp3, ocean4.mp3, ocean5.mp3 - Universfield (Pixabay Content license)
 
+paradise1.mp3, paradise2.mp3, paradise3.mp3, paradise4.mp3, paradise5.mp3 - freesound_community (Pixabay Content License)
+
+western1.mp3, western2.mp3, western3.mp3, western4.mp3 - freesound_community (Pixabay Content License)
+western5.mp3 - u_jfkxueyart, iedurodrigues (Pixabay Content License)
+
+rockstar1.mp3, rockstar2.mp3, rockstar3.mp3 - JinzoSounds (Pixabay Content License)
+rockstar4.mp3, rockstar3.mp5, rockstar6 - freesound_community (Pixabay Content License)
+
 OPENING INTROS
 fairy.mp3 - The_Mountain (Pixabay Content License)
 kitty.mp3 - GoldenSoundLabs (Pixabay Content License)
@@ -985,5 +996,6 @@ starlight.mp3 - The Mountain (Pixabay Content License)
 duck.mp3 - PaoloArgento.mp3 (Pixabay Content License)
 ocean.mp3 - expmp3 (Pixabay Content License)
 woof.mp3 - GoldenSoundLabs (Pixabay Content License)
-
-
+western.mp3 - Atlas Audio (Pixabay Content License)
+rockstar.mp3 - NastelBom (Pixabay Content License)
+paradise.mp3 - Geoff Harvey (Pixabay Content License)
