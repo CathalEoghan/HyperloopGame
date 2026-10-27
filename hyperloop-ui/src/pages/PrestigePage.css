@@ -713,8 +713,10 @@
     box-shadow: 0 0 18px color-mix(in srgb, var(--ui-accent, #f5a623) 25%, transparent);
 }
 .prestige-reward-label { color: var(--pt-muted); font-size: 0.62rem; text-transform: uppercase; letter-spacing: 1.6px; font-family: 'Courier New', monospace; }
-.prestige-reward-value { color: var(--pt-gold); font-size: 2.4rem; font-weight: 800; line-height: 1.1; font-family: 'Courier New', monospace; }
-.prestige-reward-sub { font-size: 0.8rem; color: var(--pt-muted); }
+.prestige-reward-value { color: var(--pt-gold); font-size: 2.4rem; font-weight: 800; line-height: 1.1; font-family: 'Courier New', monospace; margin-bottom: 4px; }
+/* Kept small and muted on purpose - it's the breakdown for anyone curious, not the headline. The big
+   +N number above should read first. */
+.prestige-reward-sub { font-size: 0.68rem; color: var(--pt-muted); opacity: 0.8; line-height: 1.4; }
 .prestige-reward-balance { margin-top: 6px; font-size: 0.85rem; color: var(--pt-muted); }
 .prestige-reward-balance b { color: var(--pt-text); }
 .prestige-reward-next { margin: 8px 0 14px; text-align: center; font-size: 0.78rem; color: var(--pt-muted); }

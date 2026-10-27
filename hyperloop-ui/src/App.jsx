@@ -1856,6 +1856,10 @@ function App() {
             cities: purchasedCitiesCount,
             developments: progressionManager.purchasedDevelopments.length,
             farewells: farewellsGiven,
+            greets: progressionManager.greetingsGiven ?? 0,
+            reputation,
+            milestones: claimedMilestones.current.size,
+            underConstruction: progressionManager.citiesUnderConstruction.length + progressionManager.developmentsUnderConstruction.length,
             startedAt: createdAt,
           }}
           onPrestige={handlePrestige}

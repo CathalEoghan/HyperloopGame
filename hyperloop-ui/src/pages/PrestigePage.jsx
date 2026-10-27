@@ -149,6 +149,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                             <span>Cities connected</span><b>{runStats.cities}</b>
                             <span>Developments built</span><b>{runStats.developments}</b>
                             <span>Farewells given</span><b>{runStats.farewells}</b>
+                            <span>Greets given</span><b>{runStats.greets}</b>
                             <span>Time on this run</span><b>{fmtSpan(Date.now() - runStats.startedAt)}</b>
                         </div>
 
@@ -156,11 +157,12 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                             <div className="prestige-reset">
                                 <h4>Resets</h4>
                                 <ul>
-                                    <li>Cash and rank</li>
-                                    <li>Reputation</li>
-                                    <li>Cities</li>
-                                    <li>Developments and upgrades</li>
-                                    <li>Milestones</li>
+                                    <li>Cash and rank (Rank {rank})</li>
+                                    <li>Reputation ({runStats.reputation})</li>
+                                    <li>Cities ({runStats.cities})</li>
+                                    <li>Developments and upgrades ({runStats.developments})</li>
+                                    <li>Milestones ({runStats.milestones})</li>
+                                    {runStats.underConstruction > 0 && <li>Work in progress ({runStats.underConstruction})</li>}
                                 </ul>
                             </div>
                             <div className="prestige-keep">
