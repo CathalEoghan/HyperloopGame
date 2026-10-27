@@ -105,6 +105,9 @@ import starlightOpening from '../assets/opening-intros/starlight.mp3'
 import duckOpening from '../assets/opening-intros/duck.mp3'
 import woofOpening from '../assets/opening-intros/woof.mp3'
 import oceanOpening from '../assets/opening-intros/ocean.mp3'
+import rockstarOpening from '../assets/opening-intros/rockstar.mp3'
+import westernOpening from '../assets/opening-intros/western.mp3'
+import paradiseOpening from '../assets/opening-intros/paradise.mp3'
 import princess1 from '../assets/work-click-sounds/princess1.mp3'
 import princess2 from '../assets/work-click-sounds/princess2.mp3'
 import princess3 from '../assets/work-click-sounds/princess3.mp3'
@@ -137,6 +140,22 @@ import woof2 from '../assets/work-click-sounds/woof2.mp3'
 import woof3 from '../assets/work-click-sounds/woof3.mp3'
 import woof4 from '../assets/work-click-sounds/woof4.mp3'
 import woof5 from '../assets/work-click-sounds/woof5.mp3'
+import rockstar1 from '../assets/work-click-sounds/rockstar1.mp3'
+import rockstar2 from '../assets/work-click-sounds/rockstar2.mp3'
+import rockstar3 from '../assets/work-click-sounds/rockstar3.mp3'
+import rockstar4 from '../assets/work-click-sounds/rockstar4.mp3'
+import rockstar5 from '../assets/work-click-sounds/rockstar5.mp3'
+import rockstar6 from '../assets/work-click-sounds/rockstar6.mp3'
+import western1 from '../assets/work-click-sounds/western1.mp3'
+import western2 from '../assets/work-click-sounds/western2.mp3'
+import western3 from '../assets/work-click-sounds/western3.mp3'
+import western4 from '../assets/work-click-sounds/western4.mp3'
+import western5 from '../assets/work-click-sounds/western5.mp3'
+import paradise1 from '../assets/work-click-sounds/paradise1.mp3'
+import paradise2 from '../assets/work-click-sounds/paradise2.mp3'
+import paradise3 from '../assets/work-click-sounds/paradise3.mp3'
+import paradise4 from '../assets/work-click-sounds/paradise4.mp3'
+import paradise5 from '../assets/work-click-sounds/paradise5.mp3'
 // Each theme photo ships as two pre-resized files rather than one full-resolution original scaled down by the
 // browser: a small one for the Shop's own little cards (shop/, ~480px wide) and a bigger one for the Terminal
 // Board's full-bleed, heavily-dimmed background (board/, ~1600px wide) - both already sharp at the size they're
@@ -163,6 +182,12 @@ import woofThemePicShop from '../assets/theme-pics/shop/woof.jpg'
 import woofThemePicBoard from '../assets/theme-pics/board/woof.jpg'
 import oceanThemePicShop from '../assets/theme-pics/shop/ocean.jpg'
 import oceanThemePicBoard from '../assets/theme-pics/board/ocean.jpg'
+import rockstarThemePicShop from '../assets/theme-pics/shop/rockstar.jpg'
+import rockstarThemePicBoard from '../assets/theme-pics/board/rockstar.jpg'
+import westernThemePicShop from '../assets/theme-pics/shop/western.jpg'
+import westernThemePicBoard from '../assets/theme-pics/board/western.jpg'
+import paradiseThemePicShop from '../assets/theme-pics/shop/paradise.jpg'
+import paradiseThemePicBoard from '../assets/theme-pics/board/paradise.jpg'
 
 // A theme's photo, shown dimmed in the background of every Shop card for that theme (work click, opening audio,
 // board/Hyper-Link/general theme, cursor...) and, once its General theme is equipped, as the Terminal Board's own
@@ -182,6 +207,9 @@ export const THEME_PICS = {
     princess: princessThemePicShop,
     woof: woofThemePicShop,
     ocean: oceanThemePicShop,
+    rockstar: rockstarThemePicShop,
+    western: westernThemePicShop,
+    paradise: paradiseThemePicShop,
 }
 
 // The bigger variant of the same photos, used only for the Terminal Board's own background (see applyCosmetics()
@@ -198,6 +226,9 @@ export const THEME_PICS_BOARD = {
     princess: princessThemePicBoard,
     woof: woofThemePicBoard,
     ocean: oceanThemePicBoard,
+    rockstar: rockstarThemePicBoard,
+    western: westernThemePicBoard,
+    paradise: paradiseThemePicBoard,
 }
 
 // The theme id the Shop spotlights in a "Featured" group at the top of every category tab (see ShopModal.jsx) -
@@ -336,12 +367,9 @@ export const SHOP_ITEMS = {
         workSound('duck', 'Duck click', 25, [duck1, duck2, duck3], 'Make the work button quack like a duck! Part of the Duck bundle.'),
         workSound('woof', 'Woof click', 25, [woof1, woof2, woof3, woof4, woof5], 'Now it barks at you! Part of the Woof bundle.'),
         workSound('ocean', 'Ocean click', 25, [ocean1, ocean2, ocean3, ocean4, ocean5], 'Bubbles! Part of the Ocean bundle.'),
-
-        // ── New bundle template pieces - reused the classic sample as a stand-in, same as 'fanfare' above.
-        // Swap each src for a real themed sample (a power chord, a "yee-haw", a steel drum) when it's ready.
-        workSound('rockstar', 'Rockstar click', 25, workClickSound, 'A guitar power chord on every click. Part of the Rockstar bundle.'),
-        workSound('western', 'Western click', 25, workClickSound, 'A cowboy "yee-haw" on every click. Part of the Western bundle.'),
-        workSound('paradise', 'Paradise click', 25, workClickSound, 'A steel-drum note on every click. Part of the Paradise bundle.'),
+        workSound('rockstar', 'Rockstar click', 25, [rockstar1, rockstar2, rockstar3, rockstar4, rockstar5, rockstar6], 'A guitar power chord on every click. Part of the Rockstar bundle.'),
+        workSound('western', 'Western click', 25, [western1, western2, western3, western4, western5], 'A cowboy "yee-haw" on every click. Part of the Western bundle.'),
+        workSound('paradise', 'Paradise click', 25, [paradise1, paradise2, paradise3, paradise4, paradise5], 'A steel-drum note on every click. Part of the Paradise bundle.'),
     ],
     openingAudio: [
         openingSound('default', 'Classic opening', 0, classicOpeningAudio, 'The original.'),
@@ -361,12 +389,9 @@ export const SHOP_ITEMS = {
         openingSound('duck', 'Duck opening', 25, duckOpening, 'Part of the Duck bundle.'),
         openingSound('woof', 'Woof opening', 25, woofOpening, 'Part of the Woof bundle.'),
         openingSound('ocean', 'Ocean opening', 25, oceanOpening, 'Part of the Ocean bundle.'),
-
-        // New bundle template pieces - reused the classic opening as a stand-in, swapped for a real
-        // recording when it's ready, same as the others above.
-        openingSound('rockstar', 'Rockstar opening', 25, classicOpeningAudio, 'Part of the Rockstar bundle.'),
-        openingSound('western', 'Western opening', 25, classicOpeningAudio, 'Part of the Western bundle.'),
-        openingSound('paradise', 'Paradise opening', 25, classicOpeningAudio, 'Part of the Paradise bundle.'),
+        openingSound('rockstar', 'Rockstar opening', 25, rockstarOpening, 'Part of the Rockstar bundle.'),
+        openingSound('western', 'Western opening', 25, westernOpening, 'Part of the Western bundle.'),
+        openingSound('paradise', 'Paradise opening', 25, paradiseOpening, 'Part of the Paradise bundle.'),
     ],
 
     boardTheme: [
