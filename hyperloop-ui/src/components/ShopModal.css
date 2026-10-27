@@ -100,7 +100,8 @@
 .shop-nav-item-active .shop-nav-item-name { color: var(--ui-accent, #f5a623); }
 .shop-nav-item-sub { font-size: 0.68rem; color: #888; }
 
-/* The category icon: white square, grey border normally, glowing gold when its tab is the active one. */
+/* The category icon: white square, grey border normally, glowing in the equipped theme's accent colour when its
+   tab is the active one (gold by default, matching whatever --ui-accent the equipped General theme sets). */
 .shop-nav-item-icon-box {
     flex: 0 0 auto;
     width: 34px;
@@ -115,8 +116,8 @@
 }
 .shop-nav-item-icon-box img { width: 19px; height: 19px; object-fit: contain; }
 .shop-nav-item-active .shop-nav-item-icon-box {
-    border-color: #e8941a;
-    box-shadow: 0 0 0 1px #e8941a, 0 0 8px 1px rgba(232, 148, 26, 0.65);
+    border-color: var(--ui-accent, #f5a623);
+    box-shadow: 0 0 0 1px var(--ui-accent, #f5a623), 0 0 8px 1px color-mix(in srgb, var(--ui-accent, #f5a623) 65%, transparent);
 }
 
 .shop-content {

@@ -68,7 +68,12 @@ function ThemePreview({ categoryId, item }) {
 // all id 'fairy'), so a card's own item.id is also the key into THEME_PICS. When that theme has a photo, the
 // card gets it dimmed into its background, with a border in that theme's own General-theme accent colour (e.g.
 // Poltergeist's spooky green) - a plain accent recolour (no THEME_PICS entry) is left exactly as it looks today.
+// The Classic/default piece in every category has no theme of its own, so without this it would fall through to
+// the .shop-item-equipped CSS rule and pick up whatever theme is currently equipped (--ui-accent) - its card
+// stays gold always instead, regardless of what's equipped (bug report: Classic's border went red when Rockstar
+// was equipped).
 function themedCardStyle(id) {
+    if (id === 'default') return { borderColor: '#f5a623' }
     const pic = THEME_PICS[id]
     if (!pic) return {}
     const accent = SHOP_ITEMS.generalTheme.find(i => i.id === id)?.vars?.['--ui-accent']
