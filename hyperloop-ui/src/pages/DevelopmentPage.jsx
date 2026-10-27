@@ -2,7 +2,7 @@ import { useState, useMemo, Fragment } from 'react'
 import BoostTooltip from '../components/BoostTooltip.jsx'
 import IncomeRow from '../components/IncomeRow.jsx'
 import PageIntroModal from '../components/PageIntroModal.jsx'
-import monitorIcon from '../assets/misc/monitor.png'
+import crowdIcon from '../assets/misc/crowd.png'
 import growthIcon from '../assets/misc/growth.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
@@ -103,7 +103,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
             {showIntro && (
                 <PageIntroModal title="Welcome to Developments" onClose={closeIntro} points={[
                     { icon: constructionIcon, text: <>Developments can add <strong>flat income</strong> of their own, or <strong>powerful modifiers</strong> that influence other areas of gameplay instead.</> },
-                    { icon: monitorIcon, text: <>Every development's income scales with how busy the terminal is right now - the busy meter rises as loops near departure or have just arrived, and falls when things are quiet, between a <strong>10% floor and 100%</strong>.</> },
+                    { icon: crowdIcon, text: <>Every development's income scales with how busy the terminal is right now - the busy meter rises as loops near departure or have just arrived, and falls when things are quiet, between a <strong>10% floor and 100%</strong>.</> },
                     { icon: growthIcon, text: <>Flat-income developments can also be upgraded to <strong>improve their base revenue</strong>.</> },
                 ]} />
             )}
