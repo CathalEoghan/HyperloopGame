@@ -336,6 +336,12 @@ export const SHOP_ITEMS = {
         workSound('duck', 'Duck click', 25, [duck1, duck2, duck3], 'Make the work button quack like a duck! Part of the Duck bundle.'),
         workSound('woof', 'Woof click', 25, [woof1, woof2, woof3, woof4, woof5], 'Now it barks at you! Part of the Woof bundle.'),
         workSound('ocean', 'Ocean click', 25, [ocean1, ocean2, ocean3, ocean4, ocean5], 'Bubbles! Part of the Ocean bundle.'),
+
+        // ── New bundle template pieces - reused the classic sample as a stand-in, same as 'fanfare' above.
+        // Swap each src for a real themed sample (a power chord, a "yee-haw", a steel drum) when it's ready.
+        workSound('rockstar', 'Rockstar click', 25, workClickSound, 'A guitar power chord on every click. Part of the Rockstar bundle.'),
+        workSound('western', 'Western click', 25, workClickSound, 'A cowboy "yee-haw" on every click. Part of the Western bundle.'),
+        workSound('paradise', 'Paradise click', 25, workClickSound, 'A steel-drum note on every click. Part of the Paradise bundle.'),
     ],
     openingAudio: [
         openingSound('default', 'Classic opening', 0, classicOpeningAudio, 'The original.'),
@@ -355,6 +361,12 @@ export const SHOP_ITEMS = {
         openingSound('duck', 'Duck opening', 25, duckOpening, 'Part of the Duck bundle.'),
         openingSound('woof', 'Woof opening', 25, woofOpening, 'Part of the Woof bundle.'),
         openingSound('ocean', 'Ocean opening', 25, oceanOpening, 'Part of the Ocean bundle.'),
+
+        // New bundle template pieces - reused the classic opening as a stand-in, swapped for a real
+        // recording when it's ready, same as the others above.
+        openingSound('rockstar', 'Rockstar opening', 25, classicOpeningAudio, 'Part of the Rockstar bundle.'),
+        openingSound('western', 'Western opening', 25, classicOpeningAudio, 'Part of the Western bundle.'),
+        openingSound('paradise', 'Paradise opening', 25, classicOpeningAudio, 'Part of the Paradise bundle.'),
     ],
 
     boardTheme: [
@@ -384,6 +396,9 @@ export const SHOP_ITEMS = {
         boardTheme('jazz', 'Jazz board', 40, { accent: '#b8860b' }, 'Smoky goldenrod lettering. Part of the Jazz bundle.'),
         boardTheme('duck', 'Duck board', 40, { accent: '#f9f500' }, 'Sunny-yellow lettering. Part of the Duck bundle.'),
         boardTheme('woof', 'Woof board', 40, { accent: '#4a7fc9' }, 'Denim-blue lettering. Part of the Woof bundle.'),
+        boardTheme('rockstar', 'Rockstar board', 40, { accent: '#e3122a' }, 'Electric-red lettering. Part of the Rockstar bundle.'),
+        boardTheme('western', 'Western board', 40, { accent: '#a0522d' }, 'Saddle-brown lettering. Part of the Western bundle.'),
+        boardTheme('paradise', 'Paradise board', 40, { accent: '#00bfa5' }, 'Tropical-teal lettering. Part of the Paradise bundle.'),
     ],
 
     hyperLinkTheme: [
@@ -405,6 +420,9 @@ export const SHOP_ITEMS = {
         hyperLinkTheme('jazz', 'Jazz Hyper-Link', 40, { accent: '#b8860b', accentDark: '#8b0000' }, 'Part of the Jazz bundle.'),
         hyperLinkTheme('duck', 'Duck Hyper-Link', 40, { accent: '#f9f500', accentDark: '#e0a800' }, 'Part of the Duck bundle.'),
         hyperLinkTheme('woof', 'Woof Hyper-Link', 40, { accent: '#4a7fc9', accentDark: '#2e5a99' }, 'Part of the Woof bundle.'),
+        hyperLinkTheme('rockstar', 'Rockstar Hyper-Link', 40, { accent: '#e3122a', accentDark: '#a10d1e' }, 'Part of the Rockstar bundle.'),
+        hyperLinkTheme('western', 'Western Hyper-Link', 40, { accent: '#a0522d', accentDark: '#7a3c1e' }, 'Part of the Western bundle.'),
+        hyperLinkTheme('paradise', 'Paradise Hyper-Link', 40, { accent: '#ff5c8a', accentDark: '#e53f70' }, 'Part of the Paradise bundle.'),
     ],
 
     generalTheme: [
@@ -474,6 +492,21 @@ export const SHOP_ITEMS = {
             tickerBg: '#0d1a2e', tickerText: '#9acd32',
             departureArc: '#4a7fc9', arrivalArc: '#9acd32',
         }, 'Denim blue and tennis-ball green. Part of the Woof bundle.'),
+        generalTheme('rockstar', 'Rockstar', 75, {
+            barBg: 'rgb(20, 18, 20)', barText: '#f2f2f2', barTextMuted: '#bdbdbd', accent: '#e3122a',
+            tickerBg: '#000000', tickerText: '#e3122a',
+            departureArc: '#e3122a', arrivalArc: '#c0c0c0',
+        }, 'Black and electric red, chrome highlights. Part of the Rockstar bundle.'),
+        generalTheme('western', 'Western', 75, {
+            barBg: 'rgb(244, 231, 206)', accent: '#a0522d',
+            tickerBg: '#2a1a0e', tickerText: '#d9a566',
+            departureArc: '#a0522d', arrivalArc: '#6b8e23',
+        }, 'Sun-baked tan and saddle brown, sagebrush green. Part of the Western bundle.'),
+        generalTheme('paradise', 'Paradise', 75, {
+            barBg: 'rgb(224, 248, 245)', accent: '#00bfa5',
+            tickerBg: '#07262a', tickerText: '#00bfa5',
+            departureArc: '#00bfa5', arrivalArc: '#ff5c8a',
+        }, 'Turquoise and hibiscus pink. Part of the Paradise bundle.'),
     ],
 
     cursorTheme: [
@@ -505,6 +538,9 @@ export const SHOP_ITEMS = {
         cursorTheme('jazz', 'Jazz cursor', 20, recolorCursor({ a: '#f0d890', b: '#b8860b', stroke: '#1a0c0c', fill: '#b8860b', hilite: '#fff6dc' }), 'Part of the Jazz bundle.'),
         cursorTheme('duck', 'Duck cursor', 20, recolorCursor({ a: '#fff3c4', b: '#f9f500', stroke: '#1a1506', fill: '#f9f500', hilite: '#fffdf0' }), 'Part of the Duck bundle.'),
         cursorTheme('woof', 'Woof cursor', 20, recolorCursor({ a: '#cfe0f7', b: '#4a7fc9', stroke: '#0d1a2e', fill: '#4a7fc9', hilite: '#f0f6ff' }), 'Part of the Woof bundle.'),
+        cursorTheme('rockstar', 'Rockstar cursor', 20, recolorCursor({ a: '#4a4a4a', b: '#e3122a', stroke: '#0a0a0a', fill: '#e3122a', hilite: '#f2f2f2' }), 'Part of the Rockstar bundle.'),
+        cursorTheme('western', 'Western cursor', 20, recolorCursor({ a: '#e8c79a', b: '#a0522d', stroke: '#2a1a0e', fill: '#a0522d', hilite: '#fff6e8' }), 'Part of the Western bundle.'),
+        cursorTheme('paradise', 'Paradise cursor', 20, recolorCursor({ a: '#9df0e6', b: '#00bfa5', stroke: '#07262a', fill: '#00bfa5', hilite: '#f0fffd' }), 'Part of the Paradise bundle.'),
     ],
 }
 
@@ -567,5 +603,20 @@ export const SHOP_BUNDLES = [
         id: 'ocean', name: 'Ocean', tier: 'special',
         blurb: 'Sea-themed: deep blue bars, a wave-blue Hyper-Link, a splash on every click.',
         items: { generalTheme: 'ocean', boardTheme: 'ocean', hyperLinkTheme: 'ocean', workSound: 'ocean', cursorTheme: 'ocean', openingAudio: 'ocean' },
+    },
+    {
+        id: 'rockstar', name: 'Rockstar', tier: 'special',
+        blurb: 'Rock-themed: black and electric red, a power chord on every click.',
+        items: { generalTheme: 'rockstar', boardTheme: 'rockstar', hyperLinkTheme: 'rockstar', workSound: 'rockstar', cursorTheme: 'rockstar', openingAudio: 'rockstar' },
+    },
+    {
+        id: 'western', name: 'Western', tier: 'special',
+        blurb: 'Cowboy-themed: sun-baked tan and saddle brown, a "yee-haw" on every click.',
+        items: { generalTheme: 'western', boardTheme: 'western', hyperLinkTheme: 'western', workSound: 'western', cursorTheme: 'western', openingAudio: 'western' },
+    },
+    {
+        id: 'paradise', name: 'Paradise', tier: 'special',
+        blurb: 'Tropical-themed: turquoise and hibiscus pink, a steel-drum note on every click.',
+        items: { generalTheme: 'paradise', boardTheme: 'paradise', hyperLinkTheme: 'paradise', workSound: 'paradise', cursorTheme: 'paradise', openingAudio: 'paradise' },
     },
 ]

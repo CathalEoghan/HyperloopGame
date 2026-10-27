@@ -138,6 +138,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
     const visibleItems = items.filter(item => matchesSearch(item.name) && (viewMode !== 'owned' || isOwned(cosmetics, categoryId, item.id)))
     const featuredVisible = featuredItem && matchesSearch(featuredItem.name) && (viewMode !== 'owned' || isOwned(cosmetics, categoryId, featuredItem.id)) ? featuredItem : null
     const visibleBundles = SHOP_BUNDLES.filter(b => matchesSearch(b.name) && (viewMode !== 'owned' || isBundleOwned(cosmetics, b)))
+        .sort((a, b) => a.name.localeCompare(b.name))
 
     // The small second line under each sidebar entry: what's currently equipped in that category, or how many
     // bundle sets are fully owned - so you can see your whole loadout at a glance without clicking through
@@ -333,6 +334,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                             )}
                             {TIERS.map(tier => {
                                 const tierItems = visibleItems.filter(item => (item.tier || 'standard') === tier.id)
+                                    .sort((a, b) => a.name.localeCompare(b.name))
                                 if (tierItems.length === 0) return null
                                 return (
                                     <div key={tier.id} className="shop-tier-group">
