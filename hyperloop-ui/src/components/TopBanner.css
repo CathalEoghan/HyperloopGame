@@ -98,12 +98,13 @@ font-size: 1rem;
     cursor: var(--cursor-pointer, pointer);
 }
 
-/* The photo sits on its own layer so it can zoom slowly on hover without moving the label */
+/* The photo sits on its own layer so it can zoom slowly on hover without moving the label. Shows the equipped
+   theme's board photo (--board-bg-image, set in cosmetics.js) when there is one, else the default hyperloop photo. */
 .MysterySpot::before {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--board-img) center / cover no-repeat;
+    background: var(--board-bg-image, var(--board-img-fallback)) center / cover no-repeat;
     transition: transform 0.4s ease, filter 0.3s ease;
 }
 

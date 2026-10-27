@@ -1,12 +1,8 @@
 
-/* A board theme can set --board-bg-image (a Special-tier thing - see shopCatalog.js). It's always layered under
-   a fixed dark scrim here, so whatever image a theme picks can never make the board's text hard to read; a
-   theme that leaves it at 'none' looks exactly like the plain black board, same as before. */
+/* The board itself is always plain black, whatever theme is equipped - a theme's own photo (--board-bg-image)
+   shows on the Shop card preview and on the "TERMINAL BOARD" banner button instead (see ShopModal.css / TopBanner.css). */
 .departure-board {
     background-color: #0a0a0a;
-    background-image: linear-gradient(rgba(10, 10, 10, 0.82), rgba(10, 10, 10, 0.82)), var(--board-bg-image, none);
-    background-size: cover;
-    background-position: center;
     color: var(--board-accent, #f5a623);
     font-family: 'B612 Mono', 'Courier New', monospace;
     padding: 16px;

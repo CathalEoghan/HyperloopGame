@@ -87,9 +87,9 @@ export function applyCosmetics(state = readCosmetics()) {
         const item = getEquippedItem(category, state)
         Object.entries(item?.vars || {}).forEach(([name, value]) => root.style.setProperty(name, value))
     })
-    // A themed General theme's own photo takes the Terminal Board's background over whatever Board theme is
-    // equipped (bug request: "theme-pics... replace the terminal board image when their general theme is
-    // purchased" - equipped in practice, since only one photo can show at a time).
+    // A themed General theme's own photo takes the "TERMINAL BOARD" banner button's background over whatever
+    // Board theme is equipped (equipped in practice, since only one photo can show at a time). The Departure
+    // Board page itself stays plain black regardless - see DepartureBoard.css.
     const generalPic = THEME_PICS_BOARD[getEquippedItem('generalTheme', state)?.id]
     if (generalPic) root.style.setProperty('--board-bg-image', `url(${generalPic})`)
 }

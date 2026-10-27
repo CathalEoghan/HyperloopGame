@@ -273,7 +273,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     if (activeTab === "DepartureBoard") { playClickSound3(); } else { playClickSound2(); }
                     onSelect(activeTab === "DepartureBoard" ? "Home" : "DepartureBoard");
                 }}
-                style={{ '--board-img': `url(${departureBoardImg})` }}
+                style={{ '--board-img-fallback': `url(${departureBoardImg})` }}
             >
                 <span className="MysterySpotLabel">TERMINAL BOARD</span>
                 {hasFarewellPending && <span className="departure-badge" />}
