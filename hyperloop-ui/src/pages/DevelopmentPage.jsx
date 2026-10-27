@@ -401,7 +401,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 )
                                             })()}
                                             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0' }}>
-                                                <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgrade Level</span>
+                                                <span style={{ fontSize: '0.85rem', color: '#888' }}>Upgrade level</span>
                                                 <span style={{ fontWeight: 'bold' }}>{getLevel(selectedDevelopment)} / 10</span>
                                             </div>
                                         </div>
