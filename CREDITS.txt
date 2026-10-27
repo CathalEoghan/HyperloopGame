@@ -945,6 +945,7 @@ chat.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.c
 click.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/left-click" title="left click icons">Left click icons created by Magnific - Flaticon</a>
 gift.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/gift" title="gift icons">Gift icons created by Magnific - Flaticon</a>
 padlock.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/padlock" title="padlock icons">Padlock icons created by Magnific - Flaticon</a>
+crowd.png - Photo by Umeicon (Flaticon license), <a href="https://www.flaticon.com/free-icons/gathering" title="gathering icons">Gathering icons created by Umeicon - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
