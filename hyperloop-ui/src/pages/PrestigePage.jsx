@@ -6,6 +6,9 @@ import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialCh
 import { formatBalance } from '../utils/formatBalance.js'
 import padlockIcon from '../assets/misc/padlock.png'
 import cashIcon from '../assets/misc/cash.png'
+import PageIntroModal from '../components/PageIntroModal.jsx'
+import starIcon from '../assets/misc/star.png'
+import trophyIcon from '../assets/misc/trophy.svg'
 import './PrestigePage.css'
 
 // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
@@ -70,6 +73,12 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     const [prestige] = useState(() => new PrestigeManager())
     const [, setTick] = useState(0)
     const [selectedId, setSelectedId] = useState(null)
+    // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
+    // then they already know how Prestige Points and the upgrade layers work.
+    const [showIntro, setShowIntro] = useState(() =>
+        PrestigeManager.getHistory().length === 0 && localStorage.getItem('hyperloop_prestige_intro_seen') !== 'true'
+    )
+    const closeIntro = () => { localStorage.setItem('hyperloop_prestige_intro_seen', 'true'); setShowIntro(false) }
     const refresh = () => setTick(t => t + 1)
     // Points can be paid out while this page is open (Experimental Technology finishing a build), so re-read them
     useEffect(() => {
@@ -103,6 +112,13 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
 
     return (
         <div className="prestige-page" ref={pageRef} onClick={() => setSelectedId(null)} style={pageHeight ? { height: pageHeight } : undefined}>
+            {showIntro && (
+                <PageIntroModal title="Welcome to Prestige" onClose={closeIntro} points={[
+                    { icon: starIcon, text: <>Once you've unlocked <strong>Early Retirement</strong>, retiring ends this run early in exchange for Prestige Points - earned from both your rank and the cash you've made this run.</> },
+                    { icon: padlockIcon, text: <>Spend Prestige Points on <strong>permanent upgrades</strong> across several layers - each layer unlocks once every upgrade in the one before it is owned.</> },
+                    { icon: trophyIcon, text: <>Prestige Points and upgrades are <strong>kept forever</strong>, even after retiring - only the current run's cash, rank, cities and developments reset.</> },
+                ]} />
+            )}
             <div className="prestige-header">
                 <div className="prestige-header-text">
                     <h1 className="prestige-title">Prestige Upgrades</h1>

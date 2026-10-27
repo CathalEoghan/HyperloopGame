@@ -13,6 +13,10 @@ import reputationIcon from '../assets/misc/reputation.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_VALUES, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
+import PageIntroModal from '../components/PageIntroModal.jsx'
+import giftIcon from '../assets/misc/gift.png'
+import growthIcon from '../assets/misc/growth.png'
+import starIcon from '../assets/misc/star.png'
 import './ProgressPage.css'
 
 // Same thumbnail artwork and name-matching PrestigePage.jsx uses ("Cult of Celebrity" -> CultOfCelebrity.jpg),
@@ -32,6 +36,12 @@ const CashValue = ({ amount, suffix = '' }) => (
 )
 
 function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
+    // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
+    // then they already know how claiming and the stat sections work.
+    const [showIntro, setShowIntro] = useState(() =>
+        PrestigeManager.getHistory().length === 0 && localStorage.getItem('hyperloop_progress_intro_seen') !== 'true'
+    )
+    const closeIntro = () => { localStorage.setItem('hyperloop_progress_intro_seen', 'true'); setShowIntro(false) }
     const [, setTick] = useState(0)
     // The game only tallies finished departures/arrivals/passengers every 10 seconds, so while this page is open
     // it asks for a fresh tally on opening and every second, to keep those totals from lagging behind.
@@ -438,6 +448,13 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     return (
         <>
+            {showIntro && (
+                <PageIntroModal title="Welcome to Progress" onClose={closeIntro} points={[
+                    { icon: giftIcon, text: <>Every city, country and development you've collected has a <strong>one-off reward</strong> waiting - click its card for a small, random payout of cash or Reputation.</> },
+                    { icon: growthIcon, text: <><strong>General Stats</strong> tracks this run's lifetime totals, and <strong>Active Bonuses</strong> lists every passive boost currently stacked on your income.</> },
+                    { icon: starIcon, text: <>Sections can be folded away to save space - a badge stays on a collapsed header to remind you what's still <strong>waiting to be claimed</strong>.</> },
+                ]} />
+            )}
             <div className="progress-page" style={{ height: `calc(100vh - ${topOffset + 141}px)` }}>
                 <div className="progress-content">
                     {sectionHeader('general', 'General Stats')}

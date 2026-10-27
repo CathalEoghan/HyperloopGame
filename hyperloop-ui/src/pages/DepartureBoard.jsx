@@ -7,7 +7,12 @@ import ScheduleModal from '../components/ScheduleModal.jsx'
 import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable, clearTimetable } from '../utils/timetable.js'
 import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus, farewellWindowMinutes } from '../utils/loops.js'
 import { AUTOMATE_SCHEDULE_REP_COST } from 'Managers/ProgressionManager/ProgressionManager.js'
+import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import reputationIcon from '../assets/misc/reputation.png'
+import PageIntroModal from '../components/PageIntroModal.jsx'
+import boardIcon from '../assets/misc/board.png'
+import clockIcon from '../assets/misc/clock.png'
+import warningIcon from '../assets/misc/warning.png'
 
 const TAB_KEY = 'terminalBoardTab'
 
@@ -91,6 +96,12 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
     const [confirmClearHover, setConfirmClearHover] = useState(false)
     const [cancelClearHover, setCancelClearHover] = useState(false)
     const [clearHover, setClearHover] = useState(false)
+    // Shown once, the first time a player opens the board - skipped entirely once they've retired, since by
+    // then they already know how scheduling and the board itself work.
+    const [showIntro, setShowIntro] = useState(() =>
+        PrestigeManager.getHistory().length === 0 && localStorage.getItem('hyperloop_board_intro_seen') !== 'true'
+    )
+    const closeIntro = () => { localStorage.setItem('hyperloop_board_intro_seen', 'true'); setShowIntro(false) }
 
     const splitFlapEnabled = () => localStorage.getItem('splitFlap') !== 'false'
     const homeName = homeCity?.name
@@ -306,6 +317,13 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
 
     return (
         <div className="departure-board">
+            {showIntro && (
+                <PageIntroModal title="Welcome to the Terminal Board" onClose={closeIntro} points={[
+                    { icon: boardIcon, text: <>The <strong>Departures</strong> tab is your schedule - every connected city needs a scheduled departure before it earns anything, so check back here after connecting a new one.</> },
+                    { icon: clockIcon, text: <><strong>Schedule Loop</strong> lets you pick the time and city yourself; <strong>Automate Schedule</strong> fills every unscheduled city in one go for a Reputation cost.</> },
+                    { icon: warningIcon, text: <><strong>Clear Timetable</strong> wipes every scheduled departure at once, with a confirmation step so it's never a misclick - handy for rebuilding a schedule from scratch.</> },
+                ]} />
+            )}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', gap: '12px', flexWrap: 'wrap' }}>
                 <div className="board-heading">
                   <div className="board-tabrow">
