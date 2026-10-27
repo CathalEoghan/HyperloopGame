@@ -207,8 +207,10 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         : ''
 
     const isInstantEvent = activeEvent?.durationSeconds === 0
-    const balanceColor = balanceFlash === 'down' ? '#e74c3c' : '#333'
-    const repColor = repFlash === 'down' ? '#e74c3c' : '#333'
+    // Follows the equipped theme's bar text colour (same var .time/.rank already use via CSS) so balance and
+    // reputation stay readable on a dark bar theme - was hardcoded dark grey, invisible on themes like Rockstar.
+    const balanceColor = balanceFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #333)'
+    const repColor = repFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #333)'
 
     return (
         <>
