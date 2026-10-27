@@ -378,9 +378,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                 )}
                                                 {!isHome && (
                                                     <>
-                                                        <IncomeRow label="Base income" amount={baseIncome} last={boostPct <= 0} />
+                                                        <IncomeRow label="Base income" amount={baseIncome} last={boostPct <= 0 && !capacity} />
                                                         {boostPct > 0 && (
-                                                            <IncomeRow label="Boosted income" amount={effectiveIncome} last>
+                                                            <IncomeRow label="Boosted income" amount={effectiveIncome} last={!capacity}>
                                                                 <span
                                                                     style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
                                                                     onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
@@ -388,6 +388,16 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                                 >
                                                                     (+{boostPct.toLocaleString('en-GB')}%)
                                                                     <BoostTooltip anchor={showCityBoostTip} lines={lines} />
+                                                                </span>
+                                                            </IncomeRow>
+                                                        )}
+                                                        {/* What it's actually earning right now: Boosted income is the full-capacity rate, but a loop
+                                                            is rarely at 100% capacity - this scales it by the same running-at-X% figure shown above,
+                                                            so it's clear why "live" lands below the boosted figure rather than looking like a bug. */}
+                                                        {capacity && (
+                                                            <IncomeRow label="Live income right now" amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(selectedCity, coordsMap))} last>
+                                                                <span style={{ color: '#27ae60', fontSize: '0.78rem', fontWeight: 'bold' }}>
+                                                                    ({Math.round(capacity.percent)}% capacity)
                                                                 </span>
                                                             </IncomeRow>
                                                         )}

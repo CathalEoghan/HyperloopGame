@@ -127,6 +127,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     const [globeReady, setGlobeReady] = useState(false)
     const [selectedGlobeCity, setSelectedGlobeCity] = useState(null)
     const [selectedUnlockedCity, setSelectedUnlockedCity] = useState(null)
+    // The city picture in the flag-click card can be enlarged, same as on the Cities page (bug: no way to do that here)
+    const [enlargedImage, setEnlargedImage] = useState(null)
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
     const showOwnedRef = useRef(showOwned)
@@ -969,10 +971,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                             // Falls back to the thumbnail for a city that hasn't made it to the Cloudinary host yet.
                             src={cityImages[selectedGlobeCity.name] || cityThumbnails[selectedGlobeCity.name]}
                             alt={selectedGlobeCity.name}
-                            style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', marginTop: '8px' }}
+                            onClick={(e) => { e.stopPropagation(); setEnlargedImage(cityImages[selectedGlobeCity.name] || cityThumbnails[selectedGlobeCity.name]) }}
+                            style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', marginTop: '8px', cursor: 'zoom-in' }}
                         />
                         <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setSelectedGlobeCity(null) }}>Close</button>
                     </div>
+                </div>
+            )}
+            {enlargedImage && (
+                <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
+                    <img src={enlargedImage} alt="enlarged" style={{ maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', border: '3px solid black' }} />
                 </div>
             )}
             {selectedUnlockedCity && !purchasedCities.some(c => c.name === selectedUnlockedCity.name) && (

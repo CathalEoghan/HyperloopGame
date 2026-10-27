@@ -50,6 +50,9 @@
 .sched-field select {
     background: #1a1a1a; color: var(--board-accent, #f5a623); border: 1px solid #444; border-radius: 4px;
     font-family: inherit; font-size: 0.85rem; padding: 6px 8px; cursor: var(--cursor-pointer, pointer);
+    /* Without a cap, the Gate select grows to fit its widest option - and "Gate 2 (busy: Toronto at 14:05)"
+       can be a lot wider than "Gate 2", stretching the whole row every time a gate happens to be taken. */
+    max-width: 180px;
 }
 .sched-field select:disabled { opacity: 0.7; cursor: var(--cursor-default, default); }
 .sched-field select option:disabled { color: #666; }

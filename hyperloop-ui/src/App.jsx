@@ -58,7 +58,7 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, distanceMiles } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
@@ -75,6 +75,10 @@ const OFFLINE_RATE = 1.0;
 // pile up behind the welcome popup.
 const onboardingPending = () => localStorage.getItem('hyperloop_onboarding_pending') === '1';
 const SECONDS_IN_A_DAY = 86400;
+// A positive instant-cash event (Government Grant, Prestigious Award, Insurance Payout) pays 10% of a day's
+// income - which is £0 if nothing is earning yet (e.g. a freshly unlocked city with no developments built).
+// A reward that gives nothing reads as broken, so it never pays out less than this floor.
+const MIN_INSTANT_CASH_BONUS = 10000;
 // The Antarctic finale unlocks once every regular city is connected (bug #115).
 const REGULAR_CITY_COUNT = allCities.filter(c => c.continent !== 'Antarctica').length;
 
@@ -850,7 +854,8 @@ function App() {
         : null;
 
     if (event.effectType === 'instantCash') {
-      const bonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
+      const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
+      const bonus = Math.max(rawBonus, MIN_INSTANT_CASH_BONUS);
       progressionManager.addCash(bonus);
       const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
       activeEventRef.current = fullEvent;
@@ -1876,6 +1881,7 @@ function App() {
             stopTick();
             deleteSave();
             clearGameState();
+            resetSoundSettings();
             localStorage.removeItem('hyperloop_heartbeat_at');
             localStorage.removeItem('hyperloop_hidden_at');
             window.location.reload();

@@ -362,11 +362,17 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 )
                                             })()}
                                             {(() => {
-                                                // Base revenue, then boosted (all the + and x modifiers), then upgraded (the level's multiplier)
+                                                // Base revenue (the sticker rate), then boosted (all the + and x upgrade modifiers), then what
+                                                // it's actually earning right now - which also factors in the level multiplier and, critically,
+                                                // how busy the terminal is this moment (busyPct, shown above). That last factor is why "live"
+                                                // can land well below "boosted": a quiet terminal earns a fraction of its full-capacity rate,
+                                                // not because anything is broken, but because the floor-to-100% footfall curve always applies.
                                                 const { lines: tooltipLines, totalBoost } = economyManager.getDevBoostBreakdown(selectedDevelopment)
                                                 const totalBoostPct = Math.round(totalBoost * 100)
                                                 const level = getLevel(selectedDevelopment)
                                                 const levelMult = economyManager.getDevLevelMultiplier(selectedDevelopment)
+                                                const liveRevenue = economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment))
+                                                const busyPct = economyManager.getDevelopmentBusyPercent()
                                                 return (
                                                     <>
                                                         <IncomeRow label="Base revenue" amount={selectedDevelopment.revenue} />
@@ -382,11 +388,15 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                                 </span>
                                                             </IncomeRow>
                                                         )}
-                                                        {level > 0 && (
-                                                            <IncomeRow label={`Upgraded (Level ${level})`} amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment))}>
-                                                                <span style={{ color: '#27ae60', fontSize: '0.8rem' }}>(×{+levelMult.toFixed(2)})</span>
-                                                            </IncomeRow>
-                                                        )}
+                                                        <IncomeRow label="Live revenue right now" amount={liveRevenue} last>
+                                                            <span
+                                                                style={{ color: '#27ae60', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
+                                                                onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `What this earns this moment: ${level > 0 ? `the Level ${level} upgrade (×${+levelMult.toFixed(2)}) ` : ''}${level > 0 ? 'and ' : ''}how busy the terminal is right now (${busyPct}% footfall) are both applied on top of the figures above.` })}
+                                                                onMouseLeave={() => setShowBusyTooltip(null)}
+                                                            >
+                                                                {level > 0 ? `(×${+levelMult.toFixed(2)} · ` : '('}{busyPct}% busy)
+                                                            </span>
+                                                        </IncomeRow>
                                                     </>
                                                 )
                                             })()}

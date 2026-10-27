@@ -64,6 +64,11 @@ export const EFFECT_DESCRIPTIONS = {
     personalImageBranding: (v) => `Earn ${pct(v)}% of a city's daily income when giving a farewell`,
     firstFarewellOfDayDouble: () => `First farewell of the day earns double Reputation`,
     developmentUpgradeDiscount: (v) => `-${pct(v)}% development upgrade cost`,
+    milestoneReputationBonus: (v) => `+${v} Reputation every time you reach a milestone`,
+    likePositiveEventChance: (v) => `${pct(v)}% chance that liking a Hyper-Link post triggers a positive event`,
+    positiveEventReputationBonus: (v) => `+${v} Reputation on every positive event`,
+    lostAndFoundBoost: (v) => `+${pct(v)}% income from Shopping and Recreation developments`,
+    soleCityInCountryBoost: (v) => `+${pct(v)}% income from a city that's the only one you've connected in its country`,
 }
 
 // Regular upgrades that raise income all go into one pot and are ADDED together (+20% and +30% make +50%). Only the
@@ -76,6 +81,7 @@ const ADDS_TO_INCOME = new Set([
     'infrastructureDevBoost', 'enterpriseDevBoost', 'serviceDevBoost', 'devContinentBoost', 'morningBoost',
     'afternoonBoost', 'eveningBoost', 'nightBoost', 'weekendBoost', 'smallCityBoost', 'christmasBoost',
     'valentinesBoost', 'halloweenBoost', 'fourthOfJulyBoost', 'easterBoost', 'newYearsBoost',
+    'lostAndFoundBoost', 'soleCityInCountryBoost',
 ])
 const ADDS_TO_WORK = new Set(['workClickBonus', 'workPerAchievement'])
 

@@ -94,6 +94,14 @@ export function setCategoryMuted(category, muted) {
     writeMap(MUTE_KEY, map)
 }
 
+// Delete Save starts the game over, including the sound sliders and mutes (master On/Off too) - without this
+// they're the one thing a "fresh start" leaves behind, so a muted category stays muted into the new game.
+export function resetSoundSettings() {
+    localStorage.removeItem('soundEnabled')
+    localStorage.removeItem(VOLUME_KEY)
+    localStorage.removeItem(MUTE_KEY)
+}
+
 // The volume a sound in `category` should actually play at: Master Sound's own slider/mute always applies, on
 // top of that category's own slider/mute. A category of null (a Shop preview, where the player is deliberately
 // testing a clip) only goes through Master, not any specific category.
