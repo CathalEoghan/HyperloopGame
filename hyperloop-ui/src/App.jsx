@@ -79,6 +79,9 @@ const SECONDS_IN_A_DAY = 86400;
 // income - which is £0 if nothing is earning yet (e.g. a freshly unlocked city with no developments built).
 // A reward that gives nothing reads as broken, so it never pays out less than this floor.
 const MIN_INSTANT_CASH_BONUS = 10000;
+// Same problem in reverse for the negative instant-cash-loss events (Lawsuit Filed, Regulatory Fine, Emergency
+// Repairs): they cost 2% of a day's income, which is £0 for a new or quiet terminal and reads as a broken event.
+const MIN_INSTANT_CASH_LOSS = 2500;
 // The Antarctic finale unlocks once every regular city is connected (bug #115).
 const REGULAR_CITY_COUNT = allCities.filter(c => c.continent !== 'Antarctica').length;
 
@@ -869,7 +872,8 @@ function App() {
         activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event');
       }, 8000);
     } else if (event.effectType === 'instantCashLoss') {
-      const loss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
+      const rawLoss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
+      const loss = Math.max(rawLoss, MIN_INSTANT_CASH_LOSS);
       progressionManager.addCash(-loss);
       const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
       activeEventRef.current = fullEvent;

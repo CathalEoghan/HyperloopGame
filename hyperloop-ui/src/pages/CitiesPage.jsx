@@ -20,7 +20,7 @@ import growthIcon from '../assets/misc/growth.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { isGrantedCity } from '../utils/grantedCities.js'
-import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHoverSound, playNotEnoughFundsSound, playBigMomentSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js';
 import { flagSrc } from '../utils/flagSrc.js'
 
@@ -518,7 +518,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
                                         if (!canAfford || !onUpgradeCityLine(selectedCity)) { playNotEnoughFundsSound(); return; }
-                                        playFarewellAcceptSound();
+                                        info.nextLevel === 10 ? playBigMomentSound() : playFarewellAcceptSound();
                                         setShowLineUpgradeModal(false);
                                     }}>
                                         Upgrade

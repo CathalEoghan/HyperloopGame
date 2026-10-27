@@ -1,10 +1,15 @@
-import { useState } from 'react'
-import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import { useState, useEffect } from 'react'
+import { playClickSound2, playHoverSound, playBigMomentSound } from '../utils/sound.js'
 import officialLogo from '../assets/misc/officialLogo.png'
 import './SecretCityModal.css'
 
 function SecretCityModal({ onContinue }) {
     const [hovered, setHovered] = useState(false)
+
+    useEffect(() => {
+        playBigMomentSound()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <div className="modal-overlay">

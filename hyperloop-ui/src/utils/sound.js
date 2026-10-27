@@ -21,6 +21,7 @@ import departureBoardSound from '../assets/sounds/departureBoard.mp3'
 import phoneNotificationSound from '../assets/sounds/phoneNotification.mp3'
 import splitFlapLong from '../assets/sounds/splitFlapLong.wav'
 import splitFlapShort from '../assets/sounds/splitFlapShort.wav'
+import bigMomentSound from '../assets/sounds/bigMoment.mp3'
 import { getEquippedItem } from './cosmetics.js'
 
 let audioUnlocked = false
@@ -288,6 +289,9 @@ export function playAutomatedScheduleSound()    { play(automatedScheduleSound, '
 export function playDevelopmentUnlockedSound()  { play(developmentUnlocked, 'progressClaim') }
 // Plays once when a city-choice roll includes a Tier 3 city, so pulling one feels like a moment.
 export function playTier3CitySound()            { play(tier3CitySound, 'progressClaim') }
+// The big celebratory sting: a prestige run landing back on the home screen, a development/city line hitting its
+// maximum level, and the "you've connected every city!" reveal before Antarctic Peninsula.
+export function playBigMomentSound()            { play(bigMomentSound, 'progressClaim') }
 export function playDailyLoginSound()           { play(dailyLoginSound, 'dailyBonus') }
 export function playNotEnoughFundsSound()       { play(notEnoughFundsSound, 'clickSounds') }
 export function playSplitFlapLong()  { return play(splitFlapLong, 'departureBoard') }

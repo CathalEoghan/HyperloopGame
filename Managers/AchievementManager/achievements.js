@@ -55,7 +55,7 @@ export const ACHIEVEMENTS = [
     { id: 'iLikeIt', group: 'Hyper-Link', name: 'I Like It', description: 'Like a Hyper-Link post.', check: atLeast('likes', 1) },
     { id: 'socialMediaAddict', group: 'Hyper-Link', name: 'Social Media Addict', description: 'Like 100 Hyper-Link posts.', check: atLeast('likes', 100) },
     { id: 'doomscroller', group: 'Hyper-Link', name: 'Doomscroller', description: 'Like 250 Hyper-Link posts.', check: atLeast('likes', 250) },
-    { id: 'cameo', group: 'Hyper-Link', name: 'Cameo', description: 'Like the Hyper-Link post featuring me.' },
+    { id: 'cameo', group: 'Hyper-Link', name: 'Cameo', description: 'Feeling conceited?' },
     { id: 'shutUp', group: 'Hyper-Link', name: 'Shut Up!', description: 'Mute Hyper-Link.' },
 
     // Farewells

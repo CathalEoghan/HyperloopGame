@@ -191,8 +191,10 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     const getEventIndicatorText = () => {
         if (!activeEvent) return ''
         const { effectType, title, instantCashAmount } = activeEvent
-        if (effectType === 'instantCash') return `${title} — +£${instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`
-        if (effectType === 'instantCashLoss') return `${title} — -£${Math.abs(instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`
+        // Home cities don't all use £, so the amount is shown next to the generic cash icon rather than a £ sign (bug #211)
+        const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle' }} />
+        if (effectType === 'instantCash') return <>{title} — +{cashIconEl}{instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>
+        if (effectType === 'instantCashLoss') return <>{title} — -{cashIconEl}{Math.abs(instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>
         if (effectType === 'passiveBoost') return `${title} — +${Math.round(((activeEvent.effect?.multiplier ?? 2) - 1) * 100)}% passive income`
         if (effectType === 'passivePenalty') return `${title} — -50% passive income`
         if (effectType === 'workBoost') return `${title} — +${Math.round(((activeEvent.effect?.multiplier ?? 1.5) - 1) * 100)}% work earnings`

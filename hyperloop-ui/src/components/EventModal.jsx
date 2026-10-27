@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import cashIcon from '../assets/misc/cash.png'
 import './EventModal.css'
 
 function EventModal({ event, onContinue, terminalName }) {
@@ -28,9 +29,12 @@ function EventModal({ event, onContinue, terminalName }) {
         ? ` (${event.durationModifier.direction === 'longer' ? '+' : ''}${event.durationModifier.percent}% ${event.durationModifier.direction})`
         : ''
 
+    // Home cities don't all use £, so the amount is shown next to the generic cash icon rather than a £ sign (bug #211)
+    const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
+
     const getEffectText = () => {
-        if (event.effectType === 'instantCash') return `£${event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance`
-        if (event.effectType === 'instantCashLoss') return `£${Math.abs(event.instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been deducted from your balance`
+        if (event.effectType === 'instantCash') return <>{cashIconEl}{event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance</>
+        if (event.effectType === 'instantCashLoss') return <>{cashIconEl}{Math.abs(event.instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been deducted from your balance</>
         if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s${durationSuffix}`
         if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s${durationSuffix}`
         if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s${durationSuffix}`

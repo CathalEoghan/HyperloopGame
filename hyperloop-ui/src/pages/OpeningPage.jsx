@@ -1,8 +1,8 @@
 import starterCities from "../data/starterCities"
 import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from "../data/countryFlags"
-import { playClickSound2, playHoverSound, playConstructionSound } from '../utils/sound.js'
-import { useState, useRef } from 'react'
+import { playClickSound2, playHoverSound, playConstructionSound, playBigMomentSound } from '../utils/sound.js'
+import { useState, useRef, useEffect } from 'react'
 import { allCities } from '../../../CityManager/CityRegistry'
 import CityPickerModal from '../components/CityPickerModal.jsx'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
@@ -27,6 +27,13 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
     // Personal Favours: besides the six usual starters, any city in the world can be the new home city
     const canPickAny = !!runStart && PrestigeManager.owns('personalFavours')
     const [pickerOpen, setPickerOpen] = useState(false)
+
+    // runStart is only truthy the moment this screen is reached because a run was just retired - celebrate it once.
+    useEffect(() => {
+        if (runStart) playBigMomentSound()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
+
     const startCity = (city) => {
         if (pickedRef.current) return
         pickedRef.current = true

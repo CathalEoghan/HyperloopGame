@@ -14,7 +14,7 @@ import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime } from '../utils/time.js'
 import { formatPerHour } from '../utils/income.js'
 import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.js'
-import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound, playBigMomentSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { DEV_NAME_MAX_LENGTH, getRenameRepCost, resolveDevelopmentName } from 'Managers/ProgressionManager/ProgressionManager.js'
@@ -183,7 +183,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
                                         if (!canAfford || !onUpgrade(selectedDevelopment, 1.0 - economyManager.getUpgradeSum('developmentUpgradeDiscount'))) { playNotEnoughFundsSound(); return; }
-                                        playFarewellAcceptSound();
+                                        info.nextLevel === 10 ? playBigMomentSound() : playFarewellAcceptSound();
                                         setShowUpgradeModal(false);
                                     }}>
                                         Upgrade

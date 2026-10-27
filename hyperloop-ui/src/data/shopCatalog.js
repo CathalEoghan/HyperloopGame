@@ -242,7 +242,7 @@ export const FEATURED_TAGLINE = null
 export const SHOP_CATEGORIES = [
     { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
     { id: 'openingAudio', name: 'Opening audios', blurb: "The sound that plays when you step into the terminal." },
-    { id: 'boardTheme', name: 'Board themes', blurb: 'The look (and, for some, the sound) of the Terminal Board.' },
+    { id: 'boardTheme', name: 'Board themes', blurb: 'The look of the Terminal Board.' },
     { id: 'hyperLinkTheme', name: 'Hyper-Link themes', blurb: 'The look of the Hyper-Link phone.' },
     { id: 'generalTheme', name: 'General themes', blurb: 'The top and bottom bars, ticker, Work button and route colours.' },
     { id: 'cursorTheme', name: 'Cursors', blurb: 'The pointer, arrow and drag cursors.' },
@@ -367,9 +367,9 @@ export const SHOP_ITEMS = {
         workSound('duck', 'Duck click', 25, [duck1, duck2, duck3], 'Make the work button quack like a duck! Part of the Duck bundle.'),
         workSound('woof', 'Woof click', 25, [woof1, woof2, woof3, woof4, woof5], 'Now it barks at you! Part of the Woof bundle.'),
         workSound('ocean', 'Ocean click', 25, [ocean1, ocean2, ocean3, ocean4, ocean5], 'Bubbles! Part of the Ocean bundle.'),
-        workSound('rockstar', 'Rockstar click', 25, [rockstar1, rockstar2, rockstar3, rockstar4, rockstar5, rockstar6], 'A guitar power chord on every click. Part of the Rockstar bundle.'),
-        workSound('western', 'Western click', 25, [western1, western2, western3, western4, western5], 'A cowboy "yee-haw" on every click. Part of the Western bundle.'),
-        workSound('paradise', 'Paradise click', 25, [paradise1, paradise2, paradise3, paradise4, paradise5], 'A steel-drum note on every click. Part of the Paradise bundle.'),
+        workSound('rockstar', 'Rockstar click', 25, [rockstar1, rockstar2, rockstar3, rockstar4, rockstar5, rockstar6], 'Powerful chords on every click. Part of the Rockstar bundle.'),
+        workSound('western', 'Western click', 25, [western1, western2, western3, western4, western5], 'Yee-haw! Part of the Western bundle.'),
+        workSound('paradise', 'Paradise click', 25, [paradise1, paradise2, paradise3, paradise4, paradise5], 'Peaceful ukulele. Part of the Paradise bundle.'),
     ],
     openingAudio: [
         openingSound('default', 'Classic opening', 0, classicOpeningAudio, 'The original.'),
