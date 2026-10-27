@@ -211,6 +211,17 @@ export function removeSlot(name, purchasedCities, nowMs = Date.now()) {
     syncToday(name, null, purchasedCities, nowMs)
 }
 
+// Wipes every scheduled departure (the whole timetable, not just today's list), so every connected city goes
+// back to "no departure scheduled" and has to be rescheduled by hand or with Automate. Returns how many
+// entries were cleared, so the caller can skip the save/notice when there was nothing to clear.
+export function clearTimetable(purchasedCities, nowMs = Date.now()) {
+    ensureDepartures(purchasedCities, nowMs)
+    const cleared = readTimetable()
+    writeTimetable([])
+    cleared.forEach(e => syncToday(e.name, null, purchasedCities, nowMs))
+    return cleared.length
+}
+
 // A disconnected city leaves the timetable (its loops still to come are taken off today's departures by the caller)
 export function dropCityFromTimetable(name) {
     writeTimetable(readTimetable().filter(e => e.name !== name))

@@ -82,6 +82,9 @@ const MIN_INSTANT_CASH_BONUS = 10000;
 // Same problem in reverse for the negative instant-cash-loss events (Lawsuit Filed, Regulatory Fine, Emergency
 // Repairs): they cost 2% of a day's income, which is £0 for a new or quiet terminal and reads as a broken event.
 const MIN_INSTANT_CASH_LOSS = 2500;
+// Same reasoning again for the Daily Bonus: 25% (or 50% with Commemorative Displays) of a day's income is £0
+// for a new or quiet terminal, which reads as a broken reward rather than a login bonus.
+const MIN_DAILY_BONUS = 25000;
 // The Antarctic finale unlocks once every regular city is connected (bug #115).
 const REGULAR_CITY_COUNT = allCities.filter(c => c.continent !== 'Antarctica').length;
 
@@ -771,7 +774,8 @@ function App() {
     economyManager.activeEvent = null;
     const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
     economyManager.activeEvent = savedEvent;
-    const cashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25)) * (PrestigeManager.owns('betterInterestRates') ? 10 : 1);
+    const rawCashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25)) * (PrestigeManager.owns('betterInterestRates') ? 10 : 1);
+    const cashBonus = Math.max(rawCashBonus, MIN_DAILY_BONUS);
     // Passenger Loyalty Scheme and Personal Styling Retinue each add their own +5
     const repBonus = economyManager.getUpgradeSum('dailyLoginRep');
     localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus }));

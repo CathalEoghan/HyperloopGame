@@ -4,7 +4,7 @@ import './DepartureBoard.css'
 import { playSplitFlapLong, playSplitFlapShort, playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { minutesUntilDeparture } from '../utils/time.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
-import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable } from '../utils/timetable.js'
+import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable, clearTimetable } from '../utils/timetable.js'
 import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus, farewellWindowMinutes } from '../utils/loops.js'
 import { AUTOMATE_SCHEDULE_REP_COST } from 'Managers/ProgressionManager/ProgressionManager.js'
 import reputationIcon from '../assets/misc/reputation.png'
@@ -87,6 +87,10 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
     const [showSchedule, setShowSchedule] = useState(openScheduleOnMount)
     const [scheduledCount, setScheduledCount] = useState(0)
     const [notice, setNotice] = useState('')
+    const [confirmClear, setConfirmClear] = useState(false)
+    const [confirmClearHover, setConfirmClearHover] = useState(false)
+    const [cancelClearHover, setCancelClearHover] = useState(false)
+    const [clearHover, setClearHover] = useState(false)
 
     const splitFlapEnabled = () => localStorage.getItem('splitFlap') !== 'false'
     const homeName = homeCity?.name
@@ -185,6 +189,15 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
         if (waiting === 0) setNotice('Every city already has a departure.')
         else if (added.length === 0) setNotice('There was no room left on the timetable.')
         else setNotice(`Scheduled ${added.length} loop${added.length === 1 ? '' : 's'}.${skipped > 0 ? ` ${skipped} could not be fitted in.` : ''}${costNote}`)
+    }
+
+    const clearAll = () => {
+        playClickSound2()
+        const count = clearTimetable(purchasedCities)
+        afterScheduleChange()
+        if (count > 0) onSave()
+        setNotice(count > 0 ? `Cleared ${count} departure${count === 1 ? '' : 's'} from the timetable.` : 'There was nothing scheduled to clear.')
+        setConfirmClear(false)
     }
 
     useEffect(() => {
@@ -333,6 +346,38 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
                                         </span>
                                     </span>
                                 </button>
+                                {scheduledCount > 0 && (confirmClear ? (
+                                    <>
+                                        <button
+                                            className="board-action"
+                                            style={{ background: confirmClearHover ? '#a93226' : '#c0392b' }}
+                                            onMouseEnter={() => { playHoverSound(); setConfirmClearHover(true) }}
+                                            onMouseLeave={() => setConfirmClearHover(false)}
+                                            onClick={clearAll}
+                                        >
+                                            CONFIRM CLEAR
+                                        </button>
+                                        <button
+                                            className="board-action"
+                                            style={{ background: cancelClearHover ? '#666' : '#888' }}
+                                            onMouseEnter={() => { playHoverSound(); setCancelClearHover(true) }}
+                                            onMouseLeave={() => setCancelClearHover(false)}
+                                            onClick={() => { playClickSound2(); setConfirmClear(false) }}
+                                        >
+                                            CANCEL
+                                        </button>
+                                    </>
+                                ) : (
+                                    <button
+                                        className="board-action"
+                                        style={{ background: clearHover ? '#a93226' : undefined }}
+                                        onMouseEnter={() => { playHoverSound(); setClearHover(true) }}
+                                        onMouseLeave={() => setClearHover(false)}
+                                        onClick={() => { playClickSound2(); setConfirmClear(true) }}
+                                    >
+                                        CLEAR TIMETABLE
+                                    </button>
+                                ))}
                             </div>
                         )
                     })()}

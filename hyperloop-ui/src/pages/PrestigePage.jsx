@@ -5,6 +5,7 @@ import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/pre
 import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialChime, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatBalance } from '../utils/formatBalance.js'
 import padlockIcon from '../assets/misc/padlock.png'
+import cashIcon from '../assets/misc/cash.png'
 import './PrestigePage.css'
 
 // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
@@ -27,6 +28,15 @@ const fmtSpan = ms => {
     if (!Number.isFinite(ms) || ms < 0) return '—'
     const d = Math.floor(ms / 86400000), h = Math.floor((ms % 86400000) / 3600000), m = Math.floor((ms % 3600000) / 60000)
     return d > 0 ? `${d}d ${h}h` : h > 0 ? `${h}h ${m}m` : `${m}m`
+}
+// Home cities don't all use £, so the retire-confirmation modal shows the generic cash icon next to the figure
+// instead of a £ sign (same treatment as EventModal/TopBanner, bug #211 pattern) - same breakpoints as fmtCash.
+const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
+const fmtCashIcon = n => {
+    if (!Number.isFinite(n)) return '—'
+    if (n >= 1e9) return <>{cashIconEl}{formatBalance(n)}</>
+    if (n >= 1e6) return <>{cashIconEl}{(n / 1e6).toFixed(2)} million</>
+    return <>{cashIconEl}{Math.floor(n).toLocaleString('en-GB')}</>
 }
 
 function UpgradeArt({ upgrade, className }) {
@@ -125,8 +135,8 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
             {confirming && runStats && (
                 <div className="prestige-modal-overlay" onClick={e => { e.stopPropagation(); closeConfirm() }}>
                     <div className="prestige-modal" onClick={e => e.stopPropagation()}>
-                        <h2>Retire this terminal?</h2>
-                        <p className="prestige-modal-sub">This ends your run and pays out Prestige Points.</p>
+                        <h2 style={{ textAlign: 'center' }}>Retire this terminal?</h2>
+                        <p className="prestige-modal-sub" style={{ textAlign: 'center' }}>This ends your run and pays out Prestige Points.</p>
 
                         <div className="prestige-reward">
                             <span className="prestige-reward-label">You will earn</span>
@@ -135,17 +145,17 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                 Rank {rank}: {payoutSteps} block{payoutSteps === 1 ? '' : 's'} of {RANKS_PER_PRESTIGE_POINT} ranks × {pointsPerStep} point{pointsPerStep === 1 ? '' : 's'} (+{rankPoints})
                             </span>
                             <span className="prestige-reward-sub">
-                                {fmtCash(runStats?.cash ?? 0)} earned: {cashSteps} block{cashSteps === 1 ? '' : 's'} of £{CASH_PER_PRESTIGE_POINT / 1e6}M (+{cashPoints})
+                                {fmtCashIcon(runStats?.cash ?? 0)} earned: {cashSteps} block{cashSteps === 1 ? '' : 's'} of {cashIconEl}{CASH_PER_PRESTIGE_POINT / 1e6}M (+{cashPoints})
                             </span>
                             <span className="prestige-reward-balance">Prestige Points: {prestige.points} → <b>{prestige.points + retirePoints}</b></span>
                         </div>
                         <p className="prestige-reward-next">
                             {nextStepRank <= MAX_RANK && <>{nextStepRank - rank} more rank{nextStepRank - rank === 1 ? '' : 's'} (Rank {nextStepRank}) would earn <b>+{pointsPerStep} more</b>. </>}
-                            Another {fmtCash(nextCashStep - (runStats?.cash ?? 0))} earned would earn <b>+1 more</b>.
+                            Another {fmtCashIcon(nextCashStep - (runStats?.cash ?? 0))} earned would earn <b>+1 more</b>.
                         </p>
 
                         <div className="prestige-modal-stats">
-                            <span>Total cash earned</span><b>{fmtCash(runStats.cash)}</b>
+                            <span>Total cash earned</span><b>{fmtCashIcon(runStats.cash)}</b>
                             <span>Cities connected</span><b>{runStats.cities}</b>
                             <span>Developments built</span><b>{runStats.developments}</b>
                             <span>Farewells given</span><b>{runStats.farewells}</b>
