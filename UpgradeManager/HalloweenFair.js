@@ -7,5 +7,5 @@ export const halloweenFair = new Upgrade(
     83000,
     "Recreation",
     "halloweenBoost",
-    1.0
+    5.0
 );

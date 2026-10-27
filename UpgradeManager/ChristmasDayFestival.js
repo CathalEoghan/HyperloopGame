@@ -7,5 +7,5 @@ export const christmasDayFestival = new Upgrade(
     105000,
     "Recreation",
     "christmasBoost",
-    1.0
+    5.0
 );

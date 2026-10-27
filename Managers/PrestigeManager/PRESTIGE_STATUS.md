@@ -22,7 +22,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 2 | Colour Theory | A development that earns money, or a newly connected city, opens at Level 1 (no cash or Reputation paid; not applied to developments/cities already built) | ProgressionManager `purchaseDevelopment`, `purchaseCity` |
 | 2 | Oral Hygiene | x2 farewell Reputation (x4 with the x2 upgrade) | `getFarewellRepGain` |
 | 2 | Better Interest Rates | Daily bonus cash x10 | App.jsx `checkDailyLogin` |
-| 2 | Elite Accountants | Offline "double" becomes x4, same 20 Rep | OfflineModal `bonusFactor` |
+| 2 | Elite Accountants | Offline "double" becomes x3, same 20 Rep | OfflineModal `bonusFactor` |
 | 2 | Cult of Celebrity | +1 Rep for each Hyper-Link post liked (likes are permanent) | HyperLink `onLikeReward` |
 | 2 | Good Standing | Developments and cities upgrade for half the Rep | ProgressionManager `getDevelopmentUpgradeCostInfo`, `getCityLineUpgradeCostInfo` |
 | 2 | Advanced Engineering | Cities and developments build immediately (finish on the next tick) | ConstructionManager |

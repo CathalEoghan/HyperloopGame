@@ -7,5 +7,5 @@ export const fourthOfJulyShows = new Upgrade(
     68900,
     "Enterprise",
     "fourthOfJulyBoost",
-    1.0
+    5.0
 );

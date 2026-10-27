@@ -7,5 +7,5 @@ export const easterWeekendDeals = new Upgrade(
     112500,
     "Enterprise",
     "easterBoost",
-    1.0
+    5.0
 );

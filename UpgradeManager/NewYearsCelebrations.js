@@ -7,5 +7,5 @@ export const newYearsCelebrations = new Upgrade(
     76000,
     "Recreation",
     "newYearsBoost",
-    1.0
+    5.0
 )

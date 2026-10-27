@@ -7,5 +7,5 @@ export const valentinesDaySales = new Upgrade(
     98700,
     "Enterprise",
     "valentinesBoost",
-    1.0
+    5.0
 )

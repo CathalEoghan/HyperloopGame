@@ -369,11 +369,11 @@ export class EconomyManager {
         const now = new Date();
         const month = now.getMonth();
         const date = now.getDate();
-        if (month === 9  && date === 31 && this.hasUpgrade('halloweenBoost')) return 1.0 * festiveFreak;
-        if (month === 6  && date === 4  && this.hasUpgrade('fourthOfJulyBoost')) return 1.0 * festiveFreak;
-        if (month === 0  && date === 1  && this.hasUpgrade('newYearsBoost')) return 1.0 * festiveFreak;
-        if (month === 11 && date === 25 && this.hasUpgrade('christmasBoost')) return 1.0 * festiveFreak;
-        if (month === 1  && date === 14 && this.hasUpgrade('valentinesBoost')) return 1.0 * festiveFreak;
+        if (month === 9  && date === 31 && this.hasUpgrade('halloweenBoost')) return this.getUpgradeSum('halloweenBoost') * festiveFreak;
+        if (month === 6  && date === 4  && this.hasUpgrade('fourthOfJulyBoost')) return this.getUpgradeSum('fourthOfJulyBoost') * festiveFreak;
+        if (month === 0  && date === 1  && this.hasUpgrade('newYearsBoost')) return this.getUpgradeSum('newYearsBoost') * festiveFreak;
+        if (month === 11 && date === 25 && this.hasUpgrade('christmasBoost')) return this.getUpgradeSum('christmasBoost') * festiveFreak;
+        if (month === 1  && date === 14 && this.hasUpgrade('valentinesBoost')) return this.getUpgradeSum('valentinesBoost') * festiveFreak;
         if (this.hasUpgrade('easterBoost')) {
             const y = now.getFullYear();
             const a = y % 19, b = Math.floor(y/100), c = y % 100;
@@ -383,7 +383,7 @@ export class EconomyManager {
             const m = Math.floor((a+11*h+22*l)/451);
             const easterMonth = Math.floor((h+l-7*m+114)/31) - 1;
             const easterDay = ((h+l-7*m+114) % 31) + 1;
-            if (month === easterMonth && date === easterDay) return 1.0 * festiveFreak;
+            if (month === easterMonth && date === easterDay) return this.getUpgradeSum('easterBoost') * festiveFreak;
         }
         return 0;
     }

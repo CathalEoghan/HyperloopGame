@@ -1989,7 +1989,7 @@ function App() {
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
           capHours={Math.round(economyManager.calculateOfflineCap() / 3600)}
-          bonusFactor={PrestigeManager.owns('eliteAccountants') ? 4 : 2}
+          bonusFactor={PrestigeManager.owns('eliteAccountants') ? 3 : 2}
           reputation={reputation}
           onSpendRep={(amount) => { offlineDoubleRep.current = amount; }}
           onCollect={(finalIncome) => {

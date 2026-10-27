@@ -20,7 +20,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
     const [doubleHovered, setDoubleHovered] = useState(false)
     const canDouble = reputation >= 20 && !doubled
     const displayIncome = doubled ? Math.floor(offlineIncome * bonusFactor) : Math.floor(offlineIncome)
-    const bonusWord = bonusFactor >= 4 ? 'Quadruple' : 'Double'
+    const bonusWord = bonusFactor >= 4 ? 'Quadruple' : bonusFactor >= 3 ? 'Triple' : 'Double'
 
     return (
         <div className="modal-overlay">
