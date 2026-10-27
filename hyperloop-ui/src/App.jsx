@@ -965,6 +965,12 @@ function App() {
       // getTerminalFootfallBreakdown) - so this is deliberately not activeLoopsNow.length.
       const footfall = getTerminalFootfallBreakdown(progressionManager.purchasedCities);
       economyManager.setBoardLoopCount(footfall.total, footfall);
+      // A connected city earns at the demand of its own timetabled slot, not whatever hour it is right now
+      // (bug report: a city set to depart in the afternoon was showing Night-level capacity at night) - so feed
+      // the economy manager each tick's scheduled hour per city, read from the timetable the UI owns.
+      const scheduleHours = {};
+      readTimetable().forEach(entry => { scheduleHours[entry.name] = Math.floor(entry.minuteOfDay / 60); });
+      economyManager.setCityScheduleHours(scheduleHours);
 
             const now2 = Date.now();
       const gap = Math.max(0, (now2 - lastTickTimeRef.current) / 1000);

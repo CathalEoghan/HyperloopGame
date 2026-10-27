@@ -94,11 +94,22 @@ export class EconomyManager {
         // The same count, split into departures-about-to-leave vs. arrivals-just-landed, so the busy status can
         // explain itself (e.g. "2 loops nearing departure, 1 just arrived") instead of just showing a bare number.
         this.boardLoopBreakdown = { departures: 0, arrivals: 0 };
+        // City name → the hour (0-23) that city's loop is timetabled to depart. Set once by the UI each tick from
+        // the timetable, since this manager has no access to the schedule storage that lives in the UI layer (same
+        // pattern as boardLoopCount above). Connection demand/capacity is driven by this scheduled hour rather than
+        // the live clock - a loop timetabled for the afternoon earns at afternoon demand all day, not whatever hour
+        // it happens to be when the player looks: unlike developments (whose footfall is genuinely live), a city's
+        // own timetabled slot is what decides how many people turn up for it.
+        this.cityScheduleHours = {};
     }
 
     setBoardLoopCount(count, breakdown = null) {
         this.boardLoopCount = Math.max(0, count || 0);
         if (breakdown) this.boardLoopBreakdown = { departures: Math.max(0, breakdown.departures || 0), arrivals: Math.max(0, breakdown.arrivals || 0) };
+    }
+
+    setCityScheduleHours(hoursByName) {
+        this.cityScheduleHours = hoursByName || {};
     }
 
     getUpgradeSum(effectType) {
@@ -264,7 +275,9 @@ export class EconomyManager {
     // utils/loops.js), so every passenger count in the game agrees with this one.
     getConnectionCapacityInfo(city, nowMs = Date.now()) {
         const now = new Date(nowMs);
-        const hour = now.getHours();
+        // The city's own timetabled departure hour, not the live clock (see cityScheduleHours above) - falls back
+        // to the current hour for a city with no scheduled slot known yet (it won't be earning anyway in that case).
+        const hour = this.cityScheduleHours[city.name] ?? now.getHours();
         const seed = `${city.name}|${now.toDateString()}|${hour}`;
         const percent = getCapacityPercent(hour, seed);
         const capacity = getTierCapacity(city.tier);
@@ -273,7 +286,7 @@ export class EconomyManager {
 
     getConnectionCapacityMultiplier(city, nowMs = Date.now()) {
         const now = new Date(nowMs);
-        const hour = now.getHours();
+        const hour = this.cityScheduleHours[city.name] ?? now.getHours();
         const seed = `${city.name}|${now.toDateString()}|${hour}`;
         return getCapacityMultiplier(hour, seed);
     }
