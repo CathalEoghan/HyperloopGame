@@ -59,16 +59,31 @@
 
 /* A Tier 3 option in the roll gets the same gold treatment as a maxed development/city, so a rare pull
    stands out in the list before you've even picked it. Chained with .citychoice-card so it always wins
-   regardless of rule order, and layered on top of (not instead of) each state's own box-shadow. */
+   regardless of rule order, and layered on top of (not instead of) each state's own box-shadow. The glow
+   pulses at rest so a rare pull reads as alive rather than just another static border - hover and the
+   selected state stop the pulse, since they already read as "activated" through their own changes. */
 .citychoice-card.citychoice-card-tier3 {
     border-color: #D4AF37;
-    box-shadow:
-        0 4px 10px rgba(0, 0, 0, 0.2),
-        inset 0 0 0 1px #F7E7A0,
-        0 0 0 2px #8A6914,
-        0 0 10px 3px rgba(212, 175, 55, 0.55);
+    animation: citychoice-tier3-pulse 2.2s ease-in-out infinite;
+}
+@keyframes citychoice-tier3-pulse {
+    0%, 100% {
+        box-shadow:
+            0 4px 10px rgba(0, 0, 0, 0.2),
+            inset 0 0 0 1px #F7E7A0,
+            0 0 0 2px #8A6914,
+            0 0 10px 3px rgba(212, 175, 55, 0.5);
+    }
+    50% {
+        box-shadow:
+            0 4px 10px rgba(0, 0, 0, 0.2),
+            inset 0 0 0 1px #F7E7A0,
+            0 0 0 2px #8A6914,
+            0 0 22px 7px rgba(212, 175, 55, 0.9);
+    }
 }
 .citychoice-card.citychoice-card-tier3:hover {
+    animation: none;
     box-shadow:
         0 9px 18px rgba(0, 0, 0, 0.28),
         inset 0 0 0 1px #F7E7A0,
@@ -76,6 +91,7 @@
         0 0 12px 4px rgba(212, 175, 55, 0.65);
 }
 .citychoice-card-on.citychoice-card-tier3, .citychoice-card-on.citychoice-card-tier3:hover {
+    animation: none;
     background: #333;
     color: #fff;
     border-color: #D4AF37;
