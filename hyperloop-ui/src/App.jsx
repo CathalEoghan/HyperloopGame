@@ -297,6 +297,22 @@ function App() {
   const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
+  // Forces a re-render once pickedCity's construction timer (started by startTutorialConstruction) elapses, so
+  // the Construction screen's isComplete prop (read fresh each render from purchasedCities.length) picks the
+  // change up. This can't wait for the main tick below: that tick returns immediately while hasEnteredRef is
+  // false, which it always is here (set the moment a city is picked) - so without this, nothing would ever call
+  // constructionManager.update() to let the city finish building in the first place, and the Construction
+  // screen would be stuck on "Building your terminal in <city>..." forever, for every new game and every
+  // prestige run alike.
+  const [, forceConstructionPulse] = useState(0);
+  useEffect(() => {
+    if (!pickedCity || constructionReady) return;
+    const id = setInterval(() => {
+      constructionManager.update();
+      forceConstructionPulse(p => p + 1);
+    }, 250);
+    return () => clearInterval(id);
+  }, [pickedCity, constructionReady, constructionManager]);
   // Tracks whether the player has actually pressed "click anywhere to enter" - on the Loading screen for a
   // returning player, or the Construction screen for a new city. Read inside the tick interval (whose closure
   // is set up once on mount, so a plain state variable would be stale there) to stop income, random events,
