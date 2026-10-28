@@ -5,7 +5,9 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
-    z-index: 310;
+    /* Above ScheduleModal (320) - same reasoning as FarewellModal.css: opening Schedule while a delay notice is
+       up must never silently bury it. */
+    z-index: 330;
     display: flex;
     align-items: center;
     justify-content: center;

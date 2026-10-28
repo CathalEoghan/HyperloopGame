@@ -23,14 +23,15 @@ function ConstructionScreen({ city, isComplete, onEnter }) {
     const [fading, setFading] = useState(false)
 
     useEffect(() => {
+        let fadeTimer = null
         const interval = setInterval(() => {
             setTipVisible(false)
-            setTimeout(() => {
+            fadeTimer = setTimeout(() => {
                 setTipIndex(i => (i + 1) % TIPS.length)
                 setTipVisible(true)
             }, 600)
         }, 4000)
-        return () => clearInterval(interval)
+        return () => { clearInterval(interval); clearTimeout(fadeTimer) }
     }, [])
 
     // A double-click must not enter twice, which played the opening sound twice (bug #173)

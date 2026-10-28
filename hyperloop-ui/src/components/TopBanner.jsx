@@ -62,6 +62,18 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     const repStartRef = useRef(null)
     const prevBalanceRef = useRef(balance)
     const prevRepRef = useRef(reputation)
+    // Store each flash/float's own timeout id so a second change arriving within the window (e.g. a delay
+    // payout immediately followed by a passive-income tick) cancels the still-pending timeout from the first
+    // change before it fires - otherwise that stale timeout clears the indicator the second change just set,
+    // even though a newer one is what's actually supposed to be showing.
+    const balanceFlashTimerRef = useRef(null)
+    const balanceFloatTimerRef = useRef(null)
+    const repFlashTimerRef = useRef(null)
+    useEffect(() => () => {
+        clearTimeout(balanceFlashTimerRef.current)
+        clearTimeout(balanceFloatTimerRef.current)
+        clearTimeout(repFlashTimerRef.current)
+    }, [])
 
     useEffect(() => {
         if (!activeEvent || activeEvent.durationSeconds === 0) return;
@@ -90,20 +102,23 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
     useEffect(() => {
         const diff = balance - prevBalanceRef.current
         if (diff < 0) {
+            clearTimeout(balanceFlashTimerRef.current)
             setBalanceFlash('down')
-            setTimeout(() => setBalanceFlash(null), 400)
+            balanceFlashTimerRef.current = setTimeout(() => setBalanceFlash(null), 400)
         }
         if (Math.abs(diff) >= 100) {
+            clearTimeout(balanceFloatTimerRef.current)
             setBalanceFloat({ value: prevBalanceRef.current, id: Date.now(), dir: diff >= 0 ? 'up' : 'down' })
-            setTimeout(() => setBalanceFloat(null), 600)
+            balanceFloatTimerRef.current = setTimeout(() => setBalanceFloat(null), 600)
         }
         prevBalanceRef.current = balance
     }, [balance])
 
     useEffect(() => {
         if (reputation < prevRepRef.current) {
+            clearTimeout(repFlashTimerRef.current)
             setRepFlash('down')
-            setTimeout(() => setRepFlash(null), 400)
+            repFlashTimerRef.current = setTimeout(() => setRepFlash(null), 400)
         }
         prevRepRef.current = reputation
     }, [reputation])

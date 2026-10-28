@@ -357,7 +357,6 @@ function App() {
       finishDeparture(dep);
       const greetingPost = { type: 'arrivalGiven', data: { city: dep?.name }, readyAt: socialPostDelay() };
       hyperLinkTriggerRef.current = greetingPost;
-      setHyperLinkTrigger(greetingPost);
       return;
     }
     const today = new Date().toDateString();
@@ -389,7 +388,6 @@ function App() {
     finishDeparture(dep);
     const farewellPost = { type: 'farewellGiven', data: { city: dep?.name }, readyAt: socialPostDelay() };
     hyperLinkTriggerRef.current = farewellPost;
-    setHyperLinkTrigger(farewellPost);
   }
   // The tick is set up once, so it calls the newest copy through this
   const giveFarewellRef = useRef(null);
@@ -481,8 +479,10 @@ function App() {
   // Keep ref in sync so tick loop can check without stale closure
   useEffect(() => { hyperLinkOpenRef.current = hyperLinkOpen }, [hyperLinkOpen])
   useEffect(() => { terminalNameRef.current = terminalName }, [terminalName])
-  const [hyperLinkTrigger, setHyperLinkTrigger] = useState(null)
   // Triggers wait in a short queue, so two things happening close together each get their post (bug #135).
+  // (There used to be a parallel `hyperLinkTrigger` React state mirroring this ref on every assignment below -
+  // nothing ever read the state itself, only the ref, so it did nothing but force a full re-render of App and
+  // every mounted child, including the always-mounted 3D globe, each time - often once a second.)
   const [hyperLinkTriggerRef] = useState(makeTriggerQueue)
   const hyperLinkOpenRef = useRef(false)
   const nextPostTick = useRef(60 + Math.floor(Math.random() * 120))
@@ -615,7 +615,7 @@ function App() {
     if (!chosen && economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
     // Ranking up pays no Reputation of its own; only the Passenger Appreciation Initiatives upgrade adds some
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
-    if (freeRep > 0) progressionManager.addReputation(freeRep);
+    if (freeRep > 0) { progressionManager.addReputation(freeRep); setReputation(progressionManager.reputation); }
     setPendingRankUps(prev => prev - 1);
     triggerSave();
   };
@@ -633,7 +633,7 @@ function App() {
       gained.push(city);
     }
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') * pendingRankUps;
-    if (freeRep > 0) progressionManager.addReputation(freeRep);
+    if (freeRep > 0) { progressionManager.addReputation(freeRep); setReputation(progressionManager.reputation); }
     setPendingRankUps(0);
     if (gained.length > 0) setClaimAllCities(gained);
     triggerSave();
@@ -882,9 +882,15 @@ function App() {
       setActiveEvent(fullEvent);
       setShowEventModal(true);
       if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
+      // Also clears the React state keeping the popup on screen (not just the ref the next event check gates
+      // on) - without this, a player who left the "cash added" popup open past 8 seconds would see it silently
+      // swapped out from under them the moment the next random event fired, having never pressed Continue.
       setTimeout(() => {
         if (eventGenerationRef.current !== myGeneration) return;
-        activeEventRef.current = null; localStorage.removeItem('hyperloop_active_event');
+        activeEventRef.current = null;
+        setActiveEvent(null);
+        setShowEventModal(false);
+        localStorage.removeItem('hyperloop_active_event');
       }, 8000);
     } else if (event.effectType === 'instantCashLoss') {
       const rawLoss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
@@ -892,13 +898,21 @@ function App() {
       progressionManager.addCash(-loss);
       const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
       activeEventRef.current = fullEvent;
+      // Persisted like every other branch (this one alone used to skip it) - without it, a reload during the
+      // 8-second window loses all memory the event ever happened, even though nothing removes it either.
+      localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
       playEventSound();
       setActiveEvent(fullEvent);
       setShowEventModal(true);
       if (POSTS.officialEvent?.[event.id]) pendingEventPostRef.current = { type: 'officialEvent', data: { eventId: event.id, occasion: event.occasion } };
+      // See the instantCash branch above for why the React state and localStorage are cleared here too, not
+      // just the ref.
       setTimeout(() => {
         if (eventGenerationRef.current !== myGeneration) return;
         activeEventRef.current = null;
+        setActiveEvent(null);
+        setShowEventModal(false);
+        localStorage.removeItem('hyperloop_active_event');
       }, 8000);
     } else {
       const fullEvent = { ...event, durationSeconds, durationModifier, expiresAt: Date.now() + durationSeconds * 1000 };
@@ -1102,7 +1116,6 @@ function App() {
           const key = UPGRADE_KEY_MAP[upgrade.name];
           if (key) {
             hyperLinkTriggerRef.current = { type: key };
-            setHyperLinkTrigger({ type: key });
           }
         });
         prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
@@ -1134,7 +1147,6 @@ function App() {
           } catch { /* storage blocked: no prompt */ }
           const newCityTrigger = { type: city.tier === 1 ? 'newCityTier1' : city.tier === 3 ? 'newCityTier3' : 'newCity', data: { city: city.name } }
           hyperLinkTriggerRef.current = newCityTrigger
-          setHyperLinkTrigger(newCityTrigger)
         });
       }
 
@@ -1151,7 +1163,6 @@ function App() {
             const key = devCatMap[dev.category]
             if (key) {
               hyperLinkTriggerRef.current = { type: key, data: { store: dev.name, recreation: dev.name, service: dev.name, food: dev.name } }
-              setHyperLinkTrigger({ type: key, data: { store: dev.name, recreation: dev.name, service: dev.name, food: dev.name } })
             }
           })
         }
@@ -1238,7 +1249,6 @@ function App() {
             localStorage.setItem('hyperloop_hyperlink_used_month_posts', JSON.stringify(usedMonthPostRecords))
           }
           hyperLinkTriggerRef.current = null
-          setHyperLinkTrigger(null)
           nextPostTick.current = tickCount.current + 60 + Math.floor(Math.random() * 120)
           pushHyperLinkPost(post)
         } else {
@@ -1798,14 +1808,12 @@ function App() {
             // development is the original category (e.g. "Pharmacy"); developmentName is the player's new name
             const renamedData = { development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined }
             hyperLinkTriggerRef.current = { type: 'development_renamed', data: renamedData }
-            setHyperLinkTrigger({ type: 'development_renamed', data: renamedData })
           }}
           onRemove={(development) => {
             unlockAchievement('hereTodayGoneTomorrow')
             // development is the category (e.g. "Pharmacy"); a removed development's custom name may already be gone, so it isn't used
             const removedData = { development: development.name }
             hyperLinkTriggerRef.current = { type: 'development_removed', data: removedData }
-            setHyperLinkTrigger({ type: 'development_removed', data: removedData })
           }}
           onUpgrade={(development, discountMultiplier = 1.0) => {
             const success = progressionManager.upgradeDevelopment(development, discountMultiplier);
@@ -1815,7 +1823,6 @@ function App() {
               // developmentName is sent only for a development the player renamed; otherwise the engine falls back to "the <category>"
               const upgradedDevData = { development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined };
               hyperLinkTriggerRef.current = { type: 'developmentUpgraded', data: upgradedDevData }
-              setHyperLinkTrigger({ type: 'developmentUpgraded', data: upgradedDevData })
             }
             return success;
           }}
@@ -2071,8 +2078,8 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; setHyperLinkTrigger({ type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }); } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
-          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; setHyperLinkTrigger({ type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }); } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
+          onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
+          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
         />
       )}
 
@@ -2082,7 +2089,7 @@ function App() {
           departure={activeDeparture}
           economyManager={economyManager}
           onFarewell={(repGain) => giveFarewell(activeDeparture, repGain)}
-          onMiss={() => { finishDeparture(activeDeparture); if (activeDeparture.kind !== 'arrival') { const missedPost = { type: 'farewellMissed', readyAt: socialPostDelay() }; hyperLinkTriggerRef.current = missedPost; setHyperLinkTrigger(missedPost); } }}
+          onMiss={() => { finishDeparture(activeDeparture); if (activeDeparture.kind !== 'arrival') { const missedPost = { type: 'farewellMissed', readyAt: socialPostDelay() }; hyperLinkTriggerRef.current = missedPost; } }}
         />
       )}
 

@@ -5,7 +5,9 @@
     width: 100%;
     height: 100%;
     background: rgba(0, 0, 0, 0.75);
-    z-index: 310;
+    /* Above ScheduleModal (320) - its countdown has a real deadline (missing a farewell loses the reputation
+       bonus), so opening Schedule from the Terminal Board while this is up must never bury it silently. */
+    z-index: 330;
     display: flex;
     align-items: center;
     justify-content: center;

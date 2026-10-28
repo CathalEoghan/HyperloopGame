@@ -267,7 +267,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
     // Worked out on every render (the page re-renders each second). These lists are added to in place, so a memo
     // keyed on them never noticed a new city or development, and boosts that follow the clock froze too (bug #157).
-    const cityIncomes = new Map(purchasedCities.map(c => [c, economyManager.calculateCityIncome(c)]))
+    // calculateCityEarning, not calculateCityIncome - the latter is what a city could earn at full capacity,
+    // ignoring whether it's actually on the timetable (or the home city, which never earns at all). Using it
+    // here let a city earning £0 right now still get crowned "Most profitable city" below, contradicting what
+    // its own card on the Cities page shows at that same moment.
+    const cityIncomes = new Map(purchasedCities.map(c => [c, economyManager.calculateCityEarning(c)]))
     const totalPopulation = purchasedCities.reduce((sum, c) => sum + c.population, 0)
     const totalRevenue = (() => {
         // What the cities earn at the moment: only the ones on the timetable (and the home city) count, so this
@@ -323,8 +327,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Highest rank reached', value: highestRank },
         { label: 'Work button clicks', value: (achievementManager?.counter('work') ?? 0).toLocaleString('en-GB') },
         { label: 'Daily bonuses collected', value: achievementManager?.counter('dailyBonus') ?? 0 },
-        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(mostProfitableCity))} suffix="/day" /></span> : '—' },
-        { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityIncome(leastProfitableCity))} suffix="/day" /></span> : '—' },
+        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(mostProfitableCity))} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(leastProfitableCity))} suffix="/day" /></span> : '—' },
         { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(mostProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
         { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(leastProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev))} suffix="/day" /></span> : '—' },
         { label: 'Longest route', value: routeValue(longestRoute) },

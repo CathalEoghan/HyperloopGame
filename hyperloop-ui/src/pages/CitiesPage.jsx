@@ -53,8 +53,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     )
     const closeIntro = () => { localStorage.setItem('hyperloop_cities_intro_seen', 'true'); setShowIntro(false) }
 
+    // Keep selectedCity in sync with preSelectedCity: the useState initializer above only captures it once at
+    // mount, so a later preSelectedCity change (e.g. a second "jump to city" trigger while this page stays
+    // mounted) would otherwise be silently ignored.
     useEffect(() => {
         if (preSelectedCity) {
+            setSelectedCity(preSelectedCity)
             onPreSelectedCityHandled?.()
         }
     }, [preSelectedCity])

@@ -59,11 +59,16 @@ export function writeSchedule(key, list) {
     try { localStorage.setItem(key, JSON.stringify(list)) } catch { /* storage full */ }
 }
 
-// Removes every day's schedule that can no longer matter: departures before yesterday, and arrivals before today
+// Removes every day's schedule that can no longer matter: departures before yesterday, and arrivals before
+// yesterday. Yesterday's arrivals have to stay, not just today's and tomorrow's - getTerminalFootfallBreakdown
+// (below) deliberately reads yesterday's and today's arrivals together, so a loop that landed just before
+// midnight still counts as "people in the terminal" for up to ARRIVAL_FOOTFALL_MINUTES into the new day. Pruning
+// yesterday's arrivals away at the same rollover tick that makes them newly relevant silently broke that for the
+// whole footfall window every single day.
 export function pruneSchedules(nowMs = Date.now()) {
     const keep = new Set([
         departuresKey(shiftDays(nowMs, -1)), departuresKey(nowMs),
-        arrivalsKey(nowMs), arrivalsKey(shiftDays(nowMs, 1)),
+        arrivalsKey(shiftDays(nowMs, -1)), arrivalsKey(nowMs), arrivalsKey(shiftDays(nowMs, 1)),
     ])
     Object.keys(localStorage).forEach(key => {
         if ((key.startsWith('departures_') || key.startsWith('arrivals_')) && !keep.has(key)) localStorage.removeItem(key)

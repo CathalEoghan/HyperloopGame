@@ -227,7 +227,14 @@ export class EconomyManager {
         return this.progressionManager.purchasedUpgrades.some(u => u.name === name);
     }
 
-    getCategoryMultiplier(category) {
+    // The per-category income boost for a development's category - Food/Recreation/Shopping/Service's own named
+    // upgrade, plus Lost & Found Office (Novosibirsk, one upgrade boosting Shopping and Recreation at once rather
+    // than a separately-named upgrade for each). Kept in one place so every caller that needs a development's
+    // category boost (the three income functions below, and getCategoryMultiplier here) uses the exact same
+    // figure - previously getEffectiveDevIncomeWithBoosts, getDevBoostBreakdown and calculateDevelopmentIncome
+    // each rebuilt this themselves without the Lost & Found Office addition, so that upgrade boosted nothing a
+    // player's income actually used it for.
+    getCategoryBoost(category) {
         const effectTypeMap = {
             'Food':       'foodIncome',
             'Recreation': 'recreationIncome',
@@ -236,11 +243,12 @@ export class EconomyManager {
         };
         const effectType = effectTypeMap[category];
         let boost = effectType ? this.getUpgradeSum(effectType) : 0;
-        // Lost & Found Office (Novosibirsk): one upgrade boosting two categories at once, rather than a
-        // separately-named, separately-purchased upgrade for each - so it's added onto both here instead of
-        // getting its own entry in effectTypeMap above.
         if (category === 'Shopping' || category === 'Recreation') boost += this.getUpgradeSum('lostAndFoundBoost');
-        return 1 + boost;
+        return boost;
+    }
+
+    getCategoryMultiplier(category) {
+        return 1 + this.getCategoryBoost(category);
     }
 
     // Which connected cities are on the departure timetable. A city only earns while it has a scheduled departure.
@@ -459,15 +467,7 @@ export class EconomyManager {
         const base = this.getEffectiveDevRevenue(development);
         if (!base) return 0;
 
-        const categoryEffectMap = {
-            'Food': 'foodIncome',
-            'Recreation': 'recreationIncome',
-            'Shopping': 'shoppingIncome',
-            'Service': 'serviceIncome'
-        };
-
-        const categoryEffectType = categoryEffectMap[development.category];
-        const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
+        const categoryBoost = this.getCategoryBoost(development.category);
         const devBoost = this.getUpgradeSum('developmentBoost');
 
         const uniqueContinents = new Set(this.progressionManager.purchasedCities.map(c => c.continent)).size;
@@ -503,14 +503,7 @@ export class EconomyManager {
         const lines = [];
         let totalBoost = 0;
 
-        const categoryEffectMap = {
-            'Food': 'foodIncome',
-            'Recreation': 'recreationIncome',
-            'Shopping': 'shoppingIncome',
-            'Service': 'serviceIncome'
-        };
-        const categoryEffectType = categoryEffectMap[development.category];
-        const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
+        const categoryBoost = this.getCategoryBoost(development.category);
         if (categoryBoost > 0) { lines.push(`${development.category} bonus: +${Math.round(categoryBoost * 100)}%`); totalBoost += categoryBoost; }
 
         const devBoost = this.getUpgradeSum('developmentBoost');
@@ -698,13 +691,6 @@ export class EconomyManager {
             + this.progressionManager.purchasedUpgrades.filter(u => u.category === 'Service').length;
         const serviceBoost = this.getUpgradeSum('serviceDevBoost') * serviceCount;
 
-        const categoryEffectMap = {
-            'Food': 'foodIncome',
-            'Recreation': 'recreationIncome',
-            'Shopping': 'shoppingIncome',
-            'Service': 'serviceIncome'
-        };
-
         const seasonUpgrade = this.getCurrentSeasonUpgrade();
         const seasonBoost = seasonUpgrade ? seasonUpgrade.effectValue : 0;
         const monthUpgrade = this.getCurrentMonthUpgrade();
@@ -718,8 +704,7 @@ export class EconomyManager {
         let developmentIncome = 0;
         this.progressionManager.purchasedDevelopments.forEach(development => {
             const base = this.getEffectiveDevRevenue(development);
-            const categoryEffectType = categoryEffectMap[development.category];
-            const categoryBoost = categoryEffectType ? this.getUpgradeSum(categoryEffectType) : 0;
+            const categoryBoost = this.getCategoryBoost(development.category);
             const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost;
             developmentIncome += base * (1 + totalBoost) * prestigeMult * this.getDevelopmentBusyMultiplier();
         });

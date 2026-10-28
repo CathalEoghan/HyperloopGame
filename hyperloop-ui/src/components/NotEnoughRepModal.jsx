@@ -2,8 +2,11 @@ import { playClickSound2 } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 
 function NotEnoughRepModal({ onClose }) {
+    // The only place this opens from (App.jsx's reroll handler) is on top of CityChoiceModal, whose
+    // overlay is z-index 300 - at 200 this rendered completely hidden behind it, so the Reroll button
+    // looked like it did nothing instead of explaining why it was refused.
     return (
-            <div className="modal-overlay" style={{ zIndex: 200 }} onClick={onClose}>
+            <div className="modal-overlay" style={{ zIndex: 310 }} onClick={onClose}>
             <div className="modal" onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                 <img src={reputationIcon} alt="reputation" style={{ width: '48px', height: '48px', margin: '0 auto 12px', display: 'block' }} />
                 <h3 style={{ margin: '0 0 12px', fontFamily: 'Inter, sans-serif' }}>Not enough Reputation!</h3>

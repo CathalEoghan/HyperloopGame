@@ -119,16 +119,19 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
 
     // Each row flips a moment after the others, like a real board. Keyed by list as well as city: a city can be on both.
     const rowCount = schedule.length + arrivals.length
+    // Identity of the current row set, not just its size: a city swapped in at the same row count still needs its
+    // own randomized lag rather than silently reusing (or missing from) the previous set's map.
+    const rowKeysSignature = [...schedule.map(e => `dep|${e.name}`), ...arrivals.map(e => `arr|${e.name}`)].join(',')
     useEffect(() => {
         if (rowCount === 0) return
-        const keys = [...schedule.map(e => `dep|${e.name}`), ...arrivals.map(e => `arr|${e.name}`)]
+        const keys = rowKeysSignature.split(',')
         const lags = keys.map(() => 2 + Math.random() * 3.9)
         lags[Math.floor(Math.random() * lags.length)] = 6
         const newMap = {}
         keys.forEach((k, i) => { newMap[k] = lags[i] })
         lagMapRef.current = newMap
         setLagMap(newMap)
-    }, [rowCount])
+    }, [rowKeysSignature])
 
     useEffect(() => {
         if (rowCount > 0 && !hasPlayedLongRef.current) {
