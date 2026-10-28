@@ -120,6 +120,13 @@ function getSunWorldPosition() {
 
 function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity, active = true, onGlobeReady }) {
     const mountRef = useRef(null)
+    // Chrome (and some other browsers) can drop the WebGL context entirely on certain GPU/compositor transitions -
+    // toggling fullscreen being the one players actually hit - leaving the canvas permanently black with nothing
+    // this component already does able to bring it back (a lost context never recovers on its own, and once it's
+    // gone the old renderer/scene are just dead references). Bumping this forces the big mount effect below to
+    // tear down (its existing cleanup already disposes everything) and build a brand new renderer/scene/canvas
+    // from scratch, which is simpler and more reliable than trying to restore GPU resources into the dead context.
+    const [rebuildKey, setRebuildKey] = useState(0)
     // Whether this is the currently selected bottom-nav tab. The scene/renderer/textures below are built once and
     // kept alive for the whole session (App.jsx no longer unmounts this page on every tab switch - that used to
     // mean a full rebuild, including re-decoding the globe texture, every time the player came back to Home); this
@@ -314,6 +321,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         renderer.setSize(width, height)
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
         mount.appendChild(renderer.domElement)
+
+        // See the comment on rebuildKey above - this is the actual recovery. preventDefault() tells the browser
+        // we intend to handle the loss ourselves rather than leaving the canvas permanently dead; bumping
+        // rebuildKey re-runs this whole effect, whose existing cleanup (below) already disposes the old
+        // renderer/scene/textures cleanly before building fresh ones from scratch on a brand new canvas.
+        const onContextLost = (event) => {
+            event.preventDefault()
+            setRebuildKey(k => k + 1)
+        }
+        renderer.domElement.addEventListener('webglcontextlost', onContextLost, false)
 
         const globeRadius = 1
         const textureLoader = new THREE.TextureLoader()
@@ -848,10 +865,15 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             globeMaterial.uniforms.nightTexture.value.dispose()
             globeMaterialRef.current = null
             textureLoaderRef.current = null
+            // Removed before forceContextLoss() below deliberately triggers the very 'webglcontextlost' event
+            // onContextLost listens for - without this, a normal unmount (leaving Home, or the rebuild this
+            // listener itself just caused) would queue a pointless extra rebuild on a component that's already
+            // being torn down (or already mid-rebuild).
+            renderer.domElement.removeEventListener('webglcontextlost', onContextLost)
             renderer.forceContextLoss()
             renderer.dispose()
         }
-    }, [])
+    }, [rebuildKey])
 
     // Settings -> Globe Quality writes straight to localStorage and dispatches this event rather than triggering a
     // remount (the globe stays mounted for the whole session now - see the comment by activeRef above), so this is
