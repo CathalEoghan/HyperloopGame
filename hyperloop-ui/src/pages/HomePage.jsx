@@ -118,8 +118,15 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity, active = true }) {
     const mountRef = useRef(null)
+    // Whether this is the currently selected bottom-nav tab. The scene/renderer/textures below are built once and
+    // kept alive for the whole session (App.jsx no longer unmounts this page on every tab switch - that used to
+    // mean a full rebuild, including re-decoding the globe texture, every time the player came back to Home); this
+    // ref lets the animation loop and the window-wide pointer listeners - both set up once, in a []-deps effect, so
+    // they can't just read a fresh `active` prop - know to stand down while another tab is showing instead.
+    const activeRef = useRef(active)
+    useEffect(() => { activeRef.current = active }, [active])
     const [hoveredCity, setHoveredCity] = useState(null)
     const [showOwned, setShowOwned] = useState(() => {
         try { return localStorage.getItem('globeShowOwned') !== 'false' } catch { return true }
@@ -158,6 +165,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
 
     useEffect(() => {
         const update = () => {
+            // No point reading the schedule and recomputing the loops list while another tab is showing - this
+            // keeps the background cost at zero, same as when this page used to fully unmount (see activeRef above).
+            if (!activeRef.current) return
             const list = getActiveLoops(purchasedCitiesRef.current)
             const home = purchasedCitiesRef.current[0]
             loopsRef.current = list
@@ -605,6 +615,11 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             }
         }
         const onPointerMove = (e) => {
+            // This listens on the whole window (not just the globe), so the mouse moving over any other page
+            // would otherwise still raycast against the hidden globe every frame for nothing - the pointerdown
+            // that would set isDragging/pointers can only happen on the globe itself, which can't receive it
+            // while hidden, so there's nothing here worth doing until this tab is showing again.
+            if (!activeRef.current) return
             if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
             if (disabledRef.current) return
             if (pinching && pointers.size >= 2) {
@@ -727,6 +742,11 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         let animFrameId
         const animate = () => {
             animFrameId = requestAnimationFrame(animate)
+            // Paused while another tab is showing, rather than stopped: the loop keeps ticking (cheap - one
+            // function call and a return) so it's instantly ready to resume, with nothing to reload, the moment
+            // this tab is active again - that's the whole point of keeping this page mounted instead of rebuilding
+            // the globe from scratch on every visit.
+            if (!activeRef.current) return
             easeCamera()
             camPos.copy(camera.position).normalize()
             const loopsView = globeViewRef.current === 'loops'
@@ -826,7 +846,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     }, [])
 
     return (
-        <div className={`home-page${disabled ? ' home-page-disabled' : ''}`} style={{ pointerEvents: disabled ? 'none' : 'auto' }}>
+        <div className={`home-page${disabled ? ' home-page-disabled' : ''}`} style={{ pointerEvents: disabled ? 'none' : 'auto', display: active ? undefined : 'none' }}>
             <div className="globe-top-info">
                 <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
                 <p className="globe-cities">{purchasedCitiesCount} {purchasedCitiesCount === 1 ? 'city' : 'cities'} connected</p>

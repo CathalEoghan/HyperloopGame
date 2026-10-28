@@ -1671,18 +1671,22 @@ function App() {
         nextRank={rankSet + 1}
         activeEvent={activeEvent}
       />
-      {activeTab === "Home" && (
-        <HomePage
-          purchasedCities={progressionManager.purchasedCities}
-          unlockedCities={progressionManager.unlockedCities}
-          purchasedCitiesCount={purchasedCitiesCount}
-          disabled={hyperLinkOpen || popupOpen || achievementsOpen}
-          economyManager={economyManager}
-          balance={balance}
-          constructionManager={constructionManager}
-          onConnectCity={triggerSave}
-        />
-      )}
+      {/* Mounted for the whole session, not just while this tab is open: building the globe (scene, renderer,
+          the day/night textures) is real CPU/GPU work, and re-running it on every single visit to Home - which is
+          what conditionally mounting it used to do - meant the "Loading globe..." flash came back every time,
+          even at 2K. It's hidden with `active` (via CSS display, inside the component) instead of unmounted, so
+          that work happens once per session and switching tabs back to Home is instant. */}
+      <HomePage
+        active={activeTab === "Home"}
+        purchasedCities={progressionManager.purchasedCities}
+        unlockedCities={progressionManager.unlockedCities}
+        purchasedCitiesCount={purchasedCitiesCount}
+        disabled={hyperLinkOpen || popupOpen || achievementsOpen}
+        economyManager={economyManager}
+        balance={balance}
+        constructionManager={constructionManager}
+        onConnectCity={triggerSave}
+      />
       {activeTab === "Cities" && (
         <CitiesPage
           topOffset={topOffset}
