@@ -148,6 +148,11 @@ export function formatClock(ms) {
 
 // "4h 12m", "35m", "under 1m"
 export function formatDuration(ms) {
+    // Any positive duration under a minute used to round straight up to "1m" (Math.ceil never lands below 1 for
+    // ms > 0), so this branch could never actually show - a loop with, say, 30 seconds left just displayed "1m"
+    // the same as one with 59 seconds left, and "under 1m" never appeared. Catching the sub-minute case first
+    // makes it a real, reachable label instead of dead code.
+    if (ms > 0 && ms < 60000) return 'under 1m'
     const totalMinutes = Math.ceil(ms / 60000)
     if (totalMinutes < 1) return 'under 1m'
     const h = Math.floor(totalMinutes / 60), m = totalMinutes % 60

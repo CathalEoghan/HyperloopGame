@@ -1569,10 +1569,19 @@ function App() {
   const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs
     && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !dailyLoginData && !(showOfflineModal && !!offlineData)
     && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0;
-  const popupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
+  // Every OTHER blocking popup, i.e. everything that isn't the event modal itself - used below to decide whether
+  // a random event is allowed to actually show its popup right now. Without this, the event-firing check (which
+  // only looks at its own small set of guards) could fire while, say, the Shop, Achievements, Schedule or a
+  // Departure/Delay popup was already open: the event becomes "active" and starts counting down, but its modal
+  // never gets a turn on screen (it's not hidden *behind* the other popup - with no shared z-index, which one of
+  // two simultaneously-mounted overlays wins is arbitrary/inconsistent - it just never renders at all over it, per
+  // the render guard below), so the player sees whatever popup they already had open, with no sign an event even
+  // started, until it quietly expires unseen (bug report finding #1).
+  const otherPopupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
     || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
-    || milestoneQueue.length > 0 || showSecretCityModal || (showEventModal && !!activeEvent)
+    || milestoneQueue.length > 0 || showSecretCityModal
+  const popupOpen = otherPopupOpen || (showEventModal && !!activeEvent)
 
   // Shop: buying costs Reputation and equips the item straight away. Returns false when the player can't afford it.
   const updateCosmetics = (next) => { writeCosmetics(next); setCosmetics(next); applyCosmetics(next); };
@@ -1962,7 +1971,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && showEventModal && activeEvent && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && (
+      {!otherPopupOpen && showEventModal && activeEvent && (
         <EventModal
           key={`${activeEvent.id}-${activeEvent.expiresAt}-${activeEvent.instantCashAmount}`}
           event={activeEvent}

@@ -224,7 +224,7 @@ const lastWorkPreview = { src: null }
 let lastWorkPreviewAt = 0
 let workPreviewAudio = null
 export function playWorkSoundPreview(src) {
-    if (!canPlay()) return
+    if (!canPlay() || !entered) return
     const now = performance.now()
     if (now - lastWorkPreviewAt < WORK_CLICK_MIN_GAP_MS) return
     lastWorkPreviewAt = now
@@ -239,7 +239,7 @@ let previewAudio = null
 // Returns the Audio it started (or null if sound is off), so the Shop can show a playing/stopped state on its
 // own Preview button and know when the clip finishes on its own (the 'ended' event).
 export function playPreviewSound(src) {
-    if (!canPlay()) return null
+    if (!canPlay() || !entered) return null
     const volume = categoryMultiplier(null)
     if (volume <= 0) return null
     if (previewAudio) { previewAudio.pause(); previewAudio.currentTime = 0 }
@@ -301,7 +301,7 @@ export function playSplitFlapLong()  { return play(splitFlapLong, 'departureBoar
 // which piled up into a buzzing drone instead of a single clean clack per switch.
 let shortFlapAudio = null
 export function playSplitFlapShort() {
-    if (!canPlay()) return
+    if (!canPlay() || !entered) return
     const volume = categoryMultiplier('departureBoard')
     if (volume <= 0) return
     if (!shortFlapAudio) shortFlapAudio = new Audio(splitFlapShort)
@@ -311,7 +311,7 @@ export function playSplitFlapShort() {
 }
 export function playPhoneNotificationSound() { play(phoneNotificationSound, 'hyperlink') }
 export function playDepartureBoardSound() {
-    if (!canPlay()) return null
+    if (!canPlay() || !entered) return null
     const volume = categoryMultiplier('departureBoard')
     if (volume <= 0) return null
     const audio = new Audio(departureBoardSound)

@@ -80,7 +80,12 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             setEventSecondsLeft(left);
         }, 1000);
         return () => clearInterval(timer);
-    }, [activeEvent?.id]);
+        // Also restart on expiresAt, not just id: the interval's own `activeEvent` is captured once, when it
+        // starts, so if the same event (same id) ever got a new expiresAt - e.g. a duration-extending upgrade
+        // applying after it had already fired - this would otherwise go on ticking down from the stale time it
+        // had at that point, same as EventModal's own key (id-expiresAt-instantCashAmount, below) already treats
+        // a changed expiresAt as effectively a different event.
+    }, [activeEvent?.id, activeEvent?.expiresAt]);
 
     useEffect(() => {
         const diff = balance - prevBalanceRef.current

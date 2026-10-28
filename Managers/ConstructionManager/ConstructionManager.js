@@ -53,13 +53,14 @@ export class ConstructionManager {
         if (city.tier !== 0 && !pm.unlockedCities.includes(city)) return false;
         const connectionCost = this.calculateTierConnectionCost(city);
         const canAfford = this.progressionManager.spendCash(connectionCost);
-        if (!canAfford) return;
+        if (!canAfford) return false;
 
         // Advanced Engineering: built immediately (finishes on the next tick)
         const duration = PrestigeManager.owns('advancedEngineering') ? 0 : this.calculateTierTime(city);
         city.finishTime = this.timeManager.getFinishTime(duration);
         city.underConstruction = true;
         this.progressionManager.citiesUnderConstruction.push(city);
+        return true;
     }
 
     // Reputation to finish this city or development right now (0 when there is nothing left to wait for)
@@ -107,11 +108,12 @@ export class ConstructionManager {
 
     startDevelopmentConstruction(development, discountedCost) {
         const cost = discountedCost ?? development.cost;
-        if (!this.progressionManager.spendCash(cost)) return;
+        if (!this.progressionManager.spendCash(cost)) return false;
         const duration = PrestigeManager.owns('advancedEngineering') ? 0 : TWENTY_SECONDS;
         development.finishTime = this.timeManager.getFinishTime(duration);
         development.underConstruction = true;
         this.progressionManager.developmentsUnderConstruction.push(development);
+        return true;
     }
 
     completeDevelopmentConstruction(development) {

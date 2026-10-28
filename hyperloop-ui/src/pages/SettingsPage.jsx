@@ -213,6 +213,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     useEffect(() => onFullscreenChange(setFullscreenState), [])
     const [splitFlap, setSplitFlap] = useState(localStorage.getItem('splitFlap') !== 'false')
     const [nameInput, setNameInput] = useState(terminalName)
+    // useState above only reads terminalName once, on mount - if it ever changes while this page stays mounted
+    // (the Settings tab currently unmounts/remounts it on every visit, so a change elsewhere is picked up next
+    // time it's opened either way, but that's incidental, not something this component should rely on), the
+    // input would keep showing the old name instead of following the prop like the rest of the game does.
+    useEffect(() => { setNameInput(terminalName) }, [terminalName])
     const [nameSaved, setNameSaved] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [importError, setImportError] = useState(null)
