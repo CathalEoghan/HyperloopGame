@@ -118,7 +118,7 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity, active = true }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity, active = true, onGlobeReady }) {
     const mountRef = useRef(null)
     // Whether this is the currently selected bottom-nav tab. The scene/renderer/textures below are built once and
     // kept alive for the whole session (App.jsx no longer unmounts this page on every tab switch - that used to
@@ -330,7 +330,14 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         let loadedCount = 0
         const onTextureLoad = () => {
             loadedCount++
-            if (loadedCount === 2) setGlobeReady(true)
+            if (loadedCount === 2) {
+                setGlobeReady(true)
+                // Lets the Loading screen (now built behind, not after, it - see App.jsx) know the globe itself is
+                // done, not just its own image preload, so "Ready" doesn't appear until there's truly nothing left
+                // to build. The GPU upload on the very next animation frame is sub-16ms, well inside the Loading
+                // screen's own minimum-visible buffer, so there's no need to wait on that frame specifically too.
+                onGlobeReady?.()
+            }
         }
 
         const dayTexture = textureLoader.load(dayUrl, onTextureLoad)

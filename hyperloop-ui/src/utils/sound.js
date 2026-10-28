@@ -40,6 +40,15 @@ function canPlay() {
     return localStorage.getItem('soundEnabled') !== 'false'
 }
 
+// Whether the player has actually entered the game yet - past the Loading screen for a returning player, or
+// the Construction screen for a new city. App.jsx is the only thing that calls this (it mirrors its own
+// hasEnteredRef). Starts true so sound.js works as expected from anywhere that doesn't go through App.jsx at
+// all (Settings preview clips, tests). Without this, mounting the real app behind the Loading screen so the
+// globe can build with no stutter (see App.jsx) meant the reveal-popup "unclaimed from last session" queue and
+// the real-time departure/farewell detection could already be making noise before the player had clicked anything.
+let entered = true
+export function setEntered(value) { entered = value }
+
 // Every distinct sound in the game belongs to one of these categories, each with its own volume slider and mute
 // switch in Settings, on top of the overall Master Sound slider/mute that scales all of them together. Order
 // here is the order they're shown in Settings.
@@ -122,7 +131,7 @@ const SAME_SOUND_GAP_MS = 40
 const lastPlayed = new Map()   // src -> { at, audio }
 
 function play(src, category) {
-    if (!canPlay()) return null
+    if (!canPlay() || !entered) return null
     const volume = categoryMultiplier(category)
     if (volume <= 0) return null
     const now = performance.now()
@@ -147,7 +156,7 @@ let lastHoverAt = 0
 // src lets a caller (the Terminal Board, with a custom board theme) use a different hover tick. The default
 // hover sound is used when none is given, same as before.
 function playHover(src = hoverSound) {
-    if (!canPlay()) return
+    if (!canPlay() || !entered) return
     const volume = categoryMultiplier('hover')
     if (volume <= 0) return
     const now = performance.now()
