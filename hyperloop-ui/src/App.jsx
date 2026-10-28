@@ -2079,7 +2079,7 @@ function App() {
           economyManager={economyManager}
           balance={balance}
           onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
-          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
+          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(progressionManager.reputation); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
         />
       )}
 
@@ -2133,6 +2133,7 @@ function App() {
             onReroll={canReroll ? () => {
               if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
               progressionManager.addReputation(-rerollCost);
+              setReputation(progressionManager.reputation);
               setHasFreeReroll(false);
               setCityChoices(progressionManager.getCityChoices(allCities, economyManager.getCityChoiceCount(), cityChoices));
               triggerSave();

@@ -407,11 +407,14 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Positive Event Preference', value: has('positiveEventBoost') ? 'Active' : '—' },
             { label: 'Extra City Choices on Rank Up', value: sum('skilledNegotiationTeams') > 0 ? `+${sum('skilledNegotiationTeams')} choices` : '—' },
             {
+                // Each holiday upgrade carries its own effectValue (currently 5.0/+500% for all six, but this
+                // reads it rather than assuming a fixed figure, since a hardcoded "+100%" here previously
+                // understated the real bonus every one of these upgrades actually grants).
                 label: 'Special Day Bonus', value: (() => {
                     const days = { christmasBoost: 'Christmas Day', valentinesBoost: "Valentine's Day", halloweenBoost: 'Halloween', fourthOfJulyBoost: '4th of July', easterBoost: 'Easter Sunday', newYearsBoost: "New Year's Day" }
-                    const owned = Object.keys(days).filter(k => has(k)).map(k => days[k])
+                    const owned = Object.keys(days).filter(k => has(k)).map(k => `${days[k]} +${Math.round(sum(k) * 100)}%`)
                     if (owned.length === 0) return '—'
-                    return `+100% on ${owned.join(', ')}${economyManager.getSpecialDayBonus() > 0 ? ' ✓ active' : ''}`
+                    return `${owned.join(', ')}${economyManager.getSpecialDayBonus() > 0 ? ' ✓ active' : ''}`
                 })()
             },
             {
