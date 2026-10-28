@@ -9,7 +9,24 @@ import './SettingsPage.css'
 
 const VERSION_LOG = [
     {
-        version: 'v2.2',
+        version: 'v.4',
+        label: 'Economy & Shop Update',
+        major: true,
+        date: 'October 2026',
+        notes: [
+            'Economy overhaul - departing loops now need to be scheduled, with ticket sales dependent on time of day',
+            'Development income now closely follows how many loops are departing soon or have just arrived',
+            'Added the shop with 14 starting bundles',
+            'Added new maximum-quality globe texture',
+            'Added new Prestige upgrades',
+            'Added new cities and developments',
+            'Economy balancing changes',
+            'Countless bug fixes, QoL updates and UI changes for a more fun overall experience',
+        ]
+    },
+
+    {
+        version: 'v.3',
         label: 'Prestige & Achievements',
         major: true,
         date: 'October 2026',
