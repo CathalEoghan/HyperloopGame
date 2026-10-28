@@ -51,11 +51,11 @@ export default function FirstLoopModal({ purchasedCities, reputation = 0, progre
                 ) : (
                     <>
                         <p className="firstloop-text">
-                            No loops run until you schedule them, and a city earns nothing until it has a departure.
+                            No loops run <strong>until you schedule them</strong>, and a city earns nothing until it has a departure.
                             Pick a time and gate for it yourself, or automate it and the game picks for you, so
-                            passengers can start travelling.
+                            passengers can start travelling!
                         </p>
-                        <p className="firstloop-tip"><b>Tip:</b> be at the terminal when a loop departs to say farewell and earn Reputation.</p>
+                        <p className="firstloop-tip"><b>Tip:</b> Be at the terminal when a loop departs to say farewell and earn Reputation.</p>
                         <div className="firstloop-actions">
                             <button className="firstloop-btn firstloop-btn-primary" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onSchedule() }}>Schedule a loop</button>
                             <button
