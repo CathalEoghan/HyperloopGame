@@ -118,8 +118,15 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity, active = true }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity, active = true, onGlobeReady }) {
     const mountRef = useRef(null)
+    // Chrome (and some other browsers) can drop the WebGL context entirely on certain GPU/compositor transitions -
+    // toggling fullscreen being the one players actually hit - leaving the canvas permanently black with nothing
+    // this component already does able to bring it back (a lost context never recovers on its own, and once it's
+    // gone the old renderer/scene are just dead references). Bumping this forces the big mount effect below to
+    // tear down (its existing cleanup already disposes everything) and build a brand new renderer/scene/canvas
+    // from scratch, which is simpler and more reliable than trying to restore GPU resources into the dead context.
+    const [rebuildKey, setRebuildKey] = useState(0)
     // Whether this is the currently selected bottom-nav tab. The scene/renderer/textures below are built once and
     // kept alive for the whole session (App.jsx no longer unmounts this page on every tab switch - that used to
     // mean a full rebuild, including re-decoding the globe texture, every time the player came back to Home); this
@@ -315,6 +322,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
         mount.appendChild(renderer.domElement)
 
+        // See the comment on rebuildKey above - this is the actual recovery. preventDefault() tells the browser
+        // we intend to handle the loss ourselves rather than leaving the canvas permanently dead; bumping
+        // rebuildKey re-runs this whole effect, whose existing cleanup (below) already disposes the old
+        // renderer/scene/textures cleanly before building fresh ones from scratch on a brand new canvas.
+        const onContextLost = (event) => {
+            event.preventDefault()
+            setRebuildKey(k => k + 1)
+        }
+        renderer.domElement.addEventListener('webglcontextlost', onContextLost, false)
+
         const globeRadius = 1
         const textureLoader = new THREE.TextureLoader()
         const quality = getGlobeQuality()
@@ -330,7 +347,14 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         let loadedCount = 0
         const onTextureLoad = () => {
             loadedCount++
-            if (loadedCount === 2) setGlobeReady(true)
+            if (loadedCount === 2) {
+                setGlobeReady(true)
+                // Lets the Loading screen (now built behind, not after, it - see App.jsx) know the globe itself is
+                // done, not just its own image preload, so "Ready" doesn't appear until there's truly nothing left
+                // to build. The GPU upload on the very next animation frame is sub-16ms, well inside the Loading
+                // screen's own minimum-visible buffer, so there's no need to wait on that frame specifically too.
+                onGlobeReady?.()
+            }
         }
 
         const dayTexture = textureLoader.load(dayUrl, onTextureLoad)
@@ -797,13 +821,31 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         }
         animate()
 
-        const onResize = () => {
-            const w = mount.clientWidth, h = mount.clientHeight
+        const onResize = (w, h) => {
+            // A size of 0 is always a transient mid-transition reading (a flex/vh container briefly collapses
+            // while the browser is still resolving a layout change), never a real target size - acting on it
+            // doesn't just render one bad frame, it's actively harmful: renderer.setSize() sets the canvas
+            // element's own inline CSS width/height in pixels, and "0px" x "0px" sticks there, pinning the
+            // canvas invisible, until something calls setSize() again with a real size. Skipping bad reads here
+            // is what makes sure that always eventually happens (bug #201 - fullscreen showed a solid black
+            // globe, every time, because the very first resize during the transition landed on a 0x0 read and
+            // nothing ever corrected it afterwards).
+            if (w <= 0 || h <= 0) return
             camera.aspect = w / h
             camera.updateProjectionMatrix()
             renderer.setSize(w, h)
         }
-        window.addEventListener('resize', onResize)
+        // A ResizeObserver on the container itself replaces listening for window 'resize' (and, before that, also
+        // 'fullscreenchange' - see bug #201 above): it reports the container's actual box size directly, for
+        // every layout change regardless of cause (a window resize, entering/leaving fullscreen, a sidebar
+        // opening), and keeps firing for as long as that size keeps changing - including the transition's last,
+        // settled frame - rather than this having to guess which single DOM event to listen for and when, after
+        // a transition, it's safe to trust the size it reports.
+        const resizeObserver = new ResizeObserver(entries => {
+            const { width, height } = entries[entries.length - 1].contentRect
+            onResize(width, height)
+        })
+        resizeObserver.observe(mount)
 
         return () => {
             cancelAnimationFrame(animFrameId)
@@ -814,7 +856,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             window.removeEventListener('pointerup', onPointerUp)
             window.removeEventListener('pointercancel', onPointerCancel)
             mount.removeEventListener('wheel', onWheel)
-            window.removeEventListener('resize', onResize)
+            resizeObserver.disconnect()
             if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement)
             // Dispose the scene as well as the renderer. Three.js gives every sprite (the flags) one shared shape, and each
             // renderer that draws it leaves a listener on that shape; disposing it removes those listeners. Without this,
@@ -832,10 +874,15 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             globeMaterial.uniforms.nightTexture.value.dispose()
             globeMaterialRef.current = null
             textureLoaderRef.current = null
+            // Removed before forceContextLoss() below deliberately triggers the very 'webglcontextlost' event
+            // onContextLost listens for - without this, a normal unmount (leaving Home, or the rebuild this
+            // listener itself just caused) would queue a pointless extra rebuild on a component that's already
+            // being torn down (or already mid-rebuild).
+            renderer.domElement.removeEventListener('webglcontextlost', onContextLost)
             renderer.forceContextLoss()
             renderer.dispose()
         }
-    }, [])
+    }, [rebuildKey])
 
     // Settings -> Globe Quality writes straight to localStorage and dispatches this event rather than triggering a
     // remount (the globe stays mounted for the whole session now - see the comment by activeRef above), so this is

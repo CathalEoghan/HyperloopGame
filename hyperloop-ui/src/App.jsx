@@ -58,7 +58,7 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, distanceMiles } from './utils/loops.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
@@ -278,6 +278,10 @@ function App() {
   }
 
   const [isLoading, setIsLoading] = useState(() => hasSave() && progressionManager.purchasedCities.length > 0);
+  // Whether the globe (built behind the Loading screen below, not after it) has actually finished its first
+  // real frame - the Loading screen's "Ready" waits on this too, alongside its own image preload, so the
+  // moment it's clicked through there's nothing left for the globe to build.
+  const [globeBuilt, setGlobeBuilt] = useState(false);
   const [constructionReady, setConstructionReady] = useState(false);
   const [showOfflineModal, setShowOfflineModal] = useState(!!offlineData);
   const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || runStart?.terminalName || 'Hyperloop Empire');
@@ -293,12 +297,19 @@ function App() {
   const [purchasedCitiesCount, setPurchasedCitiesCount] = useState(() => progressionManager.purchasedCities.length);
   const [activeTab, setActiveTab] = useState("Home");
   const [pickedCity, setPickedCity] = useState(null);
-  // Tracks whether the player has actually pressed "click anywhere to enter" on the Construction screen, as
-  // opposed to merely having picked a city. Read inside the tick interval (whose closure is set up once on
-  // mount, so a plain state variable would be stale there) to stop income, random events, Hyper-Link posts
-  // and their sounds from running in the background while the Opening/Construction screens are still up -
-  // starts true because a returning player with an existing city skips both of those screens entirely.
-  const hasEnteredRef = useRef(true);
+  // Tracks whether the player has actually pressed "click anywhere to enter" - on the Loading screen for a
+  // returning player, or the Construction screen for a new city. Read inside the tick interval (whose closure
+  // is set up once on mount, so a plain state variable would be stale there) to stop income, random events,
+  // Hyper-Link posts, departure/farewell notifications and their sounds from running in the background before
+  // then. Starts false whenever there's a Loading screen to get through first (see isLoading above); true only
+  // for the rare case of neither screen applying (no save, or no cities yet) - isLoading starting true already
+  // implies the Opening/Construction screens don't apply this session, so the two never fight over this ref.
+  const hasEnteredRef = useRef(!isLoading);
+  // sound.js can't read this ref, so it keeps its own copy for the one thing it needs to know: whether to play
+  // anything at all right now. Set once here to start in step with hasEnteredRef above - the Loading screen then
+  // flips it the moment it's actually clicked (not 600ms later, once its own fade-out finishes and onComplete
+  // below fires), so the click's own opening-audio sound isn't the one thing this silences.
+  useState(() => { setEntered(!isLoading); return null });
   const [pendingRankUps, setPendingRankUps] = useState(() => parseInt(localStorage.getItem('hyperloop_pending_rankups') || '0') || 0);
   // Persist unclaimed rank-ups so a reload before pressing Claim doesn't lose them.
   useEffect(() => { if (!blockedRef.current) localStorage.setItem('hyperloop_pending_rankups', pendingRankUps) }, [pendingRankUps]);
@@ -956,6 +967,12 @@ function App() {
         return;
       }
       localStorage.setItem(TAB_LOCK_KEY, JSON.stringify({ id: tabId, at: Date.now() }));
+      // Nothing below this point should run, or make noise, before the player has actually entered (see
+      // hasEnteredRef above) - the tab-lock heartbeat above still needs to run regardless, so another tab
+      // doesn't wrongly conclude this one has gone away while it's sitting on the Loading screen. Without
+      // this, real-time-scheduled departures (and their farewell sound) could already be firing in the
+      // background during loading, since that detection runs off the wall clock, not simulated playtime.
+      if (!hasEnteredRef.current) return;
       tickCount.current += 1;
 
       // Loops literally in the air right now, read once per tick and reused below for the achievements check.
@@ -1528,9 +1545,12 @@ function App() {
     );
   }
 
-  if (isLoading) return <LoadingScreen onComplete={() => setIsLoading(false)} />;
-
-    if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
+  // isLoading only ever starts true alongside an existing save with at least one city (see its useState above),
+  // which is exactly the case the two checks below don't apply to - so letting isLoading fall through to them
+  // instead of returning the Loading screen on its own never collides with the Opening/Construction screens.
+  // It's rendered as an overlay further down instead, on top of the real dashboard (including the globe) as
+  // they build behind it, so there's nothing left to build - no stutter - by the time it's clicked through.
+  if (progressionManager.purchasedCities.length === 0 && pickedCity === null) {
     return <OpeningPage constructionManager={constructionManager} runStart={runStart} setPickedCity={city => {
       // A prestige run skips the first-time walkthrough
       if (!runStart) localStorage.setItem('hyperloop_onboarding_pending', '1');
@@ -1695,7 +1715,21 @@ function App() {
         balance={balance}
         constructionManager={constructionManager}
         onConnectCity={triggerSave}
+        onGlobeReady={() => setGlobeBuilt(true)}
       />
+      {isLoading && (
+        <LoadingScreen
+          globeReady={globeBuilt}
+          onComplete={() => {
+            hasEnteredRef.current = true;
+            // Restart the "quiet period" before random events can fire from the moment the player actually
+            // enters, instead of from whenever this component happened to mount while they were still on
+            // the Loading screen (same reasoning as the Construction screen's onEnter, further up).
+            gameStartTime.current = Date.now();
+            setIsLoading(false);
+          }}
+        />
+      )}
       {activeTab === "Cities" && (
         <CitiesPage
           topOffset={topOffset}

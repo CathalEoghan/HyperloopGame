@@ -33,14 +33,17 @@ import jazzOpening from '../assets/opening-intros/jazz.mp3'
 import playroomOpening from '../assets/opening-intros/playtime.mp3'
 import starlightOpening from '../assets/opening-intros/starlight.mp3'
 import duckOpening from '../assets/opening-intros/duck.mp3'
-import { playOpeningAudio } from '../utils/sound.js'
+import { playOpeningAudio, setEntered } from '../utils/sound.js'
 import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
 import officialLogo from '../assets/misc/officialLogo.png'
 import './LoadingScreen.css'
 
-const DURATION = 5000
+// Below, "Ready" means every one of those images has actually finished loading (or failed - a
+// broken image shouldn't be able to hang the whole screen), not just that a fixed clock ran out.
+const MIN_VISIBLE_MS = 500   // avoids a jarring instant flash past the status text when everything's already cached
+const SAFETY_TIMEOUT_MS = 8000   // a genuinely bad connection shouldn't be able to strand the player here forever
 
 const SOUNDS = [
     click_sound_2, click_sound_3, rankUpSound, leavingSound,
@@ -79,7 +82,7 @@ const TIPS = [
     "Check out the shop for cool cosmetics! Choose from a wide selection of themes, cursors, and even custom audio."
 ]
 
-function LoadingScreen({ onComplete }) {
+function LoadingScreen({ onComplete, globeReady = true }) {
     const [progress, setProgress] = useState(0)
     const [fading, setFading] = useState(false)
     const [statusText, setStatusText] = useState('Loading terminal systems...')
@@ -87,6 +90,13 @@ function LoadingScreen({ onComplete }) {
     const [tipIndex, setTipIndex] = useState(() => Math.floor(Math.random() * TIPS.length))
     const [tipVisible, setTipVisible] = useState(true)
     const done = useRef(false)
+    // "Ready" now waits on two independent things finishing: this screen's own image preload below, and - now
+    // that App.jsx builds the real globe behind this screen instead of only after it - the globe itself having
+    // decoded its texture and rendered. Whichever finishes last is what actually flips the bar to 100%, so
+    // there's nothing left to build by the time this screen is clicked through.
+    const imagesDoneRef = useRef(false)
+    const globeReadyRef = useRef(globeReady)
+    const markReadyRef = useRef(() => {})
 
     useEffect(() => {
         const quality = getGlobeQuality()
@@ -105,11 +115,7 @@ function LoadingScreen({ onComplete }) {
             ...FEMALE_PFPS,
             cashIcon, clockIcon, reputationIcon, starIcon, departureBoardImg,
         ]
-
-        // Only what's shown straight away: the lists and reveals use the local thumbnails above.
-        // The Cloudinary photos (city and development details) load when first opened.
-        // Flags are inside the game's script itself (src/data/flagImages.js), so there is nothing to wait for.
-        preloadImages(imageSrcs)
+        const total = imageSrcs.length
 
         SOUNDS.forEach(src => {
             const audio = new Audio(src)
@@ -117,27 +123,64 @@ function LoadingScreen({ onComplete }) {
         })
 
         const startTime = Date.now()
+        let cancelled = false
 
-        const timer = setInterval(() => {
+        const markReady = () => {
+            if (done.current || cancelled) return
+            if (!imagesDoneRef.current || !globeReadyRef.current) return
+            done.current = true
+            setProgress(100)
+            setStatusText('Ready.')
+            setReady(true)
+        }
+        markReadyRef.current = markReady
+
+        // Only what's shown straight away: the lists and reveals use the local thumbnails above.
+        // The Cloudinary photos (city and development details) load when first opened.
+        // Flags are inside the game's script itself (src/data/flagImages.js), so there is nothing to wait for.
+        let lastPct = -1
+        preloadImages(imageSrcs, (loaded) => {
+            if (cancelled) return
+            const pct = total ? loaded / total : 1
+            // Only re-render on whole-percent changes - a setState per image (up to ~1,500 of them) is wasted work.
+            const pctWhole = Math.floor(pct * 100)
+            if (pctWhole === lastPct) return
+            lastPct = pctWhole
+            // Capped below 100 until the globe (tracked separately) is also done, so the bar doesn't sit at a
+            // false 100% while still waiting on it.
+            setProgress(Math.min(pct * 100, globeReadyRef.current ? 100 : 99))
+            const count = `(${loaded.toLocaleString()}/${total.toLocaleString()})`
+            if (pct < 0.20)      setStatusText(`Loading city thumbnails... ${count}`)
+            else if (pct < 0.40) setStatusText(`Loading developments... ${count}`)
+            else if (pct < 0.60) setStatusText(`Loading countries... ${count}`)
+            else if (pct < 1)    setStatusText(`Loading globe textures... ${count}`)
+        }).then(() => {
+            if (cancelled) return
+            imagesDoneRef.current = true
+            // A near-instant load (everything already cached from last time) would otherwise skip straight past
+            // the status text - hold for a small minimum so it reads as "finished", not as the screen glitching.
             const elapsed = Date.now() - startTime
-            const pct = Math.min(elapsed / DURATION, 1)
-            setProgress(pct * 100)
+            setTimeout(markReady, Math.max(0, MIN_VISIBLE_MS - elapsed))
+        })
 
-            if (pct < 0.20)      setStatusText('Loading city thumbnails...')
-            else if (pct < 0.40) setStatusText('Loading developments...')
-            else if (pct < 0.60) setStatusText('Loading countries...')
-            else if (pct < 0.80) setStatusText('Loading globe textures...')
-            else                 setStatusText('Ready.')
+        // A genuinely bad connection (or a GPU taking its time with the globe) shouldn't be able to strand the
+        // player on this screen forever - let them in once the cap is hit regardless, and let whatever's left
+        // keep loading in the background (preloadImages doesn't depend on this component staying mounted - the
+        // Image objects it created keep downloading regardless, and the globe keeps building behind this screen
+        // either way since it's part of the real app now, not something this screen owns).
+        const safetyTimer = setTimeout(() => {
+            imagesDoneRef.current = true
+            globeReadyRef.current = true
+            markReady()
+        }, SAFETY_TIMEOUT_MS)
 
-            if (pct >= 1 && !done.current) {
-                done.current = true
-                clearInterval(timer)
-                setReady(true)
-            }
-        }, 50)
-
-        return () => clearInterval(timer)
+        return () => { cancelled = true; clearTimeout(safetyTimer) }
     }, [])
+
+    useEffect(() => {
+        globeReadyRef.current = globeReady
+        if (globeReady) markReadyRef.current()
+    }, [globeReady])
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -155,6 +198,9 @@ function LoadingScreen({ onComplete }) {
     const handleEnter = () => {
         if (!ready || enteredRef.current) return
         enteredRef.current = true
+        // Unsilences sound.js right now, on the click itself - not 600ms from now when onComplete fires below,
+        // once the fade-out finishes - so the very next line isn't blocked by the thing it's meant to allow.
+        setEntered(true)
         playOpeningAudio()
         setFading(true)
         setTimeout(onComplete, 600)
