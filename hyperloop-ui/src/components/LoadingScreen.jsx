@@ -140,7 +140,12 @@ function LoadingScreen({ onComplete, globeReady = true }) {
         // Flags are inside the game's script itself (src/data/flagImages.js), so there is nothing to wait for.
         let lastPct = -1
         preloadImages(imageSrcs, (loaded) => {
-            if (cancelled) return
+            // Once the safety timeout has already forced us into the "ready" state, the still-downloading
+            // images in the background (preloadImages keeps going regardless, per the comment below) must not
+            // be allowed to overwrite the "Ready." status/100% bar with a stale "Loading..." message as they
+            // keep trickling in - this previously left the bar visibly stuck below 100% with the enter prompt
+            // already showing, which was confusing even though clicking through still worked.
+            if (cancelled || done.current) return
             const pct = total ? loaded / total : 1
             // Only re-render on whole-percent changes - a setState per image (up to ~1,500 of them) is wasted work.
             const pctWhole = Math.floor(pct * 100)
