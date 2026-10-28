@@ -9,7 +9,7 @@ import './SettingsPage.css'
 
 const VERSION_LOG = [
     {
-        version: 'v.4',
+        version: 'v.4.0',
         label: 'Economy & Shop Update',
         major: true,
         date: 'October 2026',
@@ -26,7 +26,7 @@ const VERSION_LOG = [
     },
 
     {
-        version: 'v.3',
+        version: 'v.3.0',
         label: 'Prestige & Achievements',
         major: true,
         date: 'October 2026',
