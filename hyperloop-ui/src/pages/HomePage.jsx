@@ -811,6 +811,14 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             renderer.setSize(w, h)
         }
         window.addEventListener('resize', onResize)
+        // Entering/leaving fullscreen (the Settings -> Fullscreen toggle, or F11/Esc) doesn't reliably fire a
+        // plain window 'resize' event in every browser, even though the container does resize via CSS (it's
+        // sized with flex/vh, which the layout engine updates on its own) - without this, the canvas keeps
+        // rendering at its pre-fullscreen resolution and aspect ratio, so the globe looks squashed/cut off
+        // against its now-different box. 'fullscreenchange' always fires on this transition regardless, but the
+        // layout isn't always settled by the time it does, so this re-checks once more a frame later too.
+        const onFullscreenChange = () => { onResize(); requestAnimationFrame(onResize) }
+        document.addEventListener('fullscreenchange', onFullscreenChange)
 
         return () => {
             cancelAnimationFrame(animFrameId)
@@ -822,6 +830,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             window.removeEventListener('pointercancel', onPointerCancel)
             mount.removeEventListener('wheel', onWheel)
             window.removeEventListener('resize', onResize)
+            document.removeEventListener('fullscreenchange', onFullscreenChange)
             if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement)
             // Dispose the scene as well as the renderer. Three.js gives every sprite (the flags) one shared shape, and each
             // renderer that draws it leaves a listener on that shape; disposing it removes those listeners. Without this,
