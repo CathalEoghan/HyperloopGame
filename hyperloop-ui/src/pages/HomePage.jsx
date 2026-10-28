@@ -127,6 +127,12 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     // they can't just read a fresh `active` prop - know to stand down while another tab is showing instead.
     const activeRef = useRef(active)
     useEffect(() => { activeRef.current = active }, [active])
+    // Lets the quality-change listener below (Settings -> Globe Quality) reach the live globe material and swap
+    // its day/night textures in place. Before the globe persisted across tab switches, changing this setting only
+    // "worked" because leaving and returning to Home tore down and rebuilt the whole globe with the new quality
+    // picked up fresh - now that it stays mounted, nothing re-reads the setting unless something tells it to.
+    const globeMaterialRef = useRef(null)
+    const textureLoaderRef = useRef(null)
     const [hoveredCity, setHoveredCity] = useState(null)
     const [showOwned, setShowOwned] = useState(() => {
         try { return localStorage.getItem('globeShowOwned') !== 'false' } catch { return true }
@@ -372,6 +378,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             globeMaterial
         )
         scene.add(globe)
+        globeMaterialRef.current = globeMaterial
+        textureLoaderRef.current = textureLoader
 
         const atmosMaterial = new THREE.ShaderMaterial({
             vertexShader: `
@@ -818,11 +826,49 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const materials = Array.isArray(obj.material) ? obj.material : obj.material ? [obj.material] : []
                 materials.forEach(m => { m.map?.dispose(); m.dispose() })
             })
-            dayTexture.dispose()
-            nightTexture.dispose()
+            // Dispose whatever textures are live right now, not the ones this closure loaded at mount time - a
+            // quality change (see the listener below) may have swapped them out for a different pair since.
+            globeMaterial.uniforms.dayTexture.value.dispose()
+            globeMaterial.uniforms.nightTexture.value.dispose()
+            globeMaterialRef.current = null
+            textureLoaderRef.current = null
             renderer.forceContextLoss()
             renderer.dispose()
         }
+    }, [])
+
+    // Settings -> Globe Quality writes straight to localStorage and dispatches this event rather than triggering a
+    // remount (the globe stays mounted for the whole session now - see the comment by activeRef above), so this is
+    // what actually applies a quality change: swap the day/night textures on the live material in place, in both
+    // directions (dropping back down from Max works the same way as stepping up).
+    useEffect(() => {
+        const onQualityChange = () => {
+            const material = globeMaterialRef.current
+            const loader = textureLoaderRef.current
+            if (!material || !loader) return
+            const quality = getGlobeQuality()
+            let dayUrl, nightUrl
+            try {
+                dayUrl = new URL(`../assets/misc/${quality}_earth_daymap.jpg`, import.meta.url).href
+                nightUrl = new URL(`../assets/misc/${quality}_earth_nightmap.jpg`, import.meta.url).href
+            } catch {
+                dayUrl = 'https://unpkg.com/three-globe/example/img/earth-day.jpg'
+                nightUrl = 'https://unpkg.com/three-globe/example/img/earth-night.jpg'
+            }
+            const oldDayTexture = material.uniforms.dayTexture.value
+            const oldNightTexture = material.uniforms.nightTexture.value
+            const anisotropy = oldDayTexture.anisotropy
+            const newDayTexture = loader.load(dayUrl)
+            const newNightTexture = loader.load(nightUrl)
+            newDayTexture.anisotropy = anisotropy
+            newNightTexture.anisotropy = anisotropy
+            material.uniforms.dayTexture.value = newDayTexture
+            material.uniforms.nightTexture.value = newNightTexture
+            oldDayTexture.dispose()
+            oldNightTexture.dispose()
+        }
+        window.addEventListener('globeQualityChange', onQualityChange)
+        return () => window.removeEventListener('globeQualityChange', onQualityChange)
     }, [])
 
     // The trophy button is fixed to the bottom of the window, but the globe can sit lower than expected (a long

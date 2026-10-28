@@ -229,6 +229,9 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         setGlobeQuality(quality)
         if (quality === 'auto') localStorage.removeItem(GLOBE_QUALITY_KEY)
         else localStorage.setItem(GLOBE_QUALITY_KEY, quality)
+        // The globe now stays mounted for the whole session instead of rebuilding itself every time you
+        // revisit Home, so nothing else would notice this change - this is what tells it to swap textures.
+        window.dispatchEvent(new Event('globeQualityChange'))
     }
 
     const handleNightModeChange = (enabled) => {
