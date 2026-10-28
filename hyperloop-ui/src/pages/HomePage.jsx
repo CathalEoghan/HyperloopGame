@@ -821,21 +821,31 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         }
         animate()
 
-        const onResize = () => {
-            const w = mount.clientWidth, h = mount.clientHeight
+        const onResize = (w, h) => {
+            // A size of 0 is always a transient mid-transition reading (a flex/vh container briefly collapses
+            // while the browser is still resolving a layout change), never a real target size - acting on it
+            // doesn't just render one bad frame, it's actively harmful: renderer.setSize() sets the canvas
+            // element's own inline CSS width/height in pixels, and "0px" x "0px" sticks there, pinning the
+            // canvas invisible, until something calls setSize() again with a real size. Skipping bad reads here
+            // is what makes sure that always eventually happens (bug #201 - fullscreen showed a solid black
+            // globe, every time, because the very first resize during the transition landed on a 0x0 read and
+            // nothing ever corrected it afterwards).
+            if (w <= 0 || h <= 0) return
             camera.aspect = w / h
             camera.updateProjectionMatrix()
             renderer.setSize(w, h)
         }
-        window.addEventListener('resize', onResize)
-        // Entering/leaving fullscreen (the Settings -> Fullscreen toggle, or F11/Esc) doesn't reliably fire a
-        // plain window 'resize' event in every browser, even though the container does resize via CSS (it's
-        // sized with flex/vh, which the layout engine updates on its own) - without this, the canvas keeps
-        // rendering at its pre-fullscreen resolution and aspect ratio, so the globe looks squashed/cut off
-        // against its now-different box. 'fullscreenchange' always fires on this transition regardless, but the
-        // layout isn't always settled by the time it does, so this re-checks once more a frame later too.
-        const onFullscreenChange = () => { onResize(); requestAnimationFrame(onResize) }
-        document.addEventListener('fullscreenchange', onFullscreenChange)
+        // A ResizeObserver on the container itself replaces listening for window 'resize' (and, before that, also
+        // 'fullscreenchange' - see bug #201 above): it reports the container's actual box size directly, for
+        // every layout change regardless of cause (a window resize, entering/leaving fullscreen, a sidebar
+        // opening), and keeps firing for as long as that size keeps changing - including the transition's last,
+        // settled frame - rather than this having to guess which single DOM event to listen for and when, after
+        // a transition, it's safe to trust the size it reports.
+        const resizeObserver = new ResizeObserver(entries => {
+            const { width, height } = entries[entries.length - 1].contentRect
+            onResize(width, height)
+        })
+        resizeObserver.observe(mount)
 
         return () => {
             cancelAnimationFrame(animFrameId)
@@ -846,8 +856,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             window.removeEventListener('pointerup', onPointerUp)
             window.removeEventListener('pointercancel', onPointerCancel)
             mount.removeEventListener('wheel', onWheel)
-            window.removeEventListener('resize', onResize)
-            document.removeEventListener('fullscreenchange', onFullscreenChange)
+            resizeObserver.disconnect()
             if (mount.contains(renderer.domElement)) mount.removeChild(renderer.domElement)
             // Dispose the scene as well as the renderer. Three.js gives every sprite (the flags) one shared shape, and each
             // renderer that draws it leaves a listener on that shape; disposing it removes those listeners. Without this,
