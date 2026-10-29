@@ -95,6 +95,17 @@
     50%       { opacity: 0.3; }
 }
 
+/* Positioned against .loading-screen (the fixed, inset:0 ancestor), not in normal flow, so it never
+   adds to the content height - the scroll-to-fit fix for short viewports (bug #185) stays intact. */
+.loading-version-tag {
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.35);
+    pointer-events: none;
+}
+
 .loading-tip {
     display: inline-flex;
     align-items: center;

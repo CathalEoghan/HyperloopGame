@@ -38,6 +38,7 @@ import { preloadImages } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
 import officialLogo from '../assets/misc/officialLogo.png'
+import { VERSION_LOG } from '../utils/versionLog.js'
 import './LoadingScreen.css'
 
 // Below, "Ready" means every one of those images has actually finished loading (or failed - a
@@ -232,6 +233,11 @@ function LoadingScreen({ onComplete, globeReady = true }) {
                 <span className="loading-tip-label">TIP</span>
                 <span className="loading-tip-text">{TIPS[tipIndex]}</span>
             </div>
+            {/* Pulled from the same VERSION_LOG Settings' Update History reads, so this can't fall out of
+                sync with it. Absolutely positioned (not a flow sibling) so it can't add to the content
+                height that bug #185 already had to fix overflow for, and pointer-events: none so it can
+                never swallow the "click anywhere to enter" tap. */}
+            <span className="loading-version-tag">{VERSION_LOG[0].version}</span>
         </div>
     )
 }
