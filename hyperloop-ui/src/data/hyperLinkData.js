@@ -714,8 +714,21 @@ export const POSTS = {
         'Gonna call down to {developmentName} at some point, heard they rly renovated it',
         'they spent some money on {developmentName} lol it defo shows',
         'anyone seen {developmentName} since it stopped renovations? is it actually better now?',
-        '{developmentName} looking real pretty'
-    ],
+        '{developmentName} looking real pretty',
+        'okay wait... {developmentName} actually looks incredible now 😳',
+        'Just passed {developmentName} and wow, major glow up ✨',
+        'whoever designed the new {developmentName} deserves a raise fr',
+        'Honestly didn\'t expect {developmentName} to look this good after the renovations!',
+        'is it just me or does {developmentName} look completely different now?',
+        'okay {developmentName} glow up was NOT on this years bingo card 😭🔥',
+        'nah because {developmentName} looks so aesthetic now 👀',
+        'finally {developmentName} got the upgrade it desperately needed!!',
+        '{developmentName} is looking so sleek now, definitely heading over soon woah',
+        'was not expecting {developmentName} to turn out this nice ngl lol',
+        'They really transformed {developmentName}, looks so good!',
+        'took a look at {developmentName} today and wow, massive improvement 💯',
+        '{developmentName} upgrade is 10/10, no notes !'
+],
 
     boarding: [
         'Family making me go on this trip to {boardingCity} zzzz',
