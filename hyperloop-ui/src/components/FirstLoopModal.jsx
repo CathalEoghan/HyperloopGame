@@ -55,7 +55,7 @@ export default function FirstLoopModal({ purchasedCities, reputation = 0, progre
                              Pick a time and gate for it yourself, or automate it and the game picks for you, so
                             passengers can start travelling!
                         </p>
-                        <p className="firstloop-tip"><b>Tip:</b> Be at the terminal when a loop departs to say farewell and earn Reputation.</p>
+                        <p className="firstloop-tip">Be at the terminal when a loop departs to say farewell and earn Reputation.</p>
                         <div className="firstloop-actions">
                             <button className="firstloop-btn firstloop-btn-primary" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onSchedule() }}>Schedule a loop</button>
                             <button
