@@ -29,12 +29,20 @@ if (typeof window !== 'undefined') window.addEventListener(COSMETICS_EVENT, () =
 const loopColor = (kind) => kind === 'arrival' ? arcColors.arrival : arcColors.departure
 // How close (in pixels) the mouse must be to an arc to count as pointing at it
 const ARC_HIT_PX = 10
+// The widest of the route's three tubes (the halo, visible while highlighted) - how far out a pod has
+// to sit to clear the route's surface instead of sinking its lower half into it. placePods uses this
+// to lift the pod along the "away from the globe" axis; it has to stay in sync with the halo's own
+// TubeGeometry radius below, so both read it from here rather than repeating the number.
+const ROUTE_TUBE_RADIUS = 0.0065
+// The shuttle's own height (its local Y extent), same number makePodGeometry uses below - placePods
+// needs it too, to lift the pod by half its (post-zoom-scale) height on top of the route's surface.
+const POD_HEIGHT = 0.012
 // The shuttle's silhouette: a flat-faced box chamfered to a point at the nose (forward, local +X,
 // same convention placePods already turns to face the route). Still every face flat and every edge
 // sharp like the plain box it replaces - built as a 2D "home plate" profile (rectangular body,
 // triangular nose) extruded to the pod's height, rather than rounding it off into a bullet/capsule.
 const makePodGeometry = () => {
-    const halfDepth = 0.004, height = 0.012
+    const halfDepth = 0.004, height = POD_HEIGHT
     const rearX = -0.018, shoulderX = 0.0079, tipX = 0.018
     const shape = new THREE.Shape()
     shape.moveTo(rearX, -halfDepth)
@@ -545,7 +553,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 // A dark underlay keeps white readable over bright land and cloud; the halo only shows when highlighted
                 const under = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0034, 5, false), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }))
                 const line = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0019, 5, false), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false }))
-                const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0065, 6, false), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
+                const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, ROUTE_TUBE_RADIUS, 6, false), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
                 halo.visible = false
                 // The shuttle: flat-faced and chamfered to a point at the nose, turned along the route.
                 // The fill stays white (readable over bright land/cloud, same as before); the edges, a
@@ -595,9 +603,15 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 tmpB.addScaledVector(tmpC, -tmpB.dot(tmpC)).normalize()
                 tmpS.crossVectors(tmpB, tmpC).normalize()   // across the route
                 tmpM.makeBasis(tmpB, tmpC, tmpS)
-                o.pod.position.copy(tmpA)
+                const podScale = zoom * (isLit ? 1.35 : 1)
+                // tmpA sits ON the route's centreline, same as the tube meshes do - placing the pod there
+                // directly buries its lower half inside the (always-visible) under tube and, while
+                // highlighted, the halo too. Lift it along tmpC (the pod's own "up", per the basis above)
+                // by the widest tube's radius plus half the pod's own current height, so it rests on top
+                // of the route instead of clipping through it.
+                o.pod.position.copy(tmpA).addScaledVector(tmpC, ROUTE_TUBE_RADIUS + (POD_HEIGHT / 2) * podScale)
                 o.pod.quaternion.setFromRotationMatrix(tmpM)
-                o.pod.scale.setScalar(zoom * (isLit ? 1.35 : 1))
+                o.pod.scale.setScalar(podScale)
                 const col = loopColor(o.loop.kind)
                 o.pod.material.color.setHex(isLit ? col : LOOP_WHITE)
                 o.line.material.color.setHex(isLit ? col : LOOP_WHITE)
@@ -975,6 +989,21 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         }
         window.addEventListener('globeQualityChange', onQualityChange)
         return () => window.removeEventListener('globeQualityChange', onQualityChange)
+    }, [])
+
+    // Same persisted-globe problem as quality above, for Settings -> Globe Night Mode: On/Off wrote to
+    // localStorage and a bit of local SettingsPage state, but nothing ever pushed it onto the live
+    // material's nightMode uniform, so toggling it had no visible effect once the globe stopped
+    // remounting on every Home visit.
+    useEffect(() => {
+        const onNightModeChange = () => {
+            const material = globeMaterialRef.current
+            if (!material) return
+            const nightMode = localStorage.getItem('globeNightMode') !== 'false'
+            material.uniforms.nightMode.value = nightMode ? 1.0 : 0.0
+        }
+        window.addEventListener('globeNightModeChange', onNightModeChange)
+        return () => window.removeEventListener('globeNightModeChange', onNightModeChange)
     }, [])
 
     // The trophy button is fixed to the bottom of the window, but the globe can sit lower than expected (a long

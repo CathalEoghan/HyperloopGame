@@ -104,6 +104,9 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleNightModeChange = (enabled) => {
         setGlobeNightMode(enabled)
         localStorage.setItem('globeNightMode', enabled)
+        // Same reason handleQualityChange dispatches globeQualityChange above: the globe stays mounted for
+        // the whole session now, so writing to localStorage alone doesn't reach its already-live material.
+        window.dispatchEvent(new Event('globeNightModeChange'))
     }
 
     const handleSoundToggle = (enabled) => {
