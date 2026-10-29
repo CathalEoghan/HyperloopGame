@@ -105,7 +105,9 @@ function shortfall(reputation, cost) {
 //   onBuyBundle(bundle) -> true when every not-yet-owned piece was bought (and all equipped)
 //   onEquipBundle(bundle)
 function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquipBundle, onClose }) {
-    const [categoryId, setCategoryId] = useState(SHOP_CATEGORIES[0].id)
+    // Hardcoded rather than SHOP_CATEGORIES[0].id, so the tab the Shop opens on doesn't silently change
+    // whenever that list's order does (it's sorted alphabetically for the sidebar, not for this)
+    const [categoryId, setCategoryId] = useState('workSound')
     const [shaking, setShaking] = useState(null)
     const [search, setSearch] = useState('')
     const [viewMode, setViewMode] = useState('shop') // 'shop' (everything) or 'owned' (collection only)

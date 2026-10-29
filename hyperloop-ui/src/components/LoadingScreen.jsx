@@ -39,6 +39,7 @@ import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
 import officialLogo from '../assets/misc/officialLogo.png'
 import { VERSION_LOG } from '../utils/versionLog.js'
+import { THEME_PICS, THEME_PICS_BOARD } from '../data/shopCatalog.js'
 import './LoadingScreen.css'
 
 // Below, "Ready" means every one of those images has actually finished loading (or failed - a
@@ -115,6 +116,13 @@ function LoadingScreen({ onComplete, globeReady = true }) {
             ...MALE_PFPS,
             ...FEMALE_PFPS,
             cashIcon, clockIcon, reputationIcon, starIcon, departureBoardImg,
+            // Every Shop theme's preview photo, not just the equipped one - same reasoning as the Opening
+            // audio options below: whichever theme gets equipped or browsed to shouldn't be the one thing
+            // that wasn't warm yet. THEME_PICS_BOARD doubles as the "TERMINAL BOARD" banner background for
+            // whatever General theme is equipped (see applyCosmetics in utils/cosmetics.js), so this also
+            // covers that, not just the Shop's own previews.
+            ...Object.values(THEME_PICS),
+            ...Object.values(THEME_PICS_BOARD),
         ]
         const total = imageSrcs.length
 

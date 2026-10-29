@@ -239,13 +239,15 @@ export const FEATURED_THEME_ID = 'poltergeist'
 // to yet). Give it a value alongside FEATURED_THEME_ID when there's a real reason to show, not just a label.
 export const FEATURED_TAGLINE = null
 
+// Listed alphabetically by name, so the sidebar order matches what the player reads top to bottom -
+// Bundles is appended separately in ShopModal and stays last, since it isn't really a category of its own.
 export const SHOP_CATEGORIES = [
-    { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
-    { id: 'openingAudio', name: 'Opening audios', blurb: "The sound that plays when you step into the terminal." },
     { id: 'boardTheme', name: 'Board themes', blurb: 'The look of the Terminal Board.' },
-    { id: 'hyperLinkTheme', name: 'Hyper-Link themes', blurb: 'The look of the Hyper-Link phone.' },
-    { id: 'generalTheme', name: 'General themes', blurb: 'The top and bottom bars, ticker, Work button and route colours.' },
     { id: 'cursorTheme', name: 'Cursors', blurb: 'The pointer, arrow and drag cursors.' },
+    { id: 'generalTheme', name: 'General themes', blurb: 'The top and bottom bars, ticker, Work button and route colours.' },
+    { id: 'hyperLinkTheme', name: 'Hyper-Link themes', blurb: 'The look of the Hyper-Link phone.' },
+    { id: 'openingAudio', name: 'Opening audios', blurb: "The sound that plays when you step into the terminal." },
+    { id: 'workSound', name: 'Work sounds', blurb: 'The sound the Work button makes.' },
 ]
 
 // The order tiers are grouped and labelled in the Shop.
