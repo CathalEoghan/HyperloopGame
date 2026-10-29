@@ -29,6 +29,25 @@ if (typeof window !== 'undefined') window.addEventListener(COSMETICS_EVENT, () =
 const loopColor = (kind) => kind === 'arrival' ? arcColors.arrival : arcColors.departure
 // How close (in pixels) the mouse must be to an arc to count as pointing at it
 const ARC_HIT_PX = 10
+// The shuttle's silhouette: a flat-faced box chamfered to a point at the nose (forward, local +X,
+// same convention placePods already turns to face the route). Still every face flat and every edge
+// sharp like the plain box it replaces - built as a 2D "home plate" profile (rectangular body,
+// triangular nose) extruded to the pod's height, rather than rounding it off into a bullet/capsule.
+const makePodGeometry = () => {
+    const halfDepth = 0.004, height = 0.012
+    const rearX = -0.018, shoulderX = 0.0079, tipX = 0.018
+    const shape = new THREE.Shape()
+    shape.moveTo(rearX, -halfDepth)
+    shape.lineTo(shoulderX, -halfDepth)
+    shape.lineTo(tipX, 0)
+    shape.lineTo(shoulderX, halfDepth)
+    shape.lineTo(rearX, halfDepth)
+    shape.lineTo(rearX, -halfDepth)
+    const geo = new THREE.ExtrudeGeometry(shape, { depth: height, bevelEnabled: false, steps: 1 })
+    geo.rotateX(-Math.PI / 2)          // the extrude axis (local Z) becomes "up" (local Y)
+    geo.translate(0, -height / 2, 0)   // centre vertically, same pivot as the box it replaces
+    return geo
+}
 const VIEW_KEY = 'globeView'
 const PANEL_KEY = 'globeLoopsPanelOpen'
 
@@ -484,6 +503,26 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         // ---- Active loops: an arc per route and a pod travelling along it ----
         const loopGroup = new THREE.Group()
         scene.add(loopGroup)
+        // Loop-independent gradients for the pod's glow and trail - every pod tints the same canvas via
+        // its own sprite/material colour, so one of each covers every loop rather than drawing a canvas
+        // per loop. Safe to share: removeLoopObject below only calls material.dispose(), never
+        // texture.dispose(), so a removed loop never takes this texture down with it.
+        const podGlowTexture = (() => {
+            const c = document.createElement('canvas'); c.width = c.height = 64
+            const ctx = c.getContext('2d')
+            const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32)
+            g.addColorStop(0, '#fff'); g.addColorStop(0.4, '#fff'); g.addColorStop(1, 'rgba(255,255,255,0)')
+            ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64)
+            return new THREE.CanvasTexture(c)
+        })()
+        const podTrailTexture = (() => {
+            const c = document.createElement('canvas'); c.width = 64; c.height = 16
+            const ctx = c.getContext('2d')
+            const g = ctx.createLinearGradient(0, 0, 64, 0)
+            g.addColorStop(0, 'rgba(255,255,255,0)'); g.addColorStop(1, '#fff')
+            ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 16)
+            return new THREE.CanvasTexture(c)
+        })()
         const loopObjects = new Map()
         let syncedLoops = null
         const removeLoopObject = (id) => {
@@ -508,10 +547,22 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const line = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0019, 5, false), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false }))
                 const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0065, 6, false), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
                 halo.visible = false
-                // The shuttle: a small rounded-off box, turned along the route, with a dark outline
-                const podGeo = new THREE.BoxGeometry(0.036, 0.012, 0.008)
+                // The shuttle: flat-faced and chamfered to a point at the nose, turned along the route.
+                // The fill stays white (readable over bright land/cloud, same as before); the edges, a
+                // glow and a short trail are tinted to the loop's colour - kind, and the equipped general
+                // theme, via loopColor - so it reads as a pod going somewhere even before you hover it.
+                const podGeo = makePodGeometry()
                 const pod = new THREE.Mesh(podGeo, new THREE.MeshBasicMaterial({ color: LOOP_WHITE }))
-                pod.add(new THREE.LineSegments(new THREE.EdgesGeometry(podGeo), new THREE.LineBasicMaterial({ color: 0x000000 })))
+                const podEdges = new THREE.LineSegments(new THREE.EdgesGeometry(podGeo), new THREE.LineBasicMaterial({ color: loopColor(loop.kind) }))
+                pod.add(podEdges)
+                const podGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: podGlowTexture, color: loopColor(loop.kind), transparent: true, opacity: 0.4, depthWrite: false, blending: THREE.AdditiveBlending }))
+                podGlow.scale.setScalar(0.034)
+                pod.add(podGlow)
+                const podTrailGeo = new THREE.PlaneGeometry(0.03, 0.009)
+                podTrailGeo.rotateX(-Math.PI / 2) // lies flat; width along local X = forward/back, so the gradient's opaque edge sits at the pod and fades out behind it
+                const podTrail = new THREE.Mesh(podTrailGeo, new THREE.MeshBasicMaterial({ map: podTrailTexture, color: loopColor(loop.kind), transparent: true, opacity: 0.6, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide }))
+                podTrail.position.set(-0.026, 0, 0) // behind the pod, in its own local space - rides along for free, no extra per-frame placement
+                pod.add(podTrail)
                 // Arrows showing the way the loop is going, only while highlighted
                 const arrows = Array.from({ length: ARROW_COUNT }, () => {
                     const a = new THREE.Mesh(new THREE.ConeGeometry(0.0075, 0.02, 8), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind) }))
@@ -520,7 +571,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 })
                 group.add(under, line, halo, pod, ...arrows)
                 loopGroup.add(group)
-                loopObjects.set(loop.id, { group, under, line, halo, pod, arrows, points, curve, loop })
+                loopObjects.set(loop.id, { group, under, line, halo, pod, podEdges, podGlow, podTrail, arrows, points, curve, loop })
             })
             syncedLoops = list
         }
@@ -547,13 +598,21 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 o.pod.position.copy(tmpA)
                 o.pod.quaternion.setFromRotationMatrix(tmpM)
                 o.pod.scale.setScalar(zoom * (isLit ? 1.35 : 1))
-                o.pod.material.color.setHex(isLit ? loopColor(o.loop.kind) : LOOP_WHITE)
-                o.line.material.color.setHex(isLit ? loopColor(o.loop.kind) : LOOP_WHITE)
+                const col = loopColor(o.loop.kind)
+                o.pod.material.color.setHex(isLit ? col : LOOP_WHITE)
+                o.line.material.color.setHex(isLit ? col : LOOP_WHITE)
+                // Unlike the fill, the edges/glow/trail stay tinted whether or not the loop is highlighted -
+                // that's the point (readable at a glance, not just on hover) - they just intensify when it is
+                o.podEdges.material.color.setHex(col)
+                o.podGlow.material.color.setHex(col)
+                o.podGlow.material.opacity = isLit ? 0.7 : 0.4
+                o.podTrail.material.color.setHex(col)
+                o.podTrail.material.opacity = isLit ? 0.85 : 0.6
                 o.line.material.opacity = anyLit ? (isLit ? 1 : 0.3) : 0.8
                 o.under.material.opacity = anyLit && !isLit ? 0.12 : 0.35
                 o.halo.visible = isLit
                 o.group.renderOrder = isLit ? 2 : 1
-                ;[o.under, o.line, o.halo, o.pod].forEach(m => { m.renderOrder = isLit ? 3 : 1 })
+                ;[o.under, o.line, o.halo, o.pod, o.podEdges, o.podGlow, o.podTrail].forEach(m => { m.renderOrder = isLit ? 3 : 1 })
                 o.arrows.forEach((a, k) => {
                     a.visible = isLit
                     if (!isLit) return
