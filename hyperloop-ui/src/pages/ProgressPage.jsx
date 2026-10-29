@@ -280,10 +280,16 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         const devIncome = (purchasedDevelopments || []).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0)
         return economyManager.withFoundersHall(cityIncome + devIncome)
     })()
-    const mostProfitableCity = purchasedCities.length
-        ? purchasedCities.reduce((best, c) => cityIncomes.get(c) > cityIncomes.get(best) ? c : best) : null
-    const leastProfitableCity = purchasedCities.length
-        ? purchasedCities.reduce((worst, c) => cityIncomes.get(c) < cityIncomes.get(worst) ? c : worst) : null
+    // The home city (always purchasedCities[0]) never earns - isCityEarning hard-codes it to false, so
+    // calculateCityEarning is always exactly 0 for it. Left in the pool, it didn't just occasionally tie for
+    // "Least profitable": reduce with no initial value starts from purchasedCities[0] (home), and nothing can
+    // beat £0 with a strictly-less-than check since no city earns a negative amount, so home won every time
+    // there was at least one other connected city, whatever that city actually earned.
+    const profitableCities = purchasedCities.slice(1)
+    const mostProfitableCity = profitableCities.length
+        ? profitableCities.reduce((best, c) => cityIncomes.get(c) > cityIncomes.get(best) ? c : best) : null
+    const leastProfitableCity = profitableCities.length
+        ? profitableCities.reduce((worst, c) => cityIncomes.get(c) < cityIncomes.get(worst) ? c : worst) : null
 
     const revenueDevs = (purchasedDevelopments || []).filter(d => d.revenue > 0)
     const mostProfitableDev = revenueDevs.length ? revenueDevs.reduce((best, d) => economyManager.getEffectiveDevIncomeWithBoosts(d) > economyManager.getEffectiveDevIncomeWithBoosts(best) ? d : best) : null
