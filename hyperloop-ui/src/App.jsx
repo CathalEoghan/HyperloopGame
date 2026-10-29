@@ -1226,6 +1226,11 @@ function App() {
         // Only pictures used in the last 3 hours count as used, so they come round again instead of running out (bug #71)
         const feedPfpIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPfpId).filter(Boolean))
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]').filter(id => feedPfpIds.has(id))
+        // Posts about owned developments/upgrades/prestige items (see OWNED_POSTS_WEIGHT in hyperLinkEngine.js):
+        // once one has fired, it stays excluded for the rest of the run, not just the usual 3 hours - this list
+        // only ever grows within a run and is wiped by startPrestigeRun/clearGameState (SaveManager.js), unlike
+        // usedPostIds above which prunes itself back down as entries age out of the 3-hour window.
+        const firedDevPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
         const todayKey = new Date().toDateString()
         const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
         const todaysArrivals = JSON.parse(localStorage.getItem(`arrivals_${todayKey}`) || '[]')
@@ -1251,6 +1256,7 @@ function App() {
           usedPfps,
           templateLastUsed,
           pfpLastUsed,
+          firedDevPostIds,
           trigger: hyperLinkTriggerRef.current,
         })
         if (post) {
@@ -1266,6 +1272,10 @@ function App() {
           if (post.monthPostId) {
             usedMonthPostRecords.push({ id: post.monthPostId, year: currentYear })
             localStorage.setItem('hyperloop_hyperlink_used_month_posts', JSON.stringify(usedMonthPostRecords))
+          }
+          if (post.isOwnedPost) {
+            firedDevPostIds.push(post.usedPostId)
+            localStorage.setItem('hyperloop_hyperlink_fired_devposts', JSON.stringify(firedDevPostIds))
           }
           hyperLinkTriggerRef.current = null
           nextPostTick.current = tickCount.current + 60 + Math.floor(Math.random() * 120)

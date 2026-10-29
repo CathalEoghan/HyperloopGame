@@ -195,10 +195,13 @@ function getMonthCategory() {
 }
 
 // All the posts about the developments and upgrades the player owns share this weight, however many they own,
-// so they make up roughly 1 post in 5 (the everyday categories weigh about 15 between them). Each line can come
-// back once it hasn't been used for 3 hours, like any other post. They used to fire once per development per run,
-// so most lines were never seen, and every owned development competed at once: they flooded the start of a run
-// and then stopped.
+// so they make up roughly 1 post in 5 (the everyday categories weigh about 15 between them). They used to all
+// compete with their own separate weight, which is what flooded the start of a run; sharing one weight between
+// however many are owned fixed that part. But each line was also only "used" for the same 3 hours as any other
+// post, and with only a handful of developments owned - the common case for most of a run - that shared weight
+// keeps landing on the same small pool, so the same couple of lines were coming back again and again inside a
+// single run. These specific lines (via firedDevPostIds below) are excluded for the rest of the run once shown,
+// not just for 3 hours, and only clear when a new run starts.
 const OWNED_POSTS_WEIGHT = 4
 
 // Ranks that have their own milestone posts (the list is `milestone<rank>` in hyperLinkData.js). To add one, add the
@@ -243,7 +246,9 @@ function buildEligibleCategories(gameState) {
     } = gameState
 
     const cats = []
-    const add = (category, weight, data = {}) => cats.push({ category, weight, data })
+    // isOwned marks the development/upgrade/prestige categories added further down, so generateHyperLinkPost
+    // knows to exclude a chosen line for the rest of the run (not just 3 hours) once it's been shown.
+    const add = (category, weight, data = {}, isOwned = false) => cats.push({ category, weight, data, isOwned })
 
     add('general', 2)
     add('officialGeneral', 5)
@@ -323,7 +328,7 @@ function buildEligibleCategories(gameState) {
         ...purchasedUpgrades.map(upg => UPGRADE_KEY_MAP[upg.name]),
         ...Object.entries(PRESTIGE_POST_MAP).filter(([id]) => PrestigeManager.owns(id)).map(([, key]) => key),
     ])].filter(key => key && POSTS[key]?.length && (!OWNED_POST_WINDOWS[key] || OWNED_POST_WINDOWS[key](new Date())))
-    ownedKeys.forEach(key => add(key, OWNED_POSTS_WEIGHT / ownedKeys.length))
+    ownedKeys.forEach(key => add(key, OWNED_POSTS_WEIGHT / ownedKeys.length, {}, true))
 
     return cats
 }
@@ -410,13 +415,19 @@ function generateUser(gender, usedPfps, pfpLastUsed = {}) {
 }
 
 export function generateHyperLinkPost(gameState) {
-    const { terminalName, usedPostIds, usedMonthPostIds = [], usedPfps, trigger, templateLastUsed = {}, pfpLastUsed = {} } = gameState
+    const { terminalName, usedPostIds, usedMonthPostIds = [], usedPfps, trigger, templateLastUsed = {}, pfpLastUsed = {}, firedDevPostIds = [] } = gameState
+
+    // firedDevPostIds holds the IDs of owned-development/upgrade/prestige posts already shown this run (see
+    // OWNED_POSTS_WEIGHT above) - it never expires the way usedPostIds does, only clearing on a new run. Folded
+    // into one exclusion list used everywhere below: every category's IDs are namespaced by its own category
+    // name, so this never excludes anything outside the owned categories it's actually meant for.
+    const excludedPostIds = firedDevPostIds.length ? [...usedPostIds, ...firedDevPostIds] : usedPostIds
 
     // Categories whose templates are all in use are left out of the draw, so a pick is never wasted
     // on one that cannot produce a post (bug #71).
     const hasTemplateLeft = c => (POSTS[c.category] || []).some((_, i) => {
         const id = `${c.category}_${i}`
-        return !usedPostIds.includes(id) && !(MONTH_NAMES.includes(c.category) && usedMonthPostIds.includes(id))
+        return !excludedPostIds.includes(id) && !(MONTH_NAMES.includes(c.category) && usedMonthPostIds.includes(id))
     })
     const cats = buildEligibleCategories(gameState).filter(hasTemplateLeft)
     if (cats.length === 0) return null
@@ -425,13 +436,13 @@ export function generateHyperLinkPost(gameState) {
     // instead of competing with the ordinary categories (bug #135).
     const triggerCat = trigger ? cats.find(c => c.category === trigger.type) : null
     const triggerHasPosts = triggerCat && (POSTS[triggerCat.category] || [])
-        .some((_, i) => !usedPostIds.includes(`${triggerCat.category}_${i}`))
+        .some((_, i) => !excludedPostIds.includes(`${triggerCat.category}_${i}`))
     const selected = triggerHasPosts ? triggerCat : pickCategory(cats)
 
     if (selected.category === 'officialGeneral') {
         const pool = POSTS.officialGeneral || []
         const available = pool.map((text, i) => ({ id: `officialGeneral_${i}`, text }))
-            .filter(p => !usedPostIds.includes(p.id))
+            .filter(p => !excludedPostIds.includes(p.id))
         if (available.length === 0) return null
         const chosen = pickLeastRecent(available, templateLastUsed)
         return {
@@ -457,7 +468,7 @@ export function generateHyperLinkPost(gameState) {
         // top of the normal "already in the last-2-days feed" check, also exclude anything already
         // shown this calendar year. Otherwise the same handful of posts would cycle every couple of
         // days for the entire month instead of each firing once before next year's version of it.
-        .filter(p => !usedPostIds.includes(p.id) && !(isMonthPost && usedMonthPostIds.includes(p.id)))
+        .filter(p => !excludedPostIds.includes(p.id) && !(isMonthPost && usedMonthPostIds.includes(p.id)))
 
     if (available.length === 0) return null
 
@@ -487,6 +498,9 @@ export function generateHyperLinkPost(gameState) {
         usedPfpId: pfpId,
         gender,
         monthPostId: isMonthPost ? chosenPost.id : null,
+        // Tells App.jsx to also record this one in firedDevPostIds, so it's excluded for the rest of the
+        // run - not just the next 3 hours - the same as every other owned-category post.
+        isOwnedPost: !!selected.isOwned,
     }
 }
 
