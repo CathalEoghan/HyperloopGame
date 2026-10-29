@@ -748,7 +748,14 @@ export const POSTS = {
         'ticket scanned, officially en route to {boardingCity}! xx',
         'already tapped into my downloaded podcasts for the trip to {boardingCity} 🎧',
         'boarding is super smooth today, gotta give credit to the staff at {terminalName} 👏',
-    ],
+        'standing in line to board and I already forgot my seat number 💀',
+        'so excited to finally be boarding for {boardingCity}!! line is actually moving fast today',
+        'Boarding call just went out for {boardingCity}, smell you guys later!',
+        'nothing worse than getting stuck behind a massive group while boarding... #{boardingCity}',
+        'stepping into the pod right now, see you soon {boardingCity} ❤️',
+        'Boarding at {terminalName} is chaotic today ngl, everyone\'s rushing lol',
+        'Seat secured for {boardingCity}! now to pray the pod stays quiet 🙏'
+],
 
     finalCall: [
         'OMGG i completely forgot i had to board literally writing this & running at the same time',
@@ -803,6 +810,7 @@ export const POSTS = {
         'Window seat for the loop to {departedCity}... time for a quick nap 💤',
         'off to {departedCity}! hopefully i make it back in one piece 🙈',
         'on my way to {departedCity}! super smooth ride today, 10/10 experience',
+        'Well we havent crashed yet at least #{departedCity}',
     ],
 
     delayCompensated: [
