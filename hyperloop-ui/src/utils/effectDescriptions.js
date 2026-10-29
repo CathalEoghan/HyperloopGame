@@ -21,7 +21,9 @@ export const EFFECT_DESCRIPTIONS = {
     delayCompensationReduction: (v) => `-${pct(v)}% delay compensation cost`,
     delayRepCostReduction: (v) => `-${v} Reputation when ignoring delays`,
     bonusDurationExtension: (v) => `Bonus events last ${pct(v)}% longer`,
-    farewellWindowExtension: (v) => `+${v} minutes farewell window`,
+    // Also extends the greeting window on arrivals (App.jsx derives both from this same effect), so the
+    // wording says so rather than naming only the farewell half.
+    farewellWindowExtension: (v) => `+${v} minutes to farewell and greeting windows`,
     farewellRepDoubled: () => `Reputation from farewells doubled`,
     negativeEventReduction: (v) => `Negative events ${pct(v)}% less likely`,
     workRepChanceDouble: () => `Double chance of Reputation from Work`,
