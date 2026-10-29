@@ -605,6 +605,9 @@ function App() {
   const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
   const lastModalClearedAt = useRef(Date.now() + 180000);
   const lastEventTime = useRef(Date.now());
+  // See the otherPopupOpen effect below, which keeps this in sync each render - read by the tick's
+  // event-firing checks so a new event can't start counting down while its own modal couldn't show yet.
+  const otherPopupOpenRef = useRef(false);
   const rankSetRef = useRef(rankManager.rank);
   const terminalNameRef = useRef(terminalName);
   const departureBoardAudioRef = useRef(null);
@@ -1424,7 +1427,10 @@ function App() {
       // easily sit on the Construction screen past the 1-minute mark otherwise.
       const timeSinceLastEvent = Date.now() - lastEventTime.current;
       const forceEvent = timeSinceLastEvent > 300000;
-      if (hasEnteredRef.current && (Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000) {
+      // otherPopupOpenRef also gates firing, not just the modal's render (see its declaration) - the roll and
+      // the 5-minute guarantee both just keep re-checking every tick, so holding off here only delays the event
+      // until the blocking popup clears, it never skips one.
+      if (hasEnteredRef.current && (Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000 && !otherPopupOpenRef.current) {
         lastEventTime.current = Date.now();
         const noNegatives = PrestigeManager.owns('crisisAvoidanceSpecialists');
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
@@ -1437,7 +1443,7 @@ function App() {
       // Free Wi-Fi (Vientiane): liking a Hyper-Link post has a small chance of triggering a positive event of
       // its own, independent of the regular random-interval roll above - queued by onLikeReward below and
       // picked up here on the next tick, so it still goes through the same rank/cooldown/active-event guards.
-      if (likeEventPendingRef.current && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK) {
+      if (likeEventPendingRef.current && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && !otherPopupOpenRef.current) {
         likeEventPendingRef.current = false;
         lastEventTime.current = Date.now();
         fireEvent(getRandomEvent(true));
@@ -1628,6 +1634,13 @@ function App() {
     || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
     || milestoneQueue.length > 0 || showSecretCityModal
   const popupOpen = otherPopupOpen || (showEventModal && !!activeEvent)
+  // Mirrored into a ref so the tick's event-firing checks (a stale closure set up once by startTick, same
+  // reason every other thing it reads is a ref) see this render's up-to-date value instead of whatever
+  // otherPopupOpen happened to be when that closure was created. Without this, an event could still fire (and
+  // start counting down) while blocked behind a common popup like a farewell or rank-up - the render guard
+  // below stops its modal appearing, but nothing stopped the clock, so by the time the blocking popup cleared
+  // the event had little time left or had already silently expired, which read as events "leaving quickly".
+  useEffect(() => { otherPopupOpenRef.current = otherPopupOpen }, [otherPopupOpen])
 
   // Shop: buying costs Reputation and equips the item straight away. Returns false when the player can't afford it.
   const updateCosmetics = (next) => { writeCosmetics(next); setCosmetics(next); applyCosmetics(next); };
