@@ -112,8 +112,14 @@ export function loopPassengers(cityName, hour, seed) {
 export const loopId = (kind, dayMs, entry) => `${kind === 'arrival' ? 'arr' : 'dep'}|${dayKey(dayMs)}|${entry.time}|${entry.name}`
 
 // A loop's passengers depend on the city, the day and its hour only, never its exact minute, so the Schedule loop
-// preview is exactly what runs, and moving a loop within the hour or delaying it doesn't change who is on board
-export const stablePassengers = (kind, dayMs, name, hour) => loopPassengers(name, hour, `${kind}|${dayKey(dayMs)}|${name}`)
+// preview is exactly what runs, and moving a loop within the hour or delaying it doesn't change who is on board.
+// `kind` isn't part of the seed: capacityCurve.js's demand curve is rolled once per city/day/hour, not per
+// direction, and the seed here has to match EconomyManager.getConnectionCapacityInfo's build exactly
+// (`${name}|${dateString}|${hour}`) - that's what decides the connection's actual income, and what the City
+// modal shows as "running at X% capacity". A seed that drifted from it (this used to lead with `kind` instead
+// of the city name) rolled a different number for the same city/hour/day, so the departure board could show a
+// loop as full while the City modal - correctly - showed what it was actually earning at a lower capacity.
+export const stablePassengers = (kind, dayMs, name, hour) => loopPassengers(name, hour, `${name}|${dayKey(dayMs)}|${hour}`)
 const passengersOf = (kind, dayMs, entry) => stablePassengers(kind, dayMs, entry.name, entry.hour)
 
 export function loopSpeedMph(seed) {
