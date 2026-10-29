@@ -51,8 +51,8 @@ export default function FirstLoopModal({ purchasedCities, reputation = 0, progre
                 ) : (
                     <>
                         <p className="firstloop-text">
-                            No loops run <strong>until you schedule them</strong>, and a city <strong>earns nothing until it has a departure.</strong>
-                            Pick a time and gate for it yourself, or automate it and the game picks for you, so
+                            No loops run <strong>until you schedule them</strong>, and a city <strong>earns nothing until it has a departure</strong>.
+                             Pick a time and gate for it yourself, or automate it and the game picks for you, so
                             passengers can start travelling!
                         </p>
                         <p className="firstloop-tip"><b>Tip:</b> Be at the terminal when a loop departs to say farewell and earn Reputation.</p>
