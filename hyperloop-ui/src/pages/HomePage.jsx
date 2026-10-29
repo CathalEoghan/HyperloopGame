@@ -29,11 +29,14 @@ if (typeof window !== 'undefined') window.addEventListener(COSMETICS_EVENT, () =
 const loopColor = (kind) => kind === 'arrival' ? arcColors.arrival : arcColors.departure
 // How close (in pixels) the mouse must be to an arc to count as pointing at it
 const ARC_HIT_PX = 10
-// The widest of the route's three tubes (the halo, visible while highlighted) - how far out a pod has
-// to sit to clear the route's surface instead of sinking its lower half into it. placePods uses this
-// to lift the pod along the "away from the globe" axis; it has to stay in sync with the halo's own
-// TubeGeometry radius below, so both read it from here rather than repeating the number.
-const ROUTE_TUBE_RADIUS = 0.0065
+// The route's two tube radii that matter for resting a pod on top of it rather than inside it: the
+// always-visible "under" tube, and the wider "halo" that only shows up while highlighted. placePods
+// lifts the pod by whichever one is actually rendered at the time (under normally, halo when isLit) -
+// using the halo's radius even when only the slimmer "under" tube is showing overshot by about double,
+// which read as the pod floating above the route instead of resting on it. Both stay in sync with their
+// own TubeGeometry radius below, so everything reads the number from here rather than repeating it.
+const ROUTE_UNDER_RADIUS = 0.0034
+const ROUTE_HALO_RADIUS = 0.0065
 // The shuttle's own height (its local Y extent), same number makePodGeometry uses below - placePods
 // needs it too, to lift the pod by half its (post-zoom-scale) height on top of the route's surface.
 const POD_HEIGHT = 0.012
@@ -551,9 +554,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const curve = new THREE.CatmullRomCurve3(points)
                 const group = new THREE.Group()
                 // A dark underlay keeps white readable over bright land and cloud; the halo only shows when highlighted
-                const under = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0034, 5, false), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }))
+                const under = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, ROUTE_UNDER_RADIUS, 5, false), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }))
                 const line = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0019, 5, false), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false }))
-                const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, ROUTE_TUBE_RADIUS, 6, false), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
+                const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, ROUTE_HALO_RADIUS, 6, false), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
                 halo.visible = false
                 // The shuttle: flat-faced and chamfered to a point at the nose, turned along the route.
                 // The fill stays white (readable over bright land/cloud, same as before); the edges, a
@@ -605,11 +608,14 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 tmpM.makeBasis(tmpB, tmpC, tmpS)
                 const podScale = zoom * (isLit ? 1.35 : 1)
                 // tmpA sits ON the route's centreline, same as the tube meshes do - placing the pod there
-                // directly buries its lower half inside the (always-visible) under tube and, while
-                // highlighted, the halo too. Lift it along tmpC (the pod's own "up", per the basis above)
-                // by the widest tube's radius plus half the pod's own current height, so it rests on top
-                // of the route instead of clipping through it.
-                o.pod.position.copy(tmpA).addScaledVector(tmpC, ROUTE_TUBE_RADIUS + (POD_HEIGHT / 2) * podScale)
+                // directly buries its lower half inside whichever tube is currently showing. Lift it along
+                // tmpC (the pod's own "up", per the basis above) by that tube's own radius - under's slimmer
+                // one normally, halo's wider one once isLit swaps it in - plus half the pod's own current
+                // height, so it rests on top of the route instead of clipping through it. Using halo's
+                // (wider) radius even while only the slimmer under tube was showing is what previously had
+                // it floating with a visible gap above the route.
+                const tubeClearance = isLit ? ROUTE_HALO_RADIUS : ROUTE_UNDER_RADIUS
+                o.pod.position.copy(tmpA).addScaledVector(tmpC, tubeClearance + (POD_HEIGHT / 2) * podScale)
                 o.pod.quaternion.setFromRotationMatrix(tmpM)
                 o.pod.scale.setScalar(podScale)
                 const col = loopColor(o.loop.kind)
