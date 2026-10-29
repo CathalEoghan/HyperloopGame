@@ -7,7 +7,7 @@ export const EARLY_RETIREMENT_REP_COST = 50;
 export const earlyRetirement = new Upgrade(
     "Early Retirement",
     0,
-    "Recreation",
+    "Enterprise",
     "earlyRetirement",
     EARLY_RETIREMENT_REP_COST
 );

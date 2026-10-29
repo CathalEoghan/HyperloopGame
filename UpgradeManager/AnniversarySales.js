@@ -5,7 +5,7 @@ import { Upgrade } from "./Upgrade.js";
 export const anniversarySales = new Upgrade(
     "Anniversary Sales",
     0,
-    "Recreation",
+    "Enterprise",
     "workPerAchievement",
     0.05
 );
