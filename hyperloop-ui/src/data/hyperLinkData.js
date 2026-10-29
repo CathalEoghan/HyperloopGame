@@ -136,10 +136,10 @@ export const FIRST_NAMES_FEMALE = [
 ]
 
 export const SURNAMES = [
-    'Smith', 'Jones', 'Williams', 'Taylor', 'Brown', 'Quinn', 'Paisley', 'Cross',
-    'Davies', 'Evans', 'Wilson', 'Thomas', 'Roberts', 'Romanova', 'Laurent',
-    'Johnson', 'Lewis', 'Walker', 'Robinson', 'Wood', 'Ackley', 'Le Blanc', 'Keyes',
-    'Thompson', 'White', 'Watson', 'Jackson', 'Harris', 'Acker', 'Rios', 'Tanen', 'St. James',
+    'Smith', 'Jones', 'Williams', 'Taylor', 'Brown', 'Quinn', 'Paisley', 'Cross', 'Fiennes', 'Gosling',
+    'Davies', 'Evans', 'Wilson', 'Thomas', 'Roberts', 'Romanova', 'Laurent', 'Hartland', 'Moreland',
+    'Johnson', 'Lewis', 'Walker', 'Robinson', 'Wood', 'Ackley', 'Le Blanc', 'Keyes', 'More', 'Costello', 'Devine',
+    'Thompson', 'White', 'Watson', 'Jackson', 'Harris', 'Acker', 'Rios', 'Tanen', 'St. James', 'Seymour',
     'Martin', 'Clarke', 'Turner', 'Hill', 'Scott', 'Ziegler', 'Herrera', 'Jameson', 'Harries', 'Feeley',
     'Moore', 'Cooper', 'Ward', 'Morris', 'King', 'Lake', 'Carver', 'Ramirez', 'Dobbs', 'Feely',
     'Wright', 'Green', 'Baker', 'Hall', 'Young', 'Slater', 'Suarez', 'Guerrero', 'York',
