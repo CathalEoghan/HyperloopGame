@@ -442,7 +442,7 @@ export const POSTS = {
         'I was feeling bad then i remembered its friday',
         'Whats everyones fave day and why is it friday',
         'Weekend is hereeee',
-        'How is everyone\'s Friday going? Y\'all reday for the weekend? 🎉',
+        'How is everyone\'s Friday going? Y\'all ready for the weekend? 🎉',
         'how is it friday already? this week flew by',
         'Weekend is finally here 🎉',
     ],
