@@ -251,7 +251,7 @@ const cityLoopCodes = {
   'Palikir': 'PAL',
   'Panama City': 'PAN',
   'Paramaribo': 'PAR',
-  'Paris': 'PRM',
+  'Paris': 'PRS',
   'Perth': 'PER',
   'Philadelphia': 'PHI',
   'Phnom Penh': 'PHN',
