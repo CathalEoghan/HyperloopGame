@@ -343,7 +343,7 @@ export const POSTS = {
         'Getting ready to start my evening shift! #terminallife',
         'Defo getting a bit colder now the suns dipping out',
         'Arrived early for my loop later on tonight. What can I do to pass the time?',
-        'Anyonw wanna watch the sunset with me 🥺',
+        'Anyone wanna watch the sunset with me 🥺',
         'Ready for this day to be over',
         'The sunset looks so beautiful 😻',
         'Another day almost over... #timeflies'
