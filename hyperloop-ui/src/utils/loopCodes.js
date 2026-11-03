@@ -12,10 +12,11 @@
 //   - Departure numbers come from YOUR terminal's own shared pool (getDeparturePool below), one slot for
 //     every connected city other than home. The pool itself isn't tied to any one city - a number is only
 //     claimed once a departure is actually scheduled with it (timetable.js stores the chosen number right
-//     on that entry, as `loopNumber`), and it's freed back up the moment that departure is removed or
-//     moved to a different number. That's what lets the Schedule screen offer it as a plain pick-one-from-
-//     your-list choice: every pool number not currently claimed by another scheduled departure is free to
-//     pick, like an unused gate.
+//     on that entry, as `loopNumber`), and it's freed back up the moment that departure is removed, moved
+//     to a different number, or its round trip (there, back, and maintenance) is over. That's what lets the
+//     Schedule screen offer it as a plain pick-one-from-your-list choice: every pool number not currently
+//     out on another scheduled departure's round trip is free to pick, like an unused gate (see
+//     timetable.js's busyLoopNumbers for exactly how "out on a round trip" is worked out).
 //   - Arrival numbers are each city's OWN number, rolled and kept independently of your departure pool
 //     and of every other city's arrival number. Two different cities arriving under the same number is
 //     fine and expected - same as two real carriers reusing a flight number independently of each other.

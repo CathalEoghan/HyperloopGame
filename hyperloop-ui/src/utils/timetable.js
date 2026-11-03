@@ -26,6 +26,9 @@ export const TIMETABLE_KEY = 'hyperloop_timetable'
 export const GATE_COOLDOWN = 30
 // A loop that is due in less than this long is locked for today (it is boarding): changes to it start tomorrow
 export const MIN_LEAD = 15
+// A loop number is busy for the whole round trip it's out on - there, back, and this long again on the ground
+// for maintenance - before it's free for a different city's departure (see busyLoopNumbers below)
+export const LOOP_TURNAROUND_MINUTES = 30
 export const FIRST_MINUTE = 5            // never exactly 00:00: its farewell window would start on the previous day
 export const LAST_MINUTE = 23 * 60 + 55
 
@@ -113,12 +116,13 @@ export function busyGates(timetable, name, minuteOfDay) {
 }
 
 // A loop number stands for one vehicle actually out on the line, not a city's permanent property, so two
-// cities can share one as long as their trips don't actually overlap - DUB001 can leave for Venice at 19:15
-// and, once that loop's back, leave for Copenhagen at 14:15 the next day's cycle, same as a real flight
-// number gets reused for a different route once the aircraft's back. `durA`/`durB` are each trip's whole
-// time on the line, so this is the same idea as busyGates' cooldown, just stretched to the trip's own length
-// instead of a flat 30 minutes. The timetable repeats every day on a 24-hour clock, so a trip is checked
-// against the other one's window a day either side too - that's what catches a trip crossing midnight.
+// cities can share one as long as their round trips don't actually overlap - DUB001 can leave for Venice
+// at 19:15 and, once that loop's there, back, and through maintenance, leave for Copenhagen at 14:15 the
+// next day's cycle, same as a real flight number gets reused for a different route once the aircraft's
+// back and turned around. `durA`/`durB` are each round trip's whole time out of service, so this is the
+// same idea as busyGates' cooldown, just stretched to the loop's own round-trip length instead of a flat
+// 30 minutes. The timetable repeats every day on a 24-hour clock, so a trip is checked against the other
+// one's window a day either side too - that's what catches a trip crossing midnight.
 function windowsOverlap(startA, durA, startB, durB) {
     const a0 = startA, a1 = startA + durA
     return [-1440, 0, 1440].some(offset => {
@@ -127,15 +131,22 @@ function windowsOverlap(startA, durA, startB, durB) {
     })
 }
 
-// Which pool numbers are already out on another city's overlapping trip right now, as { number: 'why' } -
-// same shape as busyGates above, for the same reason: the Schedule screen disables them the same way. Trip
-// lengths come from tripMinutes with no day seed, a stable per-route estimate (not today's actual roll),
-// since this is checking the repeating timetable itself, not one specific day's instance of it.
+// How long a departure to `name` ties its loop number up for: there, back, and LOOP_TURNAROUND_MINUTES on
+// the ground for maintenance before it's fit to fly again. Both legs come from tripMinutes with no day
+// seed, a stable per-route estimate (not today's actual roll), since this is checking the repeating
+// timetable itself, not one specific day's instance of it - and the return leg has its own estimate rather
+// than just doubling the outbound one, since the direction can roll a slightly different speed.
+function roundTripMinutes(homeName, name) {
+    return tripMinutes(homeName, name) + tripMinutes(name, homeName) + LOOP_TURNAROUND_MINUTES
+}
+
+// Which pool numbers are already out on another city's overlapping round trip right now, as { number: 'why' }
+// - same shape as busyGates above, for the same reason: the Schedule screen disables them the same way.
 export function busyLoopNumbers(timetable, name, minuteOfDay, homeName) {
-    const durationMin = tripMinutes(homeName, name)
+    const durationMin = roundTripMinutes(homeName, name)
     const busy = {}
     timetable.filter(e => e.name !== name && Number.isFinite(e.loopNumber)).forEach(e => {
-        const eDuration = tripMinutes(homeName, e.name)
+        const eDuration = roundTripMinutes(homeName, e.name)
         if (windowsOverlap(minuteOfDay, durationMin, e.minuteOfDay, eDuration)) {
             busy[e.loopNumber] = `${e.name} at ${timeString(e.minuteOfDay)}`
         }

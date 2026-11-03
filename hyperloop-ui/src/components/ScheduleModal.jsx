@@ -131,7 +131,7 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                 <div className="sched-body">
                     <p className="sched-intro">
                         Each city can leave once a day. Loops can leave at the same time from different gates, but a gate can't be reused for 30 minutes,
-                        and a loop number can't be reused until the loop it's already out on is back.
+                        and a loop number can't be reused until the loop it's already out on is there, back, and through maintenance.
                         Your timetable is saved and repeats every day at no extra cost, though passenger counts and income will vary from day to day.
                     </p>
 
