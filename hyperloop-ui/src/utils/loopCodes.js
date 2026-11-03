@@ -61,6 +61,17 @@ function pruneDisconnected(map, connectedNames) {
     return changed
 }
 
+// Which OTHER currently-connected city (if any) already holds this departure number - a read-only check,
+// so the Schedule Loop menu can validate a number the player is still typing before they commit to it
+// with setDepartureNumber below.
+export function departureNumberConflict(cityName, number, purchasedCities) {
+    const connectedNames = new Set((purchasedCities || []).map(c => c.name))
+    const map = readMap(DEPARTURE_NUMBERS_KEY)
+    const n = Number(number)
+    const entry = Object.entries(map).find(([name, num]) => name !== cityName && connectedNames.has(name) && num === n)
+    return entry ? entry[0] : null
+}
+
 // This city's departure number: assigned once from the shared pool the first time it's needed, then
 // reused for the rest of the run.
 export function getDepartureNumber(cityName, purchasedCities) {
@@ -76,6 +87,24 @@ export function getDepartureNumber(cityName, purchasedCities) {
     return map[cityName]
 }
 
+// Lets the player manually set a city's departure number from the Schedule Loop menu, in place of the one
+// rolled automatically. Refused if it's out of range, or already claimed by another currently-connected
+// city - the same busy/free rule getDepartureNumber enforces for its own random pick.
+export function setDepartureNumber(cityName, number, purchasedCities) {
+    const n = Number(number)
+    if (!Number.isInteger(n) || n < DEPARTURE_NUMBER_MIN || n > DEPARTURE_NUMBER_MAX) {
+        return { ok: false, error: `Loop number must be between ${String(DEPARTURE_NUMBER_MIN).padStart(3, '0')} and ${DEPARTURE_NUMBER_MAX}.` }
+    }
+    const conflict = departureNumberConflict(cityName, n, purchasedCities)
+    if (conflict) return { ok: false, error: `${conflict} is already using loop number ${String(n).padStart(3, '0')}.` }
+    const connectedNames = new Set((purchasedCities || []).map(c => c.name))
+    const map = readMap(DEPARTURE_NUMBERS_KEY)
+    pruneDisconnected(map, connectedNames)
+    map[cityName] = n
+    writeMap(DEPARTURE_NUMBERS_KEY, map)
+    return { ok: true }
+}
+
 // This city's own arrival number: independent of every other city's and of the departure pool above.
 export function getArrivalNumber(cityName, purchasedCities) {
     const connectedNames = new Set((purchasedCities || []).map(c => c.name))
@@ -89,11 +118,11 @@ export function getArrivalNumber(cityName, purchasedCities) {
     return map[cityName]
 }
 
-// The code shown to the player for a loop: the city's code plus its departure or arrival number, e.g.
-// "FRA008" (departure, zero-padded to 3 digits so the board column doesn't jump around) or "FRA7"
-// (arrival, shown plain - real flight numbers aren't padded either).
+// The code shown to the player for a loop: the city's code plus its departure or arrival number, both
+// zero-padded to 3 digits (e.g. "FRA008", "FRA007") so every code reads the same width whichever board
+// it's on, even though arrival numbers are drawn from a much smaller range than departure ones.
 export function loopCode(cityName, kind, purchasedCities) {
     const prefix = getCityLoopCode(cityName)
-    if (kind === 'arrival') return `${prefix}${getArrivalNumber(cityName, purchasedCities)}`
-    return `${prefix}${String(getDepartureNumber(cityName, purchasedCities)).padStart(3, '0')}`
+    const number = kind === 'arrival' ? getArrivalNumber(cityName, purchasedCities) : getDepartureNumber(cityName, purchasedCities)
+    return `${prefix}${String(number).padStart(3, '0')}`
 }

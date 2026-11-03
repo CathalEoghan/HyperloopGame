@@ -25,8 +25,8 @@ function getOrdinal(n) {
 
 const STATUS_WIDTH = 11
 const GATE_WIDTH = 3
-// Long enough for the longest code this ever produces: a 3-letter city code plus a 3-digit departure
-// number, e.g. "FRA008" (an arrival's smaller number, e.g. "FRA7", is shorter and just pads out).
+// A 3-letter city code plus a 3-digit number, e.g. "FRA008" - departure and arrival numbers are both
+// zero-padded to the same width, even though arrivals are drawn from a much smaller range.
 const CODE_WIDTH = 6
 
 function padText(text, width, padChar = '-') {

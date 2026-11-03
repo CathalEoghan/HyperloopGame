@@ -4,6 +4,8 @@ import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHove
 import { NUM_GATES, timeString, entryTimestamp, formatDuration } from '../utils/loops.js'
 import { formatPerHour } from '../utils/income.js'
 import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, busyGates, previewLoop, MIN_LEAD } from '../utils/timetable.js'
+import { getDepartureNumber, setDepartureNumber, departureNumberConflict, loopCode } from '../utils/loopCodes.js'
+import { getCityLoopCode } from '../data/cityLoopCodes.js'
 import cashIcon from '../assets/misc/cash.png'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
@@ -33,6 +35,9 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
     const [editing, setEditing] = useState(null)       // the city being moved, or null when adding
     const [cityPick, setCity] = useState(() => open[0]?.name || '')
     const [slot, setSlot] = useState(() => suggestSlot(timetable, open[0]?.name || ''))
+    // This city's own departure number, from your shared pool (see loopCodes.js) - prefilled with its
+    // assigned one (rolling it for the first time if it doesn't have one yet), editable before it's saved.
+    const [loopNumber, setLoopNumber] = useState(() => open[0] ? getDepartureNumber(open[0].name, purchasedCities) : 1)
     // The city being added. When the one picked is no longer on offer (the form was hidden because every city was
     // scheduled, then one was removed), the first city on offer is the one the form shows, so it is the one used.
     const city = editing ? editing : (open.some(c => c.name === cityPick) ? cityPick : (open[0]?.name || ''))
@@ -46,6 +51,12 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
     const preview = city ? previewLoop(home.name, city, slot.minuteOfDay) : null
     const tooSoonToday = city && entryTimestamp({ hour, minute }, Date.now()) - Date.now() < MIN_LEAD * 60000
     const formVisible = editing !== null || open.length > 0
+    const loopNumberValid = Number.isInteger(loopNumber) && loopNumber >= 1 && loopNumber <= 999
+    const loopConflictCity = city && loopNumberValid ? departureNumberConflict(city, loopNumber, purchasedCities) : null
+    const loopError = !city ? null
+        : !loopNumberValid ? 'Loop number must be between 001 and 999.'
+        : loopConflictCity ? `${loopConflictCity} is already using loop number ${String(loopNumber).padStart(3, '0')}.`
+        : null
 
     const refresh = () => { setVersion(v => v + 1); onChange() }
     // Changing the time may land on a gate that is busy then: move to one that is free
@@ -57,6 +68,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
     const chooseCity = name => {
         setCity(name)
         setSlot(suggestSlot(timetable, name))
+        setLoopNumber(getDepartureNumber(name, purchasedCities))
         setError(''); setNotice('')
     }
     const resetForm = () => {
@@ -64,10 +76,13 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
         setEditing(null)
         setCity(next[0]?.name || '')
         setSlot(suggestSlot(readTimetable(), next[0]?.name || ''))
+        setLoopNumber(next[0] ? getDepartureNumber(next[0].name, purchasedCities) : 1)
     }
     const submit = () => {
         playClickSound2()
         const wasAdd = !editing
+        const codeResult = setDepartureNumber(city, loopNumber, purchasedCities)
+        if (!codeResult.ok) { setError(codeResult.error); return }
         const result = saveSlot({ name: city, ...slot }, purchasedCities)
         if (!result.ok) { setError(result.error); return }
         const verb = editing ? 'Moved' : 'Scheduled'
@@ -83,6 +98,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
         playClickSound2()
         setEditing(entry.name); setCity(entry.name)
         setSlot({ minuteOfDay: entry.minuteOfDay, gate: entry.gate })
+        setLoopNumber(getDepartureNumber(entry.name, purchasedCities))
         setError(''); setNotice('')
     }
     const remove = entry => {
@@ -138,6 +154,18 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                                         ))}
                                     </select>
                                 </label>
+                                <label className="sched-field">
+                                    <span>Loop No.</span>
+                                    <span className="sched-loopno">
+                                        <span className="sched-loopno-prefix">{city ? getCityLoopCode(city) : '---'}</span>
+                                        <input
+                                            type="number" min={1} max={999} step={1}
+                                            value={loopNumber}
+                                            onChange={e => { setLoopNumber(Number(e.target.value)); setError(''); setNotice('') }}
+                                            aria-label="Loop number"
+                                        />
+                                    </span>
+                                </label>
                             </div>
 
                             {preview && (
@@ -150,10 +178,10 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                                 </div>
                             )}
                             {tooSoonToday && !problem && <p className="sched-hint">That's too soon for today, so this loop starts tomorrow.</p>}
-                            {(problem || error) && <p className="sched-error">{error || problem}</p>}
+                            {(problem || error || loopError) && <p className="sched-error">{error || problem || loopError}</p>}
 
                             <div className="sched-actions">
-                                <button className="sched-btn sched-btn-primary" disabled={!!problem} onMouseEnter={() => playHoverSound()} onClick={submit}>
+                                <button className="sched-btn sched-btn-primary" disabled={!!problem || !!loopError} onMouseEnter={() => playHoverSound()} onClick={submit}>
                                     {editing ? 'Save move' : 'Add to timetable'}
                                 </button>
                                 {editing && (
@@ -179,7 +207,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                                     <li key={e.name} className={`sched-row${editing === e.name ? ' sched-row-editing' : ''}`}>
                                         <span className="sched-row-time">{timeString(e.minuteOfDay)}</span>
                                         <span className="sched-row-city">{e.name}{left && <small> · left today</small>}</span>
-                                        <span className="sched-row-detail">Gate {e.gate} · {arrived ? 'arrived' : 'arrives'} {p.arriveClock} · {p.passengers} passengers {left ? 'onboard' : 'expected'}</span>
+                                        <span className="sched-row-detail">{loopCode(e.name, 'departure', purchasedCities)} · Gate {e.gate} · {arrived ? 'arrived' : 'arrives'} {p.arriveClock} · {p.passengers} passengers {left ? 'onboard' : 'expected'}</span>
                                         <span className="sched-row-actions">
                                             <button className="sched-btn sched-btn-small" onMouseEnter={() => playHoverSound()} onClick={() => startEdit(e)}>Move</button>
                                             <button className="sched-btn sched-btn-small sched-btn-danger" onMouseEnter={() => playHoverSound()} onClick={() => remove(e)}>Remove</button>
