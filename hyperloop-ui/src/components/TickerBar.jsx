@@ -19,11 +19,11 @@ function TickerBar({ terminalName, purchasedCities }) {
             const diff = minutesUntilDeparture(entry)
             const code = loopCode(entry.name, 'departure', purchasedCitiesRef.current)
             if (diff > 30 && diff <= 45) {
-                msgs.push(`Attention: Passengers travelling with the ${code} service to ${entry.name} for a ${entry.time} departure are advised to go to Gate ${entry.gate}.`)
+                msgs.push(`Notice: Gate ${entry.gate} is now open for the ${entry.time} ${code} service to ${entry.name}.`)
             } else if (diff > 10 && diff <= 30) {
-                msgs.push(`Attention: The ${code} service, the ${entry.time} hyperloop to ${entry.name}, is now boarding at Gate ${entry.gate}.`)
+                msgs.push(`Attention: The ${entry.time} hyperloop ${code} to ${entry.name} is now boarding at Gate ${entry.gate}.`)
             } else if (diff > 5 && diff <= 10) {
-                msgs.push(`Attention: Final call for passengers travelling with the ${code} service to ${entry.name}. Go to Gate ${entry.gate} immediately.`)
+                msgs.push(`Attention: Final call for passengers travelling on the ${entry.time} ${code} service to ${entry.name}. Please proceed to Gate ${entry.gate} immediately.`)
             }
         })
         return msgs
@@ -38,7 +38,7 @@ function TickerBar({ terminalName, purchasedCities }) {
             const diff = minutesUntilDeparture(entry)
             const code = loopCode(entry.name, 'arrival', purchasedCitiesRef.current)
             if (diff > 0 && diff <= 10) {
-                msgs.push(`Attention: The ${code} service, the ${entry.time} hyperloop from ${entry.name}, will shortly arrive at Gate ${entry.gate}.`)
+                msgs.push(`Notice: The ${code} service from ${entry.name} is now approaching Gate ${entry.gate}.`)
             } else if (diff <= 0 && diff > -10) {
                 msgs.push(`Attention: The ${code} service from ${entry.name} has arrived at Gate ${entry.gate}. Welcome to ${terminalNameRef.current}.`)
             }
@@ -56,9 +56,9 @@ function TickerBar({ terminalName, purchasedCities }) {
     `Welcome to ${terminalName}. Thank you for travelling with us today.`,
     'Please keep your belongings close to you at all times.',
     `${terminalName} operates 24 hours a day, 7 days a week.`,
-    'Please report any unattended luggage to a member of staff.',
+    'Please report any unattended baggage to a member of our security team.',
     'We wish you a pleasant journey.',
-    'Departure updates will display here. Please stand by.',
+    'Departure and arrival updates will display here.',
 ]
 
     const displayMessages = messages.length > 0 ? messages : idleMessages
