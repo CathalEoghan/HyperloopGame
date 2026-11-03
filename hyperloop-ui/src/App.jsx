@@ -1772,6 +1772,7 @@ function App() {
         economyManager={economyManager}
         balance={balance}
         constructionManager={constructionManager}
+        terminalName={terminalName}
         onConnectCity={triggerSave}
         onGlobeReady={() => setGlobeBuilt(true)}
       />
@@ -1947,6 +1948,7 @@ function App() {
             <DepartureBoard
               purchasedCities={progressionManager.purchasedCities}
               homeCity={progressionManager.purchasedCities[0]}
+              terminalName={terminalName}
               purchasedUpgrades={progressionManager.purchasedUpgrades}
               openScheduleOnMount={boardOpensSchedule}
               reputation={reputation}

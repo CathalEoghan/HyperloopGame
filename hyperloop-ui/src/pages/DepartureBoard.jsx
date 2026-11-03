@@ -74,7 +74,7 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
     )
 })
 
-function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openScheduleOnMount = false, reputation = 0, progressionManager = null, onSave = () => {}, onAutomated = () => {}, onClose }) {
+function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgrades, openScheduleOnMount = false, reputation = 0, progressionManager = null, onSave = () => {}, onAutomated = () => {}, onClose }) {
     // How long an arrival stays lit as ARRIVED on the board — matches how long its greeting window actually
     // stays open, rather than assuming every farewell-window upgrade is owned (bug #183)
     const litMinutes = farewellWindowMinutes(purchasedUpgrades)
@@ -295,7 +295,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
             ? status.label === 'ARRIVING' || status.label === 'ARRIVED'
             : status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
         const gateText = padText(showGate ? `-${String(entry.gate).padStart(2, '0')}` : '---', GATE_WIDTH)
-        const code = loopCode(entry.name, isArrivals ? 'arrival' : 'departure', purchasedCities)
+        const code = loopCode(entry.name, isArrivals ? 'arrival' : 'departure', purchasedCities, terminalName)
         return (
             <>
                 <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>
@@ -479,6 +479,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
             {showSchedule && createPortal(
                 <ScheduleModal
                     purchasedCities={purchasedCities}
+                    terminalName={terminalName}
                     onChange={afterScheduleChange}
                     onClose={() => setShowSchedule(false)}
                 />,

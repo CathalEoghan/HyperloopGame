@@ -1,10 +1,19 @@
-// Flight-number-style codes for loops, mimicking a real departure/arrival board: each connected city's
-// three-letter code (cityLoopCodes.js) followed by a number, e.g. "FRA008".
+// Flight-number-style codes for loops, mimicking a real departure/arrival board, e.g. "FRA008" for an
+// arrival from Frankfurt or "DUB098" for a departure out of a terminal called "Dubai Terminus".
 //
-// Departures and arrivals are numbered differently on purpose:
-//   - Departure numbers are YOUR terminal's own shared pool. A number already claimed by another
-//     currently-connected city is "busy" and skipped, like a gate - so two of your own loops can never
-//     be running under the same number at once.
+// Departures and arrivals use a different PREFIX as well as a different number, on purpose:
+//   - A departure's prefix is YOUR terminal's own code (mechanicalLoopCode of its name, e.g. "Dubai
+//     Terminus" -> "DUB") - every departure shares it, because they're all loops leaving the same
+//     terminal, the same way every real departure board entry at an airport starts with that airport's
+//     own code, not the destination's.
+//   - An arrival's prefix is the connected city's OWN code (cityLoopCodes.js) - same as today, unchanged.
+//
+// Numbers follow the same split:
+//   - Departure numbers are drawn from YOUR terminal's own shared pool, one per connected city. A number
+//     already claimed by another currently-connected city is "busy" and skipped, like a gate - so two of
+//     your own departures can never be running under the same number at once. Connecting a city claims a
+//     free number from the pool, kept for as long as that city stays connected; disconnecting it frees
+//     that number straight back up for the next city that connects.
 //   - Arrival numbers are each city's OWN number, rolled and kept independently of your departure pool
 //     and of every other city's arrival number. Two different cities arriving under the same number is
 //     fine and expected - same as two real carriers reusing a flight number independently of each other.
@@ -17,7 +26,7 @@
 // or a fresh save (see SaveManager.js's AUX_KEYS), so a new run gets fresh numbers rather than inheriting
 // the last one's.
 
-import { getCityLoopCode } from '../data/cityLoopCodes.js'
+import { getCityLoopCode, mechanicalLoopCode } from '../data/cityLoopCodes.js'
 
 export const DEPARTURE_NUMBERS_KEY = 'hyperloop_loop_dep_numbers'
 export const ARRIVAL_NUMBERS_KEY = 'hyperloop_loop_arr_numbers'
@@ -118,11 +127,14 @@ export function getArrivalNumber(cityName, purchasedCities) {
     return map[cityName]
 }
 
-// The code shown to the player for a loop: the city's code plus its departure or arrival number, both
-// zero-padded to 3 digits (e.g. "FRA008", "FRA007") so every code reads the same width whichever board
-// it's on, even though arrival numbers are drawn from a much smaller range than departure ones.
-export function loopCode(cityName, kind, purchasedCities) {
-    const prefix = getCityLoopCode(cityName)
+// The code shown to the player for a loop: a prefix plus its departure or arrival number, both
+// zero-padded to 3 digits (e.g. "DUB098", "FRA007") so every code reads the same width whichever board
+// it's on, even though arrival numbers are drawn from a much smaller range than departure ones. The
+// prefix is the home terminal's own code for a departure (every departure shares it) or the connected
+// city's own code for an arrival (see the file header above) - so `terminalName` is only needed for
+// departures, and callers rendering only arrivals can omit it.
+export function loopCode(cityName, kind, purchasedCities, terminalName) {
+    const prefix = kind === 'arrival' ? getCityLoopCode(cityName) : mechanicalLoopCode(terminalName)
     const number = kind === 'arrival' ? getArrivalNumber(cityName, purchasedCities) : getDepartureNumber(cityName, purchasedCities)
     return `${prefix}${String(number).padStart(3, '0')}`
 }

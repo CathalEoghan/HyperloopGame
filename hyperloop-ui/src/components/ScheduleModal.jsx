@@ -5,7 +5,7 @@ import { NUM_GATES, timeString, entryTimestamp, formatDuration } from '../utils/
 import { formatPerHour } from '../utils/income.js'
 import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, busyGates, previewLoop, MIN_LEAD } from '../utils/timetable.js'
 import { getDepartureNumber, setDepartureNumber, departureNumberConflict, loopCode } from '../utils/loopCodes.js'
-import { getCityLoopCode } from '../data/cityLoopCodes.js'
+import { mechanicalLoopCode } from '../data/cityLoopCodes.js'
 import cashIcon from '../assets/misc/cash.png'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
@@ -27,7 +27,7 @@ function suggestSlot(timetable, name, nowMs = Date.now()) {
 
 // The Schedule loop screen: add a city to the departure timetable, and move or remove the ones already on it.
 // `onChange` is called after every change so the board can redraw.
-export default function ScheduleModal({ purchasedCities, onChange = () => {}, onClose }) {
+export default function ScheduleModal({ purchasedCities, terminalName, onChange = () => {}, onClose }) {
     const home = purchasedCities[0]
     const [version, setVersion] = useState(0)
     const timetable = readTimetable().filter(e => purchasedCities.some(c => c.name === e.name))
@@ -157,7 +157,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                                 <label className="sched-field">
                                     <span>Loop No.</span>
                                     <span className="sched-loopno">
-                                        <span className="sched-loopno-prefix">{city ? getCityLoopCode(city) : '---'}</span>
+                                        <span className="sched-loopno-prefix">{mechanicalLoopCode(terminalName)}</span>
                                         <input
                                             type="number" min={1} max={999} step={1}
                                             value={loopNumber}
@@ -207,7 +207,7 @@ export default function ScheduleModal({ purchasedCities, onChange = () => {}, on
                                     <li key={e.name} className={`sched-row${editing === e.name ? ' sched-row-editing' : ''}`}>
                                         <span className="sched-row-time">{timeString(e.minuteOfDay)}</span>
                                         <span className="sched-row-city">{e.name}{left && <small> · left today</small>}</span>
-                                        <span className="sched-row-detail">{loopCode(e.name, 'departure', purchasedCities)} · Gate {e.gate} · {arrived ? 'arrived' : 'arrives'} {p.arriveClock} · {p.passengers} passengers {left ? 'onboard' : 'expected'}</span>
+                                        <span className="sched-row-detail">{loopCode(e.name, 'departure', purchasedCities, terminalName)} · Gate {e.gate} · {arrived ? 'arrived' : 'arrives'} {p.arriveClock} · {p.passengers} passengers {left ? 'onboard' : 'expected'}</span>
                                         <span className="sched-row-actions">
                                             <button className="sched-btn sched-btn-small" onMouseEnter={() => playHoverSound()} onClick={() => startEdit(e)}>Move</button>
                                             <button className="sched-btn sched-btn-small sched-btn-danger" onMouseEnter={() => playHoverSound()} onClick={() => remove(e)}>Remove</button>

@@ -149,7 +149,7 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity, active = true, onGlobeReady }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, terminalName, onConnectCity, active = true, onGlobeReady }) {
     const mountRef = useRef(null)
     // Chrome (and some other browsers) can drop the WebGL context entirely on certain GPU/compositor transitions -
     // toggling fullscreen being the one players actually hit - leaving the canvas permanently black with nothing
@@ -1111,9 +1111,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                     {loops.map(loop => {
                                         const progress = Math.min(100, Math.max(0, ((nowMs - loop.startTs) / Math.max(1, loop.endTs - loop.startTs)) * 100))
                                         const fromFlag = countryFlags[loop.fromCountry], toFlag = countryFlags[loop.toCountry]
-                                        // The connected city's own code, not home's - a departure's is home's own numbered
-                                        // slot for that destination, an arrival's is that city's own independent number
-                                        const code = loopCode(loop.kind === 'arrival' ? loop.from : loop.to, loop.kind, purchasedCities)
+                                        // A departure's prefix is the home terminal's own code (every departure shares it),
+                                        // numbered from home's shared pool; an arrival's prefix is that city's own code,
+                                        // with its own independent number - see loopCodes.js for the full rationale
+                                        const code = loopCode(loop.kind === 'arrival' ? loop.from : loop.to, loop.kind, purchasedCities, terminalName)
                                         // Distance still to go: the route's length, less the share of the trip already travelled
                                         const routeMiles = distanceMiles(loop.from, loop.to)
                                         const milesLeft = routeMiles === null ? null : routeMiles * (1 - progress / 100)
