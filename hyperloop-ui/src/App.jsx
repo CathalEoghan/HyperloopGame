@@ -381,15 +381,7 @@ function App() {
       hyperLinkTriggerRef.current = greetingPost;
       return;
     }
-    const today = new Date().toDateString();
-    const isFirstToday = lastFarewellDateRef.current !== today;
-    const hasDoubleFirst = economyManager.hasUpgrade('firstFarewellOfDayDouble');
-    const finalRep = (isFirstToday && hasDoubleFirst) ? (repGain ?? 5) * 2 : (repGain ?? 5);
-    if (isFirstToday) {
-      lastFarewellDateRef.current = today;
-      localStorage.setItem('hyperloop_last_farewell_date', today);
-    }
-    progressionManager.addReputation(finalRep);
+    progressionManager.addReputation(repGain ?? 5);
     // Personal Image Branding: +10% of the departing city's daily income per farewell.
     const farewellCity = allCities.find(c => c.name === dep?.name);
     const farewellCash = farewellCity ? economyManager.getFarewellCityIncomeBonus(farewellCity) : 0;
@@ -608,7 +600,6 @@ function App() {
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
   const lastTickTimeRef = useRef(Date.now());
   const playtimePending = useRef(0);
-  const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
   const lastModalClearedAt = useRef(Date.now() + 180000);
   const lastEventTime = useRef(Date.now());
   // See the otherPopupOpen effect below, which keeps this in sync each render - read by the tick's

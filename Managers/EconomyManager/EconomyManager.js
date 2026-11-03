@@ -954,9 +954,4 @@ export class EconomyManager {
         const m = this.getFoundersHallMultiplier();
         return m > 1 ? `Founders' Hall: ×${+m.toFixed(2)}` : null;
     }
-
-    getDailyRepBonus(rank) {
-        if (!this.hasUpgrade('dailyRepPerRank')) return 0;
-        return Math.floor(rank / 5);
-    }
 }

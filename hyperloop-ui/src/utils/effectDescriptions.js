@@ -64,7 +64,6 @@ export const EFFECT_DESCRIPTIONS = {
     newYearsBoost: (v) => `+${pct(v)}% city and development income on New Year's Day`,
     skilledNegotiationTeams: (v) => `+${v} city choices each time you rank up`,
     personalImageBranding: (v) => `Earn ${pct(v)}% of a city's daily income when giving a farewell`,
-    firstFarewellOfDayDouble: () => `First farewell of the day earns double Reputation`,
     developmentUpgradeDiscount: (v) => `-${pct(v)}% development upgrade cost`,
     milestoneReputationBonus: (v) => `+${v} Reputation every time you reach a milestone`,
     likePositiveEventChance: (v) => `${pct(v)}% chance that liking a Hyper-Link post triggers a positive event`,

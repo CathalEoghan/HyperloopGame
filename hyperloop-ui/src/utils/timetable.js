@@ -298,9 +298,12 @@ const shuffle = list => {
     return a
 }
 
-// A random free time and gate for a city, always later today (at least MIN_LEAD from now) so every loop starts today.
-// A time earlier in the day, which only starts tomorrow, is used only when nothing is free for the rest of today.
-function pickSlot(timetable, name, nowMs) {
+// A random free time, gate and loop number for a city, always later today (at least MIN_LEAD from now) so every
+// loop starts today. A time earlier in the day, which only starts tomorrow, is used only when nothing is free for
+// the rest of today. A minute with a free gate but no free loop number (every pool number already out on an
+// overlapping round trip) is skipped just like a minute with no free gate - picking a gate there would only have
+// to be thrown away once nothing was left to assign a number from.
+function pickSlot(timetable, name, nowMs, purchasedCities) {
     const now = new Date(nowMs)
     const earliestToday = now.getHours() * 60 + now.getMinutes() + MIN_LEAD
     const minutes = []
@@ -308,27 +311,29 @@ function pickSlot(timetable, name, nowMs) {
     const rest = shuffle(minutes.filter(m => m >= earliestToday))
     const earlier = shuffle(minutes.filter(m => m < earliestToday))
     for (const minuteOfDay of [...rest, ...earlier]) {
+        const freeNumbers = availableLoopNumbers(timetable, name, minuteOfDay, purchasedCities)
+        if (freeNumbers.length === 0) continue
         for (const gate of shuffle(Array.from({ length: NUM_GATES }, (_, i) => i + 1))) {
-            if (!slotProblem(timetable, { name, minuteOfDay, gate }, nowMs)) return { minuteOfDay, gate }
+            if (!slotProblem(timetable, { name, minuteOfDay, gate }, nowMs)) {
+                const loopNumber = freeNumbers[Math.floor(Math.random() * freeNumbers.length)]
+                return { minuteOfDay, gate, loopNumber }
+            }
         }
     }
     return null
 }
 
-// Gives every unscheduled city a random free time and gate. Cities already on the timetable are left alone.
-// Returns { added: [slots], skipped: number of cities with no room left }.
+// Gives every unscheduled city a random free time, gate and loop number. Cities already on the timetable are
+// left alone. Returns { added: [slots], skipped: number of cities with no room left }.
 export function automateTimetable(purchasedCities, nowMs = Date.now()) {
     ensureDepartures(purchasedCities, nowMs)
     const timetable = readTimetable()
     const added = []
     let skipped = 0
     shuffle(unscheduledCities(purchasedCities, timetable)).forEach(city => {
-        const found = pickSlot(timetable, city.name, nowMs)
+        const found = pickSlot(timetable, city.name, nowMs, purchasedCities)
         if (!found) { skipped += 1; return }
-        const freeNumbers = availableLoopNumbers(timetable, city.name, found.minuteOfDay, purchasedCities)
-        if (freeNumbers.length === 0) { skipped += 1; return }
-        const loopNumber = freeNumbers[Math.floor(Math.random() * freeNumbers.length)]
-        const slot = { name: city.name, country: city.country, ...found, loopNumber }
+        const slot = { name: city.name, country: city.country, ...found }
         timetable.push(slot)
         added.push(slot)
     })
