@@ -1226,6 +1226,11 @@ function App() {
         // Only pictures used in the last 3 hours count as used, so they come round again instead of running out (bug #71)
         const feedPfpIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPfpId).filter(Boolean))
         const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]').filter(id => feedPfpIds.has(id))
+        // Posts about owned developments/upgrades/prestige items (see OWNED_POSTS_WEIGHT in hyperLinkEngine.js):
+        // once one has fired, it stays excluded for the rest of the run, not just the usual 3 hours - this list
+        // only ever grows within a run and is wiped by startPrestigeRun/clearGameState (SaveManager.js), unlike
+        // usedPostIds above which prunes itself back down as entries age out of the 3-hour window.
+        const firedDevPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
         const todayKey = new Date().toDateString()
         const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
         const todaysArrivals = JSON.parse(localStorage.getItem(`arrivals_${todayKey}`) || '[]')
@@ -1251,6 +1256,7 @@ function App() {
           usedPfps,
           templateLastUsed,
           pfpLastUsed,
+          firedDevPostIds,
           trigger: hyperLinkTriggerRef.current,
         })
         if (post) {
@@ -1266,6 +1272,10 @@ function App() {
           if (post.monthPostId) {
             usedMonthPostRecords.push({ id: post.monthPostId, year: currentYear })
             localStorage.setItem('hyperloop_hyperlink_used_month_posts', JSON.stringify(usedMonthPostRecords))
+          }
+          if (post.isOwnedPost) {
+            firedDevPostIds.push(post.usedPostId)
+            localStorage.setItem('hyperloop_hyperlink_fired_devposts', JSON.stringify(firedDevPostIds))
           }
           hyperLinkTriggerRef.current = null
           nextPostTick.current = tickCount.current + 60 + Math.floor(Math.random() * 120)
@@ -1577,6 +1587,37 @@ function App() {
     );
   }
 
+  // True while any popup is, or is about to be, on screen - has to be computed (and the ref below kept in sync)
+  // up here, before the Opening/Construction early returns just below, not after them: a hook can't be skipped
+  // on some renders and not others, but those two returns ARE skipped once an existing save already has cities.
+  // A brand-new save (or one straight after retiring) renders through them for real on its first few frames,
+  // then stops taking that path the moment Construction's "enter" is clicked - which was exactly "fewer hooks,
+  // then more hooks" on the very next render, and crashed the app right as a new run or a prestige's fresh run
+  // was getting started (bug #189).
+  const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs
+    && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !dailyLoginData && !(showOfflineModal && !!offlineData)
+    && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0;
+  // Every OTHER blocking popup, i.e. everything that isn't the event modal itself - used below to decide whether
+  // a random event is allowed to actually show its popup right now. Without this, the event-firing check (which
+  // only looks at its own small set of guards) could fire while, say, the Shop, Achievements, Schedule or a
+  // Departure/Delay popup was already open: the event becomes "active" and starts counting down, but its modal
+  // never gets a turn on screen (it's not hidden *behind* the other popup - with no shared z-index, which one of
+  // two simultaneously-mounted overlays wins is arbitrary/inconsistent - it just never renders at all over it, per
+  // the render guard below), so the player sees whatever popup they already had open, with no sign an event even
+  // started, until it quietly expires unseen (bug report finding #1).
+  const otherPopupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
+    || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
+    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
+    || milestoneQueue.length > 0 || showSecretCityModal
+  const popupOpen = otherPopupOpen || (showEventModal && !!activeEvent)
+  // Mirrored into a ref so the tick's event-firing checks (a stale closure set up once by startTick, same
+  // reason every other thing it reads is a ref) see this render's up-to-date value instead of whatever
+  // otherPopupOpen happened to be when that closure was created. Without this, an event could still fire (and
+  // start counting down) while blocked behind a common popup like a farewell or rank-up - the render guard
+  // below stops its modal appearing, but nothing stopped the clock, so by the time the blocking popup cleared
+  // the event had little time left or had already silently expired, which read as events "leaving quickly".
+  useEffect(() => { otherPopupOpenRef.current = otherPopupOpen }, [otherPopupOpen])
+
   // isLoading only ever starts true alongside an existing save with at least one city (see its useState above),
   // which is exactly the case the two checks below don't apply to - so letting isLoading fall through to them
   // instead of returning the Loading screen on its own never collides with the Opening/Construction screens.
@@ -1611,36 +1652,14 @@ function App() {
     />;
   }
 
-  // True while any popup is, or is about to be, on screen. The globe and the Hyper-Link phone button ignore input then (bugs #80, #122).
+  // The globe and the Hyper-Link phone button ignore input while any popup is, or is about to be, on screen
+  // (bugs #80, #122) - firstLoopVisible/otherPopupOpen/popupOpen are computed further up now (see the comment
+  // there), before the Opening/Construction early returns, so they're still in scope here same as before.
   // Opens the Terminal Board the way its own button does, with the board's background sound
   const openBoardFromPrompt = () => {
     if (departureBoardAudioRef.current === null) departureBoardAudioRef.current = playDepartureBoardSound();
     setShowDepartureBoard(true);
   };
-  // Waits for the reveal popups (a development or upgrade the new city unlocked) and the other popups to be done first
-  const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs
-    && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !dailyLoginData && !(showOfflineModal && !!offlineData)
-    && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0;
-  // Every OTHER blocking popup, i.e. everything that isn't the event modal itself - used below to decide whether
-  // a random event is allowed to actually show its popup right now. Without this, the event-firing check (which
-  // only looks at its own small set of guards) could fire while, say, the Shop, Achievements, Schedule or a
-  // Departure/Delay popup was already open: the event becomes "active" and starts counting down, but its modal
-  // never gets a turn on screen (it's not hidden *behind* the other popup - with no shared z-index, which one of
-  // two simultaneously-mounted overlays wins is arbitrary/inconsistent - it just never renders at all over it, per
-  // the render guard below), so the player sees whatever popup they already had open, with no sign an event even
-  // started, until it quietly expires unseen (bug report finding #1).
-  const otherPopupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
-    || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
-    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
-    || milestoneQueue.length > 0 || showSecretCityModal
-  const popupOpen = otherPopupOpen || (showEventModal && !!activeEvent)
-  // Mirrored into a ref so the tick's event-firing checks (a stale closure set up once by startTick, same
-  // reason every other thing it reads is a ref) see this render's up-to-date value instead of whatever
-  // otherPopupOpen happened to be when that closure was created. Without this, an event could still fire (and
-  // start counting down) while blocked behind a common popup like a farewell or rank-up - the render guard
-  // below stops its modal appearing, but nothing stopped the clock, so by the time the blocking popup cleared
-  // the event had little time left or had already silently expired, which read as events "leaving quickly".
-  useEffect(() => { otherPopupOpenRef.current = otherPopupOpen }, [otherPopupOpen])
 
   // Shop: buying costs Reputation and equips the item straight away. Returns false when the player can't afford it.
   const updateCosmetics = (next) => { writeCosmetics(next); setCosmetics(next); applyCosmetics(next); };
