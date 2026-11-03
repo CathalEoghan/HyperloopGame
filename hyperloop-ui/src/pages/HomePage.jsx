@@ -1114,7 +1114,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                         // A departure's prefix is the home terminal's own code (every departure shares it),
                                         // numbered from home's shared pool; an arrival's prefix is that city's own code,
                                         // with its own independent number - see loopCodes.js for the full rationale
-                                        const code = loopCode(loop.kind === 'arrival' ? loop.from : loop.to, loop.kind, purchasedCities, terminalName)
+                                        const code = loopCode(loop.kind === 'arrival' ? loop.from : loop.to, loop.kind, purchasedCities, terminalName, loop.loopNumber)
                                         // Distance still to go: the route's length, less the share of the trip already travelled
                                         const routeMiles = distanceMiles(loop.from, loop.to)
                                         const milesLeft = routeMiles === null ? null : routeMiles * (1 - progress / 100)

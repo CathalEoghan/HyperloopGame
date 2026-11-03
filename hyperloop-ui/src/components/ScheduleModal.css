@@ -59,10 +59,6 @@
 
 .sched-loopno { display: inline-flex; align-items: center; gap: 4px; color: var(--board-accent, #f5a623); font-weight: 700; }
 .sched-loopno-prefix { letter-spacing: 1px; }
-.sched-field input[type="number"] {
-    background: #1a1a1a; color: var(--board-accent, #f5a623); border: 1px solid #444; border-radius: 4px;
-    font-family: inherit; font-size: 0.85rem; padding: 6px 8px; width: 60px;
-}
 
 .sched-preview { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 0.78rem; }
 .sched-preview > div { display: flex; flex-direction: column; gap: 2px; }

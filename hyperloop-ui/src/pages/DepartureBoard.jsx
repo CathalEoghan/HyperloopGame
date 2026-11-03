@@ -295,7 +295,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
             ? status.label === 'ARRIVING' || status.label === 'ARRIVED'
             : status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
         const gateText = padText(showGate ? `-${String(entry.gate).padStart(2, '0')}` : '---', GATE_WIDTH)
-        const code = loopCode(entry.name, isArrivals ? 'arrival' : 'departure', purchasedCities, terminalName)
+        const code = loopCode(entry.name, isArrivals ? 'arrival' : 'departure', purchasedCities, terminalName, entry.loopNumber)
         return (
             <>
                 <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>

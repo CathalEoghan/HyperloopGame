@@ -5,7 +5,8 @@
 // day starts. Changing it also changes today's departures that haven't left yet. Arrivals are not part of this: other
 // terminals manage those, so they stay on their own automatic timetable (see loops.js).
 //
-// A timetable entry is { name, country, minuteOfDay, gate }: one departure a day per city.
+// A timetable entry is { name, country, minuteOfDay, gate, loopNumber }: one departure a day per city,
+// with the loop number (out of the terminal's shared pool, see loopCodes.js) the player picked for it.
 
 import {
     NUM_GATES, dayKey, departuresKey, readSchedule, writeSchedule, entryTimestamp, tripMinutes,
@@ -15,6 +16,7 @@ import { isRealMinute } from './time.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import { baseCityIncome } from '../../../Managers/EconomyManager/EconomyManager.js'
 import { getCapacityPercent, getCapacityMultiplier, getTierCapacity, getDemandBand } from '../../../Managers/EconomyManager/capacityCurve.js'
+import { getDeparturePool } from './loopCodes.js'
 
 const CITY_BY_NAME = new Map(allCities.map(c => [c.name, c]))
 
@@ -110,6 +112,22 @@ export function busyGates(timetable, name, minuteOfDay) {
     return busy
 }
 
+// Which pool numbers are already claimed by another city's scheduled departure, as { number: 'cityName' } -
+// same shape as busyGates above, for the same reason: the Schedule screen disables them the same way.
+export function busyLoopNumbers(timetable, name) {
+    const busy = {}
+    timetable.filter(e => e.name !== name && Number.isFinite(e.loopNumber)).forEach(e => { busy[e.loopNumber] = e.name })
+    return busy
+}
+
+// The departure-pool numbers free for `name` to pick right now - every pool number not already claimed by
+// a different city's scheduled departure. `name`'s own current number (if it has one) stays free to it,
+// so moving its own loop doesn't make its own number look busy to itself.
+export function availableLoopNumbers(timetable, name, purchasedCities) {
+    const busy = busyLoopNumbers(timetable, name)
+    return getDeparturePool(purchasedCities).filter(n => !(n in busy))
+}
+
 // ---- What a loop would do ----
 
 // Used by the Schedule loop screen: when it should arrive (leaving out any delay), how many passengers to expect,
@@ -143,10 +161,13 @@ export function previewLoop(homeName, name, minuteOfDay, nowMs = Date.now()) {
 
 // ---- Today's departures ----
 
-const entryFor = (slot, home, nowMs) => makeEntry(
-    { name: slot.name, country: slot.country }, slot.minuteOfDay, slot.gate,
-    tripMinutes(home.name, slot.name, `${dayKey(nowMs)}|departure`),
-)
+const entryFor = (slot, home, nowMs) => ({
+    ...makeEntry(
+        { name: slot.name, country: slot.country }, slot.minuteOfDay, slot.gate,
+        tripMinutes(home.name, slot.name, `${dayKey(nowMs)}|departure`),
+    ),
+    loopNumber: slot.loopNumber,
+})
 
 // Makes today's departures from the timetable, if the day doesn't have them yet
 export function ensureDepartures(purchasedCities, nowMs = Date.now()) {
@@ -199,8 +220,13 @@ export function saveSlot(slot, purchasedCities, nowMs = Date.now()) {
     if (!home || slot.name === home.name || !purchasedCities.some(c => c.name === slot.name)) {
         return { ok: false, error: 'That city is not connected.' }
     }
+    const pool = getDeparturePool(purchasedCities)
+    const busy = busyLoopNumbers(timetable, slot.name)
+    if (!pool.includes(slot.loopNumber) || busy[slot.loopNumber]) {
+        return { ok: false, error: 'Pick a free loop number from your list.' }
+    }
     const country = purchasedCities.find(c => c.name === slot.name).country
-    const next = { name: slot.name, country, minuteOfDay: slot.minuteOfDay, gate: slot.gate }
+    const next = { name: slot.name, country, minuteOfDay: slot.minuteOfDay, gate: slot.gate, loopNumber: slot.loopNumber }
     writeTimetable([...timetable.filter(e => e.name !== slot.name), next])
     return { ok: true, today: syncToday(slot.name, next, purchasedCities, nowMs) }
 }
@@ -264,8 +290,10 @@ export function automateTimetable(purchasedCities, nowMs = Date.now()) {
     let skipped = 0
     shuffle(unscheduledCities(purchasedCities, timetable)).forEach(city => {
         const found = pickSlot(timetable, city.name, nowMs)
-        if (!found) { skipped += 1; return }
-        const slot = { name: city.name, country: city.country, ...found }
+        const freeNumbers = availableLoopNumbers(timetable, city.name, purchasedCities)
+        if (!found || freeNumbers.length === 0) { skipped += 1; return }
+        const loopNumber = freeNumbers[Math.floor(Math.random() * freeNumbers.length)]
+        const slot = { name: city.name, country: city.country, ...found, loopNumber }
         timetable.push(slot)
         added.push(slot)
     })

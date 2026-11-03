@@ -197,8 +197,10 @@ const AUX_SHAPES = {
     hyperloop_progress_intro_seen: v => typeof v === 'boolean',
     hyperloop_prestige_intro_seen: v => typeof v === 'boolean',
     hyperloop_board_intro_seen: v => typeof v === 'boolean',
-    // { cityName: number, ... } - this run's loop-number assignments (loopCodes.js)
-    hyperloop_loop_dep_numbers: v => isObj(v) && Object.values(v).every(Number.isFinite),
+    // [number, ...] - the terminal's shared departure-number pool (loopCodes.js); which city's departure
+    // currently holds which pool number lives on the timetable entries themselves (hyperloop_timetable)
+    hyperloop_loop_dep_numbers: listOf(Number.isFinite),
+    // { cityName: number, ... } - this run's arrival-number assignments (loopCodes.js)
     hyperloop_loop_arr_numbers: v => isObj(v) && Object.values(v).every(Number.isFinite),
 }
 const listOfStrings = listOf(x => typeof x === 'string')

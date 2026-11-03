@@ -3,8 +3,8 @@ import './ScheduleModal.css'
 import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playSplitFlapShort } from '../utils/sound.js'
 import { NUM_GATES, timeString, entryTimestamp, formatDuration } from '../utils/loops.js'
 import { formatPerHour } from '../utils/income.js'
-import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, busyGates, previewLoop, MIN_LEAD } from '../utils/timetable.js'
-import { getDepartureNumber, setDepartureNumber, departureNumberConflict, loopCode } from '../utils/loopCodes.js'
+import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, busyGates, busyLoopNumbers, availableLoopNumbers, previewLoop, MIN_LEAD } from '../utils/timetable.js'
+import { getDeparturePool, loopCode } from '../utils/loopCodes.js'
 import { mechanicalLoopCode } from '../data/cityLoopCodes.js'
 import cashIcon from '../assets/misc/cash.png'
 
@@ -35,9 +35,9 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
     const [editing, setEditing] = useState(null)       // the city being moved, or null when adding
     const [cityPick, setCity] = useState(() => open[0]?.name || '')
     const [slot, setSlot] = useState(() => suggestSlot(timetable, open[0]?.name || ''))
-    // This city's own departure number, from your shared pool (see loopCodes.js) - prefilled with its
-    // assigned one (rolling it for the first time if it doesn't have one yet), editable before it's saved.
-    const [loopNumber, setLoopNumber] = useState(() => open[0] ? getDepartureNumber(open[0].name, purchasedCities) : 1)
+    // This city's loop number, picked from your shared pool (see loopCodes.js) - prefilled with the first
+    // one that's free, editable (as a pick-from-the-list, not a free-text number) before it's saved.
+    const [loopNumber, setLoopNumber] = useState(() => open[0] ? (availableLoopNumbers(timetable, open[0].name, purchasedCities)[0] ?? null) : null)
     // The city being added. When the one picked is no longer on offer (the form was hidden because every city was
     // scheduled, then one was removed), the first city on offer is the one the form shows, so it is the one used.
     const city = editing ? editing : (open.some(c => c.name === cityPick) ? cityPick : (open[0]?.name || ''))
@@ -51,11 +51,11 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
     const preview = city ? previewLoop(home.name, city, slot.minuteOfDay) : null
     const tooSoonToday = city && entryTimestamp({ hour, minute }, Date.now()) - Date.now() < MIN_LEAD * 60000
     const formVisible = editing !== null || open.length > 0
-    const loopNumberValid = Number.isInteger(loopNumber) && loopNumber >= 1 && loopNumber <= 999
-    const loopConflictCity = city && loopNumberValid ? departureNumberConflict(city, loopNumber, purchasedCities) : null
+    const loopPool = getDeparturePool(purchasedCities)
+    const loopBusy = city ? busyLoopNumbers(timetable, city) : {}
     const loopError = !city ? null
-        : !loopNumberValid ? 'Loop number must be between 001 and 999.'
-        : loopConflictCity ? `${loopConflictCity} is already using loop number ${String(loopNumber).padStart(3, '0')}.`
+        : loopPool.length === 0 ? 'No loop numbers are free yet.'
+        : (!loopPool.includes(loopNumber) || loopBusy[loopNumber]) ? 'Pick a free loop number from your list.'
         : null
 
     const refresh = () => { setVersion(v => v + 1); onChange() }
@@ -68,22 +68,21 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
     const chooseCity = name => {
         setCity(name)
         setSlot(suggestSlot(timetable, name))
-        setLoopNumber(getDepartureNumber(name, purchasedCities))
+        setLoopNumber(availableLoopNumbers(timetable, name, purchasedCities)[0] ?? null)
         setError(''); setNotice('')
     }
     const resetForm = () => {
-        const next = unscheduledCities(purchasedCities, readTimetable()).sort((x, y) => x.name.localeCompare(y.name))
+        const nextTimetable = readTimetable()
+        const next = unscheduledCities(purchasedCities, nextTimetable).sort((x, y) => x.name.localeCompare(y.name))
         setEditing(null)
         setCity(next[0]?.name || '')
-        setSlot(suggestSlot(readTimetable(), next[0]?.name || ''))
-        setLoopNumber(next[0] ? getDepartureNumber(next[0].name, purchasedCities) : 1)
+        setSlot(suggestSlot(nextTimetable, next[0]?.name || ''))
+        setLoopNumber(next[0] ? (availableLoopNumbers(nextTimetable, next[0].name, purchasedCities)[0] ?? null) : null)
     }
     const submit = () => {
         playClickSound2()
         const wasAdd = !editing
-        const codeResult = setDepartureNumber(city, loopNumber, purchasedCities)
-        if (!codeResult.ok) { setError(codeResult.error); return }
-        const result = saveSlot({ name: city, ...slot }, purchasedCities)
+        const result = saveSlot({ name: city, ...slot, loopNumber }, purchasedCities)
         if (!result.ok) { setError(result.error); return }
         const verb = editing ? 'Moved' : 'Scheduled'
         setNotice(`${verb} ${city} to ${timeString(slot.minuteOfDay)}, Gate ${slot.gate}. ${result.today ? 'It leaves today.' : 'It starts tomorrow.'}`)
@@ -98,7 +97,8 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
         playClickSound2()
         setEditing(entry.name); setCity(entry.name)
         setSlot({ minuteOfDay: entry.minuteOfDay, gate: entry.gate })
-        setLoopNumber(getDepartureNumber(entry.name, purchasedCities))
+        // Its own current number stays on offer to it (availableLoopNumbers never excludes a city's own pick)
+        setLoopNumber(Number.isFinite(entry.loopNumber) ? entry.loopNumber : (availableLoopNumbers(timetable, entry.name, purchasedCities)[0] ?? null))
         setError(''); setNotice('')
     }
     const remove = entry => {
@@ -158,12 +158,17 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                                     <span>Loop No.</span>
                                     <span className="sched-loopno">
                                         <span className="sched-loopno-prefix">{mechanicalLoopCode(terminalName)}</span>
-                                        <input
-                                            type="number" min={1} max={999} step={1}
-                                            value={loopNumber}
+                                        <select
+                                            value={loopNumber ?? ''}
                                             onChange={e => { setLoopNumber(Number(e.target.value)); setError(''); setNotice('') }}
                                             aria-label="Loop number"
-                                        />
+                                        >
+                                            {loopPool.map(n => (
+                                                <option key={n} value={n} disabled={!!loopBusy[n]}>
+                                                    {`${String(n).padStart(3, '0')}${loopBusy[n] ? ` (busy: ${loopBusy[n]})` : ''}`}
+                                                </option>
+                                            ))}
+                                        </select>
                                     </span>
                                 </label>
                             </div>
@@ -207,7 +212,7 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                                     <li key={e.name} className={`sched-row${editing === e.name ? ' sched-row-editing' : ''}`}>
                                         <span className="sched-row-time">{timeString(e.minuteOfDay)}</span>
                                         <span className="sched-row-city">{e.name}{left && <small> · left today</small>}</span>
-                                        <span className="sched-row-detail">{loopCode(e.name, 'departure', purchasedCities, terminalName)} · Gate {e.gate} · {arrived ? 'arrived' : 'arrives'} {p.arriveClock} · {p.passengers} passengers {left ? 'onboard' : 'expected'}</span>
+                                        <span className="sched-row-detail">{loopCode(e.name, 'departure', purchasedCities, terminalName, e.loopNumber)} · Gate {e.gate} · {arrived ? 'arrived' : 'arrives'} {p.arriveClock} · {p.passengers} passengers {left ? 'onboard' : 'expected'}</span>
                                         <span className="sched-row-actions">
                                             <button className="sched-btn sched-btn-small" onMouseEnter={() => playHoverSound()} onClick={() => startEdit(e)}>Move</button>
                                             <button className="sched-btn sched-btn-small sched-btn-danger" onMouseEnter={() => playHoverSound()} onClick={() => remove(e)}>Remove</button>

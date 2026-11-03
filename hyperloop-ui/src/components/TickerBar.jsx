@@ -17,7 +17,7 @@ function TickerBar({ terminalName, purchasedCities }) {
         const msgs = []
         schedule.forEach(entry => {
             const diff = minutesUntilDeparture(entry)
-            const code = loopCode(entry.name, 'departure', purchasedCitiesRef.current, terminalNameRef.current)
+            const code = loopCode(entry.name, 'departure', purchasedCitiesRef.current, terminalNameRef.current, entry.loopNumber)
             if (diff > 30 && diff <= 45) {
                 msgs.push(`Notice: Gate ${entry.gate} is now open for the ${entry.time} ${code} service to ${entry.name}.`)
             } else if (diff > 10 && diff <= 30) {

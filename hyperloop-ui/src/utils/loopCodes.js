@@ -9,22 +9,25 @@
 //   - An arrival's prefix is the connected city's OWN code (cityLoopCodes.js) - same as today, unchanged.
 //
 // Numbers follow the same split:
-//   - Departure numbers are drawn from YOUR terminal's own shared pool, one per connected city. A number
-//     already claimed by another currently-connected city is "busy" and skipped, like a gate - so two of
-//     your own departures can never be running under the same number at once. Connecting a city claims a
-//     free number from the pool, kept for as long as that city stays connected; disconnecting it frees
-//     that number straight back up for the next city that connects.
+//   - Departure numbers come from YOUR terminal's own shared pool (getDeparturePool below), one slot for
+//     every connected city other than home. The pool itself isn't tied to any one city - a number is only
+//     claimed once a departure is actually scheduled with it (timetable.js stores the chosen number right
+//     on that entry, as `loopNumber`), and it's freed back up the moment that departure is removed or
+//     moved to a different number. That's what lets the Schedule screen offer it as a plain pick-one-from-
+//     your-list choice: every pool number not currently claimed by another scheduled departure is free to
+//     pick, like an unused gate.
 //   - Arrival numbers are each city's OWN number, rolled and kept independently of your departure pool
 //     and of every other city's arrival number. Two different cities arriving under the same number is
 //     fine and expected - same as two real carriers reusing a flight number independently of each other.
 //
-// Both persist for the life of the run (not re-rolled day to day), and both are reconciled against the
-// live purchasedCities list every time they're read: a newly connected city claims a free number (the
-// list grows by one); a city disconnected since (e.g. via Amicable Breakups) frees its number straight
-// back up (the list shrinks by one), ready for the next city that connects. hyperloop_loop_dep_numbers
-// and hyperloop_loop_arr_numbers are wiped alongside the game's other run-scoped aux keys on a prestige
-// or a fresh save (see SaveManager.js's AUX_KEYS), so a new run gets fresh numbers rather than inheriting
-// the last one's.
+// Both persist for the life of the run (not re-rolled day to day). The arrival map is reconciled against
+// the live purchasedCities list every time it's read (a newly connected city rolls its own number; one
+// disconnected since frees its number back up). The departure pool is reconciled the same way, but by
+// size rather than by name, since no city owns a slot in it: it always holds exactly one number per
+// connected city other than home, growing or shrinking to match as cities connect or disconnect.
+// hyperloop_loop_dep_numbers and hyperloop_loop_arr_numbers are wiped alongside the game's other
+// run-scoped aux keys on a prestige or a fresh save (see SaveManager.js's AUX_KEYS), so a new run gets
+// fresh numbers rather than inheriting the last one's.
 
 import { getCityLoopCode, mechanicalLoopCode } from '../data/cityLoopCodes.js'
 
@@ -70,48 +73,28 @@ function pruneDisconnected(map, connectedNames) {
     return changed
 }
 
-// Which OTHER currently-connected city (if any) already holds this departure number - a read-only check,
-// so the Schedule Loop menu can validate a number the player is still typing before they commit to it
-// with setDepartureNumber below.
-export function departureNumberConflict(cityName, number, purchasedCities) {
-    const connectedNames = new Set((purchasedCities || []).map(c => c.name))
-    const map = readMap(DEPARTURE_NUMBERS_KEY)
-    const n = Number(number)
-    const entry = Object.entries(map).find(([name, num]) => name !== cityName && connectedNames.has(name) && num === n)
-    return entry ? entry[0] : null
-}
-
-// This city's departure number: assigned once from the shared pool the first time it's needed, then
-// reused for the rest of the run.
-export function getDepartureNumber(cityName, purchasedCities) {
-    const connectedNames = new Set((purchasedCities || []).map(c => c.name))
-    const map = readMap(DEPARTURE_NUMBERS_KEY)
-    let changed = pruneDisconnected(map, connectedNames)
-    if (map[cityName] === undefined) {
-        const taken = new Set(Object.values(map))
-        map[cityName] = pickFree(DEPARTURE_NUMBER_MIN, DEPARTURE_NUMBER_MAX, taken)
+// Your terminal's shared departure-number pool: a plain list of unique numbers, one for every connected
+// city other than home (connecting a city grows it by one free number to pick from; disconnecting one
+// shrinks it back down). None of them belong to any city in particular - see the file header above for
+// how a number actually gets claimed. Reconciled against the live purchasedCities list every time it's
+// read, so the Schedule screen always offers exactly the right number of choices.
+export function getDeparturePool(purchasedCities) {
+    const size = Math.max(0, (purchasedCities || []).length - 1)
+    let pool
+    try {
+        const parsed = JSON.parse(localStorage.getItem(DEPARTURE_NUMBERS_KEY) || '[]')
+        pool = Array.isArray(parsed) ? [...new Set(parsed.filter(Number.isFinite))] : []
+    } catch {
+        pool = []
+    }
+    let changed = false
+    if (pool.length > size) { pool = pool.slice(0, size); changed = true }
+    while (pool.length < size) {
+        pool.push(pickFree(DEPARTURE_NUMBER_MIN, DEPARTURE_NUMBER_MAX, new Set(pool)))
         changed = true
     }
-    if (changed) writeMap(DEPARTURE_NUMBERS_KEY, map)
-    return map[cityName]
-}
-
-// Lets the player manually set a city's departure number from the Schedule Loop menu, in place of the one
-// rolled automatically. Refused if it's out of range, or already claimed by another currently-connected
-// city - the same busy/free rule getDepartureNumber enforces for its own random pick.
-export function setDepartureNumber(cityName, number, purchasedCities) {
-    const n = Number(number)
-    if (!Number.isInteger(n) || n < DEPARTURE_NUMBER_MIN || n > DEPARTURE_NUMBER_MAX) {
-        return { ok: false, error: `Loop number must be between ${String(DEPARTURE_NUMBER_MIN).padStart(3, '0')} and ${DEPARTURE_NUMBER_MAX}.` }
-    }
-    const conflict = departureNumberConflict(cityName, n, purchasedCities)
-    if (conflict) return { ok: false, error: `${conflict} is already using loop number ${String(n).padStart(3, '0')}.` }
-    const connectedNames = new Set((purchasedCities || []).map(c => c.name))
-    const map = readMap(DEPARTURE_NUMBERS_KEY)
-    pruneDisconnected(map, connectedNames)
-    map[cityName] = n
-    writeMap(DEPARTURE_NUMBERS_KEY, map)
-    return { ok: true }
+    if (changed) { try { localStorage.setItem(DEPARTURE_NUMBERS_KEY, JSON.stringify(pool)) } catch { /* storage full */ } }
+    return pool
 }
 
 // This city's own arrival number: independent of every other city's and of the departure pool above.
@@ -132,9 +115,11 @@ export function getArrivalNumber(cityName, purchasedCities) {
 // it's on, even though arrival numbers are drawn from a much smaller range than departure ones. The
 // prefix is the home terminal's own code for a departure (every departure shares it) or the connected
 // city's own code for an arrival (see the file header above) - so `terminalName` is only needed for
-// departures, and callers rendering only arrivals can omit it.
-export function loopCode(cityName, kind, purchasedCities, terminalName) {
+// departures, and callers rendering only arrivals can omit it. A departure's number isn't looked up here:
+// it's whichever one that specific scheduled entry was given (see timetable.js), so the caller passes it
+// in directly as `departureNumber` - arrival callers can omit that too.
+export function loopCode(cityName, kind, purchasedCities, terminalName, departureNumber) {
     const prefix = kind === 'arrival' ? getCityLoopCode(cityName) : mechanicalLoopCode(terminalName)
-    const number = kind === 'arrival' ? getArrivalNumber(cityName, purchasedCities) : getDepartureNumber(cityName, purchasedCities)
+    const number = kind === 'arrival' ? getArrivalNumber(cityName, purchasedCities) : (Number.isFinite(departureNumber) ? departureNumber : 0)
     return `${prefix}${String(number).padStart(3, '0')}`
 }
