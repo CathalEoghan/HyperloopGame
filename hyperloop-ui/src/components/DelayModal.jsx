@@ -2,16 +2,18 @@ import { useEffect } from 'react'
 import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playEventSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
-import warningIcon from '../assets/misc/warning.png'
 import './DelayModal.css'
+
+// Base reputation cost for refusing compensation outright, before any delayRepCostReduction upgrade.
+const BASE_DELAY_REP_COST = 20
 
 function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance }) {
     const adjustedCompensation = economyManager
         ? economyManager.calculateDelayCompensation(delay.compensation)
         : delay.compensation
     const adjustedRepCost = economyManager
-        ? economyManager.calculateDelayRepCost(10)
-        : 10
+        ? economyManager.calculateDelayRepCost(BASE_DELAY_REP_COST)
+        : BASE_DELAY_REP_COST
 
     const canAffordCompensation = balance >= adjustedCompensation
 
@@ -22,7 +24,7 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
     return (
         <div className="delay-overlay">
             <div className="delay-modal">
-                <p className="delay-header"><img src={warningIcon} alt="warning" style={{ width: '16px', height: '16px', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '0' }} />LOOP DELAYED</p>
+                <p className="delay-header">LOOP DELAYED</p>
                 <div className="delay-divider">━━━━━━━━━━━━━━━━━━━━</div>
                 <p className="delay-message">
                     {delay.kind === 'arrival'
