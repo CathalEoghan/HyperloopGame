@@ -2,32 +2,24 @@ import { useState } from 'react'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import officialLogo from '../assets/misc/officialLogo.png'
 import mePhoto from '../assets/misc/me.jpg'
+import { WIKIMEDIA_CREDITS, FREESOUND_CC_CREDITS, FLATICON_AUTHORS } from '../data/creditsData.js'
 import './CreditsModal.css'
 
-const CREDITS_TEXT = `CITY IMAGES
-All city photographs sourced via Pexels and Wikimedia Commons.
-Full attribution available at github.com/CathalEoghan/HyperloopGame
-DEVELOPMENT IMAGES
-All development photographs sourced via Pexels and Wikimedia Commons.
-Full attribution available at github.com/CathalEoghan/HyperloopGame
-SOUNDS
-cityConnectComplete.mp3 — Robinhood76 via Freesound
-leavingSound.mp3 — GraceSoundProductions via Pixabay
-farewellAccept.mp3 — Universfield via Pixabay
-constructionSound.mp3 — freesound community via Pixabay
-workClickSound.mp3 — linhmitto via Pixabay
-openingAudio.mp3 — via Pixabay
-hoverSound.mp3 — tunetank via Pixabay
-developmentUnlocked.mp3 — freesound via Pixabay
-REPUTATION ICON
-Clean icons created by Smashicons — Flaticon
-GLOBE TEXTURES
-NASA Visible Earth
-GAME DESIGN & DEVELOPMENT
-Cathal Eoghan, the sole developer
-Built with React, Three.js and a lot of Monster energy drinks.`
-
 const BONUS_KEY = 'hyperloop_dev_portrait_bonus'
+
+// A clickable attribution line when a source URL is known, otherwise plain text - either way it reads as
+// "name — author · licence". Wikimedia entries without a surviving link (the uploader removed the page, or
+// never gave a link) still get credited by name, just without anywhere to click through to.
+function CreditLine({ name, author, license, url }) {
+    const text = `${name} — ${author} · ${license}`
+    return (
+        <p className="credits-line">
+            {url
+                ? <a className="credits-link" href={url} target="_blank" rel="noopener noreferrer">{text}</a>
+                : text}
+        </p>
+    )
+}
 
 function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
     const [claimed, setClaimed] = useState(() => !!localStorage.getItem(BONUS_KEY))
@@ -45,16 +37,47 @@ function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
         setTimeout(() => setShowToast(false), 3000)
     }
 
+    const flaticonLine = FLATICON_AUTHORS.join(', ')
+
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="credits-modal" onClick={e => e.stopPropagation()}>
                 <p className="credits-heading"><img src={officialLogo} alt="Hyperloop Empire" className="credits-heading-logo" /> CREDITS</p>
                 <div className="credits-body">
-                    {CREDITS_TEXT.split('\n').map((line, i) => (
-                        <p key={i} className={line === line.toUpperCase() && line.trim() ? 'credits-section' : 'credits-line'}>
-                            {line || '\u00A0'}
-                        </p>
+                    <p className="credits-section">Game Design &amp; Development</p>
+                    <p className="credits-line">Cathal Eoghan, the sole developer</p>
+                    <p className="credits-line">Built with React, Three.js and a lot of Monster energy drinks.</p>
+
+                    <p className="credits-section">City &amp; Development Photography</p>
+                    <p className="credits-line">Most city and development photos are sourced from Pexels, which doesn't require attribution - but thank you to every photographer whose work appears here regardless.</p>
+                    <p className="credits-subheading">Individually licensed (Wikimedia Commons)</p>
+                    {WIKIMEDIA_CREDITS.map((c, i) => <CreditLine key={i} {...c} />)}
+
+                    <p className="credits-section">Theme, Profile &amp; Prestige Artwork</p>
+                    <p className="credits-line">Shop theme photos, Hyper-Link profile pictures and Prestige upgrade artwork are sourced from Pexels and Pixabay.</p>
+
+                    <p className="credits-section">Achievement &amp; UI Icons</p>
+                    <p className="credits-line">Icons by {flaticonLine}, from <a className="credits-link" href="https://www.flaticon.com" target="_blank" rel="noopener noreferrer">Flaticon</a>.</p>
+
+                    <p className="credits-section">Sounds &amp; Music</p>
+                    <p className="credits-line">Most sound effects and opening audios are sourced from Pixabay, which doesn't require attribution.</p>
+                    <p className="credits-subheading">Individually licensed (Freesound, Creative Commons)</p>
+                    {FREESOUND_CC_CREDITS.map((c, i) => (
+                        <div key={i}>
+                            <CreditLine {...c} />
+                            {!c.commercial && <p className="credits-note">Pending permission for commercial use - see Settings &gt; Legal &amp; Privacy.</p>}
+                        </div>
                     ))}
+
+                    <p className="credits-section">Globe Imagery</p>
+                    <p className="credits-line">NASA Visible Earth (public domain)</p>
+
+                    <p className="credits-section">Fonts &amp; Open Source</p>
+                    <p className="credits-line">Inter typeface - SIL Open Font License 1.1</p>
+                    <p className="credits-line">Country flags - the flag-icons project (MIT licence)</p>
+
+                    <p className="credits-section">Full Attribution</p>
+                    <p className="credits-line">Every individual Pexels and Pixabay photo credit - not legally required, but given anyway - is listed file-by-file in CREDITS.txt at github.com/CathalEoghan/HyperloopGame</p>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', margin: '24px 0 12px' }}>
                     <img

@@ -43,8 +43,11 @@ function LegalModal({ onClose }) {
                     <p className="credits-section">CONTENT</p>
                     <p className="credits-line">City and development images are sourced from Pexels and Wikimedia Commons under their respective licences.</p>
                     <p className="credits-line">Sound effects are sourced from Freesound and Pixabay under their respective licences.</p>
+                    <p className="credits-line">Icons are sourced from Flaticon under their free licence.</p>
                     <p className="credits-line">Globe textures courtesy of NASA Visible Earth.</p>
                     <p className="credits-line">Country flags come from the flag-icons project (MIT licence).</p>
+                    <p className="credits-line">Every work that requires individual attribution (Wikimedia Commons photos, specific Freesound effects, Flaticon icons) is credited by name in Credits, alongside the ones that don't.</p>
+                    <p className="credits-line">The split-flap board sound is currently licensed for noncommercial use only, pending a reply from its author about commercial use - see Credits for details.</p>
                     <p className="credits-section">DISCLAIMER</p>
                     <p className="credits-line">Hyperloop Empire is a fictional idle game provided for entertainment purposes only. All city names, facts and figures are used in a fictional context.</p>
                     <p className="credits-line">The game is provided as-is with no warranties expressed or implied.</p>

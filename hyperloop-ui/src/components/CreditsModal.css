@@ -3,8 +3,8 @@
     border: 2px solid black;
     border-radius: 12px;
     padding: 28px 32px;
-    width: 480px;
-    max-height: 70vh;
+    width: 520px;
+    max-height: 78vh;
     display: flex;
     flex-direction: column;
     box-shadow: 0 8px 32px rgba(0,0,0,0.3);
@@ -52,6 +52,41 @@
     color: #555;
     margin: 2px 0;
     line-height: 1.5;
+}
+
+/* A lighter-weight label between a full section heading and its lines, for a licensing subgroup within a
+   section (e.g. "Individually licensed (Wikimedia Commons)" under "City & Development Photography") - smaller
+   and less heavy than .credits-section so it reads as a subdivision, not a new topic. */
+.credits-subheading {
+    font-family: 'Courier New', monospace;
+    font-size: 0.68rem;
+    font-weight: bold;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 10px 0 2px;
+}
+
+/* A credit line with a real source URL - same size/colour as a plain .credits-line so the list doesn't turn
+   into a wall of blue, just an underline on hover to show it's clickable. */
+.credits-link {
+    color: #555;
+    text-decoration: none;
+}
+
+.credits-link:hover {
+    color: var(--ui-accent, #f5a623);
+    text-decoration: underline;
+}
+
+/* A short flag under a credit line that needs one, e.g. a licence pending commercial-use permission. */
+.credits-note {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-style: italic;
+    color: #b45309;
+    margin: 0 0 6px;
+    line-height: 1.4;
 }
 
 .closeButton:hover {
