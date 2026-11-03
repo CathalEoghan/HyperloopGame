@@ -36,8 +36,14 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
     const [cityPick, setCity] = useState(() => open[0]?.name || '')
     const [slot, setSlot] = useState(() => suggestSlot(timetable, open[0]?.name || ''))
     // This city's loop number, picked from your shared pool (see loopCodes.js) - prefilled with the first
-    // one that's free, editable (as a pick-from-the-list, not a free-text number) before it's saved.
-    const [loopNumber, setLoopNumber] = useState(() => open[0] ? (availableLoopNumbers(timetable, open[0].name, purchasedCities)[0] ?? null) : null)
+    // one that's free at the suggested time (editable, as a pick-from-the-list, not a free-text number,
+    // before it's saved - and it stays reactive to the Departs time, since a number busy at one time of
+    // day can be free at another, see setMinuteOfDay below).
+    const [loopNumber, setLoopNumber] = useState(() => {
+        if (!open[0]) return null
+        const initialSlot = suggestSlot(timetable, open[0].name)
+        return availableLoopNumbers(timetable, open[0].name, initialSlot.minuteOfDay, purchasedCities)[0] ?? null
+    })
     // The city being added. When the one picked is no longer on offer (the form was hidden because every city was
     // scheduled, then one was removed), the first city on offer is the one the form shows, so it is the one used.
     const city = editing ? editing : (open.some(c => c.name === cityPick) ? cityPick : (open[0]?.name || ''))
@@ -52,23 +58,28 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
     const tooSoonToday = city && entryTimestamp({ hour, minute }, Date.now()) - Date.now() < MIN_LEAD * 60000
     const formVisible = editing !== null || open.length > 0
     const loopPool = getDeparturePool(purchasedCities)
-    const loopBusy = city ? busyLoopNumbers(timetable, city) : {}
+    const loopBusy = city ? busyLoopNumbers(timetable, city, slot.minuteOfDay, home.name) : {}
     const loopError = !city ? null
         : loopPool.length === 0 ? 'No loop numbers are free yet.'
         : (!loopPool.includes(loopNumber) || loopBusy[loopNumber]) ? 'Pick a free loop number from your list.'
         : null
 
     const refresh = () => { setVersion(v => v + 1); onChange() }
-    // Changing the time may land on a gate that is busy then: move to one that is free
+    // Changing the time may land on a gate that is busy then: move to one that is free. A loop number is
+    // busy only while its trip overlaps another one's (see busyLoopNumbers), so it can free up or clash
+    // differently at a different time of day too - the same move-to-a-free-one applies to it.
     const setMinuteOfDay = minuteOfDay => {
-        const taken = busyGates(timetable, city, minuteOfDay)
-        setSlot(s => ({ minuteOfDay, gate: taken[s.gate] ? (GATES.find(g => !taken[g]) ?? s.gate) : s.gate }))
+        const takenGates = busyGates(timetable, city, minuteOfDay)
+        setSlot(s => ({ minuteOfDay, gate: takenGates[s.gate] ? (GATES.find(g => !takenGates[g]) ?? s.gate) : s.gate }))
+        const freeNumbers = availableLoopNumbers(timetable, city, minuteOfDay, purchasedCities)
+        setLoopNumber(n => (freeNumbers.includes(n) ? n : (freeNumbers[0] ?? n)))
         setError(''); setNotice('')
     }
     const chooseCity = name => {
         setCity(name)
-        setSlot(suggestSlot(timetable, name))
-        setLoopNumber(availableLoopNumbers(timetable, name, purchasedCities)[0] ?? null)
+        const newSlot = suggestSlot(timetable, name)
+        setSlot(newSlot)
+        setLoopNumber(availableLoopNumbers(timetable, name, newSlot.minuteOfDay, purchasedCities)[0] ?? null)
         setError(''); setNotice('')
     }
     const resetForm = () => {
@@ -76,8 +87,9 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
         const next = unscheduledCities(purchasedCities, nextTimetable).sort((x, y) => x.name.localeCompare(y.name))
         setEditing(null)
         setCity(next[0]?.name || '')
-        setSlot(suggestSlot(nextTimetable, next[0]?.name || ''))
-        setLoopNumber(next[0] ? (availableLoopNumbers(nextTimetable, next[0].name, purchasedCities)[0] ?? null) : null)
+        const newSlot = suggestSlot(nextTimetable, next[0]?.name || '')
+        setSlot(newSlot)
+        setLoopNumber(next[0] ? (availableLoopNumbers(nextTimetable, next[0].name, newSlot.minuteOfDay, purchasedCities)[0] ?? null) : null)
     }
     const submit = () => {
         playClickSound2()
@@ -98,7 +110,7 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
         setEditing(entry.name); setCity(entry.name)
         setSlot({ minuteOfDay: entry.minuteOfDay, gate: entry.gate })
         // Its own current number stays on offer to it (availableLoopNumbers never excludes a city's own pick)
-        setLoopNumber(Number.isFinite(entry.loopNumber) ? entry.loopNumber : (availableLoopNumbers(timetable, entry.name, purchasedCities)[0] ?? null))
+        setLoopNumber(Number.isFinite(entry.loopNumber) ? entry.loopNumber : (availableLoopNumbers(timetable, entry.name, entry.minuteOfDay, purchasedCities)[0] ?? null))
         setError(''); setNotice('')
     }
     const remove = entry => {
@@ -118,7 +130,8 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                 </div>
                 <div className="sched-body">
                     <p className="sched-intro">
-                        Each city can leave once a day. Loops can leave at the same time from different gates, but a gate can't be reused for 30 minutes.
+                        Each city can leave once a day. Loops can leave at the same time from different gates, but a gate can't be reused for 30 minutes,
+                        and a loop number can't be reused until the loop it's already out on is back.
                         Your timetable is saved and repeats every day at no extra cost, though passenger counts and income will vary from day to day.
                     </p>
 

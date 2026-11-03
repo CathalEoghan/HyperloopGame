@@ -112,19 +112,42 @@ export function busyGates(timetable, name, minuteOfDay) {
     return busy
 }
 
-// Which pool numbers are already claimed by another city's scheduled departure, as { number: 'cityName' } -
-// same shape as busyGates above, for the same reason: the Schedule screen disables them the same way.
-export function busyLoopNumbers(timetable, name) {
+// A loop number stands for one vehicle actually out on the line, not a city's permanent property, so two
+// cities can share one as long as their trips don't actually overlap - DUB001 can leave for Venice at 19:15
+// and, once that loop's back, leave for Copenhagen at 14:15 the next day's cycle, same as a real flight
+// number gets reused for a different route once the aircraft's back. `durA`/`durB` are each trip's whole
+// time on the line, so this is the same idea as busyGates' cooldown, just stretched to the trip's own length
+// instead of a flat 30 minutes. The timetable repeats every day on a 24-hour clock, so a trip is checked
+// against the other one's window a day either side too - that's what catches a trip crossing midnight.
+function windowsOverlap(startA, durA, startB, durB) {
+    const a0 = startA, a1 = startA + durA
+    return [-1440, 0, 1440].some(offset => {
+        const b0 = startB + offset, b1 = b0 + durB
+        return a0 < b1 && b0 < a1
+    })
+}
+
+// Which pool numbers are already out on another city's overlapping trip right now, as { number: 'why' } -
+// same shape as busyGates above, for the same reason: the Schedule screen disables them the same way. Trip
+// lengths come from tripMinutes with no day seed, a stable per-route estimate (not today's actual roll),
+// since this is checking the repeating timetable itself, not one specific day's instance of it.
+export function busyLoopNumbers(timetable, name, minuteOfDay, homeName) {
+    const durationMin = tripMinutes(homeName, name)
     const busy = {}
-    timetable.filter(e => e.name !== name && Number.isFinite(e.loopNumber)).forEach(e => { busy[e.loopNumber] = e.name })
+    timetable.filter(e => e.name !== name && Number.isFinite(e.loopNumber)).forEach(e => {
+        const eDuration = tripMinutes(homeName, e.name)
+        if (windowsOverlap(minuteOfDay, durationMin, e.minuteOfDay, eDuration)) {
+            busy[e.loopNumber] = `${e.name} at ${timeString(e.minuteOfDay)}`
+        }
+    })
     return busy
 }
 
-// The departure-pool numbers free for `name` to pick right now - every pool number not already claimed by
-// a different city's scheduled departure. `name`'s own current number (if it has one) stays free to it,
-// so moving its own loop doesn't make its own number look busy to itself.
-export function availableLoopNumbers(timetable, name, purchasedCities) {
-    const busy = busyLoopNumbers(timetable, name)
+// The departure-pool numbers free for `name` to pick for a departure at `minuteOfDay` - every pool number
+// not already out on another city's overlapping trip. `name`'s own current number (if it has one) stays
+// free to it, so moving its own loop doesn't make its own number look busy to itself.
+export function availableLoopNumbers(timetable, name, minuteOfDay, purchasedCities) {
+    const busy = busyLoopNumbers(timetable, name, minuteOfDay, purchasedCities?.[0]?.name)
     return getDeparturePool(purchasedCities).filter(n => !(n in busy))
 }
 
@@ -221,7 +244,7 @@ export function saveSlot(slot, purchasedCities, nowMs = Date.now()) {
         return { ok: false, error: 'That city is not connected.' }
     }
     const pool = getDeparturePool(purchasedCities)
-    const busy = busyLoopNumbers(timetable, slot.name)
+    const busy = busyLoopNumbers(timetable, slot.name, slot.minuteOfDay, home.name)
     if (!pool.includes(slot.loopNumber) || busy[slot.loopNumber]) {
         return { ok: false, error: 'Pick a free loop number from your list.' }
     }
@@ -290,8 +313,9 @@ export function automateTimetable(purchasedCities, nowMs = Date.now()) {
     let skipped = 0
     shuffle(unscheduledCities(purchasedCities, timetable)).forEach(city => {
         const found = pickSlot(timetable, city.name, nowMs)
-        const freeNumbers = availableLoopNumbers(timetable, city.name, purchasedCities)
-        if (!found || freeNumbers.length === 0) { skipped += 1; return }
+        if (!found) { skipped += 1; return }
+        const freeNumbers = availableLoopNumbers(timetable, city.name, found.minuteOfDay, purchasedCities)
+        if (freeNumbers.length === 0) { skipped += 1; return }
         const loopNumber = freeNumbers[Math.floor(Math.random() * freeNumbers.length)]
         const slot = { name: city.name, country: city.country, ...found, loopNumber }
         timetable.push(slot)
