@@ -1996,7 +1996,7 @@ function App() {
         />
       )}
       <AchievementToast queue={achievementQueue} onShift={() => setAchievementQueue(q => q.slice(1))} />
-      <TickerBar terminalName={terminalName} />
+      <TickerBar terminalName={terminalName} purchasedCities={progressionManager.purchasedCities} />
       <BottomNav activeTab={activeTab} onSelect={(tab) => {
         if (departureBoardAudioRef.current) {
           departureBoardAudioRef.current.pause();

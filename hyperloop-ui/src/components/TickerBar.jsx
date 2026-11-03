@@ -2,23 +2,28 @@ import { useState, useEffect, useRef } from 'react'
 import './TickerBar.css'
 import { minutesUntilDeparture } from '../utils/time.js'
 import { arrivalsKey, readSchedule } from '../utils/loops.js'
+import { loopCode } from '../utils/loopCodes.js'
 
-function TickerBar({ terminalName }) {
+function TickerBar({ terminalName, purchasedCities }) {
     const [messages, setMessages] = useState([])
-    // The announcements are refreshed by a timer set up once, so it reads the name through this
+    // The announcements are refreshed by a timer set up once, so they read the name and the connected
+    // cities (for loopCode's departure-pool reconciliation) through these rather than stale closures
     const terminalNameRef = useRef(terminalName)
     useEffect(() => { terminalNameRef.current = terminalName }, [terminalName])
+    const purchasedCitiesRef = useRef(purchasedCities)
+    useEffect(() => { purchasedCitiesRef.current = purchasedCities }, [purchasedCities])
 
     function getActiveMessages(schedule) {
         const msgs = []
         schedule.forEach(entry => {
             const diff = minutesUntilDeparture(entry)
+            const code = loopCode(entry.name, 'departure', purchasedCitiesRef.current)
             if (diff > 30 && diff <= 45) {
-                msgs.push(`Attention: Passengers travelling to ${entry.name} for a ${entry.time} departure are advised to go to Gate ${entry.gate}.`)
+                msgs.push(`Attention: Passengers travelling with the ${code} service to ${entry.name} for a ${entry.time} departure are advised to go to Gate ${entry.gate}.`)
             } else if (diff > 10 && diff <= 30) {
-                msgs.push(`Attention: The ${entry.time} hyperloop to ${entry.name} is now boarding at Gate ${entry.gate}.`)
+                msgs.push(`Attention: The ${code} service, the ${entry.time} hyperloop to ${entry.name}, is now boarding at Gate ${entry.gate}.`)
             } else if (diff > 5 && diff <= 10) {
-                msgs.push(`Attention: Final call for passengers travelling to ${entry.name}. Go to Gate ${entry.gate} immediately.`)
+                msgs.push(`Attention: Final call for passengers travelling with the ${code} service to ${entry.name}. Go to Gate ${entry.gate} immediately.`)
             }
         })
         return msgs
@@ -31,10 +36,11 @@ function TickerBar({ terminalName }) {
         // Loops that have just come in, or are about to
         readSchedule(arrivalsKey()).forEach(entry => {
             const diff = minutesUntilDeparture(entry)
+            const code = loopCode(entry.name, 'arrival', purchasedCitiesRef.current)
             if (diff > 0 && diff <= 10) {
-                msgs.push(`Attention: The ${entry.time} hyperloop from ${entry.name} will shortly arrive at Gate ${entry.gate}.`)
+                msgs.push(`Attention: The ${code} service, the ${entry.time} hyperloop from ${entry.name}, will shortly arrive at Gate ${entry.gate}.`)
             } else if (diff <= 0 && diff > -10) {
-                msgs.push(`Attention: The hyperloop from ${entry.name} has arrived at Gate ${entry.gate}. Welcome to ${terminalNameRef.current}.`)
+                msgs.push(`Attention: The ${code} service from ${entry.name} has arrived at Gate ${entry.gate}. Welcome to ${terminalNameRef.current}.`)
             }
         })
         setMessages(msgs)

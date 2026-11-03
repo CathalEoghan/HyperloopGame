@@ -14,6 +14,7 @@ import reputationIcon from '../assets/misc/reputation.png'
 import './HomePage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 import { getActiveLoops, formatClock, formatDuration, distanceMiles } from '../utils/loops.js'
+import { loopCode } from '../utils/loopCodes.js'
 import { formatDistance } from '../utils/units.js'
 import { formatPerHour } from '../utils/income.js'
 import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
@@ -1110,6 +1111,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                     {loops.map(loop => {
                                         const progress = Math.min(100, Math.max(0, ((nowMs - loop.startTs) / Math.max(1, loop.endTs - loop.startTs)) * 100))
                                         const fromFlag = countryFlags[loop.fromCountry], toFlag = countryFlags[loop.toCountry]
+                                        // The connected city's own code, not home's - a departure's is home's own numbered
+                                        // slot for that destination, an arrival's is that city's own independent number
+                                        const code = loopCode(loop.kind === 'arrival' ? loop.from : loop.to, loop.kind, purchasedCities)
                                         // Distance still to go: the route's length, less the share of the trip already travelled
                                         const routeMiles = distanceMiles(loop.from, loop.to)
                                         const milesLeft = routeMiles === null ? null : routeMiles * (1 - progress / 100)
@@ -1127,7 +1131,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                     <span className="loop-arrow">→</span>
                                                     {toFlag && <img src={flagSrc(toFlag)} alt="" className="loop-flag" />}
                                                     <span className="loop-city">{loop.to}</span>
-                                                    <span className="loop-tag">{loop.kind === 'arrival' ? 'ARR' : 'DEP'}</span>
+                                                    <span className="loop-tag" title={loop.kind === 'arrival' ? 'Arrival' : 'Departure'}>{code}</span>
                                                 </div>
                                                 <div className="loop-bar" style={{ '--p': progress / 100 }}><div className="loop-bar-fill" /><div className="loop-pod" /></div>
                                                 <div className="loop-eta">
