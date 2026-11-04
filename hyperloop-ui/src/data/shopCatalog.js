@@ -553,6 +553,14 @@ export const SHOP_ITEMS = {
         cursorTheme('rockstar', 'Rockstar cursor', 20, recolorCursor({ a: '#4a4a4a', b: '#e3122a', stroke: '#0a0a0a', fill: '#e3122a', hilite: '#f2f2f2' }), 'Part of the Rockstar bundle.'),
         cursorTheme('western', 'Western cursor', 20, recolorCursor({ a: '#e8c79a', b: '#a0522d', stroke: '#2a1a0e', fill: '#a0522d', hilite: '#fff6e8' }), 'Part of the Western bundle.'),
         cursorTheme('paradise', 'Paradise cursor', 20, recolorCursor({ a: '#9df0e6', b: '#00bfa5', stroke: '#07262a', fill: '#00bfa5', hilite: '#f0fffd' }), 'Part of the Paradise bundle.'),
+
+        // ── Standalone cursor themes - not part of a Shop bundle (no matching General/Board/Hyper-Link/Sound
+        // pieces exist yet for these). Colour placeholders built with recolorCursor(), same as the bundle pieces
+        // above: replace the five hex values, or give any of them a genuinely new shape, whenever real art is
+        // ready. Register a matching SHOP_BUNDLES entry later if a full set gets built out for one of these.
+        cursorTheme('wartime', 'Wartime cursor', 20, recolorCursor({ a: '#9aab6e', b: '#4b5320', stroke: '#14160a', fill: '#4b5320', hilite: '#eef0e0' }), 'Matte khaki into olive drab.'),
+        cursorTheme('gingerbread', 'Gingerbread cursor', 20, recolorCursor({ a: '#f0c891', b: '#6b3410', stroke: '#7a1414', fill: '#6b3410', hilite: '#fff0dc' }), 'Warm gingerbread brown, trimmed in holly red.'),
+        cursorTheme('dystopia', 'Dystopia cursor', 20, recolorCursor({ a: '#b06ee0', b: '#4b2e83', stroke: '#0a0612', fill: '#3a3a42', hilite: '#ff2fd1' }), 'Deep violet and cool grey, with a neon glow.'),
     ],
 }
 
