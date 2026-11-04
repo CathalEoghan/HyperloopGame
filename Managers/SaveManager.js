@@ -263,6 +263,17 @@ function validateSave(save) {
         if (names === null || typeof names !== 'object' || Array.isArray(names)) return false
         if (Object.values(names).some(value => typeof value !== 'string')) return false
     }
+    // Connected/built dates are ISO date strings, same shape check as developmentNames above.
+    if (save.cityConnectedDates !== undefined) {
+        const dates = save.cityConnectedDates
+        if (dates === null || typeof dates !== 'object' || Array.isArray(dates)) return false
+        if (Object.values(dates).some(value => typeof value !== 'string')) return false
+    }
+    if (save.developmentBuiltDates !== undefined) {
+        const dates = save.developmentBuiltDates
+        if (dates === null || typeof dates !== 'object' || Array.isArray(dates)) return false
+        if (Object.values(dates).some(value => typeof value !== 'string')) return false
+    }
     // Every development upgrade level, and every city line-upgrade level, must be a whole number from 0 to 10
     // (bug #82; raised from a max of 3 when levels 4-10 were added)
     if (save.developmentUpgradeLevels && Object.values(save.developmentUpgradeLevels).some(v => !Number.isInteger(v) || v < 0 || v > 10)) return false
@@ -315,6 +326,8 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
         developmentUpgradeLevels: progressionManager.developmentUpgradeLevels,
         cityLineLevels: progressionManager.cityLineLevels,
         developmentNames: progressionManager.developmentNames,
+        cityConnectedDates: progressionManager.cityConnectedDates,
+        developmentBuiltDates: progressionManager.developmentBuiltDates,
         citiesUnderConstruction: progressionManager.citiesUnderConstruction.map(c => ({
             name: c.name,
             finishTime: c.finishTime
@@ -356,6 +369,16 @@ export function loadGame(progressionManager, rankManager) {
         if (save.developmentNames && typeof save.developmentNames === 'object' && !Array.isArray(save.developmentNames)) {
             save.developmentNames = Object.fromEntries(
                 Object.entries(save.developmentNames).map(([name, custom]) => [currentName(name), custom])
+            )
+        }
+        if (save.cityConnectedDates && typeof save.cityConnectedDates === 'object' && !Array.isArray(save.cityConnectedDates)) {
+            save.cityConnectedDates = Object.fromEntries(
+                Object.entries(save.cityConnectedDates).map(([name, date]) => [currentName(name), date])
+            )
+        }
+        if (save.developmentBuiltDates && typeof save.developmentBuiltDates === 'object' && !Array.isArray(save.developmentBuiltDates)) {
+            save.developmentBuiltDates = Object.fromEntries(
+                Object.entries(save.developmentBuiltDates).map(([name, date]) => [currentName(name), date])
             )
         }
 
@@ -429,6 +452,8 @@ export function loadGame(progressionManager, rankManager) {
 
         progressionManager.developmentUpgradeLevels = save.developmentUpgradeLevels || {}
         progressionManager.cityLineLevels = save.cityLineLevels || {}
+        progressionManager.cityConnectedDates = save.cityConnectedDates || {}
+        progressionManager.developmentBuiltDates = save.developmentBuiltDates || {}
         progressionManager.greetingsGiven = Number.isFinite(save.greetingsGiven) && save.greetingsGiven >= 0 ? Math.floor(save.greetingsGiven) : 0
 
         // Custom names only count for developments that are built, and are cleaned the same way as when typed

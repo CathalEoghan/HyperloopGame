@@ -21,7 +21,7 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { isGrantedCity } from '../utils/grantedCities.js'
 import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHoverSound, playNotEnoughFundsSound, playBigMomentSound } from '../utils/sound.js'
-import { formatTime } from '../utils/time.js';
+import { formatTime, formatDate } from '../utils/time.js';
 import { flagSrc } from '../utils/flagSrc.js'
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
@@ -355,6 +355,10 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <hr />
                                     <p><strong>Country</strong>: {selectedCity.country}</p>
                                     <p><strong>Population</strong>: {selectedCity.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</p>
+                                    {(() => {
+                                        const date = formatDate(constructionManager.progressionManager.cityConnectedDates[selectedCity.name])
+                                        return date ? <p><strong>Connected</strong>: {date}</p> : null
+                                    })()}
                                     {(() => {
                                         const coords = cityCoordinates[selectedCity.name]
                                         const coordsMap = coords ? { [selectedCity.name]: coords } : null

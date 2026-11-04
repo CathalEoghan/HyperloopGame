@@ -1,4 +1,16 @@
 
+// A real-world calendar date (an ISO string, e.g. a city's connectedAt or a development's builtAt),
+// shown the way the rest of the game formats things for a UK audience - "4 Nov 2026" rather than a
+// locale-ambiguous 11/4/26. Returns null for anything not dated yet (an older save, or something
+// owned before this feature shipped), so the caller can just skip the line rather than show a
+// fabricated date.
+export function formatDate(isoString) {
+    if (!isoString) return null
+    const d = new Date(isoString)
+    if (Number.isNaN(d.getTime())) return null
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+}
+
 export function formatTime(ms) {
     const totalSeconds = Math.floor(ms / 1000)
     const hours = Math.floor(totalSeconds / 3600)

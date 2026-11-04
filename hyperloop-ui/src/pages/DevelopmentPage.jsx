@@ -11,7 +11,7 @@ import './DevelopmentPage.css'
 import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
-import { formatTime } from '../utils/time.js'
+import { formatTime, formatDate } from '../utils/time.js'
 import { formatPerHour } from '../utils/income.js'
 import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.js'
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound, playBigMomentSound } from '../utils/sound.js'
@@ -21,6 +21,7 @@ import { DEV_NAME_MAX_LENGTH, getRenameRepCost, resolveDevelopmentName } from 'M
 import poorIcon from '../assets/misc/poor.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
+import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.js'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
@@ -267,7 +268,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 playClickSound2(); playFarewellAcceptSound(); onSave(); closeModal()
                                             }}>
                                                 <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                    Build instantly (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{skipCost})
+                                                    {developmentVerb(selectedDevelopment.name)} instantly (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{skipCost})
                                                 </span>
                                             </button>
                                         )
@@ -276,7 +277,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 </>
                             ) : available.some(d => d.name === selectedDevelopment.name) ? (
                                 <>
-                                    <h3>{selectedDevelopment.effectType === 'earlyRetirement' ? `Purchase ${selectedDevelopment.name}?` : `Build ${selectedDevelopment.name}?`}</h3>
+                                    <h3>{selectedDevelopment.effectType === 'earlyRetirement' ? `Purchase ${selectedDevelopment.name}?` : `${developmentVerb(selectedDevelopment.name)} ${selectedDevelopment.name}?`}</h3>
                                     {/* Falls back to the (lower-res, but locally bundled) thumbnail for a development that
                                         hasn't made it to the Cloudinary host yet, instead of a broken image. */}
                                     <img className="modal-city-image" src={developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]} alt={selectedDevelopment.name}
@@ -320,7 +321,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             }
                                         }}>
                                             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                Build (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                                {developmentVerb(selectedDevelopment.name)} (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                                                 {(() => {
                                                     const discount = economyManager.getUpgradeSum('developmentDiscount')
                                                     return discount > 0 ? <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
@@ -346,6 +347,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         return sourceCity ? <p><em>Unlocked with: <strong>{sourceCity.name}</strong></em></p> : null
                                     })()}
                                     <p><strong>Category</strong>: {selectedDevelopment.category}</p>
+                                    {(() => {
+                                        const date = formatDate(progressionManager.developmentBuiltDates[selectedDevelopment.name])
+                                        if (!date) return null
+                                        const verb = selectedDevelopment.effectType === 'earlyRetirement' ? 'Purchased' : developmentVerbPast(selectedDevelopment.name)
+                                        return <p><strong>{verb}</strong>: {date}</p>
+                                    })()}
                                     {selectedDevelopment.revenue ? (
                                         <div style={{ width: '100%', margin: '8px 0' }}>
                                             {(() => {

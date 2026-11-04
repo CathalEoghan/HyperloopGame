@@ -72,6 +72,14 @@ export class ProgressionManager {
         this.cityLineLevels = {};
         // Custom names players have given developments: original name -> custom name. Only ever used for display.
         this.developmentNames = {};
+        // Real-world date (ISO string) a connected city, or a built/launched/purchased development or upgrade,
+        // was completed - keyed by name exactly like developmentUpgradeLevels/cityLineLevels above, and for the
+        // same reason: City/Development/Upgrade objects are shared singletons rebuilt fresh from their registries
+        // on every load, not restored from the save (see SaveManager), so this can't live as a field on them.
+        // Missing from these maps (anything owned before this feature shipped) just means the card shows no
+        // date, rather than a fabricated one.
+        this.cityConnectedDates = {};
+        this.developmentBuiltDates = {};
         // Arriving loops greeted in this run (a prestige starts it again, like the farewell count)
         this.greetingsGiven = 0;
     }
@@ -111,6 +119,7 @@ export class ProgressionManager {
 
     purchaseCity(city) {
         if (this.purchasedCities.includes(city)) return;
+        if (!this.cityConnectedDates[city.name]) this.cityConnectedDates[city.name] = new Date().toISOString();
         city.connect();
         city.rewards.forEach(reward => this.unlockReward(reward));
         this.purchasedCities.push(city);
@@ -123,6 +132,7 @@ export class ProgressionManager {
         const isUnlocked = this.unlockedDevelopments.includes(development) || this.unlockedUpgrades.includes(development);
         if (!isUnlocked) return;
         if (this.purchasedDevelopments.includes(development) || this.purchasedUpgrades.includes(development)) return;
+        if (!this.developmentBuiltDates[development.name]) this.developmentBuiltDates[development.name] = new Date().toISOString();
         if (development instanceof Upgrade) {
             this.purchasedUpgrades.push(development);
             if (development.effectType === 'prestigePoints') PrestigeManager.award(development.effectValue);
@@ -203,6 +213,7 @@ export class ProgressionManager {
         const repCost = upgrade.effectValue;
         if (this.reputation < repCost) return false;
         this.addReputation(-repCost);
+        if (!this.developmentBuiltDates[upgrade.name]) this.developmentBuiltDates[upgrade.name] = new Date().toISOString();
         this.purchasedUpgrades.push(upgrade);
         this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u !== upgrade);
         return true;
