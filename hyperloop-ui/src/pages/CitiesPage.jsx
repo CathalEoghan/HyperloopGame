@@ -390,7 +390,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                         {boostPct > 0 && (
                                                             <IncomeRow label="Boosted income" amount={effectiveIncome} last={!capacity}>
                                                                 <span
-                                                                    style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
+                                                                    style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'var(--cursor-help, help)', position: 'relative' }}
                                                                     onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
                                                                     onMouseLeave={() => setShowCityBoostTip(null)}
                                                                 >
