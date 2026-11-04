@@ -808,6 +808,9 @@ western.jpg - Photo by Temperate Sage via Pixabay (Pixabay Content License)
 paradise.jpg - Photo by Pexels via Pixabay (Pixabay Content License)
 rockstar.jpg - Photo by Pexels via Pixabay (Pixabay Content License)
 fairy.jpg - Photo by Marek Prášil via Pexels
+dystopia.jpg - Photo by Brett Sayles via Pexels
+gingerbread.jpg - Photo by Jill Wellington via Pexels
+wartime.jpg - Photo by Henrickson via Wikimedia Commons (GNU Free Documentation License, link: https://commons.wikimedia.org/wiki/File:US_Woodland_pattern.svg)
 
 
 
