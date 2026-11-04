@@ -188,6 +188,10 @@ export class ProgressionManager {
     disconnectCity(city) {
         this.purchasedCities = this.purchasedCities.filter(c => c !== city);
         if (!this.unlockedCities.includes(city)) this.unlockedCities.push(city);
+        // Only a connected city can have its line upgraded, so a disconnected one's level resets - same as a
+        // removed development's upgrade level (see removeDevelopment) - rather than letting it quietly keep a
+        // paid-for level that reconnecting would otherwise hand back for free.
+        delete this.cityLineLevels[city.name];
         city.rewards.forEach(reward => {
             // A reward that is already built, or being built right now, stays (otherwise its build would be lost)
             const isBuilt = this.purchasedDevelopments.some(d => d.name === reward.name) ||

@@ -72,6 +72,10 @@ const AUX_KEYS = [
     'hyperloop_progress_intro_seen',
     'hyperloop_prestige_intro_seen',
     'hyperloop_board_intro_seen',
+    // This run's loop-number assignments (loopCodes.js) - your own departure pool, and each city's own
+    // arrival number. A new run gets fresh numbers rather than inheriting the last one's.
+    'hyperloop_loop_dep_numbers',
+    'hyperloop_loop_arr_numbers',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -193,6 +197,11 @@ const AUX_SHAPES = {
     hyperloop_progress_intro_seen: v => typeof v === 'boolean',
     hyperloop_prestige_intro_seen: v => typeof v === 'boolean',
     hyperloop_board_intro_seen: v => typeof v === 'boolean',
+    // [number, ...] - the terminal's shared departure-number pool (loopCodes.js); which city's departure
+    // currently holds which pool number lives on the timetable entries themselves (hyperloop_timetable)
+    hyperloop_loop_dep_numbers: listOf(Number.isFinite),
+    // { cityName: number, ... } - this run's arrival-number assignments (loopCodes.js)
+    hyperloop_loop_arr_numbers: v => isObj(v) && Object.values(v).every(Number.isFinite),
 }
 const listOfStrings = listOf(x => typeof x === 'string')
 // These two hold a plain date string ("Tue Sep 29 2026"), not JSON.

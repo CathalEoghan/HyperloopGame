@@ -353,6 +353,8 @@ Minneapolis.jpg - Photo by Jonathan Lassen via Pexels
 Antalya.jpg - Photo by Erik Karits via Pexels
 Bristol.jpg - Photo by Boys in Bristol Photography via Pexels
 Leeds.jpg - Photo by Manikuttan TK via Pexels
+Chennai.jpg - Photo by Daswin Ebenezer via Pexels
+Mazatlán.jpg - Photo by S L V via Pexels
 
 
 
@@ -709,6 +711,14 @@ HairSalon.jpg - Photo by RDNE Stock project via Pexels
 LaundryRoom.jpg - Photo by Mathias Reding via Pexels
 BikeRental.jpg - Photo by Ligin Lee via Pexels
 CoWorkingSpace.jpg - Photo by Kindel Media via Pexels
+AntiLitteringCampaign.jpg - Photo by Valr Studio via Pexels
+AdvertisingCampaignCanada.jpg - Photo by Viktorya Sergeeva 🫂 via Pexels
+AdvertisingCampaignJapan.jpg - Photo by Tokyo via Wikimedia Commons (Creative Commons Attribution 2.0 Generic license, link: https://commons.wikimedia.org/wiki/File:Flag_of_Japan_(1).jpg)
+AdvertisingCampaignFrance.jpg - Photo by Atypeek Dgn via Pexels
+JollofRiceRestaurant.jpg - Photo by Studio Saiz via Pexels
+CrossTerminalRickshawService.jpg - Photo by Tanha Tamanna Syed via Pexels
+FlexibleNetworkContracts.jpg - Photo by https://kaboompics.com/ via Pexels
+JuneTicketDeals.jpg - Photo by Kadir Akman via Pexels
 
 
 PRESTIGE UPGRADES
@@ -747,6 +757,9 @@ NewsColumn.jpg - Photo by Anna Keibalo via Pexels
 OpeningParty.jpg - Photo by Anat Landa via Pexels
 Resilience.jpg - Photo by Anastasia Shuraeva via Pexels
 FestiveFreak.jpg - Photo by Vlada Karpovich via Pexels
+SkeletonStaff.jpg - Photo by Edge Training via Pexels
+ColourTheory.jpg - Photo by Antoni Shkraba via Pexels
+
 
 
 
@@ -794,6 +807,7 @@ woof.jpg - Photo by Barnabas Davoti via Pexels
 western.jpg - Photo by Temperate Sage via Pixabay (Pixabay Content License)
 paradise.jpg - Photo by Pexels via Pixabay (Pixabay Content License)
 rockstar.jpg - Photo by Pexels via Pixabay (Pixabay Content License)
+fairy.jpg - Photo by Marek Prášil via Pexels
 
 
 
@@ -820,6 +834,9 @@ diceRoll.mp3 - Sound by u_ngsgp0r6zb via Pixabay (Pixabay Content License)
 automatedSchedule.mp3 - Sound by Universfield (Pixabay Content License)
 bigMoment.mp3 - Sound by Universfield (Pixabay Content License)
 tier3City.mp3 - Sound by BenKirb (Pixabay Content License)
+splitFlapLong.wav - Sound by matucha via Freesound (Attribution NonCommercial 4.0)
+splitFlapShort.wav - Sound by matucha via Freesound (Attribution NonCommercial 4.0)
+rankUpSound.mp3 - Sound by ALEXIS_GAMING_CAM via Pixabay (Pixabay Content License)
 
 ACHIEVEMENT LOGOS
 
@@ -919,6 +936,9 @@ welcomeBack.png - <a href="https://www.flaticon.com/free-icons/welcome" title="w
 touchGrass.png - <a href="https://www.flaticon.com/free-icons/grass" title="grass icons">Grass icons created by Magnific - Flaticon</a>
 stirCrazy.png - <a href="https://www.flaticon.com/free-icons/crazy" title="crazy icons">Crazy icons created by kmg design - Flaticon</a>
 beepBoop.jpg - <a href="https://www.flaticon.com/free-icons/robot" title="robot icons">Robot icons created by Magnific - Flaticon</a>
+theLapOfLuxury.jpg - <a href="https://www.flaticon.com/free-icons/luxury" title="luxury icons">Luxury icons created by Flat Icons - Flaticon</a>
+passengerConfusion.jpg - <a href="https://www.flaticon.com/free-icons/confused" title="confused icons">Confused icons created by kmg design - Flaticon</a>
+shoppingSpree.jpg - <a href="https://www.flaticon.com/free-icons/online-shop" title="online shop icons">Online shop icons created by HAJICON - Flaticon</a>
 
 MISC ICONS
 
@@ -964,7 +984,7 @@ pirate1.mp3, pirate2.mp3, pirate3.mp3, pirate4.mp3 - freesound_community (Pixaba
 princess1.mp3, princess2.mp3, princess3.mp3, princess4.mp3 - freesound_community (Pixabay Content License)
 
 duck1.mp3, duck2.mp3 - freesound_community (Pixabay Content License)
-duck2.mp3 - iedurodrigues (Pixabay Content License)
+duck3.mp3 - iedurodrigues (Pixabay Content License)
 
 playroom1.mp3, playroom2.mp3, playroom3.mp3, playroom4.mp3, playroom5.mp3 - freesound_community (Pixabay Content License)
 
@@ -985,7 +1005,7 @@ western1.mp3, western2.mp3, western3.mp3, western4.mp3 - freesound_community (Pi
 western5.mp3 - u_jfkxueyart, iedurodrigues (Pixabay Content License)
 
 rockstar1.mp3, rockstar2.mp3, rockstar3.mp3 - JinzoSounds (Pixabay Content License)
-rockstar4.mp3, rockstar3.mp5, rockstar6 - freesound_community (Pixabay Content License)
+rockstar4.mp3, rockstar5.mp3, rockstar6.mp3 - freesound_community (Pixabay Content License)
 
 OPENING INTROS
 fairy.mp3 - The_Mountain (Pixabay Content License)
@@ -1001,3 +1021,4 @@ woof.mp3 - GoldenSoundLabs (Pixabay Content License)
 western.mp3 - Atlas Audio (Pixabay Content License)
 rockstar.mp3 - NastelBom (Pixabay Content License)
 paradise.mp3 - Geoff Harvey (Pixabay Content License)
+playtime.mp3 - Sonican (Pixabay Content License)

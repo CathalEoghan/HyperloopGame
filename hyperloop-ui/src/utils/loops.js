@@ -305,6 +305,7 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
                 id: loopId('departure', dayMs, e), kind: 'departure',
                 from: homeCity.name, fromCountry: homeCity.country, to: e.name, toCountry: e.country,
                 startTs, endTs, delayed: !!e.delayed, passengers: passengersOf('departure', dayMs, e),
+                loopNumber: e.loopNumber,
             })
         })
     })

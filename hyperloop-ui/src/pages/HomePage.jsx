@@ -14,6 +14,7 @@ import reputationIcon from '../assets/misc/reputation.png'
 import './HomePage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 import { getActiveLoops, formatClock, formatDuration, distanceMiles } from '../utils/loops.js'
+import { loopCode } from '../utils/loopCodes.js'
 import { formatDistance } from '../utils/units.js'
 import { formatPerHour } from '../utils/income.js'
 import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
@@ -40,6 +41,15 @@ const ROUTE_HALO_RADIUS = 0.0065
 // The shuttle's own height (its local Y extent), same number makePodGeometry uses below - placePods
 // needs it too, to lift the pod by half its (post-zoom-scale) height on top of the route's surface.
 const POD_HEIGHT = 0.012
+// How much the pod's nose banks into the arc's own climb/dive, instead of staying level with the globe
+// regardless of the route's slope. The real geometry is shallow - even the most extreme route in the game
+// (two near-antipodal cities) only climbs at up to ~13 degrees right after departure, flattening to 0 at
+// the route's midpoint (see arcPoints' sine bulge), so following the arc's actual tangent 1:1 reads as
+// barely-there on a pod this small at the globe's zoomed-out scale. TILT_BOOST exaggerates that real climb
+// well past its true angle so a bank is actually visible; MAX_TILT_SIN caps how far the exaggeration can
+// ever push it (0.6 = ~37 degrees), so a pod never looks like it's nosediving.
+const TILT_BOOST = 2.75
+const MAX_TILT_SIN = 0.6
 // The shuttle's silhouette: a flat-faced box chamfered to a point at the nose (forward, local +X,
 // same convention placePods already turns to face the route). Still every face flat and every edge
 // sharp like the plain box it replaces - built as a 2D "home plate" profile (rectangular body,
@@ -148,7 +158,7 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, onConnectCity, active = true, onGlobeReady }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, terminalName, onConnectCity, active = true, onGlobeReady }) {
     const mountRef = useRef(null)
     // Chrome (and some other browsers) can drop the WebGL context entirely on certain GPU/compositor transitions -
     // toggling fullscreen being the one players actually hit - leaving the canvas permanently black with nothing
@@ -587,7 +597,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             syncedLoops = list
         }
         const UP = new THREE.Vector3(0, 1, 0)
-        const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3(), tmpS = new THREE.Vector3(), tmpM = new THREE.Matrix4()
+        const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3(), tmpS = new THREE.Vector3(), tmpU = new THREE.Vector3(), tmpM = new THREE.Matrix4()
         const placePods = () => {
             const now = Date.now()
             // Highlighted loops that have since arrived no longer dim the others
@@ -599,21 +609,27 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const { startTs, endTs } = o.loop
                 const progress = Math.min(1, Math.max(0, (now - startTs) / Math.max(1, endTs - startTs)))
                 const isLit = lit.has(o.loop.id)
-                // Shuttle: on the arc, long side along the direction of travel, flat side to the globe
+                // Shuttle: on the arc, long side along the direction of travel, banked into the arc's own
+                // climb/dive - exaggerated by TILT_BOOST and clamped by MAX_TILT_SIN (see their comment
+                // above) rather than staying flat to the globe regardless of the route's slope.
                 o.curve.getPointAt(progress, tmpA)
                 o.curve.getTangentAt(progress, tmpB)
                 tmpC.copy(tmpA).normalize()                 // away from the globe
-                tmpB.addScaledVector(tmpC, -tmpB.dot(tmpC)).normalize()
+                const verticalTangent = tmpB.dot(tmpC)
+                const boostedVertical = Math.max(-MAX_TILT_SIN, Math.min(MAX_TILT_SIN, verticalTangent * TILT_BOOST))
+                tmpB.addScaledVector(tmpC, boostedVertical - verticalTangent).normalize()
                 tmpS.crossVectors(tmpB, tmpC).normalize()   // across the route
-                tmpM.makeBasis(tmpB, tmpC, tmpS)
+                tmpU.crossVectors(tmpS, tmpB).normalize()   // the pod's own "up" - squared back to the now-tilted
+                // forward direction above, so the basis below stays a clean rotation rather than a shear
+                tmpM.makeBasis(tmpB, tmpU, tmpS)
                 const podScale = zoom * (isLit ? 1.35 : 1)
                 // tmpA sits ON the route's centreline, same as the tube meshes do - placing the pod there
                 // directly buries its lower half inside whichever tube is currently showing. Lift it along
-                // tmpC (the pod's own "up", per the basis above) by that tube's own radius - under's slimmer
-                // one normally, halo's wider one once isLit swaps it in - plus half the pod's own current
-                // height, so it rests on top of the route instead of clipping through it. Using halo's
-                // (wider) radius even while only the slimmer under tube was showing is what previously had
-                // it floating with a visible gap above the route.
+                // tmpC (straight away from the globe, not the pod's own now-tilted "up" above) by that tube's
+                // own radius - under's slimmer one normally, halo's wider one once isLit swaps it in - plus
+                // half the pod's own current height, so it rests on top of the route instead of clipping
+                // through it. Using halo's (wider) radius even while only the slimmer under tube was showing
+                // is what previously had it floating with a visible gap above the route.
                 const tubeClearance = isLit ? ROUTE_HALO_RADIUS : ROUTE_UNDER_RADIUS
                 o.pod.position.copy(tmpA).addScaledVector(tmpC, tubeClearance + (POD_HEIGHT / 2) * podScale)
                 o.pod.quaternion.setFromRotationMatrix(tmpM)
@@ -1110,6 +1126,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                     {loops.map(loop => {
                                         const progress = Math.min(100, Math.max(0, ((nowMs - loop.startTs) / Math.max(1, loop.endTs - loop.startTs)) * 100))
                                         const fromFlag = countryFlags[loop.fromCountry], toFlag = countryFlags[loop.toCountry]
+                                        // A departure's prefix is the home terminal's own code (every departure shares it),
+                                        // numbered from home's shared pool; an arrival's prefix is that city's own code,
+                                        // with its own independent number - see loopCodes.js for the full rationale
+                                        const code = loopCode(loop.kind === 'arrival' ? loop.from : loop.to, loop.kind, purchasedCities, terminalName, loop.loopNumber)
                                         // Distance still to go: the route's length, less the share of the trip already travelled
                                         const routeMiles = distanceMiles(loop.from, loop.to)
                                         const milesLeft = routeMiles === null ? null : routeMiles * (1 - progress / 100)
@@ -1127,7 +1147,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                     <span className="loop-arrow">→</span>
                                                     {toFlag && <img src={flagSrc(toFlag)} alt="" className="loop-flag" />}
                                                     <span className="loop-city">{loop.to}</span>
-                                                    <span className="loop-tag">{loop.kind === 'arrival' ? 'ARR' : 'DEP'}</span>
+                                                    <span className="loop-tag" title={loop.kind === 'arrival' ? 'Arrival' : 'Departure'}>{code}</span>
                                                 </div>
                                                 <div className="loop-bar" style={{ '--p': progress / 100 }}><div className="loop-bar-fill" /><div className="loop-pod" /></div>
                                                 <div className="loop-eta">

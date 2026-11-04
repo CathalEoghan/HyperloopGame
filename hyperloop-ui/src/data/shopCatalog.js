@@ -234,7 +234,9 @@ export const THEME_PICS_BOARD = {
 // The theme id the Shop spotlights in a "Featured" group at the top of every category tab (see ShopModal.jsx) -
 // one setting to change for a future promo rather than anything in the component itself. Only meaningful for an
 // id that actually has a piece in every category, so the Featured group has something to show on every tab.
-export const FEATURED_THEME_ID = 'poltergeist'
+// null means no Featured group is shown at all - set this (and FEATURED_TAGLINE) when the next seasonal theme
+// (a Christmas one, nearer December) is ready to spotlight. Poltergeist was here for Halloween; that's passed.
+export const FEATURED_THEME_ID = null
 // The short line shown under the "★ Featured" heading - left blank for now (no promo/seasonal copy to commit
 // to yet). Give it a value alongside FEATURED_THEME_ID when there's a real reason to show, not just a label.
 export const FEATURED_TAGLINE = null
@@ -353,9 +355,6 @@ export const SHOP_ITEMS = {
     workSound: [
         workSound('default', 'Classic click', 0, workClickSound, 'The original.'),
 
-        // PLACEHOLDER - 'supporter' tier: locked until the Supporter's Set DLC exists (see TIERS above)
-        workSound('fanfare', 'Fanfare', 0, workClickSound, 'A little flourish on every click. Part of the Supporter’s Set.', 'supporter'),
-
         // ── Bundle template pieces (see "ADDING A BUNDLE" above) - reused existing samples as stand-ins. Swap
         // each src for a real themed sample (a meow, a chime, a parrot squawk...) whenever you get to it.
         workSound('kitty', 'Kitty click', 25, [kitty1, kitty2, kitty3, kitty4, kitty5], 'Meows like a cat. Part of the Kitty bundle.'),
@@ -408,9 +407,6 @@ export const SHOP_ITEMS = {
             bgImage: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' fill='%23030712'/%3E%3Cg fill='%23ffffff'%3E%3Ccircle cx='14' cy='18' r='1.1' opacity='0.8'/%3E%3Ccircle cx='40' cy='8' r='0.8' opacity='0.5'/%3E%3Ccircle cx='66' cy='26' r='1.3' opacity='0.9'/%3E%3Ccircle cx='92' cy='14' r='0.9' opacity='0.6'/%3E%3Ccircle cx='110' cy='40' r='1.1' opacity='0.7'/%3E%3Ccircle cx='22' cy='52' r='0.9' opacity='0.5'/%3E%3Ccircle cx='54' cy='60' r='1.2' opacity='0.8'/%3E%3Ccircle cx='80' cy='70' r='0.8' opacity='0.5'/%3E%3Ccircle cx='104' cy='84' r='1.3' opacity='0.9'/%3E%3Ccircle cx='10' cy='92' r='1' opacity='0.6'/%3E%3Ccircle cx='36' cy='104' r='0.9' opacity='0.5'/%3E%3Ccircle cx='62' cy='96' r='1.2' opacity='0.8'/%3E%3Ccircle cx='90' cy='110' r='1' opacity='0.6'/%3E%3Ccircle cx='116' cy='100' r='0.9' opacity='0.5'/%3E%3C/g%3E%3C/svg%3E\")",
         }, 'Lilac lettering. Part of the Starlight bundle.', 'standard', { hoverSound: hoverSoundAsset, clickSource: clickSound3 }),
 
-        // PLACEHOLDER - 'supporter' tier
-        boardTheme('aurora', 'Aurora', 0, { accent: '#39ffc9' }, 'Shifting aurora colours behind the board. Part of the Supporter’s Set.', 'supporter'),
-
         // ── Bundle template pieces (see "ADDING A BUNDLE" above) - plain accent recolours for now. Give any of
         // these a real bgImage (and hoverSound/clickSource) the same way 'starlight' above does when you're
         // ready. The Starlight BUNDLE itself reuses the 'starlight' item above rather than duplicating it.
@@ -432,9 +428,6 @@ export const SHOP_ITEMS = {
         hyperLinkTheme('default', 'Classic Hyper-Link', 0, {}, 'The classic amber Hyper-Link.'),
         // PLACEHOLDER
         hyperLinkTheme('ocean', 'Ocean Hyper-Link', 40, { accent: '#3b82f6', accentDark: '#2563eb' }, 'Part of the Ocean bundle.'),
-
-        // PLACEHOLDER - 'supporter' tier
-        hyperLinkTheme('neon', 'Neon', 0, { accent: '#39ffc9', accentDark: '#00c2a8' }, 'Part of the Supporter’s Set.', 'supporter'),
 
         // ── Bundle template pieces (see "ADDING A BUNDLE" above)
         hyperLinkTheme('kitty', 'Kitty Hyper-Link', 40, { accent: '#ff8fab', accentDark: '#e85d87' }, 'Part of the Kitty bundle.'),
@@ -460,13 +453,6 @@ export const SHOP_ITEMS = {
             tickerBg: '#06101c', tickerText: '#4fc3f7',
             departureArc: '#3b82f6', arrivalArc: '#f5a623',
         }, 'Light blue and gold. Part of the Ocean bundle.'),
-
-        // PLACEHOLDER - 'supporter' tier
-        generalTheme('prestige', 'Prestige', 0, {
-            barBg: 'rgb(20, 18, 14)', barText: '#fbf1d9', barTextMuted: '#c7b989', accent: '#ffd86b',
-            tickerBg: '#000000', tickerText: '#ffd86b',
-            departureArc: '#ffd86b', arrivalArc: '#c4b5fd',
-        }, 'Part of the Supporter’s Set.', 'supporter'),
 
         // ── Bundle template pieces (see "ADDING A BUNDLE" above)
         generalTheme('kitty', 'Kitty', 75, {
@@ -547,11 +533,6 @@ export const SHOP_ITEMS = {
             cursorGrabbing: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Cg fill='%230d1b2e' stroke='%230d1b2e' stroke-width='2.4' stroke-linejoin='round'%3E%3Crect x='7.5' y='11' width='4.6' height='9' rx='2.3'/%3E%3Crect x='12' y='9.5' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='16.5' y='9.8' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='21' y='11.5' width='4.4' height='8.5' rx='2.2'/%3E%3Crect x='7.5' y='15' width='17.9' height='11' rx='5.5'/%3E%3Cellipse cx='13' cy='21.5' rx='5.5' ry='2.6'/%3E%3C/g%3E%3Cg fill='%234fc3f7'%3E%3Crect x='7.5' y='11' width='4.6' height='9' rx='2.3'/%3E%3Crect x='12' y='9.5' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='16.5' y='9.8' width='4.6' height='9.5' rx='2.3'/%3E%3Crect x='21' y='11.5' width='4.4' height='8.5' rx='2.2'/%3E%3Crect x='7.5' y='15' width='17.9' height='11' rx='5.5'/%3E%3Cellipse cx='13' cy='21.5' rx='5.5' ry='2.6'/%3E%3C/g%3E%3C/svg%3E\") 16 16, grabbing",
         }, 'Part of the Ocean bundle.'),
 
-        // PLACEHOLDER - 'supporter' tier (reuses the Ocean shapes recoloured gold, as a stand-in until real art exists)
-        cursorTheme('vip', 'VIP', 0, {
-            cursorDefault: "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23fff3c4'/%3E%3Cstop offset='1' stop-color='%23ffd86b'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3.5 2.2 L3.5 19.4 L7.9 15.3 L11 22 L13.7 20.8 L10.6 14.2 L16.6 14.2 Z' fill='url(%23g)' stroke='%232b1a00' stroke-width='1.1' stroke-linejoin='round'/%3E%3C/svg%3E\") 3 2, default",
-        }, 'Part of the Supporter’s Set.', 'supporter'),
-
         // ── Bundle template pieces (see "ADDING A BUNDLE" above) - built with recolorCursor(), so each one is a
         // real working recolour already. Give any of them a genuinely new shape later if you want that bundle's
         // cursor to feel more special.
@@ -571,79 +552,36 @@ export const SHOP_ITEMS = {
     ],
 }
 
+// A bundle's blurb is built from what it actually contains, by looking up each piece's real name in SHOP_ITEMS -
+// so the text can never list a name that doesn't match what's shown in the Shop. Rename a piece and every
+// bundle blurb that uses it updates with it, with nothing to keep in sync by hand. Order follows the same
+// category order the piece chips are shown in below (General, Board, Hyper-Link, Work sound, Opening, Cursor).
+const BUNDLE_BLURB_ORDER = ['generalTheme', 'boardTheme', 'hyperLinkTheme', 'workSound', 'openingAudio', 'cursorTheme']
+function bundleBlurb(items) {
+    const names = BUNDLE_BLURB_ORDER
+        .map(category => SHOP_ITEMS[category]?.find(item => item.id === items[category])?.name)
+        .filter(Boolean)
+    return `Includes: ${names.join(', ')}.`
+}
+const makeBundle = (id, name, items, tier = 'special') => ({ id, name, tier, blurb: bundleBlurb(items), items })
+
 // One bundle per themed set - see "ADDING A BUNDLE" near the top of this file. Prices are computed from these
 // (sum of the not-yet-owned pieces, minus 20%) by bundlePrice() in utils/cosmetics.js, so nothing here sets a
 // price directly.
 export const SHOP_BUNDLES = [
-    {
-        id: 'kitty', name: 'Kitty', tier: 'special',
-        blurb: 'Cat-themed: pink and cream everywhere, a meowing Work button, a paw-pink cursor.',
-        items: { generalTheme: 'kitty', boardTheme: 'kitty', hyperLinkTheme: 'kitty', workSound: 'kitty', cursorTheme: 'kitty', openingAudio: 'kitty' },
-    },
-    {
-        id: 'fairy', name: 'Fairy', tier: 'special',
-        blurb: 'Fantasy-themed: lavender and mint, a chiming Work button, a sparkling cursor.',
-        items: { generalTheme: 'fairy', boardTheme: 'fairy', hyperLinkTheme: 'fairy', workSound: 'fairy', cursorTheme: 'fairy', openingAudio: 'fairy' },
-    },
-    {
-        id: 'poltergeist', name: 'Poltergeist', tier: 'special',
-        blurb: 'Spooky-themed: sickly green on near-black, a creaking Work button.',
-        items: { generalTheme: 'poltergeist', boardTheme: 'poltergeist', hyperLinkTheme: 'poltergeist', workSound: 'poltergeist', cursorTheme: 'poltergeist', openingAudio: 'poltergeist' },
-    },
-    {
-        id: 'playroom', name: 'Playroom', tier: 'special',
-        blurb: 'Nursery-themed: crayon-box colours, a xylophone Work button.',
-        items: { generalTheme: 'playroom', boardTheme: 'playroom', hyperLinkTheme: 'playroom', workSound: 'playroom', cursorTheme: 'playroom', openingAudio: 'playroom' },
-    },
-    {
-        // Reuses the Board theme already built above rather than duplicating it under a second id.
-        id: 'starlight', name: 'Starlight', tier: 'special',
-        blurb: 'Sci-fi-themed: a starfield board, indigo-and-cyan bars, a sci-fi blip Work button.',
-        items: { generalTheme: 'starlight', boardTheme: 'starlight', hyperLinkTheme: 'starlight', workSound: 'starlight', cursorTheme: 'starlight', openingAudio: 'starlight' },
-    },
-    {
-        id: 'buccaneer', name: 'Buccaneer', tier: 'special',
-        blurb: 'Pirate-themed: old gold and sea teal, an "arr" on every click.',
-        items: { generalTheme: 'buccaneer', boardTheme: 'buccaneer', hyperLinkTheme: 'buccaneer', workSound: 'buccaneer', cursorTheme: 'buccaneer', openingAudio: 'buccaneer' },
-    },
-    {
-        id: 'princess', name: 'Princess', tier: 'special',
-        blurb: 'Elegant and royal: rose and gold, a sparkling Work button.',
-        items: { generalTheme: 'princess', boardTheme: 'princess', hyperLinkTheme: 'princess', workSound: 'princess', cursorTheme: 'princess', openingAudio: 'princess' },
-    },
-    {
-        id: 'jazz', name: 'Jazz', tier: 'special',
-        blurb: 'Smoky and musical: goldenrod and burgundy, a saxophone note on every click.',
-        items: { generalTheme: 'jazz', boardTheme: 'jazz', hyperLinkTheme: 'jazz', workSound: 'jazz', cursorTheme: 'jazz', openingAudio: 'jazz' },
-    },
-    {
-        id: 'duck', name: 'Duck', tier: 'special',
-        blurb: 'Pond-themed: sunny yellow and teal, a quack on every click.',
-        items: { generalTheme: 'duck', boardTheme: 'duck', hyperLinkTheme: 'duck', workSound: 'duck', cursorTheme: 'duck', openingAudio: 'duck' },
-    },
-    {
-        id: 'woof', name: 'Woof', tier: 'special',
-        blurb: 'Dog-themed: denim blue and tennis-ball green, a bark on every click.',
-        items: { generalTheme: 'woof', boardTheme: 'woof', hyperLinkTheme: 'woof', workSound: 'woof', cursorTheme: 'woof', openingAudio: 'woof' },
-    },
-    {
-        id: 'ocean', name: 'Ocean', tier: 'special',
-        blurb: 'Sea-themed: deep blue bars, a wave-blue Hyper-Link, a splash on every click.',
-        items: { generalTheme: 'ocean', boardTheme: 'ocean', hyperLinkTheme: 'ocean', workSound: 'ocean', cursorTheme: 'ocean', openingAudio: 'ocean' },
-    },
-    {
-        id: 'rockstar', name: 'Rockstar', tier: 'special',
-        blurb: 'Rock-themed: black and electric red, a power chord on every click.',
-        items: { generalTheme: 'rockstar', boardTheme: 'rockstar', hyperLinkTheme: 'rockstar', workSound: 'rockstar', cursorTheme: 'rockstar', openingAudio: 'rockstar' },
-    },
-    {
-        id: 'western', name: 'Western', tier: 'special',
-        blurb: 'Cowboy-themed: sun-baked tan and saddle brown, a "yee-haw" on every click.',
-        items: { generalTheme: 'western', boardTheme: 'western', hyperLinkTheme: 'western', workSound: 'western', cursorTheme: 'western', openingAudio: 'western' },
-    },
-    {
-        id: 'paradise', name: 'Paradise', tier: 'special',
-        blurb: 'Tropical-themed: turquoise and hibiscus pink, a steel-drum note on every click.',
-        items: { generalTheme: 'paradise', boardTheme: 'paradise', hyperLinkTheme: 'paradise', workSound: 'paradise', cursorTheme: 'paradise', openingAudio: 'paradise' },
-    },
+    makeBundle('kitty', 'Kitty', { generalTheme: 'kitty', boardTheme: 'kitty', hyperLinkTheme: 'kitty', workSound: 'kitty', cursorTheme: 'kitty', openingAudio: 'kitty' }),
+    makeBundle('fairy', 'Fairy', { generalTheme: 'fairy', boardTheme: 'fairy', hyperLinkTheme: 'fairy', workSound: 'fairy', cursorTheme: 'fairy', openingAudio: 'fairy' }),
+    makeBundle('poltergeist', 'Poltergeist', { generalTheme: 'poltergeist', boardTheme: 'poltergeist', hyperLinkTheme: 'poltergeist', workSound: 'poltergeist', cursorTheme: 'poltergeist', openingAudio: 'poltergeist' }),
+    makeBundle('playroom', 'Playroom', { generalTheme: 'playroom', boardTheme: 'playroom', hyperLinkTheme: 'playroom', workSound: 'playroom', cursorTheme: 'playroom', openingAudio: 'playroom' }),
+    // Reuses the Board theme already built above rather than duplicating it under a second id.
+    makeBundle('starlight', 'Starlight', { generalTheme: 'starlight', boardTheme: 'starlight', hyperLinkTheme: 'starlight', workSound: 'starlight', cursorTheme: 'starlight', openingAudio: 'starlight' }),
+    makeBundle('buccaneer', 'Buccaneer', { generalTheme: 'buccaneer', boardTheme: 'buccaneer', hyperLinkTheme: 'buccaneer', workSound: 'buccaneer', cursorTheme: 'buccaneer', openingAudio: 'buccaneer' }),
+    makeBundle('princess', 'Princess', { generalTheme: 'princess', boardTheme: 'princess', hyperLinkTheme: 'princess', workSound: 'princess', cursorTheme: 'princess', openingAudio: 'princess' }),
+    makeBundle('jazz', 'Jazz', { generalTheme: 'jazz', boardTheme: 'jazz', hyperLinkTheme: 'jazz', workSound: 'jazz', cursorTheme: 'jazz', openingAudio: 'jazz' }),
+    makeBundle('duck', 'Duck', { generalTheme: 'duck', boardTheme: 'duck', hyperLinkTheme: 'duck', workSound: 'duck', cursorTheme: 'duck', openingAudio: 'duck' }),
+    makeBundle('woof', 'Woof', { generalTheme: 'woof', boardTheme: 'woof', hyperLinkTheme: 'woof', workSound: 'woof', cursorTheme: 'woof', openingAudio: 'woof' }),
+    makeBundle('ocean', 'Ocean', { generalTheme: 'ocean', boardTheme: 'ocean', hyperLinkTheme: 'ocean', workSound: 'ocean', cursorTheme: 'ocean', openingAudio: 'ocean' }),
+    makeBundle('rockstar', 'Rockstar', { generalTheme: 'rockstar', boardTheme: 'rockstar', hyperLinkTheme: 'rockstar', workSound: 'rockstar', cursorTheme: 'rockstar', openingAudio: 'rockstar' }),
+    makeBundle('western', 'Western', { generalTheme: 'western', boardTheme: 'western', hyperLinkTheme: 'western', workSound: 'western', cursorTheme: 'western', openingAudio: 'western' }),
+    makeBundle('paradise', 'Paradise', { generalTheme: 'paradise', boardTheme: 'paradise', hyperLinkTheme: 'paradise', workSound: 'paradise', cursorTheme: 'paradise', openingAudio: 'paradise' }),
 ]

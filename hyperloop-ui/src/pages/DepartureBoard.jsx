@@ -6,6 +6,7 @@ import { minutesUntilDeparture } from '../utils/time.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
 import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable, clearTimetable } from '../utils/timetable.js'
 import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus, farewellWindowMinutes } from '../utils/loops.js'
+import { loopCode } from '../utils/loopCodes.js'
 import { AUTOMATE_SCHEDULE_REP_COST } from 'Managers/ProgressionManager/ProgressionManager.js'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import reputationIcon from '../assets/misc/reputation.png'
@@ -24,6 +25,9 @@ function getOrdinal(n) {
 
 const STATUS_WIDTH = 11
 const GATE_WIDTH = 3
+// A 3-letter city code plus a 3-digit number, e.g. "FRA008" - departure and arrival numbers are both
+// zero-padded to the same width, even though arrivals are drawn from a much smaller range.
+const CODE_WIDTH = 6
 
 function padText(text, width, padChar = '-') {
     return text.length >= width ? text : text + padChar.repeat(width - text.length)
@@ -70,7 +74,7 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
     )
 })
 
-function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openScheduleOnMount = false, reputation = 0, progressionManager = null, onSave = () => {}, onAutomated = () => {}, onClose }) {
+function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgrades, openScheduleOnMount = false, reputation = 0, progressionManager = null, onSave = () => {}, onAutomated = () => {}, onClose }) {
     // How long an arrival stays lit as ARRIVED on the board — matches how long its greeting window actually
     // stays open, rather than assuming every farewell-window upgrade is owned (bug #183)
     const litMinutes = farewellWindowMinutes(purchasedUpgrades)
@@ -275,6 +279,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
         if (!entry) return (
             <>
                 <td className="flip-cell"><div className="flip-card"><StaticText text={'-'.repeat(destWidth)} /></div></td>
+                <td className="flip-cell board-col-inner"><div className="flip-card"><StaticText text={'-'.repeat(CODE_WIDTH)} /></div></td>
                 <td className="flip-cell board-col-inner"><div className="flip-card"><StaticText text={'-----'} /></div></td>
                 <td className="flip-cell board-col-inner"><div className="flip-card"><StaticText text={'---'} /></div></td>
                 <td className="flip-cell board-col-inner"><div className="flip-card"><StaticText text={'-'.repeat(STATUS_WIDTH)} /></div></td>
@@ -290,12 +295,16 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
             ? status.label === 'ARRIVING' || status.label === 'ARRIVED'
             : status.label !== 'SCHEDULED' && status.label !== 'DELAYED'
         const gateText = padText(showGate ? `-${String(entry.gate).padStart(2, '0')}` : '---', GATE_WIDTH)
+        const code = loopCode(entry.name, isArrivals ? 'arrival' : 'departure', purchasedCities, terminalName, entry.loopNumber)
         return (
             <>
                 <td className="flip-cell" style={{ opacity: isGone ? 0.4 : 1 }}>
                     <div className="flip-card">
                         <StaticText text={padText(entry.name.toUpperCase(), destWidth)} />
                     </div>
+                </td>
+                <td className="flip-cell board-col-inner" style={{ opacity: isGone ? 0.4 : 1 }}>
+                    <div className="flip-card"><StaticText text={padText(code, CODE_WIDTH)} /></div>
                 </td>
                 <td className="flip-cell board-col-inner" style={{ opacity: isGone ? 0.4 : 1 }}>
                     <div className="flip-card"><StaticText text={entry.time} /></div>
@@ -443,11 +452,13 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
                     <thead>
                         <tr>
                             <td className="board-header">{isArrivals ? 'FROM' : 'DESTINATION'}</td>
+                            <td className="board-header board-col-inner">LOOP</td>
                             <td className="board-header board-col-inner">{isArrivals ? 'ARRIVES' : 'DEPARTS'}</td>
                             <td className="board-header board-col-inner">GATE</td>
                             <td className="board-header board-col-inner">STATUS</td>
                             <td className="board-col-divider board-header"></td>
                             <td className="board-header">{isArrivals ? 'FROM' : 'DESTINATION'}</td>
+                            <td className="board-header board-col-inner">LOOP</td>
                             <td className="board-header board-col-inner">{isArrivals ? 'ARRIVES' : 'DEPARTS'}</td>
                             <td className="board-header board-col-inner">GATE</td>
                             <td className="board-header board-col-inner">STATUS</td>
@@ -468,6 +479,7 @@ function DepartureBoard({ purchasedCities, homeCity, purchasedUpgrades, openSche
             {showSchedule && createPortal(
                 <ScheduleModal
                     purchasedCities={purchasedCities}
+                    terminalName={terminalName}
                     onChange={afterScheduleChange}
                     onClose={() => setShowSchedule(false)}
                 />,

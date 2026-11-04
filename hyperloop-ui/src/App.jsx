@@ -57,7 +57,6 @@ import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, distanceMiles } from './utils/loops.js'
-import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
@@ -85,6 +84,13 @@ const MIN_INSTANT_CASH_LOSS = 2500;
 // Same reasoning again for the Daily Bonus: 25% (or 50% with Commemorative Displays) of a day's income is £0
 // for a new or quiet terminal, which reads as a broken reward rather than a login bonus.
 const MIN_DAILY_BONUS = 25000;
+// A delayed loop's compensation used to be a flat delayMinutes*£1000 regardless of how much the terminal
+// actually earns - fine early on, but trivial once income has grown, unlike the instant-cash-loss events
+// above which scale with a day's income. Instead this pays out DELAY_COMPENSATION_MULTIPLIER times whatever
+// income that delay's share of a day would have earned - angry passengers expect more than just their fare
+// back - floored the same way as the other instant-cash effects so it's never £0 for a new/quiet terminal.
+const DELAY_COMPENSATION_MULTIPLIER = 2;
+const MIN_DELAY_COMPENSATION = 2500;
 // The Antarctic finale unlocks once every regular city is connected (bug #115).
 const REGULAR_CITY_COUNT = allCities.filter(c => c.continent !== 'Antarctica').length;
 
@@ -375,15 +381,7 @@ function App() {
       hyperLinkTriggerRef.current = greetingPost;
       return;
     }
-    const today = new Date().toDateString();
-    const isFirstToday = lastFarewellDateRef.current !== today;
-    const hasDoubleFirst = economyManager.hasUpgrade('firstFarewellOfDayDouble');
-    const finalRep = (isFirstToday && hasDoubleFirst) ? (repGain ?? 5) * 2 : (repGain ?? 5);
-    if (isFirstToday) {
-      lastFarewellDateRef.current = today;
-      localStorage.setItem('hyperloop_last_farewell_date', today);
-    }
-    progressionManager.addReputation(finalRep);
+    progressionManager.addReputation(repGain ?? 5);
     // Personal Image Branding: +10% of the departing city's daily income per farewell.
     const farewellCity = allCities.find(c => c.name === dep?.name);
     const farewellCash = farewellCity ? economyManager.getFarewellCityIncomeBonus(farewellCity) : 0;
@@ -602,7 +600,6 @@ function App() {
   const farewellsRef = useRef(savedData?.farewellsGiven || 0);
   const lastTickTimeRef = useRef(Date.now());
   const playtimePending = useRef(0);
-  const lastFarewellDateRef = useRef(localStorage.getItem('hyperloop_last_farewell_date') || null);
   const lastModalClearedAt = useRef(Date.now() + 180000);
   const lastEventTime = useRef(Date.now());
   // See the otherPopupOpen effect below, which keeps this in sync each render - read by the tick's
@@ -1407,7 +1404,12 @@ function App() {
           const newHour = Math.floor(newTotalMins / 60) % 24;
           const newMinute = newTotalMins % 60;
           const newTime = `${String(newHour).padStart(2, '0')}:${String(newMinute).padStart(2, '0')}`;
-          const compensation = Math.round(delayMinutes * 50 * INCOME_SCALE);
+          // What this delay's share of a day would have earned the terminal, times the goodwill multiplier,
+          // rounded to the nearest £100 the same way the instant-cash-loss events are, and floored so it's
+          // never trivial for a new/quiet terminal (see DELAY_COMPENSATION_MULTIPLIER/MIN_DELAY_COMPENSATION above).
+          const incomePerSecond = economyManager.calculateDailyIncome(null, createdAt);
+          const rawCompensation = Math.round(incomePerSecond * SECONDS_IN_A_DAY * (delayMinutes / 1440) * DELAY_COMPENSATION_MULTIPLIER / 100) * 100;
+          const compensation = Math.max(rawCompensation, MIN_DELAY_COMPENSATION);
           triggeredDelays.current.add(`${isArrival ? 'arr_' : ''}${entry.time}_${entry.name}`);
           // The delayed loop takes its new place in the day's order (bug #103).
           // Matched on the city too: a delayed loop can land on another's time, and only this one moves (bug #171)
@@ -1772,6 +1774,7 @@ function App() {
         economyManager={economyManager}
         balance={balance}
         constructionManager={constructionManager}
+        terminalName={terminalName}
         onConnectCity={triggerSave}
         onGlobeReady={() => setGlobeBuilt(true)}
       />
@@ -1947,6 +1950,7 @@ function App() {
             <DepartureBoard
               purchasedCities={progressionManager.purchasedCities}
               homeCity={progressionManager.purchasedCities[0]}
+              terminalName={terminalName}
               purchasedUpgrades={progressionManager.purchasedUpgrades}
               openScheduleOnMount={boardOpensSchedule}
               reputation={reputation}
@@ -2015,7 +2019,7 @@ function App() {
         />
       )}
       <AchievementToast queue={achievementQueue} onShift={() => setAchievementQueue(q => q.slice(1))} />
-      <TickerBar terminalName={terminalName} />
+      <TickerBar terminalName={terminalName} purchasedCities={progressionManager.purchasedCities} />
       <BottomNav activeTab={activeTab} onSelect={(tab) => {
         if (departureBoardAudioRef.current) {
           departureBoardAudioRef.current.pause();
