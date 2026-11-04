@@ -26,6 +26,12 @@
     flex-direction: column;
     align-items: center;
 }
+/* The game's gold scrollbar (App.css) is sized for a full page - on this narrow, rounded card it reads as a thick
+   bar cutting into the curve. Keeps scrolling (wheel/trackpad/touch/keyboard), just without its own visible track. */
+.modal::-webkit-scrollbar { display: none; }
+@supports not selector(::-webkit-scrollbar) {
+    .modal { scrollbar-width: none; }
+}
 
 .modal img.modal-city-image {
     width: 160px;
