@@ -41,6 +41,13 @@ const ROUTE_HALO_RADIUS = 0.0065
 // The shuttle's own height (its local Y extent), same number makePodGeometry uses below - placePods
 // needs it too, to lift the pod by half its (post-zoom-scale) height on top of the route's surface.
 const POD_HEIGHT = 0.012
+// How much of the arc's own climb/dive the pod's nose actually follows, instead of staying level with
+// the globe regardless of the route's slope: 0 keeps it dead flat (the old look - technically on the arc,
+// but reading as floating above it rather than riding it), 1 has it follow the arc's real tangent all the
+// way, which points the nose almost straight up or down right at takeoff and landing on the longest
+// routes (the bulge is tallest and steepest-ended for a near-antipodal pair - see arcPoints' `height`).
+// This is the middle ground: a visible bank into steep stretches without ever going that extreme.
+const PITCH_DAMPING = 0.4
 // The shuttle's silhouette: a flat-faced box chamfered to a point at the nose (forward, local +X,
 // same convention placePods already turns to face the route). Still every face flat and every edge
 // sharp like the plain box it replaces - built as a 2D "home plate" profile (rectangular body,
@@ -588,7 +595,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             syncedLoops = list
         }
         const UP = new THREE.Vector3(0, 1, 0)
-        const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3(), tmpS = new THREE.Vector3(), tmpM = new THREE.Matrix4()
+        const tmpA = new THREE.Vector3(), tmpB = new THREE.Vector3(), tmpC = new THREE.Vector3(), tmpS = new THREE.Vector3(), tmpU = new THREE.Vector3(), tmpM = new THREE.Matrix4()
         const placePods = () => {
             const now = Date.now()
             // Highlighted loops that have since arrived no longer dim the others
@@ -600,21 +607,26 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const { startTs, endTs } = o.loop
                 const progress = Math.min(1, Math.max(0, (now - startTs) / Math.max(1, endTs - startTs)))
                 const isLit = lit.has(o.loop.id)
-                // Shuttle: on the arc, long side along the direction of travel, flat side to the globe
+                // Shuttle: on the arc, long side along the direction of travel, banked into the arc's own
+                // climb/dive by PITCH_DAMPING (see its comment above) rather than staying flat to the globe
+                // regardless of the route's slope.
                 o.curve.getPointAt(progress, tmpA)
                 o.curve.getTangentAt(progress, tmpB)
                 tmpC.copy(tmpA).normalize()                 // away from the globe
-                tmpB.addScaledVector(tmpC, -tmpB.dot(tmpC)).normalize()
+                const verticalTangent = tmpB.dot(tmpC)
+                tmpB.addScaledVector(tmpC, -(1 - PITCH_DAMPING) * verticalTangent).normalize()
                 tmpS.crossVectors(tmpB, tmpC).normalize()   // across the route
-                tmpM.makeBasis(tmpB, tmpC, tmpS)
+                tmpU.crossVectors(tmpS, tmpB).normalize()   // the pod's own "up" - squared back to the now-tilted
+                // forward direction above, so the basis below stays a clean rotation rather than a shear
+                tmpM.makeBasis(tmpB, tmpU, tmpS)
                 const podScale = zoom * (isLit ? 1.35 : 1)
                 // tmpA sits ON the route's centreline, same as the tube meshes do - placing the pod there
                 // directly buries its lower half inside whichever tube is currently showing. Lift it along
-                // tmpC (the pod's own "up", per the basis above) by that tube's own radius - under's slimmer
-                // one normally, halo's wider one once isLit swaps it in - plus half the pod's own current
-                // height, so it rests on top of the route instead of clipping through it. Using halo's
-                // (wider) radius even while only the slimmer under tube was showing is what previously had
-                // it floating with a visible gap above the route.
+                // tmpC (straight away from the globe, not the pod's own now-tilted "up" above) by that tube's
+                // own radius - under's slimmer one normally, halo's wider one once isLit swaps it in - plus
+                // half the pod's own current height, so it rests on top of the route instead of clipping
+                // through it. Using halo's (wider) radius even while only the slimmer under tube was showing
+                // is what previously had it floating with a visible gap above the route.
                 const tubeClearance = isLit ? ROUTE_HALO_RADIUS : ROUTE_UNDER_RADIUS
                 o.pod.position.copy(tmpA).addScaledVector(tmpC, tubeClearance + (POD_HEIGHT / 2) * podScale)
                 o.pod.quaternion.setFromRotationMatrix(tmpM)
