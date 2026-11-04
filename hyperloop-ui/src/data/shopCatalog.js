@@ -532,6 +532,26 @@ export const SHOP_ITEMS = {
             tickerBg: '#07262a', tickerText: '#00bfa5',
             departureArc: '#00bfa5', arrivalArc: '#ff5c8a',
         }, 'Turquoise and hibiscus pink. Part of the Paradise bundle.'),
+
+        // ── Standalone general themes - same id and colour palette as the standalone cursor theme below, not
+        // part of a Shop bundle yet (no Board/Hyper-Link/Sound/Opening piece exists for these). Having this
+        // piece is what gives the matching cursor card its coloured frame (ShopModal's themedCardStyle reads
+        // the border colour from here) and puts the theme in a second Shop section (General Theme).
+        generalTheme('wartime', 'Wartime', 75, {
+            barBg: 'rgb(20, 22, 12)', barText: '#eef0e0', barTextMuted: '#9aab6e', accent: '#9aab6e',
+            tickerBg: '#0d0f08', tickerText: '#9aab6e',
+            departureArc: '#9aab6e', arrivalArc: '#b5651d',
+        }, 'Matte khaki on dark olive drab.'),
+        generalTheme('gingerbread', 'Gingerbread', 75, {
+            barBg: 'rgb(255, 240, 220)', accent: '#6b3410',
+            tickerBg: '#2a1006', tickerText: '#f0c891',
+            departureArc: '#6b3410', arrivalArc: '#7a1414',
+        }, 'Warm gingerbread brown, trimmed in holly red.'),
+        generalTheme('dystopia', 'Dystopia', 75, {
+            barBg: 'rgb(10, 6, 18)', barText: '#e8d9ff', barTextMuted: '#b06ee0', accent: '#ff2fd1',
+            tickerBg: '#000000', tickerText: '#ff2fd1',
+            departureArc: '#ff2fd1', arrivalArc: '#b06ee0',
+        }, 'Deep violet and cool grey, with a neon glow.'),
     ],
 
     cursorTheme: [
@@ -563,10 +583,12 @@ export const SHOP_ITEMS = {
         cursorTheme('western', 'Western cursor', 20, recolorCursor({ a: '#e8c79a', b: '#a0522d', stroke: '#2a1a0e', fill: '#a0522d', hilite: '#fff6e8' }), 'Part of the Western bundle.'),
         cursorTheme('paradise', 'Paradise cursor', 20, recolorCursor({ a: '#9df0e6', b: '#00bfa5', stroke: '#07262a', fill: '#00bfa5', hilite: '#f0fffd' }), 'Part of the Paradise bundle.'),
 
-        // ── Standalone cursor themes - not part of a Shop bundle (no matching General/Board/Hyper-Link/Sound
-        // pieces exist yet for these). Colour placeholders built with recolorCursor(), same as the bundle pieces
-        // above: replace the five hex values, or give any of them a genuinely new shape, whenever real art is
-        // ready. Register a matching SHOP_BUNDLES entry later if a full set gets built out for one of these.
+        // ── Standalone cursor themes - each now has a matching General theme above (same id), which is what
+        // gives this card its coloured frame and a second place to show up (the General Theme tab) - but still
+        // not a full bundle (no Board/Hyper-Link/Sound/Opening piece exists yet for these). Colour placeholders
+        // built with recolorCursor(), same as the bundle pieces above: replace the five hex values, or give any
+        // of them a genuinely new shape, whenever real art is ready. Register a matching SHOP_BUNDLES entry
+        // later if a full set gets built out for one of these.
         cursorTheme('wartime', 'Wartime cursor', 20, recolorCursor({ a: '#9aab6e', b: '#4b5320', stroke: '#14160a', fill: '#4b5320', hilite: '#eef0e0' }), 'Matte khaki into olive drab.'),
         cursorTheme('gingerbread', 'Gingerbread cursor', 20, recolorCursor({ a: '#f0c891', b: '#6b3410', stroke: '#7a1414', fill: '#6b3410', hilite: '#fff0dc' }), 'Warm gingerbread brown, trimmed in holly red.'),
         cursorTheme('dystopia', 'Dystopia cursor', 20, recolorCursor({ a: '#b06ee0', b: '#4b2e83', stroke: '#0a0612', fill: '#3a3a42', hilite: '#ff2fd1' }), 'Deep violet and cool grey, with a neon glow.'),

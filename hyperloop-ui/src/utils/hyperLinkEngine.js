@@ -257,7 +257,14 @@ function buildEligibleCategories(gameState) {
     const monthCategory = getMonthCategory()
     if (POSTS[monthCategory]?.length) add(monthCategory, 2)
 
-    if (trigger) add(trigger.type, 25, trigger.data || {})
+    // A seasonal upgrade (Valentine's Day Sales, Halloween Fair, ...) fires this trigger the instant it's bought
+    // (see App.jsx, "bug #70"), whatever the real date is - OWNED_POST_WINDOWS below exists precisely to stop a
+    // seasonal line showing out of season, so it has to gate this immediate post too, not just the regular
+    // owned-posts pool further down. Buying Valentine's Day Sales in November just falls through to a normal
+    // post instead.
+    if (trigger && (!OWNED_POST_WINDOWS[trigger.type] || OWNED_POST_WINDOWS[trigger.type](new Date()))) {
+        add(trigger.type, 25, trigger.data || {})
+    }
 
     // Posts about what is on the boards right now. A big timetable has many loops in each window, so each kind of post
     // is drawn once, about one of them picked at random, and counts for at most three loops' worth of weight: otherwise

@@ -41,15 +41,14 @@ const ROUTE_HALO_RADIUS = 0.0065
 // The shuttle's own height (its local Y extent), same number makePodGeometry uses below - placePods
 // needs it too, to lift the pod by half its (post-zoom-scale) height on top of the route's surface.
 const POD_HEIGHT = 0.012
-// How much the pod's nose banks into the arc's own climb/dive, instead of staying level with the globe
-// regardless of the route's slope. The real geometry is shallow - even the most extreme route in the game
-// (two near-antipodal cities) only climbs at up to ~13 degrees right after departure, flattening to 0 at
-// the route's midpoint (see arcPoints' sine bulge), so following the arc's actual tangent 1:1 reads as
-// barely-there on a pod this small at the globe's zoomed-out scale. TILT_BOOST exaggerates that real climb
-// well past its true angle so a bank is actually visible; MAX_TILT_SIN caps how far the exaggeration can
-// ever push it (0.6 = ~37 degrees), so a pod never looks like it's nosediving.
-const TILT_BOOST = 2.75
-const MAX_TILT_SIN = 0.6
+// The pod's nose banks into the arc's own climb/dive by following the curve's real tangent exactly, rather
+// than staying level with the globe regardless of the route's slope. This used to multiply that tilt well
+// past its true angle (TILT_BOOST) to make the bank more visible, but since the tube/route itself is drawn
+// along the true, un-multiplied tangent, the exaggeration pointed the pod's nose increasingly above the
+// tube as a route climbed - most visibly right after departure, where even the shallow real slope (up to
+// ~13 degrees on the steepest route in the game - two near-antipodal cities; see arcPoints' sine bulge) was
+// being multiplied past 30 degrees. Following the true tangent keeps the nose flush with the tube at every
+// point instead.
 // The shuttle's silhouette: a flat-faced box chamfered to a point at the nose (forward, local +X,
 // same convention placePods already turns to face the route). Still every face flat and every edge
 // sharp like the plain box it replaces - built as a 2D "home plate" profile (rectangular body,
@@ -610,14 +609,11 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const progress = Math.min(1, Math.max(0, (now - startTs) / Math.max(1, endTs - startTs)))
                 const isLit = lit.has(o.loop.id)
                 // Shuttle: on the arc, long side along the direction of travel, banked into the arc's own
-                // climb/dive - exaggerated by TILT_BOOST and clamped by MAX_TILT_SIN (see their comment
-                // above) rather than staying flat to the globe regardless of the route's slope.
+                // climb/dive by following the curve's real tangent (see comment above) rather than staying
+                // flat to the globe regardless of the route's slope.
                 o.curve.getPointAt(progress, tmpA)
                 o.curve.getTangentAt(progress, tmpB)
                 tmpC.copy(tmpA).normalize()                 // away from the globe
-                const verticalTangent = tmpB.dot(tmpC)
-                const boostedVertical = Math.max(-MAX_TILT_SIN, Math.min(MAX_TILT_SIN, verticalTangent * TILT_BOOST))
-                tmpB.addScaledVector(tmpC, boostedVertical - verticalTangent).normalize()
                 tmpS.crossVectors(tmpB, tmpC).normalize()   // across the route
                 tmpU.crossVectors(tmpS, tmpB).normalize()   // the pod's own "up" - squared back to the now-tilted
                 // forward direction above, so the basis below stays a clean rotation rather than a shear
