@@ -398,7 +398,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                         <IncomeRow label="Live revenue right now" amount={liveRevenue} last>
                                                             <span
                                                                 style={{ color: '#27ae60', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'help', position: 'relative' }}
-                                                                onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `What this earns this moment: ${level > 0 ? `the Level ${level} upgrade (×${+levelMult.toFixed(2)}) ` : ''}${level > 0 ? 'and ' : ''}how busy the terminal is right now (${busyPct}% footfall) are both applied on top of the figures above.` })}
+                                                                onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `What this earns this moment: ${level > 0 ? `the Level ${level} upgrade (×${+levelMult.toFixed(2)}) and ` : ''}how busy the terminal is right now (${busyPct}% footfall) ${level > 0 ? 'are both' : 'is'} applied on top of the figures above.` })}
                                                                 onMouseLeave={() => setShowBusyTooltip(null)}
                                                             >
                                                                 {level > 0 ? `(×${+levelMult.toFixed(2)} · ` : '('}{busyPct}% busy)
