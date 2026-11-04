@@ -15,6 +15,7 @@ import ProgressPage from './pages/ProgressPage.jsx'
 import DepartureBoard from "./pages/DepartureBoard"
 import FirstLoopModal from './components/FirstLoopModal.jsx'
 import { ensureDepartures, readTimetable, dropCityFromTimetable, autoScheduleExisting, markTimetableAutofilled } from './utils/timetable.js'
+import { loopCode } from './utils/loopCodes.js'
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
 import SettingsPage from './pages/SettingsPage'
@@ -845,6 +846,15 @@ function App() {
     return () => clearTimeout(timer);
   }, [showEventModal]);
 
+  // The flight-number-style code (see loopCodes.js) for a delayed loop, so the official Hyper-Link post about
+  // it can name the service the same way a real departure board would ("Service DUB098 to Munich is delayed"),
+  // not just the city. A departure's number is whichever one that entry was actually given (delay.loopNumber,
+  // carried over from the schedule entry when the delay was created); an arrival's is looked up live by city
+  // name, the same as every other arrival code in the game - see loopCodes.js's file header for why.
+  const delayLoopCode = (delay) => delay
+    ? loopCode(delay.name, delay.kind === 'arrival' ? 'arrival' : 'departure', progressionManager.purchasedCities, terminalNameRef.current, delay.loopNumber)
+    : ''
+
   const fireOfficialHyperLinkPost = (trigger) => {
     // No updates at all for the phone until a city is connected, or before the player has actually entered
     // (construction can finish, and purchasedCities go non-empty, while they're still on the "click
@@ -1425,7 +1435,9 @@ function App() {
             : e).sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute));
           if (isArrival) writeSchedule(arrivalsKey(now.getTime()), updated);
           else localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
-          const delay = { name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation, ...(isArrival ? { kind: 'arrival' } : {}) };
+          // loopNumber is only meaningful for a departure (an arrival's code is looked up live by city name
+          // instead - see delayLoopCode/loopCodes.js), but carrying it either way is harmless.
+          const delay = { name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation, loopNumber: entry.loopNumber, ...(isArrival ? { kind: 'arrival' } : {}) };
           localStorage.setItem('hyperloop_pending_delay', JSON.stringify(delay));
           setActiveDelay(delay);
         }
@@ -2130,8 +2142,8 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name } }); }}
-          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(progressionManager.reputation); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name } }); }}
+          onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
+          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(progressionManager.reputation); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
         />
       )}
 

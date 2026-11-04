@@ -2052,23 +2052,23 @@ export const POSTS = {
     ],
 
     officialDelay: [
-        'We apologise for the delay to the {delayedCity} service. Thank you for your patience 🙏',
-        'Update: the {delayedCity} loop is experiencing a delay. We are working to resolve this ⚠️',
-        'Service advisory: departures for {delayedCity} are currently delayed. Please check station monitors for updated timings ⏱️',
-        'We regret to inform passengers that the {delayedCity} service is running behind schedule. We appreciate your understanding ⏳',
-        'Delay update: the incoming service from {delayedCity} is held up. Our teams are doing everything to get it back on track 🧭',
-        'Notice for passengers travelling to {delayedCity}: your service has been delayed. We apologise for the disruption to your journey 🙇',
-        'Apologies for the inconvenience — the {delayedCity} departure is delayed. Live updates will follow shortly 📢',
+        'We apologise for the delay to service {loopCode} to {delayedCity}. Thank you for your patience 🙏',
+        'Update: loop {loopCode} to {delayedCity} is experiencing a delay. We are working to resolve this ⚠️',
+        'Service advisory: {loopCode}, departing for {delayedCity}, is currently delayed. Please check station monitors for updated timings ⏱️',
+        'We regret to inform passengers that service {loopCode} to {delayedCity} is running behind schedule. We appreciate your understanding ⏳',
+        'Delay update: the incoming service {loopCode} from {delayedCity} is held up. Our teams are doing everything to get it back on track 🧭',
+        'Notice for passengers travelling to {delayedCity} on {loopCode}: your service has been delayed. We apologise for the disruption to your journey 🙇',
+        'Apologies for the inconvenience — departure {loopCode} to {delayedCity} is delayed. Live updates will follow shortly 📢',
     ],
 
     officialDelayCompensated: [
-        'Passengers affected by the {delayedCity} delay have been compensated. We are sorry for the inconvenience 💛',
-        'Compensation has been issued for the {delayedCity} delay. Thank you for your understanding 🙏',
-        'Update: automated compensation has been processed for all passengers impacted by the {delayedCity} delay 💳',
-        'We apologize for today\'s disruption to {delayedCity}. Fare adjustments/compensation have now been issued to affected travelers ✨',
-        'Compensation notice: accounts for passengers on the delayed {delayedCity} service have been credited. Thank you for your patience 🤝',
-        'We deeply value your time. Compensation for the {delayedCity} delay has been granted to all affected passengers 💵',
-        'In light of the delay on the {delayedCity} route, compensation has been distributed. Thank you for bearing with us 🛡️',
+        'Passengers affected by the delay to {loopCode} ({delayedCity}) have been compensated. We are sorry for the inconvenience 💛',
+        'Compensation has been issued for the delay to {loopCode} ({delayedCity}). Thank you for your understanding 🙏',
+        'Update: automated compensation has been processed for all passengers impacted by the {loopCode} delay to {delayedCity} 💳',
+        'We apologize for today\'s disruption to {loopCode} ({delayedCity}). Fare adjustments/compensation have now been issued to affected travelers ✨',
+        'Compensation notice: accounts for passengers on the delayed {loopCode} service to {delayedCity} have been credited. Thank you for your patience 🤝',
+        'We deeply value your time. Compensation for the {loopCode} delay to {delayedCity} has been granted to all affected passengers 💵',
+        'In light of the delay on the {loopCode} route to {delayedCity}, compensation has been distributed. Thank you for bearing with us 🛡️',
     ],
 
     officialEvent: {

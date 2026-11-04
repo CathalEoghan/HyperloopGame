@@ -531,6 +531,7 @@ export function generateOfficialEventPost(gameState) {
         .replace(/\{terminalName\}/g, () => terminalName)
         .replace(/\{occasion\}/g, trigger.data?.occasion || 'the big event')
         .replace(/\{delayedCity\}/g, trigger.data?.delayedCity || '')
+        .replace(/\{loopCode\}/g, trigger.data?.loopCode || '')
         .replace(/\{cityCount\}/g, gameState.purchasedCities?.length || 0)
 
     return {
