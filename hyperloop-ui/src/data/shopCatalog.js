@@ -188,6 +188,12 @@ import westernThemePicShop from '../assets/theme-pics/shop/western.jpg'
 import westernThemePicBoard from '../assets/theme-pics/board/western.jpg'
 import paradiseThemePicShop from '../assets/theme-pics/shop/paradise.jpg'
 import paradiseThemePicBoard from '../assets/theme-pics/board/paradise.jpg'
+// No board/ (Terminal Board background) size yet for these three - only a General theme equips that background,
+// and none exists for these ids yet (they're cursor-only so far). Add the board/ import + THEME_PICS_BOARD entry
+// alongside whenever a matching General theme gets built for one of these.
+import wartimeThemePicShop from '../assets/theme-pics/shop/wartime.jpg'
+import gingerbreadThemePicShop from '../assets/theme-pics/shop/gingerbread.jpg'
+import dystopiaThemePicShop from '../assets/theme-pics/shop/dystopia.jpg'
 
 // A theme's photo, shown dimmed in the background of every Shop card for that theme (work click, opening audio,
 // board/Hyper-Link/general theme, cursor...) and, once its General theme is equipped, as the Terminal Board's own
@@ -210,6 +216,9 @@ export const THEME_PICS = {
     rockstar: rockstarThemePicShop,
     western: westernThemePicShop,
     paradise: paradiseThemePicShop,
+    wartime: wartimeThemePicShop,
+    gingerbread: gingerbreadThemePicShop,
+    dystopia: dystopiaThemePicShop,
 }
 
 // The bigger variant of the same photos, used only for the Terminal Board's own background (see applyCosmetics()
