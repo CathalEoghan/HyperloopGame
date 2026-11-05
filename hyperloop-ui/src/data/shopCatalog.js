@@ -262,12 +262,11 @@ export const THEME_PICS_BOARD = {
 // The theme id the Shop spotlights in a "Featured" group at the top of every category tab (see ShopModal.jsx) -
 // one setting to change for a future promo rather than anything in the component itself. Only meaningful for an
 // id that actually has a piece in every category, so the Featured group has something to show on every tab.
-// null means no Featured group is shown at all - set this (and FEATURED_TAGLINE) when the next seasonal theme
-// (a Christmas one, nearer December) is ready to spotlight. Poltergeist was here for Halloween; that's passed.
-export const FEATURED_THEME_ID = null
-// The short line shown under the "★ Featured" heading - left blank for now (no promo/seasonal copy to commit
-// to yet). Give it a value alongside FEATURED_THEME_ID when there's a real reason to show, not just a label.
-export const FEATURED_TAGLINE = null
+// null means no Featured group is shown at all. Poltergeist was here for Halloween; that's passed. Gingerbread
+// (fully built out - all six categories plus its own bundle) is the Christmas one this was left waiting for.
+export const FEATURED_THEME_ID = 'gingerbread'
+// The short line shown under the "★ Featured" heading.
+export const FEATURED_TAGLINE = 'Deck your terminal for the holidays! 🎄'
 
 // Listed alphabetically by name, so the sidebar order matches what the player reads top to bottom -
 // Bundles is appended separately in ShopModal and stays last, since it isn't really a category of its own.
