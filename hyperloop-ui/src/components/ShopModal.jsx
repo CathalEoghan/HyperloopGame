@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PICS, FEATURED_THEME_ID, FEATURED_TAGLINE } from '../data/shopCatalog.js'
-import { isOwned, isBundleOwned, bundlePieces, bundlePrice, getEquippedItem } from '../utils/cosmetics.js'
+import { isOwned, isBundleOwned, bundlePieces, bundlePrice, bundleOriginalPrice, getEquippedItem } from '../utils/cosmetics.js'
 import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, stopPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import paletteIcon from '../assets/misc/palette.png'
@@ -296,6 +296,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                         const owned = isBundleOwned(cosmetics, bundle)
                                         const locked = bundle.tier === 'premium' && !owned
                                         const price = bundlePrice(cosmetics, bundle)
+                                        const originalPrice = bundleOriginalPrice(cosmetics, bundle)
                                         const need = shortfall(reputation, price)
                                         return (
                                             <div key={bundle.id} className={`shop-item shop-bundle-card${locked ? ' shop-item-locked' : ''}${shaking === bundle.id ? ' shop-item-shake' : ''}`} style={themedCardStyle(bundle.id)} onMouseEnter={() => playHoverSound()}>
@@ -331,7 +332,9 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                         <>
                                                             {need != null && <span className="shop-need-more">Need {need} more</span>}
                                                             <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} onClick={() => handleBundleBuy(bundle)}>
+                                                                {originalPrice > price && <span className="shop-bundle-original-price">{originalPrice}</span>}
                                                                 <img src={reputationIcon} alt="" /> {price}
+                                                                {originalPrice > price && <span className="shop-bundle-discount-tag">-20%</span>}
                                                             </button>
                                                         </>
                                                     )}

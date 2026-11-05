@@ -29,11 +29,15 @@
     margin-bottom: 14px;
 }
 
+/* Was 0.85rem and unbolded - easy to miss next to the bigger, bolder Reputation counter and Close button right
+   beside it. Kept the same retro monospace-caps styling (matches the departure-board look used throughout the
+   game) just sized and weighted to actually read as the modal's own heading. */
 .shop-title {
     margin: 0;
     flex: 1;
     font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
+    font-size: 1.5rem;
+    font-weight: bold;
     letter-spacing: 3px;
     text-transform: uppercase;
     color: var(--ui-accent, #f5a623);
@@ -337,6 +341,14 @@
     background: color-mix(in srgb, var(--ui-accent, #f5a623) 18%, white); color: var(--ui-accent, #f5a623);
 }
 .shop-bundle-badge-premium { background: color-mix(in srgb, #8b5cf6 18%, white); color: #8b5cf6; }
+/* Shown on a bundle's Buy button, right beside the already-discounted price, so the saving is obvious at the
+   exact point a player is deciding whether to buy - not just mentioned once in the tab's intro blurb. */
+.shop-bundle-original-price { text-decoration: line-through; color: #999; font-weight: normal; margin-right: 2px; }
+.shop-bundle-discount-tag {
+    font-size: 0.62rem; font-weight: bold; color: #1f8a4c;
+    background: color-mix(in srgb, #1f8a4c 15%, white);
+    border-radius: 8px; padding: 1px 6px; margin-left: 4px;
+}
 /* A compact row of category-initial chips in place of the old 5-line text list - full piece name + owned
    status is still there, just as a hover tooltip (the span's title attribute) rather than printed out. */
 .shop-bundle-pieces { display: flex; flex-wrap: wrap; gap: 4px; margin: 2px 0; }

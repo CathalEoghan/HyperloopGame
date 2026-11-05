@@ -61,11 +61,21 @@ export function isBundleOwned(state, bundle) {
     return bundlePieces(bundle).every(p => isOwned(state, p.category, p.id))
 }
 
-export function bundlePrice(state, bundle) {
-    const total = bundlePieces(bundle)
+function bundleUnownedTotal(state, bundle) {
+    return bundlePieces(bundle)
         .filter(p => !isOwned(state, p.category, p.id))
         .reduce((sum, p) => sum + (p.item.cost || 0), 0)
-    return Math.round(total * 0.8)
+}
+
+export function bundlePrice(state, bundle) {
+    return Math.round(bundleUnownedTotal(state, bundle) * 0.8)
+}
+
+// The same unowned-pieces total bundlePrice discounts, before that 20% comes off - so the Shop can show players
+// what they're actually saving (the crossed-out price next to the real one) instead of just a price that's
+// quietly lower than adding up the pieces would suggest.
+export function bundleOriginalPrice(state, bundle) {
+    return Math.round(bundleUnownedTotal(state, bundle))
 }
 
 // The item currently equipped in a category: the saved choice if it still exists and is owned, otherwise the default
