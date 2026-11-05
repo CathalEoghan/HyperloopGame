@@ -108,6 +108,9 @@ import oceanOpening from '../assets/opening-intros/ocean.mp3'
 import rockstarOpening from '../assets/opening-intros/rockstar.mp3'
 import westernOpening from '../assets/opening-intros/western.mp3'
 import paradiseOpening from '../assets/opening-intros/paradise.mp3'
+import wartimeOpening from '../assets/opening-intros/wartime.mp3'
+import gingerbreadOpening from '../assets/opening-intros/gingerbread.mp3'
+import dystopiaOpening from '../assets/opening-intros/dystopia.mp3'
 import princess1 from '../assets/work-click-sounds/princess1.mp3'
 import princess2 from '../assets/work-click-sounds/princess2.mp3'
 import princess3 from '../assets/work-click-sounds/princess3.mp3'
@@ -156,6 +159,22 @@ import paradise2 from '../assets/work-click-sounds/paradise2.mp3'
 import paradise3 from '../assets/work-click-sounds/paradise3.mp3'
 import paradise4 from '../assets/work-click-sounds/paradise4.mp3'
 import paradise5 from '../assets/work-click-sounds/paradise5.mp3'
+import wartime1 from '../assets/work-click-sounds/wartime1.mp3'
+import wartime2 from '../assets/work-click-sounds/wartime2.mp3'
+import wartime3 from '../assets/work-click-sounds/wartime3.mp3'
+import wartime4 from '../assets/work-click-sounds/wartime4.mp3'
+import wartime5 from '../assets/work-click-sounds/wartime5.mp3'
+import wartime7 from '../assets/work-click-sounds/wartime7.mp3'
+import gingerbread1 from '../assets/work-click-sounds/gingerbread1.mp3'
+import gingerbread2 from '../assets/work-click-sounds/gingerbread2.mp3'
+import gingerbread3 from '../assets/work-click-sounds/gingerbread3.mp3'
+import gingerbread4 from '../assets/work-click-sounds/gingerbread4.mp3'
+import gingerbread5 from '../assets/work-click-sounds/gingerbread5.mp3'
+import dystopia1 from '../assets/work-click-sounds/dystopia1.mp3'
+import dystopia2 from '../assets/work-click-sounds/dystopia2.mp3'
+import dystopia3 from '../assets/work-click-sounds/dystopia3.mp3'
+import dystopia4 from '../assets/work-click-sounds/dystopia4.mp3'
+import dystopia5 from '../assets/work-click-sounds/dystopia5.mp3'
 // Each theme photo ships as two pre-resized files rather than one full-resolution original scaled down by the
 // browser: a small one for the Shop's own little cards (shop/, ~480px wide) and a bigger one for the Terminal
 // Board's full-bleed, heavily-dimmed background (board/, ~1600px wide) - both already sharp at the size they're
@@ -383,9 +402,9 @@ export const SHOP_ITEMS = {
         workSound('rockstar', 'Rockstar click', 25, [rockstar1, rockstar2, rockstar3, rockstar4, rockstar5, rockstar6], 'Powerful chords on every click. Part of the Rockstar bundle.'),
         workSound('western', 'Western click', 25, [western1, western2, western3, western4, western5], 'Yee-haw! Part of the Western bundle.'),
         workSound('paradise', 'Paradise click', 25, [paradise1, paradise2, paradise3, paradise4, paradise5], 'Peaceful ukulele. Part of the Paradise bundle.'),
-        workSound('wartime', 'Wartime click', 25, workClickSound, 'Intense soldier calls or the sound of gunfire. Part of the Wartime bundle.'),
-        workSound('gingerbread', 'Gingerbread click', 25, workClickSound, 'Christmas magic! Part of the Gingerbread bundle.'),
-        workSound('dystopia', 'Dystopia click', 25, workClickSound, 'Synthy beats. Part of the Dystopia bundle.'),
+        workSound('wartime', 'Wartime click', 25, [wartime1, wartime2, wartime3, wartime4, wartime5, wartime7], 'Intense soldier calls or the sound of gunfire. Part of the Wartime bundle.'),
+        workSound('gingerbread', 'Gingerbread click', 25, [gingerbread1, gingerbread2, gingerbread3, gingerbread4, gingerbread5], 'Christmas magic! Part of the Gingerbread bundle.'),
+        workSound('dystopia', 'Dystopia click', 25, [dystopia1, dystopia2, dystopia3, dystopia4, dystopia5], 'Synthy beats. Part of the Dystopia bundle.'),
     ],
     openingAudio: [
         openingSound('default', 'Classic opening', 0, classicOpeningAudio, 'The original.'),
@@ -408,9 +427,9 @@ export const SHOP_ITEMS = {
         openingSound('rockstar', 'Rockstar opening', 25, rockstarOpening, 'Part of the Rockstar bundle.'),
         openingSound('western', 'Western opening', 25, westernOpening, 'Part of the Western bundle.'),
         openingSound('paradise', 'Paradise opening', 25, paradiseOpening, 'Part of the Paradise bundle.'),
-        openingSound('wartime', 'Wartime opening', 25, classicOpeningAudio, 'Part of the Wartime bundle.'),
-        openingSound('gingerbread', 'Gingerbread opening', 25, classicOpeningAudio, 'Part of the Gingerbread bundle.'),
-        openingSound('dystopia', 'Dystopia opening', 25, classicOpeningAudio, 'Part of the Dystopia bundle.'),
+        openingSound('wartime', 'Wartime opening', 25, wartimeOpening, 'Part of the Wartime bundle.'),
+        openingSound('gingerbread', 'Gingerbread opening', 25, gingerbreadOpening, 'Part of the Gingerbread bundle.'),
+        openingSound('dystopia', 'Dystopia opening', 25, dystopiaOpening, 'Part of the Dystopia bundle.'),
     ],
 
     boardTheme: [
