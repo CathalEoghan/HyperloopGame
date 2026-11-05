@@ -383,13 +383,9 @@ export const SHOP_ITEMS = {
         workSound('rockstar', 'Rockstar click', 25, [rockstar1, rockstar2, rockstar3, rockstar4, rockstar5, rockstar6], 'Powerful chords on every click. Part of the Rockstar bundle.'),
         workSound('western', 'Western click', 25, [western1, western2, western3, western4, western5], 'Yee-haw! Part of the Western bundle.'),
         workSound('paradise', 'Paradise click', 25, [paradise1, paradise2, paradise3, paradise4, paradise5], 'Peaceful ukulele. Part of the Paradise bundle.'),
-
-        // Placeholder: plays the Classic click (workClickSound) until a real themed recording exists for each -
-        // same situation the bundle pieces above started in, per their own comment. Swap each src for a real
-        // themed sample whenever you get to it.
-        workSound('wartime', 'Wartime click', 25, workClickSound, 'Placeholder sound - the classic click for now. Part of the Wartime bundle.'),
-        workSound('gingerbread', 'Gingerbread click', 25, workClickSound, 'Placeholder sound - the classic click for now. Part of the Gingerbread bundle.'),
-        workSound('dystopia', 'Dystopia click', 25, workClickSound, 'Placeholder sound - the classic click for now. Part of the Dystopia bundle.'),
+        workSound('wartime', 'Wartime click', 25, workClickSound, 'Intense soldier calls or the sound of gunfire. Part of the Wartime bundle.'),
+        workSound('gingerbread', 'Gingerbread click', 25, workClickSound, 'Christmas magic! Part of the Gingerbread bundle.'),
+        workSound('dystopia', 'Dystopia click', 25, workClickSound, 'Synthy beats. Part of the Dystopia bundle.'),
     ],
     openingAudio: [
         openingSound('default', 'Classic opening', 0, classicOpeningAudio, 'The original.'),
@@ -412,11 +408,9 @@ export const SHOP_ITEMS = {
         openingSound('rockstar', 'Rockstar opening', 25, rockstarOpening, 'Part of the Rockstar bundle.'),
         openingSound('western', 'Western opening', 25, westernOpening, 'Part of the Western bundle.'),
         openingSound('paradise', 'Paradise opening', 25, paradiseOpening, 'Part of the Paradise bundle.'),
-
-        // Placeholder: plays the Classic opening (classicOpeningAudio) until a real themed recording exists.
-        openingSound('wartime', 'Wartime opening', 25, classicOpeningAudio, 'Placeholder sound - the classic opening for now. Part of the Wartime bundle.'),
-        openingSound('gingerbread', 'Gingerbread opening', 25, classicOpeningAudio, 'Placeholder sound - the classic opening for now. Part of the Gingerbread bundle.'),
-        openingSound('dystopia', 'Dystopia opening', 25, classicOpeningAudio, 'Placeholder sound - the classic opening for now. Part of the Dystopia bundle.'),
+        openingSound('wartime', 'Wartime opening', 25, classicOpeningAudio, 'Part of the Wartime bundle.'),
+        openingSound('gingerbread', 'Gingerbread opening', 25, classicOpeningAudio, 'Part of the Gingerbread bundle.'),
+        openingSound('dystopia', 'Dystopia opening', 25, classicOpeningAudio, 'Part of the Dystopia bundle.'),
     ],
 
     boardTheme: [
@@ -597,9 +591,9 @@ export const SHOP_ITEMS = {
         cursorTheme('western', 'Western cursor', 20, recolorCursor({ a: '#e8c79a', b: '#a0522d', stroke: '#2a1a0e', fill: '#a0522d', hilite: '#fff6e8' }), 'Part of the Western bundle.'),
         cursorTheme('paradise', 'Paradise cursor', 20, recolorCursor({ a: '#9df0e6', b: '#00bfa5', stroke: '#07262a', fill: '#00bfa5', hilite: '#f0fffd' }), 'Part of the Paradise bundle.'),
 
-        cursorTheme('wartime', 'Wartime cursor', 20, recolorCursor({ a: '#9aab6e', b: '#4b5320', stroke: '#14160a', fill: '#4b5320', hilite: '#eef0e0' }), 'Matte khaki into olive drab. Part of the Wartime bundle.'),
-        cursorTheme('gingerbread', 'Gingerbread cursor', 20, recolorCursor({ a: '#f0c891', b: '#6b3410', stroke: '#7a1414', fill: '#6b3410', hilite: '#fff0dc' }), 'Warm gingerbread brown, trimmed in holly red. Part of the Gingerbread bundle.'),
-        cursorTheme('dystopia', 'Dystopia cursor', 20, recolorCursor({ a: '#b06ee0', b: '#4b2e83', stroke: '#0a0612', fill: '#3a3a42', hilite: '#ff2fd1' }), 'Deep violet and cool grey, with a neon glow. Part of the Dystopia bundle.'),
+        cursorTheme('wartime', 'Wartime cursor', 20, recolorCursor({ a: '#9aab6e', b: '#4b5320', stroke: '#14160a', fill: '#4b5320', hilite: '#eef0e0' }), 'Part of the Wartime bundle.'),
+        cursorTheme('gingerbread', 'Gingerbread cursor', 20, recolorCursor({ a: '#f0c891', b: '#6b3410', stroke: '#7a1414', fill: '#6b3410', hilite: '#fff0dc' }), 'Part of the Gingerbread bundle.'),
+        cursorTheme('dystopia', 'Dystopia cursor', 20, recolorCursor({ a: '#b06ee0', b: '#4b2e83', stroke: '#0a0612', fill: '#3a3a42', hilite: '#ff2fd1' }), 'Part of the Dystopia bundle.'),
     ],
 }
 
