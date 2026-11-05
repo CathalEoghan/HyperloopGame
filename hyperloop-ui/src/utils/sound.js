@@ -226,24 +226,13 @@ export function playWorkClickSound() {
     if (audio) activeWorkClickAudios.push(audio)
 }
 
-// The Shop's Preview button for a Work sound: sounds the same as actually mashing the Work button (see
-// playRandomNoRepeat above) rather than cutting itself off, since that's exactly the
-// behaviour the player is trying to judge by previewing it.
-const lastWorkPreview = { src: null }
-let lastWorkPreviewAt = 0
-let workPreviewAudio = null
-export function playWorkSoundPreview(src) {
-    if (!canPlay() || !entered) return
-    const now = performance.now()
-    if (now - lastWorkPreviewAt < WORK_CLICK_MIN_GAP_MS) return
-    lastWorkPreviewAt = now
-    workPreviewAudio = playRandomNoRepeat(Array.isArray(src) ? src : [src], lastWorkPreview, 'workClicks')
-}
-
-// The Shop's Preview button for anything else (Opening audios and the like) - a sound meant to play once, not
-// be mashed, so only one preview ever plays at a time: clicking Preview again, on the same item or a different
-// one, stops whatever preview is already going first rather than layering a new copy on top of it. A preview is
-// a deliberate, explicit test of a clip, so it only follows Master Sound, not whichever category it belongs to.
+// The Shop's Preview button - for every category, Work sounds included: a sound meant to play once, not be
+// mashed, so only one preview ever plays at a time. Clicking Preview again, on the same item or a different one,
+// stops whatever preview is already going first rather than layering a new copy on top of it (a Work sound used
+// to be the one exception, left to overlap like mashing the real Work button does - see playWorkClickSound above
+// for that behaviour, which is unchanged; only the Shop's own preview of it now cancels like everything else). A
+// preview is a deliberate, explicit test of a clip, so it only follows Master Sound, not whichever category it
+// belongs to.
 let previewAudio = null
 // Returns the Audio it started (or null if sound is off), so the Shop can show a playing/stopped state on its
 // own Preview button and know when the clip finishes on its own (the 'ended' event).
@@ -257,11 +246,10 @@ export function playPreviewSound(src) {
     previewAudio.play().catch(() => {})
     return previewAudio
 }
-// Stops whichever Shop preview (Preview button sound, or a Work sound preview) is currently playing. Called when
-// the Shop closes, so a preview doesn't keep playing on top of the game once the player has left it.
+// Stops whichever Shop preview is currently playing. Called when the Shop closes, so a preview doesn't keep
+// playing on top of the game once the player has left it.
 export function stopPreviewSound() {
     if (previewAudio) { previewAudio.pause(); previewAudio.currentTime = 0; previewAudio = null }
-    if (workPreviewAudio) { workPreviewAudio.pause(); workPreviewAudio.currentTime = 0; workPreviewAudio = null }
 }
 // The Terminal Board's own buttons (schedule, automate, the board tabs, Farewell, Delay) use these instead of the
 // generic click/hover, so an equipped board theme's own sounds (if it sets any) are heard there and nowhere else.

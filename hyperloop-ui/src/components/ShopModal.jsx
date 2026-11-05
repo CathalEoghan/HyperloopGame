@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PICS, FEATURED_THEME_ID, FEATURED_TAGLINE } from '../data/shopCatalog.js'
 import { isOwned, isBundleOwned, bundlePieces, bundlePrice, getEquippedItem } from '../utils/cosmetics.js'
-import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkSoundPreview, stopPreviewSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, stopPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import paletteIcon from '../assets/misc/palette.png'
 import boardIcon from '../assets/misc/board.png'
@@ -171,13 +171,11 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
         setTimeout(() => setShaking(null), 400)
     }
 
-    // The Preview button. A Work sound keeps its old always-plays-another-sample behaviour with no toggle (see
-    // playWorkSoundPreview's own comment in sound.js - it's deliberately built to never cut itself off, since
-    // that's exactly what mashing the Work button actually sounds like, so a Stop state would misrepresent it).
-    // Everything else toggles: clicking Preview again, or clicking it on another card, stops the clip; letting
-    // it finish on its own does too, via the Audio's 'ended' event.
+    // The Preview button, same toggle for every category including Work sounds: clicking Preview again, or
+    // clicking it on another card, stops whatever's already playing before starting the new clip; letting it
+    // finish on its own does too, via the Audio's 'ended' event. (The real Work button out in the game still
+    // overlaps when mashed - see playWorkClickSound in sound.js - only this Shop preview of it cancels now.)
     const handlePreviewClick = (item, key) => {
-        if (categoryId === 'workSound') { playWorkSoundPreview(item.srcs || item.src); return }
         if (previewingKey === key) { stopPreviewSound(); setPreviewingKey(null); return }
         const audio = playPreviewSound(item.srcs || item.src)
         if (!audio) return
@@ -210,7 +208,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                         <>
                             {(item.src || item.srcs) && (
                                 <button className="shop-btn shop-btn-ghost" onClick={() => handlePreviewClick(item, shakeKey)} onMouseEnter={() => playHoverSound()}>
-                                    {categoryId !== 'workSound' && previewingKey === shakeKey ? '■ Stop' : '▶ Preview'}
+                                    {previewingKey === shakeKey ? '■ Stop' : '▶ Preview'}
                                 </button>
                             )}
                             {equipped ? (
