@@ -214,6 +214,14 @@
     gap: 12px;
 }
 
+/* The Featured group only ever holds the one spotlighted card (featuredItem is a single .find(), never a
+   list), but it reuses .shop-grid above - auto-fill still reserves as many empty 205px+ column tracks as
+   fit the row width, so that lone card sat in the first column with a big blank gap beside it. A fixed
+   single wider track instead gives it room to read as a spotlight banner, with no empty tracks left over. */
+.shop-featured-group .shop-grid {
+    grid-template-columns: minmax(205px, 420px);
+}
+
 .shop-item {
     border: 2px solid #ddd;
     border-radius: 10px;

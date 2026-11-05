@@ -161,7 +161,14 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
             const ownedCount = SHOP_BUNDLES.filter(b => isBundleOwned(cosmetics, b)).length
             return `${ownedCount}/${SHOP_BUNDLES.length} sets owned`
         }
-        return getEquippedItem(id, cosmetics)?.name || null
+        // Bundles already shows an owned-count ("X/Y sets owned") so you can see collection progress at a
+        // glance - every other category only showed what's equipped, with no sense of how many of that
+        // category you've actually collected. Pairing the two gives every tab the same at-a-glance info.
+        const categoryItems = SHOP_ITEMS[id] || []
+        const ownedCount = categoryItems.filter(item => isOwned(cosmetics, id, item.id)).length
+        const ownedLabel = `${ownedCount}/${categoryItems.length} owned`
+        const equippedName = getEquippedItem(id, cosmetics)?.name
+        return equippedName ? `${equippedName} · ${ownedLabel}` : ownedLabel
     }
 
     const handleBuy = (item, shakeKey = item.id) => {
