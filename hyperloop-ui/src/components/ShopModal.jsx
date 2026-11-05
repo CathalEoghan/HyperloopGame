@@ -177,11 +177,15 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
         setTimeout(() => setShaking(null), 400)
     }
 
-    // The Preview button, same toggle for every category including Work sounds: clicking Preview again, or
-    // clicking it on another card, stops whatever's already playing before starting the new clip; letting it
-    // finish on its own does too, via the Audio's 'ended' event. (The real Work button out in the game still
-    // overlaps when mashed - see playWorkClickSound in sound.js - only this Shop preview of it cancels now.)
+    // The Preview button. A Work sound still never shows a Stop state - clicking it (on the same card or a
+    // different one) always just plays another sample, the same spirit as mashing the real Work button (which
+    // still overlaps when mashed - see playWorkClickSound in sound.js, unaffected) - but it no longer layers that
+    // new sample on top of whatever Work-sound preview clip was already going; playPreviewSound cancels that
+    // first regardless, it's only the toggle-to-Stop/early-stop behaviour that Work sounds skip. Everything else
+    // toggles: clicking Preview again, or clicking it on another card, stops the clip; letting it finish on its
+    // own does too, via the Audio's 'ended' event.
     const handlePreviewClick = (item, key) => {
+        if (categoryId === 'workSound') { playPreviewSound(item.srcs || item.src); return }
         if (previewingKey === key) { stopPreviewSound(); setPreviewingKey(null); return }
         const audio = playPreviewSound(item.srcs || item.src)
         if (!audio) return
@@ -192,6 +196,12 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
     // One item card, shared by the Featured group and the ordinary Standard/Special/Supporter tier groups below
     // it - a Featured card is the exact same card (buy/equip state and all), just with a key prefix so React
     // doesn't reuse the one DOM node for what are, visually, two separate cards.
+    //
+    // The hover sound lives on the card itself, not its individual buttons - it used to be attached to just the
+    // Preview/Equip/Buy buttons, so hovering a locked card (no buttons at all, just a "Coming with..." note), an
+    // equipped one (an "Equipped" span, not a button), or the theme swatch/background played nothing. One
+    // listener on the whole card covers every one of those, and (since mouseenter doesn't re-fire moving between
+    // child elements already inside it) still only plays once per visit rather than once per button crossed.
     const renderItemCard = (item, { featured = false } = {}) => {
         const tier = item.tier || 'standard'
         const locked = tier === 'supporter' && !isOwned(cosmetics, categoryId, item.id)
@@ -199,7 +209,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
         const equipped = owned && equippedId === item.id
         const shakeKey = featured ? `featured-${item.id}` : item.id
         return (
-            <div key={shakeKey} className={`shop-item${equipped ? ' shop-item-equipped' : ''}${locked ? ' shop-item-locked' : ''}${featured ? ' shop-item-featured' : ''}${shaking === shakeKey ? ' shop-item-shake' : ''}`} style={themedCardStyle(item.id)}>
+            <div key={shakeKey} className={`shop-item${equipped ? ' shop-item-equipped' : ''}${locked ? ' shop-item-locked' : ''}${featured ? ' shop-item-featured' : ''}${shaking === shakeKey ? ' shop-item-shake' : ''}`} style={themedCardStyle(item.id)} onMouseEnter={() => playHoverSound()}>
                 <div className="shop-item-name">{item.name}{locked && <span className="shop-item-lock" aria-hidden="true">🔒</span>}</div>
                 {item.vars && (
                     <button type="button" className="shop-preview-trigger" onClick={() => setLightbox({ categoryId, item })} aria-label={`Enlarge ${item.name} preview`}>
@@ -213,18 +223,18 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                     ) : (
                         <>
                             {(item.src || item.srcs) && (
-                                <button className="shop-btn shop-btn-ghost" onClick={() => handlePreviewClick(item, shakeKey)} onMouseEnter={() => playHoverSound()}>
-                                    {previewingKey === shakeKey ? '■ Stop' : '▶ Preview'}
+                                <button className="shop-btn shop-btn-ghost" onClick={() => handlePreviewClick(item, shakeKey)}>
+                                    {categoryId !== 'workSound' && previewingKey === shakeKey ? '■ Stop' : '▶ Preview'}
                                 </button>
                             )}
                             {equipped ? (
                                 <span className="shop-equipped">Equipped</span>
                             ) : owned ? (
-                                <button className="shop-btn" onClick={() => { playClickSound2(); onEquip(categoryId, item) }} onMouseEnter={() => playHoverSound()}>Equip</button>
+                                <button className="shop-btn" onClick={() => { playClickSound2(); onEquip(categoryId, item) }}>Equip</button>
                             ) : (
                                 <>
                                     {shortfall(reputation, item.cost) != null && <span className="shop-need-more">Need {shortfall(reputation, item.cost)} more</span>}
-                                    <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} onClick={() => handleBuy(item, shakeKey)} onMouseEnter={() => playHoverSound()}>
+                                    <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} onClick={() => handleBuy(item, shakeKey)}>
                                         <img src={reputationIcon} alt="" /> {item.cost}
                                     </button>
                                 </>
@@ -288,7 +298,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                         const price = bundlePrice(cosmetics, bundle)
                                         const need = shortfall(reputation, price)
                                         return (
-                                            <div key={bundle.id} className={`shop-item shop-bundle-card${locked ? ' shop-item-locked' : ''}${shaking === bundle.id ? ' shop-item-shake' : ''}`} style={themedCardStyle(bundle.id)}>
+                                            <div key={bundle.id} className={`shop-item shop-bundle-card${locked ? ' shop-item-locked' : ''}${shaking === bundle.id ? ' shop-item-shake' : ''}`} style={themedCardStyle(bundle.id)} onMouseEnter={() => playHoverSound()}>
                                                 <div className="shop-item-name">
                                                     {bundle.name}
                                                     <span className={`shop-bundle-badge shop-bundle-badge-${bundle.tier}`}>{bundle.tier === 'premium' ? 'Premium' : 'Special'}</span>
@@ -316,11 +326,11 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                     {locked ? (
                                                         <span className="shop-locked-note">Coming with the Supporter's Set</span>
                                                     ) : owned ? (
-                                                        <button className="shop-btn" onClick={() => { playClickSound2(); onEquipBundle(bundle) }} onMouseEnter={() => playHoverSound()}>Equip all</button>
+                                                        <button className="shop-btn" onClick={() => { playClickSound2(); onEquipBundle(bundle) }}>Equip all</button>
                                                     ) : (
                                                         <>
                                                             {need != null && <span className="shop-need-more">Need {need} more</span>}
-                                                            <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} onClick={() => handleBundleBuy(bundle)} onMouseEnter={() => playHoverSound()}>
+                                                            <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} onClick={() => handleBundleBuy(bundle)}>
                                                                 <img src={reputationIcon} alt="" /> {price}
                                                             </button>
                                                         </>
