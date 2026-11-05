@@ -72,6 +72,12 @@ function ThemePreview({ categoryId, item }) {
 // the .shop-item-equipped CSS rule and pick up whatever theme is currently equipped (--ui-accent) - its card
 // stays gold always instead, regardless of what's equipped (bug report: Classic's border went red when Rockstar
 // was equipped).
+//
+// The same accent also drives the card's hover glow (see .shop-item:hover in ShopModal.css) via the
+// --card-glow-color custom property: set it here and the CSS just colour-mixes it into a soft box-shadow, the
+// same color-mix(...) trick .shop-nav-item-active already uses for the equipped tab's glow. A card with no
+// accent of its own (no THEME_PICS entry) simply has no --card-glow-color, so the CSS's own fallback (gold,
+// matching Classic) takes over - every card gets SOME glow, themed ones just get their own colour.
 function themedCardStyle(id) {
     if (id === 'default') return { borderColor: '#f5a623' }
     const pic = THEME_PICS[id]
@@ -81,7 +87,7 @@ function themedCardStyle(id) {
         backgroundImage: `linear-gradient(rgba(255, 250, 244, 0.86), rgba(255, 250, 244, 0.86)), url(${pic})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        ...(accent ? { borderColor: accent } : {}),
+        ...(accent ? { borderColor: accent, '--card-glow-color': accent } : {}),
     }
 }
 

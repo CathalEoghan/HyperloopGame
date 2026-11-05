@@ -214,6 +214,14 @@
     flex-direction: column;
     gap: 6px;
     background: #fffaf4;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+/* Lifts slightly and glows in the card's own theme colour (--card-glow-color, set per-card in
+   themedCardStyle() - falls back to Classic's gold for anything without one) - same color-mix(...) glow
+   .shop-nav-item-active already uses for the active category tab, just per-card instead of global. */
+.shop-item:hover {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22), 0 0 16px 3px color-mix(in srgb, var(--card-glow-color, #f5a623) 60%, transparent);
 }
 .shop-item-equipped { border-color: var(--ui-accent, #f5a623); }
 .shop-item-locked { opacity: 0.6; background: #f3f3f3; }
@@ -370,7 +378,11 @@
     border-top-color: #222;
 }
 
-@media (prefers-reduced-motion: reduce) { .shop-item-shake { animation: none; } }
+@media (prefers-reduced-motion: reduce) {
+    .shop-item-shake { animation: none; }
+    /* Keep the glow (it's just a colour, not motion) but drop the lift itself. */
+    .shop-item:hover { transform: none; }
+}
 
 /* ── Click-to-enlarge preview lightbox ─────────────────────────────────────────────────────────────────────── */
 .shop-lightbox-overlay {
