@@ -158,11 +158,15 @@
 .shop-view-btn-active { background: var(--ui-accent, #f5a623); color: white; }
 .shop-empty { font-size: 0.8rem; color: #888; font-style: italic; margin: 4px 0; }
 
-/* The scrollable area holding every tier's group, one under another */
+/* The scrollable area holding every tier's group, one under another. Padded enough on every side (not just the
+   old 2px/6px) that a hover card's glow (.shop-item:hover's box-shadow, up to ~19px of blur+spread) has room to
+   fade out before it would otherwise get clipped by this container's own edge - it only showed up on cards
+   sitting flush against the left edge (the first grid column), since inner gaps between cards were already wide
+   enough, but the same clip would hit the top/bottom/right edges too without this. */
 .shop-groups {
     overflow-y: auto;
     min-height: 0;
-    padding: 2px 6px 2px 2px;
+    padding: 18px;
     display: flex;
     flex-direction: column;
     gap: 16px;
