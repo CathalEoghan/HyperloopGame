@@ -410,25 +410,25 @@ export const SHOP_ITEMS = {
 
         // One opening audio per themed bundle, same as the work-click sounds above - added as the real
         // recordings come in, so there's no placeholder list to keep in sync here.
-        openingSound('kitty', 'Kitty opening', 25, kittyOpening, 'A cheerful little meow to kick things off. Part of the Kitty bundle.'),
-        openingSound('fairy', 'Fairy opening', 25, fairyOpening, 'A twinkling flourish of fairy dust. Part of the Fairy bundle.'),
-        openingSound('poltergeist', 'Poltergeist opening', 25, poltergeistOpening, 'A spooky creak and a distant scream. Part of the Poltergeist bundle.'),
+        openingSound('kitty', 'Kitty opening', 25, kittyOpening, 'Cheerful and whimsy. Part of the Kitty bundle.'),
+        openingSound('fairy', 'Fairy opening', 25, fairyOpening, 'Fantastical melody. Part of the Fairy bundle.'),
+        openingSound('poltergeist', 'Poltergeist opening', 25, poltergeistOpening, 'Spooky! Part of the Poltergeist bundle.'),
         // id matches every other Buccaneer piece ('buccaneer', not 'pirate') so this card picks up the
         // Buccaneer theme photo (THEME_PICS is keyed by id) the same way its other pieces do.
-        openingSound('buccaneer', 'Buccaneer opening', 25, pirateOpening, 'A hearty pirate yell to set sail. Part of the Buccaneer bundle.'),
-        openingSound('princess', 'Princess opening', 25, princessOpening, 'A gentle harp flourish fit for royalty. Part of the Princess bundle.'),
-        openingSound('jazz', 'Jazz opening', 25, jazzOpening, 'A smooth sax riff to ease you in. Part of the Jazz bundle.'),
-        openingSound('playroom', 'Playroom opening', 25, playroomOpening, 'A playful xylophone jingle. Part of the Playroom bundle.'),
-        openingSound('starlight', 'Starlight opening', 25, starlightOpening, 'A shimmering sci-fi power-up chime. Part of the Starlight bundle.'),
-        openingSound('duck', 'Duck opening', 25, duckOpening, 'A friendly quack to welcome you back. Part of the Duck bundle.'),
-        openingSound('woof', 'Woof opening', 25, woofOpening, 'An excited bark hello. Part of the Woof bundle.'),
-        openingSound('ocean', 'Ocean opening', 25, oceanOpening, 'A wash of waves and bubbling water. Part of the Ocean bundle.'),
-        openingSound('rockstar', 'Rockstar opening', 25, rockstarOpening, 'An electric guitar riff to open the show. Part of the Rockstar bundle.'),
-        openingSound('western', 'Western opening', 25, westernOpening, 'A twangy guitar sting straight outta the frontier. Part of the Western bundle.'),
-        openingSound('paradise', 'Paradise opening', 25, paradiseOpening, 'A relaxed ukulele strum. Part of the Paradise bundle.'),
-        openingSound('wartime', 'Wartime opening', 25, wartimeOpening, 'A dramatic air-raid siren wail. Part of the Wartime bundle.'),
-        openingSound('gingerbread', 'Gingerbread opening', 25, gingerbreadOpening, 'A jingle of sleigh bells and Christmas cheer. Part of the Gingerbread bundle.'),
-        openingSound('dystopia', 'Dystopia opening', 25, dystopiaOpening, 'A pulsing synth stinger straight out of a dystopian future. Part of the Dystopia bundle.'),
+        openingSound('buccaneer', 'Buccaneer opening', 25, pirateOpening, 'Salty sea shanty. Part of the Buccaneer bundle.'),
+        openingSound('princess', 'Princess opening', 25, princessOpening, 'Fit for royalty! Part of the Princess bundle.'),
+        openingSound('jazz', 'Jazz opening', 25, jazzOpening, 'Jazzy vibes. Part of the Jazz bundle.'),
+        openingSound('playroom', 'Playroom opening', 25, playroomOpening, 'Childhood nostalgia. Part of the Playroom bundle.'),
+        openingSound('starlight', 'Starlight opening', 25, starlightOpening, 'Out of this world! Part of the Starlight bundle.'),
+        openingSound('duck', 'Duck opening', 25, duckOpening, 'Silly and unserious. Part of the Duck bundle.'),
+        openingSound('woof', 'Woof opening', 25, woofOpening, 'Good vibes. Part of the Woof bundle.'),
+        openingSound('ocean', 'Ocean opening', 25, oceanOpening, 'Perfect for exploring the deep blue sea. Part of the Ocean bundle.'),
+        openingSound('rockstar', 'Rockstar opening', 25, rockstarOpening, 'For the rock music enthusiasts. Part of the Rockstar bundle.'),
+        openingSound('western', 'Western opening', 25, westernOpening, 'Wilder than the west. Part of the Western bundle.'),
+        openingSound('paradise', 'Paradise opening', 25, paradiseOpening, 'Relaxing ukulele strums. Part of the Paradise bundle.'),
+        openingSound('wartime', 'Wartime opening', 25, wartimeOpening, 'It means business. Part of the Wartime bundle.'),
+        openingSound('gingerbread', 'Gingerbread opening', 25, gingerbreadOpening, 'Festive cheer! Part of the Gingerbread bundle.'),
+        openingSound('dystopia', 'Dystopia opening', 25, dystopiaOpening, 'Straight out of a dystopian future. Part of the Dystopia bundle.'),
     ],
 
     boardTheme: [
