@@ -57,7 +57,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
-import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, distanceMiles } from './utils/loops.js'
+import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
@@ -267,6 +267,15 @@ function App() {
     economyManager.setCityScheduleHours(scheduleHours);
   }
 
+  // What the terminal earned while the game was closed or asleep, from `startMs` for `seconds`: stepped through
+  // the absence using the timetable and each day's own capacity roll, rather than from the single moment the
+  // player came back (see EconomyManager.calculateOfflineIncome and makeFootfallEstimator).
+  function offlineIncomeFor(startMs, seconds, bonusCreatedAt) {
+    primeIncomeInputs();
+    const footfallAt = makeFootfallEstimator(progressionManager.purchasedCities, readTimetable());
+    return economyManager.calculateOfflineIncome(startMs, startMs + seconds * 1000, footfallAt, bonusCreatedAt) * OFFLINE_RATE;
+  }
+
   function calculateFreshOffline() {
     // Use the most recent sign of life: a stale hidden_at left by another tab must not
     // override a newer heartbeat.
@@ -293,11 +302,8 @@ function App() {
     ensureDepartures(progressionManager.purchasedCities);
     primeIncomeInputs();
     const savedCreatedAt = savedData?.createdAt || Date.now();
-    const savedEvent = economyManager.activeEvent;
-    economyManager.activeEvent = null;
-    const incomePerSecond = economyManager.calculateDailyIncome(null, savedCreatedAt);
-    economyManager.activeEvent = savedEvent;
-    const offlineIncome = incomePerSecond * totalSeconds * OFFLINE_RATE;
+    // Paid from the moment the player left; if the absence passes the cap, it is the first stretch that counts
+    const offlineIncome = offlineIncomeFor(parseInt(hiddenAt), totalSeconds, savedCreatedAt);
     if (offlineIncome < 1) return null;
     return { offlineSeconds: totalSeconds, offlineIncome };
   }
@@ -1073,10 +1079,7 @@ function App() {
         elapsed = 0;
         constructionManager.update();
         const offlineSeconds = Math.min(gap, economyManager.calculateOfflineCap());
-        const savedEvent = economyManager.activeEvent;
-        economyManager.activeEvent = null;
-        const offlineIncome = economyManager.calculateDailyIncome(null, savedCreatedAt) * offlineSeconds * OFFLINE_RATE;
-        economyManager.activeEvent = savedEvent;
+        const offlineIncome = offlineIncomeFor(now2 - gap * 1000, offlineSeconds, savedCreatedAt);
         if (offlineIncome >= 1) {
           let pending = null;
           try { pending = JSON.parse(localStorage.getItem('hyperloop_pending_offline')); } catch { pending = null; }

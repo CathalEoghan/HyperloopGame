@@ -363,6 +363,57 @@ export function getTerminalFootfallBreakdown(purchasedCities, nowMs = Date.now()
     return { departures, arrivals, total: departures + arrivals }
 }
 
+// Terminal footfall at any moment, including ones that have passed while the game was closed: returns a function
+// of a timestamp. A day with a stored board is read from it (so delays are respected); a day without one is
+// rebuilt - departures from the player's timetable, which repeats every day, and arrivals as their average, since
+// they are drawn at random once a day and an unplayed day never drew them (each connected city arrives once, so a
+// window of W minutes holds N * W / 1440 of them on average). Footfall feeds development income linearly, so an
+// average is as good as the real draw. The timetable is passed in (its module imports this one).
+export function makeFootfallEstimator(purchasedCities, timetable = []) {
+    const homeCity = purchasedCities?.[0]
+    if (!homeCity) return () => 0
+    const connected = new Set(purchasedCities.map(c => c.name))
+    const destinationCount = purchasedCities.length - 1
+    const departureWindowMs = DEPARTURE_FOOTFALL_HOURS * 60 * 60000
+    const arrivalWindowMs = ARRIVAL_FOOTFALL_MINUTES * 60000
+    const slots = (timetable || [])
+        .filter(s => s && s.name !== homeCity.name && connected.has(s.name) && Number.isFinite(s.minuteOfDay))
+        .map(s => ({ name: s.name, hour: Math.floor(s.minuteOfDay / 60), minute: s.minuteOfDay % 60 }))
+    const days = new Map()
+    const dayInfo = dayMs => {
+        const key = dayKey(dayMs)
+        let info = days.get(key)
+        if (info) return info
+        const stored = k => (localStorage.getItem(k) !== null ? readSchedule(k) : null)
+        const departures = (stored(departuresKey(dayMs)) ?? slots)
+            .filter(e => connected.has(e.name)).map(e => entryTimestamp(e, dayMs))
+        const arrivals = stored(arrivalsKey(dayMs))?.filter(e => connected.has(e.name)).map(e => entryTimestamp(e, dayMs)) ?? null
+        const startMs = entryTimestamp({ hour: 0, minute: 0 }, dayMs)
+        const endMs = entryTimestamp({ hour: 0, minute: 0 }, shiftDays(dayMs, 1))
+        info = { departures, arrivals, startMs, endMs }
+        days.set(key, info)
+        return info
+    }
+    return ms => {
+        let count = 0
+        ;[0, 1].forEach(offset => {
+            dayInfo(offset === 0 ? ms : shiftDays(ms, offset)).departures.forEach(ts => {
+                if (ts >= ms && ts - ms <= departureWindowMs) count++
+            })
+        })
+        ;[-1, 0].forEach(offset => {
+            const info = dayInfo(offset === 0 ? ms : shiftDays(ms, offset))
+            if (info.arrivals) {
+                info.arrivals.forEach(ts => { if (ts <= ms && ms - ts <= arrivalWindowMs) count++ })
+            } else {
+                const overlap = Math.max(0, Math.min(ms, info.endMs) - Math.max(ms - arrivalWindowMs, info.startMs))
+                count += destinationCount * overlap / (info.endMs - info.startMs)
+            }
+        })
+        return count
+    }
+}
+
 // How many loops are putting people in the home terminal right now, for the development busy bonus (see
 // getTerminalFootfallBreakdown for the departure/arrival split behind this number).
 export function getTerminalFootfallCount(purchasedCities, nowMs = Date.now()) {

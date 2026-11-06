@@ -302,8 +302,8 @@ export class EconomyManager {
     // Terminal footfall: 10% floor, +5% per loop currently putting people in the terminal, capped at 100%. Drives
     // every development's income (see calculateDevelopmentIncome / getEffectiveDevIncomeWithBoosts) - set each
     // tick by the UI via setBoardLoopCount, since this manager has no access to the schedule storage itself.
-    getDevelopmentBusyPercent() {
-        const base = DEV_BUSY_FLOOR_PCT + DEV_BUSY_PCT_PER_LOOP * this.boardLoopCount;
+    getDevelopmentBusyPercent(loopCount = this.boardLoopCount) {
+        const base = DEV_BUSY_FLOOR_PCT + DEV_BUSY_PCT_PER_LOOP * loopCount;
         let shift = 0;
         if (this.activeEvent?.effectType === 'passiveBoost') shift = DEV_BUSY_EVENT_SHIFT_PCT;
         else if (this.activeEvent?.effectType === 'passivePenalty') shift = -DEV_BUSY_EVENT_SHIFT_PCT;
@@ -799,6 +799,49 @@ export class EconomyManager {
             return base * foundersMultiplier * this.activeEvent.effect.multiplier;
         }
         return base * foundersMultiplier;
+    }
+
+    // What the terminal would have earned between two moments, built up in short steps instead of from the single
+    // moment the player came back: each step takes the footfall at that point (footfallAt(ms), which the UI layer
+    // supplies since the schedules live there) for the developments, and that day's own capacity roll for each
+    // connection - both are things a live session would have changed through the absence. Event effects are left
+    // out, as for every other offline payout. Boosts that go by the clock (time of day, season, weekend...) are
+    // still the ones in force when this is called.
+    calculateOfflineIncome(startMs, endMs, footfallAt, createdAt = null) {
+        if (!(endMs > startMs)) return 0;
+        const savedEvent = this.activeEvent;
+        this.activeEvent = null;
+        try {
+            // The development total as it stands is already scaled by the current busy multiplier (never 0: the
+            // floor is 10%), so dividing it back out leaves the amount at a 100% multiplier to scale per step.
+            const devAtFullBusy = this.calculateDevelopmentIncome() / this.getDevelopmentBusyMultiplier();
+            const cities = this.progressionManager.purchasedCities.filter(city => this.isCityEarning(city));
+            const cityAtFullCapacity = cities.map(city => this.calculateCityIncome(city));
+            // About 2000 steps at most, however long the absence (the cap can be unlimited)
+            const stepMs = Math.max(10 * 60000, Math.ceil((endMs - startMs) / 2000 / 60000) * 60000);
+            // A connection's capacity only changes from one day to the next (its scheduled hour is fixed)
+            const capacityByDay = new Map();
+            let total = 0;
+            for (let t = startMs; t < endMs; t += stepMs) {
+                const stepSeconds = Math.min(stepMs, endMs - t) / 1000;
+                const mid = t + stepSeconds * 500;
+                let perDay = devAtFullBusy * (this.getDevelopmentBusyPercent(footfallAt(mid)) / 100);
+                const day = new Date(mid).toDateString();
+                cities.forEach((city, i) => {
+                    const key = `${city.name}|${day}`;
+                    let multiplier = capacityByDay.get(key);
+                    if (multiplier === undefined) {
+                        multiplier = this.getConnectionCapacityMultiplier(city, mid);
+                        capacityByDay.set(key, multiplier);
+                    }
+                    perDay += cityAtFullCapacity[i] * multiplier;
+                });
+                total += perDay / SECONDS_IN_A_DAY * stepSeconds;
+            }
+            return total * this.getFoundersHallMultiplier(createdAt);
+        } finally {
+            this.activeEvent = savedEvent;
+        }
     }
 
     calculateDiscountedBuildCost(baseCost) {
