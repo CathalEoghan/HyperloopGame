@@ -248,6 +248,12 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
         let mins = Math.ceil((earliestMins + Math.floor(Math.random() * 30)) / 5) * 5
         // Doesn't fit before today's cutoff: push the whole thing a day later rather than dropping it
         if (mins >= lastMins) { dayMs = shiftDays(nowMs, 1); mins = Math.max(5, mins - 24 * 60) }
+        addEntry(kind, dayMs, mins, durationMin)
+    }
+
+    // Puts one arrival from this city on a given day's board, at the first free real minute from `startMins` on
+    const addEntry = (kind, dayMs, startMins, durationMin) => {
+        let mins = startMins
         const key = scheduleKey(kind, dayMs)
         const schedule = readSchedule(key)
         if (schedule.some(e => e.name === city.name)) return
@@ -265,6 +271,15 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
 
     const inbound = tripMinutes(city.name, homeCity.name, `${dayKey(nowMs)}|arrival`)
     place('arrival', currentMins + 30 + inbound, inbound)
+    // Tomorrow's arrivals are drawn once, earlier (see ensureSchedules), before this city was connected - so
+    // without this, tomorrow's board would have no arrival from it at all, and that day would lose its greeting
+    // Reputation, footfall and passenger totals. (A board not drawn yet will include the city when it is.)
+    const tomorrowMs = shiftDays(nowMs, 1)
+    if (localStorage.getItem(arrivalsKey(tomorrowMs)) !== null) {
+        const inboundTomorrow = tripMinutes(city.name, homeCity.name, `${dayKey(tomorrowMs)}|arrival`)
+        // Anywhere from 00:05 to the cutoff, to the nearest 5 minutes; nothing is added if it is already there
+        addEntry('arrival', tomorrowMs, 5 + 5 * Math.floor(Math.random() * ((lastMins - 5) / 5 + 1)), inboundTomorrow)
+    }
     // With no arrivals today yet (the first city connected on a new game), an empty list is kept, so the board
     // doesn't fill in a whole day of arrivals from a city that wasn't connected when they set off
     if (localStorage.getItem(arrivalsKey(nowMs)) === null) writeSchedule(arrivalsKey(nowMs), [])

@@ -70,6 +70,21 @@ import "./App.css";
 const EVENT_MIN_RANK = 3
 
 const OFFLINE_RATE = 1.0;
+
+// The cities a rank-up is offering are kept in storage (with whether its free re-roll is unused) until one is
+// picked, so reloading the page can't swap the offer for a fresh, free one. Anything that no longer matches
+// what can be unlocked is dropped.
+const CITY_OFFER_KEY = 'hyperloop_rankup_offer';
+function readSavedCityOffer(progressionManager, waitingRankUps) {
+  if (!(waitingRankUps > 0)) return null;
+  let saved;
+  try { saved = JSON.parse(localStorage.getItem(CITY_OFFER_KEY)); } catch { return null; }
+  if (!saved || !Array.isArray(saved.names) || saved.names.length === 0) return null;
+  const unlockable = progressionManager.getUnlockableCities(allCities);
+  const cities = saved.names.map(name => unlockable.find(city => city.name === name));
+  if (cities.some(city => !city)) return null;
+  return { cities, freeReroll: saved.freeReroll === true };
+}
 // A brand-new game is "onboarding pending" from the moment the home city is picked until the welcome popup is closed.
 // Nothing is earned in that time (income, offline pay, daily bonus, Work clicks), so no rank-up or reward popup can
 // pile up behind the welcome popup.
@@ -461,7 +476,7 @@ function App() {
   // at any point before the welcome popup is closed still shows it.
   const [showOnboarding, setShowOnboarding] = useState(() =>
     localStorage.getItem('hyperloop_onboarding_pending') === '1' && progressionManager.purchasedCities.length > 0);
-  const [hasFreeReroll, setHasFreeReroll] = useState(false);
+  const [hasFreeReroll, setHasFreeReroll] = useState(() => readSavedCityOffer(progressionManager, pendingRankUps)?.freeReroll ?? false);
   const [showNotEnoughRep, setShowNotEnoughRep] = useState(false);
   // The Shop (opened from the top bar) and what the player owns and has equipped from it
   const [showShop, setShowShop] = useState(false);
@@ -640,7 +655,12 @@ function App() {
   const lobbying = PrestigeManager.owns('lobbyingSuavity');
   const [showCityPicker, setShowCityPicker] = useState(false);
   // The cities a rank-up currently offers to choose from (null when none is on offer)
-  const [cityChoices, setCityChoices] = useState(null);
+  const [cityChoices, setCityChoices] = useState(() => readSavedCityOffer(progressionManager, pendingRankUps)?.cities ?? null);
+  useEffect(() => {
+    if (blockedRef.current) return;
+    if (cityChoices) localStorage.setItem(CITY_OFFER_KEY, JSON.stringify({ names: cityChoices.map(city => city.name), freeReroll: hasFreeReroll }));
+    else localStorage.removeItem(CITY_OFFER_KEY);
+  }, [cityChoices, hasFreeReroll]);
   const [claimedByChoice, setClaimedByChoice] = useState(false);
   // Takes the rank-up: unlocks the city (drawn at random, or chosen) and pays the rank-up bonuses.
   const claimRankUp = (newCity, chosen) => {

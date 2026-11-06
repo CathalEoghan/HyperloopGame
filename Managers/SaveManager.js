@@ -36,6 +36,9 @@ const AUX_KEYS = [
     'hyperloop_hyperlink_liked',
     'hyperloop_hyperlink_used_month_posts',
     'hyperloop_pending_rankups',
+    // The cities a rank-up is currently offering (and whether its free re-roll is still unused), so a reload
+    // can't hand out a fresh offer without the Reputation re-roll
+    'hyperloop_rankup_offer',
     // Cities Government Grants connected for free: Amicable Breakups refunds nothing for them
     'hyperloop_granted_cities',
     // Kept with the save so a backup can't re-offer today's daily bonus, and an uncollected
@@ -179,6 +182,7 @@ const AUX_SHAPES = {
     hyperloop_loop_counted: v => v !== null && typeof v === 'object' && !Array.isArray(v)
         && ['departure', 'arrival'].every(k => v[k] === undefined || (v[k] !== null && typeof v[k] === 'object' && Number.isFinite(v[k].t))),
     hyperloop_pending_rankups: v => Number.isFinite(v),
+    hyperloop_rankup_offer: v => isObj(v) && listOfStrings(v.names) && typeof v.freeReroll === 'boolean',
     hyperloop_dev_portrait_bonus: v => v === 1,
     hyperloop_livestream_clicks: v => Number.isFinite(v) && v >= 0,
     hyperloop_prestige: v => v !== null && typeof v === 'object' && !Array.isArray(v) && Number.isFinite(v.points) && Array.isArray(v.owned),
