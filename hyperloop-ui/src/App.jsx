@@ -1574,36 +1574,10 @@ function App() {
     };
   }, []);
 
-  if (blockedByOtherTab) {
-    return (
-      <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
-        <div style={{ background: 'rgb(255, 239, 224)', border: '2px solid black', borderRadius: '12px', padding: '32px 24px', maxWidth: '380px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
-          <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>Open in another tab</h2>
-          <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
-            Hyperloop Empire is already running in another tab. Only one tab can play at a time, so your progress isn&#39;t overwritten.
-          </p>
-          <button className="closeButton" onClick={() => {
-            // Ask the active tab to save and step aside; take over anyway if it doesn't answer.
-            localStorage.setItem(TAKEOVER_REQUEST_KEY, tabId);
-            const started = Date.now();
-            const wait = setInterval(() => {
-              if (!readTabLock() || Date.now() - started > 3000) {
-                clearInterval(wait);
-                localStorage.removeItem(TAKEOVER_REQUEST_KEY);
-                takeOverAndReload();
-              }
-            }, 200);
-          }}>
-            Play here instead
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   // True while any popup is, or is about to be, on screen - has to be computed (and the ref below kept in sync)
-  // up here, before the Opening/Construction early returns just below, not after them: a hook can't be skipped
-  // on some renders and not others, but those two returns ARE skipped once an existing save already has cities.
+  // up here, before the blocked-tab and Opening/Construction early returns below, not after them: a hook can't
+  // be skipped on some renders and not others, but those returns ARE skipped in a normal playing tab. The
+  // blocked-tab return flips on mid-session when a second tab takes over, which is "fewer hooks" on that render.
   // A brand-new save (or one straight after retiring) renders through them for real on its first few frames,
   // then stops taking that path the moment Construction's "enter" is clicked - which was exactly "fewer hooks,
   // then more hooks" on the very next render, and crashed the app right as a new run or a prestige's fresh run
@@ -1631,6 +1605,33 @@ function App() {
   // below stops its modal appearing, but nothing stopped the clock, so by the time the blocking popup cleared
   // the event had little time left or had already silently expired, which read as events "leaving quickly".
   useEffect(() => { otherPopupOpenRef.current = otherPopupOpen }, [otherPopupOpen])
+
+  if (blockedByOtherTab) {
+    return (
+      <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
+        <div style={{ background: 'rgb(255, 239, 224)', border: '2px solid black', borderRadius: '12px', padding: '32px 24px', maxWidth: '380px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
+          <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>Open in another tab</h2>
+          <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
+            Hyperloop Empire is already running in another tab. Only one tab can play at a time, so your progress isn&#39;t overwritten.
+          </p>
+          <button className="closeButton" onClick={() => {
+            // Ask the active tab to save and step aside; take over anyway if it doesn't answer.
+            localStorage.setItem(TAKEOVER_REQUEST_KEY, tabId);
+            const started = Date.now();
+            const wait = setInterval(() => {
+              if (!readTabLock() || Date.now() - started > 3000) {
+                clearInterval(wait);
+                localStorage.removeItem(TAKEOVER_REQUEST_KEY);
+                takeOverAndReload();
+              }
+            }, 200);
+          }}>
+            Play here instead
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   // isLoading only ever starts true alongside an existing save with at least one city (see its useState above),
   // which is exactly the case the two checks below don't apply to - so letting isLoading fall through to them
