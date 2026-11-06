@@ -254,6 +254,19 @@ function App() {
     return combined;
   });
 
+  // Hands the economy the two live inputs it can't read for itself: the terminal footfall that decides what
+  // developments earn, and each city's timetabled departure hour that decides what its connection earns. The tick
+  // does this every second, but the offline payout and the daily bonus are worked out on load, BEFORE the first
+  // tick - so without this they ran at the 10% footfall floor and at the hour the game was opened, paying
+  // developments 3.5-10x too little compared with the same absence spent in a sleeping tab.
+  function primeIncomeInputs() {
+    const footfall = getTerminalFootfallBreakdown(progressionManager.purchasedCities);
+    economyManager.setBoardLoopCount(footfall.total, footfall);
+    const scheduleHours = {};
+    readTimetable().forEach(entry => { scheduleHours[entry.name] = Math.floor(entry.minuteOfDay / 60); });
+    economyManager.setCityScheduleHours(scheduleHours);
+  }
+
   function calculateFreshOffline() {
     // Use the most recent sign of life: a stale hidden_at left by another tab must not
     // override a newer heartbeat.
@@ -274,6 +287,11 @@ function App() {
     // A game from before cities needed a scheduled departure to earn gets its timetable filled in first, so its
     // offline income isn't worked out from an empty timetable.
     autoScheduleExisting(progressionManager.purchasedCities);
+    // Today's boards may not exist yet after a night away (the mount effect makes them, but only after this runs),
+    // and the footfall below is read from them.
+    ensureSchedules(progressionManager.purchasedCities);
+    ensureDepartures(progressionManager.purchasedCities);
+    primeIncomeInputs();
     const savedCreatedAt = savedData?.createdAt || Date.now();
     const savedEvent = economyManager.activeEvent;
     economyManager.activeEvent = null;
@@ -798,6 +816,7 @@ function App() {
     localStorage.setItem('hyperloop_last_login', today);
     const hasCommemorativeDisplays = progressionManager.purchasedUpgrades.some(u => u.name === 'Commemorative Displays');
     // The bonus is worked out without any running event, so an event can't double or halve it
+    primeIncomeInputs();
     const savedEvent = economyManager.activeEvent;
     economyManager.activeEvent = null;
     const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
@@ -1020,14 +1039,10 @@ function App() {
       // Terminal footfall for development income: people actually standing in the building - a loop counts from
       // 3 hours before it departs until it leaves, or for an hour after it lands, but not while mid-flight (see
       // getTerminalFootfallBreakdown) - so this is deliberately not activeLoopsNow.length.
-      const footfall = getTerminalFootfallBreakdown(progressionManager.purchasedCities);
-      economyManager.setBoardLoopCount(footfall.total, footfall);
       // A connected city earns at the demand of its own timetabled slot, not whatever hour it is right now
-      // (bug report: a city set to depart in the afternoon was showing Night-level capacity at night) - so feed
-      // the economy manager each tick's scheduled hour per city, read from the timetable the UI owns.
-      const scheduleHours = {};
-      readTimetable().forEach(entry => { scheduleHours[entry.name] = Math.floor(entry.minuteOfDay / 60); });
-      economyManager.setCityScheduleHours(scheduleHours);
+      // (bug report: a city set to depart in the afternoon was showing Night-level capacity at night) - so the
+      // economy manager is also fed each tick's scheduled hour per city, read from the timetable the UI owns.
+      primeIncomeInputs();
 
             const now2 = Date.now();
       const gap = Math.max(0, (now2 - lastTickTimeRef.current) / 1000);
