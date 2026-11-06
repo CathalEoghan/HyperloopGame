@@ -175,7 +175,9 @@ export function previewLoop(homeName, name, minuteOfDay, nowMs = Date.now()) {
     const arriveTs = departTs + durationMin * 60000
     const nextDay = new Date(arriveTs).getDate() !== new Date(departTs).getDate()
     const city = CITY_BY_NAME.get(name)
-    const seed = `departure|${dayKey(nowMs)}|${name}`
+    // The same seed the passenger count below and the connection's real earnings use (see stablePassengers in
+    // loops.js) - a different one rolls a different capacity, so the % and income would disagree with the count.
+    const seed = `${name}|${dayKey(nowMs)}|${hour}`
     const capacityPercent = city ? getCapacityPercent(hour, seed) : null
     const estimatedDailyIncome = city ? baseCityIncome(city) * getCapacityMultiplier(hour, seed) : null
     return {

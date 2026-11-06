@@ -1417,7 +1417,12 @@ function App() {
           // What this delay's share of a day would have earned the terminal, times the goodwill multiplier,
           // rounded to the nearest £100 the same way the instant-cash-loss events are, and floored so it's
           // never trivial for a new/quiet terminal (see DELAY_COMPENSATION_MULTIPLIER/MIN_DELAY_COMPENSATION above).
+          // Worked out with any running income event switched off, the way the daily bonus and offline pay do, so a
+          // delay during "Profits Through the Roof" isn't compensated at 6-11x while refusing still costs a flat 20.
+          const savedDelayEvent = economyManager.activeEvent;
+          economyManager.activeEvent = null;
           const incomePerSecond = economyManager.calculateDailyIncome(null, createdAt);
+          economyManager.activeEvent = savedDelayEvent;
           const rawCompensation = Math.round(incomePerSecond * SECONDS_IN_A_DAY * (delayMinutes / 1440) * DELAY_COMPENSATION_MULTIPLIER / 100) * 100;
           const compensation = Math.max(rawCompensation, MIN_DELAY_COMPENSATION);
           triggeredDelays.current.add(`${isArrival ? 'arr_' : ''}${entry.time}_${entry.name}`);
