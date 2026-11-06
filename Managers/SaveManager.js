@@ -310,6 +310,34 @@ function validateSave(save) {
     return true
 }
 
+// A save already in storage that cannot be read. loadGame throws this instead of starting a new game, because the
+// first autosave of that new game would write over the only copy of the old one (R2-L1). The error screen
+// (components/ErrorBoundary.jsx) then offers "Download my save" and a reset.
+export class SaveLoadError extends Error {
+    constructor(message) {
+        super(message)
+        this.name = 'SaveLoadError'
+    }
+}
+
+// Where a copy of an unreadable save is kept, untouched by anything the game does afterwards.
+const SAVE_BACKUP_KEY = 'hyperloop_save_backup'
+
+// The part of validateSave that decides whether the game can load a save at all: every value the loader reads must
+// have the right type. A value that is missing is fine (older saves lack some, and the loader has a default for each).
+// The plausibility checks in validateSave (balance against total earned, rank limits and so on) are left out on
+// purpose: they are there to catch hand-edited imports, and a real save must never be refused because of one.
+function hasLoadableShape(save) {
+    if (!save || typeof save !== 'object' || Array.isArray(save)) return false
+    const isMap = value => value === undefined || (value !== null && typeof value === 'object' && !Array.isArray(value))
+    if (SAVE_NUMBERS.some(key => save[key] != null && !Number.isFinite(save[key]))) return false
+    if (SAVE_NAME_LISTS.some(key => save[key] != null && !(Array.isArray(save[key]) && save[key].every(n => typeof n === 'string')))) return false
+    if (SAVE_BUILD_LISTS.some(key => save[key] != null && !(Array.isArray(save[key]) && save[key].every(item => item && typeof item.name === 'string' && Number.isFinite(item.finishTime))))) return false
+    if (save.terminalName != null && typeof save.terminalName !== 'string') return false
+    if (!isMap(save.developmentUpgradeLevels) || !isMap(save.cityLineLevels)) return false
+    return true
+}
+
 export function saveGame(progressionManager, rankManager, terminalName, farewellsGiven) {
     // Nothing is saved until the home city exists. A save written during the naming screen
     // or the tutorial build made a reload skip onboarding, or let the player pick a second
@@ -363,6 +391,7 @@ export function loadGame(progressionManager, rankManager) {
 
     try {
         const save = JSON.parse(raw)
+        if (!hasLoadableShape(save)) throw new SaveLoadError('The saved game has values the game cannot read')
 
         // Bring old names up to date before looking anything up.
         ;['purchasedCities', 'unlockedCities', 'purchasedDevelopments', 'purchasedUpgrades', 'unlockedDevelopments', 'unlockedUpgrades']
@@ -499,7 +528,9 @@ export function loadGame(progressionManager, rankManager) {
 
     } catch (e) {
         console.error('Failed to load save:', e)
-        return null
+        // Keep a copy, then stop: carrying on as a new game would let the first autosave replace this one
+        try { if (localStorage.getItem(SAVE_BACKUP_KEY) === null) localStorage.setItem(SAVE_BACKUP_KEY, raw) } catch { /* storage full: the save itself is still there */ }
+        throw e instanceof SaveLoadError ? e : new SaveLoadError(e?.message || 'The saved game could not be read')
     }
 }
 
@@ -514,9 +545,13 @@ export function deleteSave() {
 export function exportSave() {
     const raw = localStorage.getItem(SAVE_KEY)
     if (!raw) return
-    const save = JSON.parse(raw)
-    const bundle = { ...save, _aux: bundleAuxState() }
-    const blob = new Blob([JSON.stringify(bundle)], { type: 'application/json' })
+    // A save that is not valid JSON is handed over exactly as stored, so a damaged one can still be rescued
+    let text = raw
+    try {
+        const save = JSON.parse(raw)
+        if (save && typeof save === 'object' && !Array.isArray(save)) text = JSON.stringify({ ...save, _aux: bundleAuxState() })
+    } catch { /* keep the raw text */ }
+    const blob = new Blob([text], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url

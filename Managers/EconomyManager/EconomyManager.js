@@ -91,6 +91,10 @@ export class EconomyManager {
         // utils/loops.js) - not loops literally in the air, whose passengers can't shop. Set once by the UI each
         // tick, since this manager has no access to the schedule storage that lives in the UI layer.
         this.boardLoopCount = 0;
+        // While calculateOfflineIncome steps through an absence, the moment of the step being priced. Every
+        // holiday, season, month, weekday and time-of-day boost reads the clock through _now(), so each step is
+        // paid at the boosts that were running then, not the ones running when the player came back.
+        this._clockMs = null;
         // The same count, split into departures-about-to-leave vs. arrivals-just-landed, so the busy status can
         // explain itself (e.g. "2 loops nearing departure, 1 just arrived") instead of just showing a bare number.
         this.boardLoopBreakdown = { departures: 0, arrivals: 0 };
@@ -144,7 +148,7 @@ export class EconomyManager {
     getCurrentSeasonName() {
         const homeCity = this.progressionManager.purchasedCities[0];
         const homeLat = homeCity ? this.coordinates?.[homeCity.name]?.lat : undefined;
-        const month = (new Date().getMonth() + (typeof homeLat === 'number' && homeLat < 0 ? 6 : 0)) % 12;
+        const month = (this._now().getMonth() + (typeof homeLat === 'number' && homeLat < 0 ? 6 : 0)) % 12;
         return month >= 2 && month <= 4 ? 'Spring' : month >= 5 && month <= 7 ? 'Summer' : month >= 8 && month <= 10 ? 'Autumn' : 'Winter';
     }
 
@@ -384,13 +388,18 @@ export class EconomyManager {
         return Math.floor(base * UPGRADE_MULTIPLIERS[level]);
     }
 
+    // The date those boosts follow: the real clock, or the step being priced during an offline payout.
+    _now() {
+        return this._clockMs === null ? new Date() : new Date(this._clockMs);
+    }
+
     isBusinessWeek() {
-        const day = new Date().getDay();
+        const day = this._now().getDay();
         return day >= 1 && day <= 5;
     }
 
     isWeekend() {
-        const day = new Date().getDay();
+        const day = this._now().getDay();
         return day === 0 || day === 6;
     }
 
@@ -398,7 +407,7 @@ export class EconomyManager {
         // Festive Freak doubles every one of these (and the season/month boosts below), so it's applied once
         // here rather than at each `return 1.0`.
         const festiveFreak = PrestigeManager.owns('festiveFreak') ? PV.festiveFreakFactor : 1;
-        const now = new Date();
+        const now = this._now();
         const month = now.getMonth();
         const date = now.getDate();
         if (month === 9  && date === 31 && this.hasUpgrade('halloweenBoost')) return this.getUpgradeSum('halloweenBoost') * festiveFreak;
@@ -425,7 +434,7 @@ export class EconomyManager {
     }
 
     getTimeOfDayBonus() {
-        const hour = new Date().getHours();
+        const hour = this._now().getHours();
         let bonus = 0;
         if (hour >= 6  && hour < 12 && this.hasUpgrade('morningBoost'))   bonus += this.getUpgradeSum('morningBoost');
         if (hour >= 12 && hour < 18 && this.hasUpgrade('afternoonBoost')) bonus += this.getUpgradeSum('afternoonBoost');
@@ -453,7 +462,7 @@ export class EconomyManager {
         const homeCity = this.progressionManager.purchasedCities[0];
         const homeLat = homeCity ? this.coordinates?.[homeCity.name]?.lat : undefined;
         const southern = typeof homeLat === 'number' && homeLat < 0;
-        const month = (new Date().getMonth() + (southern ? 6 : 0)) % 12;
+        const month = (this._now().getMonth() + (southern ? 6 : 0)) % 12;
         const seasons = { Spring: [2,3,4], Summer: [5,6,7], Autumn: [8,9,10], Winter: [11,0,1] };
         const currentSeason = Object.entries(seasons).find(([, months]) => months.includes(month))?.[0];
         if (!currentSeason) return null;
@@ -467,7 +476,7 @@ export class EconomyManager {
 
     getCurrentMonthUpgrade() {
         const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-        const currentMonth = monthNames[new Date().getMonth()];
+        const currentMonth = monthNames[this._now().getMonth()];
         return this._applyFestiveFreak(this.progressionManager.purchasedUpgrades.find(u =>
             u.effectType === 'seasonBoost' && u.name.includes(currentMonth)
         ) || null);
@@ -548,7 +557,7 @@ export class EconomyManager {
         const monthUpgrade = this.getCurrentMonthUpgrade();
         if (monthUpgrade) {
             const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-            const mn = monthNames[new Date().getMonth()];
+            const mn = monthNames[this._now().getMonth()];
             lines.push(`${mn} boost: +${Math.round(monthUpgrade.effectValue * 100)}%`); totalBoost += monthUpgrade.effectValue;
         }
 
@@ -564,7 +573,7 @@ export class EconomyManager {
         const specialBonus = this.getSpecialDayBonus();
         if (specialBonus > 0) { lines.push(`Special day: +${Math.round(specialBonus * 100)}%`); totalBoost += specialBonus; }
 
-        const hour = new Date().getHours();
+        const hour = this._now().getHours();
         const timePeriod = hour >= 6 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : hour >= 18 && hour < 22 ? 'Evening' : 'Night';
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
@@ -646,7 +655,7 @@ export class EconomyManager {
         const monthUpgrade = this.getCurrentMonthUpgrade();
         if (monthUpgrade) {
             const monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-            const mn = monthNames[new Date().getMonth()];
+            const mn = monthNames[this._now().getMonth()];
             lines.push(`${mn} boost: +${Math.round(monthUpgrade.effectValue * 100)}%`); totalBoost += monthUpgrade.effectValue;
         }
 
@@ -668,7 +677,7 @@ export class EconomyManager {
         const specialDayBonus = this.getSpecialDayBonus();
         if (specialDayBonus > 0) { lines.push(`Special day: +${Math.round(specialDayBonus * 100)}%`); totalBoost += specialDayBonus; }
 
-        const hour = new Date().getHours();
+        const hour = this._now().getHours();
         const timePeriod = hour >= 6 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : hour >= 18 && hour < 22 ? 'Evening' : 'Night';
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
@@ -823,31 +832,46 @@ export class EconomyManager {
         const savedEvent = this.activeEvent;
         this.activeEvent = null;
         try {
-            // The development total as it stands is already scaled by the current busy multiplier (never 0: the
-            // floor is 10%), so dividing it back out leaves the amount at a 100% multiplier to scale per step.
-            const devAtFullBusy = this.calculateDevelopmentIncome() / this.getDevelopmentBusyMultiplier();
             const cities = this.progressionManager.purchasedCities.filter(city => this.isCityEarning(city));
-            const cityAtFullCapacity = cities.map(city => this.calculateCityIncome(city));
+            // The development total includes the current busy multiplier (never 0: the floor is 10%), so it is
+            // divided back out to leave the amount at a 100% multiplier to scale per step.
+            const busyNow = this.getDevelopmentBusyMultiplier();
             // About 2000 steps at most, however long the absence (the cap can be unlimited)
             const stepMs = Math.max(10 * 60000, Math.ceil((endMs - startMs) / 2000 / 60000) * 60000);
+            // Holidays, seasons, months, weekdays and the time of day only change on the hour, so what each city
+            // and development earns at full capacity is worked out once per hour of the absence, with the clock
+            // set to that moment (a Christmas Day boost pays only for the hours that fell on Christmas Day)
+            const incomeByHour = new Map();
             // A connection's capacity only changes from one day to the next (its scheduled hour is fixed)
             const capacityByDay = new Map();
             let total = 0;
-            for (let t = startMs; t < endMs; t += stepMs) {
-                const stepSeconds = Math.min(stepMs, endMs - t) / 1000;
-                const mid = t + stepSeconds * 500;
-                let perDay = devAtFullBusy * (this.getDevelopmentBusyPercent(footfallAt(mid)) / 100);
-                const day = new Date(mid).toDateString();
-                cities.forEach((city, i) => {
-                    const key = `${city.name}|${day}`;
-                    let multiplier = capacityByDay.get(key);
-                    if (multiplier === undefined) {
-                        multiplier = this.getConnectionCapacityMultiplier(city, mid);
-                        capacityByDay.set(key, multiplier);
+            try {
+                for (let t = startMs; t < endMs; t += stepMs) {
+                    const stepSeconds = Math.min(stepMs, endMs - t) / 1000;
+                    const mid = t + stepSeconds * 500;
+                    const when = new Date(mid);
+                    const day = when.toDateString();
+                    const hourKey = `${day}|${when.getHours()}`;
+                    let hourly = incomeByHour.get(hourKey);
+                    if (!hourly) {
+                        this._clockMs = mid;
+                        hourly = { dev: this.calculateDevelopmentIncome() / busyNow, cities: cities.map(city => this.calculateCityIncome(city)) };
+                        incomeByHour.set(hourKey, hourly);
                     }
-                    perDay += cityAtFullCapacity[i] * multiplier;
-                });
-                total += perDay / SECONDS_IN_A_DAY * stepSeconds;
+                    let perDay = hourly.dev * (this.getDevelopmentBusyPercent(footfallAt(mid)) / 100);
+                    cities.forEach((city, i) => {
+                        const key = `${city.name}|${day}`;
+                        let multiplier = capacityByDay.get(key);
+                        if (multiplier === undefined) {
+                            multiplier = this.getConnectionCapacityMultiplier(city, mid);
+                            capacityByDay.set(key, multiplier);
+                        }
+                        perDay += hourly.cities[i] * multiplier;
+                    });
+                    total += perDay / SECONDS_IN_A_DAY * stepSeconds;
+                }
+            } finally {
+                this._clockMs = null;
             }
             return total * this.getFoundersHallMultiplier(createdAt);
         } finally {

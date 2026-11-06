@@ -35,7 +35,9 @@ class ErrorBoundary extends Component {
           <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
             {confirmReset
               ? 'This deletes your terminal and all progress on this browser. It can\'t be undone. Download your save first if you might want it back.'
-              : 'Hyperloop Empire hit an error. Try reloading. If it keeps happening, download your save, then reset the game.'}
+              : this.state.error?.name === 'SaveLoadError'
+                ? 'Your saved game could not be read, so it has been left untouched instead of being replaced by a new one. Download it now to keep a copy, then reset the game to start again.'
+                : 'Hyperloop Empire hit an error. Try reloading. If it keeps happening, download your save, then reset the game.'}
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
             {!confirmReset && <button className="closeButton" onClick={() => window.location.reload()}>Reload</button>}

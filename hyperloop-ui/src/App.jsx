@@ -2197,10 +2197,12 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && (
-        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={!showCityPicker && !cityChoices && progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !cityChoices && !showCityPicker && (
+        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
+         // The city offer or picker is already open: claiming again would swap in a fresh offer without the re-roll cost
+         if (cityChoices || showCityPicker) return;
          // Lobbying Suavity: the player picks the city (once none are left to unlock, there is nothing to pick)
          if (lobbying && progressionManager.getUnlockableCities(allCities).length > 0) { setShowCityPicker(true); return; }
          // Otherwise the rank-up offers a few random cities to choose from (one free re-roll with Advanced Terminal Planning)

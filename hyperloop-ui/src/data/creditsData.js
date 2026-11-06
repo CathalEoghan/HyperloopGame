@@ -254,6 +254,18 @@ export const WIKIMEDIA_CREDITS = [
         url: 'https://commons.wikimedia.org/wiki/File:Port_Louis_Skyline.JPG'
     },
     {
+        name: 'Montpellier',
+        author: 'G.Mannaerts',
+        license: 'CC BY-SA 4.0',
+        url: 'https://commons.wikimedia.org/wiki/File:Montpellier_ecusson.jpg'
+    },
+    {
+        name: 'Wartime event theme',
+        author: 'Henrickson',
+        license: 'GFDL',
+        url: 'https://commons.wikimedia.org/wiki/File:US_Woodland_pattern.svg'
+    },
+    {
         name: 'Hyperloop Pod Refurbishments (development)',
         author: 'Sameboat',
         license: 'CC0 1.0 (Public Domain)',
