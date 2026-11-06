@@ -1503,7 +1503,7 @@ function App() {
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
         const event = getRandomEvent(positiveOnly);
 
-        const skipEvent = event.type === 'negative' && (noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('negativeEventReduction')));
+        const skipEvent = event.type === 'negative' && (noNegatives || Math.random() < economyManager.getNegativeEventReduction());
         if (!skipEvent) fireEvent(event);
       }
 

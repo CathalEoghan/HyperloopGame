@@ -301,7 +301,15 @@ export class ProgressionManager {
         return this.cityLineLevels[city.name] || 0;
     }
 
+    // Whether a city's line can ever be upgraded. The secret tier 0 Antarctic Peninsula earns nothing (there is no
+    // tier 0 income), so every level would multiply zero: it is never offered, rather than selling about GBP1.36B
+    // of upgrades with no effect. If tier 0 is ever given an income, this is the one place to lift that.
+    canUpgradeCityLine(city) {
+        return !!city && city.tier > 0;
+    }
+
     getCityLineUpgradeCostInfo(city) {
+        if (!this.canUpgradeCityLine(city)) return null;
         if (!this.purchasedCities.includes(city)) return null;
         const currentLevel = this.getCityLineLevel(city);
         const nextLevel = currentLevel + 1;

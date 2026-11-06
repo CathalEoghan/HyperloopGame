@@ -402,7 +402,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             },
             { label: 'Dev Build Discount', value: sum('developmentDiscount') > 0 ? `-${Math.round(sum('developmentDiscount') * 100)}%` : '—' },
             { label: 'Dev Upgrade Discount', value: sum('developmentUpgradeDiscount') > 0 ? `-${Math.round(sum('developmentUpgradeDiscount') * 100)}%` : '—' },
-            { label: 'Negative Event Reduction', value: sum('negativeEventReduction') > 0 ? `${Math.round(sum('negativeEventReduction') * 100)}% chance to skip` : '—' },
+            { label: 'Negative Event Reduction', value: sum('negativeEventReduction') > 0 ? `${Math.round(economyManager.getNegativeEventReduction() * 100)}% chance to skip` : '—' },
             { label: 'Event Duration Extension', value: sum('bonusDurationExtension') > 0 ? `+${Math.round(sum('bonusDurationExtension') * 100)}% longer` : '—' },
             { label: 'Delay Compensation Cut', value: sum('delayCompensationReduction') > 0 ? `-${Math.round(sum('delayCompensationReduction') * 100)}%` : '—' },
             { label: 'Delay Rep Cost Reduction', value: sum('delayRepCostReduction') > 0 ? `-${sum('delayRepCostReduction')} rep` : '—' },

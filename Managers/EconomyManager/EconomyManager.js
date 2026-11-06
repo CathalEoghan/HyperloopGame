@@ -219,6 +219,17 @@ export class EconomyManager {
         return this.prestigeMultipliers(kind).map(([name, v]) => `${name}: ×${fmt(v)}`);
     }
 
+    // The chance a negative event is skipped. Each owned reduction upgrade cuts whatever chance is left by its own
+    // share (1 - the product of what each leaves through), so they stack without ever reaching 100% - five of the
+    // six 20% upgrades used to add up to a guaranteed skip, which is what the Crisis Avoidance Specialists Prestige
+    // perk is for.
+    getNegativeEventReduction() {
+        const stillGetsThrough = this.progressionManager.purchasedUpgrades
+            .filter(u => u.effectType === 'negativeEventReduction')
+            .reduce((left, u) => left * (1 - Math.min(1, Math.max(0, u.effectValue))), 1);
+        return 1 - stillGetsThrough;
+    }
+
     hasUpgrade(effectType) {
         return this.progressionManager.purchasedUpgrades.some(u => u.effectType === effectType);
     }

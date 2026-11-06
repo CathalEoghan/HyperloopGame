@@ -414,7 +414,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                             </div>
                                         )
                                     })()}
-                                    {!economyManager.isHomeCity(selectedCity) && (() => {
+                                    {!economyManager.isHomeCity(selectedCity) && constructionManager.progressionManager.canUpgradeCityLine(selectedCity) && (() => {
                                         const pm = constructionManager.progressionManager
                                         const lineLevel = pm.getCityLineLevel(selectedCity)
                                         const lineInfo = pm.getCityLineUpgradeCostInfo(selectedCity)
