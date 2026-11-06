@@ -285,9 +285,11 @@
    Shows "<reputation> / <cost>" rather than "Need N more" - a tried progress bar here read as a floating,
    disconnected mark (its unfilled track was too close to the card background to show up as a container), so
    this keeps the same "how close am I" info as plain, bold-vs-grey text instead, matching the "X/Y owned"
-   phrasing already used elsewhere in the Shop rather than inventing a new shape. */
-.shop-need-more { font-size: 0.68rem; color: #b9541a; white-space: nowrap; flex-basis: 100%; text-align: right; }
-.shop-need-more strong { color: #7a3610; }
+   phrasing already used elsewhere in the Shop rather than inventing a new shape. Grey (matching
+   .shop-nav-item-sub's #888), not the old warning-red - it's not a warning, just progress, and in a grid
+   where most bundles land on the same price it was the same red text repeated on card after card. */
+.shop-need-more { font-size: 0.68rem; color: #888; white-space: nowrap; flex-basis: 100%; text-align: right; }
+.shop-need-more strong { color: #555; }
 
 /* The preview mock, wrapped in a plain button so it can be clicked open into the lightbox - reset to look
    exactly like the un-clickable div it used to be, with just a pointer cursor and a focus ring to show it's
