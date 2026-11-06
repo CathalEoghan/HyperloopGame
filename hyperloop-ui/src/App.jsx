@@ -270,7 +270,7 @@ function App() {
     if (blockedByOtherTab) return null;
     // Offline earnings are kept in storage until the player presses Collect, so closing
     // or reloading the page before then doesn't lose them (bug #84).
-    let pending = null;
+    let pending;
     try { pending = JSON.parse(localStorage.getItem('hyperloop_pending_offline')); } catch { pending = null; }
     const fresh = calculateFreshOffline();
     if (!pending && !fresh) return null;
@@ -528,7 +528,7 @@ function App() {
     try {
       const stored = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
       // Posts from older versions also carried their whole picture; drop it, the id is enough (bug #134)
-      const fresh = stored.filter(p => p.timestamp > Date.now() - 172800000).map(({ pfp, ...rest }) => rest)
+      const fresh = stored.filter(p => p.timestamp > Date.now() - 172800000).map(p => { const rest = { ...p }; delete rest.pfp; return rest })
       if (fresh.length !== stored.length || stored.some(p => 'pfp' in p)) localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(fresh))
       // The old picture table could never be read back and only grew
       localStorage.removeItem('hyperloop_hyperlink_user_pfps')
@@ -844,7 +844,7 @@ function App() {
   function checkDailyLogin() {
     if (blockedRef.current || !hasSave() || progressionManager.purchasedCities.length === 0 || onboardingPending()) return;
     // A bonus offered on an earlier load but never collected is still owed (bug #84).
-    let pendingDaily = null;
+    let pendingDaily;
     try { pendingDaily = JSON.parse(localStorage.getItem('hyperloop_pending_daily')); } catch { pendingDaily = null; }
     if (pendingDaily) { setDailyLoginData(pendingDaily); return; }
     const today = new Date().toDateString();
@@ -1112,7 +1112,7 @@ function App() {
         const offlineSeconds = Math.min(gap, economyManager.calculateOfflineCap());
         const offlineIncome = offlineIncomeFor(now2 - gap * 1000, offlineSeconds, savedCreatedAt);
         if (offlineIncome >= 1) {
-          let pending = null;
+          let pending;
           try { pending = JSON.parse(localStorage.getItem('hyperloop_pending_offline')); } catch { pending = null; }
           const combined = {
             offlineSeconds: (pending?.offlineSeconds || 0) + offlineSeconds,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import { playSpecialChime } from '../utils/sound.js'
 import { achievementLogo } from '../utils/achievementLogos.js'
 import './AchievementToast.css'

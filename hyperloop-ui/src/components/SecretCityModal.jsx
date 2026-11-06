@@ -8,7 +8,6 @@ function SecretCityModal({ onContinue }) {
 
     useEffect(() => {
         playBigMomentSound()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (

@@ -260,6 +260,12 @@ export const WIKIMEDIA_CREDITS = [
         url: 'https://commons.wikimedia.org/wiki/File:Montpellier_ecusson.jpg'
     },
     {
+        name: 'Vientiane',
+        author: 'Jakub Halun',
+        license: 'CC BY-SA 4.0',
+        url: 'https://commons.wikimedia.org/wiki/File:20171118_Vientiane_3220_DxO.jpg'
+    },
+    {
         name: 'Wartime event theme',
         author: 'Henrickson',
         license: 'GFDL',

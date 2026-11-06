@@ -320,7 +320,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                 </div>
                                                 <div className="shop-item-desc">{bundle.blurb}</div>
                                                 <div className="shop-bundle-pieces">
-                                                    {bundlePieces(bundle).map(({ category: pc, id, item }) => {
+                                                    {bundlePieces(bundle).map(({ category: pc, id }) => {
                                                         const pieceOwned = isOwned(cosmetics, pc, id)
                                                         const tooltipText = `${PIECE_LABELS[pc]}${pieceOwned ? ' (owned)' : ' (not owned)'}`
                                                         return (

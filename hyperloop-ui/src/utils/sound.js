@@ -80,7 +80,7 @@ function readMap(key) {
 }
 
 function writeMap(key, map) {
-    try { localStorage.setItem(key, JSON.stringify(map)) } catch {}
+    try { localStorage.setItem(key, JSON.stringify(map)) } catch { /* storage full or blocked: the setting just isn't remembered */ }
 }
 
 export function getCategoryVolume(category) {
