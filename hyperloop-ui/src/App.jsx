@@ -965,7 +965,7 @@ function App() {
       const rawLoss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
       const loss = Math.max(rawLoss, MIN_INSTANT_CASH_LOSS);
       progressionManager.addCash(-loss);
-      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss };
+      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss, expiresAt: Date.now() + 8000 };
       activeEventRef.current = fullEvent;
       // Persisted like every other branch (this one alone used to skip it) - without it, a reload during the
       // 8-second window loses all memory the event ever happened, even though nothing removes it either.

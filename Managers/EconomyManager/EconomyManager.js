@@ -1004,6 +1004,8 @@ export class EconomyManager {
 
     getFarewellCityIncomeBonus(city) {
         if (!this.hasUpgrade('personalImageBranding')) return 0;
+        // A city that earns nothing (off the timetable, or the home city) pays nothing here either (R3-L3)
+        if (!this.isCityEarning(city)) return 0;
         const dailyIncome = this.calculateCityIncome(city);
         return Math.floor(dailyIncome * 0.1);
     }
