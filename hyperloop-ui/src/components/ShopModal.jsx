@@ -104,6 +104,16 @@ function shortfall(reputation, cost) {
     return need > 0 ? need : null
 }
 
+// What % of the way to affording something the player currently is, for the thin progress bar under "Need N
+// more" - a bare number doesn't say whether that gap is small or still most of the price, and that distinction
+// matters most exactly when nothing is affordable yet (a whole Shop tab of "Need N more" otherwise all reads
+// equally out of reach). Guards cost <= 0 (a free/default item never reaches the shortfall UI anyway, but
+// dividing by zero would be worse than just saying "there").
+function affordProgress(reputation, cost) {
+    if (cost <= 0) return 100
+    return Math.max(0, Math.min(100, (reputation / cost) * 100))
+}
+
 // The Shop. It only shows things and reports clicks: App does the buying (it owns Reputation) and the equipping.
 //   cosmetics: { owned, equipped } as read by utils/cosmetics.js
 //   onBuy(category, item) -> true when it was bought (and equipped)
@@ -156,19 +166,22 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
     // The small second line under each sidebar entry: what's currently equipped in that category, or how many
     // bundle sets are fully owned - so you can see your whole loadout at a glance without clicking through
     // every tab first.
+    // Returns { line1, line2 } rather than one combined string - equipped-item names vary a lot in length
+    // ("Classic" vs "Classic Hyper-Link"), so concatenating them with the owned-count onto one string and
+    // letting it wrap naturally gave some sidebar rows 2 lines and others 3, depending on name length. Two
+    // dedicated lines (name, then count) keep every non-Bundles row the same height regardless of name length.
     const navSubtitle = (id) => {
         if (id === 'bundles') {
             const ownedCount = SHOP_BUNDLES.filter(b => isBundleOwned(cosmetics, b)).length
-            return `${ownedCount}/${SHOP_BUNDLES.length} sets owned`
+            return { line1: null, line2: `${ownedCount}/${SHOP_BUNDLES.length} sets owned` }
         }
         // Bundles already shows an owned-count ("X/Y sets owned") so you can see collection progress at a
         // glance - every other category only showed what's equipped, with no sense of how many of that
         // category you've actually collected. Pairing the two gives every tab the same at-a-glance info.
         const categoryItems = SHOP_ITEMS[id] || []
         const ownedCount = categoryItems.filter(item => isOwned(cosmetics, id, item.id)).length
-        const ownedLabel = `${ownedCount}/${categoryItems.length} owned`
         const equippedName = getEquippedItem(id, cosmetics)?.name
-        return equippedName ? `${equippedName} · ${ownedLabel}` : ownedLabel
+        return { line1: equippedName || null, line2: `${ownedCount}/${categoryItems.length} owned` }
     }
 
     const handleBuy = (item, shakeKey = item.id) => {
@@ -240,7 +253,14 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                 <button className="shop-btn" onClick={() => { playClickSound2(); onEquip(categoryId, item) }}>Equip</button>
                             ) : (
                                 <>
-                                    {shortfall(reputation, item.cost) != null && <span className="shop-need-more">Need {shortfall(reputation, item.cost)} more</span>}
+                                    {shortfall(reputation, item.cost) != null && (
+                                        <div className="shop-afford-progress-wrap">
+                                            <span className="shop-need-more">Need {shortfall(reputation, item.cost)} more</span>
+                                            <div className="shop-afford-progress">
+                                                <div className="shop-afford-progress-fill" style={{ width: `${affordProgress(reputation, item.cost)}%` }} />
+                                            </div>
+                                        </div>
+                                    )}
                                     <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} onClick={() => handleBuy(item, shakeKey)}>
                                         <img src={reputationIcon} alt="" /> {item.cost}
                                     </button>
@@ -274,7 +294,8 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                     <span className="shop-nav-item-icon-box"><img src={NAV_ICONS[c.id]} alt="" /></span>
                                     <span className="shop-nav-item-text">
                                         <span className="shop-nav-item-name">{c.name}</span>
-                                        {subtitle && <span className="shop-nav-item-sub">{subtitle}</span>}
+                                        {subtitle.line1 && <span className="shop-nav-item-sub">{subtitle.line1}</span>}
+                                        {subtitle.line2 && <span className="shop-nav-item-sub">{subtitle.line2}</span>}
                                     </span>
                                 </button>
                             )
@@ -337,7 +358,14 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                         <button className="shop-btn" onClick={() => { playClickSound2(); onEquipBundle(bundle) }}>Equip all</button>
                                                     ) : (
                                                         <>
-                                                            {need != null && <span className="shop-need-more">Need {need} more</span>}
+                                                            {need != null && (
+                                                                <div className="shop-afford-progress-wrap">
+                                                                    <span className="shop-need-more">Need {need} more</span>
+                                                                    <div className="shop-afford-progress">
+                                                                        <div className="shop-afford-progress-fill" style={{ width: `${affordProgress(reputation, price)}%` }} />
+                                                                    </div>
+                                                                </div>
+                                                            )}
                                                             <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} onClick={() => handleBundleBuy(bundle)}>
                                                                 {originalPrice > price && <span className="shop-bundle-original-price">{originalPrice}</span>}
                                                                 <img src={reputationIcon} alt="" /> {price}
