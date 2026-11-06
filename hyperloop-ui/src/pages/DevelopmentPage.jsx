@@ -25,7 +25,7 @@ import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.j
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
-function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onRename, onRemove, onUpgradeBuilt, topOffset = 113 }) {
+function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onRename, onRemove, topOffset = 113 }) {
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [activeCategory, setActiveCategory] = usePersistedChoice('developmentsCategory', CATEGORIES, 'All')

@@ -661,14 +661,12 @@ function App() {
     if (cityChoices) localStorage.setItem(CITY_OFFER_KEY, JSON.stringify({ names: cityChoices.map(city => city.name), freeReroll: hasFreeReroll }));
     else localStorage.removeItem(CITY_OFFER_KEY);
   }, [cityChoices, hasFreeReroll]);
-  const [claimedByChoice, setClaimedByChoice] = useState(false);
   // Takes the rank-up: unlocks the city (drawn at random, or chosen) and pays the rank-up bonuses.
   const claimRankUp = (newCity, chosen) => {
     if (claimedCityRef.current) return;
     if (newCity) {
       progressionManager.unlockCity(newCity);
       claimedCityRef.current = newCity;
-      setClaimedByChoice(chosen);
       setCityClaimPending(true);
       setTimeout(() => setClaimedCity(newCity), 300);
     }
@@ -1155,7 +1153,6 @@ function App() {
       }
 
       const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];
-      const currentUnlockedCount = currentUnlocked.length;
       if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
         const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
         const alreadyShown = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
@@ -1854,7 +1851,6 @@ function App() {
           constructionManager={constructionManager}
           unlockedCities={progressionManager.unlockedCities}
           balance={balance}
-          totalCashEarned={totalCashEarned}
           economyManager={economyManager}
           reputation={reputation}
           homeCity={progressionManager.purchasedCities[0]}
@@ -2295,7 +2291,6 @@ function App() {
               })
             }
             claimedCityRef.current = null;
-            setClaimedByChoice(false);
             setCityClaimPending(false);
             setClaimedCity(null)
           }}

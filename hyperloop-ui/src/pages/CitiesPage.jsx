@@ -35,7 +35,7 @@ const CONTINENT_COLOURS = {
     'All': '#444'
 }
 
-function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, totalCashEarned, economyManager, onDisconnect, onUpgradeCityLine, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, topOffset = 113 }) {
+function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, economyManager, onDisconnect, onUpgradeCityLine, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, topOffset = 113 }) {
     const [selectedCity, setSelectedCity] = useState(() => preSelectedCity || null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [showLineUpgradeModal, setShowLineUpgradeModal] = useState(false)

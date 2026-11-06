@@ -149,8 +149,8 @@ export class EconomyManager {
     }
 
     // Prestige upgrades. All percentages are additive with the normal boosts.
-    // Unique achievements unlocked. There is no Achievements system yet, so this is 0; when it exists it
-    // stores the unlocked ids in 'hyperloop_achievements' and Anniversary Sales and Trophy Cabinet switch on.
+    // Unique achievements unlocked, read from the ids stored in 'hyperloop_achievements'. This is what Anniversary
+    // Sales and Trophy Cabinet scale with.
     getUniqueAchievementCount() {
         let raw = null;
         try { raw = localStorage.getItem('hyperloop_achievements'); } catch { /* storage unavailable */ }

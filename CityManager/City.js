@@ -12,13 +12,8 @@ export class City {
         this.isSouthern = isSouthern;
         this.isHome = isHome;
         this.localCountryBoostValue = localCountryBoostValue;
-        this.connected = false;
         this.underConstruction = false;
         this.finishTime = null;
-    }
-
-    connect() {
-        this.connected = true;
     }
 
 }

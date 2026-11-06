@@ -427,7 +427,7 @@ export const POSTS = {
         'right need to start making plans for the weekend its thursday and ive literally nothing',
         'excited to get this loop over and done with so i can have an easy weekend',
         'i can literally smell the weekend. or maybe its the leftover paella in my bag',
-        'almost weekend time!! Thursday is just Friday Eve 🎉',,
+        'almost weekend time!! Thursday is just Friday Eve 🎉',
         'we are SO close to the weekend guys, just hold on one more day! xx 🙌',
         'happy Friday Jr 🥂',
         'Thursday travel hits different knowing tomorrow is Friday 🥳',

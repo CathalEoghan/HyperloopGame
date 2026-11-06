@@ -1,5 +1,5 @@
 // The achievement list. Each one unlocks for good (it survives prestige) and counts towards Anniversary Sales
-// (+5% work each) and Trophy Cabinet (+25% income each).
+// (+5% work each) and Trophy Cabinet (+2% income each).
 //
 // State achievements have a `check(ctx)` that is run every second against a snapshot of the game (see
 // AchievementManager.buildContext). Event achievements have no check and are unlocked with `unlock(id)` where it happens.

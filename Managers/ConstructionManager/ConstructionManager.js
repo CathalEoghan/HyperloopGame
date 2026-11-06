@@ -107,6 +107,12 @@ export class ConstructionManager {
     }
 
     startDevelopmentConstruction(development, discountedCost) {
+        // Never charge for a development that is already built or being built, or that hasn't been unlocked (the
+        // same guards as startStationConstruction), whatever the UI does.
+        const pm = this.progressionManager;
+        if (pm.purchasedDevelopments.includes(development) || pm.purchasedUpgrades.includes(development)
+            || pm.developmentsUnderConstruction.includes(development)) return false;
+        if (!pm.unlockedDevelopments.includes(development) && !pm.unlockedUpgrades.includes(development)) return false;
         const cost = discountedCost ?? development.cost;
         if (!this.progressionManager.spendCash(cost)) return false;
         const duration = PrestigeManager.owns('advancedEngineering') ? 0 : TWENTY_SECONDS;

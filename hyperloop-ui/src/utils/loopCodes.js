@@ -79,6 +79,16 @@ function pruneDisconnected(map, connectedNames) {
 // shrinks it back down). None of them belong to any city in particular - see the file header above for
 // how a number actually gets claimed. Reconciled against the live purchasedCities list every time it's
 // read, so the Schedule screen always offers exactly the right number of choices.
+// The pool numbers scheduled departures are holding right now (timetable.js keeps the chosen number on each entry)
+function numbersOnTimetable() {
+    try {
+        const list = JSON.parse(localStorage.getItem('hyperloop_timetable'))
+        return new Set(Array.isArray(list) ? list.map(e => e?.loopNumber).filter(Number.isFinite) : [])
+    } catch {
+        return new Set()
+    }
+}
+
 export function getDeparturePool(purchasedCities) {
     const size = Math.max(0, (purchasedCities || []).length - 1)
     let pool
@@ -89,7 +99,15 @@ export function getDeparturePool(purchasedCities) {
         pool = []
     }
     let changed = false
-    if (pool.length > size) { pool = pool.slice(0, size); changed = true }
+    if (pool.length > size) {
+        // Shrinking drops the numbers no scheduled departure holds first (latest first), so a city still on the
+        // timetable keeps its own number instead of having it cut from the end and then rejecting it when moved
+        const held = numbersOnTimetable()
+        const latestFirst = [...pool].reverse()
+        const drop = new Set([...latestFirst.filter(n => !held.has(n)), ...latestFirst.filter(n => held.has(n))].slice(0, pool.length - size))
+        pool = pool.filter(n => !drop.has(n))
+        changed = true
+    }
     while (pool.length < size) {
         pool.push(pickFree(DEPARTURE_NUMBER_MIN, DEPARTURE_NUMBER_MAX, new Set(pool)))
         changed = true

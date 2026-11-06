@@ -120,7 +120,6 @@ export class ProgressionManager {
     purchaseCity(city) {
         if (this.purchasedCities.includes(city)) return;
         if (!this.cityConnectedDates[city.name]) this.cityConnectedDates[city.name] = new Date().toISOString();
-        city.connect();
         city.rewards.forEach(reward => this.unlockReward(reward));
         this.purchasedCities.push(city);
         this.unlockedCities = this.unlockedCities.filter(c => c !== city);
@@ -192,6 +191,8 @@ export class ProgressionManager {
         // removed development's upgrade level (see removeDevelopment) - rather than letting it quietly keep a
         // paid-for level that reconnecting would otherwise hand back for free.
         delete this.cityLineLevels[city.name];
+        // Reconnected later, it shows the new date, not the original one
+        delete this.cityConnectedDates[city.name];
         city.rewards.forEach(reward => {
             // A reward that is already built, or being built right now, stays (otherwise its build would be lost)
             const isBuilt = this.purchasedDevelopments.some(d => d.name === reward.name) ||
@@ -260,6 +261,8 @@ export class ProgressionManager {
         this.purchasedDevelopments = this.purchasedDevelopments.filter(d => d !== development);
         delete this.developmentUpgradeLevels[development.name];
         delete this.developmentNames[development.name];
+        // Built again later, it shows the new date, not the original one
+        delete this.developmentBuiltDates[development.name];
         // It can be built again only while a connected city still offers it (a city may have been disconnected since)
         if (this.purchasedCities.some(c => c.rewards.some(r => r.name === development.name))) this.unlockReward(development);
         return true;

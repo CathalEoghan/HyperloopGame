@@ -404,7 +404,6 @@ export function loadGame(progressionManager, rankManager) {
         save.purchasedCities.forEach(name => {
             const city = allCities.find(c => c.name === name)
             if (city && !progressionManager.purchasedCities.includes(city)) {
-                city.connect()
                 progressionManager.purchasedCities.push(city)
             }
         })
@@ -522,8 +521,13 @@ export function exportSave() {
     const a = document.createElement('a')
     a.href = url
     a.download = `hyperloop-save-${new Date().toISOString().slice(0, 10)}.json`
+    // In the page for the click, and the link kept alive a moment after it: some browsers cancel a download
+    // whose link isn't attached or is revoked straight away
+    a.style.display = 'none'
+    document.body.appendChild(a)
     a.click()
-    URL.revokeObjectURL(url)
+    a.remove()
+    setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
 export function importSave(file) {
@@ -547,7 +551,6 @@ export function importSave(file) {
                     const { checksum: _, ...saveWithoutChecksum } = data
                     const computed = computeChecksum(saveWithoutChecksum)
                     if (computed !== storedChecksum) {
-                        data.tampered = true
                         console.warn('Save checksum mismatch — save may have been modified')
                     }
                 }
@@ -576,15 +579,6 @@ export function importSave(file) {
         reader.onerror = () => reject(new Error('Could not read file'))
         reader.readAsText(file)
     })
-}
-
-export function isSaveTampered() {
-    const save = getSaveRaw()
-    if (!save) return false
-    if (save.tampered) return true
-    if (!save.checksum) return false
-    const { checksum: _, ...saveWithoutChecksum } = save
-    return computeChecksum(saveWithoutChecksum) !== save.checksum
 }
 
 function getSaveRaw() {
