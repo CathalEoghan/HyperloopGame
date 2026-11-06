@@ -281,15 +281,13 @@
 .shop-btn-poor { opacity: 0.7; border-color: #ccc; color: #999; }
 .shop-equipped { font-size: 0.78rem; font-weight: bold; color: #4a8f3c; }
 /* Its own full-width line above the Buy button (flex-basis: 100%, inside the now-wrapping .shop-item-actions)
-   rather than squeezed onto the same line as Preview/Buy, which is what overflowed in the first place. */
-.shop-need-more { font-size: 0.68rem; color: #b9541a; white-space: nowrap; }
-/* Wraps the "Need N more" text plus the thin progress bar below it, carrying the flex-basis: 100% that used
-   to live on .shop-need-more itself - a bare "Need 123 more" doesn't say whether that's most of the price or
-   nearly there, and that distinction is exactly what's missing when a whole tab of items are all unaffordable
-   and all read equally out of reach. */
-.shop-afford-progress-wrap { flex-basis: 100%; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; }
-.shop-afford-progress { width: 100%; max-width: 140px; height: 4px; border-radius: 2px; background: #e8e2d8; overflow: hidden; }
-.shop-afford-progress-fill { height: 100%; border-radius: 2px; background: color-mix(in srgb, var(--card-glow-color, #f5a623) 70%, #b9541a 30%); }
+   rather than squeezed onto the same line as Preview/Buy, which is what overflowed in the first place.
+   Shows "<reputation> / <cost>" rather than "Need N more" - a tried progress bar here read as a floating,
+   disconnected mark (its unfilled track was too close to the card background to show up as a container), so
+   this keeps the same "how close am I" info as plain, bold-vs-grey text instead, matching the "X/Y owned"
+   phrasing already used elsewhere in the Shop rather than inventing a new shape. */
+.shop-need-more { font-size: 0.68rem; color: #b9541a; white-space: nowrap; flex-basis: 100%; text-align: right; }
+.shop-need-more strong { color: #7a3610; }
 
 /* The preview mock, wrapped in a plain button so it can be clicked open into the lightbox - reset to look
    exactly like the un-clickable div it used to be, with just a pointer cursor and a focus ring to show it's

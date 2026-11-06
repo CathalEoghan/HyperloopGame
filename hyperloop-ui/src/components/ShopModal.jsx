@@ -104,16 +104,6 @@ function shortfall(reputation, cost) {
     return need > 0 ? need : null
 }
 
-// What % of the way to affording something the player currently is, for the thin progress bar under "Need N
-// more" - a bare number doesn't say whether that gap is small or still most of the price, and that distinction
-// matters most exactly when nothing is affordable yet (a whole Shop tab of "Need N more" otherwise all reads
-// equally out of reach). Guards cost <= 0 (a free/default item never reaches the shortfall UI anyway, but
-// dividing by zero would be worse than just saying "there").
-function affordProgress(reputation, cost) {
-    if (cost <= 0) return 100
-    return Math.max(0, Math.min(100, (reputation / cost) * 100))
-}
-
 // The Shop. It only shows things and reports clicks: App does the buying (it owns Reputation) and the equipping.
 //   cosmetics: { owned, equipped } as read by utils/cosmetics.js
 //   onBuy(category, item) -> true when it was bought (and equipped)
@@ -254,12 +244,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                             ) : (
                                 <>
                                     {shortfall(reputation, item.cost) != null && (
-                                        <div className="shop-afford-progress-wrap">
-                                            <span className="shop-need-more">Need {shortfall(reputation, item.cost)} more</span>
-                                            <div className="shop-afford-progress">
-                                                <div className="shop-afford-progress-fill" style={{ width: `${affordProgress(reputation, item.cost)}%` }} />
-                                            </div>
-                                        </div>
+                                        <span className="shop-need-more"><strong>{Math.floor(reputation)}</strong> / {item.cost}</span>
                                     )}
                                     <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} onClick={() => handleBuy(item, shakeKey)}>
                                         <img src={reputationIcon} alt="" /> {item.cost}
@@ -359,12 +344,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                     ) : (
                                                         <>
                                                             {need != null && (
-                                                                <div className="shop-afford-progress-wrap">
-                                                                    <span className="shop-need-more">Need {need} more</span>
-                                                                    <div className="shop-afford-progress">
-                                                                        <div className="shop-afford-progress-fill" style={{ width: `${affordProgress(reputation, price)}%` }} />
-                                                                    </div>
-                                                                </div>
+                                                                <span className="shop-need-more"><strong>{Math.floor(reputation)}</strong> / {price}</span>
                                                             )}
                                                             <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} onClick={() => handleBundleBuy(bundle)}>
                                                                 {originalPrice > price && <span className="shop-bundle-original-price">{originalPrice}</span>}
