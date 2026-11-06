@@ -103,7 +103,9 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             setBalanceFlash('down')
             balanceFlashTimerRef.current = setTimeout(() => setBalanceFlash(null), 400)
         }
-        if (Math.abs(diff) >= 100) {
+        // The old value only floats away when the balance reads differently: at 1.20 billion it takes millions to move
+        // the printed number, and until then the same text would float up on every tick
+        if (Math.abs(diff) >= 100 && formatBalance(prevBalanceRef.current) !== formatBalance(balance)) {
             clearTimeout(balanceFloatTimerRef.current)
             setBalanceFloat({ value: prevBalanceRef.current, id: Date.now(), dir: diff >= 0 ? 'up' : 'down' })
             balanceFloatTimerRef.current = setTimeout(() => setBalanceFloat(null), 600)
