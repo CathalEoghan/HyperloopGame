@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useSyncExternalStore } from "react";
 import TopBanner from "./components/TopBanner";
 import ExperienceBar from "./components/ExperienceBar";
 import BottomNav from "./components/BottomNav";
@@ -142,6 +142,19 @@ const FIRST_LOOP_PROMPT_KEY = 'hyperloop_first_loop_prompt';
 // Arrivals share the queue (their greeting uses the same popup), so their ids are kept apart from departures'.
 const departureId = dep => `${dep.kind === 'arrival' ? 'arr_' : ''}${dep.time}_${dep.name}`;
 // A farewell whose window closed more than a minute ago is dropped, however it got left behind.
+// True while a popup overlay is on screen: a direct child of .App whose class says "overlay" and that isn't hidden
+const popupIsCoveringApp = () => {
+  const app = document.querySelector('.App');
+  return !!app && Array.from(app.children).some(el => typeof el.className === 'string' && el.className.includes('overlay') && el.style.display !== 'none');
+};
+// Tells React when that might have changed: an element added or removed, or a style (the hidden popups) changed
+const watchForPopups = (onChange) => {
+  const observer = new MutationObserver(onChange);
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ['style'] });
+  return () => observer.disconnect();
+};
+// Wraps the page behind the popups without adding a box of its own, so layout stays exactly as it was
+const BEHIND_POPUPS_STYLE = { display: 'contents' };
 const stillOpen = dep => !dep.expiresAt || Date.now() < dep.expiresAt + 60000;
 // A departure that waited its turn still gets at least 30 seconds on screen.
 const withMinimumWindow = dep => ({ ...dep, expiresAt: Math.max(dep.expiresAt || 0, Date.now() + 30000) });
@@ -1646,6 +1659,12 @@ function App() {
   // the event had little time left or had already silently expired, which read as events "leaving quickly".
   useEffect(() => { otherPopupOpenRef.current = otherPopupOpen }, [otherPopupOpen])
 
+  // While a popup covers the screen, nothing behind it can be reached from the keyboard either. The popups' overlays
+  // already stop the mouse, but Tab still walked into the buttons underneath and Enter pressed them (the Shop opening
+  // over a popup, a rank-up claim re-rolling the city offer - R2-M1). Rather than keep a list of every popup, this looks
+  // at what is actually on screen: a popup is a direct child of the app whose class name says "overlay".
+  const popupCoversApp = useSyncExternalStore(watchForPopups, popupIsCoveringApp)
+
   if (blockedByOtherTab) {
     return (
       <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
@@ -1764,6 +1783,7 @@ function App() {
 
   return (
     <div className="App">
+      <div className="behind-popups" style={BEHIND_POPUPS_STYLE} inert={popupCoversApp}>
       <TopBanner
         onOpenShop={() => setShowShop(true)}
         terminalName={terminalName}
@@ -1831,6 +1851,7 @@ function App() {
         onConnectCity={triggerSave}
         onGlobeReady={() => setGlobeBuilt(true)}
       />
+      </div>
       {isLoading && (
         <LoadingScreen
           globeReady={globeBuilt}
@@ -1844,6 +1865,7 @@ function App() {
           }}
         />
       )}
+      <div className="behind-popups" style={BEHIND_POPUPS_STYLE} inert={popupCoversApp}>
       {activeTab === "Cities" && (
         <CitiesPage
           topOffset={topOffset}
@@ -1958,6 +1980,7 @@ function App() {
           }}
         />
       )}
+      </div>
       {firstLoopVisible && (
         <FirstLoopModal
           purchasedCities={progressionManager.purchasedCities}
@@ -2023,6 +2046,7 @@ function App() {
           </div>
         </div>
       )}
+      <div className="behind-popups" style={BEHIND_POPUPS_STYLE} inert={popupCoversApp}>
       {activeTab === "Prestige" && (
         <PrestigePage
           rank={rankSet}
@@ -2070,7 +2094,9 @@ function App() {
           onSurprise={() => unlockAchievement('surprise')}
         />
       )}
+      </div>
       <AchievementToast queue={achievementQueue} onShift={() => setAchievementQueue(q => q.slice(1))} />
+      <div className="behind-popups" style={BEHIND_POPUPS_STYLE} inert={popupCoversApp}>
       <TickerBar terminalName={terminalName} purchasedCities={progressionManager.purchasedCities} />
       <BottomNav activeTab={activeTab} onSelect={(tab) => {
         if (departureBoardAudioRef.current) {
@@ -2081,6 +2107,7 @@ function App() {
         setShowDepartureBoard(false);
         setActiveTab(tab);
       }} />
+      </div>
 
       {showSaved && (
         <div style={{

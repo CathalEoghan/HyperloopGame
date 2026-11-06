@@ -10,6 +10,7 @@ import pinIcon from '../assets/misc/pin.png'
 import countryFlags from '../data/countryFlags.js'
 import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } from '../utils/sound.js'
 import { formatBalance } from '../utils/formatBalance.js'
+import { BIG_NUMBER_TIERS, scaleToTier } from '../utils/bigNumbers.js'
 import { flagSrc } from '../utils/flagSrc.js'
 
 const WORK_PHRASES = [
@@ -30,19 +31,15 @@ const WORK_PHRASES = [
 
 let floatId = 0
 
-const WORK_SUFFIXES = ['k', 'm', 'b', 't', 'qa', 'qi', 'sx', 'sp', 'oc', 'no', 'dc']
-
+// 1.2k, 3.4m, 5.6b ... through the short names in bigNumbers.js; scientific notation for a tier with no name
 const formatWorkAmount = (value, tilde = false) => {
     const t = tilde ? '~' : ''
     if (!Number.isFinite(value)) return `0${t}`
     if (value < 1000) return `${Math.round(value)}${t}`
-    let tier = Math.floor(Math.log10(value) / 3)
-    // Beyond the last suffix, fall back to scientific notation
-    if (tier > WORK_SUFFIXES.length) return `${value.toExponential(1).replace('e+', 'e')}${t}`
-    let scaled = value / Math.pow(1000, tier)
-    // 999.96k rounds to "1000.0k", so step up to the next suffix instead
-    if (Number(scaled.toFixed(1)) >= 1000 && tier < WORK_SUFFIXES.length) { tier += 1; scaled = value / Math.pow(1000, tier) }
-    return `${scaled.toFixed(1)}${WORK_SUFFIXES[tier - 1]}${t}`
+    const { tier, scaled } = scaleToTier(value, 1)
+    const suffix = tier === 1 ? 'k' : BIG_NUMBER_TIERS[tier]?.[1]
+    if (!suffix) return `${value.toExponential(1).replace('e+', 'e')}${t}`
+    return `${scaled.toFixed(1)}${suffix}${t}`
 }
 
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, autoWorkTick, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, onOpenShop, workDisabled = false }) {
