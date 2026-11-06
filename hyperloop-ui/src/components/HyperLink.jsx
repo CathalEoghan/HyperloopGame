@@ -58,11 +58,29 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
     const [likeAnimating, setLikeAnimating] = useState(null)
     const [, setTick] = useState(0)
     const lastTapRef = useRef({})
+    const feedRef = useRef(null)
+    // Posts that were already there when the phone opened count as seen. One that arrives while it is open is
+    // "new" until the reader has been at the top of the feed for a moment (its tint then fades away); if they are
+    // scrolled down reading older posts, a pill tells them how many are waiting instead of moving the page.
+    const [seenIds, setSeenIds] = useState(() => new Set(feed.map(p => p.id)))
+    const [atTop, setAtTop] = useState(true)
+    const newCount = feed.reduce((n, p) => n + (seenIds.has(p.id) ? 0 : 1), 0)
 
     useEffect(() => {
         const interval = setInterval(() => setTick(t => t + 1), 30000)
         return () => clearInterval(interval)
     }, [])
+
+    useEffect(() => {
+        if (!atTop || newCount === 0) return
+        const timer = setTimeout(() => setSeenIds(new Set(feed.map(p => p.id))), 2200)
+        return () => clearTimeout(timer)
+    }, [atTop, newCount, feed])
+
+    const showNewPosts = () => {
+        playClickSound2()
+        feedRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+    }
 
     // A like is permanent: it can't be taken back, so a later reward for likes can't be farmed by
     // liking and unliking the same post.
@@ -113,17 +131,24 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                             {onToggleMute && (
                                 <button
-                                    className="hyperlink-close hyperlink-mute"
+                                    className={`hyperlink-close hyperlink-mute${muted ? ' hyperlink-mute-off' : ' hyperlink-mute-on'}`}
                                     onMouseEnter={() => playHoverSound()}
                                     onClick={() => { playClickSound2(); onToggleMute() }}
                                     aria-label={muted ? 'Unmute notifications' : 'Mute notifications'}
+                                    title={muted ? 'Notifications are muted. Click to turn them on' : 'Notifications are on. Click to mute them'}
                                     aria-pressed={muted}
                                 >{muted ? '🔕' : '🔔'}</button>
                             )}
                             <button className="hyperlink-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>✕</button>
                         </div>
                     </div>
-                    <div className="hyperlink-feed">
+                    <div className="hyperlink-feed-wrap">
+                    {!atTop && newCount > 0 && (
+                        <button className="hyperlink-new-pill" onClick={showNewPosts} onMouseEnter={() => playHoverSound()}>
+                            ↑ {newCount} new {newCount === 1 ? 'post' : 'posts'}
+                        </button>
+                    )}
+                    <div className="hyperlink-feed" ref={feedRef} onScroll={e => setAtTop(e.currentTarget.scrollTop < 48)}>
                         {feed.length === 0 ? (
                             <div className="hyperlink-empty">No posts yet. Check back soon!</div>
                         ) : (
@@ -139,7 +164,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                 return (
                                     <div
                                         key={post.id}
-                                        className={`hyperlink-post${post.isOfficial ? ' hyperlink-post-official' : ''}`}
+                                        className={`hyperlink-post${post.isOfficial ? ' hyperlink-post-official' : ''}${seenIds.has(post.id) ? '' : ' hyperlink-post-new'}`}
                                         onClick={() => handlePostTap(post.id)}
                                         style={{ position: 'relative', cursor: 'var(--cursor-pointer, pointer)' }}
                                     >
@@ -185,6 +210,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                 )
                             })
                         )}
+                    </div>
                     </div>
                     <div className="hyperlink-home-bar">
                         <div className="hyperlink-home-bar-pill" />
