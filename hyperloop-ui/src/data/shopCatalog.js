@@ -66,7 +66,8 @@
 //     'starlight' bundle below reuses the Board theme already built earlier in this file rather than making a
 //     second item with the same name).
 //   - tier: 'special' (Reputation, like everything else here) or 'premium' (locked until the Supporter's Set
-//     DLC - its pieces should then be tier:'supporter' themselves, the same locking TIERS already does).
+//     DLC - its pieces should then be tier:'supporter' themselves, the same locking TIERS already does). The one
+//     'standard' bundle is Classic: every piece is the free default, so it is owned and equipped from the start.
 //   - Each piece keeps its own Standard/Special/Supporter tag in its home category's tab; the bundle's own
 //     tier badge ("Special"/"Premium") is a separate, bundle-level label shown only in the Bundles tab.
 //   - Price: the sum of whichever pieces the player doesn't already own, minus 20% - see bundlePrice() in
@@ -635,6 +636,10 @@ const makeBundle = (id, name, items, tier = 'special') => ({ id, name, tier, blu
 // (sum of the not-yet-owned pieces, minus 20%) by bundlePrice() in utils/cosmetics.js, so nothing here sets a
 // price directly.
 export const SHOP_BUNDLES = [
+    // Every category's free default piece, so it is owned from the start (nothing to buy) and is what is equipped on a
+    // new game. It's here so a player can put the whole original look and sound back in one tap instead of switching
+    // six categories one by one. The Shop pins it to the top of the Bundles tab.
+    makeBundle('default', 'Classic', { generalTheme: 'default', boardTheme: 'default', hyperLinkTheme: 'default', workSound: 'default', cursorTheme: 'default', openingAudio: 'default' }, 'standard'),
     makeBundle('kitty', 'Kitty', { generalTheme: 'kitty', boardTheme: 'kitty', hyperLinkTheme: 'kitty', workSound: 'kitty', cursorTheme: 'kitty', openingAudio: 'kitty' }),
     makeBundle('fairy', 'Fairy', { generalTheme: 'fairy', boardTheme: 'fairy', hyperLinkTheme: 'fairy', workSound: 'fairy', cursorTheme: 'fairy', openingAudio: 'fairy' }),
     makeBundle('poltergeist', 'Poltergeist', { generalTheme: 'poltergeist', boardTheme: 'poltergeist', hyperLinkTheme: 'poltergeist', workSound: 'poltergeist', cursorTheme: 'poltergeist', openingAudio: 'poltergeist' }),

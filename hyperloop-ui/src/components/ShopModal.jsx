@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { createPortal } from 'react-dom'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PICS, FEATURED_THEME_ID, FEATURED_TAGLINE } from '../data/shopCatalog.js'
-import { isOwned, isBundleOwned, bundlePieces, bundlePrice, bundleOriginalPrice, getEquippedItem } from '../utils/cosmetics.js'
+import { isOwned, isBundleOwned, isBundleEquipped, bundlePieces, bundlePrice, bundleOriginalPrice, getEquippedItem } from '../utils/cosmetics.js'
 import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkPreviewSound, stopPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import paletteIcon from '../assets/misc/palette.png'
@@ -160,7 +160,8 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
     const visibleItems = items.filter(item => matchesSearch(item.name) && (viewMode !== 'owned' || isOwned(cosmetics, categoryId, item.id)))
     const featuredVisible = featuredItem && matchesSearch(featuredItem.name) && (viewMode !== 'owned' || isOwned(cosmetics, categoryId, featuredItem.id)) ? featuredItem : null
     const visibleBundles = SHOP_BUNDLES.filter(b => matchesSearch(b.name) && (viewMode !== 'owned' || isBundleOwned(cosmetics, b)))
-        .sort((a, b) => a.name.localeCompare(b.name))
+        // Classic (the one set everybody owns) stays on top; the rest go alphabetically
+        .sort((a, b) => (b.id === 'default') - (a.id === 'default') || a.name.localeCompare(b.name))
 
     // The small second line under each sidebar entry: what's currently equipped in that category, or how many
     // bundle sets are fully owned - so you can see your whole loadout at a glance without clicking through
@@ -314,15 +315,16 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                 <div className="shop-grid shop-bundle-grid">
                                     {visibleBundles.map(bundle => {
                                         const owned = isBundleOwned(cosmetics, bundle)
+                                        const equipped = owned && isBundleEquipped(cosmetics, bundle)
                                         const locked = bundle.tier === 'premium' && !owned
                                         const price = bundlePrice(cosmetics, bundle)
                                         const originalPrice = bundleOriginalPrice(cosmetics, bundle)
                                         const need = shortfall(reputation, price)
                                         return (
-                                            <div key={bundle.id} className={`shop-item shop-bundle-card${locked ? ' shop-item-locked' : ''}${shaking === bundle.id ? ' shop-item-shake' : ''}`} style={themedCardStyle(bundle.id)} onMouseEnter={() => playHoverSound()}>
+                                            <div key={bundle.id} className={`shop-item shop-bundle-card${equipped ? ' shop-item-equipped' : ''}${locked ? ' shop-item-locked' : ''}${shaking === bundle.id ? ' shop-item-shake' : ''}`} style={themedCardStyle(bundle.id)} onMouseEnter={() => playHoverSound()}>
                                                 <div className="shop-item-name">
                                                     {bundle.name}
-                                                    <span className={`shop-bundle-badge shop-bundle-badge-${bundle.tier}`}>{bundle.tier === 'premium' ? 'Premium' : 'Special'}</span>
+                                                    <span className={`shop-bundle-badge shop-bundle-badge-${bundle.tier}`}>{{ premium: 'Premium', standard: 'Standard' }[bundle.tier] || 'Special'}</span>
                                                     {locked && <span className="shop-item-lock" aria-hidden="true">🔒</span>}
                                                 </div>
                                                 <div className="shop-item-desc">{bundle.blurb}</div>
@@ -346,6 +348,8 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                 <div className="shop-item-actions">
                                                     {locked ? (
                                                         <span className="shop-locked-note">Coming with the Supporter's Set</span>
+                                                    ) : equipped ? (
+                                                        <span className="shop-equipped">Equipped</span>
                                                     ) : owned ? (
                                                         <button className="shop-btn" onClick={() => { playClickSound2(); onEquipBundle(bundle) }}>Equip all</button>
                                                     ) : (

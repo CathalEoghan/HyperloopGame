@@ -61,6 +61,12 @@ export function isBundleOwned(state, bundle) {
     return bundlePieces(bundle).every(p => isOwned(state, p.category, p.id))
 }
 
+// True when every piece of the bundle is the one equipped in its category right now (a new game has the Classic
+// bundle equipped, since every category starts on its default piece).
+export function isBundleEquipped(state, bundle) {
+    return bundlePieces(bundle).every(p => getEquippedItem(p.category, state)?.id === p.id)
+}
+
 function bundleUnownedTotal(state, bundle) {
     return bundlePieces(bundle)
         .filter(p => !isOwned(state, p.category, p.id))
