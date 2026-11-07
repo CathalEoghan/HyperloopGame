@@ -224,6 +224,11 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             <p>{formatTime(constructionManager.timeManager.getTimeRemaining(city.finishTime))}</p>
                         </div>
                     )}
+                    {!isUnderConstruction && isAvailable && (
+                        <div className="city-income-strip" style={{ color: '#aaa' }}>
+                            Cost <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{constructionManager.calculateTierConnectionCost(city).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                        </div>
+                    )}
                     {!isUnderConstruction && !isAvailable && (
                         <div className={`city-income-strip${(offTimetable || isHome) ? ' city-income-strip-off' : ''}`}
                             title={isHome ? 'Your home terminal: it earns no income of its own' : offTimetable ? 'Not on the timetable: it earns nothing until it has a scheduled departure' : undefined}>

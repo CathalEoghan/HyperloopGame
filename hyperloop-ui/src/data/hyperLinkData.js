@@ -205,7 +205,7 @@ export const SURNAMES = [
     'Jacobs', 'Ingram', 'Fields', 'Dunn', 'Duncan', 'Dean', 'Conrad', 'Conner', 'Dempsey', 'Fletcher',
     'Hernandez', 'Takahashi', 'Zhao', 'Zhou', 'Xu', 'Kaur', 'Bennett', 'Foster', 'Flanagan', 'Hoffman', 'Santana', 'Delacruz',
     'Harrison', 'Graham', 'Shaw', 'Perry', 'Gardner', 'Stone', 'Vasquez', 'Osei', 'Johansson', 'Nyström',
-    'Ibrahim', 'Hassan', 'Okonkwo', 'Dlamini', 'Le', 'Hoang', 'Kapoor', 'Shin', 'Mehta',
+    'Ibrahim', 'Hassan', 'Okonkwo', 'Dlamini', 'Le', 'Hoang', 'Kapoor', 'Shin', 'Mehta', 'Schmidt ',
 ]
 
 export const POSTS = {

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import './AchievementsModal.css'
 import './HyperLink.css'
 import trophyIcon from '../assets/misc/trophy.svg'
@@ -34,6 +35,7 @@ export function AchievementsButton({ unseen = 0, showBubble = false, bubbleKey =
 
 // onSeen(id) is called when the player hovers over (or taps) an achievement they had not looked at yet.
 export default function AchievementsModal({ achievementManager, purchasedUpgrades, onSeen = () => { }, onClose }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     const count = achievementManager.count
     const firstUnseenRef = useRef(null)
     // Opening the page with something new on it: bring the first new achievement into view

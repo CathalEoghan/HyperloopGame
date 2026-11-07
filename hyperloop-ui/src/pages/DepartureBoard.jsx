@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react"
 import { createPortal } from 'react-dom'
 import './DepartureBoard.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playSplitFlapLong, playSplitFlapShort, playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { minutesUntilDeparture } from '../utils/time.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
@@ -75,6 +76,8 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
 })
 
 function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgrades, openScheduleOnMount = false, reputation = 0, progressionManager = null, onSave = () => {}, onAutomated = () => {}, onClose }) {
+    // Escape leaves the board (the Schedule and the page intro, being opened later, close first)
+    useEscapeToClose(() => { playClickSound2(); onClose?.() }, !!onClose)
     // How long an arrival stays lit as ARRIVED on the board — matches how long its greeting window actually
     // stays open, rather than assuming every farewell-window upgrade is owned (bug #183)
     const litMinutes = farewellWindowMinutes(purchasedUpgrades)

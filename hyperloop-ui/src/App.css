@@ -95,3 +95,14 @@ body, .App {
 }
 
 
+
+/* Keyboard focus. The browser's own ring is a thin near-black line: weak on the black-bordered cards and invisible
+   on the dark globe bar. This two-tone ring - white inside, dark outside - shows on light and dark surfaces alike.
+   Only keyboard focus gets it (:focus-visible), never a mouse click. :where() keeps the specificity at the bare
+   pseudo-class, so a component's own focus style (the phone button, the Shop preview trigger...) still wins, and
+   text fields keep their own border-colour focus style, so they aren't listed. */
+:where(button, [role="tab"], a[href], summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: 0;
+    box-shadow: 0 0 0 4px #1a1a1a;
+}

@@ -633,6 +633,11 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 />
                                 <div className="dev-revenue-strip" style={{ color: '#aaa' }}>
                                     {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{formatPerHour(development.revenue)}/hr</> : 'UPGRADE'}
+                                    <div className="dev-cost-line">
+                                        Cost {development.effectType === 'earlyRetirement'
+                                            ? <><img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.effectValue}</>
+                                            : <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.calculateDiscountedBuildCost(development.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>}
+                                    </div>
                                 </div>
                             </div>
                             <div>{development.name}</div>

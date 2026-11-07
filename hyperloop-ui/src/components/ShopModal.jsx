@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { createPortal } from 'react-dom'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PICS, FEATURED_THEME_ID, FEATURED_TAGLINE } from '../data/shopCatalog.js'
 import { isOwned, isBundleOwned, bundlePieces, bundlePrice, bundleOriginalPrice, getEquippedItem } from '../utils/cosmetics.js'
@@ -124,6 +125,8 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
     const [search, setSearch] = useState('')
     const [viewMode, setViewMode] = useState('shop') // 'shop' (everything) or 'owned' (collection only)
     const [lightbox, setLightbox] = useState(null) // { categoryId, item } for the enlarged preview, or null
+    // Escape closes the enlarged preview first if one is open, and only then the Shop itself
+    useEscapeToClose(() => { if (lightbox) { setLightbox(null) } else { playClickSound2(); onClose() } })
     // Hover tooltip for a bundle piece chip - { text, left, top } in viewport coordinates, or null. Rendered
     // through a portal to document.body so it can't be clipped by the scrollable shop-content column it sits in
     // (that column's overflow-y:auto forces overflow-x to clip too, which cut off the tooltip for edge-column chips).

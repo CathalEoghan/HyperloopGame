@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import officialLogo from '../assets/misc/officialLogo.png'
 import mePhoto from '../assets/misc/me.jpg'
@@ -22,6 +23,7 @@ function CreditLine({ name, author, license, url }) {
 }
 
 function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     const [claimed, setClaimed] = useState(() => !!localStorage.getItem(BONUS_KEY))
     const [showToast, setShowToast] = useState(false)
 

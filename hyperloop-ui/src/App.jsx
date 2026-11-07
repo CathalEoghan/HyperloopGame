@@ -40,6 +40,7 @@ import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } fro
 import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
 import { POSTS } from "./data/hyperLinkData.js"
 import { playPhoneNotificationSound } from "./utils/sound.js"
+import { useAttentionAlerts } from "./utils/attentionAlerts.js"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -1689,6 +1690,42 @@ function App() {
   // the event had little time left or had already silently expired, which read as events "leaving quickly".
   useEffect(() => { otherPopupOpenRef.current = otherPopupOpen }, [otherPopupOpen])
 
+  // What needs the player right now, for the browser-tab title and the opt-in notifications while the game is in a
+  // background tab (utils/attentionAlerts.js). Most important first. Farewells and greetings the video-message
+  // prestige upgrade sends by itself need nobody, so they aren't listed. Like every hook here, this has to stay above
+  // the early returns below.
+  const attentionItems = []
+  if (!blockedByOtherTab) {
+    if (!PrestigeManager.owns('videoMessage')) {
+      departureQueue.forEach(dep => {
+        const arrival = dep.kind === 'arrival'
+        attentionItems.push({
+          key: `dep:${departureId(dep)}`,
+          title: arrival ? (dep.vip ? 'VIP arrival' : 'Passengers arrived') : (dep.vip ? 'VIP final call' : 'Final call'),
+          body: arrival ? `The loop from ${dep.name} has arrived at Gate ${dep.gate}. Greet the passengers.` : `The loop to ${dep.name} is about to leave from Gate ${dep.gate}. Give the passengers a farewell.`,
+        })
+      })
+    }
+    if (activeDelay) {
+      attentionItems.push({
+        key: `delay:${activeDelay.kind || ''}_${activeDelay.originalTime}_${activeDelay.name}`,
+        title: 'Loop delayed',
+        body: `The ${activeDelay.originalTime} loop ${activeDelay.kind === 'arrival' ? 'from' : 'to'} ${activeDelay.name} is running late. You can compensate the passengers.`,
+      })
+    }
+    if (showEventModal && activeEvent) {
+      attentionItems.push({
+        key: `event:${activeEvent.id}-${activeEvent.expiresAt}`,
+        title: activeEvent.title,
+        body: activeEvent.type === 'positive' ? 'Something good has happened at your terminal.' : 'Something has gone wrong at your terminal.',
+      })
+    }
+    if (pendingRankUps > 0) {
+      attentionItems.push({ key: `rank:${pendingRankUps}`, title: 'Rank up', body: 'You have ranked up. A new city is waiting to be claimed.' })
+    }
+  }
+  useAttentionAlerts(attentionItems)
+
   // While a popup covers the screen, nothing behind it can be reached from the keyboard either. The popups' overlays
   // already stop the mouse, but Tab still walked into the buttons underneath and Enter pressed them (the Shop opening
   // over a popup, a rank-up claim re-rolling the city offer - R2-M1). Rather than keep a list of every popup, this looks
@@ -2189,6 +2226,8 @@ function App() {
         <UpgradeRevealModal
           key={revealedUpgradeQueue[0].name}
           upgrade={revealedUpgradeQueue[0]}
+          waiting={revealedUpgradeQueue.length}
+          onContinueAll={() => setRevealedUpgradeQueue([])}
           onContinue={() => setRevealedUpgradeQueue(q => q.slice(1))}
         />
       )}

@@ -1,4 +1,5 @@
 import './PageIntroModal.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 
 // A one-time explainer shown the first time a player opens a page (Cities, Development, ...), so
@@ -6,6 +7,7 @@ import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHove
 // around. `onClose` is expected to persist a "seen" flag so it doesn't show again.
 // `points` is a list of { icon, text } - one icon'd row per point, matching the onboarding modal's style.
 export default function PageIntroModal({ title, points, onClose }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     return (
         <div className="pageintro-overlay" onClick={onClose}>
             <div className="pageintro-panel" onClick={e => e.stopPropagation()} role="dialog" aria-label={title}>

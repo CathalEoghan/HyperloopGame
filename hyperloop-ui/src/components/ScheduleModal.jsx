@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import './ScheduleModal.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playSplitFlapShort } from '../utils/sound.js'
 import { NUM_GATES, timeString, entryTimestamp, formatDuration } from '../utils/loops.js'
 import { formatPerHour } from '../utils/income.js'
@@ -28,6 +29,7 @@ function suggestSlot(timetable, name, nowMs = Date.now()) {
 // The Schedule loop screen: add a city to the departure timetable, and move or remove the ones already on it.
 // `onChange` is called after every change so the board can redraw.
 export default function ScheduleModal({ purchasedCities, terminalName, onChange = () => {}, onClose }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     const home = purchasedCities[0]
     const [version, setVersion] = useState(0)
     const timetable = readTimetable().filter(e => purchasedCities.some(c => c.name === e.name))

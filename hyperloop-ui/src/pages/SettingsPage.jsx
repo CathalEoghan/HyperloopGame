@@ -6,6 +6,7 @@ import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
 import { GLOBE_QUALITY_KEY, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
 import { VERSION_LOG } from '../utils/versionLog.js'
+import { notificationsEnabled, enableNotifications, disableNotifications } from '../utils/attentionAlerts.js'
 import './SettingsPage.css'
 
 const OptionBtn = ({ active, onClick, children }) => {
@@ -77,6 +78,8 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const [fullscreen, setFullscreenState] = useState(isFullscreen())
     useEffect(() => onFullscreenChange(setFullscreenState), [])
     const [splitFlap, setSplitFlap] = useState(localStorage.getItem('splitFlap') !== 'false')
+    const [notify, setNotify] = useState(() => notificationsEnabled())
+    const [notifyMessage, setNotifyMessage] = useState('')
     const [nameInput, setNameInput] = useState(terminalName)
     // useState above only reads terminalName once, on mount - if it ever changes while this page stays mounted
     // (the Settings tab currently unmounts/remounts it on every visit, so a change elsewhere is picked up next
@@ -130,6 +133,17 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleEventTintToggle = (enabled) => {
         setEventTint(enabled)
         localStorage.setItem('hyperloop_event_tint', enabled)
+    }
+
+    // Turning notifications on asks the browser for permission first, and stays off if it isn't given
+    const handleNotifyToggle = async (enabled) => {
+        setNotifyMessage('')
+        if (!enabled) { disableNotifications(); setNotify(false); return }
+        const result = await enableNotifications()
+        setNotify(result === 'granted')
+        if (result === 'denied') setNotifyMessage('Your browser is blocking notifications for this page. Allow them in the site settings, then switch this on again.')
+        else if (result === 'default') setNotifyMessage('Notifications stay off until you allow them in the browser prompt.')
+        else if (result === 'unsupported') setNotifyMessage('This browser does not support notifications.')
     }
 
     const handleSplitFlapToggle = (enabled) => {
@@ -261,6 +275,21 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     ))}
                 </div>
                 </div>
+                </div>
+            </div>
+
+            <div className="settings-section">
+                <h2 className="settings-section-title">Alerts</h2>
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Browser Notifications</span>
+                        <span className="settings-label-desc">Get a notification when a departure, arrival, delay, event or rank-up needs you while this tab is in the background. They are shown by your browser on this device. Either way, the tab title shows how many things are waiting.</span>
+                        {notifyMessage && <span className="settings-label-desc" style={{ color: '#c0392b' }}>{notifyMessage}</span>}
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={notify} onClick={() => handleNotifyToggle(true)}>On</OptionBtn>
+                        <OptionBtn active={!notify} onClick={() => handleNotifyToggle(false)}>Off</OptionBtn>
+                    </div>
                 </div>
             </div>
 

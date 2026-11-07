@@ -246,6 +246,14 @@
     cursor: var(--cursor-default, default);
 }
 
+/* The switch clips its contents to its rounded corners (overflow: hidden), which would cut an outside focus ring
+   down to a sliver - so on these two tabs the ring is drawn inside the button instead. */
+.globe-view-btn:focus-visible {
+    outline: 2px solid #fff;
+    outline-offset: -3px;
+    box-shadow: none;
+}
+
 .globe-view-count {
     background: #b3b3b3;   /* neutral grey: blue read as "arrival" */
     color: #0a0a1a;

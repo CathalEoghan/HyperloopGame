@@ -1,4 +1,5 @@
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import './GuideModal.css'
 
 const GUIDE_SECTIONS = [
@@ -18,6 +19,7 @@ const GUIDE_SECTIONS = [
 ]
 
 function GuideModal({ onClose }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="guide-modal" onClick={e => e.stopPropagation()}>

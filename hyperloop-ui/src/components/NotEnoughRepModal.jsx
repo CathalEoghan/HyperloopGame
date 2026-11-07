@@ -1,7 +1,9 @@
 import { playClickSound2 } from '../utils/sound.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import reputationIcon from '../assets/misc/reputation.png'
 
 function NotEnoughRepModal({ onClose }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     // The only place this opens from (App.jsx's reroll handler) is on top of CityChoiceModal, whose
     // overlay is z-index 300 - at 200 this rendered completely hidden behind it, so the Reroll button
     // looked like it did nothing instead of explaining why it was refused.

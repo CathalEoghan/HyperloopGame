@@ -7,7 +7,12 @@ import { cloudinaryResize } from '../utils/cloudinaryImage.js'
 import { playClickSound2, playDevelopmentUnlockedSound, playHoverSound } from '../utils/sound.js'
 import './UpgradeRevealModal.css'
 
-function UpgradeRevealModal({ upgrade, onContinue }) {
+// waiting: how many upgrade reveals are queued (this one included). From CONTINUE_ALL_UPGRADES_FROM up, "Continue all"
+// dismisses the rest of the queue - the upgrades are already owned by the time this popup shows, so it only skips the
+// announcements. Same threshold as the development reveals' "Claim all".
+export const CONTINUE_ALL_UPGRADES_FROM = 3
+
+function UpgradeRevealModal({ upgrade, onContinue, waiting = 0, onContinueAll }) {
     useEffect(() => {
         playDevelopmentUnlockedSound()
     }, [])
@@ -41,6 +46,15 @@ function UpgradeRevealModal({ upgrade, onContinue }) {
                 >
                     Continue
                 </button>
+                {waiting >= CONTINUE_ALL_UPGRADES_FROM && onContinueAll && (
+                    <button
+                        className="closeButton upgrade-reveal-continueall"
+                        onMouseEnter={() => playHoverSound()}
+                        onClick={() => { playClickSound2(); onContinueAll() }}
+                    >
+                        Continue all ({waiting})
+                    </button>
+                )}
             </div>
         </div>
     )
