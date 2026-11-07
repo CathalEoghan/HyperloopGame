@@ -53,7 +53,7 @@
 }
 
 .delay-newtime {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-size: 1.1rem;
     margin: 0 0 20px;
     letter-spacing: 1px;
@@ -78,8 +78,8 @@
 
 .delay-btn-compensate {
     background: none;
-    border: 2px solid var(--board-accent, #f5a623);
-    color: var(--board-accent, #f5a623);
+    border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-family: 'Courier New', Courier, monospace;
     font-size: 1rem;
     letter-spacing: 1px;
@@ -91,7 +91,7 @@
 
 .delay-btn-compensate:hover {
     background: var(--board-accent, #f5a623);
-    color: #0a0a1a;
+    color: var(--board-accent-contrast, #0a0a1a);
 }
 
 .delay-btn-dismiss {

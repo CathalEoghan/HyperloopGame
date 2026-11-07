@@ -26,7 +26,7 @@
 }
 
 .farewell-attention {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-size: 1.8rem;
     font-weight: bold;
     letter-spacing: 12px;
@@ -34,7 +34,7 @@
 }
 
 .farewell-divider {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     opacity: 0.4;
     margin: 0 0 20px;
     font-size: 0.9rem;
@@ -72,7 +72,7 @@
 }
 
 .farewell-message strong {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-weight: bold;
 }
 
@@ -81,7 +81,7 @@
     font-weight: bold;
     letter-spacing: 6px;
     margin: 0 0 32px;
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     transition: color 0.5s;
 }
 
@@ -97,8 +97,8 @@
 
 .farewell-button {
     background: none;
-    border: 2px solid var(--board-accent, #f5a623);
-    color: var(--board-accent, #f5a623);
+    border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-family: 'Courier New', Courier, monospace;
     font-size: 1rem;
     letter-spacing: 1px;
@@ -111,11 +111,11 @@
 
 .farewell-button:hover {
     background: var(--board-accent, #f5a623);
-    color: #0a0a1a;
+    color: var(--board-accent-contrast, #0a0a1a);
     animation: none;
 }
 
 @keyframes buttonPulse {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--board-accent, #f5a623) 40%, transparent); }
-    50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--board-accent, #f5a623) 0%, transparent); }
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--board-accent-readable, var(--board-accent, #f5a623)) 40%, transparent); }
+    50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--board-accent-readable, var(--board-accent, #f5a623)) 0%, transparent); }
 }

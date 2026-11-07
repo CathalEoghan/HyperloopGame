@@ -158,6 +158,17 @@ export function applyCosmetics(state = readCosmetics()) {
     const accentTooDarkForSurface = accentLum !== null && contrastRatio(accentLum, DARK_SURFACE) < 4.5
     root.style.setProperty('--ui-accent-readable', accentTooDarkForSurface ? '#ffffff' : accent)
     root.style.setProperty('--globe-active-text', contrastText === LIGHT_TEXT ? '#ffffff' : '#0a0a1a')
+    // The same two ideas for the BOARD accent, which a Board theme sets separately from the general accent. The
+    // arrival/departure popups (greeting, farewell, VIP, delay) draw their text and button outlines in it on a
+    // near-black card, so a dark one (Gingerbread's brown) goes white there, and --board-accent-contrast is the
+    // text for a surface filled with the board accent (the buttons' hover). Any other board accent is left as is.
+    const boardAccent = root.style.getPropertyValue('--board-accent').trim() || '#f5a623'
+    const boardLum = relativeLuminance(boardAccent)
+    const BOARD_CARD = relativeLuminance('#0a0a0a'), BOARD_DARK_TEXT = '#0a0a1a'
+    const boardTooDark = boardLum !== null && contrastRatio(boardLum, BOARD_CARD) < 4.5
+    root.style.setProperty('--board-accent-readable', boardTooDark ? '#ffffff' : boardAccent)
+    const boardWantsLightText = boardLum !== null && contrastRatio(1, boardLum) > contrastRatio(relativeLuminance(BOARD_DARK_TEXT), boardLum)
+    root.style.setProperty('--board-accent-contrast', boardWantsLightText ? '#ffffff' : BOARD_DARK_TEXT)
 }
 
 // The globe's route colours as numbers for three.js, from the equipped general theme (gold departures, blue arrivals by default)
