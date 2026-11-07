@@ -6,6 +6,7 @@ import wifiIcon from '../assets/misc/wifi.png'
 import batteryIcon from '../assets/misc/battery.png'
 import signalIcon from '../assets/misc/signal.png'
 import bellIcon from '../assets/misc/bell.png'
+import closeIcon from '../assets/misc/close.png'
 import { defaultPfp, MALE_PFPS, FEMALE_PFPS, officialPfp } from '../assets/hyperLinkAssets.js'
 export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
 
@@ -122,14 +123,13 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                         </div>
                     </div>
                     <div className="hyperlink-header">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <img src={phoneIcon} alt="" style={{ width: '18px', height: '18px', border: 'none', borderRadius: '0', opacity: 0.9 }} />
+                        <div className="hyperlink-brand">
+                            <div className="hyperlink-logo-tile"><img src={phoneIcon} alt="" draggable={false} /></div>
                             <div>
                                 <div className="hyperlink-logo">Hyper<span>-</span>Link</div>
-                                <div className="hyperlink-disclaimer">All scenarios and characters are completely fictional</div>
                             </div>
                         </div>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <div className="hyperlink-header-actions">
                             {onToggleMute && (
                                 <button
                                     className={`hyperlink-close hyperlink-mute${muted ? ' hyperlink-mute-off' : ' hyperlink-mute-on'}`}
@@ -140,9 +140,10 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                     aria-pressed={muted}
                                 ><img src={bellIcon} alt="" draggable={false} /></button>
                             )}
-                            <button className="hyperlink-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>✕</button>
+                            <button className="hyperlink-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close" title="Close"><img className="hyperlink-close-icon" src={closeIcon} alt="" draggable={false} /></button>
                         </div>
                     </div>
+                    <div className="hyperlink-disclaimer">All scenarios and characters are completely fictional</div>
                     <div className="hyperlink-feed-wrap">
                     {!atTop && newCount > 0 && (
                         <button className="hyperlink-new-pill" onClick={showNewPosts} onMouseEnter={() => playHoverSound()}>

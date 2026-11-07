@@ -113,7 +113,7 @@
 
 .hyperlink-header {
     background: linear-gradient(135deg, var(--hl-accent, #f5a623), var(--hl-accent-dark, #e8941a));
-    padding: 10px 16px 12px;
+    padding: 8px 16px 10px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -143,6 +143,7 @@
     font-size: 1.3rem;
     color: white;
     letter-spacing: -0.5px;
+    line-height: 1.15;
 }
 
 .hyperlink-logo span {
@@ -154,8 +155,10 @@
     border: none;
     color: white;
     border-radius: 50%;
-    width: 28px;
-    height: 28px;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    flex-shrink: 0;
     cursor: var(--cursor-pointer, pointer);
     font-size: 1rem;
     display: flex;
@@ -166,6 +169,45 @@
 
 .hyperlink-close:hover {
     background: rgba(255,255,255,0.35);
+}
+
+/* The header's three pictures share one look: round, the same pale-glass fill, and a picture size that follows
+   its drawing (the X is a plain stroke so it sits smaller than the bell). */
+.hyperlink-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+.hyperlink-logo-tile {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;      /* the long disclaimer beside it was squeezing the picture narrow */
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hyperlink-logo-tile img {
+    width: 26px;
+    height: 26px;
+    display: block;
+    pointer-events: none;
+}
+.hyperlink-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+}
+.hyperlink-close-icon {
+    width: 12px;
+    height: 12px;
+    display: block;
+    pointer-events: none;
+    filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.45));
 }
 
 .hyperlink-feed-wrap {
@@ -209,8 +251,8 @@
 
 /* The bell: lit while notifications are on, flat and dimmed while they are muted */
 .hyperlink-mute img {
-    width: 18px;
-    height: 18px;
+    width: 19px;
+    height: 19px;
     display: block;
     pointer-events: none;
 }
@@ -511,13 +553,13 @@
    instead of straight on it: white on the header was as low as 1.2:1 on the lightest themes, and white on a 50%
    black chip is at least 4.5:1 on every one of them. */
 .hyperlink-disclaimer {
-    display: inline-block;
-    font-size: 0.58rem;
+    /* A slim strip under the header rather than a line inside it: beside the buttons it ran out of room. */
+    flex-shrink: 0;
+    text-align: center;
+    font-size: 0.6rem;
     line-height: 1.3;
-    white-space: nowrap;
-    margin-top: 3px;
-    padding: 0 6px;
-    border-radius: 8px;
-    background: rgba(0, 0, 0, 0.5);
+    padding: 3px 12px;
+    /* The theme's own dark colour with 50% black over it, so the strip belongs to the header; white on it is 7:1 or better on every theme */
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), var(--hl-accent-dark, #e8941a);
     color: #fff;
 }
