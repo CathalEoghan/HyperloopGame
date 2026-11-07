@@ -5,11 +5,14 @@ import developmentThumbnails from '../data/developmentThumbnails.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
 import { cloudinaryResize } from '../utils/cloudinaryImage.js'
 import './DevelopmentRevealModal.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 // waiting: how many reveals are queued (this one included). From CLAIM_ALL_FROM up, "Claim all" skips the rest of the queue.
 export const CLAIM_ALL_DEVS_FROM = 3
 
 function DevelopmentRevealModal({ development, onContinue, waiting = 0, onClaimAll }) {
+    // Escape = Continue (this one only, not Claim all)
+    useEscapeToClose(() => { playClickSound2(); onContinue() })
     useEffect(() => {
         playDevelopmentUnlockedSound()
     }, [])

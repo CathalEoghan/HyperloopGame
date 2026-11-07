@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import countryFlags from '../data/countryFlags.js'
 import { matchesSearch } from '../utils/search.js'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
@@ -14,13 +14,6 @@ function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lo
     const [query, setQuery] = useState('')
     const [tier, setTier] = useState(0)          // 0 = every tier
     const [selected, setSelected] = useState(null)
-
-    useEffect(() => {
-        if (hidden) return
-        const onKey = e => { if (e.key === 'Escape') onCancel() }
-        window.addEventListener('keydown', onKey)
-        return () => window.removeEventListener('keydown', onKey)
-    }, [onCancel, hidden])
 
     // The best earners first, then alphabetical
     const sorted = useMemo(

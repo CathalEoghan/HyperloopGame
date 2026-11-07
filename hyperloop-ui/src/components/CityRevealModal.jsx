@@ -3,11 +3,14 @@ import countryFlags from '../data/countryFlags.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { playClickSound2, playHoverSound, playDiceRollSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import './CityRevealModal.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { flagSrc } from '../utils/flagSrc.js'
 
 // rerollCost is what the game will actually charge: 0 with a free re-roll, less with the
 // re-roll discount (bug #64).
 function CityRevealModal({ city, onClose, onReroll, reputation, rerollCost = 15 }) {
+    // Escape = Accept. The city is already unlocked, and re-rolling costs Reputation so it is never what Escape does
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     const canReroll = reputation >= rerollCost
     const isSecret = city.name === 'Antarctic Peninsula'
 

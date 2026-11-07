@@ -2,8 +2,11 @@ import { useState, useEffect } from 'react'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import './EventModal.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 function EventModal({ event, onContinue, terminalName }) {
+    // Escape = Continue: an event popup is only a notice, the event carries on either way
+    useEscapeToClose(() => { playClickSound2(); onContinue() })
     // Count down to the event's real end time, not from the full length when the popup happens to appear (bug #122)
     const remaining = () => event.expiresAt ? Math.max(0, Math.ceil((event.expiresAt - Date.now()) / 1000)) : (event.durationSeconds || 0)
     const [secondsLeft, setSecondsLeft] = useState(remaining)

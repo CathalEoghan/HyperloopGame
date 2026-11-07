@@ -41,6 +41,7 @@ import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
 import { POSTS } from "./data/hyperLinkData.js"
 import { playPhoneNotificationSound } from "./utils/sound.js"
 import { useAttentionAlerts } from "./utils/attentionAlerts.js"
+import { useEscapeToClose } from "./utils/useEscapeToClose.js"
 import { RankManager } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
@@ -60,7 +61,7 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
 import { pickCelebrityDeparture } from './utils/celebrity.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playClickSound3, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
@@ -1731,6 +1732,17 @@ function App() {
   // over a popup, a rank-up claim re-rolling the city offer - R2-M1). Rather than keep a list of every popup, this looks
   // at what is actually on screen: a popup is a direct child of the app whose class name says "overlay".
   const popupCoversApp = useSyncExternalStore(watchForPopups, popupIsCoveringApp)
+
+  // Escape on Cities / Development / Progress / Prestige / Settings goes back to Home, like clicking the tab you are on.
+  // It only does so when nothing else wants the key: any dialog that closes on Escape is above this one in the stack, and
+  // with a popup on screen it is switched off altogether - so Escape can never skip past a delay, a farewell or greeting,
+  // or the city choice, or move the page behind them. In a search box or other field, Escape just leaves the field.
+  useEscapeToClose(() => {
+    const el = document.activeElement
+    if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) { el.blur(); return }
+    playClickSound3()
+    setActiveTab('Home')
+  }, activeTab !== 'Home' && !popupCoversApp && !showDepartureBoard)
 
   if (blockedByOtherTab) {
     return (

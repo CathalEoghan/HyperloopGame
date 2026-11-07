@@ -7,6 +7,7 @@ import batteryIcon from '../assets/misc/battery.png'
 import signalIcon from '../assets/misc/signal.png'
 import bellIcon from '../assets/misc/bell.png'
 import closeIcon from '../assets/misc/close.png'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { defaultPfp, MALE_PFPS, FEMALE_PFPS, officialPfp } from '../assets/hyperLinkAssets.js'
 export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
 
@@ -51,6 +52,7 @@ function formatPostText(text) {
 }
 
 function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = false, onToggleMute }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     const now = new Date()
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     const [likedPosts, setLikedPosts] = useState(() => {

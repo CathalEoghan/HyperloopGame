@@ -1,11 +1,13 @@
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import './RankUpModal.css'
 import './ClaimedCitiesModal.css'
 
 // Shown after "Claim all developments": everything that was unlocked, in one list instead of a reveal for each.
 // Shares its layout with the cities summary; the thumbnail takes the place of the flag and the category the place of country and tier.
 function ClaimedDevelopmentsModal({ developments, onClose }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     return (
         <div className="modal-overlay">
             <div className="modal claimed-modal" role="dialog" aria-label="Developments unlocked">

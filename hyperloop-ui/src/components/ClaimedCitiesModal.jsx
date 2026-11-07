@@ -1,11 +1,13 @@
 import countryFlags from '../data/countryFlags.js'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import './RankUpModal.css'
 import './ClaimedCitiesModal.css'
 import { flagSrc } from '../utils/flagSrc.js'
 
 // Shown after "Claim all cities": every city that was unlocked, in one list instead of a reveal for each.
 function ClaimedCitiesModal({ cities, onClose }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     return (
         <div className="modal-overlay">
             <div className="modal claimed-modal" role="dialog" aria-label="Cities unlocked">

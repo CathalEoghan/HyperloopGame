@@ -7,6 +7,7 @@ import GuideModal from '../components/GuideModal.jsx'
 import { GLOBE_QUALITY_KEY, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
 import { VERSION_LOG } from '../utils/versionLog.js'
 import { notificationsEnabled, enableNotifications, disableNotifications } from '../utils/attentionAlerts.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import './SettingsPage.css'
 
 const OptionBtn = ({ active, onClick, children }) => {
@@ -30,6 +31,7 @@ const OptionBtn = ({ active, onClick, children }) => {
 }
 
 function LegalModal({ onClose }) {
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="credits-modal" onClick={e => e.stopPropagation()}>

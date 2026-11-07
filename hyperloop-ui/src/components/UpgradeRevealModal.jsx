@@ -4,6 +4,7 @@ import developmentThumbnails from '../data/developmentThumbnails.js'
 import { EFFECT_DESCRIPTIONS } from '../utils/effectDescriptions.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
 import { cloudinaryResize } from '../utils/cloudinaryImage.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playClickSound2, playDevelopmentUnlockedSound, playHoverSound } from '../utils/sound.js'
 import './UpgradeRevealModal.css'
 
@@ -13,6 +14,8 @@ import './UpgradeRevealModal.css'
 export const CONTINUE_ALL_UPGRADES_FROM = 3
 
 function UpgradeRevealModal({ upgrade, onContinue, waiting = 0, onContinueAll }) {
+    // Escape = Continue (this one only, not Continue all)
+    useEscapeToClose(() => { playClickSound2(); onContinue() })
     useEffect(() => {
         playDevelopmentUnlockedSound()
     }, [])

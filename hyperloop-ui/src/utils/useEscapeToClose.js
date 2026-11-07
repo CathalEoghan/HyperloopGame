@@ -5,8 +5,10 @@ import { useEffect, useRef, useState } from 'react'
 // the Shop, the Schedule before the Terminal Board it opened from) instead of closing everything at once.
 //
 // Only use it for dialogs that are safe to dismiss with no decision made (Shop, Guide, Credits, Achievements,
-// the Schedule, page intros). Never for a popup the player has to answer - departures, delays, events, rank-ups
-// and reveals - where a stray Escape would pick a result for them.
+// the Schedule, page intros, Hyper-Link, event notices and the "you've unlocked..." reveals - where Escape does what
+// their own Continue/Accept button does). Never for a popup the player has to answer: a farewell or greeting, a
+// delay, or the city choice and city picker, where a stray Escape would pick a result for them. (The one odd case is
+// the "You've ranked up!" popup: it can't be dismissed, so there Escape means "continue" - the same as its button.)
 //
 // onEscape is what runs: pass the same function the dialog's own Close button runs. enabled=false opts out
 // (e.g. a board shown without a way to leave it).
