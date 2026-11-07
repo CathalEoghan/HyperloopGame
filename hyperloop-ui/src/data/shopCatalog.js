@@ -462,7 +462,7 @@ export const SHOP_ITEMS = {
         boardTheme('western', 'Western board', 40, { accent: '#a0522d' }, 'Saddle-brown lettering. Part of the Western bundle.'),
         boardTheme('paradise', 'Paradise board', 40, { accent: '#00bfa5' }, 'Tropical-teal lettering. Part of the Paradise bundle.'),
         boardTheme('wartime', 'Wartime board', 40, { accent: '#9aab6e' }, 'Khaki lettering. Part of the Wartime bundle.'),
-        boardTheme('gingerbread', 'Gingerbread board', 40, { accent: '#6b3410' }, 'Gingerbread-brown lettering. Part of the Gingerbread bundle.'),
+        boardTheme('gingerbread', 'Gingerbread board', 40, { accent: '#6b3410' }, 'Snow white lettering. Part of the Gingerbread bundle.'),
         boardTheme('dystopia', 'Dystopia board', 40, { accent: '#ff2fd1' }, 'Neon-pink lettering. Part of the Dystopia bundle.'),
     ],
 
