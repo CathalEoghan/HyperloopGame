@@ -154,7 +154,17 @@
   color: var(--ui-accent, #f5a623);
 }
 
+/* Both section headings ("Completed developments" and "Available to build") are the same flex row: the title
+   (text + count pill) and, on the Available one, the Develop-all buttons. Everything in the row is centred on
+   one line by flexbox - not nudged with vertical-align - so the pill, the title text and the buttons share a
+   centre, and the two headings treat their pills identically. min-height is the button height plus the
+   heading's padding, so the Completed heading (no buttons) is as tall as the Available one's content row and
+   both sit the same distance above their cards. */
 .section-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
   font-size: 1.1rem;
   font-weight: bold;
   margin: 16px 0 10px;
@@ -164,17 +174,30 @@
   z-index: 9;
   padding: 4px 0;
   width: 100%;
+  box-sizing: border-box;
+  min-height: 33px;
+}
+
+.section-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .section-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 26px;
+  height: 18px;
+  padding: 0 8px;
   background: #222;
   color: white;
   font-size: 0.75rem;
   font-weight: bold;
-  padding: 2px 8px;
+  line-height: 1;
   border-radius: 10px;
-  margin-left: 8px;
-  vertical-align: middle;
 }
 
 /* The two "Develop all" buttons and the Connect-all one on Cities share this look; see CitiesPage.css for
@@ -195,14 +218,9 @@
 }
 .bulk-buy-btn:hover { filter: brightness(1.1); }
 .bulk-buy-cost { display: inline-flex; align-items: center; gap: 2px; }
-.bulk-buy-row { display: flex; gap: 8px; flex-wrap: wrap; }
+.bulk-buy-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
 .section-header-available {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 16px;
   color: #555;
   border-top: 2px solid #ddd;
   padding-top: 16px;
