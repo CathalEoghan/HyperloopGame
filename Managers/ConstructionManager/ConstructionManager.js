@@ -1,5 +1,6 @@
 import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js'
 import { FIVE_SECONDS, TEN_SECONDS, TWENTY_SECONDS, FORTY_FIVE_SECONDS, TWO_MINUTES, FIVE_MINUTES } from '../TimeManager/TimeManager.js'
+import { TIER_CONNECTION_COST } from '../ProgressionManager/economyConstants.js'
 
 // Finishing a build early costs Reputation by the time left: 1 per 5 seconds, never less than 2
 export const SKIP_MS_PER_REP = 5000
@@ -97,13 +98,9 @@ export class ConstructionManager {
     }
 
     calculateTierConnectionCost(city) {
-        switch (city.tier) {
-            case 0: return 2500000;
-            case 1: return 50000;
-            case 2: return 250000;
-            case 3: return 1000000;
-            default: throw new Error("Error: tier not recognised.")
-        }
+        const cost = TIER_CONNECTION_COST[city.tier]
+        if (cost === undefined) throw new Error("Error: tier not recognised.")
+        return cost
     }
 
     startDevelopmentConstruction(development, discountedCost) {

@@ -1,6 +1,7 @@
 import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js'
 import { Upgrade } from "../../UpgradeManager/Upgrade.js";
 import { Development } from "../../DevelopmentManager/Development.js";
+import { STARTING_BALANCE, TIER_CONNECTION_COST } from './economyConstants.js';
 
 // Renaming a development, and removing one (it goes back to Available to build), each cost this much Reputation
 export const DEV_RENAME_REP_COST = 20;
@@ -44,7 +45,8 @@ const MAX_DEV_LEVEL = UPGRADE_CASH_PCTS.length - 1; // 10
 // ~1.6x per level (level 1 costs 3x the connection price, level 10 over 200x it) for a flat +40% income each
 // time - same diminishing-value shape as the development levels above, so cash still matters deep into the
 // late game even once every city is connected and every development is built and maxed.
-const LINE_BASE_COST = { 0: 2500000, 1: 50000, 2: 250000, 3: 1000000 };
+// The connection price itself - the same table the Construction Manager charges from, so a line upgrade always moves with it
+const LINE_BASE_COST = TIER_CONNECTION_COST;
 const LINE_LEVEL_CASH_MULT = 3.00; // level 1's cost, as a multiple of the city's connection price
 const LINE_LEVEL_CASH_GROWTH = 1.6; // each further level costs this much more than the one before
 const LINE_LEVEL_REP_COST = 10; // per level, flat
@@ -61,7 +63,7 @@ export class ProgressionManager {
         this.unlockedDevelopments = [];
         this.purchasedDevelopments = [];
         this.citiesUnderConstruction = [];
-        this.balance = 1000000;
+        this.balance = STARTING_BALANCE;
         this.reputation = 50;
         this.totalCashEarned = 0;
         this.rankManager = rankManager;

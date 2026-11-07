@@ -29,7 +29,7 @@ export const PRESTIGE_VALUES = {
     livestreamEvery: 100,              // ... every this many manual Work clicks in a run
     streamingMasteryFactor: 2,         // Streaming Mastery: the bonus is doubled ...
     streamingMasteryEvery: 50,         // ... and paid every this many clicks instead
-    signOnBonus: 1000000,              // Sign-On Bonus: extra cash at the start of every new run
+    signOnBonus: 1500000,              // Sign-On Bonus: extra cash at the start of every new run (the standard starting balance again, so double)
     pizzaParties: 2,                   // x2 positive event strength
     newsColumnRep: 5,                  // News Column: +5 Reputation whenever a positive event fires
     resilienceDurationFactor: 0.5,     // Resilience: negative events (the ones with a duration) last x0.5 as long

@@ -3,6 +3,8 @@ import { allDevelopments } from '../DevelopmentManager/DevelopmentRegistry.js'
 import { allUpgrades } from '../UpgradeManager/UpgradeRegistry.js'
 import { MAX_RANK } from './RankManager/RankManager.js'
 import { sanitizeDevelopmentName } from './ProgressionManager/ProgressionManager.js'
+import { STARTING_BALANCE } from './ProgressionManager/economyConstants.js'
+import { PRESTIGE_VALUES } from './PrestigeManager/prestigeUpgrades.js'
 
 const SAVE_KEY = 'hyperloop_save'
 
@@ -296,11 +298,11 @@ function validateSave(save) {
     if (save.balance < 0) return false
     if (save.reputation < 0) return false
     if (save.rank < 1 || save.rank > MAX_RANK) return false
-    // Every game starts with £1,000,000 and £0 earned, so the balance can be up to that much
-    // above the total earned (bug #56).
-    
+    // Every game starts with STARTING_BALANCE and £0 earned, and a Sign-On Bonus adds its amount on top of that
+    // straight into the balance (not as earned cash), so the balance can be up to that much above the total earned
+    // (bug #56). The bonus is allowed for everyone: a save doesn't say whether the player owns it.
     // The two totals round differently, so allow a pound of slack
-    if (save.balance > save.totalCashEarned + 1_000_001) return false
+    if (save.balance > save.totalCashEarned + STARTING_BALANCE + PRESTIGE_VALUES.signOnBonus + 1) return false
     if (save.purchasedCities.length > allCities.length) return false
     if (save.purchasedDevelopments.length > allDevelopments.length) return false
     if (save.purchasedUpgrades.length > allUpgrades.length) return false
@@ -426,7 +428,7 @@ export function loadGame(progressionManager, rankManager) {
             )
         }
 
-        progressionManager.balance = save.balance ?? 1000000
+        progressionManager.balance = save.balance ?? STARTING_BALANCE
         progressionManager.reputation = save.reputation ?? 50
         progressionManager.totalCashEarned = save.totalCashEarned ?? 0
         rankManager.rank = save.rank ?? 1
