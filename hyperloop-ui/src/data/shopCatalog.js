@@ -507,7 +507,7 @@ export const SHOP_ITEMS = {
         }, 'Pink and cream. Part of the Kitty bundle.'),
         generalTheme('fairy', 'Fairy', 75, {
             barBg: 'rgb(243, 235, 255)', accent: '#b794f6',
-            tickerBg: '#160f26', tickerText: '#d9c7ff',
+            tickerBg: '#160f26', tickerText: '#6ee7b7',
             departureArc: '#b794f6', arrivalArc: '#6ee7b7',
         }, 'Lavender and mint. Part of the Fairy bundle.'),
         generalTheme('poltergeist', 'Poltergeist', 75, {
@@ -573,9 +573,9 @@ export const SHOP_ITEMS = {
         }, 'Matte khaki on dark olive drab. Part of the Wartime bundle.'),
         generalTheme('gingerbread', 'Gingerbread', 75, {
             barBg: 'rgb(255, 240, 220)', accent: '#6b3410',
-            tickerBg: '#7a1414', tickerText: '#177f3d',
-            departureArc: '#6b3410', arrivalArc: '#177f3d',
-        }, 'Warm gingerbread brown, trimmed in holly red and pine green. Part of the Gingerbread bundle.'),
+            tickerBg: '#6b3410', tickerText: '#00a53c',
+            departureArc: '#9e1515', arrivalArc: '#00a53c',
+        }, 'Warm gingerbread brown, trimmed in holly red and festive green. Part of the Gingerbread bundle.'),
         generalTheme('dystopia', 'Dystopia', 75, {
             barBg: 'rgb(10, 6, 18)', barText: '#e8d9ff', barTextMuted: '#b06ee0', accent: '#ff2fd1',
             tickerBg: '#000000', tickerText: '#ff2fd1',
