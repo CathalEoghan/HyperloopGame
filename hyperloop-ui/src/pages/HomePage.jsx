@@ -10,6 +10,7 @@ import { formatTime } from '../utils/time.js'
 import { makeStarPositions } from '../utils/stars.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
 import cashIcon from '../assets/misc/cash.png'
+import openEyeIcon from '../assets/misc/open-eye.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import './HomePage.css'
 import { flagSrc } from '../utils/flagSrc.js'
@@ -1068,7 +1069,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                             })
                         }}
                     >
-                        {showOwned ? '👁 All cities' : '👁 Owned only'}
+                        <span className="globe-toggle-eye" style={{ '--eye-icon': `url(${openEyeIcon})` }} aria-hidden="true" />
+                        {showOwned ? 'All cities' : 'Owned only'}
                     </button>
                 <div className="globe-view-switch" role="tablist" aria-label="Globe view">
                     <button

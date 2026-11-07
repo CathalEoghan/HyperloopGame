@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PICS, FEATURED_THEME_ID, FEATURED_TAGLINE } from '../data/shopCatalog.js'
 import { isOwned, isBundleOwned, bundlePieces, bundlePrice, bundleOriginalPrice, getEquippedItem } from '../utils/cosmetics.js'
-import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, stopPreviewSound } from '../utils/sound.js'
+import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkPreviewSound, stopPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import paletteIcon from '../assets/misc/palette.png'
 import boardIcon from '../assets/misc/board.png'
@@ -187,15 +187,13 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
         setTimeout(() => setShaking(null), 400)
     }
 
-    // The Preview button. A Work sound still never shows a Stop state - clicking it (on the same card or a
-    // different one) always just plays another sample, the same spirit as mashing the real Work button (which
-    // still overlaps when mashed - see playWorkClickSound in sound.js, unaffected) - but it no longer layers that
-    // new sample on top of whatever Work-sound preview clip was already going; playPreviewSound cancels that
-    // first regardless, it's only the toggle-to-Stop/early-stop behaviour that Work sounds skip. Everything else
-    // toggles: clicking Preview again, or clicking it on another card, stops the clip; letting it finish on its
-    // own does too, via the Audio's 'ended' event.
+    // The Preview button. A Work sound never shows a Stop state - clicking it (on the same card or a different one)
+    // always plays another sample, like mashing the real Work button: the clip before it is quietened and rings out
+    // underneath rather than being cut off (playWorkPreviewSound in sound.js). Everything else toggles: clicking
+    // Preview again, or clicking it on another card, stops the clip; letting it finish on its own does too, via the
+    // Audio's 'ended' event.
     const handlePreviewClick = (item, key) => {
-        if (categoryId === 'workSound') { playPreviewSound(item.srcs || item.src); return }
+        if (categoryId === 'workSound') { playWorkPreviewSound(item.srcs || item.src); return }
         if (previewingKey === key) { stopPreviewSound(); setPreviewingKey(null); return }
         const audio = playPreviewSound(item.srcs || item.src)
         if (!audio) return

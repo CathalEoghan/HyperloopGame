@@ -1,3 +1,4 @@
+import { createVoiceManager } from './workVoices.js'
 import click_sound_2 from '../assets/sounds/click_sound_2.mp3'
 import click_sound_3 from '../assets/sounds/click_sound_3.mp3'
 import rankUpSound from '../assets/sounds/rankUpSound.mp3'
@@ -185,28 +186,9 @@ function playRandomNoRepeat(pool, lastRef, category) {
     return play(pick, category)
 }
 
-// Mashing the Work button fast enough starts a new copy on every single click, with nothing to stop them piling
-// up - three or four different samples all ringing at once reads as one harsh overlapping screech rather than a
-// flourish, most noticeable on samples with a longer sustain (Princess's harp glissandos ring much longer than,
-// say, a quack). So at most MAX_CONCURRENT_WORK_CLICKS copies are ever sounding at once: once that cap is hit,
-// the oldest one is faded out quickly (rather than cut off instantly, which itself clicks/pops) to make room for
-// the new one. Normal, human-paced tapping never gets anywhere near the cap.
-const MAX_CONCURRENT_WORK_CLICKS = 2
-const WORK_CLICK_FADE_OUT_MS = 60
-let activeWorkClickAudios = []
-
-function fadeOutAndStop(audio) {
-    const startVolume = audio.volume
-    const start = performance.now()
-    const step = () => {
-        if (audio.paused) return
-        const t = (performance.now() - start) / WORK_CLICK_FADE_OUT_MS
-        if (t >= 1) { audio.pause(); return }
-        audio.volume = startVolume * (1 - t)
-        requestAnimationFrame(step)
-    }
-    requestAnimationFrame(step)
-}
+// Work clicks (and the Shop's Work previews) ring out rather than cutting each other off; the older ones are
+// quietened as new ones arrive so fast tapping can't stack into a screech. How, and why, is in workVoices.js.
+const workVoices = createVoiceManager()
 
 // The Work button's sound is whichever one is equipped in the Shop (the classic click by default). A 'special'-tier
 // work sound can equip several samples (srcs) instead of one.
@@ -218,12 +200,31 @@ export function playWorkClickSound() {
     if (now - lastWorkClickAt < WORK_CLICK_MIN_GAP_MS) return
     lastWorkClickAt = now
     const item = getEquippedItem('workSound')
-    activeWorkClickAudios = activeWorkClickAudios.filter(a => !a.ended && !a.paused)
-    while (activeWorkClickAudios.length >= MAX_CONCURRENT_WORK_CLICKS) {
-        fadeOutAndStop(activeWorkClickAudios.shift())
-    }
     const audio = playRandomNoRepeat(item?.srcs?.length ? item.srcs : [item?.src ?? workClickSound], lastWorkClick, 'workClicks')
-    if (audio) activeWorkClickAudios.push(audio)
+    if (audio) workVoices.add(audio)
+}
+
+// The Shop's Preview of a Work sound behaves like the real Work button: pressing it again before the clip has
+// finished adds another click (the older one quietened) instead of cutting the first off. Like every preview it
+// only follows Master Sound, not the Work Clicks slider.
+const lastWorkPreview = { src: null }
+let lastWorkPreviewAt = 0
+export function playWorkPreviewSound(src) {
+    if (!canPlay() || !entered) return null
+    const volume = categoryMultiplier(null)
+    if (volume <= 0) return null
+    const now = performance.now()
+    if (now - lastWorkPreviewAt < WORK_CLICK_MIN_GAP_MS) return null
+    lastWorkPreviewAt = now
+    const pool = Array.isArray(src) ? src : [src]
+    const choices = pool.length > 1 ? pool.filter(s => s !== lastWorkPreview.src) : pool
+    const pick = choices[Math.floor(Math.random() * choices.length)]
+    lastWorkPreview.src = pick
+    const audio = new Audio(pick)
+    audio.volume = volume
+    audio.play().catch(() => {})
+    workVoices.add(audio, { preview: true })
+    return audio
 }
 
 // The Shop's Preview button - for every category, Work sounds included: a sound meant to play once, not be
@@ -249,6 +250,7 @@ export function playPreviewSound(src) {
 // Stops whichever Shop preview is currently playing. Called when the Shop closes, so a preview doesn't keep
 // playing on top of the game once the player has left it.
 export function stopPreviewSound() {
+    workVoices.stopPreviews()
     if (previewAudio) { previewAudio.pause(); previewAudio.currentTime = 0; previewAudio = null }
 }
 // The Terminal Board's own buttons (schedule, automate, the board tabs, Farewell, Delay) use these instead of the
