@@ -147,6 +147,15 @@ export function applyCosmetics(state = readCosmetics()) {
         }
     }
     root.style.setProperty('--ui-accent-on-dark', onDark)
+    // The globe page's controls (Owned only, Connections / Active Loops, the "N cities connected" line, the loops
+    // panel) are accent-coloured text and outlines on a near-black bar. A genuinely dark accent (Gingerbread's brown)
+    // is nearly invisible there, so for those themes - and only those - they switch to plain white; every other
+    // theme keeps its accent exactly as set. --globe-active-text is the text on the selected tab, which is filled
+    // with the accent itself: white on a dark accent, the usual near-black otherwise.
+    const GLOBE_BG = relativeLuminance('#0a0a1a')
+    const accentTooDarkForGlobe = accentLum !== null && contrastRatio(accentLum, GLOBE_BG) < 4.5
+    root.style.setProperty('--ui-accent-on-globe', accentTooDarkForGlobe ? '#ffffff' : accent)
+    root.style.setProperty('--globe-active-text', contrastText === LIGHT_TEXT ? '#ffffff' : '#0a0a1a')
 }
 
 // The globe's route colours as numbers for three.js, from the equipped general theme (gold departures, blue arrivals by default)
