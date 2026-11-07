@@ -113,17 +113,25 @@
 /* Folded away: the arrow turns to point right */
 .progress-section-closed .progress-chevron { transform: rotate(-90deg); }
 
-/* A folded grid with rewards waiting */
-.progress-claim-badge {
+/* "Claim all (N)": on a section's header whenever any reward is waiting in it, even folded (it replaced the old "N to claim" badge) */
+.progress-claim-all {
     font-family: 'Courier New', monospace;
     font-size: 0.75rem;
     font-weight: bold;
     color: #222;
     background: #FFD700;
+    border: 2px solid #222;
     border-radius: 10px;
-    padding: 3px 10px;
+    padding: 1px 10px;
     white-space: nowrap;
+    cursor: var(--cursor-pointer, pointer);
     animation: gold-pulse 2s ease-in-out infinite;
+    transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.progress-claim-all:hover {
+    background: #ffe44d;
+    transform: scale(1.06);
 }
 
 /* Right-hand "Hide" / "Show" label */

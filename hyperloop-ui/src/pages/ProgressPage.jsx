@@ -14,6 +14,7 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_VALUES, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import PageIntroModal from '../components/PageIntroModal.jsx'
+import ClaimedRewardsModal from '../components/ClaimedRewardsModal.jsx'
 import giftIcon from '../assets/misc/gift.png'
 import growthIcon from '../assets/misc/growth.png'
 import starIcon from '../assets/misc/star.png'
@@ -88,8 +89,19 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             </span>
             <span className="progress-section-title">{title}</span>
             {extra}
-            {collapsed[id] && claimable?.[id] > 0 && (
-                <span className="progress-claim-badge">{claimable[id]} to claim</span>
+            {claimable?.[id] > 0 && (
+                // Whenever a reward is waiting, folded or not - so it also does the old badge's job of reminding you on a
+                // folded header. Inside the fold/unfold header, so a click or Enter/Space on it must not also fold the section
+                <button
+                    type="button"
+                    className="progress-claim-all"
+                    aria-label={`Claim all ${claimable[id]} waiting ${claimable[id] === 1 ? 'reward' : 'rewards'} in ${id}`}
+                    onMouseEnter={e => { e.stopPropagation(); playHoverSound() }}
+                    onKeyDown={e => e.stopPropagation()}
+                    onClick={e => { e.stopPropagation(); playClickSound2(); claimAll(id, id) }}
+                >
+                    Claim all ({claimable[id]})
+                </button>
             )}
             <span className="progress-toggle-hint">{collapsed[id] ? 'Show' : 'Hide'}</span>
         </h2>
@@ -143,6 +155,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     const [prestige] = useState(() => new PrestigeManager())
     const [floats, setFloats] = useState([])
     const [fading, setFading] = useState(new Set())
+    const [claimedSummary, setClaimedSummary] = useState(null)
 
     // Halved again from 1250/2500/5000/12500/25000 (themselves already halved once, see git history) now that
     // Developments and Prestige upgrades have their own claimable cards alongside Cities and Countries: the
@@ -159,6 +172,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         if (roll < 98) return { type: 'rep', amount: 5 }
         return { type: 'rep', amount: 10 }
     }
+    // The boost upgrade (x2) and Viral Superstar multiply each other
+    const getRewardFactor = () => ((purchasedUpgrades || []).some(u => u.effectType === 'progressRewardBoost') ? 2 : 1)
+        * (PrestigeManager.owns('viralSuperstar') ? PRESTIGE_VALUES.viralSuperstar : 1)
     // Shared by every claimable grid (Cities, Countries, Developments, Prestige upgrades) - only the Set/ref/
     // setState/localStorage key backing "claimed" differs, so that trio is passed in rather than duplicated.
     const makeClaimHandler = (claimedSetRef, setClaimedState, storageKey) => (e, key) => {
@@ -167,11 +183,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         // Save the claim at the same moment the reward is paid, so leaving the page or reloading
         // during the fade-out can't make the card claimable again (bug #59).
         localStorage.setItem(storageKey, JSON.stringify([...claimedSetRef.current]))
-        const hasBoost = (purchasedUpgrades || []).some(u => u.effectType === 'progressRewardBoost')
         const reward = getRandomReward()
-        // The boost upgrade (x2) and Viral Superstar multiply each other
-        const rewardFactor = (hasBoost ? 2 : 1) * (PrestigeManager.owns('viralSuperstar') ? PRESTIGE_VALUES.viralSuperstar : 1)
-        reward.amount *= rewardFactor
+        reward.amount *= getRewardFactor()
         const rect = e.currentTarget.getBoundingClientRect()
         const id = Date.now() + Math.random()
         setFloats(prev => [...prev, { id, reward, x: rect.left + rect.width / 2, y: rect.top }])
@@ -187,6 +200,48 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     }
     const handleCardClick = makeClaimHandler(claimedRef, setClaimed, 'hyperloop_progress_rewards')
     const handlePrestigeCardClick = makeClaimHandler(claimedPrestigeRef, setClaimedPrestige, 'hyperloop_prestige_upgrade_rewards')
+
+    // "Claim all" on a section header: every reward still waiting in that grid, each rolled exactly as if its card had been
+    // clicked (same odds, same boosts), but paid as one total and reported in one popup rather than a float per card.
+    // As with a single claim, the claimed keys are saved in the same moment the reward is paid (bug #59), and a key
+    // already claimed - or fading out after a click a moment ago - is skipped, so a double click can't pay twice.
+    const claimAll = (sectionId, title) => {
+        const groups = {
+            countries: [{ ref: claimedRef, set: setClaimed, storageKey: 'hyperloop_progress_rewards',
+                keys: [...purchasedCountries].filter(c => sortedCountries.includes(c)).map(c => 'country:' + c) }],
+            cities: [{ ref: claimedRef, set: setClaimed, storageKey: 'hyperloop_progress_rewards',
+                keys: purchasedCities.filter(c => visibleCities.some(v => v.name === c.name)).map(c => 'city:' + c.name) }],
+            developments: [
+                { ref: claimedRef, set: setClaimed, storageKey: 'hyperloop_progress_rewards',
+                    keys: collectibleDevelopments.filter(d => getDevelopmentState(d) === 'connected').map(d => 'dev:' + d.name) },
+                { ref: claimedPrestigeRef, set: setClaimedPrestige, storageKey: 'hyperloop_prestige_upgrade_rewards',
+                    keys: PRESTIGE_UPGRADES.filter(u => PrestigeManager.owns(u.id)).map(u => 'prestige:' + u.id) },
+            ],
+        }[sectionId] || []
+        const factor = getRewardFactor()
+        let cash = 0, rep = 0, count = 0
+        groups.forEach(({ ref, set, storageKey, keys }) => {
+            const fresh = keys.filter(k => !ref.current.has(k) && !fading.has(k))
+            if (fresh.length === 0) return
+            fresh.forEach(k => ref.current.add(k))
+            localStorage.setItem(storageKey, JSON.stringify([...ref.current]))
+            fresh.forEach(() => {
+                const reward = getRandomReward()
+                if (reward.type === 'cash') cash += reward.amount * factor
+                else rep += reward.amount * factor
+                count++
+            })
+            setFading(prev => new Set([...prev, ...fresh]))
+            setTimeout(() => {
+                set(prev => new Set([...prev, ...fresh]))
+                setFading(prev => { const s = new Set(prev); fresh.forEach(k => s.delete(k)); return s })
+            }, 500)
+        })
+        if (count === 0) return
+        if (cash > 0) { playFarewellAcceptSound(); onCollectReward({ type: 'cash', amount: cash }) }
+        if (rep > 0) { playReputationWorkBonusSound(); onCollectReward({ type: 'rep', amount: rep }) }
+        setClaimedSummary({ cash, rep, count, label: title })
+    }
 
     const antarcticaUnlocked = purchasedCities.some(p => p.continent === 'Antarctica')
     const visibleCities = allCities.filter(c => c.continent !== 'Antarctica' || antarcticaUnlocked)
@@ -465,7 +520,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                 <PageIntroModal title="Welcome to Progress" onClose={closeIntro} points={[
                     { icon: giftIcon, text: <>Every city, country and development you've collected has a <strong>one-off reward</strong> waiting - click its card for a small, random payout of cash or Reputation.</> },
                     { icon: growthIcon, text: <><strong>General Stats</strong> tracks this run's lifetime totals, and <strong>Active Bonuses</strong> lists every passive boost currently stacked on your income.</> },
-                    { icon: starIcon, text: <>Sections can be folded away to save space - a badge stays on a collapsed header to remind you what's still <strong>waiting to be claimed</strong>.</> },
+                    { icon: starIcon, text: <>Sections can be folded away to save space - a <strong>Claim all</strong> button stays on the header, folded or not, for whatever is still <strong>waiting to be claimed</strong>.</> },
                 ]} />
             )}
             <div className="progress-page" style={{ height: `calc(100vh - ${topOffset + 141}px)` }}>
@@ -599,6 +654,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     </div>}
                 </div>
             </div>
+            {claimedSummary && <ClaimedRewardsModal summary={claimedSummary} onClose={() => setClaimedSummary(null)} />}
             {floats.map(f => (
                 <div key={f.id} style={{
                     position: 'fixed', left: f.x, top: f.y,
