@@ -641,12 +641,17 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 o.podGlow.material.opacity = isLit ? 0.7 : 0.4
                 o.podTrail.material.color.setHex(col)
                 o.podTrail.material.opacity = isLit ? 0.85 : 0.6
+                // The halo (the wide tube shown while highlighted) and the arrows are built once, when the loop first appears,
+                // and a loop can run for hours - so they have to follow the equipped theme here too, like everything above.
+                // Otherwise a loop already running when the theme changed kept the old theme's halo and arrows until it ended.
+                o.halo.material.color.setHex(col)
                 o.line.material.opacity = anyLit ? (isLit ? 1 : 0.3) : 0.8
                 o.under.material.opacity = anyLit && !isLit ? 0.12 : 0.35
                 o.halo.visible = isLit
                 o.group.renderOrder = isLit ? 2 : 1
                 ;[o.under, o.line, o.halo, o.pod, o.podEdges, o.podGlow, o.podTrail].forEach(m => { m.renderOrder = isLit ? 3 : 1 })
                 o.arrows.forEach((a, k) => {
+                    a.material.color.setHex(col)
                     a.visible = isLit
                     if (!isLit) return
                     const t = ((k / ARROW_COUNT) + now / 9000) % 1   // drifts slowly the way the loop travels
