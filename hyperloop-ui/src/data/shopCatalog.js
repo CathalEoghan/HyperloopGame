@@ -512,7 +512,7 @@ export const SHOP_ITEMS = {
         }, 'Lavender and mint. Part of the Fairy bundle.'),
         generalTheme('poltergeist', 'Poltergeist', 75, {
             barBg: 'rgb(18, 20, 18)', barText: '#a8d6a0', barTextMuted: '#a8d6a0', accent: '#9fffb0',
-            tickerBg: '#000000', tickerText: '#7cff6b',
+            tickerBg: '#000000', tickerText: '#c4b5fd',
             departureArc: '#9fffb0', arrivalArc: '#c4b5fd',
         }, 'Sickly green on near-black. Part of the Poltergeist bundle.'),
         generalTheme('playroom', 'Playroom', 75, {
@@ -522,7 +522,7 @@ export const SHOP_ITEMS = {
         }, 'Crayon-box colours. Part of the Playroom bundle.'),
         generalTheme('starlight', 'Starlight', 75, {
             barBg: 'rgb(10, 10, 20)', barText: '#39ffc9', barTextMuted: '#a79fc9', accent: '#c4b5fd',
-            tickerBg: '#000000', tickerText: '#39ffc9',
+            tickerBg: '#000000', tickerText: '#c4b5fd',
             departureArc: '#c4b5fd', arrivalArc: '#39ffc9',
         }, 'Indigo and cyan. Part of the Starlight bundle.'),
         generalTheme('buccaneer', 'Buccaneer', 75, {
@@ -532,7 +532,7 @@ export const SHOP_ITEMS = {
         }, 'Old gold and sea teal. Part of the Buccaneer bundle.'),
         generalTheme('princess', 'Princess', 75, {
             barBg: 'rgb(255, 244, 250)', accent: '#f0a8d0',
-            tickerBg: '#1a0514', tickerText: '#f6c7e4',
+            tickerBg: '#1a0514', tickerText: '#d4af37',
             departureArc: '#f0a8d0', arrivalArc: '#d4af37',
         }, 'Rose and gold. Part of the Princess bundle.'),
         generalTheme('jazz', 'Jazz', 75, {
@@ -542,7 +542,7 @@ export const SHOP_ITEMS = {
         }, 'Smoky goldenrod and burgundy. Part of the Jazz bundle.'),
         generalTheme('duck', 'Duck', 75, {
             barBg: 'rgb(255, 248, 224)', accent: '#ffcc33',
-            tickerBg: '#1a1506', tickerText: '#f9f500',
+            tickerBg: '#1a1506', tickerText: '#2e8b8b',
             departureArc: '#f9f500', arrivalArc: '#2e8b8b',
         }, 'Sunny yellow and pond teal. Part of the Duck bundle.'),
         generalTheme('woof', 'Woof', 75, {
@@ -562,7 +562,7 @@ export const SHOP_ITEMS = {
         }, 'Sun-baked tan and saddle brown, sagebrush green. Part of the Western bundle.'),
         generalTheme('paradise', 'Paradise', 75, {
             barBg: 'rgb(224, 248, 245)', accent: '#00bfa5',
-            tickerBg: '#07262a', tickerText: '#00bfa5',
+            tickerBg: '#07262a', tickerText: '#ff5c8a',
             departureArc: '#00bfa5', arrivalArc: '#ff5c8a',
         }, 'Turquoise and hibiscus pink. Part of the Paradise bundle.'),
 
@@ -573,7 +573,7 @@ export const SHOP_ITEMS = {
         }, 'Matte khaki on dark olive drab. Part of the Wartime bundle.'),
         generalTheme('gingerbread', 'Gingerbread', 75, {
             barBg: 'rgb(255, 240, 220)', accent: '#6b3410',
-            tickerBg: '#2a1006', tickerText: '#f0c891',
+            tickerBg: '#2a1006', tickerText: '#7a1414',
             departureArc: '#6b3410', arrivalArc: '#7a1414',
         }, 'Warm gingerbread brown, trimmed in holly red. Part of the Gingerbread bundle.'),
         generalTheme('dystopia', 'Dystopia', 75, {
