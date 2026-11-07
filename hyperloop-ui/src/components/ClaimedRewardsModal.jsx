@@ -15,7 +15,7 @@ function ClaimedRewardsModal({ summary, onClose }) {
     return (
         <div className="modal-overlay">
             <div className="modal claimed-modal claimed-rewards-modal" role="dialog" aria-label="Rewards collected">
-                <h2 className="reveal-heading">You've collected {count} {count === 1 ? 'reward' : 'rewards'}!</h2>
+                <h2 className="reveal-heading"><strong>You've collected {count} {count === 1 ? 'reward' : 'rewards'}!</strong></h2>
                 <p className="claimed-rewards-sub">From your {label}</p>
                 <div className="claimed-rewards-totals">
                     {cash > 0 && (
