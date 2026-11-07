@@ -2119,7 +2119,7 @@ export const POSTS = {
             'So many new faces at {terminalName}! If you\'re arriving for {occasion}, we hope you have an unforgettable time 🥳',
             '{terminalName} is buzzing! It\'s amazing to see so many travelers coming together for {occasion} 🗺️',
             'Welcome to the city! Starting your trip at {terminalName} for {occasion}? Ask our team if you need directions! 🧭',
-            'Packed concourses and bright smiles — welcome to all {occasion} attendees passing through {terminalName}! ✨',
+            'Packed concourses and bright smiles — welcome to everyone attending {occasion} and passing through {terminalName}! ✨',
         ],
         record_day: [
             'Today is shaping up to be a record-breaking day at {terminalName}! Thank you to every single passenger 🎉',

@@ -379,7 +379,7 @@ function substituteText(text, data, gameState) {
         .replace(/\{finalCallCity\}/g, data.finalCallCity || '')
         .replace(/\{goToGateCity\}/g, data.goToGateCity || '')
         .replace(/\{departedCity\}/g, data.departedCity || '')
-        .replace(/\{occasion\}/g, data.occasion || 'the big event')
+        .replace(/\{occasion\}/g, data.occasion || 'a big event')
         .replace(/\{delayedCity\}/g, data.delayedCity || '')
         .replace(/\{gateNumber\}/g, data.gateNumber || '')
         .replace(/\{campaignCountry\}/g, data.campaignCountry || '')
@@ -529,7 +529,7 @@ export function generateOfficialEventPost(gameState) {
     const text = pool[Math.floor(Math.random() * pool.length)]
     const substituted = text
         .replace(/\{terminalName\}/g, () => terminalName)
-        .replace(/\{occasion\}/g, trigger.data?.occasion || 'the big event')
+        .replace(/\{occasion\}/g, trigger.data?.occasion || 'a big event')
         .replace(/\{delayedCity\}/g, trigger.data?.delayedCity || '')
         .replace(/\{loopCode\}/g, trigger.data?.loopCode || '')
         .replace(/\{cityCount\}/g, gameState.purchasedCities?.length || 0)
