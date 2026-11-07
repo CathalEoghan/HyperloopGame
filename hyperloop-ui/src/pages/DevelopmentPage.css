@@ -385,7 +385,11 @@
 
 .modal .closeButton:hover {
   background-color: var(--ui-accent, #f5a623) !important;
-  color: #333 !important;
+  /* Same fix as the City "Connect" button's hover (see cosmetics.js) - a flat #333 went nearly invisible against
+     a dark theme accent like Gingerbread's brown. This selector isn't scoped to this page in practice - with no
+     CSS module scoping, it's the one actually governing every ".modal .closeButton:hover" in the app (Cities'
+     own version of this rule never wins the cascade), so this single fix covers all of them. */
+  color: var(--ui-accent-contrast, #222222) !important;
 }
 
 .construction-overlay {

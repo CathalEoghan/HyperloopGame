@@ -49,7 +49,9 @@
 }
 
 .stat-value {
-    color: var(--ui-accent, #f5a623);
+    /* --ui-accent-on-dark rather than the accent itself - some themes' accent is too dark to read on this
+       card's #333, and the plain accent went close to invisible there (Gingerbread worst of all). */
+    color: var(--ui-accent-on-dark, var(--ui-accent, #f5a623));
     font-size: 0.95rem;
     font-weight: bold;
     font-family: 'Courier New', monospace;
@@ -132,7 +134,7 @@
     font-weight: bold;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-dark, var(--ui-accent, #f5a623));
     border: 1px solid color-mix(in srgb, var(--ui-accent, #f5a623) 60%, transparent);
     border-radius: 12px;
     padding: 3px 12px;
@@ -140,7 +142,7 @@
 
 .progress-section-toggle:hover .progress-toggle-hint {
     background: var(--ui-accent, #f5a623);
-    color: #222;
+    color: var(--ui-accent-contrast, #222222);
 }
 
 .progress-section-header-row {
@@ -152,7 +154,7 @@
 
 .progress-fraction {
     background: #222;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-dark, var(--ui-accent, #f5a623));
     font-family: 'Courier New', monospace;
     font-size: 0.85rem;
     padding: 3px 12px;

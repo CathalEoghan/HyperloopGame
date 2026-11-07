@@ -99,6 +99,15 @@ function relativeLuminance(hex) {
     return 0.2126 * chan(r) + 0.7152 * chan(g) + 0.0722 * chan(b)
 }
 const contrastRatio = (l1, l2) => { const [hi, lo] = l1 > l2 ? [l1, l2] : [l2, l1]; return (hi + 0.05) / (lo + 0.05) }
+// Nudges a "#rrggbb" colour toward white by the given fraction (0-1), keeping its hue - used below to lighten
+// an accent that's too dark to read as text on a dark card, without changing its colour family.
+function blendTowardWhite(hex, pct) {
+    const match = /^#([0-9a-f]{6})$/i.exec(hex)
+    if (!match) return hex
+    const [r, g, b] = [0, 2, 4].map(i => parseInt(match[1].slice(i, i + 2), 16))
+    const mix = c => Math.round(c + (255 - c) * pct)
+    return '#' + [mix(r), mix(g), mix(b)].map(c => c.toString(16).padStart(2, '0')).join('')
+}
 
 // Puts the equipped themes onto the page as CSS variables. Safe to call any time; call it on start-up and after any change.
 export function applyCosmetics(state = readCosmetics()) {
@@ -123,6 +132,21 @@ export function applyCosmetics(state = readCosmetics()) {
     const contrastText = accentLum === null ? DARK_TEXT
         : contrastRatio(1, accentLum) > contrastRatio(relativeLuminance(DARK_TEXT), accentLum) ? LIGHT_TEXT : DARK_TEXT
     root.style.setProperty('--ui-accent-contrast', contrastText)
+    // A second case: several dark cards (the Progress page's stat cards and section headers among them) use the
+    // accent as the TEXT colour on a fixed dark background, not as a background of its own - that reads fine for
+    // most themes but a genuinely dark accent (Gingerbread, Western, Rockstar) is then dark text on a dark card.
+    // Nudge just those toward white, in the accent's own hue, until it clears a readable contrast; everything
+    // else keeps its accent exactly as the theme set it.
+    const DARK_CARD_TEXT = relativeLuminance('#222222')
+    let onDark = accent
+    if (accentLum !== null) {
+        let lum = accentLum
+        for (let pct = 0; pct <= 0.8 && contrastRatio(lum, DARK_CARD_TEXT) < 4.5; pct += 0.05) {
+            onDark = blendTowardWhite(accent, pct)
+            lum = relativeLuminance(onDark)
+        }
+    }
+    root.style.setProperty('--ui-accent-on-dark', onDark)
 }
 
 // The globe's route colours as numbers for three.js, from the equipped general theme (gold departures, blue arrivals by default)
