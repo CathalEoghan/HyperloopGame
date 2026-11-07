@@ -285,7 +285,7 @@
     letter-spacing: 0.5px;
 }
 
-.city-stat-box strong { color: var(--ui-accent, #f5a623); }
+.city-stat-box strong { color: var(--ui-accent-readable, var(--ui-accent, #f5a623)); }
 .city-stat-label { color: #aaa; }
 
 /* Collapse controls */

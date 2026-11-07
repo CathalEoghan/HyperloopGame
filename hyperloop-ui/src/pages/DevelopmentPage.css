@@ -151,7 +151,7 @@
 }
 
 .total-revenue-banner strong {
-  color: var(--ui-accent, #f5a623);
+  color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
 }
 
 /* Both section headings ("Completed developments" and "Available to build") are the same flex row: the title

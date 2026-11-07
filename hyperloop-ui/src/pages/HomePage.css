@@ -30,7 +30,7 @@
 }
 
 .globe-cities {
-    color: var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     font-family: 'Courier New', monospace;
     font-size: 0.75rem;
     margin: 1px 0 0;
@@ -128,8 +128,8 @@
 
 .globe-toggle-btn {
     background: rgba(0, 0, 0, 0.6);
-    color: var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
-    border: 1px solid var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
+    border: 1px solid var(--ui-accent-readable, var(--ui-accent, #f5a623));
     border-radius: 6px;
     padding: 6px 14px;
     font-family: 'Courier New', monospace;
@@ -167,7 +167,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
     letter-spacing: 2px;
@@ -209,7 +209,7 @@
 
 .globe-view-switch {
     display: inline-flex;
-    border: 1px solid var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    border: 1px solid var(--ui-accent-readable, var(--ui-accent, #f5a623));
     border-radius: 6px;
     overflow: hidden;
     background: rgba(0, 0, 0, 0.6);
@@ -218,7 +218,7 @@
 
 .globe-view-btn {
     background: transparent;
-    color: var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     border: none;
     font-family: 'Courier New', monospace;
     font-size: 0.75rem;
@@ -232,7 +232,7 @@
 }
 
 .globe-view-btn + .globe-view-btn {
-    border-left: 1px solid var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    border-left: 1px solid var(--ui-accent-readable, var(--ui-accent, #f5a623));
 }
 
 .globe-view-btn:hover {
@@ -264,7 +264,7 @@
     display: flex;
     flex-direction: column;
     background: rgba(0, 0, 0, 0.72);
-    border: 1px solid var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    border: 1px solid var(--ui-accent-readable, var(--ui-accent, #f5a623));
     border-radius: 8px;
     overflow: hidden;
     font-family: 'Courier New', monospace;
@@ -279,7 +279,7 @@
     width: 100%;
     background: transparent;
     border: none;
-    color: var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     font-family: inherit;
     font-size: 0.78rem;
     letter-spacing: 1px;
@@ -307,7 +307,7 @@
 }
 
 .loops-panel-caret {
-    color: var(--ui-accent-on-globe, var(--ui-accent, #f5a623));
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
 }
 
 .loops-live-dot {
