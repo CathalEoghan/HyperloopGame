@@ -431,18 +431,18 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                         padding: '4px 12px', borderRadius: '4px', cursor: 'var(--cursor-pointer, pointer)',
                         letterSpacing: '1px', transition: 'color 0.2s, border-color 0.2s'
                     }}
-                    onMouseEnter={e => { playHoverSound(); e.target.style.color = 'var(--board-accent, #f5a623)'; e.target.style.borderColor = 'var(--board-accent, #f5a623)' }}
+                    onMouseEnter={e => { playHoverSound(); e.target.style.color = 'var(--board-accent-readable, var(--board-accent, #f5a623))'; e.target.style.borderColor = 'var(--board-accent-readable, var(--board-accent, #f5a623))' }}
                     onMouseLeave={e => { e.target.style.color = '#888'; e.target.style.borderColor = '#444' }}
                     >✕ CLOSE</button>
                 )}
             </div>
             {list.length === 0 ? (
                 purchasedCities.length <= 1 ? (
-                    <p style={{ color: 'var(--board-accent, #f5a623)', fontFamily: 'Courier New', marginTop: '24px' }}>
+                    <p style={{ color: 'var(--board-accent-readable, var(--board-accent, #f5a623))', fontFamily: 'Courier New', marginTop: '24px' }}>
                         Connect more cities to unlock {isArrivals ? 'arrivals' : 'departures'}!
                     </p>
                 ) : (
-                    <p style={{ color: 'var(--board-accent, #f5a623)', fontFamily: 'Courier New' }}>
+                    <p style={{ color: 'var(--board-accent-readable, var(--board-accent, #f5a623))', fontFamily: 'Courier New' }}>
                         {isArrivals
                             ? 'No arrivals today. New loops will arrive tomorrow.'
                             : nothingScheduled

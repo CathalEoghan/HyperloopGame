@@ -14,7 +14,7 @@
 }
 
 .board-title {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-family: 'Courier New', Courier, monospace;
     margin-bottom: 16px;
     font-size: 1.1rem;
@@ -166,7 +166,7 @@
 }
 
 .farewell-attention {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-size: 1.8rem;
     font-weight: bold;
     letter-spacing: 12px;
@@ -174,7 +174,7 @@
 }
 
 .farewell-divider {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     opacity: 0.4;
     margin: 0 0 20px;
     font-size: 0.9rem;
@@ -212,7 +212,7 @@
 }
 
 .farewell-message strong {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-weight: bold;
 }
 
@@ -221,7 +221,7 @@
     font-weight: bold;
     letter-spacing: 6px;
     margin: 0 0 32px;
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     transition: color 0.5s;
 }
 
@@ -237,8 +237,8 @@
 
 .farewell-button {
     background: none;
-    border: 2px solid var(--board-accent, #f5a623);
-    color: var(--board-accent, #f5a623);
+    border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-family: 'Courier New', Courier, monospace;
     font-size: 1rem;
     letter-spacing: 1px;
@@ -251,13 +251,13 @@
 
 .farewell-button:hover {
     background: var(--board-accent, #f5a623);
-    color: #0a0a1a;
+    color: var(--board-accent-contrast, #0a0a1a);
     animation: none;
 }
 
 @keyframes buttonPulse {
-    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--board-accent, #f5a623) 40%, transparent); }
-    50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--board-accent, #f5a623) 0%, transparent); }
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--board-accent-readable, var(--board-accent, #f5a623)) 40%, transparent); }
+    50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--board-accent-readable, var(--board-accent, #f5a623)) 0%, transparent); }
 }
 /* Narrower tiles below 1440px wide, so both halves of the board fit from 1024px up even with the longest
    destination name (19 letters), instead of hiding the right-hand Status column off to the side (bug #174) */
@@ -309,17 +309,17 @@
 }
 
 .board-tab:hover {
-    color: var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
 }
 
 .board-tab-active {
     background: var(--board-accent, #f5a623);
-    color: #0a0a0a;
+    color: var(--board-accent-contrast, #0a0a0a);
     cursor: var(--cursor-default, default);
 }
 
 .board-tab-active:hover {
-    color: #0a0a0a;
+    color: var(--board-accent-contrast, #0a0a0a);
 }
 
 /* Tabs on the left, then a gap, then the Schedule loop and Automate schedule buttons */
@@ -334,8 +334,8 @@
 
 .board-action {
     background: #111;
-    color: var(--board-accent, #f5a623);
-    border: 1px solid var(--board-accent, #f5a623);
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
+    border: 1px solid var(--board-accent-readable, var(--board-accent, #f5a623));
     border-radius: 6px;
     font-family: 'B612 Mono', 'Courier New', monospace;
     font-size: 0.75rem;
@@ -344,12 +344,12 @@
     cursor: var(--cursor-pointer, pointer);
     transition: color 0.2s, background 0.2s;
 }
-.board-action:hover:not([aria-disabled="true"]) { background: var(--board-accent, #f5a623); color: #0a0a0a; }
+.board-action:hover:not([aria-disabled="true"]) { background: var(--board-accent, #f5a623); color: var(--board-accent-contrast, #0a0a0a); }
 /* Greyed out but still clickable, so clicking it can play the "not enough" sound */
 .board-action[aria-disabled="true"] { opacity: 0.35; cursor: var(--cursor-default, default); }
 
 .board-sched-status { font-size: 0.72rem; letter-spacing: 1px; color: #777; }
-.board-sched-status-low { color: var(--board-accent, #f5a623); }
+.board-sched-status-low { color: var(--board-accent-readable, var(--board-accent, #f5a623)); }
 
 /* Nothing is scheduled to depart: a small blinking dot on the Departures tab */
 .board-tab-dot {
