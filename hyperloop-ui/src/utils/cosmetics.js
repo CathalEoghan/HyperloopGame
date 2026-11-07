@@ -89,6 +89,17 @@ export function getEquippedItem(category, state = readCosmetics()) {
 const THEME_CATEGORIES = SHOP_CATEGORIES.map(c => c.id).filter(id => (SHOP_ITEMS[id] || []).some(item => item.vars))
 const ALL_THEME_VARS = [...new Set(THEME_CATEGORIES.flatMap(id => SHOP_ITEMS[id].flatMap(item => Object.keys(item.vars || {}))))]
 
+// Relative luminance (WCAG definition) of a "#rrggbb" colour, used below to pick readable text for whatever
+// an equipped theme's accent happens to be.
+function relativeLuminance(hex) {
+    const match = /^#([0-9a-f]{6})$/i.exec(hex)
+    if (!match) return null
+    const [r, g, b] = [0, 2, 4].map(i => parseInt(match[1].slice(i, i + 2), 16) / 255)
+    const chan = c => c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4
+    return 0.2126 * chan(r) + 0.7152 * chan(g) + 0.0722 * chan(b)
+}
+const contrastRatio = (l1, l2) => { const [hi, lo] = l1 > l2 ? [l1, l2] : [l2, l1]; return (hi + 0.05) / (lo + 0.05) }
+
 // Puts the equipped themes onto the page as CSS variables. Safe to call any time; call it on start-up and after any change.
 export function applyCosmetics(state = readCosmetics()) {
     const root = document.documentElement
@@ -102,6 +113,16 @@ export function applyCosmetics(state = readCosmetics()) {
     // Board page itself stays plain black regardless - see DepartureBoard.css.
     const generalPic = THEME_PICS_BOARD[getEquippedItem('generalTheme', state)?.id]
     if (generalPic) root.style.setProperty('--board-bg-image', `url(${generalPic})`)
+    // Whichever of a near-black or near-white reads better on top of the equipped accent - most themes' accent
+    // is light/mid-tone and want the dark one, but a few (Gingerbread's dark brown among them) are themselves
+    // dark, and hardcoding dark text on those made buttons that fill with the accent (e.g. the City "Connect"
+    // button's hover state) nearly unreadable. Falls back to the dark text the accent's own default would want.
+    const accent = getEquippedItem('generalTheme', state)?.vars?.['--ui-accent'] || '#f5a623'
+    const accentLum = relativeLuminance(accent)
+    const DARK_TEXT = '#222222', LIGHT_TEXT = '#fff'
+    const contrastText = accentLum === null ? DARK_TEXT
+        : contrastRatio(1, accentLum) > contrastRatio(relativeLuminance(DARK_TEXT), accentLum) ? LIGHT_TEXT : DARK_TEXT
+    root.style.setProperty('--ui-accent-contrast', contrastText)
 }
 
 // The globe's route colours as numbers for three.js, from the equipped general theme (gold departures, blue arrivals by default)

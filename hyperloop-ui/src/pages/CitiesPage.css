@@ -476,7 +476,9 @@
 
 .modal .constructionButton:hover {
     background: var(--ui-accent, #f5a623) !important;
-    color: #333 !important;
+    /* Whichever of near-black/near-white actually reads on top of the equipped theme's accent - some themes'
+       accent is itself dark (Gingerbread's brown, for one), and a flat #333 there was close to unreadable. */
+    color: var(--ui-accent-contrast, #222222) !important;
     border-color: black !important;
 }
 
