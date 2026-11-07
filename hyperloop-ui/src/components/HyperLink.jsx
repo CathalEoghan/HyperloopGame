@@ -5,6 +5,7 @@ import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import wifiIcon from '../assets/misc/wifi.png'
 import batteryIcon from '../assets/misc/battery.png'
 import signalIcon from '../assets/misc/signal.png'
+import bellIcon from '../assets/misc/bell.png'
 import { defaultPfp, MALE_PFPS, FEMALE_PFPS, officialPfp } from '../assets/hyperLinkAssets.js'
 export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
 
@@ -137,7 +138,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                     aria-label={muted ? 'Unmute notifications' : 'Mute notifications'}
                                     title={muted ? 'Notifications are muted. Click to turn them on' : 'Notifications are on. Click to mute them'}
                                     aria-pressed={muted}
-                                >{muted ? '🔕' : '🔔'}</button>
+                                ><img src={bellIcon} alt="" draggable={false} /></button>
                             )}
                             <button className="hyperlink-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>✕</button>
                         </div>

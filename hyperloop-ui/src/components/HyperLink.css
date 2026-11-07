@@ -208,13 +208,37 @@
 }
 
 /* The bell: lit while notifications are on, flat and dimmed while they are muted */
+.hyperlink-mute img {
+    width: 18px;
+    height: 18px;
+    display: block;
+    pointer-events: none;
+}
+.hyperlink-mute { position: relative; }
 .hyperlink-mute-on {
     background: rgba(255, 255, 255, 0.55);
     box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9);
 }
 .hyperlink-mute-off {
     background: rgba(0, 0, 0, 0.25);
-    opacity: 0.8;
+}
+.hyperlink-mute-off img {
+    filter: grayscale(1);
+    opacity: 0.6;
+}
+/* Muted: a slash through the bell */
+.hyperlink-mute-off::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 22px;
+    height: 2px;
+    border-radius: 1px;
+    background: white;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+    transform: translate(-50%, -50%) rotate(-45deg);
+    pointer-events: none;
 }
 
 .hyperlink-empty {
@@ -235,6 +259,30 @@
     display: flex;
     gap: 12px;
     transition: background 0.8s ease;
+    position: relative;
+}
+
+/* New-post dot, top right, in the shop theme's accent. The darker ring keeps it visible on pale themes. */
+.hyperlink-post::after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--hl-accent, #f5a623);
+    box-shadow: 0 0 0 1.5px var(--hl-accent-dark, #c77d0a);
+    opacity: 0;
+    transform: scale(0.4);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+    pointer-events: none;
+}
+
+.hyperlink-post.hyperlink-post-new::after {
+    opacity: 1;
+    transform: scale(1);
+    transition-duration: 0.25s;
 }
 
 .hyperlink-post:active {
