@@ -573,9 +573,9 @@ export const SHOP_ITEMS = {
         }, 'Matte khaki on dark olive drab. Part of the Wartime bundle.'),
         generalTheme('gingerbread', 'Gingerbread', 75, {
             barBg: 'rgb(255, 240, 220)', accent: '#6b3410',
-            tickerBg: '#2a1006', tickerText: '#7a1414',
-            departureArc: '#6b3410', arrivalArc: '#7a1414',
-        }, 'Warm gingerbread brown, trimmed in holly red. Part of the Gingerbread bundle.'),
+            tickerBg: '#7a1414', tickerText: '#177f3d',
+            departureArc: '#6b3410', arrivalArc: '#177f3d',
+        }, 'Warm gingerbread brown, trimmed in holly red and pine green. Part of the Gingerbread bundle.'),
         generalTheme('dystopia', 'Dystopia', 75, {
             barBg: 'rgb(10, 6, 18)', barText: '#e8d9ff', barTextMuted: '#b06ee0', accent: '#ff2fd1',
             tickerBg: '#000000', tickerText: '#ff2fd1',
