@@ -301,6 +301,25 @@
 
 .collapse-btn:hover { background: #444 !important; }
 
+/* "Connect all affordable" - same pill as Collapse/Expand, but in the page's own accent so it reads as an action
+   rather than a view toggle, and it can be disabled-looking (see the inline opacity) when nothing is affordable. */
+.bulk-buy-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 4px;
+    background: var(--ui-accent, #f5a623) !important;
+    border: none !important;
+    border-radius: 12px !important;
+    padding: 5px 14px !important;
+    font-family: 'Inter', sans-serif !important;
+    font-size: 0.8rem !important;
+    font-weight: bold;
+    cursor: var(--cursor-pointer, pointer) !important;
+    color: white !important;
+}
+.bulk-buy-btn:hover { filter: brightness(1.1); }
+.bulk-buy-cost { display: inline-flex; align-items: center; gap: 2px; }
+
 /* Construction overlay */
 .construction-overlay {
     position: absolute;

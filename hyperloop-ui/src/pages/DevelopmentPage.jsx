@@ -22,6 +22,7 @@ import poorIcon from '../assets/misc/poor.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.js'
+import { planBulkBuy } from '../utils/bulkBuy.js'
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
@@ -88,6 +89,40 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
     const sortedPurchased = filterAndSort([...purchased, ...underConstruction], d => economyManager.getEffectiveDevIncomeWithBoosts(d))
     const sortedAvailable = filterAndSort([...available])
+
+    // What a cost looks like right now - cash for almost everything, Reputation only for Early Retirement (the
+    // one upgrade bought with it instead). Used to plan both "Develop all" buttons; see utils/bulkBuy.js.
+    const costOfDevelopment = (item, state) => item.effectType === 'earlyRetirement'
+        ? { cash: 0, rep: item.effectValue }
+        : { cash: Math.floor(item.cost * (1 - state.discount) + 1e-6) }
+    // Buying Bank (-% development cost) partway through a batch makes the rest of it cheaper, same as buying
+    // one at a time by hand would.
+    const afterBought = (state, item) => item.effectType === 'developmentDiscount'
+        ? { ...state, discount: state.discount + item.effectValue }
+        : state
+    const developmentStartState = { cash: progressionManager.balance, rep: reputation, discount: economyManager.getUpgradeSum('developmentDiscount') }
+    // "available" regardless of the search box or category filter - those only narrow what's shown.
+    const developAllPlan = planBulkBuy(available, costOfDevelopment, developmentStartState, afterBought)
+    const developAllExcludingUpgradesPlan = planBulkBuy(available.filter(item => item.revenue), costOfDevelopment, developmentStartState, afterBought)
+
+    const buyPlannedItem = (item) => {
+        if (item.effectType === 'earlyRetirement') return progressionManager.buyEarlyRetirement(item)
+        const cost = economyManager.calculateDiscountedBuildCost(item.cost)
+        if (progressionManager.balance < cost) return false
+        constructionManager.startDevelopmentConstruction(item, cost)
+        return true
+    }
+    const developAll = (restrictToRevenue) => {
+        playClickSound2()
+        // Re-plan against the real balance/reputation at the moment of the click (bug #122), then build each
+        // one - buyPlannedItem re-checks affordability itself, so nothing is lost even if something else spent
+        // cash in between.
+        const pool = restrictToRevenue ? available.filter(item => item.revenue) : available
+        const plan = planBulkBuy(pool, costOfDevelopment, { cash: progressionManager.balance, rep: progressionManager.reputation, discount: economyManager.getUpgradeSum('developmentDiscount') }, afterBought)
+        let boughtAny = false
+        plan.toBuy.forEach(item => { if (buyPlannedItem(item)) boughtAny = true })
+        if (boughtAny) { playConstructionSound(); onSave() } else playNotEnoughFundsSound()
+    }
 
     const totalRevenue = useMemo(() =>
         economyManager.withFoundersHall(purchased.filter(d => d.revenue).reduce((sum, d) => sum + economyManager.getEffectiveDevIncomeWithBoosts(d), 0)),
@@ -564,7 +599,26 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 )}
 
                 <h2 className="section-header section-header-available" style={{ marginTop: sortedPurchased.length === 0 ? '8px' : '24px', borderTop: sortedPurchased.length === 0 ? 'none' : '2px solid #ddd', top: sortedPurchased.length === 0 ? '0' : '44px' }}>
-                    Available to build <span className="section-count">{sortedAvailable.length}</span>
+                    <span>Available to build <span className="section-count">{sortedAvailable.length}</span></span>
+                    {available.length > 0 && (
+                        <span className="bulk-buy-row">
+                            <button className="bulk-buy-btn" style={{ opacity: developAllPlan.toBuy.length > 0 ? 1 : 0.5 }}
+                                onMouseEnter={() => playHoverSound()} onClick={() => developAll(false)}>
+                                Develop all available
+                                {developAllPlan.toBuy.length > 0 && (
+                                    <span className="bulk-buy-cost">
+                                        (<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                        {developAllPlan.totalRep > 0 && <> + <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>})
+                                    </span>
+                                )}
+                            </button>
+                            <button className="bulk-buy-btn" style={{ opacity: developAllExcludingUpgradesPlan.toBuy.length > 0 ? 1 : 0.5 }}
+                                onMouseEnter={() => playHoverSound()} onClick={() => developAll(true)}>
+                                Develop all, excluding upgrades
+                                {developAllExcludingUpgradesPlan.toBuy.length > 0 && <span className="bulk-buy-cost">(<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</span>}
+                            </button>
+                        </span>
+                    )}
                 </h2>
                 <div className="development-row">
                     {sortedAvailable.map(development => (

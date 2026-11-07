@@ -177,7 +177,32 @@
   vertical-align: middle;
 }
 
+/* The two "Develop all" buttons and the Connect-all one on Cities share this look; see CitiesPage.css for
+   why it's a filled accent pill rather than the dark Collapse/Expand one. */
+.bulk-buy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--ui-accent, #f5a623);
+    border: none;
+    border-radius: 12px;
+    padding: 5px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    font-weight: bold;
+    cursor: var(--cursor-pointer, pointer);
+    color: white;
+}
+.bulk-buy-btn:hover { filter: brightness(1.1); }
+.bulk-buy-cost { display: inline-flex; align-items: center; gap: 2px; }
+.bulk-buy-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
 .section-header-available {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   color: #555;
   border-top: 2px solid #ddd;
   padding-top: 16px;

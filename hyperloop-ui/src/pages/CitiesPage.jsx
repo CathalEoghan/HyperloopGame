@@ -18,6 +18,7 @@ import boardIcon from '../assets/misc/board.png'
 import clockIcon from '../assets/misc/clock.png'
 import growthIcon from '../assets/misc/growth.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { planBulkBuy } from '../utils/bulkBuy.js'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { isGrantedCity } from '../utils/grantedCities.js'
 import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHoverSound, playNotEnoughFundsSound, playBigMomentSound } from '../utils/sound.js'
@@ -73,6 +74,27 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         !underConstruction.some(c => c.name === city.name)
     )
     const connectedAndBuilding = [...purchased, ...underConstruction]
+
+    // What "Connect all affordable" would spend, right now, on the whole available list - regardless of the
+    // search box or the continent filter, since those only narrow what's shown, not what the button means.
+    // Connecting never costs Reputation, and a city's cost doesn't change as others are connected, so this is
+    // just "cheapest first, while the money lasts" - see utils/bulkBuy.js.
+    const connectAllPlan = planBulkBuy(
+        available,
+        city => ({ cash: constructionManager.calculateTierConnectionCost(city) }),
+        { cash: balance },
+    )
+    const connectAllAffordable = () => {
+        playClickSound2()
+        const pm = constructionManager.progressionManager
+        // Re-plan against the real balance at the moment of the click (bug #122: the displayed balance can be
+        // up to a second stale), then connect each one - startStationConstruction re-checks affordability itself,
+        // so nothing is lost even if something elsewhere spent cash in between.
+        const plan = planBulkBuy(available, city => ({ cash: constructionManager.calculateTierConnectionCost(city) }), { cash: pm.balance })
+        let connectedAny = false
+        plan.toBuy.forEach(city => { if (constructionManager.startStationConstruction(city)) connectedAny = true })
+        if (connectedAny) { playConstructionSound(); onSave() } else playNotEnoughFundsSound()
+    }
 
     // Each city's income is worked out once per render and reused. Sorting by income used to
     // recalculate it inside every comparison, which froze the page every second in a late
@@ -576,12 +598,19 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 Cities available to connect
                                 <span className="city-count-badge">{filteredAvailable.length}</span>
                             </h1>
-                            {!flatList && (
-                                <div className="collapse-controls">
-                                    <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); collapseAll('available', sortedAvailableCountries) }}>Collapse all</button>
-                                    <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); expandAll('available', sortedAvailableCountries) }}>Expand all</button>
-                                </div>
-                            )}
+                            <div className="collapse-controls">
+                                <button className="bulk-buy-btn" style={{ opacity: connectAllPlan.toBuy.length > 0 ? 1 : 0.5 }}
+                                    onMouseEnter={() => playHoverSound()} onClick={connectAllAffordable}>
+                                    Connect all affordable
+                                    {connectAllPlan.toBuy.length > 0 && <span className="bulk-buy-cost">(<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{connectAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</span>}
+                                </button>
+                                {!flatList && (
+                                    <>
+                                        <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); collapseAll('available', sortedAvailableCountries) }}>Collapse all</button>
+                                        <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); expandAll('available', sortedAvailableCountries) }}>Expand all</button>
+                                    </>
+                                )}
+                            </div>
                         </div>
                         {flatList
                             ? <div className="city-row">{filteredAvailable.map(city => renderCityCard(city, true, true))}</div>
