@@ -151,5 +151,5 @@
     transition: background-color 0.15s ease;
 }
 .citychoice-confirm { flex: 1; min-width: 180px; }
-.citychoice-back:hover, .citychoice-confirm:hover:not(:disabled) { background: var(--ui-accent, #f5a623); }
+.citychoice-back:hover, .citychoice-confirm:hover:not(:disabled) { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); }
 .citychoice-confirm:disabled { opacity: 0.5; cursor: not-allowed; }

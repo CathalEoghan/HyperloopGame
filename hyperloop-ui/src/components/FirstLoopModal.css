@@ -56,6 +56,6 @@
     transition: background-color 0.15s, color 0.15s, transform 0.15s;
 }
 .firstloop-btn:hover { background: #333; color: #fff; transform: translateY(-2px); }
-.firstloop-btn-primary { background: var(--ui-accent, #f5a623); }
+.firstloop-btn-primary { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); }
 .firstloop-btn-primary:hover { background: #333; }
 .firstloop-btn-quiet { border-color: #999; color: #666; }

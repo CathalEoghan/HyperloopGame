@@ -116,7 +116,7 @@ font-size: 1rem;
     transition: background 0.25s ease, color 0.25s ease, letter-spacing 0.25s ease;
 }
 
-.MysterySpot:hover .MysterySpotLabel { background: var(--ui-accent, #f5a623); color: #111; letter-spacing: 2.5px; }
+.MysterySpot:hover .MysterySpotLabel { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); letter-spacing: 2.5px; }
 
 @media (prefers-reduced-motion: reduce) {
     .MysterySpot::before, .MysterySpotLabel { transition: none; }

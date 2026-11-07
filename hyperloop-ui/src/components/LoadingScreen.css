@@ -125,7 +125,7 @@
 
 .loading-tip-label {
     background: var(--ui-accent, #f5a623);
-    color: black;
+    color: var(--ui-accent-contrast, #222222);
     font-family: 'Courier New', monospace;
     font-size: 0.8rem;
     font-weight: bold;

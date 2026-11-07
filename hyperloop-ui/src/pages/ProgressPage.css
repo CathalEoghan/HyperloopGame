@@ -104,7 +104,7 @@
     height: 30px;
     border-radius: 50%;
     background: var(--ui-accent, #f5a623);
-    color: #222;
+    color: var(--ui-accent-contrast, #222222);
     transition: transform 0.2s ease, background 0.15s ease;
 }
 
