@@ -39,6 +39,15 @@
     margin: 0 0 20px;
 }
 
+/* A quiet extra line under the description (the Celebrity Sighting's hint about the departure board) */
+.event-hint {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #555;
+    margin: -8px 0 20px;
+}
+
 .event-effect-box {
     display: flex;
     align-items: center;

@@ -296,6 +296,9 @@ function buildEligibleCategories(gameState) {
     if (reactionKey && POSTS[reactionKey]?.length) {
         add(reactionKey, 6, { occasion: activeEvent.occasion })
     }
+    // A Celebrity Sighting that marked a departure (the popup showed its hint): rumours about it. Only then, because
+    // they would hint at a flight that doesn't exist otherwise.
+    if (activeEvent?.id === 'celebrity_visit' && activeEvent.celebrityHint) add('celebrityDepartureRumour', 8)
     if (gameState.reputation < 40) add('lowReputation', 3)
     if (gameState.reputation > 200) add('highReputation', 3)
 

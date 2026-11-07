@@ -57,6 +57,7 @@ import AchievementsModal, { AchievementsButton } from "./components/Achievements
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
+import { pickCelebrityDeparture } from './utils/celebrity.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
 import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
@@ -155,6 +156,8 @@ const watchForPopups = (onChange) => {
 };
 // Wraps the page behind the popups without adding a box of its own, so layout stays exactly as it was
 const BEHIND_POPUPS_STYLE = { display: 'contents' };
+// A Celebrity Sighting marks one departure in the next few hours as the celebrity's: it is always a VIP (see the tick)
+const CELEBRITY_DEPARTURE_KEY = 'hyperloop_celebrity_departure';
 const stillOpen = dep => !dep.expiresAt || Date.now() < dep.expiresAt + 60000;
 // A departure that waited its turn still gets at least 30 seconds on screen.
 const withMinimumWindow = dep => ({ ...dep, expiresAt: Math.max(dep.expiresAt || 0, Date.now() + 30000) });
@@ -453,7 +456,8 @@ function App() {
     setFarewellsGiven(newCount);
     triggerSave(newCount);
     finishDeparture(dep);
-    const farewellPost = { type: 'farewellGiven', data: { city: dep?.name }, readyAt: socialPostDelay() };
+    // The celebrity's farewell gets its own kind of post: passengers wondering who it was, never saying
+    const farewellPost = { type: dep?.celebrity ? 'celebrityFarewell' : 'farewellGiven', data: { city: dep?.name }, readyAt: socialPostDelay() };
     hyperLinkTriggerRef.current = farewellPost;
   }
   // The tick is set up once, so it calls the newest copy through this
@@ -925,6 +929,23 @@ function App() {
     if (post) pushHyperLinkPost(post)
   }
 
+  // Picks the departure a celebrity is travelling on: one of today's departures that leaves within the next 6 hours (utils/celebrity.js)
+  // and whose farewell hasn't opened yet. Stored as the same key the tick uses, with the rest of the day's temporary
+  // state. Returns false when nothing qualifies (a young terminal, or a quiet end of the day), and then no hint is shown.
+  const markCelebrityDeparture = () => {
+    const now = new Date();
+    const todayKey = now.toDateString();
+    const key = pickCelebrityDeparture(readSchedule(`departures_${todayKey}`), {
+      nowMs: now.getTime(),
+      todayKey,
+      farewellWindowMs: farewellWindowMinutes(progressionManager.purchasedUpgrades) * 60000,
+      alreadyTriggered: triggeredDepartures.current,
+    });
+    if (!key) return false;
+    localStorage.setItem(CELEBRITY_DEPARTURE_KEY, JSON.stringify({ key }));
+    return true;
+  };
+
   // Fires an already-chosen event (Pizza Parties strength doubling, duration, the three effectType branches,
   // and the event popup/sound/post-trigger bookkeeping). Shared by the regular random-interval trigger below
   // and by Free Wi-Fi's like-triggered roll, so both go through the exact same logic - including Improved
@@ -934,9 +955,13 @@ function App() {
     // the current event by the time it fires (Opening Party can replace an event before its timer runs out).
     const myGeneration = ++eventGenerationRef.current;
     const pizza = PrestigeManager.owns('pizzaParties') && rawEvent.type === 'positive';
-    const event = (pizza && rawEvent.effect)
+    const scaledEvent = (pizza && rawEvent.effect)
       ? { ...rawEvent, effect: { ...rawEvent.effect, multiplier: 1 + (rawEvent.effect.multiplier - 1) * PRESTIGE_VALUES.pizzaParties } }
       : rawEvent;
+    // A Celebrity Sighting quietly marks one of the next few departures as the celebrity's. The popup only drops its
+    // hint ("Keep an eye on the departure board...") when there really is one to find.
+    const celebrityMarked = rawEvent.id === 'celebrity_visit' && markCelebrityDeparture();
+    const event = celebrityMarked ? { ...scaledEvent, celebrityHint: true } : scaledEvent;
     const bonusExtension = event.type === 'positive'
       ? 1 + economyManager.getUpgradeSum('bonusDurationExtension')
       : 1;
@@ -1349,6 +1374,7 @@ function App() {
         localStorage.setItem('hyperloop_departures_date', todayKey);
         localStorage.removeItem('hyperloop_triggered_departures');
         triggeredDepartures.current = new Set();
+        localStorage.removeItem(CELEBRITY_DEPARTURE_KEY);
         // A new day while the game is open: build its schedule and offer the daily bonus (bug #66),
         // and drop earlier days' schedules so they don't pile up in storage (bug #78).
         // Yesterday's departures are kept: some of those loops are still travelling (they show on the globe).
@@ -1382,7 +1408,11 @@ function App() {
           const secondsRemaining = Math.max(30, windowMinutes * 60 - secondsElapsed);
           const expiresAt = Date.now() + secondsRemaining * 1000;
           // Decided now, so Prestige upgrades bought earlier today count, and it's kept with the queued farewell.
-          const depEntry = { ...entry, secondsRemaining, expiresAt, vip: Math.random() < economyManager.getVipChance() };
+          // The celebrity's departure (see markCelebrityDeparture) is always a VIP, without a roll
+          let celebrity = false;
+          try { celebrity = JSON.parse(localStorage.getItem(CELEBRITY_DEPARTURE_KEY))?.key === key; } catch { /* unreadable: no celebrity */ }
+          if (celebrity) localStorage.removeItem(CELEBRITY_DEPARTURE_KEY);
+          const depEntry = { ...entry, secondsRemaining, expiresAt, vip: celebrity || Math.random() < economyManager.getVipChance(), ...(celebrity ? { celebrity: true } : {}) };
           // Video Message sends the farewell on the spot, whatever popup is open, instead of queueing it behind them
           if (PrestigeManager.owns('videoMessage')) {
             playFarewellAcceptSound();

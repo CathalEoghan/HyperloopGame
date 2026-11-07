@@ -52,6 +52,7 @@ function EventModal({ event, onContinue, terminalName }) {
                 <p className="event-type-label">{isPositive ? '▲ POSITIVE EVENT' : '▼ NEGATIVE EVENT'}</p>
                 <h2 className="event-title">{event.title}</h2>
                 <p className="event-description">{description}</p>
+                {event.celebrityHint && <p className="event-hint">Keep an eye on the departure board...</p>}
                 <div className="event-effect-box">
                     <span className={`event-effect-indicator ${isPositive ? 'event-positive-text' : 'event-negative-text'}`}>
                         {isPositive ? '▲' : '▼'}

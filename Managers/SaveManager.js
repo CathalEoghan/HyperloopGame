@@ -91,6 +91,8 @@ const DAY_STATE_KEYS = [
     'hyperloop_departures_date',
     'hyperloop_pending_injections',
     'hyperloop_onboarding_pending',
+    // The departure a Celebrity Sighting marked as the celebrity's
+    'hyperloop_celebrity_departure',
 ]
 
 function removeKeys(keys) {

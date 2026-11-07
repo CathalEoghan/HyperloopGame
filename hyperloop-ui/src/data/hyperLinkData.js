@@ -840,6 +840,27 @@ export const POSTS = {
         'Delay? My luck is terrible 😣',
     ],
 
+    // While a Celebrity Sighting's marked departure is still to come. Never names the city or the gate.
+    celebrityDepartureRumour: [
+        'Is it true there\'s a secret celebrity travelling out of {terminalName} today??',
+        'wait a minute... heard someone famous is flying out of {terminalName} later 👀',
+        'my cousin works at {terminalName} and says there\'s a VIP on one of the departures today 🤫',
+        'anyone know which loop the celebrity is leaving on?? asking for a friend',
+        'not saying i\'m camping by the departure board but... 👀 #celebritywatch',
+        'so apparently a very famous person is passing through {terminalName} on a departure later. keep your eyes peeled!',
+        'rumour has it there\'s a big name leaving {terminalName} soon. check the board 🧐',
+    ],
+
+    // After the manager gave the celebrity's farewell. Says nothing about who it was.
+    celebrityFarewell: [
+        'Did anyone else see who was boarding that loop out of {terminalName}?? 👀',
+        'omg was that who i think it was?? the manager just waved them off 😳',
+        'The manager gave a VIP send-off at {terminalName} earlier. Won\'t say who, but wow 🌟',
+        'ok so I def just saw someone very famous leave {terminalName}... and the manager was there to say goodbye??',
+        'not me almost fainting at the departure gate because the manager just waved off a celebrity 😵',
+        'somebody famous got a personal farewell at {terminalName} today and i am SO jealous',
+    ],
+
     farewellGiven: [
         'Wow! The manager actually came down and said goodbye to us. So sweet 🥲',
         'the manager is so nice ill defo be back',
