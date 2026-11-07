@@ -352,7 +352,8 @@
     border-top: 1px solid color-mix(in srgb, var(--ui-accent, #f5a623) 30%, transparent);
 }
 
-/* The departure colour defaults to the general theme's gold, so it always matches the globe's departure arcs */
+/* The departure and arrival colours come from the general theme's arc colours (gold and blue by default), so a row
+   always matches its route on the globe */
 .loop-row {
     padding: 8px 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
@@ -361,7 +362,7 @@
 }
 
 .loop-row-arrival {
-    --loop-color: #4fc3f7;
+    --loop-color: var(--arc-arrival, #4fc3f7);
 }
 
 .loop-row:hover {
@@ -375,11 +376,11 @@
     box-shadow: inset 3px 0 0 var(--arc-departure, #f5a623);
 }
 
-/* ...in blue for an arrival, to match its arc on the globe */
+/* ...in the arrival colour for an arrival, to match its arc on the globe */
 .loop-row-arrival.loop-row-hovered,
 .loop-row-arrival.loop-row-hovered:hover {
-    background: rgba(79, 195, 247, 0.16);
-    box-shadow: inset 3px 0 0 #4fc3f7;
+    background: color-mix(in srgb, var(--arc-arrival, #4fc3f7) 16%, transparent);
+    box-shadow: inset 3px 0 0 var(--arc-arrival, #4fc3f7);
 }
 
 .loop-route {
