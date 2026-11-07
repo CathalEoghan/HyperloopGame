@@ -597,20 +597,18 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             <h1 className="availableCitiesHeader">
                                 Cities available to connect
                                 <span className="city-count-badge">{filteredAvailable.length}</span>
-                            </h1>
-                            <div className="collapse-controls">
                                 <button className="bulk-buy-btn" style={{ opacity: connectAllPlan.toBuy.length > 0 ? 1 : 0.5 }}
                                     onMouseEnter={() => playHoverSound()} onClick={connectAllAffordable}>
                                     Connect all affordable
                                     {connectAllPlan.toBuy.length > 0 && <span className="bulk-buy-cost">(<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{connectAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</span>}
                                 </button>
-                                {!flatList && (
-                                    <>
-                                        <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); collapseAll('available', sortedAvailableCountries) }}>Collapse all</button>
-                                        <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); expandAll('available', sortedAvailableCountries) }}>Expand all</button>
-                                    </>
-                                )}
-                            </div>
+                            </h1>
+                            {!flatList && (
+                                <div className="collapse-controls">
+                                    <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); collapseAll('available', sortedAvailableCountries) }}>Collapse all</button>
+                                    <button className="collapse-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); expandAll('available', sortedAvailableCountries) }}>Expand all</button>
+                                </div>
+                            )}
                         </div>
                         {flatList
                             ? <div className="city-row">{filteredAvailable.map(city => renderCityCard(city, true, true))}</div>

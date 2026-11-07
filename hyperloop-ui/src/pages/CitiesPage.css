@@ -245,7 +245,14 @@
     margin: 0;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
     gap: 8px;
+}
+
+/* The "Connect all affordable" button sits right in the header, next to the count it acts on, with a bit more
+   breathing room than the badge gets so it doesn't read as just another badge. */
+.availableCitiesHeader .bulk-buy-btn {
+    margin-left: 8px;
 }
 
 .city-count-badge {
