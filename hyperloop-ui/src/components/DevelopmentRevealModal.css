@@ -47,7 +47,9 @@
 
 .dev-reveal-modal .closeButton:hover {
     background: var(--ui-accent, #f5a623) !important;
-    color: #333 !important;
+    /* Same fix as the City "Connect" button's hover (see cosmetics.js) - a flat #333 went nearly invisible
+       against a dark theme accent like Gingerbread's brown. */
+    color: var(--ui-accent-contrast, #222222) !important;
 }
 
 .dev-reveal-modal {
