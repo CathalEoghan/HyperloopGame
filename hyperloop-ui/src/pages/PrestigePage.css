@@ -581,15 +581,15 @@
     padding: 2px 8px;
     border-radius: 999px;
     background: rgba(0, 0, 0, 0.6);
-    color: var(--ui-accent, #f5a623);
-    border: 1px solid color-mix(in srgb, var(--ui-accent, #f5a623) 60%, transparent);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
+    border: 1px solid color-mix(in srgb, var(--ui-accent-readable, var(--ui-accent, #f5a623)) 60%, transparent);
     backdrop-filter: blur(3px);
 }
 
 .prestige-pop-soon {
     font-size: 0.78rem;
     line-height: 1.35;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
 }
 
 /* Early Retirement bar, confirm screen and run history */

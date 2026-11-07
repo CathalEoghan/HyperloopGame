@@ -55,5 +55,5 @@
 }
 
 .tips-dismiss:hover {
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
 }

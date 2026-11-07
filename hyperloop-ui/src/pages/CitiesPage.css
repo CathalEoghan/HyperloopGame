@@ -104,7 +104,7 @@
     left: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.85);
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     font-family: 'Courier New', monospace;
     font-size: 0.7rem;
     text-align: center;

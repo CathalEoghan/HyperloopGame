@@ -96,7 +96,7 @@
 .construction-enter {
     font-family: 'Courier New', monospace;
     font-size: 0.95rem;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     letter-spacing: 3px;
     text-transform: uppercase;
     margin: 16px 0 0;

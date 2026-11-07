@@ -83,7 +83,7 @@
 .loading-enter {
     font-family: 'Courier New', monospace;
     font-size: 1rem;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     letter-spacing: 3px;
     text-transform: uppercase;
     margin: 12px 0 0;

@@ -607,7 +607,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     animation: 'progress-float-up 1.5s ease-out forwards',
                     display: 'flex', alignItems: 'center', gap: '4px',
                     fontFamily: 'Courier New, monospace', fontWeight: 'bold',
-                    fontSize: '1rem', color: f.reward.type === 'cash' ? 'var(--ui-accent, #f5a623)' : '#e74c3c',
+                    fontSize: '1rem', color: f.reward.type === 'cash' ? 'var(--ui-accent-readable, var(--ui-accent, #f5a623))' : '#e74c3c',
                     background: 'rgba(0,0,0,0.75)', borderRadius: '20px', padding: '4px 12px',
                     whiteSpace: 'nowrap',
                 }}>

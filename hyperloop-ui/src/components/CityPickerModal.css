@@ -90,7 +90,7 @@
 .citypicker-country { color: #888; font-size: 0.8rem; flex: 1; }
 .citypicker-row-on .citypicker-country { color: #ccc; }
 .citypicker-badge { font-family: 'Courier New', monospace; font-size: 0.75rem; color: #b36b00; }
-.citypicker-row-on .citypicker-badge { color: var(--ui-accent, #f5a623); }
+.citypicker-row-on .citypicker-badge { color: var(--ui-accent-readable, var(--ui-accent, #f5a623)); }
 
 .citypicker-actions { display: flex; gap: 10px; justify-content: space-between; }
 

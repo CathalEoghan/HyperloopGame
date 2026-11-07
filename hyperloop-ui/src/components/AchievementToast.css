@@ -28,7 +28,7 @@
     font-size: 0.65rem;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
 }
 
 .achievement-toast-title { font-weight: 700; font-size: 1rem; }

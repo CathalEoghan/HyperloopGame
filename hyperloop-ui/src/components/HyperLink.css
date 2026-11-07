@@ -484,14 +484,14 @@
     bottom: 87.5px;
     left: 0px;
     background: #0a0a0a;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     font-family: 'Inter', sans-serif;
     font-size: 0.72rem;
     font-weight: 700;
     padding: 5px 10px;
     border-radius: 8px;
     white-space: nowrap;
-    border: 1px solid var(--ui-accent, #f5a623);
+    border: 1px solid var(--ui-accent-readable, var(--ui-accent, #f5a623));
     animation: bubble-in 0.3s ease, bubble-out 0.3s ease 2.7s forwards;
     pointer-events: none;
 }
