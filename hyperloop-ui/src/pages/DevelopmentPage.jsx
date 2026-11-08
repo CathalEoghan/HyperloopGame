@@ -604,7 +604,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         <span className="bulk-buy-row">
                             <button className="bulk-buy-btn" style={{ opacity: developAllPlan.toBuy.length > 0 ? 1 : 0.5 }}
                                 onMouseEnter={() => playHoverSound()} onClick={() => developAll(false)}>
-                                Develop all available
+                                Develop all affordable
                                 {developAllPlan.toBuy.length > 0 && (
                                     <span className="bulk-buy-cost">
                                         (<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
@@ -614,7 +614,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                             </button>
                             <button className="bulk-buy-btn" style={{ opacity: developAllExcludingUpgradesPlan.toBuy.length > 0 ? 1 : 0.5 }}
                                 onMouseEnter={() => playHoverSound()} onClick={() => developAll(true)}>
-                                Develop all, excluding upgrades
+                                Develop all affordable, excluding upgrades
                                 {developAllExcludingUpgradesPlan.toBuy.length > 0 && <span className="bulk-buy-cost">(<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</span>}
                             </button>
                         </span>
