@@ -1939,6 +1939,7 @@ function App() {
         constructionManager={constructionManager}
         terminalName={terminalName}
         onConnectCity={triggerSave}
+        onSave={triggerSave}
         onGlobeReady={() => setGlobeBuilt(true)}
       />
       </div>

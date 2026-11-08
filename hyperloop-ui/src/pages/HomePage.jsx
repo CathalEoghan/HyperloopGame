@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import * as THREE from 'three'
 import { getGlobeQuality } from '../utils/globeQuality.js'
 import cityCoordinates from '../data/cityCoordinates.js'
@@ -19,6 +20,8 @@ import { getActiveLoops, formatClock, formatDuration, distanceMiles } from '../u
 import { loopCode } from '../utils/loopCodes.js'
 import { formatDistance } from '../utils/units.js'
 import { formatPerHour } from '../utils/income.js'
+import ScheduleModal from '../components/ScheduleModal.jsx'
+import { readTimetable } from '../utils/timetable.js'
 import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
 
 // Departures are drawn in the game's gold, arrivals in blue
@@ -187,7 +190,7 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, terminalName, onConnectCity, active = true, onGlobeReady }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, terminalName, onConnectCity, onSave, active = true, onGlobeReady }) {
     const mountRef = useRef(null)
     // Chrome (and some other browsers) can drop the WebGL context entirely on certain GPU/compositor transitions -
     // toggling fullscreen being the one players actually hit - leaving the canvas permanently black with nothing
@@ -215,6 +218,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     })
     const [globeReady, setGlobeReady] = useState(false)
     const [selectedGlobeCity, setSelectedGlobeCity] = useState(null)
+    // The city whose departure is being scheduled from its card (the Schedule modal opens straight onto it), as on the Cities page
+    const [scheduleCity, setScheduleCity] = useState(null)
+    const [, setTimetableTick] = useState(0)   // bumped after a schedule change so the card re-reads the timetable
     const [selectedUnlockedCity, setSelectedUnlockedCity] = useState(null)
     // The city picture in the flag-click card can be enlarged, same as on the Cities page (bug: no way to do that here)
     const [enlargedImage, setEnlargedImage] = useState(null)
@@ -1219,7 +1225,14 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                             const coords = cityCoordinates[selectedGlobeCity.name]
                             const coordsMap = coords ? { [selectedGlobeCity.name]: coords } : null
                             const income = economyManager.withFoundersHall(economyManager.calculateCityIncome(selectedGlobeCity, coordsMap))
+                            const isHome = economyManager.isHomeCity(selectedGlobeCity)
                             const earning = economyManager.isCityEarning(selectedGlobeCity)
+                            const capacity = !isHome && earning ? economyManager.getConnectionCapacityInfo(selectedGlobeCity) : null
+                            // Same behaviour as the city card on the Cities page: the home terminal earns no departure income and has
+                            // no departure to schedule; any other connected city can be scheduled (or its departure edited) from here
+                            if (isHome) {
+                                return <p style={{ color: '#555', fontWeight: 'bold' }}>This is your home terminal. It earns no departure income.</p>
+                            }
                             return (
                                 <>
                                     <p>{earning ? 'Earning' : 'Would earn'} <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
@@ -1227,6 +1240,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                         {formatPerHour(income)}
                                     </strong> per hour</p>
                                     {!earning && <p style={{ color: '#c0392b', fontWeight: 'bold' }}>Not on the timetable: it earns nothing until it has a scheduled departure.</p>}
+                                    {capacity && (
+                                        <p style={{ color: '#555', fontSize: '0.9rem' }}>
+                                            Running at <strong>{Math.round(capacity.percent)}% capacity</strong> ({capacity.band}) · about <strong>{capacity.passengers} / {capacity.capacity}</strong> passengers
+                                        </p>
+                                    )}
+                                    <button className="lineUpgradeButton"
+                                        onMouseEnter={() => playHoverSound()}
+                                        onClick={(e) => { e.stopPropagation(); playClickSound2(); setScheduleCity(selectedGlobeCity.name) }}>
+                                        {readTimetable().some(e => e.name === selectedGlobeCity.name) ? 'Edit departure' : 'Schedule departure'}
+                                    </button>
                                 </>
                             )
                         })()}
@@ -1241,6 +1264,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                         <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setSelectedGlobeCity(null) }}>Close</button>
                     </div>
                 </div>
+            )}
+            {scheduleCity && createPortal(
+                <ScheduleModal
+                    purchasedCities={purchasedCities}
+                    terminalName={terminalName}
+                    initialCity={scheduleCity}
+                    onChange={() => { setTimetableTick(t => t + 1); onSave?.() }}
+                    onClose={() => setScheduleCity(null)}
+                />,
+                document.body
             )}
             {enlargedImage && (
                 <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
