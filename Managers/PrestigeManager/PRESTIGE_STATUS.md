@@ -35,7 +35,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 3 | Bulletproof Planning | No delays | App.jsx delay block |
 | 3 | Founders Hall Expansion | Founders' Hall step 1% to 2% per 10 days | `getFoundersHallMultiplier` |
 | 3 | Trophy Cabinet | City and development income x(1 + 2% per unique achievement), x2 at 50 (passive income only, not Work) | `getTrophyCabinetMultiplier` |
-| 3 | VIP Pods | VIP chance x10 (2% becomes 20%) | `getVipChance` |
+| 3 | Delivery Drones | Development footfall never drops below 50% (10% without it) and starts there, so each loop's +5% adds on top: 10 loops fill the terminal instead of 18 | `getDevelopmentBusyFloor` |
 | 3 | Five-Star Researchers | Experimental Technology gives 10 Prestige Points | `PrestigeManager.award` |
 | 4 | Fast Learner | Prestige Points gained are doubled (applied after Five-Star) | `PrestigeManager.award` |
 | 4 | Speedy Conveyor Belts | x2 Work earnings, on top of the Work upgrades and Anniversary Sales | `getWorkMultiplier` |
@@ -55,6 +55,7 @@ None: all 36 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 
 - **Early Retirement** (Rank 50, built): arrives unlocked under Development > Upgrades and costs 250 Reputation (no cash, no build time). Owning it enables **Retire** on the Prestige page. Re-earned every run.
 - **Anniversary Sales** (Rank 25, built, live): +5% Work earnings per unique achievement (additive).
+- **VIP Pods** (Rank 200, built, live): x10 VIP chance (2% becomes 20%). It used to be a Prestige upgrade; Delivery Drones took its place in layer 3, and anyone who owned the old one was refunded its 3 points (`RETIRED_UPGRADES` in `PrestigeManager.js`).
 
 ## Prestige runs
 
@@ -78,7 +79,7 @@ None: all 36 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 
 ## VIP passengers
 
-- When a departure's farewell window opens, `App.jsx` rolls `economyManager.getVipChance()` (2%, x10 with VIP Pods) and stores `vip: true` on the queued departure, so it survives a reload.
+- When a departure's farewell window opens, `App.jsx` rolls `economyManager.getVipChance()` (2%, x10 with VIP Pods, the Rank 200 milestone upgrade) and stores `vip: true` on the queued departure, so it survives a reload.
 - A VIP uses the normal Farewell modal with VIP wording and plays `specialChime.mp3` instead of the leaving sound. The farewell is worth x5 Reputation on top of every other bonus (`getFarewellRepGain(base, isVip)`), and unlocks Very Important Person. Arrivals can be VIPs too, with the same chance, reward and achievement.
 - Tuning: `VIP_BASE_CHANCE` and `VIP_REP_MULTIPLIER` at the top of `EconomyManager.js`.
 

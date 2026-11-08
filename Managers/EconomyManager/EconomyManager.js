@@ -32,7 +32,7 @@ const TIER_INCOME = {
 // until it leaves, or an arrival for an hour after it lands (bags, deciding where to go). A loop mid-flight, sealed
 // in its pod, contributes nothing (see getTerminalFootfallCount in utils/loops.js, and
 // EconomyManager.setBoardLoopCount, set by the UI each tick from that count).
-const DEV_BUSY_FLOOR_PCT = 10;
+const DEV_BUSY_FLOOR_PCT = 10;   // with the Delivery Drones Prestige upgrade the floor is PRESTIGE_VALUES.deliveryDronesFootfallFloor instead
 const DEV_BUSY_PCT_PER_LOOP = 5;
 const DEV_BUSY_CEILING_PCT = 100;
 // A live passive-income event nudges how busy the terminal looks, not just the headline income figure: a Profits
@@ -318,11 +318,19 @@ export class EconomyManager {
     // every development's income (see calculateDevelopmentIncome / getEffectiveDevIncomeWithBoosts) - set each
     // tick by the UI via setBoardLoopCount, since this manager has no access to the schedule storage itself.
     getDevelopmentBusyPercent(loopCount = this.boardLoopCount) {
-        const base = DEV_BUSY_FLOOR_PCT + DEV_BUSY_PCT_PER_LOOP * loopCount;
+        const floor = this.getDevelopmentBusyFloor();
+        const base = floor + DEV_BUSY_PCT_PER_LOOP * loopCount;
         let shift = 0;
         if (this.activeEvent?.effectType === 'passiveBoost') shift = DEV_BUSY_EVENT_SHIFT_PCT;
         else if (this.activeEvent?.effectType === 'passivePenalty') shift = -DEV_BUSY_EVENT_SHIFT_PCT;
-        return Math.max(DEV_BUSY_FLOOR_PCT, Math.min(DEV_BUSY_CEILING_PCT, base + shift));
+        return Math.max(floor, Math.min(DEV_BUSY_CEILING_PCT, base + shift));
+    }
+
+    // The footfall the terminal never drops below, even with nobody in it: 10%, or 50% with Delivery Drones (a Prestige
+    // upgrade). It is also where the count starts, so each loop's +5% is added on top of it - with the drones, 10 loops
+    // fill the terminal instead of 18. A negative event can't push it under the floor either.
+    getDevelopmentBusyFloor() {
+        return PrestigeManager.owns('deliveryDrones') ? PV.deliveryDronesFootfallFloor : DEV_BUSY_FLOOR_PCT;
     }
 
     getDevelopmentBusyMultiplier() {
@@ -1005,7 +1013,9 @@ export class EconomyManager {
 
     // The chance that a departure's passenger is a VIP, rolled when its farewell window opens.
     getVipChance() {
-        return Math.min(1, VIP_BASE_CHANCE * (PrestigeManager.owns('vipPods') ? 10 : 1));
+        // VIP Pods (the Rank 200 milestone upgrade) multiplies it: x10
+        const multiplier = this.getUpgradeSum('vipChanceMultiplier');
+        return Math.min(1, VIP_BASE_CHANCE * (multiplier > 0 ? multiplier : 1));
     }
 
     getFarewellCityIncomeBonus(city) {

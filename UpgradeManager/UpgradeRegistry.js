@@ -160,6 +160,7 @@ import { trafficManagementStrategy } from './TrafficManagementStrategy.js'
 import { complementaryOnboardCoffee } from './ComplementaryOnboardCoffee.js'
 import { julyTicketDeals } from './JulyTicketDeals.js'
 import { foundersHall } from './FoundersHall.js'
+import { vipPods } from './VIPPods.js'
 import { experimentalTechnology } from './ExperimentalTechnology.js'
 import { commemorativeDisplays } from './CommemorativeDisplays.js'
 import { expandedDutyFree } from './ExpandedDutyFree.js'
@@ -327,6 +328,7 @@ export const allUpgrades = [
     complementaryOnboardCoffee,
     julyTicketDeals,
     foundersHall,
+    vipPods,
     commemorativeDisplays,
     experimentalTechnology,
     expandedDutyFree,

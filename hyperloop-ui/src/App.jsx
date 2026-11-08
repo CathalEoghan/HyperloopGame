@@ -616,6 +616,7 @@ function App() {
     // Not handed over: it is unlocked, and bought with 50 Reputation (Development > Upgrades)
     { rank: PRESTIGE_MIN_RANK, upgradeName: 'Early Retirement' },
     { rank: 100, upgradeName: "Founders' Hall" },
+    { rank: 200, upgradeName: 'VIP Pods' },
   ];
   // A milestone can be noticed by more than one path (the load check, a rank-up while playing, a skipped rank), so it
   // goes into the queue once however often it is asked for: a second entry handed the reward over twice.

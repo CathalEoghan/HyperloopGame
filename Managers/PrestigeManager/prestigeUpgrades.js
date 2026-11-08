@@ -31,6 +31,7 @@ export const PRESTIGE_VALUES = {
     streamingMasteryEvery: 50,         // ... and paid every this many clicks instead
     signOnBonus: 1500000,              // Sign-On Bonus: extra cash at the start of every new run (the standard starting balance again, so double)
     pizzaParties: 2,                   // x2 positive event strength
+    deliveryDronesFootfallFloor: 50,   // Delivery Drones: development footfall never drops below this % (10% without it)
     newsColumnRep: 5,                  // News Column: +5 Reputation whenever a positive event fires
     resilienceDurationFactor: 0.5,     // Resilience: negative events (the ones with a duration) last x0.5 as long
     festiveFreakFactor: 2,             // Festive Freak: x2 season/month/special-day upgrade bonuses
@@ -72,7 +73,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'bulletproofPlanning', icon: '🛡️', layer: 3, name: 'Bulletproof Planning', description: 'No more delays, ever.' },
     { id: 'foundersHallExpansion', icon: '🏛️', layer: 3, name: 'Founders\' Hall Expansion', description: '+1% extra from the Founders\' Hall bonus.' },
     { id: 'personalFavours', icon: '🎁', layer: 3, name: 'Personal Favours', description: 'Choose any city in the world as your starting city every run.' },
-    { id: 'vipPods', icon: '🚀', layer: 3, name: 'VIP Pods', description: 'x10 VIP chance.' },
+    { id: 'deliveryDrones', icon: '🚁', layer: 3, name: 'Delivery Drones', description: `Development footfall never drops below ${V.deliveryDronesFootfallFloor}% (instead of 10%), and each loop adds to that.` },
 
     { id: 'fiveStarResearchers', icon: '🔬', layer: 3, name: 'Five-Star Researchers', description: 'Experimental Technology rewards double the Prestige Points (10 instead of 5).' },
 

@@ -720,7 +720,7 @@ const developmentRevealImages = {
     "Ride Share Kiosks": RideShareKiosks,
     "Social Media Managers": SocialMediaManagers,
     "Supermarket": Supermarket,
-    "VIPPods": VIPPods,
+    "VIP Pods": VIPPods,
 }
 
 export default developmentRevealImages

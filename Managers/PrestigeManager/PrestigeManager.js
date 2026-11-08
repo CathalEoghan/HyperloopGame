@@ -11,6 +11,11 @@ export const PRESTIGE_MIN_RANK = 50
 // Past runs kept for the history list and the Retirement count (a run takes hours, so this is never reached in practice)
 const HISTORY_LIMIT = 1000
 
+// Upgrades that have left the tree, with what each cost. load() ignores any id it no longer knows, which on its own would
+// quietly swallow the points a player spent on one - so they get them back instead, once (the id is dropped from the
+// list as they are paid). VIP Pods became the Rank 200 milestone upgrade of the same name; Delivery Drones took its place.
+const RETIRED_UPGRADES = { vipPods: 3 }
+
 let ownedCache = { raw: undefined, set: new Set(), points: 0 }
 
 const byId = Object.fromEntries(PRESTIGE_UPGRADES.map(u => [u.id, u]))
@@ -31,6 +36,8 @@ export class PrestigeManager {
                 this.points = Number.isFinite(raw.points) && raw.points > 0 ? Math.floor(raw.points) : 0
                 const ids = Array.isArray(raw.owned) ? raw.owned : []
                 this.owned = [...new Set(ids.filter(id => byId[id]))]
+                const refund = [...new Set(ids)].reduce((sum, id) => sum + (RETIRED_UPGRADES[id] ?? 0), 0)
+                if (refund > 0) { this.points += refund; this.save() }
             }
         } catch { /* nothing saved yet, or unreadable: start empty */ }
     }
@@ -132,6 +139,12 @@ export class PrestigeManager {
         let raw = null
         try { raw = localStorage.getItem(PRESTIGE_KEY) } catch { /* storage unavailable */ }
         if (raw !== ownedCache.raw) {
+            // A save that still lists a retired upgrade (an older one, or an imported file) is brought up to date - points
+            // refunded - before anything reads it
+            if (raw && Object.keys(RETIRED_UPGRADES).some(id => raw.includes(`"${id}"`))) {
+                new PrestigeManager()
+                try { raw = localStorage.getItem(PRESTIGE_KEY) } catch { /* storage unavailable */ }
+            }
             let ids = []
             let points = 0
             try {

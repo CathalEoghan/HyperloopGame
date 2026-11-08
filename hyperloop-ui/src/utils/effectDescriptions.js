@@ -5,6 +5,7 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 const pct = v => +(v * 100).toFixed(1)
 
 export const EFFECT_DESCRIPTIONS = {
+    vipChanceMultiplier: (v) => `x${v} chance of a VIP passenger`,
     foodIncome: (v) => `+${pct(v)}% income from Food developments`,
     recreationIncome: (v) => `+${pct(v)}% income from Recreation developments`,
     shoppingIncome: (v) => `+${pct(v)}% income from Shopping developments`,
