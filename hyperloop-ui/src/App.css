@@ -49,6 +49,18 @@ input, textarea, [contenteditable="true"], .selectable {
     :where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) { animation: none; }
 }
 
+/* App-level popups (rank-up, reveals, events, milestones, daily login, offline, ...) are direct children of .App and
+   share the .modal-overlay class with the dialogs that live inside pages (z-index 100, same as these). While one is
+   showing, App makes everything behind it `inert`, so anything inside a page that sits ABOVE it can't be clicked and
+   hides the popup too, leaving the player stuck. The Terminal Board (z-index 250) and the enlarged-picture lightboxes
+   in the Cities, Development and Home pages (200) did exactly that. Raising only the direct-child popups puts them
+   above both, and still below the 300+ overlays (city picker, achievements, schedule, farewell, delay), so their
+   existing order among themselves doesn't change. The direct-child selector also wins over the plain .modal-overlay
+   rules in the page stylesheets whatever order they load in. */
+.App > .modal-overlay {
+    z-index: 260;
+}
+
 body, .App {
     background-color: rgb(255, 246, 239);
 }
