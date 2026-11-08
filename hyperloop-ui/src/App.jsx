@@ -1954,6 +1954,7 @@ function App() {
         <CitiesPage
           topOffset={topOffset}
           purchasedCities={progressionManager.purchasedCities}
+          terminalName={terminalName}
           constructionManager={constructionManager}
           unlockedCities={progressionManager.unlockedCities}
           balance={balance}

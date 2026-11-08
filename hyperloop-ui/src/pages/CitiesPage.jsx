@@ -1,5 +1,8 @@
 import { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom'
 import BoostTooltip from '../components/BoostTooltip.jsx'
+import ScheduleModal from '../components/ScheduleModal.jsx'
+import { readTimetable } from '../utils/timetable.js'
 import IncomeRow from '../components/IncomeRow.jsx'
 import PageIntroModal from '../components/PageIntroModal.jsx'
 import './CitiesPage.css'
@@ -37,7 +40,7 @@ const CONTINENT_COLOURS = {
     'All': '#444'
 }
 
-function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, economyManager, onDisconnect, onUpgradeCityLine, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, topOffset = 113 }) {
+function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, economyManager, onDisconnect, onUpgradeCityLine, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, terminalName, topOffset = 113 }) {
     const [selectedCity, setSelectedCity] = useState(() => preSelectedCity || null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [showLineUpgradeModal, setShowLineUpgradeModal] = useState(false)
@@ -46,6 +49,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [sortBy, setSortBy] = usePersistedChoice('citiesSort', ['alphabetical', 'income-high', 'income-low', 'population-high', 'tier'], 'alphabetical')
     const [collapsedCountries, setCollapsedCountries] = useState(new Set())
     const [enlargedImage, setEnlargedImage] = useState(null)
+    // The city whose departure is being scheduled from its card (the Schedule modal opens straight onto it), if any
+    const [scheduleCity, setScheduleCity] = useState(null)
+    const [, setTimetableTick] = useState(0)   // re-draws the card once a departure has been added or moved
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)
     const [showCityBoostTip, setShowCityBoostTip] = useState(null) // the badge being hovered
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
@@ -323,7 +329,17 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
             </div>
 
             <div className="cities-content">
-                {enlargedImage && (
+                {scheduleCity && createPortal(
+                <ScheduleModal
+                    purchasedCities={purchasedCities}
+                    terminalName={terminalName}
+                    initialCity={scheduleCity}
+                    onChange={() => { setTimetableTick(t => t + 1); onSave?.() }}
+                    onClose={() => setScheduleCity(null)}
+                />,
+                document.body
+            )}
+            {enlargedImage && (
                     <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
                         <img src={enlargedImage} alt="enlarged" style={{ maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', border: '3px solid black' }} />
                     </div>
@@ -420,6 +436,16 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     <p style={{ margin: '0 0 6px', color: '#555', fontSize: '0.82rem' }}>
                                                         Running at <strong>{Math.round(capacity.percent)}% capacity</strong> ({capacity.band}) · about <strong>{capacity.passengers} / {capacity.capacity}</strong> passengers
                                                     </p>
+                                                )}
+                                                {/* Schedule (or change) this city's departure without leaving its card for the Terminal Board */}
+                                                {!isHome && purchasedCities.some(c => c.name === selectedCity.name) && (
+                                                    <div style={{ display: 'flex', justifyContent: 'center', margin: '2px 0 8px' }}>
+                                                        <button className="lineUpgradeButton"
+                                                            onMouseEnter={() => playHoverSound()}
+                                                            onClick={(e) => { e.stopPropagation(); playClickSound2(); setScheduleCity(selectedCity.name) }}>
+                                                            {readTimetable().some(e => e.name === selectedCity.name) ? 'Edit departure' : 'Schedule departure'}
+                                                        </button>
+                                                    </div>
                                                 )}
                                                 {!isHome && (
                                                     <>

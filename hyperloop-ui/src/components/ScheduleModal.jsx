@@ -28,23 +28,28 @@ function suggestSlot(timetable, name, nowMs = Date.now()) {
 
 // The Schedule loop screen: add a city to the departure timetable, and move or remove the ones already on it.
 // `onChange` is called after every change so the board can redraw.
-export default function ScheduleModal({ purchasedCities, terminalName, onChange = () => {}, onClose }) {
+// initialCity (optional): open straight onto that city - to add its departure, or to move it if it already has one. Used by
+// the city card; the Terminal Board opens the modal without it.
+export default function ScheduleModal({ purchasedCities, terminalName, onChange = () => {}, onClose, initialCity }) {
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const home = purchasedCities[0]
     const [version, setVersion] = useState(0)
     const timetable = readTimetable().filter(e => purchasedCities.some(c => c.name === e.name))
     const open = unscheduledCities(purchasedCities, timetable).sort((x, y) => x.name.localeCompare(y.name))
-    const [editing, setEditing] = useState(null)       // the city being moved, or null when adding
-    const [cityPick, setCity] = useState(() => open[0]?.name || '')
-    const [slot, setSlot] = useState(() => suggestSlot(timetable, open[0]?.name || ''))
+    const startEntry = initialCity ? timetable.find(e => e.name === initialCity) : null   // already scheduled: start by moving it
+    const startCity = startEntry ? startEntry.name : (initialCity && open.some(c => c.name === initialCity) ? initialCity : (open[0]?.name || ''))
+    const [editing, setEditing] = useState(() => startEntry ? startEntry.name : null)   // the city being moved, or null when adding
+    const [cityPick, setCity] = useState(() => startCity)
+    const [slot, setSlot] = useState(() => startEntry ? { minuteOfDay: startEntry.minuteOfDay, gate: startEntry.gate } : suggestSlot(timetable, startCity))
     // This city's loop number, picked from your shared pool (see loopCodes.js) - prefilled with the first
     // one that's free at the suggested time (editable, as a pick-from-the-list, not a free-text number,
     // before it's saved - and it stays reactive to the Departs time, since a number busy at one time of
     // day can be free at another, see setMinuteOfDay below).
     const [loopNumber, setLoopNumber] = useState(() => {
-        if (!open[0]) return null
-        const initialSlot = suggestSlot(timetable, open[0].name)
-        return availableLoopNumbers(timetable, open[0].name, initialSlot.minuteOfDay, purchasedCities)[0] ?? null
+        if (startEntry) return Number.isFinite(startEntry.loopNumber) ? startEntry.loopNumber : (availableLoopNumbers(timetable, startEntry.name, startEntry.minuteOfDay, purchasedCities)[0] ?? null)
+        if (!startCity) return null
+        const initialSlot = suggestSlot(timetable, startCity)
+        return availableLoopNumbers(timetable, startCity, initialSlot.minuteOfDay, purchasedCities)[0] ?? null
     })
     // The city being added. When the one picked is no longer on offer (the form was hidden because every city was
     // scheduled, then one was removed), the first city on offer is the one the form shows, so it is the one used.
@@ -125,7 +130,8 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
 
     return (
         <div className="sched-overlay" onClick={onClose}>
-            <div className="sched-panel" onClick={e => e.stopPropagation()} role="dialog" aria-label="Schedule loop">
+            {/* --sched-city-ch: the longest city name this panel can ever list, so the City box is one width however the list shrinks */}
+            <div className="sched-panel" style={{ '--sched-city-ch': Math.max(8, ...purchasedCities.map(c => c.name.length)) }} onClick={e => e.stopPropagation()} role="dialog" aria-label="Schedule loop">
                 <div className="sched-header">
                     <span className="sched-title">Schedule departures</span>
                     <button className="sched-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close">✕</button>
@@ -141,13 +147,13 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                         <div className="sched-form">
                             <div className="sched-form-title">{editing ? `Move ${editing}` : 'Add a loop'}</div>
                             <div className="sched-fields">
-                                <label className="sched-field">
+                                <label className="sched-field sched-field-city">
                                     <span>City</span>
                                     <select value={city} disabled={editing !== null} onChange={e => chooseCity(e.target.value)}>
                                         {(editing ? [{ name: editing }] : open).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
                                     </select>
                                 </label>
-                                <label className="sched-field">
+                                <label className="sched-field sched-field-time">
                                     <span>Departs</span>
                                     <span className="sched-time">
                                         <select value={hour} onChange={e => setMinuteOfDay(Number(e.target.value) * 60 + minute)} aria-label="Hour">
@@ -159,7 +165,7 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                                         </select>
                                     </span>
                                 </label>
-                                <label className="sched-field">
+                                <label className="sched-field sched-field-gate">
                                     <span>Gate</span>
                                     <select value={slot.gate} onChange={e => { setSlot(s => ({ ...s, gate: Number(e.target.value) })); setError(''); setNotice('') }}>
                                         {GATES.map(g => (
@@ -169,7 +175,7 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                                         ))}
                                     </select>
                                 </label>
-                                <label className="sched-field">
+                                <label className="sched-field sched-field-loop">
                                     <span>Loop No.</span>
                                     <span className="sched-loopno">
                                         <span className="sched-loopno-prefix">{mechanicalLoopCode(terminalName)}</span>
@@ -197,8 +203,6 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                                     )}
                                 </div>
                             )}
-                            {tooSoonToday && !problem && <p className="sched-hint">That's too soon for today, so this loop starts tomorrow.</p>}
-                            {(problem || error || loopError) && <p className="sched-error">{error || problem || loopError}</p>}
 
                             <div className="sched-actions">
                                 <button className="sched-btn sched-btn-primary" disabled={!!problem || !!loopError} onMouseEnter={() => playHoverSound()} onClick={submit}>
@@ -207,12 +211,21 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                                 {editing && (
                                     <button className="sched-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); resetForm(); setError('') }}>Cancel</button>
                                 )}
+                                {/* The one message slot: an error, else the "too soon" hint, else the confirmation of what was just
+                                    done. It lives in the button row, which is the same height whether there is a message or not, so
+                                    nothing below it ever moves when one appears or goes. */}
+                                {(() => {
+                                    const isError = !!(error || problem || loopError)
+                                    const text = error || problem || loopError || (tooSoonToday ? "That's too soon for today, so this loop starts tomorrow." : '') || notice
+                                    const kind = isError ? 'sched-error' : (tooSoonToday ? 'sched-hint' : 'sched-notice')
+                                    return text ? <span className={`sched-msg ${kind}`} title={text}>{text}</span> : null
+                                })()}
                             </div>
                         </div>
                     ) : (
                         <p className="sched-done">Every connected city has a departure. No more departures may be added.</p>
                     )}
-                    {notice && <p className="sched-notice">{notice}</p>}
+                    {!formVisible && notice && <p className="sched-notice">{notice}</p>}
 
                     <div className="sched-list-title">Timetable ({timetable.length})</div>
                     {timetable.length === 0 ? (

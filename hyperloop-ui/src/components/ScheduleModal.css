@@ -44,24 +44,36 @@
 
 .sched-form { border: 1px solid #333; border-radius: 8px; padding: 12px; background: #111; display: flex; flex-direction: column; gap: 10px; }
 .sched-form-title { color: var(--board-accent, #f5a623); font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; }
-.sched-fields { display: flex; flex-wrap: wrap; gap: 12px; }
+/* The form never reflows. Three fixed columns - City, Departs, Gate - with Loop No. on its own row below, and every box a fixed
+   width (set per field below), so changing the city, time, gate or loop number can't resize a box or send one onto another line. */
+.sched-fields { display: grid; grid-template-columns: repeat(3, max-content); column-gap: 12px; row-gap: 10px; justify-content: start; align-items: start; }
+.sched-field-loop { grid-column: 1 / -1; }
 .sched-field { display: flex; flex-direction: column; gap: 4px; font-size: 0.7rem; letter-spacing: 1px; color: #888; text-transform: uppercase; }
 .sched-time { display: inline-flex; align-items: center; gap: 4px; color: var(--board-accent, #f5a623); }
 .sched-field select {
     background: #1a1a1a; color: var(--board-accent, #f5a623); border: 1px solid #444; border-radius: 4px;
     font-family: inherit; font-size: 0.85rem; padding: 6px 8px; cursor: var(--cursor-pointer, pointer);
-    /* Without a cap, the Gate select grows to fit its widest option - and "Gate 2 (busy: Toronto at 14:05)"
-       can be a lot wider than "Gate 2", stretching the whole row every time a gate happens to be taken. */
-    max-width: 180px;
+    box-sizing: border-box;
 }
+/* A select is as wide as its widest option unless told otherwise - and "Gate 2 (busy: Toronto at 14:05)" is far wider than
+   "Gate 2", so the boxes used to resize every time a gate or loop number happened to be taken. Fixed widths instead: the
+   text that shows when closed (in this monospace font, 1ch a character) plus room for the padding and the arrow. The
+   open list still shows the full "busy" text. */
+.sched-field-city select { width: calc(var(--sched-city-ch, 12) * 1ch + 44px); }
+.sched-time select { width: calc(2ch + 44px); }
+.sched-field-gate select { width: calc(7ch + 44px); }   /* "Gate 12" */
+.sched-field-loop select { width: calc(3ch + 44px); }   /* "613" */
 .sched-field select:disabled { opacity: 0.7; cursor: var(--cursor-default, default); }
 .sched-field select option:disabled { color: #666; }
 
 .sched-loopno { display: inline-flex; align-items: center; gap: 4px; color: var(--board-accent, #f5a623); font-weight: 700; }
 .sched-loopno-prefix { letter-spacing: 1px; }
 
-.sched-preview { display: flex; flex-wrap: wrap; gap: 8px 24px; font-size: 0.78rem; }
-.sched-preview > div { display: flex; flex-direction: column; gap: 2px; }
+/* A fixed two-column grid (Should arrive | Expected passengers, then Estimated income under the first), not a wrapping row:
+   as a wrapping row the income block hopped up beside the others or dropped below them as the text changed length. */
+.sched-preview { display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: 8px 24px; align-content: start; font-size: 0.78rem; min-height: 94px; }   /* two full rows, so the form is the same height even if the income line has nothing to show */
+.sched-preview > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.sched-preview b, .sched-preview em { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sched-preview span { color: #888; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; }
 .sched-preview b { color: var(--board-accent, #f5a623); font-size: 1rem; }
 .sched-preview em { color: #777; font-style: normal; font-size: 0.68rem; }
@@ -73,7 +85,10 @@
 /* Nothing left to schedule: in the same gold as the times, so it stands out */
 .sched-done { color: var(--board-accent, #f5a623); font-weight: bold; }
 
-.sched-actions { display: flex; gap: 8px; }
+.sched-actions { display: flex; align-items: center; gap: 8px; min-height: 38px; }
+/* "Add to timetable" and "Save move" take the same room, so the row doesn't change width between adding and moving */
+.sched-actions .sched-btn-primary { min-width: 168px; }
+.sched-msg { flex: 1; min-width: 0; line-height: 1.3; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .sched-btn {
     background: none; color: #ccc; border: 1px solid #555; border-radius: 6px;
     font-family: inherit; font-size: 0.78rem; letter-spacing: 1px; padding: 7px 14px;
