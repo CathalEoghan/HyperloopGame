@@ -7,10 +7,12 @@
     min-height: 85px;
 }
 
+/* Work is the primary action, pressed constantly, so it is filled with the theme's accent (in whichever of dark or light text
+   reads on that accent). The Shop button next to the terminal name stays an outline, so the two don't compete. */
 .work-banner-btn {
-    background: white;
-    color: #333;
-    border: 2px solid var(--ui-accent, #f5a623);
+    background: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-contrast, #222);
+    border: 2px solid color-mix(in srgb, var(--ui-accent, #f5a623) 75%, black);
     border-radius: 50px;
     margin: 0 16px;
     padding: 10px 32px;
@@ -31,15 +33,15 @@ font-size: 1rem;
 }
 
 .work-banner-btn:hover {
-    background: var(--ui-accent, #f5a623);
-    color: white;
+    background: var(--ui-accent-hover, color-mix(in srgb, var(--ui-accent, #f5a623) 82%, white));
+    color: var(--ui-accent-contrast, #222);
     animation: none;
 }
 
 .work-banner-btn:active {
     transform: scale(0.92);
-    background: var(--ui-accent, #f5a623);
-    color: white;
+    background: var(--ui-accent-hover, color-mix(in srgb, var(--ui-accent, #f5a623) 82%, white));
+    color: var(--ui-accent-contrast, #222);
     animation: none;
 }
 
@@ -315,7 +317,7 @@ font-size: 1rem;
     border-radius: 0;
     display: block;
 }
-.ShopButton:hover { background: var(--ui-accent, #f5a623); color: white; }
+.ShopButton:hover { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222); }
 
 /* The Work and Shop buttons are always the same size as each other: change the size here, in one place. Placed after both
    rules above so it wins over their own padding and font-size. min-width is a floor, not a fixed width, so a very long
@@ -333,3 +335,19 @@ font-size: 1rem;
 }
 .ShopButton { gap: 10px; }
 .ShopButtonIcon { width: 26px; height: 26px; }
+
+/* On a narrower window (a half-screen window on a 1080p monitor is about 960px) the full-size buttons and a long terminal name
+   no longer fit side by side: the name was squeezed to nothing and the header grew. Both buttons shrink together below
+   1200px, so they stay the same size as each other, and the margins tighten. */
+@media (max-width: 1200px) {
+    .work-banner-btn,
+    .ShopButton {
+        height: 46px;
+        min-width: 130px;
+        padding: 0 18px;
+        font-size: 1rem;
+        margin: 0 8px;
+    }
+    .ShopButton { gap: 7px; }
+    .ShopButtonIcon { width: 22px; height: 22px; }
+}

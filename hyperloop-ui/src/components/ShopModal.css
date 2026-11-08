@@ -324,10 +324,10 @@
 /* General: top bar, globe, ticker, tabs */
 .pv-gen { background: #05060f; }
 .pv-gen-top { display: flex; align-items: center; justify-content: space-between; background: var(--ui-bar-bg, rgb(255, 240, 224)); color: var(--ui-bar-text, #222); padding: 4px 8px; font-weight: bold; font-size: 0.6rem; }
-/* Matches the real Work button (TopBanner.css .work-banner-btn): white pill, 2px accent border, bold text -
-   just scaled down to the preview's size. The real button also pulses and turns solid on hover, which isn't
-   shown here since nothing else in this static mock animates either. */
-.pv-gen-work { border: 1.5px solid var(--ui-accent, #f5a623); border-radius: 12px; padding: 1px 10px; background: white; color: #333; font-weight: bold; }
+/* Matches the real Work button (TopBanner.css .work-banner-btn): a pill filled with the accent, in whichever of dark or
+   light text reads on it, bold - just scaled down to the preview's size. The real button also pulses, which isn't shown
+   here since nothing else in this static mock animates either. */
+.pv-gen-work { border: 1.5px solid color-mix(in srgb, var(--ui-accent, #f5a623) 75%, black); border-radius: 12px; padding: 1px 10px; background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222); font-weight: bold; }
 .pv-gen-globe { display: block; width: 100%; height: 46px; }
 .pv-gen-planet { fill: #12213a; stroke: #2a4a7a; stroke-width: 1; }
 .pv-gen-globe path { fill: none; stroke-width: 2; stroke-linecap: round; }

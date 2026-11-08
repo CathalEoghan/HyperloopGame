@@ -105,6 +105,24 @@ function relativeLuminance(hex) {
     return 0.2126 * chan(r) + 0.7152 * chan(g) + 0.0722 * chan(b)
 }
 const contrastRatio = (l1, l2) => { const [hi, lo] = l1 > l2 ? [l1, l2] : [l2, l1]; return (hi + 0.05) / (lo + 0.05) }
+// Whichever of a near-black or near-white reads better on top of a given accent colour (near-black when it can't tell).
+// The same choice applyCosmetics puts on the page as --ui-accent-contrast; exported so the Shop's previews can make it
+// for the theme they are showing rather than the one equipped.
+export function accentContrastText(accent) {
+    const lum = relativeLuminance(accent)
+    const DARK = '#222222', LIGHT = '#fff'
+    return lum === null ? DARK : contrastRatio(1, lum) > contrastRatio(relativeLuminance(DARK), lum) ? LIGHT : DARK
+}
+// The accent a filled button turns to on hover/press: moved the way that helps its text read - lighter under dark text,
+// darker under light text - instead of one direction for every theme (which dimmed light text on its own fill).
+export function accentHoverFill(accent) {
+    const match = /^#([0-9a-f]{6})$/i.exec(accent)
+    if (!match) return accent
+    const lightText = accentContrastText(accent) === '#fff'
+    const [r, g, b] = [0, 2, 4].map(i => parseInt(match[1].slice(i, i + 2), 16))
+    const mix = c => Math.round(lightText ? c * 0.85 : c + (255 - c) * 0.18)
+    return '#' + [mix(r), mix(g), mix(b)].map(c => c.toString(16).padStart(2, '0')).join('')
+}
 // Nudges a "#rrggbb" colour toward white by the given fraction (0-1), keeping its hue - used below to lighten
 // an accent that's too dark to read as text on a dark card, without changing its colour family.
 function blendTowardWhite(hex, pct) {
@@ -134,10 +152,10 @@ export function applyCosmetics(state = readCosmetics()) {
     // button's hover state) nearly unreadable. Falls back to the dark text the accent's own default would want.
     const accent = getEquippedItem('generalTheme', state)?.vars?.['--ui-accent'] || '#f5a623'
     const accentLum = relativeLuminance(accent)
-    const DARK_TEXT = '#222222', LIGHT_TEXT = '#fff'
-    const contrastText = accentLum === null ? DARK_TEXT
-        : contrastRatio(1, accentLum) > contrastRatio(relativeLuminance(DARK_TEXT), accentLum) ? LIGHT_TEXT : DARK_TEXT
+    const LIGHT_TEXT = '#fff'   // what accentContrastText gives for an accent that needs light text
+    const contrastText = accentContrastText(accent)
     root.style.setProperty('--ui-accent-contrast', contrastText)
+    root.style.setProperty('--ui-accent-hover', accentHoverFill(accent))
     // A second case: several dark cards (the Progress page's stat cards and section headers among them) use the
     // accent as the TEXT colour on a fixed dark background, not as a background of its own - that reads fine for
     // most themes but a genuinely dark accent (Gingerbread, Western, Rockstar) is then dark text on a dark card.
