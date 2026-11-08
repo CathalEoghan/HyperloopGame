@@ -237,8 +237,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         : null
     // Follows the equipped theme's bar text colour (same var .time/.rank already use via CSS) so balance and
     // reputation stay readable on a dark bar theme - was hardcoded dark grey, invisible on themes like Rockstar.
-    const balanceColor = balanceFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #333)'
-    const repColor = repFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #333)'
+    const balanceColor = balanceFlash === 'down' ? '#e74c3c' : '#222'
+    const repColor = repFlash === 'down' ? '#e74c3c' : '#222'
 
     return (
         <>
@@ -281,7 +281,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <img src={cashIcon} alt="balance" /> £{formatBalance(displayBalance)}
                     {balanceFloat && (
                         <span key={balanceFloat.id} style={{
-                            position: 'absolute', left: 0, top: 0, width: '100%',
+                            position: 'absolute', left: 10, top: 5, width: 'calc(100% - 10px)',
                             color: balanceFloat.dir === 'down' ? '#e74c3c' : '#888',
                             animation: 'stat-float-up 0.6s ease-out forwards',
                             pointerEvents: 'none', whiteSpace: 'nowrap',

@@ -83,13 +83,30 @@ font-size: 1rem;
     margin: 8px 0;
 }
 
+/* The four readouts sit in their own white boxes, two across and two down, in reading order (the grid fills column by
+   column, so the markup order Time, Rank, Cash, Reputation lays out as  Time | Cash  over  Rank | Reputation).
+   The boxes are always white with dark text, whatever the equipped theme does to the bar's own colours, so the values
+   stay readable on a dark bar too. Each column is as wide as its widest box, so the two in a column line up. */
 .rightSideDetails {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    display: grid;
+    grid-template-rows: repeat(2, auto);
+    grid-auto-flow: column;
+    align-content: center;
+    gap: 6px 8px;
     padding: 8px 16px;
-    gap: 4px;
     border-right: 1px solid #ccc;
+}
+
+.rightSideDetails > .time,
+.rightSideDetails > .rank,
+.rightSideDetails > .balance,
+.rightSideDetails > .reputation {
+    background: #fff;
+    color: #222;
+    border: 1px solid #e3d3bd;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
 }
 
 .rightSideDetails img {
@@ -366,6 +383,11 @@ font-size: 1rem;
    no longer fit side by side: the name was squeezed to nothing and the header grew. Both buttons shrink together below
    1200px, so they stay the same size as each other, and the margins tighten. */
 @media (max-width: 1200px) {
+    .rightSideDetails { gap: 4px 6px; padding: 8px 10px; }
+    .rightSideDetails > .time,
+    .rightSideDetails > .rank,
+    .rightSideDetails > .balance,
+    .rightSideDetails > .reputation { padding: 4px 8px; font-size: 0.8rem; }
     .work-banner-btn,
     .ShopButton {
         height: 46px;
