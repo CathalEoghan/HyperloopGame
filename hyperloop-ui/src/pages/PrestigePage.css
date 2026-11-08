@@ -645,7 +645,11 @@
 .prestige-modal-overlay {
     position: fixed;
     inset: 0;
-    z-index: 400;
+    /* Must stay BELOW every app-level popup (the lowest are the rank-up, reveal and shop overlays at 100). This overlay
+       lives inside the page, and App makes the page `inert` while a popup is showing: at 400 the "Retire this terminal?"
+       dialog covered the popup, hiding it, while being inert itself - so neither could be clicked and the dialog
+       couldn't be closed. Below the popups, the popup shows on top and the dialog is usable again once it's dismissed. */
+    z-index: 90;
     background: rgba(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
