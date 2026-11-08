@@ -101,6 +101,34 @@ function arcPoints(from, to, segments = 64) {
     return points
 }
 
+// How a route is drawn where it meets a city. A plain tube has a handful of flat sides and is cut off square at both ends, so
+// where several routes meet at one city - the home terminal, with every route fanning out of it - their blunt, open ends
+// stack up into an angular blob that even covers the flag. These routes have enough sides to look round and narrow smoothly
+// to a point at both ends instead, so they converge cleanly under the flag.
+const ROUTE_TUBE_SEGMENTS = 96
+const ROUTE_TAPER_LENGTH = 0.055   // how far from each end the route narrows to nothing (globe radius = 1)
+function routeTubeGeometry(curve, radius, sides) {
+    const geo = new THREE.TubeGeometry(curve, ROUTE_TUBE_SEGMENTS, radius, sides, false)
+    const taper = Math.min(0.45, ROUTE_TAPER_LENGTH / curve.getLength())   // as a share of the route, never more than the nearer 45% of it
+    const pos = geo.attributes.position
+    const ring = sides + 1   // a TubeGeometry ring has one more vertex than it has sides (the seam is doubled)
+    const centre = new THREE.Vector3(), v = new THREE.Vector3()
+    for (let i = 0; i <= ROUTE_TUBE_SEGMENTS; i++) {
+        const t = i / ROUTE_TUBE_SEGMENTS
+        const k = Math.min(t, 1 - t) / taper
+        if (k >= 1) continue
+        const scale = Math.sin(k * Math.PI / 2)   // eases in: 0 at the city, 1 once past the taper
+        curve.getPointAt(t, centre)               // the same centre TubeGeometry used for this ring
+        for (let j = 0; j < ring; j++) {
+            v.fromBufferAttribute(pos, i * ring + j).sub(centre).multiplyScalar(scale).add(centre)
+            pos.setXYZ(i * ring + j, v.x, v.y, v.z)
+        }
+    }
+    pos.needsUpdate = true
+    geo.computeBoundingSphere()
+    return geo
+}
+
 function formatPopulation(pop) {
     if (pop >= 1000000000) return (pop / 1000000000).toFixed(1) + ' billion'
     if (pop >= 1000000) return Math.round(pop / 1000000) + ' million'
@@ -569,9 +597,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const curve = new THREE.CatmullRomCurve3(points)
                 const group = new THREE.Group()
                 // A dark underlay keeps white readable over bright land and cloud; the halo only shows when highlighted
-                const under = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, ROUTE_UNDER_RADIUS, 5, false), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }))
-                const line = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, 0.0019, 5, false), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false }))
-                const halo = new THREE.Mesh(new THREE.TubeGeometry(curve, 64, ROUTE_HALO_RADIUS, 6, false), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
+                const under = new THREE.Mesh(routeTubeGeometry(curve, ROUTE_UNDER_RADIUS, 10), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }))
+                const line = new THREE.Mesh(routeTubeGeometry(curve, 0.0019, 8), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false }))
+                const halo = new THREE.Mesh(routeTubeGeometry(curve, ROUTE_HALO_RADIUS, 12), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
                 halo.visible = false
                 // The shuttle: flat-faced and chamfered to a point at the nose, turned along the route.
                 // The fill stays white (readable over bright land/cloud, same as before); the edges, a
