@@ -640,7 +640,9 @@ export const POSTS = {
         'Ohhh {city}. Now thats a place i want to go ❤️',
         'Finally! This new connection to {city} will do wonders for business and tourism #Yay',
         'So excited that {terminalName} just added {city} to their network #woo',
-        'brb booking my ticket to {city} which is now connected to the loop 😊'
+        'brb booking my ticket to {city} which is now connected to the loop 😊',
+        'PACK YOUR BAGS we r going to {city}!!',
+        'yay #newconnection #{city}',
     ],
 
     newCityTier1: [
@@ -654,6 +656,14 @@ export const POSTS = {
         '{city} has no idea whats coming',
         'honestly love that {city} got a connection. smaller places deserve nice things too 🥹',
         'been to {city} once. loved it. never thought id see a loop there',
+        'is {city} even big enough to fit a hyperloop station??',
+        'officially adding {city} to my bucket list just because we can go now xx',
+        'wait, {city} is on the map now?? time for a quiet weekend trip!!',
+        '{city} was NOT on my hyperloop bingo card for this year lol',
+        'ive been going to {city} for years... yall slept on it',
+        '{city}?? where next, Ceres??',
+        'never expected {city} to get a route but good for her',
+        'Local business owners in {city} not prepared for a TSUNAMI of annoying tourists lol',
     ],
 
     newCityTier3: [
@@ -667,6 +677,16 @@ export const POSTS = {
         'if you get lost in {city} please do not call me. i will also be lost',
         'I\'ve wanted to visit {city} my entire life! Is it as busy as everyone says??',
         'cant believe a hyperloop to {city} exists now. The future is here 🚄',
+        'Waitt we can go to {city} directly now?! Bye mom 🧳',
+        'Finally! {city} is way too huge to not have a direct line.',
+        'Heading to {city}!! Time to get lost in a million skyscrapers !🏙️',
+        'a loop to {city}? hope you guys upgraded the security lines for those crowds lmao',
+        'About time we got connected to {city}. The hype is real!',
+        'Off to {city}! My bank account is already crying lmao',
+        'A route to {city} was non-negotiable at this point #travel #bigcity',
+        'direct line to {city}??',
+        'OMG no way they connected to {city} can i change loop lol',
+        'I genuinely foresee airports closing down now that this terminal is poaching all the good spots #{city}',
     ],
 
     newDevelopmentShopping: [
@@ -1020,6 +1040,8 @@ export const POSTS = {
         'at this point i will take a stale cracker. literally anything',
         'would trade my kidney for a warm meal right now #starving',
         'sitting in a foodless wasteland at {terminalName} contemplating my life choices !!',
+        'is fasting mandatory at {terminalName} or did someone just forget to build a food court??',
+        'pls build a café before i collapse on the terminal floor ☕️🙏',
     ],
 
     noShopping: [
@@ -1045,7 +1067,10 @@ export const POSTS = {
         'some fun stuff to do while we wait would be cool manager. just saying. 👍',
         'bored out of my mind nothing fun at all here to do',
         'This place would really benefit having something fun to do while waiting',
-        'Been waiting around for idk how long. Time would pass by faster if they built something fun'
+        'Been waiting around for idk how long. Time would pass by faster if they built something fun',
+        'counting tiles on the floor to pass the time… manager please build an arcade or something lols',
+        'please build literally anything fun here, I am running out of thoughts to think',
+        'is there seriously zero fun stuff to do at {terminalName} while waiting for a loop??',
     ],
 
     noService: [
