@@ -5,6 +5,7 @@ import BottomNav from "./components/BottomNav";
 import TickerBar from "./components/TickerBar";
 import RankUpModal from "./components/RankUpModal";
 import ClaimedCitiesModal from "./components/ClaimedCitiesModal";
+import PassengerAppreciationModal from "./components/PassengerAppreciationModal";
 import ClaimedDevelopmentsModal from "./components/ClaimedDevelopmentsModal";
 import CityPickerModal from "./components/CityPickerModal";
 import CityChoiceModal from "./components/CityChoiceModal";
@@ -399,6 +400,9 @@ function App() {
   const [claimedCity, setClaimedCity] = useState(null);
   // The cities unlocked by "Claim all", while their summary is on screen
   const [claimAllCities, setClaimAllCities] = useState(null);
+  // Passenger Appreciation Initiatives: the popup that follows a city reveal ({ amount, cityNames }), and the bonus waiting for that reveal to close
+  const [paBonus, setPaBonus] = useState(null);
+  const paBonusPending = useRef(null);
   // Set after "Claim all developments": the list of everything that was waiting in the reveal queue
   const [claimAllDevs, setClaimAllDevs] = useState(null);
   const [departureQueue, setDepartureQueue] = useState(() => {
@@ -696,8 +700,14 @@ function App() {
     // A chosen city is final, so a free re-roll has nothing to act on
     if (!chosen && economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
     // Ranking up pays no Reputation of its own; only the Passenger Appreciation Initiatives upgrade adds some
+    // The Reputation goes into the save now (so a reload can't lose it), but the counter and the sound wait for the
+    // Passenger Appreciation popup that follows the reveal.
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
-    if (freeRep > 0) { progressionManager.addReputation(freeRep); setReputation(progressionManager.reputation); }
+    if (freeRep > 0) {
+      progressionManager.addReputation(freeRep);
+      if (newCity) paBonusPending.current = { amount: freeRep, cityNames: [newCity.name] };
+      else setReputation(progressionManager.reputation);
+    }
     setPendingRankUps(prev => prev - 1);
     triggerSave();
   };
@@ -715,7 +725,11 @@ function App() {
       gained.push(city);
     }
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') * pendingRankUps;
-    if (freeRep > 0) { progressionManager.addReputation(freeRep); setReputation(progressionManager.reputation); }
+    if (freeRep > 0) {
+      progressionManager.addReputation(freeRep);
+      if (gained.length > 0) paBonusPending.current = { amount: freeRep, cityNames: gained.map(c => c.name) };
+      else setReputation(progressionManager.reputation);
+    }
     setPendingRankUps(0);
     if (gained.length > 0) setClaimAllCities(gained);
     triggerSave();
@@ -1683,7 +1697,7 @@ function App() {
   // then stops taking that path the moment Construction's "enter" is clicked - which was exactly "fewer hooks,
   // then more hooks" on the very next render, and crashed the app right as a new run or a prestige's fresh run
   // was getting started (bug #189).
-  const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs
+  const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus
     && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !dailyLoginData && !(showOfflineModal && !!offlineData)
     && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0;
   // Every OTHER blocking popup, i.e. everything that isn't the event modal itself - used below to decide whether
@@ -1696,7 +1710,7 @@ function App() {
   // started, until it quietly expires unseen (bug report finding #1).
   const otherPopupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
-    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
+    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || !!paBonus || pendingRankUps > 0
     || milestoneQueue.length > 0 || showSecretCityModal
   const popupOpen = otherPopupOpen || (showEventModal && !!activeEvent)
   // Mirrored into a ref so the tick's event-firing checks (a stale closure set up once by startTick, same
@@ -2313,7 +2327,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && !claimAllCities && !claimAllDevs && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && (
         <FarewellModal
           key={departureId(activeDeparture)}
           departure={activeDeparture}
@@ -2323,7 +2337,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !cityChoices && !showCityPicker && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
         <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
@@ -2376,7 +2390,7 @@ function App() {
         );
       })()}
 
-      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && !claimAllCities && !claimAllDevs && (
+      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && (
         <DevelopmentRevealModal
           key={devRevealQueue[0].name}
           development={devRevealQueue[0]}
@@ -2421,6 +2435,7 @@ function App() {
             claimedCityRef.current = null;
             setCityClaimPending(false);
             setClaimedCity(null)
+            if (paBonusPending.current) { setPaBonus(paBonusPending.current); paBonusPending.current = null }
           }}
         />
       )}
@@ -2429,11 +2444,24 @@ function App() {
         <ClaimedDevelopmentsModal developments={claimAllDevs} onClose={() => setClaimAllDevs(null)} />
       )}
 
-      {claimAllCities && !dailyLoginData && !showOfflineModal && (
-        <ClaimedCitiesModal cities={claimAllCities} onClose={() => setClaimAllCities(null)} />
+      {paBonus && !dailyLoginData && !showOfflineModal && (
+        <PassengerAppreciationModal
+          amount={paBonus.amount}
+          cityNames={paBonus.cityNames}
+          onClose={() => {
+            setReputation(progressionManager.reputation);
+            playReputationWorkBonusSound();
+            setPaBonus(null);
+            triggerSave();
+          }}
+        />
       )}
 
-      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !cityClaimPending && pendingRankUps === 0 && (
+      {claimAllCities && !dailyLoginData && !showOfflineModal && (
+        <ClaimedCitiesModal cities={claimAllCities} onClose={() => { setClaimAllCities(null); if (paBonusPending.current) { setPaBonus(paBonusPending.current); paBonusPending.current = null } }} />
+      )}
+
+      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && pendingRankUps === 0 && (
         <MilestoneModal
           milestone={milestoneQueue[0]}
           onContinue={() => {
