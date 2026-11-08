@@ -103,7 +103,7 @@ font-size: 1rem;
 .rightSideDetails > .reputation {
     background: #fff;
     color: #222;
-    border: 1px solid #e3d3bd;
+    border: 1px solid var(--ui-accent, #f5a623);   /* a thin line in the equipped theme's accent colour (orange on Classic) */
     border-radius: 8px;
     padding: 5px 10px;
     font-size: 0.9rem;
