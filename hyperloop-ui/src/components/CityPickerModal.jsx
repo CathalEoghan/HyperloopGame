@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
 import countryFlags from '../data/countryFlags.js'
-import { matchesSearch } from '../utils/search.js'
+import { matchesPlace } from '../utils/search.js'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import './CityPickerModal.css'
 import { flagSrc } from '../utils/flagSrc.js'
@@ -22,7 +22,7 @@ function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lo
     )
     const shown = sorted.filter(c =>
         (tier === 0 || c.tier === tier) &&
-        (query === '' || matchesSearch(c.name, query) || matchesSearch(c.country, query))
+        (query === '' || matchesPlace(c.name, c.country, query))
     )
 
     return (
