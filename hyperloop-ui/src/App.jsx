@@ -764,7 +764,8 @@ function App() {
       setReputation(progressionManager.reputation);
       if (!auto) playReputationWorkBonusSound();
     }
-    onRepGain?.(earned, repEarned > 0, repEarned);
+    // The fourth argument says this press paid the Livestream bonus, so the Work button can shout about it
+    onRepGain?.(earned, repEarned > 0, repEarned, livestreamRep > 0);
   };
 
   // Best P.A. Ever: Work clicks itself every 500 ms, making up clicks a throttled background tab missed.

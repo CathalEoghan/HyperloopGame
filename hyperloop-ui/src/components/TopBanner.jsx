@@ -201,8 +201,9 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
         setFloats(prev => [...prev, { id, phrase, hasRep: false, x: rect.left + rect.width / 2, y: rect.top }])
         setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
-        onWork((earned, gotRep, repAmount) => {
-            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: gotRep, earned, repGain: repAmount } : f))
+        onWork((earned, gotRep, repAmount, livestreamed) => {
+            // The click that pays the Livestream Everything / Streaming Mastery bonus gets its own message in place of a random one
+            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: gotRep, earned, repGain: repAmount, ...(livestreamed ? { phrase: 'LIVESTREAM IT!', livestream: true } : {}) } : f))
         })
         playWorkClickSound()
     }
@@ -303,7 +304,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             </button>
             {floats.map(f => (
                 <div key={f.id} className="work-float" style={{ left: f.x, top: f.y }}>
-                    <span className="work-float-phrase">{f.phrase}</span>
+                    <span className={`work-float-phrase${f.livestream ? ' work-float-livestream' : ''}`}>{f.phrase}</span>
                     <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                         +<img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(f.earned || (workRange?.low || 0))}
                         {f.hasRep && (

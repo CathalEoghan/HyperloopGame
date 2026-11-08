@@ -163,6 +163,13 @@ font-size: 1rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
 }
 
+.work-float-livestream {
+    background: var(--ui-accent, #f5a623);
+    border-color: var(--ui-accent, #f5a623);
+    color: #111;
+    letter-spacing: 0.5px;
+}
+
 .work-float-earnings {
     font-family: 'Courier New', monospace;
     font-size: 0.72rem;
