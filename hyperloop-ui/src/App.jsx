@@ -957,6 +957,16 @@ function App() {
   // and the event popup/sound/post-trigger bookkeeping). Shared by the regular random-interval trigger below
   // and by Free Wi-Fi's like-triggered roll, so both go through the exact same logic - including Improved
   // Accessibility Services' flat reputation bonus on every positive event, regardless of what triggered it.
+  // Upgrading a city's line: shared by the Cities page card and the globe's city card, so both count the achievement and save
+  const upgradeCityLine = (city) => {
+    const success = progressionManager.upgradeCityLine(city);
+    if (success) {
+      achievements.addCounter('cityUpgrades');
+      triggerSave();
+    }
+    return success;
+  };
+
   const fireEvent = (rawEvent) => {
     // This event's own generation number, so its expiry setTimeout below can tell later whether it is still
     // the current event by the time it fires (Opening Party can replace an event before its timer runs out).
@@ -1940,6 +1950,7 @@ function App() {
         terminalName={terminalName}
         onConnectCity={triggerSave}
         onSave={triggerSave}
+        onUpgradeCityLine={upgradeCityLine}
         onGlobeReady={() => setGlobeBuilt(true)}
       />
       </div>
@@ -1996,14 +2007,7 @@ function App() {
             });
             triggerSave();
           }}
-          onUpgradeCityLine={(city) => {
-            const success = progressionManager.upgradeCityLine(city);
-            if (success) {
-              achievements.addCounter('cityUpgrades');
-              triggerSave();
-            }
-            return success;
-          }}
+          onUpgradeCityLine={upgradeCityLine}
         />
       )}
       {activeTab === "Development" && (

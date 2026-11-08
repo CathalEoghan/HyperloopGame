@@ -6,7 +6,7 @@ import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
-import { playHoverSound, playClickSound2, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound } from '../utils/sound.js'
+import { playHoverSound, playClickSound2, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound, playBigMomentSound } from '../utils/sound.js'
 import { formatTime } from '../utils/time.js'
 import { makeStarPositions } from '../utils/stars.js'
 import { allCities } from '../../../CityManager/CityRegistry.js'
@@ -21,6 +21,8 @@ import { loopCode } from '../utils/loopCodes.js'
 import { formatDistance } from '../utils/units.js'
 import { formatPerHour } from '../utils/income.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
+import IncomeRow from '../components/IncomeRow.jsx'
+import BoostTooltip from '../components/BoostTooltip.jsx'
 import { readTimetable } from '../utils/timetable.js'
 import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
 
@@ -190,7 +192,7 @@ function getSunWorldPosition() {
     return latLngToVector3(sunLat, sunLng, 10)
 }
 
-function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, terminalName, onConnectCity, onSave, active = true, onGlobeReady }) {
+function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, terminalName, onConnectCity, onSave, onUpgradeCityLine, active = true, onGlobeReady }) {
     const mountRef = useRef(null)
     // Chrome (and some other browsers) can drop the WebGL context entirely on certain GPU/compositor transitions -
     // toggling fullscreen being the one players actually hit - leaving the canvas permanently black with nothing
@@ -221,6 +223,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     // The city whose departure is being scheduled from its card (the Schedule modal opens straight onto it), as on the Cities page
     const [scheduleCity, setScheduleCity] = useState(null)
     const [, setTimetableTick] = useState(0)   // bumped after a schedule change so the card re-reads the timetable
+    const [showLineUpgradeModal, setShowLineUpgradeModal] = useState(false)   // the Upgrade-the-line confirmation, as on the Cities page
+    const [showCityBoostTip, setShowCityBoostTip] = useState(null)   // the income-boost badge being hovered
+    // A different (or no) card: the upgrade confirmation belongs to the card it was opened from, so never carry it over
+    useEffect(() => { setShowLineUpgradeModal(false) }, [selectedGlobeCity])
     const [selectedUnlockedCity, setSelectedUnlockedCity] = useState(null)
     // The city picture in the flag-click card can be enlarged, same as on the Cities page (bug: no way to do that here)
     const [enlargedImage, setEnlargedImage] = useState(null)
@@ -228,6 +234,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     useEscapeToClose(() => { playClickSound2(); setSelectedGlobeCity(null) }, !!selectedGlobeCity)
     useEscapeToClose(() => { playClickSound2(); setSelectedUnlockedCity(null) }, !!selectedUnlockedCity && !purchasedCities.some(c => c.name === selectedUnlockedCity.name))
     useEscapeToClose(() => { playClickSound2(); setEnlargedImage(null) }, !!enlargedImage)
+    useEscapeToClose(() => { playClickSound2(); setShowLineUpgradeModal(false) }, showLineUpgradeModal)
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
     const showOwnedRef = useRef(showOwned)
@@ -1224,33 +1231,86 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                         {economyManager && (() => {
                             const coords = cityCoordinates[selectedGlobeCity.name]
                             const coordsMap = coords ? { [selectedGlobeCity.name]: coords } : null
-                            const income = economyManager.withFoundersHall(economyManager.calculateCityIncome(selectedGlobeCity, coordsMap))
+                            const effectiveIncome = economyManager.withFoundersHall(economyManager.calculateCityIncome(selectedGlobeCity, coordsMap))
+                            const { lines, totalBoost } = economyManager.getCityBoostBreakdown(selectedGlobeCity, coordsMap)
+                            const boostPct = Math.round(totalBoost * 100)
+                            const baseIncome = economyManager.getCityBaseIncome(selectedGlobeCity)
                             const isHome = economyManager.isHomeCity(selectedGlobeCity)
                             const earning = economyManager.isCityEarning(selectedGlobeCity)
                             const capacity = !isHome && earning ? economyManager.getConnectionCapacityInfo(selectedGlobeCity) : null
-                            // Same behaviour as the city card on the Cities page: the home terminal earns no departure income and has
+                            // The same income block as the city card on the Cities page: the home terminal earns no departure income and has
                             // no departure to schedule; any other connected city can be scheduled (or its departure edited) from here
-                            if (isHome) {
-                                return <p style={{ color: '#555', fontWeight: 'bold' }}>This is your home terminal. It earns no departure income.</p>
-                            }
                             return (
-                                <>
-                                    <p>{earning ? 'Earning' : 'Would earn'} <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />
-                                        {formatPerHour(income)}
-                                    </strong> per hour</p>
-                                    {!earning && <p style={{ color: '#c0392b', fontWeight: 'bold' }}>Not on the timetable: it earns nothing until it has a scheduled departure.</p>}
-                                    {capacity && (
-                                        <p style={{ color: '#555', fontSize: '0.9rem' }}>
+                                <div style={{ width: '100%', margin: '8px 0' }}>
+                                    {isHome ? (
+                                        <p style={{ margin: '0 0 6px', color: '#555', fontSize: '0.82rem', fontWeight: 'bold' }}>
+                                            This is your home terminal. It earns no departure income.
+                                        </p>
+                                    ) : !earning ? (
+                                        <p style={{ margin: '0 0 6px', color: '#c0392b', fontSize: '0.82rem', fontWeight: 'bold' }}>
+                                            Not on the timetable: earning nothing until it has a scheduled departure. The income below is what it earns once it does.
+                                        </p>
+                                    ) : capacity && (
+                                        <p style={{ margin: '0 0 6px', color: '#555', fontSize: '0.82rem' }}>
                                             Running at <strong>{Math.round(capacity.percent)}% capacity</strong> ({capacity.band}) · about <strong>{capacity.passengers} / {capacity.capacity}</strong> passengers
                                         </p>
                                     )}
-                                    <button className="lineUpgradeButton"
-                                        onMouseEnter={() => playHoverSound()}
-                                        onClick={(e) => { e.stopPropagation(); playClickSound2(); setScheduleCity(selectedGlobeCity.name) }}>
-                                        {readTimetable().some(e => e.name === selectedGlobeCity.name) ? 'Edit departure' : 'Schedule departure'}
-                                    </button>
-                                </>
+                                    {!isHome && (
+                                        <div style={{ display: 'flex', justifyContent: 'center', margin: '2px 0 8px' }}>
+                                            <button className="lineUpgradeButton"
+                                                onMouseEnter={() => playHoverSound()}
+                                                onClick={(e) => { e.stopPropagation(); playClickSound2(); setScheduleCity(selectedGlobeCity.name) }}>
+                                                {readTimetable().some(e => e.name === selectedGlobeCity.name) ? 'Edit departure' : 'Schedule departure'}
+                                            </button>
+                                        </div>
+                                    )}
+                                    {!isHome && (
+                                        <>
+                                            <IncomeRow label="Base income" amount={baseIncome} last={boostPct <= 0 && !capacity} />
+                                            {boostPct > 0 && (
+                                                <IncomeRow label="Boosted income" amount={effectiveIncome} last={!capacity}>
+                                                    <span
+                                                        style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'var(--cursor-help, help)', position: 'relative' }}
+                                                        onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
+                                                        onMouseLeave={() => setShowCityBoostTip(null)}
+                                                    >
+                                                        (+{boostPct.toLocaleString('en-GB')}%)
+                                                        <BoostTooltip anchor={showCityBoostTip} lines={lines} />
+                                                    </span>
+                                                </IncomeRow>
+                                            )}
+                                            {/* What it's actually earning right now: Boosted income is the full-capacity rate, but a loop is
+                                                rarely at 100% capacity - so "live" lands below the boosted figure, as on the Cities page. */}
+                                            {capacity && (
+                                                <IncomeRow label="Live income right now" amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(selectedGlobeCity, coordsMap))} last>
+                                                    <span style={{ color: '#27ae60', fontSize: '0.78rem', fontWeight: 'bold' }}>
+                                                        ({Math.round(capacity.percent)}% capacity)
+                                                    </span>
+                                                </IncomeRow>
+                                            )}
+                                        </>
+                                    )}
+                                </div>
+                            )
+                        })()}
+                        {economyManager && constructionManager && !economyManager.isHomeCity(selectedGlobeCity) && constructionManager.progressionManager.canUpgradeCityLine(selectedGlobeCity) && (() => {
+                            const pm = constructionManager.progressionManager
+                            const lineLevel = pm.getCityLineLevel(selectedGlobeCity)
+                            const lineInfo = pm.getCityLineUpgradeCostInfo(selectedGlobeCity)
+                            return (
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', padding: '8px 0' }}>
+                                    <span style={{ fontSize: '0.85rem', color: '#888' }}>Line upgrade</span>
+                                    <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <span style={{ fontWeight: 'bold' }}>{lineLevel} / 10</span>
+                                        {lineInfo && onUpgradeCityLine && (
+                                            <button className="lineUpgradeButton"
+                                                onMouseEnter={() => playHoverSound()}
+                                                onClick={(e) => { e.stopPropagation(); playClickSound2(); setShowLineUpgradeModal(true) }}>
+                                                Upgrade
+                                            </button>
+                                        )}
+                                    </span>
+                                </div>
                             )
                         })()}
                         <p><em>{selectedGlobeCity.fact}</em></p>
@@ -1265,6 +1325,37 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     </div>
                 </div>
             )}
+            {showLineUpgradeModal && selectedGlobeCity && constructionManager && (() => {
+                const pm = constructionManager.progressionManager
+                const info = pm.getCityLineUpgradeCostInfo(selectedGlobeCity)
+                if (!info) return null
+                // The real balance, not the on-screen one, which can be up to a second old (bug #170)
+                const canAfford = pm.balance >= info.cashCost && pm.reputation >= info.repCost
+                return (
+                    <div className="modal-overlay" onClick={() => setShowLineUpgradeModal(false)}>
+                        <div className="modal" onClick={e => e.stopPropagation()}>
+                            <h3>Upgrade the line to {selectedGlobeCity.name}</h3>
+                            <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
+                            <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
+                                Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
+                                {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
+                            </p>
+                            <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><span className="cost-cash-icon-wrap"><img src={cashIcon} alt="£" className="cash-icon" style={{ border: 'none' }} /></span>{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} />{info.repCost}</span></strong></>}</p>
+                            {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
+                            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
+                                <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
+                                    if (!canAfford || !onUpgradeCityLine?.(selectedGlobeCity)) { playNotEnoughFundsSound(); return }
+                                    info.nextLevel === 10 ? playBigMomentSound() : playFarewellAcceptSound()
+                                    setShowLineUpgradeModal(false)
+                                }}>
+                                    Upgrade
+                                </button>
+                                <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowLineUpgradeModal(false) }}>Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            })()}
             {scheduleCity && createPortal(
                 <ScheduleModal
                     purchasedCities={purchasedCities}
