@@ -214,6 +214,7 @@ export const POSTS = {
         'what do we actually know about this manager? Can they be trusted👀',
         'These bathrooms are so clean!! 🚽',
         'Left my passport at home 😭',
+        'Positivity is the key to success 🔑',
         'Anybody ever want to jump on the baggage reclaim belt and see where it goes?? or am i just a weirdo lol',
         'It\'s {currentTime} and I\'m thinking of you',
         'why is everyone who works here so hot tho 🔥',
