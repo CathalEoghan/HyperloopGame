@@ -1,0 +1,38 @@
+diff --git a/hyperloop-ui/src/components/TopBanner.css b/hyperloop-ui/src/components/TopBanner.css
+index 0e44217..44562db 100644
+--- a/hyperloop-ui/src/components/TopBanner.css
++++ b/hyperloop-ui/src/components/TopBanner.css
+@@ -52,21 +52,27 @@ font-size: 1rem;
+ 
+ /* Work events: a green outline ring while a positive Work event is active, red while a negative one is. Set by TopBanner.jsx
+    (workEventTone) only for workBoost / workPenalty events. The idle pulse ring takes the same colour. */
+-.work-banner-btn.work-event-boost   { border-color: #27ae60; outline: 3px solid #27ae60; outline-offset: 2px; animation-name: work-pulse-boost; }
+-.work-banner-btn.work-event-penalty { border-color: #e74c3c; outline: 3px solid #e74c3c; outline-offset: 2px; animation-name: work-pulse-penalty; }
++.work-banner-btn.work-event-boost   { border-color: #27ae60; outline: 3px solid #27ae60; outline-offset: 2px; animation-name: work-pulse-boost; animation-duration: 1.3s; animation-timing-function: ease-out; }
++.work-banner-btn.work-event-penalty { border-color: #e74c3c; outline: 3px solid #e74c3c; outline-offset: 2px; animation-name: work-pulse-penalty; animation-duration: 1.3s; animation-timing-function: ease-out; }
+ .work-banner-btn.work-event-boost:hover,   .work-banner-btn.work-event-boost:active,   .work-banner-btn.work-event-boost.work-banner-auto,
+ .work-banner-btn.work-event-penalty:hover, .work-banner-btn.work-event-penalty:active, .work-banner-btn.work-event-penalty.work-banner-auto {
+     animation: none;
+ }
+ 
++@media (prefers-reduced-motion: reduce) {
++    .work-banner-btn.work-event-boost, .work-banner-btn.work-event-penalty { animation: none; }
++}
++
+ @keyframes work-pulse-boost {
+-    0%, 100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.45); }
+-    50%       { box-shadow: 0 0 0 9px rgba(39, 174, 96, 0); }
++    0%   { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.85), 0 0 0 0 rgba(39, 174, 96, 0); transform: scale(1); }
++    35%  { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0.45), 0 0 26px 6px rgba(39, 174, 96, 0.55); transform: scale(1.07); }
++    100% { box-shadow: 0 0 0 22px rgba(39, 174, 96, 0), 0 0 0 0 rgba(39, 174, 96, 0); transform: scale(1); }
+ }
+ 
+ @keyframes work-pulse-penalty {
+-    0%, 100% { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.45); }
+-    50%       { box-shadow: 0 0 0 9px rgba(231, 76, 60, 0); }
++    0%   { box-shadow: 0 0 0 0 rgba(231, 76, 60, 0.85), 0 0 0 0 rgba(231, 76, 60, 0); transform: scale(1); }
++    35%  { box-shadow: 0 0 0 10px rgba(231, 76, 60, 0.45), 0 0 26px 6px rgba(231, 76, 60, 0.55); transform: scale(1.07); }
++    100% { box-shadow: 0 0 0 22px rgba(231, 76, 60, 0), 0 0 0 0 rgba(231, 76, 60, 0); transform: scale(1); }
+ }
+ 
+ .work-divider {

@@ -1071,9 +1071,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             const el = rightControlsRef.current
             const box = el?.parentElement?.getBoundingClientRect()
             if (!box) return
-            // Trophy: 110px up from the bottom of the window and about 78px tall, plus a little gap
-            const trophyTop = window.innerHeight - 200
-            const bottom = `${Math.max(168, Math.ceil(box.bottom - trophyTop))}px`
+            // Trophy: 110px up from the bottom of the window and --phone-btn-size tall (HyperLink.css), plus a little gap
+            const size = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--phone-btn-size')) || 78
+            const trophyTop = window.innerHeight - (110 + size + 12)
+            const bottom = `${Math.max(168 + (size - 78), Math.ceil(box.bottom - trophyTop))}px`
             if (el.style.bottom !== bottom) el.style.bottom = bottom
         }
         fit()

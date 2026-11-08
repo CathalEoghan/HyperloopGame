@@ -229,6 +229,12 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         : ''
 
     const isInstantEvent = activeEvent?.durationSeconds === 0
+    // Green / red outline on the Work button while an event that changes Work earnings specifically is running
+    // (workBoost = positive, workPenalty = negative). Other events (passive income, instant cash) don't touch it.
+    const workEventTone = isInstantEvent ? null
+        : activeEvent?.effectType === 'workBoost' ? 'boost'
+        : activeEvent?.effectType === 'workPenalty' ? 'penalty'
+        : null
     // Follows the equipped theme's bar text colour (same var .time/.rank already use via CSS) so balance and
     // reputation stay readable on a dark bar theme - was hardcoded dark grey, invisible on themes like Rockstar.
     const balanceColor = balanceFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #333)'
@@ -258,7 +264,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                 </>
             )}
             </div>
-           <button ref={btnRef} className={`work-banner-btn${autoWork ? ' work-banner-auto' : ''}`} onClick={handleWork} onKeyDown={e => { if (e.repeat) e.preventDefault() }} onMouseEnter={() => playHoverSound()}>
+           <button ref={btnRef} className={`work-banner-btn${autoWork ? ' work-banner-auto' : ''}${workEventTone ? ` work-event-${workEventTone}` : ''}`} onClick={handleWork} onKeyDown={e => { if (e.repeat) e.preventDefault() }} onMouseEnter={() => playHoverSound()}>
                 <span style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
                     Work (+<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(((workRange?.low || 0) + (workRange?.high || 0)) / 2, workRange?.low !== workRange?.high)})
                 </span>

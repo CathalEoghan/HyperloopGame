@@ -327,7 +327,7 @@
 /* Matches the real Work button (TopBanner.css .work-banner-btn): a pill filled with the accent, in whichever of dark or
    light text reads on it, bold - just scaled down to the preview's size. The real button also pulses, which isn't shown
    here since nothing else in this static mock animates either. */
-.pv-gen-work { border: 1.5px solid color-mix(in srgb, var(--ui-accent, #f5a623) 75%, black); border-radius: 12px; padding: 1px 10px; background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222); font-weight: bold; }
+.pv-gen-work { border: 1.5px solid white; border-radius: 12px; padding: 1px 10px; background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222); font-weight: bold; }
 .pv-gen-globe { display: block; width: 100%; height: 46px; }
 .pv-gen-planet { fill: #12213a; stroke: #2a4a7a; stroke-width: 1; }
 .pv-gen-globe path { fill: none; stroke-width: 2; stroke-linecap: round; }

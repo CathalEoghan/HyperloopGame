@@ -426,12 +426,16 @@
 /* Phone icon on globe - also reused for the Achievements button. Follows the equipped General theme's accent
    (--ui-accent), same as the rest of the game's chrome, not the separate Hyper-Link theme's own --hl-accent -
    these are entry-point buttons for the whole game, not part of the Hyper-Link feed page itself. */
+/* One size for both buttons. The bubble above them, and the room HomePage leaves above the trophy button for the
+   Active Loops panel (HomePage.css .globe-right-controls and HomePage.jsx), are all worked out from this value. */
+:root { --phone-btn-size: 92px; }
+
 .hyperlink-phone-btn {
     position: relative;
     bottom: auto;
     left: auto;
-    width: 78px;
-    height: 78px;
+    width: var(--phone-btn-size);
+    height: var(--phone-btn-size);
     background: rgba(10,10,10,0.75);
     border: 2px solid var(--ui-accent, #f5a623);
     border-radius: 12px;
@@ -449,8 +453,8 @@
 }
 
 .hyperlink-phone-btn img {
-    width: 48px;
-    height: 48px;
+    width: 58px;
+    height: 58px;
     border: none;
     border-radius: 0;
 }
@@ -483,7 +487,7 @@
 
 .hyperlink-notification-bubble {
     position: absolute;
-    bottom: 87.5px;
+    bottom: calc(var(--phone-btn-size) + 9.5px);
     left: 0px;
     background: #0a0a0a;
     color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
