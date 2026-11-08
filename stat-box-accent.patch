@@ -1,0 +1,27 @@
+From b41f62bb887bde7082aadd5cafca6e76bbd371d7 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 11:51:25 +0000
+Subject: [PATCH] Stat boxes: outline them in the theme's accent colour
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ hyperloop-ui/src/components/TopBanner.css | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/hyperloop-ui/src/components/TopBanner.css b/hyperloop-ui/src/components/TopBanner.css
+index 90961a1..92f4754 100644
+--- a/hyperloop-ui/src/components/TopBanner.css
++++ b/hyperloop-ui/src/components/TopBanner.css
+@@ -103,7 +103,7 @@ font-size: 1rem;
+ .rightSideDetails > .reputation {
+     background: #fff;
+     color: #222;
+-    border: 1px solid #e3d3bd;
++    border: 1px solid var(--ui-accent, #f5a623);   /* a thin line in the equipped theme's accent colour (orange on Classic) */
+     border-radius: 8px;
+     padding: 5px 10px;
+     font-size: 0.9rem;
+-- 
+2.43.0
+
