@@ -32,6 +32,8 @@ const TIER_INCOME = {
 // until it leaves, or an arrival for an hour after it lands (bags, deciding where to go). A loop mid-flight, sealed
 // in its pod, contributes nothing (see getTerminalFootfallCount in utils/loops.js, and
 // EconomyManager.setBoardLoopCount, set by the UI each tick from that count).
+// Rainforest Conservation Projects: the cities this close to the equator (degrees of latitude, north or south) earn its bonus
+export const EQUATOR_BONUS_MAX_LATITUDE = 10;
 const DEV_BUSY_FLOOR_PCT = 10;   // with the Delivery Drones Prestige upgrade the floor is PRESTIGE_VALUES.deliveryDronesFootfallFloor instead
 const DEV_BUSY_PCT_PER_LOOP = 5;
 const DEV_BUSY_CEILING_PCT = 100;
@@ -634,7 +636,7 @@ export class EconomyManager {
                 const b = this.getUpgradeSum('arcticBoost');
                 lines.push(`Arctic bonus: +${Math.round(b * 100)}%`); totalBoost += b;
             }
-            if (Math.abs(lat) <= 23 && this.hasUpgrade('equatorBoost')) {
+            if (Math.abs(lat) <= EQUATOR_BONUS_MAX_LATITUDE && this.hasUpgrade('equatorBoost')) {
                 const b = this.getUpgradeSum('equatorBoost');
                 lines.push(`Equator bonus: +${Math.round(b * 100)}%`); totalBoost += b;
             }
@@ -774,7 +776,7 @@ export class EconomyManager {
         if (coordinates && coordinates[city.name]) {
             const lat = coordinates[city.name].lat;
             if (lat > 60 && this.hasUpgrade('arcticBoost')) totalBoost += this.getUpgradeSum('arcticBoost');
-            if (Math.abs(lat) <= 23 && this.hasUpgrade('equatorBoost')) totalBoost += this.getUpgradeSum('equatorBoost');
+            if (Math.abs(lat) <= EQUATOR_BONUS_MAX_LATITUDE && this.hasUpgrade('equatorBoost')) totalBoost += this.getUpgradeSum('equatorBoost');
         }
 
         const continentExpansionBoost = this.getUpgradeSum('continentExpansionBoost');

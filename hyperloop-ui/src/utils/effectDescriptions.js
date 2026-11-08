@@ -1,4 +1,5 @@
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { EQUATOR_BONUS_MAX_LATITUDE } from 'Managers/EconomyManager/EconomyManager.js'
 
 // One list of upgrade effect descriptions, used by the unlock popup and the Developments page.
 // Whole percentages stay whole (15), fractions show properly (2.5 rather than 3) and floating point noise is removed
@@ -46,7 +47,7 @@ export const EFFECT_DESCRIPTIONS = {
     dailyLoginRep: (v) => `+${v} Reputation every day you log in`,
     freeRepOnRankUp: (v) => `+${v} Reputation each time you rank up`,
     businessWeekBoost: (v) => `+${pct(v)}% income Monday to Friday`,
-    equatorBoost: (v) => `+${pct(v)}% income from cities near the equator`,
+    equatorBoost: (v) => `+${pct(v)}% income from cities within ${EQUATOR_BONUS_MAX_LATITUDE}° of the equator`,
     infrastructureDevBoost: (v) => `+${pct(v)}% development income per Infrastructure item owned`,
     enterpriseDevBoost: (v) => `+${pct(v)}% development income per Enterprise item owned`,
     serviceDevBoost: (v) => `+${pct(v)}% development income per Service item owned`,

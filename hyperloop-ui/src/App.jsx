@@ -71,6 +71,9 @@ import "./App.css";
 
 // Random events (Under the Weather, bonuses and so on) only start from this Rank, so a new player isn't interrupted before they have found their feet
 const EVENT_MIN_RANK = 3
+// A positive event's Reputation bonuses (News Column, Improved Accessibility Services) play the Reputation sound this long after the event's own
+// chime starts: both are about two seconds long, and started together the chime would drown it out
+const EVENT_REPUTATION_SOUND_DELAY_MS = 1000
 
 const OFFLINE_RATE = 1.0;
 
@@ -1042,15 +1045,16 @@ function App() {
       }, durationSeconds * 1000);
     }
 
-    if (event.type === 'positive' && economyManager.hasUpgrade('positiveEventReputationBonus')) {
-      progressionManager.addReputation(economyManager.getUpgradeSum('positiveEventReputationBonus'));
+    // Reputation a positive event pays on top of its effect: Improved Accessibility Services' bonus, and News Column's flat
+    // bonus for every positive event however it fired (the regular roll, Opening Party, a like-triggered roll). Together they
+    // get the one Reputation sound, which these two paid in silence until now.
+    let eventRep = 0;
+    if (event.type === 'positive' && economyManager.hasUpgrade('positiveEventReputationBonus')) eventRep += economyManager.getUpgradeSum('positiveEventReputationBonus');
+    if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep += PRESTIGE_VALUES.newsColumnRep;
+    if (eventRep > 0) {
+      progressionManager.addReputation(eventRep);
       setReputation(progressionManager.reputation);
-    }
-    // News Column: every positive event (however it fired - the regular roll, Opening Party, a like-triggered
-    // roll) also pays a flat Reputation bonus, on top of anything Improved Accessibility Services gives.
-    if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) {
-      progressionManager.addReputation(PRESTIGE_VALUES.newsColumnRep);
-      setReputation(progressionManager.reputation);
+      setTimeout(playReputationWorkBonusSound, EVENT_REPUTATION_SOUND_DELAY_MS);
     }
   };
 
