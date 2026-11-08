@@ -115,6 +115,31 @@ export function clearGameState() {
     clearDayState()
 }
 
+// The player's settings and view preferences: how the game looks and behaves for them (Settings page toggles, the globe's
+// view, the Terminal Board's tab, the Shop's last category). They are not part of any one game, so clearGameState leaves
+// them alone and a prestige keeps them (a retire is the same save). Delete Save is the only thing that puts them back to
+// the defaults, by calling clearSettings below: a brand-new game then starts with every setting at its default.
+// The sound settings (soundEnabled, soundVolumes, soundMuted) are reset separately by resetSoundSettings in sound.js.
+// Not listed on purpose: hyperloop_save_backup (a copy of a save that would not load - nothing the game does is meant to
+// delete that) and the tab-lock keys (they only stop two tabs running the game at once).
+const SETTINGS_KEYS = [
+    'hyperloop_event_tint',
+    'globeNightMode',
+    'globeQuality',
+    'globeView',
+    'globeShowOwned',
+    'globeLoopsPanelOpen',
+    'distanceUnit',
+    'splitFlap',
+    'hyperloop_notifications',
+    'terminalBoardTab',
+    'hyperloop_shop_last_category',
+]
+
+export function clearSettings() {
+    removeKeys(SETTINGS_KEYS)
+}
+
 // What a prestige keeps. Everything else about the run is cleared. The two date stamps stay so that the
 // fresh run can't be handed today's daily bonus or today's first-farewell bonus a second time.
 const PRESTIGE_KEEP_KEYS = [

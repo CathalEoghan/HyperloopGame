@@ -1,5 +1,6 @@
 import { Component } from 'react'
-import { exportSave } from 'Managers/SaveManager.js'
+import { exportSave, clearSettings } from 'Managers/SaveManager.js'
+import { resetSoundSettings } from '../utils/sound.js'
 
 // Last line of defence (bug #88): if the game crashes while drawing the screen, show a way out
 // instead of a blank page. The player can download their save and, if the crash keeps
@@ -22,6 +23,9 @@ class ErrorBoundary extends Component {
     Object.keys(localStorage).forEach(key => {
       if (key.startsWith('hyperloop_') || key.startsWith('departures_') || key.startsWith('arrivals_')) localStorage.removeItem(key)
     })
+    // The settings that don't start with hyperloop_ (Globe Night Mode, Split Flap, sound ...) too: "delete everything" means everything
+    clearSettings()
+    resetSoundSettings()
     window.location.reload()
   }
 
