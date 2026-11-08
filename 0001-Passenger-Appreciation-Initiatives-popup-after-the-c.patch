@@ -1,0 +1,275 @@
+From 62ed1b0ace6fc0065e7f1a6f0f11f4b2767be85b Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 21:00:48 +0000
+Subject: [PATCH] Passenger Appreciation Initiatives: popup after the city
+ reveal, Reputation and sound fire on Cool!
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ hyperloop-ui/src/App.jsx                      | 46 ++++++++---
+ .../components/PassengerAppreciationModal.css | 80 +++++++++++++++++++
+ .../components/PassengerAppreciationModal.jsx | 33 ++++++++
+ 3 files changed, 150 insertions(+), 9 deletions(-)
+ create mode 100644 hyperloop-ui/src/components/PassengerAppreciationModal.css
+ create mode 100644 hyperloop-ui/src/components/PassengerAppreciationModal.jsx
+
+diff --git a/hyperloop-ui/src/App.jsx b/hyperloop-ui/src/App.jsx
+index 9f0377a..0863195 100644
+--- a/hyperloop-ui/src/App.jsx
++++ b/hyperloop-ui/src/App.jsx
+@@ -5,6 +5,7 @@ import BottomNav from "./components/BottomNav";
+ import TickerBar from "./components/TickerBar";
+ import RankUpModal from "./components/RankUpModal";
+ import ClaimedCitiesModal from "./components/ClaimedCitiesModal";
++import PassengerAppreciationModal from "./components/PassengerAppreciationModal";
+ import ClaimedDevelopmentsModal from "./components/ClaimedDevelopmentsModal";
+ import CityPickerModal from "./components/CityPickerModal";
+ import CityChoiceModal from "./components/CityChoiceModal";
+@@ -399,6 +400,9 @@ function App() {
+   const [claimedCity, setClaimedCity] = useState(null);
+   // The cities unlocked by "Claim all", while their summary is on screen
+   const [claimAllCities, setClaimAllCities] = useState(null);
++  // Passenger Appreciation Initiatives: the popup that follows a city reveal ({ amount, cityNames }), and the bonus waiting for that reveal to close
++  const [paBonus, setPaBonus] = useState(null);
++  const paBonusPending = useRef(null);
+   // Set after "Claim all developments": the list of everything that was waiting in the reveal queue
+   const [claimAllDevs, setClaimAllDevs] = useState(null);
+   const [departureQueue, setDepartureQueue] = useState(() => {
+@@ -696,8 +700,14 @@ function App() {
+     // A chosen city is final, so a free re-roll has nothing to act on
+     if (!chosen && economyManager.hasUpgrade('freeRerollOnRankUp')) setHasFreeReroll(true);
+     // Ranking up pays no Reputation of its own; only the Passenger Appreciation Initiatives upgrade adds some
++    // The Reputation goes into the save now (so a reload can't lose it), but the counter and the sound wait for the
++    // Passenger Appreciation popup that follows the reveal.
+     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
+-    if (freeRep > 0) { progressionManager.addReputation(freeRep); setReputation(progressionManager.reputation); }
++    if (freeRep > 0) {
++      progressionManager.addReputation(freeRep);
++      if (newCity) paBonusPending.current = { amount: freeRep, cityNames: [newCity.name] };
++      else setReputation(progressionManager.reputation);
++    }
+     setPendingRankUps(prev => prev - 1);
+     triggerSave();
+   };
+@@ -715,7 +725,11 @@ function App() {
+       gained.push(city);
+     }
+     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') * pendingRankUps;
+-    if (freeRep > 0) { progressionManager.addReputation(freeRep); setReputation(progressionManager.reputation); }
++    if (freeRep > 0) {
++      progressionManager.addReputation(freeRep);
++      if (gained.length > 0) paBonusPending.current = { amount: freeRep, cityNames: gained.map(c => c.name) };
++      else setReputation(progressionManager.reputation);
++    }
+     setPendingRankUps(0);
+     if (gained.length > 0) setClaimAllCities(gained);
+     triggerSave();
+@@ -1683,7 +1697,7 @@ function App() {
+   // then stops taking that path the moment Construction's "enter" is clicked - which was exactly "fewer hooks,
+   // then more hooks" on the very next render, and crashed the app right as a new run or a prestige's fresh run
+   // was getting started (bug #189).
+-  const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs
++  const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus
+     && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !dailyLoginData && !(showOfflineModal && !!offlineData)
+     && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0;
+   // Every OTHER blocking popup, i.e. everything that isn't the event modal itself - used below to decide whether
+@@ -1696,7 +1710,7 @@ function App() {
+   // started, until it quietly expires unseen (bug report finding #1).
+   const otherPopupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
+     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
+-    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || pendingRankUps > 0
++    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || !!paBonus || pendingRankUps > 0
+     || milestoneQueue.length > 0 || showSecretCityModal
+   const popupOpen = otherPopupOpen || (showEventModal && !!activeEvent)
+   // Mirrored into a ref so the tick's event-firing checks (a stale closure set up once by startTick, same
+@@ -2313,7 +2327,7 @@ function App() {
+         />
+       )}
+ 
+-      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && !claimAllCities && !claimAllDevs && (
++      {!dailyLoginData && !showOfflineModal && !activeDelay && activeDeparture && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && (
+         <FarewellModal
+           key={departureId(activeDeparture)}
+           departure={activeDeparture}
+@@ -2323,7 +2337,7 @@ function App() {
+         />
+       )}
+ 
+-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !cityChoices && !showCityPicker && (
++      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
+         <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
+          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
+          if (claimedCityRef.current) return;
+@@ -2376,7 +2390,7 @@ function App() {
+         );
+       })()}
+ 
+-      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && !claimAllCities && !claimAllDevs && (
++      {!dailyLoginData && devRevealQueue.length > 0 && !showOfflineModal && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && (
+         <DevelopmentRevealModal
+           key={devRevealQueue[0].name}
+           development={devRevealQueue[0]}
+@@ -2421,6 +2435,7 @@ function App() {
+             claimedCityRef.current = null;
+             setCityClaimPending(false);
+             setClaimedCity(null)
++            if (paBonusPending.current) { setPaBonus(paBonusPending.current); paBonusPending.current = null }
+           }}
+         />
+       )}
+@@ -2429,11 +2444,24 @@ function App() {
+         <ClaimedDevelopmentsModal developments={claimAllDevs} onClose={() => setClaimAllDevs(null)} />
+       )}
+ 
++      {paBonus && !dailyLoginData && !showOfflineModal && (
++        <PassengerAppreciationModal
++          amount={paBonus.amount}
++          cityNames={paBonus.cityNames}
++          onClose={() => {
++            setReputation(progressionManager.reputation);
++            playReputationWorkBonusSound();
++            setPaBonus(null);
++            triggerSave();
++          }}
++        />
++      )}
++
+       {claimAllCities && !dailyLoginData && !showOfflineModal && (
+-        <ClaimedCitiesModal cities={claimAllCities} onClose={() => setClaimAllCities(null)} />
++        <ClaimedCitiesModal cities={claimAllCities} onClose={() => { setClaimAllCities(null); if (paBonusPending.current) { setPaBonus(paBonusPending.current); paBonusPending.current = null } }} />
+       )}
+ 
+-      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !cityClaimPending && pendingRankUps === 0 && (
++      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && pendingRankUps === 0 && (
+         <MilestoneModal
+           milestone={milestoneQueue[0]}
+           onContinue={() => {
+diff --git a/hyperloop-ui/src/components/PassengerAppreciationModal.css b/hyperloop-ui/src/components/PassengerAppreciationModal.css
+new file mode 100644
+index 0000000..d5baaec
+--- /dev/null
++++ b/hyperloop-ui/src/components/PassengerAppreciationModal.css
+@@ -0,0 +1,80 @@
++.pai-overlay {
++    position: fixed;
++    top: 0;
++    left: 0;
++    width: 100%;
++    height: 100%;
++    background: rgba(0, 0, 0, 0.8);
++    /* Same tier as the other notice popups (Delay 330, Farewell): above ScheduleModal (255) */
++    z-index: 330;
++    display: flex;
++    align-items: center;
++    justify-content: center;
++}
++
++.pai-modal {
++    background: #0a0a0a;
++    border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
++    border-radius: 8px;
++    padding: 40px 48px;
++    text-align: center;
++    max-width: 500px;
++    width: 90%;
++    font-family: 'Courier New', Courier, monospace;
++    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), 0 20px 60px rgba(0, 0, 0, 0.8);
++}
++
++.pai-header {
++    color: var(--board-accent-readable, var(--board-accent, #f5a623));
++    font-size: 1.3rem;
++    font-weight: bold;
++    letter-spacing: 4px;
++    margin: 0 0 12px;
++}
++
++.pai-divider {
++    color: var(--board-accent-readable, var(--board-accent, #f5a623));
++    opacity: 0.4;
++    margin: 0 0 20px;
++    font-size: 0.9rem;
++    letter-spacing: 2px;
++}
++
++.pai-message {
++    color: #ccc;
++    font-size: 0.95rem;
++    line-height: 1.8;
++    margin: 0 0 16px;
++}
++
++.pai-message strong { color: #fff; }
++
++.pai-earned {
++    color: #fff;
++    font-size: 1.1rem;
++    margin: 0 0 28px;
++    display: flex;
++    align-items: center;
++    justify-content: center;
++    gap: 5px;
++}
++
++.pai-rep-icon { width: 18px; height: 18px; border: none; border-radius: 0; }
++
++.pai-btn {
++    background: none;
++    border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
++    color: var(--board-accent-readable, var(--board-accent, #f5a623));
++    font-family: 'Courier New', Courier, monospace;
++    font-size: 1rem;
++    letter-spacing: 1px;
++    padding: 14px 48px;
++    cursor: var(--cursor-pointer, pointer);
++    border-radius: 4px;
++    transition: background 0.2s, color 0.2s;
++}
++
++.pai-btn:hover {
++    background: var(--board-accent, #f5a623);
++    color: var(--board-accent-contrast, #0a0a1a);
++}
+diff --git a/hyperloop-ui/src/components/PassengerAppreciationModal.jsx b/hyperloop-ui/src/components/PassengerAppreciationModal.jsx
+new file mode 100644
+index 0000000..016e758
+--- /dev/null
++++ b/hyperloop-ui/src/components/PassengerAppreciationModal.jsx
+@@ -0,0 +1,33 @@
++import { useEffect } from 'react'
++import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playEventSound } from '../utils/sound.js'
++import reputationIcon from '../assets/misc/reputation.png'
++import './PassengerAppreciationModal.css'
++
++// Shown right after the "You've unlocked ..." reveal when the Passenger Appreciation Initiatives upgrade is owned.
++// The Reputation is already in the save; this popup is what shows it landing (the counter and sound fire on "Cool!").
++function PassengerAppreciationModal({ amount, cityNames, onClose }) {
++    useEffect(() => { playEventSound() }, [])
++    const where = cityNames.length === 1 ? cityNames[0] : `${cityNames.length} new cities`
++    return (
++        <div className="pai-overlay">
++            <div className="pai-modal" role="dialog" aria-label="Passenger Appreciation Initiative">
++                <p className="pai-header">PASSENGER APPRECIATION INITIATIVE</p>
++                <div className="pai-divider">━━━━━━━━━━━━━━━━━━━━</div>
++                <p className="pai-message">
++                    You're offering your most loyal passengers a chance to win tickets to <strong>{where}</strong>!
++                </p>
++                <p className="pai-earned">
++                    You've earned <img src={reputationIcon} alt="" className="pai-rep-icon" /><strong>{amount}</strong> Reputation!
++                </p>
++                <button className="pai-btn"
++                    onMouseEnter={() => playHoverSound()}
++                    autoFocus
++                    onClick={() => { playClickSound2(); onClose() }}>
++                    Cool!
++                </button>
++            </div>
++        </div>
++    )
++}
++
++export default PassengerAppreciationModal
+-- 
+2.43.0
+

@@ -1,0 +1,33 @@
+From cd8153dee56517461c89f3dc852d38f66097da5a Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 21:23:22 +0000
+Subject: [PATCH] Passenger Appreciation popup animates in like the other
+ modals
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ hyperloop-ui/src/App.css | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/hyperloop-ui/src/App.css b/hyperloop-ui/src/App.css
+index cb043ce..11defad 100644
+--- a/hyperloop-ui/src/App.css
++++ b/hyperloop-ui/src/App.css
+@@ -42,11 +42,11 @@ input, textarea, [contenteditable="true"], .selectable {
+     from { opacity: 0; transform: scale(0.97); }
+     to   { opacity: 1; transform: scale(1); }
+ }
+-:where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) {
++:where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .pai-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) {
+     animation: ui-modal-in 0.25s ease;
+ }
+ @media (prefers-reduced-motion: reduce) {
+-    :where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) { animation: none; }
++    :where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .pai-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) { animation: none; }
+ }
+ 
+ /* App-level popups (rank-up, reveals, events, milestones, daily login, offline, ...) are direct children of .App and
+-- 
+2.43.0
+
