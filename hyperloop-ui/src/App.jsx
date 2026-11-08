@@ -5,7 +5,7 @@ import BottomNav from "./components/BottomNav";
 import TickerBar from "./components/TickerBar";
 import RankUpModal from "./components/RankUpModal";
 import ClaimedCitiesModal from "./components/ClaimedCitiesModal";
-import PassengerAppreciationModal from "./components/PassengerAppreciationModal";
+import RepBonusModal from "./components/RepBonusModal";
 import ClaimedDevelopmentsModal from "./components/ClaimedDevelopmentsModal";
 import CityPickerModal from "./components/CityPickerModal";
 import CityChoiceModal from "./components/CityChoiceModal";
@@ -400,9 +400,15 @@ function App() {
   const [claimedCity, setClaimedCity] = useState(null);
   // The cities unlocked by "Claim all", while their summary is on screen
   const [claimAllCities, setClaimAllCities] = useState(null);
-  // Passenger Appreciation Initiatives: the popup that follows a city reveal ({ amount, cityNames }), and the bonus waiting for that reveal to close
-  const [paBonus, setPaBonus] = useState(null);
+  // Upgrade Reputation bonuses waiting to be shown after the reveal they belong to ({ title, message, amount, buttonLabel,
+  // afterUpgradeReveal }): Passenger Appreciation Initiatives (city reveal) and Expanded Family Rooms (milestone reveal).
+  // The one on screen is paBonus (derived below, once revealedUpgradeQueue exists).
+  const [bonusQueue, setBonusQueue] = useState([]);
   const paBonusPending = useRef(null);
+  // Reputation already in the save for an upgrade bonus whose popup hasn't been clicked yet. The counter leaves it out
+  // (the game loop re-syncs the counter every tick, so it would otherwise pay out before the "Cool!" click).
+  const heldRepRef = useRef(0);
+  const shownReputation = () => progressionManager.reputation - heldRepRef.current;
   // Set after "Claim all developments": the list of everything that was waiting in the reveal queue
   const [claimAllDevs, setClaimAllDevs] = useState(null);
   const [departureQueue, setDepartureQueue] = useState(() => {
@@ -508,6 +514,8 @@ function App() {
   const [showShop, setShowShop] = useState(false);
   const [cosmetics, setCosmetics] = useState(() => readCosmetics());
   const [revealedUpgradeQueue, setRevealedUpgradeQueue] = useState([]);
+  // The bonus popup on screen now: a milestone's waits until the upgrade reveal queue is empty
+  const paBonus = (bonusQueue[0] && !(bonusQueue[0].afterUpgradeReveal && revealedUpgradeQueue.length > 0)) ? bonusQueue[0] : null;
   const [activeEvent, setActiveEvent] = useState(() => {
     const saved = localStorage.getItem('hyperloop_active_event')
     if (!saved) return null
@@ -688,6 +696,11 @@ function App() {
     if (cityChoices) localStorage.setItem(CITY_OFFER_KEY, JSON.stringify({ names: cityChoices.map(city => city.name), freeReroll: hasFreeReroll }));
     else localStorage.removeItem(CITY_OFFER_KEY);
   }, [cityChoices, hasFreeReroll]);
+  const queuePassengerBonus = ({ amount, cityNames }) => setBonusQueue(prev => [...prev, {
+    title: 'PASSENGER APPRECIATION INITIATIVE',
+    message: <>You're offering your most loyal passengers a chance to win tickets to <strong>{cityNames.length === 1 ? cityNames[0] : `${cityNames.length} new cities`}</strong>!</>,
+    amount, buttonLabel: 'Cool!',
+  }]);
   // Takes the rank-up: unlocks the city (drawn at random, or chosen) and pays the rank-up bonuses.
   const claimRankUp = (newCity, chosen) => {
     if (claimedCityRef.current) return;
@@ -705,8 +718,8 @@ function App() {
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp');
     if (freeRep > 0) {
       progressionManager.addReputation(freeRep);
-      if (newCity) paBonusPending.current = { amount: freeRep, cityNames: [newCity.name] };
-      else setReputation(progressionManager.reputation);
+      if (newCity) { paBonusPending.current = { amount: freeRep, cityNames: [newCity.name] }; heldRepRef.current += freeRep }
+      else setReputation(shownReputation());
     }
     setPendingRankUps(prev => prev - 1);
     triggerSave();
@@ -727,8 +740,8 @@ function App() {
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') * pendingRankUps;
     if (freeRep > 0) {
       progressionManager.addReputation(freeRep);
-      if (gained.length > 0) paBonusPending.current = { amount: freeRep, cityNames: gained.map(c => c.name) };
-      else setReputation(progressionManager.reputation);
+      if (gained.length > 0) { paBonusPending.current = { amount: freeRep, cityNames: gained.map(c => c.name) }; heldRepRef.current += freeRep }
+      else setReputation(shownReputation());
     }
     setPendingRankUps(0);
     if (gained.length > 0) setClaimAllCities(gained);
@@ -779,7 +792,7 @@ function App() {
     const repEarned = (gotRep ? 5 : 0) + livestreamRep;
     if (repEarned > 0) {
       progressionManager.addReputation(repEarned);
-      setReputation(progressionManager.reputation);
+      setReputation(shownReputation());
       if (!auto) playReputationWorkBonusSound();
     }
     // The fourth argument says this press paid the Livestream bonus, so the Work button can shout about it
@@ -1077,7 +1090,7 @@ function App() {
     if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep += PRESTIGE_VALUES.newsColumnRep;
     if (eventRep > 0) {
       progressionManager.addReputation(eventRep);
-      setReputation(progressionManager.reputation);
+      setReputation(shownReputation());
       setTimeout(playReputationWorkBonusSound, EVENT_REPUTATION_SOUND_DELAY_MS);
     }
   };
@@ -1593,7 +1606,7 @@ function App() {
       setRankSet(rankManager.rank);
       rankSetRef.current = rankManager.rank;
       setTotalCashEarned(progressionManager.totalCashEarned);
-      setReputation(progressionManager.reputation);
+      setReputation(shownReputation());
       setPurchasedCitiesCount(progressionManager.purchasedCities.length);
 
       // Achievements: check the game once a second (balance and the like change between the events that trigger a save)
@@ -1859,7 +1872,7 @@ function App() {
     if (!progressionManager.spendReputation(item.cost)) return false;
     unlockAchievement('shoppingSpree');
     updateCosmetics(withEquipped(withPurchase(cosmetics, category, item.id), category, item.id));
-    setReputation(progressionManager.reputation);
+    setReputation(shownReputation());
     triggerSave();
     return true;
   };
@@ -1883,7 +1896,7 @@ function App() {
       next = withEquipped(next, category, id);
     });
     updateCosmetics(next);
-    setReputation(progressionManager.reputation);
+    setReputation(shownReputation());
     triggerSave();
     return true;
   };
@@ -2084,7 +2097,7 @@ function App() {
               setTotalCashEarned(progressionManager.totalCashEarned);
             } else {
               progressionManager.addReputation(reward.amount);
-              setReputation(progressionManager.reputation);
+              setReputation(shownReputation());
             }
             triggerSave();
           }}
@@ -2201,7 +2214,7 @@ function App() {
             window.location.reload();
           }}
           onManualSave={triggerSave}
-          onReputationBonus={(amount) => { progressionManager.addReputation(amount); setReputation(progressionManager.reputation); }}
+          onReputationBonus={(amount) => { progressionManager.addReputation(amount); setReputation(shownReputation()); }}
           onSurprise={() => unlockAchievement('surprise')}
         />
       )}
@@ -2242,7 +2255,7 @@ function App() {
           onCollect={(finalBonus) => {
             progressionManager.addReputation(-dailyDoubleRep.current);
             dailyDoubleRep.current = 0;
-            setReputation(progressionManager.reputation); // so the next popup does not offer a double the player can no longer afford (bug #122)
+            setReputation(shownReputation()); // so the next popup does not offer a double the player can no longer afford (bug #122)
             localStorage.removeItem('hyperloop_pending_daily');
             achievements.addCounter('dailyBonus');
             progressionManager.addCash(finalBonus);
@@ -2307,7 +2320,7 @@ function App() {
           onCollect={(finalIncome) => {
             progressionManager.addReputation(-offlineDoubleRep.current);
             offlineDoubleRep.current = 0;
-            setReputation(progressionManager.reputation);
+            setReputation(shownReputation());
             localStorage.removeItem('hyperloop_pending_offline');
             progressionManager.addCash(finalIncome);
             setShowOfflineModal(false);
@@ -2323,7 +2336,7 @@ function App() {
           economyManager={economyManager}
           balance={balance}
           onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
-          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(progressionManager.reputation); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
+          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(shownReputation()); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
         />
       )}
 
@@ -2379,7 +2392,7 @@ function App() {
             onReroll={canReroll ? () => {
               if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
               progressionManager.addReputation(-rerollCost);
-              setReputation(progressionManager.reputation);
+              setReputation(shownReputation());
               setHasFreeReroll(false);
               setCityChoices(progressionManager.getCityChoices(allCities, economyManager.getCityChoiceCount(), cityChoices));
               triggerSave();
@@ -2435,7 +2448,7 @@ function App() {
             claimedCityRef.current = null;
             setCityClaimPending(false);
             setClaimedCity(null)
-            if (paBonusPending.current) { setPaBonus(paBonusPending.current); paBonusPending.current = null }
+            if (paBonusPending.current) { queuePassengerBonus(paBonusPending.current); paBonusPending.current = null }
           }}
         />
       )}
@@ -2445,20 +2458,24 @@ function App() {
       )}
 
       {paBonus && !dailyLoginData && !showOfflineModal && (
-        <PassengerAppreciationModal
+        <RepBonusModal
+          key={paBonus.title}
+          title={paBonus.title}
+          message={paBonus.message}
           amount={paBonus.amount}
-          cityNames={paBonus.cityNames}
+          buttonLabel={paBonus.buttonLabel}
           onClose={() => {
-            setReputation(progressionManager.reputation);
+            heldRepRef.current = Math.max(0, heldRepRef.current - paBonus.amount);
+            setReputation(shownReputation());
             playReputationWorkBonusSound();
-            setPaBonus(null);
+            setBonusQueue(prev => prev.slice(1));
             triggerSave();
           }}
         />
       )}
 
       {claimAllCities && !dailyLoginData && !showOfflineModal && (
-        <ClaimedCitiesModal cities={claimAllCities} onClose={() => { setClaimAllCities(null); if (paBonusPending.current) { setPaBonus(paBonusPending.current); paBonusPending.current = null } }} />
+        <ClaimedCitiesModal cities={claimAllCities} onClose={() => { setClaimAllCities(null); if (paBonusPending.current) { queuePassengerBonus(paBonusPending.current); paBonusPending.current = null } }} />
       )}
 
       {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && pendingRankUps === 0 && (
@@ -2491,8 +2508,14 @@ function App() {
               const bonus = progressionManager.purchasedUpgrades
                 .filter(u => u.effectType === 'milestoneReputationBonus')
                 .reduce((sum, u) => sum + u.effectValue, 0);
+              // Into the save now; the counter and sound wait for the popup that follows the upgrade reveal
               progressionManager.addReputation(bonus);
-              setReputation(progressionManager.reputation);
+              heldRepRef.current += bonus;
+              setBonusQueue(prev => [...prev, {
+                title: 'EXPANDED FAMILY ROOMS',
+                message: 'Your new family rooms are open, and passengers and staff with small children are joining in the milestone celebrations!',
+                amount: bonus, buttonLabel: 'Yay!', afterUpgradeReveal: true,
+              }]);
             }
             claimedMilestones.current.add(milestoneKey(milestone));
             localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
@@ -2566,7 +2589,7 @@ function App() {
             }
             if (!PrestigeManager.owns('cultOfCelebrity')) return;
             progressionManager.addReputation(1);
-            setReputation(progressionManager.reputation);
+            setReputation(shownReputation());
             triggerSave();
           }}
           onClose={() => setHyperLinkOpen(false)}

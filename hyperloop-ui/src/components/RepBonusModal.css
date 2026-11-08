@@ -1,4 +1,4 @@
-.pai-overlay {
+.rb-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -12,7 +12,7 @@
     justify-content: center;
 }
 
-.pai-modal {
+.rb-modal {
     background: #0a0a0a;
     border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
     border-radius: 8px;
@@ -24,7 +24,7 @@
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), 0 20px 60px rgba(0, 0, 0, 0.8);
 }
 
-.pai-header {
+.rb-header {
     color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-size: 1.3rem;
     font-weight: bold;
@@ -32,7 +32,7 @@
     margin: 0 0 12px;
 }
 
-.pai-divider {
+.rb-divider {
     color: var(--board-accent-readable, var(--board-accent, #f5a623));
     opacity: 0.4;
     margin: 0 0 20px;
@@ -40,16 +40,16 @@
     letter-spacing: 2px;
 }
 
-.pai-message {
+.rb-message {
     color: #ccc;
     font-size: 0.95rem;
     line-height: 1.8;
     margin: 0 0 16px;
 }
 
-.pai-message strong { color: #fff; }
+.rb-message strong { color: #fff; }
 
-.pai-earned {
+.rb-earned {
     color: #fff;
     font-size: 1.1rem;
     margin: 0 0 28px;
@@ -59,9 +59,9 @@
     gap: 5px;
 }
 
-.pai-rep-icon { width: 18px; height: 18px; border: none; border-radius: 0; }
+.rb-rep-icon { width: 18px; height: 18px; border: none; border-radius: 0; }
 
-.pai-btn {
+.rb-btn {
     background: none;
     border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
     color: var(--board-accent-readable, var(--board-accent, #f5a623));
@@ -74,7 +74,7 @@
     transition: background 0.2s, color 0.2s;
 }
 
-.pai-btn:hover {
+.rb-btn:hover {
     background: var(--board-accent, #f5a623);
     color: var(--board-accent-contrast, #0a0a1a);
 }

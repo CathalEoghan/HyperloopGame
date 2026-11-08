@@ -42,11 +42,11 @@ input, textarea, [contenteditable="true"], .selectable {
     from { opacity: 0; transform: scale(0.97); }
     to   { opacity: 1; transform: scale(1); }
 }
-:where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .pai-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) {
+:where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .rb-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) {
     animation: ui-modal-in 0.25s ease;
 }
 @media (prefers-reduced-motion: reduce) {
-    :where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .pai-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) { animation: none; }
+    :where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .rb-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) { animation: none; }
 }
 
 /* App-level popups (rank-up, reveals, events, milestones, daily login, offline, ...) are direct children of .App and
