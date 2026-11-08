@@ -10,6 +10,7 @@ import PageIntroModal from '../components/PageIntroModal.jsx'
 import starIcon from '../assets/misc/star.png'
 import trophyIcon from '../assets/misc/trophy.svg'
 import './PrestigePage.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
 const IMAGES = import.meta.glob('../assets/prestige-upgrades-thumb/*.jpg', { eager: true, import: 'default' })
@@ -108,6 +109,12 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     // Retiring wipes the run, so it takes a second click; closing the dialog disarms it
     const [armed, setArmed] = useState(false)
     const closeConfirm = () => { setArmed(false); setConfirming(false) }
+
+    // Escape closes what is open on this page before the page-level Escape (back to Home) gets a turn: an open upgrade
+    // popover, then the past-runs list or the retire confirmation (the confirmation just closes - nothing is retired)
+    useEscapeToClose(() => { playClickSound2(); setSelectedId(null) }, selectedId !== null)
+    useEscapeToClose(() => { playClickSound2(); setShowRuns(false) }, showRuns)
+    useEscapeToClose(() => { playClickSound2(); closeConfirm() }, confirming)
     const history = PrestigeManager.getHistory()
 
     return (

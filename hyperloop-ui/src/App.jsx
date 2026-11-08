@@ -1740,6 +1740,11 @@ function App() {
   useEscapeToClose(() => {
     const el = document.activeElement
     if (el && /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)) { el.blur(); return }
+    // A card or dialog open on the page (a city or development card, a connect/develop dialog, a full-size picture...)
+    // gets Escape first - the ones that close on it are above this in the stack. This catches any that doesn't, so Escape
+    // never takes the page away from behind an open card.
+    const cardOpen = [...document.querySelectorAll('[class*="modal-overlay"]')].some(e => e.getClientRects().length > 0 && getComputedStyle(e).display !== 'none')
+    if (cardOpen) return
     playClickSound3()
     setActiveTab('Home')
   }, activeTab !== 'Home' && !popupCoversApp && !showDepartureBoard)

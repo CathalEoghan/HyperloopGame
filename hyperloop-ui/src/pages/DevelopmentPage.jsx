@@ -8,6 +8,7 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { allDevelopments } from '../../../DevelopmentManager/DevelopmentRegistry.js'
 import { matchesSearch } from '../utils/search.js'
 import './DevelopmentPage.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
@@ -132,6 +133,16 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const getUpgradeInfo = (dev) => progressionManager.getDevelopmentUpgradeCostInfo(dev, 1.0 - economyManager.getUpgradeSum('developmentUpgradeDiscount'))
     const getLevel = (dev) => progressionManager.getDevelopmentUpgradeLevel(dev)
     const closeModal = () => { setSelectedDevelopment(null); setShowUpgradeModal(false); setShowRenameModal(false); setConfirmRemove(false) }
+
+    // Escape peels back whatever is open on this page one layer at a time (full-size picture, then a dialog opened from the
+    // card, then the card), and only then does the page-level Escape (back to Home) get a turn. Registered lowest layer
+    // first on purpose: the later a hook is registered, the higher it ranks.
+    useEscapeToClose(() => { playClickSound2(); closeModal() }, !!selectedDevelopment)
+    useEscapeToClose(() => setConfirmRemove(false), confirmRemove)
+    useEscapeToClose(() => { playClickSound2(); setShowUpgradeModal(false) }, showUpgradeModal)
+    useEscapeToClose(() => { playClickSound2(); setShowRenameModal(false) }, showRenameModal)
+    useEscapeToClose(() => { playClickSound2(); setShowNoFunds(false) }, showNoFunds)
+    useEscapeToClose(() => { playClickSound2(); setEnlargedImage(null) }, !!enlargedImage)
     const openRename = (dev) => { setRenameText(nameOf(dev)); setShowRenameModal(true) }
 
     return (

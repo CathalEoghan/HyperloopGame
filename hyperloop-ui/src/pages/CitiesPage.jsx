@@ -3,6 +3,7 @@ import BoostTooltip from '../components/BoostTooltip.jsx'
 import IncomeRow from '../components/IncomeRow.jsx'
 import PageIntroModal from '../components/PageIntroModal.jsx'
 import './CitiesPage.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { allCities } from '../../../CityManager/CityRegistry'
 import cityImages from '../data/cityImages.js'
 import cityThumbnails from '../data/cityThumbnails.js'
@@ -190,6 +191,15 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         })
     }
     const closeModal = () => { setSelectedCity(null); setConfirmDisconnect(false); setShowLineUpgradeModal(false) }
+
+    // Escape peels back whatever is open on this page one layer at a time - the full-size picture, then a dialog opened from
+    // the card, then the card itself - and the page-level Escape (back to Home) only gets a turn once none is left. The
+    // hooks are registered lowest layer first on purpose: the later one is registered, the higher it ranks.
+    useEscapeToClose(() => { playClickSound2(); closeModal() }, !!selectedCity)
+    useEscapeToClose(() => setConfirmDisconnect(false), confirmDisconnect)
+    useEscapeToClose(() => { playClickSound2(); setShowLineUpgradeModal(false) }, showLineUpgradeModal)
+    useEscapeToClose(() => { playClickSound2(); setShowNoFunds(false) }, showNoFunds)
+    useEscapeToClose(() => { playClickSound2(); setEnlargedImage(null) }, !!enlargedImage)
 
     // One city card. In the flat list (any sort except A–Z) there's no country heading above
     // it, so the card shows the country's flag itself.

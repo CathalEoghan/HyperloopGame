@@ -13,6 +13,7 @@ import cashIcon from '../assets/misc/cash.png'
 import openEyeIcon from '../assets/misc/open-eye.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import './HomePage.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { flagSrc } from '../utils/flagSrc.js'
 import { getActiveLoops, formatClock, formatDuration, distanceMiles } from '../utils/loops.js'
 import { loopCode } from '../utils/loopCodes.js'
@@ -189,6 +190,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     const [selectedUnlockedCity, setSelectedUnlockedCity] = useState(null)
     // The city picture in the flag-click card can be enlarged, same as on the Cities page (bug: no way to do that here)
     const [enlargedImage, setEnlargedImage] = useState(null)
+    // Escape closes the full-size picture first, then the city card under it (lowest layer registered first on purpose)
+    useEscapeToClose(() => { playClickSound2(); setSelectedGlobeCity(null) }, !!selectedGlobeCity)
+    useEscapeToClose(() => { playClickSound2(); setSelectedUnlockedCity(null) }, !!selectedUnlockedCity && !purchasedCities.some(c => c.name === selectedUnlockedCity.name))
+    useEscapeToClose(() => { playClickSound2(); setEnlargedImage(null) }, !!enlargedImage)
     const spritesRef = useRef([])
     const prevHoveredCity = useRef(null)
     const showOwnedRef = useRef(showOwned)
