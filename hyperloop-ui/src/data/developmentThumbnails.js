@@ -358,6 +358,7 @@ import SocialMediaManagers from '../assets/developments-thumb/SocialMediaManager
 import ExpandedFamilyRooms from '../assets/developments-thumb/ExpandedFamilyRooms.jpg'
 import FreeWifi from '../assets/developments-thumb/FreeWifi.jpg'
 import ImprovedAccessibilityServices from '../assets/developments-thumb/ImprovedAccessibilityServices.jpg'
+import VIPPods from '../assets/developments-thumb/VIPPods.jpg'
 
 
 const developmentImages = {
@@ -720,6 +721,7 @@ const developmentImages = {
     "Free Wi-Fi": FreeWifi,
     "Improved Accessibility Services": ImprovedAccessibilityServices,
     "Social Media Managers": SocialMediaManagers,
+    "VIP Pods": VIPPods,
 
 
 

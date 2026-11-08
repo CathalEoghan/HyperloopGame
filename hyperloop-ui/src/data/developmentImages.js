@@ -360,6 +360,7 @@ const developmentImages = {
     "Ride Share Kiosks": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/RideShareKiosks.jpg",
     "Social Media Managers": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SocialMediaManagers.jpg",
     "Supermarket": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Supermarket.jpg",
+    "VIP Pods": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/VIPPods.jpg",
 
 
 

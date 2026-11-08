@@ -357,6 +357,7 @@ import ObservationDeck from '../assets/developments-reveal/ObservationDeck.jpg'
 import RideShareKiosks from '../assets/developments-reveal/RideShareKiosks.jpg'
 import SocialMediaManagers from '../assets/developments-reveal/SocialMediaManagers.jpg'
 import Supermarket from '../assets/developments-reveal/Supermarket.jpg'
+import VIPPods from '../assets/developments-reveal/VIPPods.jpg'
 
 
 const developmentRevealImages = {
@@ -719,6 +720,7 @@ const developmentRevealImages = {
     "Ride Share Kiosks": RideShareKiosks,
     "Social Media Managers": SocialMediaManagers,
     "Supermarket": Supermarket,
+    "VIPPods": VIPPods,
 }
 
 export default developmentRevealImages
