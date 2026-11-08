@@ -3,7 +3,9 @@
     inset: 0;
     background: rgba(0, 0, 0, 0.5);
     font-family: 'Inter', sans-serif;
-    z-index: 300;
+    /* Lives inside a page (and the Terminal Board), which App makes inert while an app-level popup shows, so it must stay
+       BELOW those popups (260 and up) or it would bury them and be unclosable. 255 keeps it above the board (250). */
+    z-index: 255;
     display: flex;
     align-items: center;
     justify-content: center;

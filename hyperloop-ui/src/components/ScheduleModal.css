@@ -2,7 +2,10 @@
     position: fixed;
     inset: 0;
     background: rgba(0, 0, 0, 0.7);
-    z-index: 320;
+    /* Opened from the Terminal Board (250) and the Cities page, both inert while an app-level popup shows, so this must stay
+       BELOW those popups (260 and up) or it would bury them and be unclosable. 255 keeps it above the board, and the
+       farewell/delay notices (330) are still above it. */
+    z-index: 255;
     display: flex;
     align-items: center;
     justify-content: center;
