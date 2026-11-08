@@ -224,7 +224,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
             {showRuns && (
                 <div className="prestige-modal-overlay" onClick={e => { e.stopPropagation(); setShowRuns(false) }}>
                     <div className="prestige-modal prestige-modal-wide" onClick={e => e.stopPropagation()}>
-                        <h2>Past runs</h2>
+                        <h2 style={{ textAlign: 'center' }}>Past Runs</h2>
                         <div className="prestige-runs">
                             <div className="prestige-runs-row prestige-runs-head"><span>Run</span><span>Rank</span><span>Points</span><span>Cash earned</span><span>Time</span></div>
                             {history.map((r, i) => (
