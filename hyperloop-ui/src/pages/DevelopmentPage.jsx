@@ -196,7 +196,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `How busy the terminal is right now: every development's income scales with this. ${busy.explanation}` })}
                                     onMouseLeave={() => setShowBusyTooltip(null)}
                                 >
-                                    <span>Live traffic:</span>
+                                    <span>Live footfall:</span>
                                     <strong style={{ color: busy.color }}>{busy.label} ({busyPct}%)</strong>
                                 </div>
                             </div>

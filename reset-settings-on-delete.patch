@@ -1,0 +1,101 @@
+From 0019bade955260c215e95d7a4b2a7135299dfda8 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 20:50:02 +0000
+Subject: [PATCH] Delete Save also puts every setting back to its default
+
+Event Screen Tint, Globe Night Mode, Globe Quality, distance unit, Split Flap,
+notifications and the view preferences (globe view/filters, Terminal Board tab,
+Shop category) survived Delete Save, so a new game inherited the old settings.
+A separate clearSettings() resets them, called only from Delete Save and the
+crash screen's reset, so a prestige (the same save) still keeps them.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ Managers/SaveManager.js                       | 25 +++++++++++++++++++
+ hyperloop-ui/src/App.jsx                      |  3 ++-
+ hyperloop-ui/src/components/ErrorBoundary.jsx |  6 ++++-
+ 3 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/Managers/SaveManager.js b/Managers/SaveManager.js
+index e08d513..71df006 100644
+--- a/Managers/SaveManager.js
++++ b/Managers/SaveManager.js
+@@ -115,6 +115,31 @@ export function clearGameState() {
+     clearDayState()
+ }
+ 
++// The player's settings and view preferences: how the game looks and behaves for them (Settings page toggles, the globe's
++// view, the Terminal Board's tab, the Shop's last category). They are not part of any one game, so clearGameState leaves
++// them alone and a prestige keeps them (a retire is the same save). Delete Save is the only thing that puts them back to
++// the defaults, by calling clearSettings below: a brand-new game then starts with every setting at its default.
++// The sound settings (soundEnabled, soundVolumes, soundMuted) are reset separately by resetSoundSettings in sound.js.
++// Not listed on purpose: hyperloop_save_backup (a copy of a save that would not load - nothing the game does is meant to
++// delete that) and the tab-lock keys (they only stop two tabs running the game at once).
++const SETTINGS_KEYS = [
++    'hyperloop_event_tint',
++    'globeNightMode',
++    'globeQuality',
++    'globeView',
++    'globeShowOwned',
++    'globeLoopsPanelOpen',
++    'distanceUnit',
++    'splitFlap',
++    'hyperloop_notifications',
++    'terminalBoardTab',
++    'hyperloop_shop_last_category',
++]
++
++export function clearSettings() {
++    removeKeys(SETTINGS_KEYS)
++}
++
+ // What a prestige keeps. Everything else about the run is cleared. The two date stamps stay so that the
+ // fresh run can't be handed today's daily bonus or today's first-farewell bonus a second time.
+ const PRESTIGE_KEEP_KEYS = [
+diff --git a/hyperloop-ui/src/App.jsx b/hyperloop-ui/src/App.jsx
+index df5b80b..9f0377a 100644
+--- a/hyperloop-ui/src/App.jsx
++++ b/hyperloop-ui/src/App.jsx
+@@ -62,7 +62,7 @@ import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from '.
+ import { pickCelebrityDeparture } from './utils/celebrity.js'
+ import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
+ import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playClickSound3, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
+-import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
++import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, clearSettings, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
+ import { getRandomEvent } from "./data/events.js"
+ import cityCoordinates from "./data/cityCoordinates.js"
+ import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
+@@ -2173,6 +2173,7 @@ function App() {
+             stopTick();
+             deleteSave();
+             clearGameState();
++            clearSettings();   // every Settings-page toggle and view preference back to its default (a retire keeps them)
+             resetSoundSettings();
+             localStorage.removeItem('hyperloop_heartbeat_at');
+             localStorage.removeItem('hyperloop_hidden_at');
+diff --git a/hyperloop-ui/src/components/ErrorBoundary.jsx b/hyperloop-ui/src/components/ErrorBoundary.jsx
+index 28fcaf3..715cc8a 100644
+--- a/hyperloop-ui/src/components/ErrorBoundary.jsx
++++ b/hyperloop-ui/src/components/ErrorBoundary.jsx
+@@ -1,5 +1,6 @@
+ import { Component } from 'react'
+-import { exportSave } from 'Managers/SaveManager.js'
++import { exportSave, clearSettings } from 'Managers/SaveManager.js'
++import { resetSoundSettings } from '../utils/sound.js'
+ 
+ // Last line of defence (bug #88): if the game crashes while drawing the screen, show a way out
+ // instead of a blank page. The player can download their save and, if the crash keeps
+@@ -22,6 +23,9 @@ class ErrorBoundary extends Component {
+     Object.keys(localStorage).forEach(key => {
+       if (key.startsWith('hyperloop_') || key.startsWith('departures_') || key.startsWith('arrivals_')) localStorage.removeItem(key)
+     })
++    // The settings that don't start with hyperloop_ (Globe Night Mode, Split Flap, sound ...) too: "delete everything" means everything
++    clearSettings()
++    resetSoundSettings()
+     window.location.reload()
+   }
+ 
+-- 
+2.43.0
+
