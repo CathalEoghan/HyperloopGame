@@ -343,20 +343,20 @@ import CarRental from '../assets/developments-reveal/CarRental.jpg'
 import LuggageStorage from '../assets/developments-reveal/LuggageStorage.jpg'
 import ExpandedDutyFree from '../assets/developments-reveal/ExpandedDutyFree.jpg'
 import SimCardServices from '../assets/developments-reveal/SimCardServices.jpg'
-import FreeWifi from '../assets/developments-reveal/FreeWifi.jpg'
-import ExpandedFamilyRooms from '../assets/developments-reveal/ExpandedFamilyRooms.jpg'
-import ImprovedAccessibilityServices from '../assets/developments-reveal/ImprovedAccessibilityServices.jpg'
-import LostAndFoundOffice from '../assets/developments-reveal/LostAndFoundOffice.jpg'
-import SocialMediaManagers from '../assets/developments-reveal/SocialMediaManagers.jpg'
 import BarberShop from '../assets/developments-reveal/BarberShop.jpg'
-import HairSalon from '../assets/developments-reveal/HairSalon.jpg'
 import BikeRental from '../assets/developments-reveal/BikeRental.jpg'
 import CoWorkingSpace from '../assets/developments-reveal/CoWorkingSpace.jpg'
 import ElectronicsStore from '../assets/developments-reveal/ElectronicsStore.jpg'
+import ExpandedFamilyRooms from '../assets/developments-reveal/ExpandedFamilyRooms.jpg'
+import FreeWifi from '../assets/developments-reveal/FreeWifi.jpg'
+import HairSalon from '../assets/developments-reveal/HairSalon.jpg'
+import ImprovedAccessibilityServices from '../assets/developments-reveal/ImprovedAccessibilityServices.jpg'
 import LaundryRoom from '../assets/developments-reveal/LaundryRoom.jpg'
+import LostAndFoundOffice from '../assets/developments-reveal/LostAndFoundOffice.jpg'
 import ObservationDeck from '../assets/developments-reveal/ObservationDeck.jpg'
-import Supermarket from '../assets/developments-reveal/Supermarket.jpg'
 import RideShareKiosks from '../assets/developments-reveal/RideShareKiosks.jpg'
+import SocialMediaManagers from '../assets/developments-reveal/SocialMediaManagers.jpg'
+import Supermarket from '../assets/developments-reveal/Supermarket.jpg'
 
 
 const developmentRevealImages = {
@@ -705,20 +705,20 @@ const developmentRevealImages = {
     "Luggage Storage": LuggageStorage,
     "Expanded Duty-Free": ExpandedDutyFree,
     "Sim Card Services": SimCardServices,
-    "Improved Accessibility Services": ImprovedAccessibilityServices,
-    "Free Wi-Fi": FreeWifi,
-    "Lost & Found Office": LostAndFoundOffice,
-    "Social Media Managers": SocialMediaManagers,
     "Barber Shop": BarberShop,
-    "Hair Salon": HairSalon,
-    "Co-Working Space": CoWorkingSpace,
-    "Expanded Family Rooms": ExpandedFamilyRooms,
-    "Laundry Room": LaundryRoom,
-    "Electronics Store": ElectronicsStore,
     "Bike Rental": BikeRental,
+    "Co-Working Space": CoWorkingSpace,
+    "Electronics Store": ElectronicsStore,
+    "Expanded Family Rooms": ExpandedFamilyRooms,
+    "Free Wi-Fi": FreeWifi,
+    "Hair Salon": HairSalon,
+    "Improved Accessibility Services": ImprovedAccessibilityServices,
+    "Laundry Room": LaundryRoom,
+    "Lost & Found Office": LostAndFoundOffice,
     "Observation Deck": ObservationDeck,
-    "Supermarket": Supermarket,
     "Ride Share Kiosks": RideShareKiosks,
+    "Social Media Managers": SocialMediaManagers,
+    "Supermarket": Supermarket,
 }
 
 export default developmentRevealImages

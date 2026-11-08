@@ -971,6 +971,12 @@ export class EconomyManager {
         return Math.max(0, Math.floor(baseCompensation * (1 - Math.min(reduction, 1))));
     }
 
+    // The share of a delay's compensation that the owned upgrades (Quiet Room, Prayer Room...) cut: 0.25 = 25%. Capped at
+    // 100% - the same cap calculateDelayCompensation applies - so what the popup shows is what it actually charges.
+    getDelayCompensationReduction() {
+        return Math.min(this.getUpgradeSum('delayCompensationReduction'), 1)
+    }
+
     calculateDelayRepCost(baseRepCost) {
         const reduction = this.getUpgradeSum('delayRepCostReduction');
         return Math.max(0, baseRepCost - reduction);

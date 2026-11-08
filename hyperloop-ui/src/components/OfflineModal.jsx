@@ -62,7 +62,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
     setDoubled(true)
 }}
                     >
-                        {bonusWord} earnings (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle' }} />20)
+                        {bonusWord} earnings (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '-0.7px' }} />20)
                     </button>
                 )}
                 <button

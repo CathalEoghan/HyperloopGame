@@ -15,6 +15,11 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
         ? economyManager.calculateDelayRepCost(BASE_DELAY_REP_COST)
         : BASE_DELAY_REP_COST
 
+    // What owned upgrades have taken off, so the buttons can say so: a percentage off the compensation (Quiet Room, Prayer
+    // Room...), and a flat amount off the Reputation lost for refusing (Service Delivery Training)
+    const compensationCutPct = Math.round((economyManager?.getDelayCompensationReduction?.() ?? 0) * 100)
+    const repCostCut = BASE_DELAY_REP_COST - adjustedRepCost
+
     const canAffordCompensation = balance >= adjustedCompensation
 
     useEffect(() => {
@@ -46,16 +51,18 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
                             playClickSound2();
                             onCompensate(adjustedCompensation);
                         }}>
-                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
+                        <span className="delay-btn-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
                             Issue compensation (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedCompensation.toLocaleString('en-GB', { maximumFractionDigits: 0 })})
                         </span>
+                        {compensationCutPct > 0 && <span className="delay-btn-note">-{compensationCutPct}% reduced cost</span>}
                     </button>
                     <button className="delay-btn-dismiss"
                         onMouseEnter={() => playHoverSound()}
                         onClick={() => { playClickSound2(); onDismiss(adjustedRepCost) }}>
-                        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                        <span className="delay-btn-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
                             Refuse compensation (-<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedRepCost})
                         </span>
+                        {repCostCut > 0 && <span className="delay-btn-note">-{repCostCut} reduced cost</span>}
                     </button>
                 </div>
             </div>

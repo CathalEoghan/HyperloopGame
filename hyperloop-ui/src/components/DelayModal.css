@@ -110,3 +110,11 @@
     background: #1a1a1a;
     color: #aaa;
 }
+
+/* The small "-25% reduced cost" line an upgrade earns under a button's label. It takes the button's own colour (so it stays
+   readable on the hover fill) and is quieter than the label. */
+.delay-btn-compensate,
+.delay-btn-dismiss { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
+.delay-btn-note { font-size: 0.72rem; letter-spacing: 0.5px; opacity: 0.75; }
+/* The Refuse button is dim grey on purpose, so its note needs its own lift to stay readable */
+.delay-btn-dismiss .delay-btn-note { opacity: 1; color: #8c8c8c; }

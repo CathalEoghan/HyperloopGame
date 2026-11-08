@@ -375,12 +375,14 @@
     min-width: 0;
 }
 
+/* The handle always sits on its own line under the name. It used to wrap there only when the two didn't fit side by
+   side, so a short name had its handle beside it. Same 6px between the lines as when it wrapped. */
 .hyperlink-post-header {
     display: flex;
-    align-items: baseline;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 6px;
     margin-bottom: 4px;
-    flex-wrap: wrap;
 }
 
 .hyperlink-display-name {

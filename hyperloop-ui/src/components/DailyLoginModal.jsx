@@ -64,7 +64,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                             setDoubled(true)
                         }}
                     >
-                        Double bonus (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle' }} />20)
+                        Double bonus (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '-0.7px' }} />20)
                     </button>
                 )}
                 <button
