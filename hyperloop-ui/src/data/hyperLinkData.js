@@ -699,7 +699,7 @@ export const POSTS = {
         'i have never been so happy to have a 3 hour delay. the new {recreation} is great',
         'the new {recreation} is making me feel like a tourist in my own life lol',
         'anyone seen my granddad? think he went to the {recreation} but not sure',
-        'is the new {recreation} suitable for beginners? asking for a very uncoordinated friend',
+        'is the new {recreation} any good? asking for a very bored friend',
         'the new {recreation} is full of people who said theyd only stay for ten minutes 😂',
     ],
 
