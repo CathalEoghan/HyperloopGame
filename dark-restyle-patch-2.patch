@@ -1,0 +1,2350 @@
+diff --git a/hyperloop-ui/src/App.css b/hyperloop-ui/src/App.css
+index 7b339b0..d81059a 100644
+--- a/hyperloop-ui/src/App.css
++++ b/hyperloop-ui/src/App.css
+@@ -50,7 +50,7 @@ input, textarea, [contenteditable="true"], .selectable {
+ }
+ 
+ body, .App {
+-    background-color: rgb(255, 246, 239);
++    background-color: var(--page-bg);
+ }
+ 
+ /* Scrollbars: amber to match the game. Light by default, darker track on the Prestige page and its popups.
+@@ -102,7 +102,7 @@ body, .App {
+    pseudo-class, so a component's own focus style (the phone button, the Shop preview trigger...) still wins, and
+    text fields keep their own border-colour focus style, so they aren't listed. */
+ :where(button, [role="tab"], a[href], summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+-    outline: 2px solid #fff;
++    outline: 2px solid var(--border);
+     outline-offset: 0;
+     box-shadow: 0 0 0 4px #1a1a1a;
+ }
+diff --git a/hyperloop-ui/src/App.jsx b/hyperloop-ui/src/App.jsx
+index 3994fea..96f62de 100644
+--- a/hyperloop-ui/src/App.jsx
++++ b/hyperloop-ui/src/App.jsx
+@@ -1752,9 +1752,9 @@ function App() {
+   if (blockedByOtherTab) {
+     return (
+       <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
+-        <div style={{ background: 'rgb(255, 239, 224)', border: '2px solid black', borderRadius: '12px', padding: '32px 24px', maxWidth: '380px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
++        <div style={{ background: 'var(--surface-solid)', border: '2px solid var(--border)', borderRadius: '12px', padding: '32px 24px', maxWidth: '380px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
+           <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>Open in another tab</h2>
+-          <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
++          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
+             Hyperloop Empire is already running in another tab. Only one tab can play at a time, so your progress isn&#39;t overwritten.
+           </p>
+           <button className="closeButton" onClick={() => {
+@@ -2549,7 +2549,7 @@ function App() {
+           padding: '24px', boxSizing: 'border-box'
+         }}>
+           <div style={{
+-            background: 'rgb(255, 239, 224)', border: '2px solid black',
++            background: 'var(--surface-solid)', border: '2px solid var(--border)',
+             borderRadius: '12px', padding: '32px 24px', maxWidth: '340px',
+             textAlign: 'center', fontFamily: 'Inter, sans-serif',
+             boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
+@@ -2558,7 +2558,7 @@ function App() {
+             <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>
+               Desktop Recommended
+             </h2>
+-            <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
++            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
+               Hyperloop Empire is designed for desktop browsers. On smaller screens some features may not display correctly.
+             </p>
+             <button
+diff --git a/hyperloop-ui/src/components/AchievementsModal.css b/hyperloop-ui/src/components/AchievementsModal.css
+index 6b743b4..e0cad18 100644
+--- a/hyperloop-ui/src/components/AchievementsModal.css
++++ b/hyperloop-ui/src/components/AchievementsModal.css
+@@ -15,7 +15,7 @@
+     max-height: 85vh;
+     display: flex;
+     flex-direction: column;
+-    background: #f8f8f8;
++    background: var(--surface-2);
+     border: 2px solid var(--ui-accent, #f5a623);
+     border-radius: 16px;
+     overflow: hidden;
+@@ -141,7 +141,7 @@
+     gap: 10px;
+     padding: 9px 10px;
+     border-radius: 8px;
+-    background: #eaeaea;
++    background: var(--surface-2);
+     border: 1px solid #444;
+     opacity: 0.75;
+     box-sizing: border-box;
+@@ -169,7 +169,7 @@
+ 
+ .achievement-card-name { font-weight: 700; font-size: 0.88rem; line-height: 1.2; }
+ 
+-.achievement-card-desc { font-size: 0.72rem; line-height: 1.35; color: #666; }
++.achievement-card-desc { font-size: 0.72rem; line-height: 1.35; color: var(--text-muted); }
+ 
+ .achievement-done .achievement-card-desc { color: #ccc; }
+ 
+@@ -214,7 +214,7 @@
+     justify-content: center;
+     background: #444;
+ }
+-.achievement-card-logo-locked { border-color: #9a9a9a; background: #d8d8d8; }
++.achievement-card-logo-locked { border-color: #9a9a9a; background: var(--surface-2); }
+ .achievement-card-logo img {
+     display: block;
+     width: 100%;
+@@ -232,6 +232,6 @@
+     line-height: 1;
+     padding: 2px;
+     border-radius: 50%;
+-    background: #eaeaea;
+-    border: 1px solid #d0d0d0;
++    background: var(--surface-2);
++    border: 1px solid var(--border);
+ }
+diff --git a/hyperloop-ui/src/components/BottomNav.css b/hyperloop-ui/src/components/BottomNav.css
+index ea88fad..dc9343d 100644
+--- a/hyperloop-ui/src/components/BottomNav.css
++++ b/hyperloop-ui/src/components/BottomNav.css
+@@ -13,6 +13,7 @@ font-family: 'Inter', sans-serif;
+ }
+ 
+ .bottomNav button {
++    border: 1px solid var(--border);
+     flex: 1;
+     height: 100%;
+     background-color: transparent;
+diff --git a/hyperloop-ui/src/components/CityChoiceModal.css b/hyperloop-ui/src/components/CityChoiceModal.css
+index 66b0a86..c981432 100644
+--- a/hyperloop-ui/src/components/CityChoiceModal.css
++++ b/hyperloop-ui/src/components/CityChoiceModal.css
+@@ -12,7 +12,7 @@
+ }
+ 
+ .citychoice-panel {
+-    background-color: rgb(255, 239, 224);
++    background-color: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 14px;
+     padding: 28px 32px;
+@@ -27,8 +27,8 @@
+     gap: 20px;
+ }
+ 
+-.citychoice-title { margin: 0; font-size: 1.5rem; font-weight: 800; color: #222; text-align: center; }
+-.citychoice-sub { margin: -10px 0 0; font-size: 0.85rem; color: #666; text-align: center; }
++.citychoice-title { margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--text); text-align: center; }
++.citychoice-sub { margin: -10px 0 0; font-size: 0.85rem; color: var(--text-muted); text-align: center; }
+ 
+ .citychoice-cards {
+     display: flex;
+@@ -47,7 +47,7 @@
+     align-items: center;
+     gap: 6px;
+     padding: 12px;
+-    background: #fff;
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+@@ -129,13 +129,13 @@
+     font-size: 0.85rem;
+     font-weight: bold;
+     border-radius: 8px;
+-    border: 2px solid #ccc;
+-    background: white;
+-    color: #666;
++    border: 2px solid var(--border);
++    background: var(--surface-solid);
++    color: var(--text-muted);
+     padding: 7px 16px;
+     cursor: var(--cursor-pointer, pointer);
+ }
+-.citychoice-reroll:hover { border-color: #888; color: #333; }
++.citychoice-reroll:hover { border-color: #888; color: var(--text); }
+ .citychoice-rep { width: 14px; height: 14px; vertical-align: middle; margin: 0 3px 1px 0; }
+ 
+ .citychoice-actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; width: 100%; }
+@@ -143,8 +143,8 @@
+     padding: 11px 18px;
+     border: 2px solid black;
+     border-radius: 8px;
+-    background: #fff;
+-    color: #222;
++    background: var(--surface-solid);
++    color: var(--text);
+     font-family: "Inter", sans-serif;
+     font-weight: bold;
+     cursor: var(--cursor-pointer, pointer);
+diff --git a/hyperloop-ui/src/components/CityPickerModal.css b/hyperloop-ui/src/components/CityPickerModal.css
+index 341ce87..b482b35 100644
+--- a/hyperloop-ui/src/components/CityPickerModal.css
++++ b/hyperloop-ui/src/components/CityPickerModal.css
+@@ -24,8 +24,8 @@
+     box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8);
+ }
+ 
+-.citypicker-title { margin: 0; font-size: 1.3rem; color: #222; text-align: center; }
+-.citypicker-sub { margin: 0; font-size: 0.85rem; color: #666; text-align: center; }
++.citypicker-title { margin: 0; font-size: 1.3rem; color: var(--text); text-align: center; }
++.citypicker-sub { margin: 0; font-size: 0.85rem; color: var(--text-muted); text-align: center; }
+ 
+ .citypicker-search {
+     padding: 10px 14px;
+@@ -33,7 +33,7 @@
+     border-radius: 10px;
+     font-size: 1rem;
+     font-family: inherit;
+-    background: #fff;
++    background: var(--surface-solid);
+     outline: none;
+ }
+ 
+@@ -43,8 +43,8 @@
+     padding: 4px 12px;
+     border: 1px solid var(--ui-accent, #f5a623);
+     border-radius: 14px;
+-    background: #fff;
+-    color: #333;
++    background: var(--surface-solid);
++    color: var(--text);
+     font-size: 0.8rem;
+     font-weight: 600;
+     cursor: var(--cursor-pointer, pointer);
+@@ -71,10 +71,10 @@
+     align-items: center;
+     gap: 10px;
+     padding: 8px 12px;
+-    border: 1px solid #e0cfae;
++    border: 1px solid var(--border);
+     border-radius: 8px;
+-    background: #fff;
+-    color: #222;
++    background: var(--surface-solid);
++    color: var(--text);
+     font-family: inherit;
+     font-size: 0.9rem;
+     text-align: left;
+@@ -105,6 +105,6 @@
+     cursor: var(--cursor-pointer, pointer);
+ }
+ 
+-.citypicker-back { background: #fff; color: #333; }
++.citypicker-back { background: var(--surface-solid); color: var(--text); }
+ .citypicker-confirm { background: var(--ui-accent, #f5a623); color: #fff; flex: 1; }
+ .citypicker-confirm:disabled { opacity: 0.5; cursor: not-allowed; }
+diff --git a/hyperloop-ui/src/components/CityRevealModal.css b/hyperloop-ui/src/components/CityRevealModal.css
+index a18f69c..0c2cffa 100644
+--- a/hyperloop-ui/src/components/CityRevealModal.css
++++ b/hyperloop-ui/src/components/CityRevealModal.css
+@@ -15,7 +15,7 @@
+ }
+ 
+ .modal {
+-    background-color: rgb(255, 239, 224);
++    background-color: var(--surface-solid);
+     border: 2px solid black;
+     font-family: "Inter", sans-serif;
+     border-radius: 12px;
+@@ -43,7 +43,7 @@
+ }
+ 
+ .modal button {
+-    background-color: rgb(255, 239, 224);
++    background-color: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 8px;
+     padding: 10px 16px;
+@@ -77,9 +77,9 @@
+     font-size: 0.85rem !important;
+     font-weight: bold !important;
+     border-radius: 8px !important;
+-    border: 2px solid #ccc !important;
+-    background: white !important;
+-    color: #666 !important;
++    border: 2px solid var(--border) !important;
++    background: var(--surface-solid) !important;
++    color: var(--text-muted) !important;
+     padding: 7px 16px !important;
+     cursor: var(--cursor-pointer, pointer) !important;
+     flex-direction: row !important;
+@@ -87,7 +87,7 @@
+ 
+ .rerollButton:hover {
+     border-color: #888 !important;
+-    color: #333 !important;
++    color: var(--text) !important;
+ }
+ 
+ .modal .rep-icon,
+diff --git a/hyperloop-ui/src/components/ClaimedCitiesModal.css b/hyperloop-ui/src/components/ClaimedCitiesModal.css
+index c1612d8..3b83179 100644
+--- a/hyperloop-ui/src/components/ClaimedCitiesModal.css
++++ b/hyperloop-ui/src/components/ClaimedCitiesModal.css
+@@ -20,7 +20,7 @@
+ }
+ 
+ .claimed-box {
+-    background: rgb(255, 252, 248);
++    background: var(--surface-2);
+     border: 2px solid black;
+     border-radius: 8px;
+     padding: 8px 10px;
+@@ -51,7 +51,7 @@
+ 
+ .claimed-sub {
+     font-size: 0.75rem;
+-    color: #777;
++    color: var(--text-muted);
+     margin-top: 2px;
+ }
+ 
+diff --git a/hyperloop-ui/src/components/ClaimedRewardsModal.css b/hyperloop-ui/src/components/ClaimedRewardsModal.css
+index 004a1f0..27d3c9f 100644
+--- a/hyperloop-ui/src/components/ClaimedRewardsModal.css
++++ b/hyperloop-ui/src/components/ClaimedRewardsModal.css
+@@ -26,7 +26,7 @@
+     font-family: 'Courier New', monospace;
+     font-size: 1.5rem;
+     font-weight: bold;
+-    color: #222;
++    color: var(--text);
+ }
+ 
+ .modal .claimed-rewards-line img {
+diff --git a/hyperloop-ui/src/components/CreditsModal.css b/hyperloop-ui/src/components/CreditsModal.css
+index 16e706a..8ff0742 100644
+--- a/hyperloop-ui/src/components/CreditsModal.css
++++ b/hyperloop-ui/src/components/CreditsModal.css
+@@ -1,5 +1,5 @@
+ .credits-modal {
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 28px 32px;
+@@ -41,7 +41,7 @@
+     font-family: 'Courier New', monospace;
+     font-size: 0.75rem;
+     font-weight: bold;
+-    color: #111;
++    color: var(--text);
+     margin: 12px 0 4px;
+     letter-spacing: 1px;
+ }
+@@ -49,7 +49,7 @@
+ .credits-line {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.8rem;
+-    color: #555;
++    color: var(--text-muted);
+     margin: 2px 0;
+     line-height: 1.5;
+ }
+@@ -70,7 +70,7 @@
+ /* A credit line with a real source URL - same size/colour as a plain .credits-line so the list doesn't turn
+    into a wall of blue, just an underline on hover to show it's clickable. */
+ .credits-link {
+-    color: #555;
++    color: var(--text-muted);
+     text-decoration: none;
+ }
+ 
+diff --git a/hyperloop-ui/src/components/CreditsModal.jsx b/hyperloop-ui/src/components/CreditsModal.jsx
+index 4b182d2..53663b5 100644
+--- a/hyperloop-ui/src/components/CreditsModal.jsx
++++ b/hyperloop-ui/src/components/CreditsModal.jsx
+@@ -97,7 +97,7 @@ function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
+                             marginBottom: '10px',
+                         }}
+                     />
+-                    <p style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#111', margin: '0 0 4px' }}>Cathal Eoghan</p>
++                    <p style={{ fontWeight: 'bold', fontSize: '0.95rem', color: 'var(--text)', margin: '0 0 4px' }}>Cathal Eoghan</p>
+                     <p style={{ fontStyle: 'italic', color: '#888', fontSize: '0.85rem', margin: 0 }}>Thanks for playing!</p>
+                     {showToast && <p className="dev-bonus-toast">✨ +50 REPUTATION</p>}
+                 </div>
+diff --git a/hyperloop-ui/src/components/DailyLoginModal.css b/hyperloop-ui/src/components/DailyLoginModal.css
+index 720c276..da5bd6e 100644
+--- a/hyperloop-ui/src/components/DailyLoginModal.css
++++ b/hyperloop-ui/src/components/DailyLoginModal.css
+@@ -1,5 +1,5 @@
+ .daily-login-modal {
+-    background: rgb(255, 239, 224);    
++    background: var(--surface-solid);    
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 32px 36px;
+@@ -31,14 +31,14 @@
+     font-family: 'Inter', sans-serif;
+     font-size: 1.5rem;
+     font-weight: 900;
+-    color: #111;
++    color: var(--text);
+     margin: 0 0 8px;
+ }
+ 
+ .daily-login-subtitle {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+-    color: #666;
++    color: var(--text-muted);
+     line-height: 1.5;
+     margin: 0 0 24px;
+ }
+@@ -47,7 +47,7 @@
+     display: flex;
+     flex-direction: column;
+     gap: 12px;
+-    background: #f8f8f8;
++    background: var(--surface-2);
+     border-radius: 12px;
+     padding: 16px 20px;
+     margin-bottom: 12px;
+diff --git a/hyperloop-ui/src/components/DevelopmentRevealModal.css b/hyperloop-ui/src/components/DevelopmentRevealModal.css
+index 7764adc..93da4c0 100644
+--- a/hyperloop-ui/src/components/DevelopmentRevealModal.css
++++ b/hyperloop-ui/src/components/DevelopmentRevealModal.css
+@@ -1,5 +1,5 @@
+ .dev-reveal-modal {
+-    background: rgb(255, 239, 224);
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 28px 32px;
+@@ -42,7 +42,7 @@
+     font-size: 1.3rem;
+     font-weight: bold;
+     margin: 0 0 16px;
+-    color: #111;
++    color: var(--text);
+ }
+ 
+ .dev-reveal-modal .closeButton:hover {
+diff --git a/hyperloop-ui/src/components/ErrorBoundary.jsx b/hyperloop-ui/src/components/ErrorBoundary.jsx
+index 28fcaf3..2d278b6 100644
+--- a/hyperloop-ui/src/components/ErrorBoundary.jsx
++++ b/hyperloop-ui/src/components/ErrorBoundary.jsx
+@@ -30,9 +30,9 @@ class ErrorBoundary extends Component {
+     const { confirmReset } = this.state
+     return (
+       <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
+-        <div style={{ background: 'rgb(255, 239, 224)', border: '2px solid black', borderRadius: '12px', padding: '32px 24px', maxWidth: '400px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
++        <div style={{ background: 'var(--surface-solid)', border: '2px solid var(--border)', borderRadius: '12px', padding: '32px 24px', maxWidth: '400px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
+           <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>Something went wrong</h2>
+-          <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
++          <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
+             {confirmReset
+               ? 'This deletes your terminal and all progress on this browser. It can\'t be undone. Download your save first if you might want it back.'
+               : this.state.error?.name === 'SaveLoadError'
+diff --git a/hyperloop-ui/src/components/EventModal.css b/hyperloop-ui/src/components/EventModal.css
+index 14d5d96..ea76620 100644
+--- a/hyperloop-ui/src/components/EventModal.css
++++ b/hyperloop-ui/src/components/EventModal.css
+@@ -1,5 +1,5 @@
+ .event-modal {
+-    background: rgb(255, 239, 224);
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 28px 32px;
+@@ -27,14 +27,14 @@
+     font-family: 'Inter', sans-serif;
+     font-size: 1.3rem;
+     font-weight: 900;
+-    color: #111;
++    color: var(--text);
+     margin: 0 0 12px;
+ }
+ 
+ .event-description {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.88rem;
+-    color: #555;
++    color: var(--text-muted);
+     line-height: 1.6;
+     margin: 0 0 20px;
+ }
+@@ -44,7 +44,7 @@
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+     font-style: italic;
+-    color: #555;
++    color: var(--text-muted);
+     margin: -8px 0 20px;
+ }
+ 
+@@ -53,7 +53,7 @@
+     align-items: center;
+     justify-content: center;
+     gap: 10px;
+-    background: rgb(255, 239, 224);
++    background: var(--surface-solid);
+     border-radius: 10px;
+     padding: 12px 16px;
+     margin-bottom: 20px;
+@@ -70,6 +70,6 @@
+ .event-effect-text {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+-    color: #333;
++    color: var(--text);
+     font-weight: 500;
+ }
+\ No newline at end of file
+diff --git a/hyperloop-ui/src/components/ExperienceBar.css b/hyperloop-ui/src/components/ExperienceBar.css
+index 2a5e4bc..7f015f7 100644
+--- a/hyperloop-ui/src/components/ExperienceBar.css
++++ b/hyperloop-ui/src/components/ExperienceBar.css
+@@ -3,7 +3,7 @@
+     z-index: 10;
+     height: 28px;
+     margin-top: 0.3px;
+-    background-color: white;
++    background-color: var(--surface-solid);
+     border: 2px solid black;
+ }
+ 
+diff --git a/hyperloop-ui/src/components/FarewellModal.css b/hyperloop-ui/src/components/FarewellModal.css
+index 6b0140e..3340f96 100644
+--- a/hyperloop-ui/src/components/FarewellModal.css
++++ b/hyperloop-ui/src/components/FarewellModal.css
+@@ -22,7 +22,7 @@
+     max-width: 500px;
+     width: 90%;
+     font-family: 'Courier New', Courier, monospace;
+-    box-shadow: 0 0 50px rgb(255, 239, 224), 0 20px 60px rgba(0, 0, 0, 0.8);
++    box-shadow: 0 0 50px rgba(255, 255, 255, 0.08), 0 20px 60px rgba(0, 0, 0, 0.8);
+ }
+ 
+ .farewell-attention {
+diff --git a/hyperloop-ui/src/components/FirstLoopModal.css b/hyperloop-ui/src/components/FirstLoopModal.css
+index a57b569..69d28f7 100644
+--- a/hyperloop-ui/src/components/FirstLoopModal.css
++++ b/hyperloop-ui/src/components/FirstLoopModal.css
+@@ -12,7 +12,7 @@
+ }
+ 
+ .firstloop-panel {
+-    background-color: rgb(255, 239, 224);
++    background-color: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 14px;
+     padding: 28px 32px;
+@@ -27,8 +27,8 @@
+     text-align: center;
+ }
+ 
+-.firstloop-title { margin: 0; font-size: 1.5rem; font-weight: 800; color: #222; }
+-.firstloop-text { margin: 0; font-size: 0.9rem; line-height: 1.5; color: #444; }
++.firstloop-title { margin: 0; font-size: 1.5rem; font-weight: 800; color: var(--text); }
++.firstloop-text { margin: 0; font-size: 0.9rem; line-height: 1.5; color: var(--text); }
+ .firstloop-tip {
+     margin: 0;
+     font-size: 0.82rem;
+@@ -40,7 +40,7 @@
+     padding: 8px 12px;
+ }
+ 
+-.firstloop-result { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; color: #222; }
++.firstloop-result { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.9rem; color: var(--text); }
+ 
+ .firstloop-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+ .firstloop-btn {
+@@ -48,8 +48,8 @@
+     font-size: 0.9rem;
+     font-weight: 700;
+     padding: 9px 18px;
+-    background: #fff;
+-    color: #222;
++    background: var(--surface-solid);
++    color: var(--text);
+     border: 2px solid black;
+     border-radius: 10px;
+     cursor: var(--cursor-pointer, pointer);
+@@ -58,4 +58,4 @@
+ .firstloop-btn:hover { background: #333; color: #fff; transform: translateY(-2px); }
+ .firstloop-btn-primary { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); }
+ .firstloop-btn-primary:hover { background: #333; }
+-.firstloop-btn-quiet { border-color: #999; color: #666; }
++.firstloop-btn-quiet { border-color: #999; color: var(--text-muted); }
+diff --git a/hyperloop-ui/src/components/GuideModal.css b/hyperloop-ui/src/components/GuideModal.css
+index 15441bc..00cdc29 100644
+--- a/hyperloop-ui/src/components/GuideModal.css
++++ b/hyperloop-ui/src/components/GuideModal.css
+@@ -1,5 +1,5 @@
+ .guide-modal {
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 28px 32px;
+@@ -32,7 +32,7 @@
+ }
+ 
+ .guide-section {
+-    background: #f8f8f8;
++    background: var(--surface-2);
+     border-radius: 10px;
+     padding: 12px 14px;
+ }
+@@ -41,14 +41,14 @@
+     font-family: 'Inter', sans-serif;
+     font-size: 0.9rem;
+     font-weight: bold;
+-    color: #111;
++    color: var(--text);
+     margin: 0 0 6px;
+ }
+ 
+ .guide-section-content {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.82rem;
+-    color: #555;
++    color: var(--text-muted);
+     line-height: 1.6;
+     margin: 0;
+ }
+diff --git a/hyperloop-ui/src/components/HyperLink.css b/hyperloop-ui/src/components/HyperLink.css
+index c455185..ae9bd93 100644
+--- a/hyperloop-ui/src/components/HyperLink.css
++++ b/hyperloop-ui/src/components/HyperLink.css
+@@ -53,7 +53,7 @@
+ 
+ /* Screen area */
+ .hyperlink-modal {
+-    background: #fff;
++    background: var(--surface-solid);
+     border-radius: 30px;
+     flex: 1;
+     display: flex;
+@@ -122,7 +122,7 @@
+ 
+ /* Home bar */
+ .hyperlink-home-bar {
+-    background: #fff;
++    background: var(--surface-solid);
+     height: 24px;
+     display: flex;
+     align-items: center;
+@@ -133,7 +133,7 @@
+ .hyperlink-home-bar-pill {
+     width: 100px;
+     height: 4px;
+-    background: #ccc;
++    background: var(--surface-2);
+     border-radius: 4px;
+ }
+ 
+@@ -184,7 +184,7 @@
+     height: 40px;
+     flex-shrink: 0;      /* the long disclaimer beside it was squeezing the picture narrow */
+     border-radius: 50%;
+-    background: rgba(255, 255, 255, 0.92);
++    background: var(--surface-solid);
+     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+     display: flex;
+     align-items: center;
+@@ -221,7 +221,7 @@
+ .hyperlink-feed {
+     overflow-y: auto;
+     flex: 1;
+-    background: #f8f8f8;
++    background: var(--surface-2);
+ }
+ 
+ /* "N new posts" - sits over the top of the feed while the reader is scrolled down */
+@@ -277,7 +277,7 @@
+     width: 22px;
+     height: 2px;
+     border-radius: 1px;
+-    background: white;
++    background: var(--surface-solid);
+     box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+     transform: translate(-50%, -50%) rotate(-45deg);
+     pointer-events: none;
+@@ -286,7 +286,7 @@
+ .hyperlink-empty {
+     padding: 48px 24px;
+     text-align: center;
+-    color: #6e6e6e;
++    color: var(--text-muted);
+     font-size: 0.9rem;
+ }
+ 
+@@ -295,8 +295,8 @@
+     -webkit-user-select: none;
+     user-select: none;
+     -webkit-tap-highlight-color: transparent;
+-    background: white;
+-    border-bottom: 1px solid #f0f0f0;
++    background: var(--surface-solid);
++    border-bottom: 1px solid var(--border);
+     padding: 14px 16px;
+     display: flex;
+     gap: 12px;
+@@ -328,12 +328,12 @@
+ }
+ 
+ .hyperlink-post:active {
+-    background: #f0f0f0;
++    background: var(--surface-2);
+     transition-duration: 0.1s;
+ }
+ 
+ .hyperlink-post-official {
+-    background: #fffbf0;
++    background: var(--surface-solid);
+     border-left: 3px solid var(--hl-accent, #f5a623);
+ }
+ 
+@@ -353,16 +353,16 @@
+     border-radius: 50%;
+     object-fit: cover;
+     flex-shrink: 0;
+-    border: 2px solid #eee;
++    border: 2px solid var(--border);
+ }
+ 
+ .hyperlink-pfp-default {
+     width: 42px;
+     height: 42px;
+     border-radius: 50%;
+-    background: #ddd;
++    background: var(--surface-2);
+     flex-shrink: 0;
+-    border: 2px solid #eee;
++    border: 2px solid var(--border);
+     object-fit: cover;
+ }
+ 
+@@ -388,24 +388,24 @@
+ .hyperlink-display-name {
+     font-weight: 700;
+     font-size: 0.88rem;
+-    color: #111;
++    color: var(--text);
+ }
+ 
+ .hyperlink-handle {
+     font-size: 0.78rem;
+-    color: #666;
++    color: var(--text-muted);
+ }
+ 
+ .hyperlink-timestamp {
+     font-size: 0.72rem;
+-    color: #6e6e6e;
++    color: var(--text-muted);
+     margin-left: auto;
+     white-space: nowrap;
+ }
+ 
+ .hyperlink-post-text {
+     font-size: 0.9rem;
+-    color: #222;
++    color: var(--text);
+     line-height: 1.5;
+     word-break: break-word;
+ }
+@@ -516,7 +516,7 @@
+ .hyperlink-likes,
+ .hyperlink-replies {
+     font-size: 0.75rem;
+-    color: #6e6e6e;
++    color: var(--text-muted);
+     cursor: var(--cursor-default, default);
+     user-select: none;
+ }
+diff --git a/hyperloop-ui/src/components/MilestoneModal.css b/hyperloop-ui/src/components/MilestoneModal.css
+index b28570f..956f3ea 100644
+--- a/hyperloop-ui/src/components/MilestoneModal.css
++++ b/hyperloop-ui/src/components/MilestoneModal.css
+@@ -1,5 +1,5 @@
+ .milestone-modal {
+-    background: rgb(255, 246, 239);
++    background: var(--page-bg);
+     border: 2px solid black;
+     border-radius: 16px;
+     padding: 36px 32px;
+@@ -26,20 +26,20 @@
+ .milestone-heading {
+     font-size: 1.5rem;
+     font-weight: bold;
+-    color: #111;
++    color: var(--text);
+     margin: 0;
+ }
+ 
+ .milestone-message {
+     font-size: 0.9rem;
+-    color: #555;
++    color: var(--text-muted);
+     line-height: 1.6;
+     margin: 0;
+     max-width: 320px;
+ }
+ 
+ .milestone-reward-box {
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid var(--ui-accent, #f5a623);
+     border-radius: 10px;
+     padding: 12px 24px;
+@@ -62,13 +62,13 @@
+ .milestone-reward-name {
+     font-size: 1.1rem;
+     font-weight: bold;
+-    color: #111;
++    color: var(--text);
+ }
+ 
+ .milestone-next {
+     margin: 0;
+     font-size: 0.8rem;
+-    color: #777;
++    color: var(--text-muted);
+ }
+ 
+ @keyframes milestone-fadein {
+diff --git a/hyperloop-ui/src/components/NotEnoughRepModal.jsx b/hyperloop-ui/src/components/NotEnoughRepModal.jsx
+index d8823de..ff3ce64 100644
+--- a/hyperloop-ui/src/components/NotEnoughRepModal.jsx
++++ b/hyperloop-ui/src/components/NotEnoughRepModal.jsx
+@@ -12,14 +12,14 @@ function NotEnoughRepModal({ onClose }) {
+             <div className="modal" onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
+                 <img src={reputationIcon} alt="reputation" style={{ width: '48px', height: '48px', margin: '0 auto 12px', display: 'block' }} />
+                 <h3 style={{ margin: '0 0 12px', fontFamily: 'Inter, sans-serif' }}>Not enough Reputation!</h3>
+-                <p style={{ fontSize: '0.88rem', color: '#555', lineHeight: 1.6, margin: '0 0 16px' }}>
++                <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: '0 0 16px' }}>
+                     You need more Reputation to do this. Here's how to earn it:
+                 </p>
+-                <div style={{ textAlign: 'left', background: '#f8f8f8', borderRadius: '10px', padding: '12px 14px', marginBottom: '16px' }}>
+-                    <p style={{ margin: '0 0 8px', fontSize: '0.85rem', fontWeight: 'bold', color: '#111' }}>✈️ Give personal farewells</p>
+-                    <p style={{ margin: '0 0 12px', fontSize: '0.82rem', color: '#555' }}>When a departure is approaching, a farewell window opens on your screen. Give a personal farewell to earn +5 Reputation.</p>
+-                    <p style={{ margin: '0 0 8px', fontSize: '0.85rem', fontWeight: 'bold', color: '#111' }}>💼 Work your terminal</p>
+-                    <p style={{ margin: '0', fontSize: '0.82rem', color: '#555' }}>There is a small chance of earning +5 Reputation each time you tap the Work button. Certain upgrades increase this chance.</p>
++                <div style={{ textAlign: 'left', background: 'var(--surface-2)', borderRadius: '10px', padding: '12px 14px', marginBottom: '16px' }}>
++                    <p style={{ margin: '0 0 8px', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text)' }}>✈️ Give personal farewells</p>
++                    <p style={{ margin: '0 0 12px', fontSize: '0.82rem', color: 'var(--text-muted)' }}>When a departure is approaching, a farewell window opens on your screen. Give a personal farewell to earn +5 Reputation.</p>
++                    <p style={{ margin: '0 0 8px', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--text)' }}>💼 Work your terminal</p>
++                    <p style={{ margin: '0', fontSize: '0.82rem', color: 'var(--text-muted)' }}>There is a small chance of earning +5 Reputation each time you tap the Work button. Certain upgrades increase this chance.</p>
+                 </div>
+                 <button className="closeButton" onClick={() => { playClickSound2(); onClose() }}>Got it</button>
+             </div>
+diff --git a/hyperloop-ui/src/components/OfflineModal.css b/hyperloop-ui/src/components/OfflineModal.css
+index 34e7445..807cff6 100644
+--- a/hyperloop-ui/src/components/OfflineModal.css
++++ b/hyperloop-ui/src/components/OfflineModal.css
+@@ -16,14 +16,14 @@
+ }
+ 
+ .offline-subtitle {
+-    color: #666;
++    color: var(--text-muted);
+     font-size: 0.9rem;
+     margin: 0 0 20px;
+     font-family: 'Inter', sans-serif;
+ }
+ 
+ .offline-earnings-box {
+-    background: #f8f8f8;
++    background: var(--surface-2);
+     border: 2px solid var(--ui-accent, #f5a623);
+     border-radius: 12px;
+     padding: 16px 24px;
+diff --git a/hyperloop-ui/src/components/OnboardingModal.css b/hyperloop-ui/src/components/OnboardingModal.css
+index 1a05bd4..7c391e3 100644
+--- a/hyperloop-ui/src/components/OnboardingModal.css
++++ b/hyperloop-ui/src/components/OnboardingModal.css
+@@ -13,14 +13,14 @@
+ .onboarding-title {
+     font-size: 1.5rem;
+     font-weight: 900;
+-    color: #111;
++    color: var(--text);
+     margin: 0 0 12px;
+     font-family: 'Inter', sans-serif;
+ }
+ 
+ .onboarding-intro {
+     font-size: 0.88rem;
+-    color: #333;
++    color: var(--text);
+     margin: 0 0 20px;
+     line-height: 1.6;
+     font-family: 'Inter', sans-serif;
+@@ -38,12 +38,12 @@
+     display: flex;
+     align-items: flex-start;
+     gap: 12px;
+-    background: #f8f8f8;
++    background: var(--surface-2);
+     border-radius: 10px;
+     padding: 12px 14px;
+     font-family: 'Inter', sans-serif;
+     font-size: 0.88rem;
+-    color: #333;
++    color: var(--text);
+     line-height: 1.4;
+ }
+ 
+@@ -56,7 +56,7 @@
+ 
+ .onboarding-hint {
+     font-size: 0.82rem;
+-    color: #333;
++    color: var(--text);
+     margin: 0 0 20px;
+     font-family: 'Inter', sans-serif;
+     line-height: 1.5;
+@@ -65,7 +65,7 @@
+ .onboarding-modal .opening-btn {
+     background: var(--ui-accent, #f5a623);
+     color: white;
+-    border: 2px solid white;
++    border: 2px solid var(--border);
+ }
+ 
+ .onboarding-modal .opening-btn:hover {
+diff --git a/hyperloop-ui/src/components/PageIntroModal.css b/hyperloop-ui/src/components/PageIntroModal.css
+index c19dee2..2e93a26 100644
+--- a/hyperloop-ui/src/components/PageIntroModal.css
++++ b/hyperloop-ui/src/components/PageIntroModal.css
+@@ -12,7 +12,7 @@
+ }
+ 
+ .pageintro-panel {
+-    background-color: rgb(255, 239, 224);
++    background-color: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 14px;
+     padding: 28px 32px;
+@@ -27,7 +27,7 @@
+     text-align: center;
+ }
+ 
+-.pageintro-title { margin: 0; font-size: 1.4rem; font-weight: 800; color: #222; }
++.pageintro-title { margin: 0; font-size: 1.4rem; font-weight: 800; color: var(--text); }
+ 
+ .pageintro-points {
+     display: flex;
+@@ -41,7 +41,7 @@
+     display: flex;
+     align-items: flex-start;
+     gap: 12px;
+-    background: #f8f8f8;
++    background: var(--surface-2);
+     border-radius: 10px;
+     padding: 12px 14px;
+ }
+@@ -51,8 +51,8 @@
+     margin-top: 1px;
+ }
+ 
+-.pageintro-point p { margin: 0; font-size: 0.88rem; line-height: 1.4; color: #333; }
+-.pageintro-point p strong { font-weight: 800; color: #222; }
++.pageintro-point p { margin: 0; font-size: 0.88rem; line-height: 1.4; color: var(--text); }
++.pageintro-point p strong { font-weight: 800; color: var(--text); }
+ 
+ .pageintro-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 6px; }
+ .pageintro-btn {
+@@ -60,8 +60,8 @@
+     font-size: 0.9rem;
+     font-weight: 700;
+     padding: 9px 18px;
+-    background: #fff;
+-    color: #222;
++    background: var(--surface-solid);
++    color: var(--text);
+     border: 2px solid black;
+     border-radius: 10px;
+     cursor: var(--cursor-pointer, pointer);
+diff --git a/hyperloop-ui/src/components/RankUpModal.css b/hyperloop-ui/src/components/RankUpModal.css
+index f0fdbb7..42ee8ca 100644
+--- a/hyperloop-ui/src/components/RankUpModal.css
++++ b/hyperloop-ui/src/components/RankUpModal.css
+@@ -14,7 +14,7 @@
+ }
+ 
+ .modal {
+-    background-color: rgb(255, 239, 224);
++    background-color: var(--surface-solid);
+     border: 2px solid black;
+     font-family: "Inter", sans-serif;
+     border-radius: 12px;
+@@ -31,7 +31,7 @@
+ 
+ .modal button {
+     align-items: center;
+-    background-color: rgb(255, 239, 224);
++    background-color: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 8px;
+     padding: 10px 16px;
+diff --git a/hyperloop-ui/src/components/ScheduleModal.css b/hyperloop-ui/src/components/ScheduleModal.css
+index c84cab2..f8fea3d 100644
+--- a/hyperloop-ui/src/components/ScheduleModal.css
++++ b/hyperloop-ui/src/components/ScheduleModal.css
+@@ -64,7 +64,7 @@
+ .sched-field-gate select { width: calc(7ch + 44px); }   /* "Gate 12" */
+ .sched-field-loop select { width: calc(3ch + 44px); }   /* "613" */
+ .sched-field select:disabled { opacity: 0.7; cursor: var(--cursor-default, default); }
+-.sched-field select option:disabled { color: #666; }
++.sched-field select option:disabled { color: var(--text-muted); }
+ 
+ .sched-loopno { display: inline-flex; align-items: center; gap: 4px; color: var(--board-accent, #f5a623); font-weight: 700; }
+ .sched-loopno-prefix { letter-spacing: 1px; }
+@@ -76,7 +76,7 @@
+ .sched-preview b, .sched-preview em { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+ .sched-preview span { color: #888; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; }
+ .sched-preview b { color: var(--board-accent, #f5a623); font-size: 1rem; }
+-.sched-preview em { color: #777; font-style: normal; font-size: 0.68rem; }
++.sched-preview em { color: var(--text-muted); font-style: normal; font-size: 0.68rem; }
+ 
+ .sched-hint { margin: 0; font-size: 0.75rem; color: #7fd4ff; }
+ .sched-error { margin: 0; font-size: 0.75rem; color: #e74c3c; }
+@@ -117,6 +117,6 @@
+ .sched-row-editing { border-color: var(--board-accent, #f5a623); }
+ .sched-row-time { grid-area: time; color: var(--board-accent, #f5a623); font-size: 1.05rem; font-weight: 700; }
+ .sched-row-city { grid-area: city; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+-.sched-row-city small { color: #777; text-transform: none; letter-spacing: 0; }
++.sched-row-city small { color: var(--text-muted); text-transform: none; letter-spacing: 0; }
+ .sched-row-detail { grid-area: detail; font-size: 0.68rem; color: #888; }
+ .sched-row-actions { grid-area: actions; display: flex; gap: 6px; }
+diff --git a/hyperloop-ui/src/components/SecretCityModal.css b/hyperloop-ui/src/components/SecretCityModal.css
+index af41fa6..0bcdd08 100644
+--- a/hyperloop-ui/src/components/SecretCityModal.css
++++ b/hyperloop-ui/src/components/SecretCityModal.css
+@@ -1,5 +1,5 @@
+ .secret-city-modal {
+-    background: rgb(255, 239, 224);
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 40px 32px;
+@@ -14,7 +14,7 @@
+     font-family: 'Courier New', monospace;
+     font-size: 1.3rem;
+     margin: 0 0 8px;
+-    color: #222;
++    color: var(--text);
+ }
+ 
+ .secret-city-subtitle {
+diff --git a/hyperloop-ui/src/components/ShopModal.css b/hyperloop-ui/src/components/ShopModal.css
+index 7eea0b4..afac8fb 100644
+--- a/hyperloop-ui/src/components/ShopModal.css
++++ b/hyperloop-ui/src/components/ShopModal.css
+@@ -11,7 +11,7 @@
+ }
+ 
+ .shop-modal {
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 22px 26px;
+@@ -53,7 +53,7 @@
+ .shop-balance img, .shop-btn img { width: 16px; height: 16px; object-fit: contain; }
+ 
+ .shop-close {
+-    background: white;
++    background: var(--surface-solid);
+     border: 1px solid #bbb;
+     border-radius: 6px;
+     padding: 4px 10px;
+@@ -61,7 +61,7 @@
+     font-size: 0.75rem;
+     cursor: var(--cursor-pointer, pointer);
+ }
+-.shop-close:hover { background: #f3f3f3; }
++.shop-close:hover { background: var(--surface-2); }
+ 
+ /* The sidebar (category list) on the left and the scrollable content pane on the right. Stacks vertically
+    below a narrow viewport - see the media query at the end of this file. */
+@@ -80,7 +80,7 @@
+     gap: 4px;
+     overflow-y: auto;
+     padding-right: 14px;
+-    border-right: 1px solid #eee;
++    border-right: 1px solid var(--border);
+ }
+ 
+ .shop-nav-item {
+@@ -88,7 +88,7 @@
+     flex-direction: row;
+     align-items: center;
+     gap: 10px;
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid transparent;
+     border-radius: 10px;
+     padding: 8px 10px;
+@@ -97,10 +97,10 @@
+     cursor: var(--cursor-pointer, pointer);
+     transition: background 0.15s ease, border-color 0.15s ease;
+ }
+-.shop-nav-item:hover { background: #fdf6ec; }
+-.shop-nav-item-active { border-color: var(--ui-accent, #f5a623); background: color-mix(in srgb, var(--ui-accent, #f5a623) 10%, white); }
++.shop-nav-item:hover { background: var(--surface-solid); }
++.shop-nav-item-active { border-color: var(--ui-accent, #f5a623); background: color-mix(in srgb, var(--ui-accent, #f5a623) 10%, transparent); }
+ .shop-nav-item-text { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; min-width: 0; }
+-.shop-nav-item-name { font-weight: 700; font-size: 0.86rem; color: #222; }
++.shop-nav-item-name { font-weight: 700; font-size: 0.86rem; color: var(--text); }
+ .shop-nav-item-active .shop-nav-item-name { color: var(--ui-accent, #f5a623); }
+ .shop-nav-item-sub { font-size: 0.68rem; color: #888; }
+ 
+@@ -113,8 +113,8 @@
+     display: flex;
+     align-items: center;
+     justify-content: center;
+-    background: white;
+-    border: 2px solid #ccc;
++    background: var(--surface-solid);
++    border: 2px solid var(--border);
+     border-radius: 8px;
+     transition: border-color 0.15s ease, box-shadow 0.15s ease;
+ }
+@@ -132,33 +132,33 @@
+     min-height: 0;
+ }
+ 
+-.shop-blurb { margin: 0 0 12px; font-size: 0.82rem; color: #666; }
++.shop-blurb { margin: 0 0 12px; font-size: 0.82rem; color: var(--text-muted); }
+ 
+ /* Search box + Shop/Owned toggle, sat above every tab's groups. */
+ .shop-filter-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+ .shop-search {
+     flex: 1;
+     min-width: 0;
+-    border: 1px solid #ccc;
++    border: 1px solid var(--border);
+     border-radius: 16px;
+     padding: 6px 12px;
+     font-family: inherit;
+     font-size: 0.8rem;
+ }
+ .shop-search:focus { outline: none; border-color: var(--ui-accent, #f5a623); }
+-.shop-view-toggle { display: flex; border: 1px solid #ccc; border-radius: 16px; overflow: hidden; flex: 0 0 auto; }
++.shop-view-toggle { display: flex; border: 1px solid var(--border); border-radius: 16px; overflow: hidden; flex: 0 0 auto; }
+ .shop-view-btn {
+-    background: white;
++    background: var(--surface-solid);
+     border: none;
+     padding: 6px 12px;
+     font-family: inherit;
+     font-size: 0.78rem;
+     font-weight: 600;
+-    color: #666;
++    color: var(--text-muted);
+     cursor: var(--cursor-pointer, pointer);
+ }
+-.shop-view-btn + .shop-view-btn { border-left: 1px solid #ccc; }
+-.shop-view-btn:hover { background: #fdf6ec; }
++.shop-view-btn + .shop-view-btn { border-left: 1px solid var(--border); }
++.shop-view-btn:hover { background: var(--surface-solid); }
+ .shop-view-btn-active { background: var(--ui-accent, #f5a623); color: white; }
+ .shop-empty { font-size: 0.8rem; color: #888; font-style: italic; margin: 4px 0; }
+ 
+@@ -188,8 +188,8 @@
+     display: flex;
+     align-items: center;
+     gap: 6px;
+-    border-bottom: 1px solid #e5e5e5;
+-    border-left: 3px solid #ccc;
++    border-bottom: 1px solid var(--border);
++    border-left: 3px solid var(--border);
+     padding: 1px 0 4px 8px;
+     margin-bottom: 8px;
+ }
+@@ -223,13 +223,13 @@
+ }
+ 
+ .shop-item {
+-    border: 2px solid #ddd;
++    border: 2px solid var(--border);
+     border-radius: 10px;
+     padding: 12px;
+     display: flex;
+     flex-direction: column;
+     gap: 6px;
+-    background: #fffaf4;
++    background: var(--surface-solid);
+     transition: transform 0.15s ease, box-shadow 0.15s ease;
+ }
+ /* Lifts slightly and glows in the card's own theme colour (--card-glow-color, set per-card in
+@@ -240,7 +240,7 @@
+     box-shadow: 0 10px 22px rgba(0, 0, 0, 0.22), 0 0 16px 3px color-mix(in srgb, var(--card-glow-color, #f5a623) 60%, transparent);
+ }
+ .shop-item-equipped { border-color: var(--ui-accent, #f5a623); }
+-.shop-item-locked { opacity: 0.6; background: #f3f3f3; }
++.shop-item-locked { opacity: 0.6; background: var(--surface-2); }
+ .shop-item-lock { margin-left: 6px; font-size: 0.8rem; }
+ .shop-locked-note { font-size: 0.72rem; color: #8b5cf6; font-weight: bold; text-align: right; flex: 1; }
+ .shop-item-shake { animation: shop-shake 0.35s ease; }
+@@ -251,7 +251,7 @@
+ }
+ 
+ .shop-item-name { font-weight: bold; font-size: 0.92rem; }
+-.shop-item-desc { font-size: 0.78rem; color: #666; }
++.shop-item-desc { font-size: 0.78rem; color: var(--text-muted); }
+ 
+ /* flex-wrap so a narrow card (more categories now have 4+ items per row than when this was written) wraps its
+    Preview/Equip/Buy buttons onto their own line instead of overflowing the card's right edge into the next one. */
+@@ -272,13 +272,13 @@
+     cursor: var(--cursor-pointer, pointer);
+ }
+ .shop-btn:hover { filter: brightness(1.08); }
+-.shop-btn-ghost { background: white; color: #444; border: 1px solid #bbb; }
+-.shop-btn-buy { background: white; color: #333; border: 2px solid var(--ui-accent, #f5a623); }
++.shop-btn-ghost { background: var(--surface-solid); color: var(--text); border: 1px solid #bbb; }
++.shop-btn-buy { background: var(--surface-solid); color: var(--text); border: 2px solid var(--ui-accent, #f5a623); }
+ /* Dimming alone (the old opacity: 0.55) kept the button's themed accent border, so an out-of-reach Buy looked
+    almost the same as a ready one at a glance - just a bit paler. Flattening the border/text to grey instead
+    makes "can't afford this yet" scannable across a grid where every card has a different accent colour,
+    while leaving size/shape/click behaviour untouched (it's still clickable - see handleBuy's shake+sound). */
+-.shop-btn-poor { opacity: 0.7; border-color: #ccc; color: #999; }
++.shop-btn-poor { opacity: 0.7; border-color: var(--border); color: #999; }
+ .shop-equipped { font-size: 0.78rem; font-weight: bold; color: #4a8f3c; }
+ /* Its own full-width line above the Buy button (flex-basis: 100%, inside the now-wrapping .shop-item-actions)
+    rather than squeezed onto the same line as Preview/Buy, which is what overflowed in the first place.
+@@ -289,7 +289,7 @@
+    .shop-nav-item-sub's #888), not the old warning-red - it's not a warning, just progress, and in a grid
+    where most bundles land on the same price it was the same red text repeated on card after card. */
+ .shop-need-more { font-size: 0.68rem; color: #888; white-space: nowrap; flex-basis: 100%; text-align: right; }
+-.shop-need-more strong { color: #555; }
++.shop-need-more strong { color: var(--text-muted); }
+ 
+ /* The preview mock, wrapped in a plain button so it can be clicked open into the lightbox - reset to look
+    exactly like the un-clickable div it used to be, with just a pointer cursor and a focus ring to show it's
+@@ -315,11 +315,11 @@
+ .pv-board-row { display: grid; grid-template-columns: 1.1fr 0.7fr 1fr; padding: 1px 0; }
+ 
+ /* Hyper-Link */
+-.pv-hl { background: #fbf3ea; }
++.pv-hl { background: var(--surface-solid); }
+ .pv-hl-head { background: linear-gradient(135deg, var(--hl-accent, #f5a623), var(--hl-accent-dark, #e8941a)); color: white; font-weight: bold; font-size: 0.7rem; padding: 4px 8px; }
+-.pv-hl-post { display: flex; flex-direction: column; gap: 1px; padding: 4px 8px; border-bottom: 1px solid #eadfd2; color: #222; }
+-.pv-hl-post span { color: #555; }
+-.pv-hl-official { border-left: 3px solid var(--hl-accent, #f5a623); background: #fffaf0; }
++.pv-hl-post { display: flex; flex-direction: column; gap: 1px; padding: 4px 8px; border-bottom: 1px solid var(--border); color: var(--text); }
++.pv-hl-post span { color: var(--text-muted); }
++.pv-hl-official { border-left: 3px solid var(--hl-accent, #f5a623); background: var(--surface-solid); }
+ 
+ /* General: top bar, globe, ticker, tabs */
+ .pv-gen { background: #05060f; }
+@@ -327,7 +327,7 @@
+ /* Matches the real Work button (TopBanner.css .work-banner-btn): white pill, 2px accent border, bold text -
+    just scaled down to the preview's size. The real button also pulses and turns solid on hover, which isn't
+    shown here since nothing else in this static mock animates either. */
+-.pv-gen-work { border: 1.5px solid var(--ui-accent, #f5a623); border-radius: 12px; padding: 1px 10px; background: white; color: #333; font-weight: bold; }
++.pv-gen-work { border: 1.5px solid var(--ui-accent, #f5a623); border-radius: 12px; padding: 1px 10px; background: var(--surface-solid); color: var(--text); font-weight: bold; }
+ .pv-gen-globe { display: block; width: 100%; height: 46px; }
+ .pv-gen-planet { fill: #12213a; stroke: #2a4a7a; stroke-width: 1; }
+ .pv-gen-globe path { fill: none; stroke-width: 2; stroke-linecap: round; }
+@@ -344,8 +344,8 @@
+    wouldn't trigger a cursor change at all. */
+ .pv-cursor {
+     pointer-events: auto;
+-    background: #fffaf4;
+-    border: 1px dashed #ccc;
++    background: var(--surface-solid);
++    border: 1px dashed var(--border);
+     border-radius: 6px;
+     padding: 14px 6px;
+     text-align: center;
+@@ -360,16 +360,16 @@
+ .shop-bundle-badge {
+     font-size: 0.62rem; font-weight: bold; letter-spacing: 0.5px; text-transform: uppercase;
+     padding: 1px 7px; border-radius: 10px; margin-left: 6px; vertical-align: middle;
+-    background: color-mix(in srgb, var(--ui-accent, #f5a623) 18%, white); color: var(--ui-accent, #f5a623);
++    background: color-mix(in srgb, var(--ui-accent, #f5a623) 18%, transparent); color: var(--ui-accent, #f5a623);
+ }
+-.shop-bundle-badge-premium { background: color-mix(in srgb, #8b5cf6 18%, white); color: #8b5cf6; }
+-.shop-bundle-badge-standard { background: #eee; color: #666; }
++.shop-bundle-badge-premium { background: color-mix(in srgb, #8b5cf6 18%, transparent); color: #8b5cf6; }
++.shop-bundle-badge-standard { background: var(--surface-2); color: var(--text-muted); }
+ /* Shown on a bundle's Buy button, right beside the already-discounted price, so the saving is obvious at the
+    exact point a player is deciding whether to buy - not just mentioned once in the tab's intro blurb. */
+ .shop-bundle-original-price { text-decoration: line-through; color: #999; font-weight: normal; margin-right: 2px; }
+ .shop-bundle-discount-tag {
+     font-size: 0.62rem; font-weight: bold; color: #1f8a4c;
+-    background: color-mix(in srgb, #1f8a4c 15%, white);
++    background: color-mix(in srgb, #1f8a4c 15%, transparent);
+     border-radius: 8px; padding: 1px 6px; margin-left: 4px;
+ }
+ /* A compact row of category-initial chips in place of the old 5-line text list - full piece name + owned
+@@ -382,12 +382,12 @@
+     letter-spacing: 0.3px;
+     padding: 2px 6px;
+     border-radius: 8px;
+-    border: 1px solid #ccc;
++    border: 1px solid var(--border);
+     color: #999;
+-    background: white;
++    background: var(--surface-solid);
+     cursor: var(--cursor-default, default);
+ }
+-.shop-bundle-chip-owned { color: #4a8f3c; border-color: #4a8f3c; background: color-mix(in srgb, #4a8f3c 12%, white); }
++.shop-bundle-chip-owned { color: #4a8f3c; border-color: #4a8f3c; background: color-mix(in srgb, #4a8f3c 12%, transparent); }
+ .shop-bundle-chip-check { margin-right: 2px; }
+ 
+ /* Hover tooltip for a bundle piece chip - shows its full category name and owned state. Rendered through a
+@@ -436,7 +436,7 @@
+ }
+ .shop-lightbox {
+     position: relative;
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 20px;
+@@ -447,7 +447,7 @@
+     position: absolute;
+     top: 10px;
+     right: 10px;
+-    background: white;
++    background: var(--surface-solid);
+     border: 1px solid #bbb;
+     border-radius: 6px;
+     padding: 3px 9px;
+@@ -455,7 +455,7 @@
+     font-size: 0.72rem;
+     cursor: var(--cursor-pointer, pointer);
+ }
+-.shop-lightbox-close:hover { background: #f3f3f3; }
++.shop-lightbox-close:hover { background: var(--surface-2); }
+ .shop-lightbox-name { font-weight: bold; font-size: 1rem; margin-bottom: 10px; padding-right: 50px; }
+ .shop-lightbox .shop-preview { font-size: 1.05rem; pointer-events: auto; }
+ .shop-lightbox .pv-gen-globe { height: 92px; }
+@@ -473,7 +473,7 @@
+         overflow-x: auto;
+         overflow-y: visible;
+         border-right: none;
+-        border-bottom: 1px solid #eee;
++        border-bottom: 1px solid var(--border);
+         padding-right: 0;
+         padding-bottom: 10px;
+     }
+diff --git a/hyperloop-ui/src/components/ShopModal.jsx b/hyperloop-ui/src/components/ShopModal.jsx
+index c7001f1..6276ac6 100644
+--- a/hyperloop-ui/src/components/ShopModal.jsx
++++ b/hyperloop-ui/src/components/ShopModal.jsx
+@@ -85,7 +85,7 @@ function themedCardStyle(id) {
+     if (!pic) return {}
+     const accent = SHOP_ITEMS.generalTheme.find(i => i.id === id)?.vars?.['--ui-accent']
+     return {
+-        backgroundImage: `linear-gradient(rgba(255, 250, 244, 0.86), rgba(255, 250, 244, 0.86)), url(${pic})`,
++        backgroundImage: `linear-gradient(rgba(30, 34, 42, 0.84), rgba(30, 34, 42, 0.84)), url(${pic})`,
+         backgroundSize: 'cover',
+         backgroundPosition: 'center',
+         ...(accent ? { borderColor: accent, '--card-glow-color': accent } : {}),
+diff --git a/hyperloop-ui/src/components/TopBanner.css b/hyperloop-ui/src/components/TopBanner.css
+index 0f4db38..f33a222 100644
+--- a/hyperloop-ui/src/components/TopBanner.css
++++ b/hyperloop-ui/src/components/TopBanner.css
+@@ -10,8 +10,8 @@
+ }
+ 
+ .work-banner-btn {
+-    background: white;
+-    color: #333;
++    background: var(--surface-solid);
++    color: var(--text);
+     border: 2px solid var(--ui-accent, #f5a623);
+     border-radius: 50px;
+     margin: 0 16px;
+@@ -52,7 +52,7 @@ font-size: 1rem;
+ 
+ .work-divider {
+     width: 1px;
+-    background: #ccc;
++    background: var(--surface-2);
+     align-self: stretch;
+     margin: 8px 0;
+ }
+@@ -63,7 +63,7 @@ font-size: 1rem;
+     justify-content: center;
+     padding: 8px 16px;
+     gap: 4px;
+-    border-right: 1px solid #ccc;
++    border-right: 1px solid var(--border);
+ }
+ 
+ .rightSideDetails img {
+@@ -157,9 +157,9 @@ font-size: 1rem;
+     font-family: 'Inter', sans-serif;
+     font-size: 0.78rem;
+     font-weight: bold;
+-    color: #333;
+-    background: white;
+-    border: 1px solid #ddd;
++    color: var(--text);
++    background: var(--surface-solid);
++    border: 1px solid var(--border);
+     border-radius: 20px;
+     padding: 3px 10px;
+     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+@@ -169,7 +169,7 @@ font-size: 1rem;
+     font-family: 'Courier New', monospace;
+     font-size: 0.72rem;
+     font-weight: bold;
+-    color: #333;
++    color: var(--text);
+     margin-top: 2px;
+     display: flex;
+     align-items: center;
+@@ -190,7 +190,7 @@ font-size: 1rem;
+     height: 10px;
+     background: #e74c3c;
+     border-radius: 50%;
+-    border: 2px solid white;
++    border: 2px solid var(--border);
+     animation: badge-pulse 1s ease-in-out infinite;
+ }
+ 
+@@ -290,8 +290,8 @@ font-size: 1rem;
+     gap: 7px;
+     align-self: center;
+     flex-shrink: 0;
+-    background: white;
+-    color: #333;
++    background: var(--surface-solid);
++    color: var(--text);
+     border: 2px solid var(--ui-accent, #f5a623);
+     border-radius: 50px;
+     margin: 0 16px;
+diff --git a/hyperloop-ui/src/components/UpgradeRevealModal.css b/hyperloop-ui/src/components/UpgradeRevealModal.css
+index de23481..5ecd74c 100644
+--- a/hyperloop-ui/src/components/UpgradeRevealModal.css
++++ b/hyperloop-ui/src/components/UpgradeRevealModal.css
+@@ -1,5 +1,5 @@
+ .upgrade-reveal-modal {
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 12px;
+     padding: 28px 32px;
+@@ -42,11 +42,11 @@
+     font-size: 1.2rem;
+     font-weight: bold;
+     margin: 0 0 14px;
+-    color: #111;
++    color: var(--text);
+ }
+ 
+ .upgrade-reveal-effect {
+-    background: #f8f8f8;
++    background: var(--surface-2);
+     border-radius: 10px;
+     padding: 10px 16px;
+     margin-bottom: 16px;
+@@ -55,7 +55,7 @@
+ .upgrade-reveal-effect-text {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+-    color: #333;
++    color: var(--text);
+     font-weight: 500;
+ }
+ .upgrade-reveal-modal .upgrade-reveal-continueall { display: block; margin: 10px auto 0; }
+diff --git a/hyperloop-ui/src/index.css b/hyperloop-ui/src/index.css
+index 8b13789..367113f 100644
+--- a/hyperloop-ui/src/index.css
++++ b/hyperloop-ui/src/index.css
+@@ -1 +1,13 @@
++/* Dark glass palette. Every page, card and popup reads these, so the whole look can be re-tuned here. */
++:root {
++    color-scheme: dark;
++    --page-bg: #14171c;                          /* behind everything */
++    --surface-solid: #1e222a;                    /* cards, popups, panels */
++    --surface: rgba(30, 34, 42, 0.8);            /* dark glass (top and bottom bars) */
++    --surface-2: #272c36;                        /* tiles and inputs sitting on a surface */
++    --border: rgba(255, 255, 255, 0.14);
++    --text: #f2f2f2;
++    --text-muted: #bdbdbd;
++}
++
+ 
+diff --git a/hyperloop-ui/src/pages/CitiesPage.css b/hyperloop-ui/src/pages/CitiesPage.css
+index d08a670..31aacf9 100644
+--- a/hyperloop-ui/src/pages/CitiesPage.css
++++ b/hyperloop-ui/src/pages/CitiesPage.css
+@@ -1,6 +1,6 @@
+ .background {
+     padding: 8px 8px 0;
+-    background-color: rgb(255, 246, 239);
++    background-color: var(--page-bg);
+     font-family: 'Inter', sans-serif;
+     display: flex;
+     flex-direction: column;
+@@ -160,28 +160,28 @@
+ }
+ 
+ .city-search {
+-    border: 2px solid #ccc;
++    border: 2px solid var(--border);
+     border-radius: 20px;
+     padding: 4px 14px;
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+-    background: white;
++    background: var(--surface-solid);
+     outline: none;
+-    color: #333;
++    color: var(--text);
+     width: 220px;
+ }
+ 
+ .city-search:focus { border-color: #888; }
+ 
+ .city-sort-select {
+-    border: 2px solid #ccc;
++    border: 2px solid var(--border);
+     border-radius: 20px;
+     padding: 4px 14px;
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+-    background: white;
++    background: var(--surface-solid);
+     cursor: var(--cursor-pointer, pointer);
+-    color: #555;
++    color: var(--text-muted);
+     outline: none;
+ }
+ 
+@@ -195,19 +195,19 @@
+ 
+ .continent-btn {
+     display: inline-block;
+-    background: white;
+-    border: 2px solid #ccc;
++    background: var(--surface-solid);
++    border: 2px solid var(--border);
+     border-radius: 20px;
+     padding: 4px 14px;
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+     font-weight: normal;
+     cursor: var(--cursor-pointer, pointer);
+-    color: #555;
++    color: var(--text-muted);
+     transition: all 0.15s ease;
+ }
+ 
+-.continent-btn:hover { border-color: #888; color: #222; }
++.continent-btn:hover { border-color: #888; color: var(--text); }
+ .continent-btn-active { color: white; }
+ 
+ /* Scrollable content */
+@@ -224,7 +224,7 @@
+ }
+ 
+ .cities-available-section {
+-    border-top: 2px solid #ddd;
++    border-top: 2px solid var(--border);
+     margin-top: 8px;
+     padding-top: 8px;
+     padding-bottom: 12px;
+@@ -236,7 +236,7 @@
+     align-items: center;
+     justify-content: space-between;
+     margin: 8px 0;
+-    background: rgb(255, 246, 239);
++    background: var(--page-bg);
+     padding: 8px 0;
+ }
+ 
+@@ -356,7 +356,7 @@
+ }
+ 
+ .modal {
+-    background: rgb(255, 239, 224);
++    background: var(--surface-solid);
+     border: 2px solid black;
+     font-family: "Inter", sans-serif;
+     border-radius: 12px;
+@@ -402,8 +402,8 @@
+     font-weight: bold !important;
+     border-radius: 8px !important;
+     border: 2px solid black !important;
+-    background: white !important;
+-    color: black !important;
++    background: var(--surface-solid) !important;
++    color: var(--text) !important;
+     padding: 10px 16px !important;
+     cursor: var(--cursor-pointer, pointer) !important;
+     flex-direction: unset !important;
+@@ -447,8 +447,8 @@
+     font-size: 0.78rem;
+     border-radius: 6px;
+     border: 2px solid black;
+-    background: white;
+-    color: black;
++    background: var(--surface-solid);
++    color: var(--text);
+     padding: 3px 10px;
+     cursor: var(--cursor-pointer, pointer);
+     line-height: 1.4;
+@@ -469,7 +469,7 @@
+     font-weight: bold !important;
+     border-radius: 8px !important;
+     border: 2px solid black !important;
+-    background: white !important;
++    background: var(--surface-solid) !important;
+     padding: 10px 16px !important;
+     cursor: var(--cursor-pointer, pointer) !important;
+ }
+diff --git a/hyperloop-ui/src/pages/CitiesPage.jsx b/hyperloop-ui/src/pages/CitiesPage.jsx
+index 87bb2ab..03412b8 100644
+--- a/hyperloop-ui/src/pages/CitiesPage.jsx
++++ b/hyperloop-ui/src/pages/CitiesPage.jsx
+@@ -379,7 +379,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                         if (!reward) return null
+                                         const article = /^[AEIOU]/i.test(reward.category) ? 'an' : 'a'
+                                         return (
+-                                            <p style={{ fontSize: '0.88rem', color: '#555', margin: '8px 0' }}>
++                                            <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '8px 0' }}>
+                                                 <em>Unlocks {article} <strong>{reward.category}</strong> {reward.revenue ? 'development' : 'upgrade'} once connected</em>
+                                             </p>
+                                         )
+@@ -425,7 +425,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                         return (
+                                             <div style={{ width: '100%', margin: '8px 0' }}>
+                                                 {isHome ? (
+-                                                    <p style={{ margin: '0 0 6px', color: '#555', fontSize: '0.82rem', fontWeight: 'bold' }}>
++                                                    <p style={{ margin: '0 0 6px', color: 'var(--text-muted)', fontSize: '0.82rem', fontWeight: 'bold' }}>
+                                                         This is your home terminal. It earns no departure income.
+                                                     </p>
+                                                 ) : !earning ? (
+@@ -433,7 +433,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                                         Not on the timetable: earning nothing until it has a scheduled departure. The income below is what it earns once it does.
+                                                     </p>
+                                                 ) : capacity && (
+-                                                    <p style={{ margin: '0 0 6px', color: '#555', fontSize: '0.82rem' }}>
++                                                    <p style={{ margin: '0 0 6px', color: 'var(--text-muted)', fontSize: '0.82rem' }}>
+                                                         Running at <strong>{Math.round(capacity.percent)}% capacity</strong> ({capacity.band}) · about <strong>{capacity.passengers} / {capacity.capacity}</strong> passengers
+                                                     </p>
+                                                 )}
+@@ -581,7 +581,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
+                                 <h3>Upgrade the line to {selectedCity.name}</h3>
+                                 <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
+                                 <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
+-                                    Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
++                                    Cumulative total after this upgrade: <strong style={{ color: 'var(--text)' }}>+{info.totalPct}%</strong>
+                                     {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
+                                 </p>
+                                 <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><span className="cost-cash-icon-wrap"><img src={cashIcon} alt="£" className="cash-icon" style={{ border: 'none' }} /></span>{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} />{info.repCost}</span></strong></>}</p>
+diff --git a/hyperloop-ui/src/pages/DepartureBoard.css b/hyperloop-ui/src/pages/DepartureBoard.css
+index 0e0c8f2..42602d7 100644
+--- a/hyperloop-ui/src/pages/DepartureBoard.css
++++ b/hyperloop-ui/src/pages/DepartureBoard.css
+@@ -162,7 +162,7 @@
+     max-width: 500px;
+     width: 90%;
+     font-family: 'Courier New', Courier, monospace;
+-    box-shadow: 0 0 50px rgb(255, 239, 224), 0 20px 60px rgba(0, 0, 0, 0.8);
++    box-shadow: 0 0 50px rgba(255, 255, 255, 0.08), 0 20px 60px rgba(0, 0, 0, 0.8);
+ }
+ 
+ .farewell-attention {
+@@ -348,7 +348,7 @@
+ /* Greyed out but still clickable, so clicking it can play the "not enough" sound */
+ .board-action[aria-disabled="true"] { opacity: 0.35; cursor: var(--cursor-default, default); }
+ 
+-.board-sched-status { font-size: 0.72rem; letter-spacing: 1px; color: #777; }
++.board-sched-status { font-size: 0.72rem; letter-spacing: 1px; color: var(--text-muted); }
+ .board-sched-status-low { color: var(--board-accent-readable, var(--board-accent, #f5a623)); }
+ 
+ /* Nothing is scheduled to depart: a small blinking dot on the Departures tab */
+diff --git a/hyperloop-ui/src/pages/DepartureBoard.jsx b/hyperloop-ui/src/pages/DepartureBoard.jsx
+index 33ff186..bc41d53 100644
+--- a/hyperloop-ui/src/pages/DepartureBoard.jsx
++++ b/hyperloop-ui/src/pages/DepartureBoard.jsx
+@@ -36,7 +36,7 @@ function padText(text, width, padChar = '-') {
+ 
+ function getStatus(hour, minute, delayed, lag = 0) {
+     const diff = minutesUntilDeparture({ hour, minute }, Date.now() - lag * 1000)
+-    if (diff <= 0)  return { label: 'DEPARTED',    color: '#666' }
++    if (diff <= 0)  return { label: 'DEPARTED',    color: 'var(--text-muted)' }
+     if (diff <= 5)  return { label: 'GATE CLOSED', color: '#e74c3c' }
+     if (diff <= 10) return { label: 'FINAL CALL',  color: 'red' }
+     if (diff <= 30) return { label: 'BOARDING',    color: 'limegreen' }
+diff --git a/hyperloop-ui/src/pages/DevelopmentPage.css b/hyperloop-ui/src/pages/DevelopmentPage.css
+index d917f76..07ff1bd 100644
+--- a/hyperloop-ui/src/pages/DevelopmentPage.css
++++ b/hyperloop-ui/src/pages/DevelopmentPage.css
+@@ -1,7 +1,7 @@
+ .background {
+     padding: 8px;
+     font-family: "Inter", sans-serif;
+-    background-color: rgb(255, 246, 239);
++    background-color: var(--page-bg);
+     display: flex;
+     flex-direction: column;
+     height: calc(100vh - 290px);
+@@ -42,14 +42,14 @@
+ }
+ 
+ .dev-search {
+-  border: 2px solid #ccc;
++  border: 2px solid var(--border);
+   border-radius: 20px;
+   padding: 4px 14px;
+   font-family: 'Inter', sans-serif;
+   font-size: 0.85rem;
+-  background-color: white;
++  background-color: var(--surface-solid);
+   outline: none;
+-  color: #333;
++  color: var(--text);
+   width: 220px;
+ }
+ 
+@@ -58,14 +58,14 @@
+ }
+ 
+ .sort-select {
+-  border: 2px solid #ccc;
++  border: 2px solid var(--border);
+   border-radius: 20px;
+   padding: 4px 14px;
+   font-family: 'Inter', sans-serif;
+   font-size: 0.85rem;
+-  background-color: white;
++  background-color: var(--surface-solid);
+   cursor: var(--cursor-pointer, pointer);
+-  color: #555;
++  color: var(--text-muted);
+   outline: none;
+ }
+ 
+@@ -78,21 +78,21 @@
+ 
+ .category-btn {
+   display: inline-block;
+-  background-color: white;
+-  border: 2px solid #ccc;
++  background-color: var(--surface-solid);
++  border: 2px solid var(--border);
+   border-radius: 20px;
+   padding: 4px 14px;
+   font-family: 'Inter', sans-serif;
+   font-size: 0.85rem;
+   font-weight: normal;
+   cursor: var(--cursor-pointer, pointer);
+-  color: #555;
++  color: var(--text-muted);
+   transition: all 0.15s ease;
+ }
+ 
+ .category-btn:hover {
+   border-color: var(--ui-accent, #f5a623);
+-  color: #222;
++  color: var(--text);
+ }
+ 
+ .category-btn-active {
+@@ -121,7 +121,7 @@
+   position: sticky;
+   top: 0;
+   z-index: 10;
+-  background: rgb(255, 246, 239);
++  background: var(--page-bg);
+   padding-bottom: 4px;
+   width: 100%;
+ }
+@@ -170,7 +170,7 @@
+   margin: 16px 0 10px;
+   position: sticky;
+   top: 52px;
+-  background: rgb(255, 246, 239);
++  background: var(--page-bg);
+   z-index: 9;
+   padding: 4px 0;
+   width: 100%;
+@@ -221,8 +221,8 @@
+ .bulk-buy-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+ 
+ .section-header-available {
+-  color: #555;
+-  border-top: 2px solid #ddd;
++  color: var(--text-muted);
++  border-top: 2px solid var(--border);
+   padding-top: 16px;
+   margin-top: 24px;
+ }
+@@ -335,7 +335,7 @@
+ }
+ 
+ .modal {
+-  background-color: rgb(255, 239, 224);
++  background-color: var(--surface-solid);
+   border: 2px solid black;
+   font-family: "Inter", sans-serif;
+   border-radius: 12px;
+@@ -388,8 +388,8 @@
+ 
+ .modal .closeButton {
+   display: block !important;
+-  background-color: rgb(255, 239, 224);
+-  color: black !important;
++  background-color: var(--surface-solid);
++  color: var(--text) !important;
+   border: 2px solid black !important;
+   border-radius: 8px !important;
+   padding: 8px 20px !important;
+@@ -497,7 +497,7 @@
+ 
+ .rename-note {
+   font-size: 0.85rem;
+-  color: #555;
++  color: var(--text-muted);
+   margin: 4px 0 10px;
+ }
+ 
+@@ -510,7 +510,7 @@
+   text-align: center;
+   border: 2px solid black;
+   border-radius: 8px;
+-  background: #fff;
++  background: var(--surface-solid);
+ }
+ 
+ .rename-input:focus {
+diff --git a/hyperloop-ui/src/pages/DevelopmentPage.jsx b/hyperloop-ui/src/pages/DevelopmentPage.jsx
+index 5340229..40e9a24 100644
+--- a/hyperloop-ui/src/pages/DevelopmentPage.jsx
++++ b/hyperloop-ui/src/pages/DevelopmentPage.jsx
+@@ -222,7 +222,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                 <h3>Upgrade {nameOf(selectedDevelopment)}</h3>
+                                 <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
+                                 <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
+-                                    Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
++                                    Cumulative total after this upgrade: <strong style={{ color: 'var(--text)' }}>+{info.totalPct}%</strong>
+                                     {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
+                                 </p>
+                                 <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><span className="cost-cash-icon-wrap"><img src={cashIcon} alt="£" className="cash-icon" style={{ border: 'none' }} /></span>{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} />{info.repCost}</span></strong></>}</p>
+@@ -334,7 +334,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                         return sourceCity ? <p><em>Unlocked with: <strong>{sourceCity.name}</strong></em></p> : null
+                                     })()}
+                                                                        {!selectedDevelopment.revenue && EFFECT_DESCRIPTIONS[selectedDevelopment.effectType] && (
+-                                        <p style={{ fontSize: '0.88rem', color: '#555', margin: '8px 0' }}>
++                                        <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '8px 0' }}>
+                                             <strong>Effect:</strong> {EFFECT_DESCRIPTIONS[selectedDevelopment.effectType](selectedDevelopment.effectValue, selectedDevelopment)}
+                                         </p>
+                                     )}
+@@ -459,7 +459,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                             </div>
+                                         </div>
+                                     ) : (
+-                                        <p style={{ fontSize: '0.88rem', color: '#555', margin: '8px 0' }}>
++                                        <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: '8px 0' }}>
+                                             <strong>Effect:</strong> {(() => {
+                                                 const effects = EFFECT_DESCRIPTIONS
+                                                 const fn = effects[selectedDevelopment.effectType]
+@@ -488,7 +488,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
+                                                     <p style={{ color: '#c0392b', fontWeight: 'bold', fontSize: '0.85rem', margin: '12px 0 4px' }}>
+                                                         Remove {nameOf(selectedDevelopment)}?
+                                                     </p>
+-                                                    <p style={{ fontSize: '0.8rem', color: '#555', margin: '0 0 8px' }}>
++                                                    <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0 0 8px' }}>
+                                                         It goes back to Available to build{losses.length > 0 && <>, losing {losses.map((piece, i) => (
+                                                             <Fragment key={i}>
+                                                                 {i > 0 && (i === losses.length - 1 ? ' and ' : ', ')}
+diff --git a/hyperloop-ui/src/pages/HomePage.css b/hyperloop-ui/src/pages/HomePage.css
+index 029af6e..3d27a67 100644
+--- a/hyperloop-ui/src/pages/HomePage.css
++++ b/hyperloop-ui/src/pages/HomePage.css
+@@ -80,7 +80,7 @@
+     font-family: 'Inter', sans-serif;
+     font-weight: bold;
+     font-size: 1.1rem;
+-    color: #111;
++    color: var(--text);
+     margin: 8px 0 2px;
+     text-align: center;
+ }
+@@ -88,7 +88,7 @@
+ .city-hover-detail {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.8rem;
+-    color: #666;
++    color: var(--text-muted);
+     margin: 0 0 4px;
+     text-align: center;
+ }
+@@ -100,7 +100,7 @@
+     gap: 10px;
+     width: 100%;
+     box-sizing: border-box;
+-    color: #555;
++    color: var(--text-muted);
+     font-family: 'Inter', sans-serif;
+     font-size: 0.7rem;
+     font-weight: bold;
+@@ -117,7 +117,7 @@
+     flex-shrink: 0;
+ }
+ .city-hover-fact {
+-    color: #333;
++    color: var(--text);
+     font-family: 'Inter', sans-serif;
+     font-size: 0.78rem;
+     font-weight: bold;
+@@ -249,7 +249,7 @@
+ /* The switch clips its contents to its rounded corners (overflow: hidden), which would cut an outside focus ring
+    down to a sliver - so on these two tabs the ring is drawn inside the button instead. */
+ .globe-view-btn:focus-visible {
+-    outline: 2px solid #fff;
++    outline: 2px solid var(--border);
+     outline-offset: -3px;
+     box-shadow: none;
+ }
+@@ -450,7 +450,7 @@
+     width: var(--pod-w);
+     height: 9px;
+     transform: translateY(-50%);
+-    background: #fff;
++    background: var(--surface-solid);
+     border: 1px solid var(--loop-color);
+     border-radius: 2px;
+     box-shadow: 0 0 5px var(--loop-color);
+diff --git a/hyperloop-ui/src/pages/OpeningPage.css b/hyperloop-ui/src/pages/OpeningPage.css
+index 2a9092e..aa73383 100644
+--- a/hyperloop-ui/src/pages/OpeningPage.css
++++ b/hyperloop-ui/src/pages/OpeningPage.css
+@@ -10,7 +10,7 @@
+ 
+ /* Step 1 — white card */
+ .opening-card {
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid black;
+     border-radius: 20px;
+     padding: 48px 56px;
+@@ -21,11 +21,11 @@
+ }
+ 
+ .opening-card .opening-welcome {
+-    color: #111;
++    color: var(--text);
+ }
+ 
+ .opening-card .opening-tagline {
+-    color: #555;
++    color: var(--text-muted);
+ }
+ 
+ /* Step 2 — city selection on dark background */
+@@ -70,7 +70,7 @@
+ 
+ .opening-divider {
+     border: none;
+-    border-top: 1px solid #eee;
++    border-top: 1px solid var(--border);
+     margin: 24px 0;
+ }
+ 
+@@ -96,12 +96,12 @@
+     padding: 12px 16px;
+     font-family: 'Inter', sans-serif;
+     font-size: 1rem;
+-    border: 2px solid #ddd;
++    border: 2px solid var(--border);
+     border-radius: 10px;
+-    background: #fafafa;
++    background: var(--surface-2);
+     outline: none;
+     transition: border-color 0.15s;
+-    color: #111;
++    color: var(--text);
+ }
+ 
+ .opening-input:focus {
+@@ -148,7 +148,7 @@
+ }
+ 
+ .starter-city-card {
+-    background: white;
++    background: var(--surface-solid);
+     border: 2px solid #444;
+     border-radius: 16px;
+     width: 280px;
+@@ -190,13 +190,13 @@
+     width: 24px;
+     height: 16px;
+     object-fit: cover;
+-    border: 1px solid #ddd;
++    border: 1px solid var(--border);
+ }
+ 
+ .starter-city-name {
+     font-size: 1.1rem;
+     font-weight: bold;
+-    color: #111;
++    color: var(--text);
+ }
+ 
+ .starter-city-country {
+@@ -206,7 +206,7 @@
+ 
+ .starter-city-pop {
+     font-size: 0.82rem;
+-    color: #555;
++    color: var(--text-muted);
+     font-variant-numeric: tabular-nums;
+ }
+ 
+diff --git a/hyperloop-ui/src/pages/ProgressPage.css b/hyperloop-ui/src/pages/ProgressPage.css
+index 04479d2..2944e87 100644
+--- a/hyperloop-ui/src/pages/ProgressPage.css
++++ b/hyperloop-ui/src/pages/ProgressPage.css
+@@ -1,6 +1,6 @@
+ .progress-page {
+     padding: 16px 16px 0;
+-    background-color: rgb(255, 246, 239);
++    background-color: var(--page-bg);
+     font-family: 'Inter', sans-serif;
+     display: flex;
+     flex-direction: column;
+@@ -118,8 +118,8 @@
+     font-family: 'Courier New', monospace;
+     font-size: 0.75rem;
+     font-weight: bold;
+-    color: #222;
+-    background: #FFD700;
++    color: var(--text);
++    background: var(--surface-2);
+     border: 2px solid #222;
+     border-radius: 10px;
+     padding: 1px 10px;
+@@ -130,7 +130,7 @@
+ }
+ 
+ .progress-claim-all:hover {
+-    background: #ffe44d;
++    background: var(--surface-2);
+     transform: scale(1.06);
+ }
+ 
+@@ -172,7 +172,7 @@
+ /* Progress bar */
+ .progress-bar-container {
+     position: relative;
+-    background: #ddd;
++    background: var(--surface-2);
+     border: 2px solid black;
+     border-radius: 20px;
+     height: 20px;
+@@ -193,7 +193,7 @@
+     transform: translateY(-50%);
+     font-size: 0.7rem;
+     font-weight: bold;
+-    color: #333;
++    color: var(--text);
+     font-family: 'Courier New', monospace;
+ }
+ 
+@@ -226,20 +226,20 @@
+     font-size: 1rem;
+     font-weight: bold;
+     padding: 8px 0 4px;
+-    border-bottom: 1px solid #ddd;
++    border-bottom: 1px solid var(--border);
+     cursor: var(--cursor-pointer, pointer);
+     user-select: none;
+     margin: 12px 0 8px;
+ }
+ 
+ .progress-country-header img {
+-    border: 1px solid #ccc;
++    border: 1px solid var(--border);
+     border-radius: 2px;
+ }
+ 
+ .progress-country-count {
+-    background: #eee;
+-    color: #555;
++    background: var(--surface-2);
++    color: var(--text-muted);
+     font-size: 0.7rem;
+     padding: 1px 6px;
+     border-radius: 8px;
+@@ -265,21 +265,21 @@
+     gap: 5px;
+     padding: 8px 6px;
+     border-radius: 8px;
+-    background: white;
+-    border: 1px solid #ddd;
++    background: var(--surface-solid);
++    border: 1px solid var(--border);
+     box-sizing: border-box;
+ }
+ 
+-.progress-country-connected { background: white; border-color: #ccc; }
+-.progress-country-unlocked { background: #f5f5f5; border-color: #ddd; }
+-.progress-country-unknown { background: #eaeaea; border-color: #d0d0d0; }
++.progress-country-connected { background: var(--surface-solid); border-color: var(--border); }
++.progress-country-unlocked { background: var(--surface-2); border-color: var(--border); }
++.progress-country-unknown { background: var(--surface-2); border-color: var(--border); }
+ 
+ .progress-country-flag {
+     width: 60px;
+     height: 40px;
+     min-height: 0;
+     object-fit: cover;
+-    border: 1px solid #ccc;
++    border: 1px solid var(--border);
+     border-radius: 3px;
+     display: block;
+ }
+@@ -287,7 +287,7 @@
+ .progress-flag-unknown {
+     width: 60px;
+     height: 40px;
+-    background: #c8c8c8;
++    background: var(--surface-2);
+     border: 1px solid #bbb;
+     border-radius: 3px;
+     display: flex;
+@@ -304,7 +304,7 @@
+     text-align: center;
+     font-family: 'Inter', sans-serif;
+     line-height: 1.3;
+-    color: #222;
++    color: var(--text);
+     overflow: hidden;
+     display: -webkit-box;
+     -webkit-line-clamp: 3;
+@@ -329,20 +329,20 @@
+     gap: 6px;
+     padding: 8px 6px;
+     border-radius: 8px;
+-    background: white;
+-    border: 1px solid #ddd;
++    background: var(--surface-solid);
++    border: 1px solid var(--border);
+ }
+ 
+-.progress-city-connected { background: white; border-color: #ccc; }
+-.progress-city-unlocked { background: #f5f5f5; border-color: #ddd; }
+-.progress-city-unknown { background: #eaeaea; border-color: #d0d0d0; }
++.progress-city-connected { background: var(--surface-solid); border-color: var(--border); }
++.progress-city-unlocked { background: var(--surface-2); border-color: var(--border); }
++.progress-city-unknown { background: var(--surface-2); border-color: var(--border); }
+ 
+ .progress-city-image {
+     width: 118px;
+     height: 80px;
+     object-fit: cover;
+     border-radius: 4px;
+-    border: 1px solid #ccc;
++    border: 1px solid var(--border);
+     display: block;
+ }
+ 
+@@ -353,7 +353,7 @@
+ .progress-city-image-unknown {
+     width: 118px;
+     height: 80px;
+-    background: #c8c8c8;
++    background: var(--surface-2);
+     border-radius: 4px;
+     border: 1px solid #bbb;
+     display: flex;
+@@ -374,7 +374,7 @@
+     display: -webkit-box;
+     -webkit-line-clamp: 2;
+     -webkit-box-orient: vertical;
+-    color: #222;
++    color: var(--text);
+     width: 100%;
+ }
+ 
+@@ -382,7 +382,7 @@
+     width: 36px;
+     height: 24px;
+     object-fit: cover;
+-    border: 1px solid #ccc;
++    border: 1px solid var(--border);
+     border-radius: 2px;
+     display: block;
+ }
+@@ -390,7 +390,7 @@
+ .progress-city-flag-unknown {
+     width: 36px;
+     height: 24px;
+-    background: #c8c8c8;
++    background: var(--surface-2);
+     border: 1px solid #bbb;
+     border-radius: 2px;
+     display: flex;
+@@ -409,7 +409,7 @@
+     align-items: center;
+     justify-content: center;
+     font-size: 2.2rem;
+-    background: #fafafa;
++    background: var(--surface-2);
+ }
+ 
+ .progress-country-card,
+@@ -455,7 +455,7 @@
+     /* The border stays 1px like every other card, so a glowing card is exactly the same size and nothing shifts when it is
+        claimed. The second pixel of gold is a ring in the shadow, which takes up no room. */
+     box-shadow: 0 0 0 1px #FFD700, 0 0 10px 3px rgba(255, 215, 0, 0.7) !important;
+-    border: 1px solid #FFD700 !important;
++    border: 1px solid var(--border) !important;
+     cursor: var(--cursor-pointer, pointer) !important;
+     animation: gold-pulse 2s ease-in-out infinite;
+ }
+@@ -475,7 +475,7 @@
+ 
+ @keyframes gold-fade-out {
+     from { background: rgba(255, 215, 0, 0.2); box-shadow: 0 0 0 1px #FFD700, 0 0 10px 3px rgba(255, 215, 0, 0.7); border-color: #FFD700; }
+-    to   { background: white; box-shadow: none; border-color: #ccc; }
++    to   { background: var(--surface-solid); box-shadow: none; border-color: var(--border); }
+ }
+ 
+ @keyframes progress-float-up {
+diff --git a/hyperloop-ui/src/pages/SettingsPage.css b/hyperloop-ui/src/pages/SettingsPage.css
+index 7642750..28131f6 100644
+--- a/hyperloop-ui/src/pages/SettingsPage.css
++++ b/hyperloop-ui/src/pages/SettingsPage.css
+@@ -1,7 +1,7 @@
+ .settings-page {
+     padding: 24px;
+     padding-bottom: 116px;
+-    background: rgb(255, 246, 239);
++    background: var(--page-bg);
+     /* The height is set in SettingsPage.jsx to fit between the banner and the bottom bar. A min-height of 100vh here
+        made the box taller than the window, so the whole page scrolled as well as the box (two scrollbars). */
+     box-sizing: border-box;
+@@ -12,13 +12,13 @@
+     font-size: 1.6rem;
+     font-weight: bold;
+     margin: 0 0 24px;
+-    color: #111;
++    color: var(--text);
+ }
+ 
+ .settings-section {
+-    background: rgb(255, 252, 248);
++    background: var(--surface-2);
+     border-radius: 12px;
+-    border: 1px solid #e8d8c8;
++    border: 1px solid var(--border);
+     overflow: hidden;
+     margin-bottom: 20px;
+ }
+@@ -30,8 +30,8 @@
+     letter-spacing: 1.5px;
+     color: #888;
+     padding: 12px 20px;
+-    background: rgb(250, 242, 234);
+-    border-bottom: 1px solid #e8d8c8;
++    background: var(--surface-solid);
++    border-bottom: 1px solid var(--border);
+     margin: 0;
+ }
+ 
+@@ -52,7 +52,7 @@
+ .settings-label-title {
+     font-size: 0.95rem;
+     font-weight: bold;
+-    color: #222;
++    color: var(--text);
+ }
+ 
+ .settings-label-desc {
+@@ -69,15 +69,15 @@
+ }
+ 
+ .settings-option-btn {
+-    background: rgb(245, 238, 230);
+-    border: 2px solid #e8d8c8;
++    background: var(--surface-solid);
++    border: 2px solid var(--border);
+     border-radius: 8px;
+     padding: 8px 20px;
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+     font-weight: bold;
+     cursor: var(--cursor-pointer, pointer);
+-    color: #555;
++    color: var(--text-muted);
+     transition: all 0.15s ease;
+ }
+ 
+@@ -99,14 +99,14 @@
+ }
+ 
+ .settings-name-input {
+-    border: 2px solid #e8d8c8;
++    border: 2px solid var(--border);
+     border-radius: 8px;
+     padding: 8px 14px;
+     font-family: 'Inter', sans-serif;
+     font-size: 0.9rem;
+     outline: none;
+     width: 220px;
+-    background: rgb(255, 252, 248);
++    background: var(--surface-2);
+ }
+ 
+ .settings-name-input:focus {
+@@ -142,7 +142,7 @@
+ /* Version Log */
+ .version-log-entry {
+     padding: 20px 20px 16px;
+-    border-top: 1px solid #e8d8c8;
++    border-top: 1px solid var(--border);
+ }
+ 
+ .version-log-entry:first-child {
+@@ -171,7 +171,7 @@
+     font-family: 'Inter', sans-serif;
+     font-weight: bold;
+     font-size: 0.9rem;
+-    color: #222;
++    color: var(--text);
+ }
+ 
+ .version-log-date {
+@@ -193,7 +193,7 @@
+ .version-log-notes li {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+-    color: #555;
++    color: var(--text-muted);
+     padding-left: 16px;
+     position: relative;
+     line-height: 1.5;
+@@ -239,7 +239,7 @@
+     font-family: 'Inter', sans-serif;
+     font-weight: 700;
+     font-size: 1rem;
+-    color: #222;
++    color: var(--text);
+ }
+ 
+ .version-log-toggle-current {
+@@ -327,7 +327,7 @@
+     align-items: center;
+     gap: 16px;
+     padding: 10px 0;
+-    border-top: 1px solid #e8d8c8;
++    border-top: 1px solid var(--border);
+ }
+ 
+ .sound-volume-row:first-child {
+@@ -337,7 +337,7 @@
+ .sound-volume-label {
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+-    color: #333;
++    color: var(--text);
+     flex: 1 1 auto;
+     min-width: 0;
+ }

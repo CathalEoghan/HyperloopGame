@@ -1,0 +1,227 @@
+diff --git a/hyperloop-ui/src/components/BottomNav.css b/hyperloop-ui/src/components/BottomNav.css
+index 56513d4..ea88fad 100644
+--- a/hyperloop-ui/src/components/BottomNav.css
++++ b/hyperloop-ui/src/components/BottomNav.css
+@@ -6,15 +6,17 @@ left: 0;
+ width: 100%;
+ height: 65px;
+ display: flex;
+-background-color: var(--ui-bar-bg, rgb(255, 240, 224));
++background-color: var(--ui-bar-bg, rgba(30, 34, 42, 0.8));
++-webkit-backdrop-filter: blur(12px);
++backdrop-filter: blur(12px);
+ font-family: 'Inter', sans-serif;
+ }
+ 
+ .bottomNav button {
+     flex: 1;
+     height: 100%;
+-    background-color: var(--ui-bar-bg, rgb(255, 240, 224));
+-    color: var(--ui-bar-text, #222);
++    background-color: transparent;
++    color: var(--ui-bar-text, #f2f2f2);
+     font-family: 'Inter', sans-serif;
+     font-weight: bold;
+     font-size:larger;
+@@ -31,8 +33,8 @@ font-family: 'Inter', sans-serif;
+ .bottomNav button {
+     flex: 1;
+     height: 100%;
+-    background-color: var(--ui-bar-bg, rgb(255, 240, 224));
+-    color: var(--ui-bar-text, #222);
++    background-color: transparent;
++    color: var(--ui-bar-text, #f2f2f2);
+     font-family: 'Inter', sans-serif;
+     font-weight: bold;
+     font-size: larger;
+diff --git a/hyperloop-ui/src/components/ShopModal.css b/hyperloop-ui/src/components/ShopModal.css
+index c2129ff..7eea0b4 100644
+--- a/hyperloop-ui/src/components/ShopModal.css
++++ b/hyperloop-ui/src/components/ShopModal.css
+@@ -323,7 +323,7 @@
+ 
+ /* General: top bar, globe, ticker, tabs */
+ .pv-gen { background: #05060f; }
+-.pv-gen-top { display: flex; align-items: center; justify-content: space-between; background: var(--ui-bar-bg, rgb(255, 240, 224)); color: var(--ui-bar-text, #222); padding: 4px 8px; font-weight: bold; font-size: 0.6rem; }
++.pv-gen-top { display: flex; align-items: center; justify-content: space-between; background: var(--ui-bar-bg, rgba(30, 34, 42, 0.8)); color: var(--ui-bar-text, #f2f2f2); padding: 4px 8px; font-weight: bold; font-size: 0.6rem; }
+ /* Matches the real Work button (TopBanner.css .work-banner-btn): white pill, 2px accent border, bold text -
+    just scaled down to the preview's size. The real button also pulses and turns solid on hover, which isn't
+    shown here since nothing else in this static mock animates either. */
+@@ -334,7 +334,7 @@
+ .pv-gen-arc-dep { stroke: var(--arc-departure, #f5a623); }
+ .pv-gen-arc-arr { stroke: var(--arc-arrival, #4fc3f7); }
+ .pv-gen-ticker { background: var(--ticker-bg, #0a0a0a); color: var(--ticker-text, #f5a623); border-top: 1px solid var(--ticker-text, #f5a623); font-family: 'Courier New', monospace; padding: 2px 6px; white-space: nowrap; overflow: hidden; }
+-.pv-gen-tabs { display: flex; background: var(--ui-bar-bg, rgb(255, 240, 224)); color: var(--ui-bar-text, #222); font-weight: bold; }
++.pv-gen-tabs { display: flex; background: var(--ui-bar-bg, rgba(30, 34, 42, 0.8)); color: var(--ui-bar-text, #f2f2f2); font-weight: bold; }
+ .pv-gen-tabs span { flex: 1; text-align: center; padding: 3px 0; }
+ .pv-gen-tab-on { background: var(--ui-accent, #f5a623); color: white; }
+ 
+diff --git a/hyperloop-ui/src/components/TopBanner.css b/hyperloop-ui/src/components/TopBanner.css
+index cafa101..0f4db38 100644
+--- a/hyperloop-ui/src/components/TopBanner.css
++++ b/hyperloop-ui/src/components/TopBanner.css
+@@ -1,7 +1,9 @@
+ .TopBanner {
+     display: flex;
+     align-items: stretch;
+-    background-color: var(--ui-bar-bg, rgb(255, 240, 224));
++    background-color: var(--ui-bar-bg, rgba(30, 34, 42, 0.8));
++    -webkit-backdrop-filter: blur(12px);
++    backdrop-filter: blur(12px);
+     border-bottom: 2px solid black;
+     font-family: 'Inter', sans-serif;
+     min-height: 85px;
+@@ -76,7 +78,7 @@ font-size: 1rem;
+     gap: 6px;
+     font-size: 0.85rem;
+     font-family: 'Inter', sans-serif;
+-    color: var(--ui-bar-text, #333);
++    color: var(--ui-bar-text, #f2f2f2);
+     font-variant-numeric: tabular-nums;
+     white-space: nowrap;
+ }
+@@ -84,7 +86,7 @@ font-size: 1rem;
+ .time {
+     font-weight: bold;
+     font-size: 1rem;
+-    color: var(--ui-bar-text, #111);
++    color: var(--ui-bar-text, #f2f2f2);
+ }
+ 
+ .MysterySpot {
+@@ -269,7 +271,7 @@ font-size: 1rem;
+     font-size: 1.7rem;
+     margin: 0;
+     padding: 0;
+-    color: var(--ui-bar-text, #111);
++    color: var(--ui-bar-text, #f2f2f2);
+ }
+ 
+ .HomeCity {
+@@ -278,7 +280,7 @@ font-size: 1rem;
+     gap: 5px;
+     font-family: 'Inter', sans-serif;
+     font-size: 0.85rem;
+-    color: var(--ui-bar-text-muted, #666);
++    color: var(--ui-bar-text-muted, #bdbdbd);
+     letter-spacing: 0.3px;
+ }
+ /* The Shop button: after the terminal name, with the same divider line that sits beside the Work button */
+diff --git a/hyperloop-ui/src/components/TopBanner.jsx b/hyperloop-ui/src/components/TopBanner.jsx
+index 047fd80..9eddc3b 100644
+--- a/hyperloop-ui/src/components/TopBanner.jsx
++++ b/hyperloop-ui/src/components/TopBanner.jsx
+@@ -230,8 +230,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
+     const isInstantEvent = activeEvent?.durationSeconds === 0
+     // Follows the equipped theme's bar text colour (same var .time/.rank already use via CSS) so balance and
+     // reputation stay readable on a dark bar theme - was hardcoded dark grey, invisible on themes like Rockstar.
+-    const balanceColor = balanceFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #333)'
+-    const repColor = repFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #333)'
++    const balanceColor = balanceFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #f2f2f2)'
++    const repColor = repFlash === 'down' ? '#e74c3c' : 'var(--ui-bar-text, #f2f2f2)'
+ 
+     return (
+         <>
+diff --git a/hyperloop-ui/src/data/shopCatalog.js b/hyperloop-ui/src/data/shopCatalog.js
+index dd4893b..0f1a31e 100644
+--- a/hyperloop-ui/src/data/shopCatalog.js
++++ b/hyperloop-ui/src/data/shopCatalog.js
+@@ -295,9 +295,9 @@ export const TIERS = [
+ // fallback written in the CSS it belongs to, so a theme that doesn't set a property is pixel-identical to today.
+ export const THEME_PROPS = {
+     generalTheme: {
+-        barBg:        { cssVar: '--ui-bar-bg',    default: 'rgb(255, 240, 224)', note: 'top bar and bottom tabs' },
+-        barText:      { cssVar: '--ui-bar-text',       default: '#111',  note: 'terminal name and top-bar readouts (time/rank/balance/reputation) and bottom-tab labels - set this alongside a dark barBg so the text stays readable' },
+-        barTextMuted: { cssVar: '--ui-bar-text-muted', default: '#666',  note: 'the softer home-city line under the terminal name - set alongside barText for a dark barBg' },
++        barBg:        { cssVar: '--ui-bar-bg',    default: 'rgba(30, 34, 42, 0.8)', note: 'top bar and bottom tabs' },
++        barText:      { cssVar: '--ui-bar-text',       default: '#f2f2f2',  note: 'terminal name and top-bar readouts (time/rank/balance/reputation) and bottom-tab labels - set this alongside a dark barBg so the text stays readable' },
++        barTextMuted: { cssVar: '--ui-bar-text-muted', default: '#bdbdbd',  note: 'the softer home-city line under the terminal name - set alongside barText for a dark barBg' },
+         accent:       { cssVar: '--ui-accent',    default: '#f5a623',            note: 'Work button, tab hover, board button, Shop buttons' },
+         tickerBg:     { cssVar: '--ticker-bg',    default: '#0a0a0a',            note: 'ticker bar background' },
+         tickerText:   { cssVar: '--ticker-text',  default: '#f5a623',            note: 'ticker bar text and top line' },
+@@ -495,19 +495,19 @@ export const SHOP_ITEMS = {
+         generalTheme('default', 'Classic', 0, {}, 'The classic look.'),
+         // PLACEHOLDER
+         generalTheme('ocean', 'Ocean', 75, {
+-            barBg: 'rgb(228, 240, 255)', accent: '#3b82f6',
++            barBg: 'rgb(228, 240, 255)', barText: '#111', barTextMuted: '#666', accent: '#3b82f6',
+             tickerBg: '#06101c', tickerText: '#4fc3f7',
+             departureArc: '#3b82f6', arrivalArc: '#f5a623',
+         }, 'Light blue and gold. Part of the Ocean bundle.'),
+ 
+         // ── Bundle template pieces (see "ADDING A BUNDLE" above)
+         generalTheme('kitty', 'Kitty', 75, {
+-            barBg: 'rgb(255, 240, 246)', accent: '#ff8fab',
++            barBg: 'rgb(255, 240, 246)', barText: '#111', barTextMuted: '#666', accent: '#ff8fab',
+             tickerBg: '#2b0f1a', tickerText: '#ffb6c9',
+             departureArc: '#ff8fab', arrivalArc: '#ffd86b',
+         }, 'Pink and cream. Part of the Kitty bundle.'),
+         generalTheme('fairy', 'Fairy', 75, {
+-            barBg: 'rgb(243, 235, 255)', accent: '#b794f6',
++            barBg: 'rgb(243, 235, 255)', barText: '#111', barTextMuted: '#666', accent: '#b794f6',
+             tickerBg: '#160f26', tickerText: '#6ee7b7',
+             departureArc: '#b794f6', arrivalArc: '#6ee7b7',
+         }, 'Lavender and mint. Part of the Fairy bundle.'),
+@@ -517,7 +517,7 @@ export const SHOP_ITEMS = {
+             departureArc: '#9fffb0', arrivalArc: '#c4b5fd',
+         }, 'Sickly green on near-black. Part of the Poltergeist bundle.'),
+         generalTheme('playroom', 'Playroom', 75, {
+-            barBg: 'rgb(255, 249, 224)', accent: '#ff6b6b',
++            barBg: 'rgb(255, 249, 224)', barText: '#111', barTextMuted: '#666', accent: '#ff6b6b',
+             tickerBg: '#1a1406', tickerText: '#ffe08a',
+             departureArc: '#ffd166', arrivalArc: '#4ecdc4',
+         }, 'Crayon-box colours. Part of the Playroom bundle.'),
+@@ -527,12 +527,12 @@ export const SHOP_ITEMS = {
+             departureArc: '#c4b5fd', arrivalArc: '#39ffc9',
+         }, 'Indigo and cyan. Part of the Starlight bundle.'),
+         generalTheme('buccaneer', 'Buccaneer', 75, {
+-            barBg: 'rgb(245, 235, 210)', accent: '#c9972a',
++            barBg: 'rgb(245, 235, 210)', barText: '#111', barTextMuted: '#666', accent: '#c9972a',
+             tickerBg: '#1a1206', tickerText: '#e8c468',
+             departureArc: '#c9972a', arrivalArc: '#2e8b8b',
+         }, 'Old gold and sea teal. Part of the Buccaneer bundle.'),
+         generalTheme('princess', 'Princess', 75, {
+-            barBg: 'rgb(255, 244, 250)', accent: '#f0a8d0',
++            barBg: 'rgb(255, 244, 250)', barText: '#111', barTextMuted: '#666', accent: '#f0a8d0',
+             tickerBg: '#1a0514', tickerText: '#d4af37',
+             departureArc: '#f0a8d0', arrivalArc: '#d4af37',
+         }, 'Rose and gold. Part of the Princess bundle.'),
+@@ -542,12 +542,12 @@ export const SHOP_ITEMS = {
+             departureArc: '#b8860b', arrivalArc: '#8b0000',
+         }, 'Smoky goldenrod and burgundy. Part of the Jazz bundle.'),
+         generalTheme('duck', 'Duck', 75, {
+-            barBg: 'rgb(255, 248, 224)', accent: '#ffcc33',
++            barBg: 'rgb(255, 248, 224)', barText: '#111', barTextMuted: '#666', accent: '#ffcc33',
+             tickerBg: '#1a1506', tickerText: '#2e8b8b',
+             departureArc: '#f9f500', arrivalArc: '#2e8b8b',
+         }, 'Sunny yellow and pond teal. Part of the Duck bundle.'),
+         generalTheme('woof', 'Woof', 75, {
+-            barBg: 'rgb(230, 238, 250)', accent: '#4a7fc9',
++            barBg: 'rgb(230, 238, 250)', barText: '#111', barTextMuted: '#666', accent: '#4a7fc9',
+             tickerBg: '#0d1a2e', tickerText: '#9acd32',
+             departureArc: '#4a7fc9', arrivalArc: '#9acd32',
+         }, 'Denim blue and tennis-ball green. Part of the Woof bundle.'),
+@@ -557,12 +557,12 @@ export const SHOP_ITEMS = {
+             departureArc: '#e3122a', arrivalArc: '#c0c0c0',
+         }, 'Black and electric red, chrome highlights. Part of the Rockstar bundle.'),
+         generalTheme('western', 'Western', 75, {
+-            barBg: 'rgb(244, 231, 206)', accent: '#a0522d',
++            barBg: 'rgb(244, 231, 206)', barText: '#111', barTextMuted: '#666', accent: '#a0522d',
+             tickerBg: '#2a1a0e', tickerText: '#d9a566',
+             departureArc: '#a0522d', arrivalArc: '#6b8e23',
+         }, 'Sun-baked tan and saddle brown, sagebrush green. Part of the Western bundle.'),
+         generalTheme('paradise', 'Paradise', 75, {
+-            barBg: 'rgb(224, 248, 245)', accent: '#00bfa5',
++            barBg: 'rgb(224, 248, 245)', barText: '#111', barTextMuted: '#666', accent: '#00bfa5',
+             tickerBg: '#07262a', tickerText: '#ff5c8a',
+             departureArc: '#00bfa5', arrivalArc: '#ff5c8a',
+         }, 'Turquoise and hibiscus pink. Part of the Paradise bundle.'),
+@@ -573,7 +573,7 @@ export const SHOP_ITEMS = {
+             departureArc: '#9aab6e', arrivalArc: '#b5651d',
+         }, 'Matte khaki on dark olive drab. Part of the Wartime bundle.'),
+         generalTheme('gingerbread', 'Gingerbread', 75, {
+-            barBg: 'rgb(255, 240, 220)', accent: '#6b3410',
++            barBg: 'rgb(255, 240, 220)', barText: '#111', barTextMuted: '#666', accent: '#6b3410',
+             tickerBg: '#6b3410', tickerText: '#f1f1f1',
+             departureArc: '#d93a3a', arrivalArc: '#f1f1f1',
+         }, 'Warm gingerbread brown, trimmed in holly red and snow white. Part of the Gingerbread bundle.'),

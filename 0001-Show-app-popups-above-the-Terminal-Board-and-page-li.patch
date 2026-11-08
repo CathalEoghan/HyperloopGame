@@ -1,0 +1,42 @@
+From 1f9c500ff62f08a7007d37c6756a57408120e564 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 06:15:19 +0000
+Subject: [PATCH] Show app popups above the Terminal Board and page lightboxes
+
+App-level popups (.App > .modal-overlay, z-index 100) rendered underneath the
+Terminal Board (250) and the enlarged-image lightboxes (200). App makes the page
+inert while a popup is showing, so the board/lightbox could not be closed and hid
+the popup. Raise the direct-child popups to 260, still below the 300+ overlays.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ hyperloop-ui/src/App.css | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
+
+diff --git a/hyperloop-ui/src/App.css b/hyperloop-ui/src/App.css
+index 7b339b0..cb043ce 100644
+--- a/hyperloop-ui/src/App.css
++++ b/hyperloop-ui/src/App.css
+@@ -49,6 +49,18 @@ input, textarea, [contenteditable="true"], .selectable {
+     :where(.modal-overlay, .achievements-overlay, .citypicker-overlay, .citychoice-overlay, .firstloop-overlay, .sched-overlay, .delay-overlay, .farewell-overlay, .prestige-modal-overlay, .pageintro-overlay, .shop-overlay) > :where(*) { animation: none; }
+ }
+ 
++/* App-level popups (rank-up, reveals, events, milestones, daily login, offline, ...) are direct children of .App and
++   share the .modal-overlay class with the dialogs that live inside pages (z-index 100, same as these). While one is
++   showing, App makes everything behind it `inert`, so anything inside a page that sits ABOVE it can't be clicked and
++   hides the popup too, leaving the player stuck. The Terminal Board (z-index 250) and the enlarged-picture lightboxes
++   in the Cities, Development and Home pages (200) did exactly that. Raising only the direct-child popups puts them
++   above both, and still below the 300+ overlays (city picker, achievements, schedule, farewell, delay), so their
++   existing order among themselves doesn't change. The direct-child selector also wins over the plain .modal-overlay
++   rules in the page stylesheets whatever order they load in. */
++.App > .modal-overlay {
++    z-index: 260;
++}
++
+ body, .App {
+     background-color: rgb(255, 246, 239);
+ }
+-- 
+2.43.0
+

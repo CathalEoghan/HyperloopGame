@@ -1,0 +1,74 @@
+From ef154e2a08f21993c2b0f9058eabed37d0a72314 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 06:36:18 +0000
+Subject: [PATCH] Show LIVESTREAM IT! on the Work click that pays the
+ Livestream bonus
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ hyperloop-ui/src/App.jsx                  | 3 ++-
+ hyperloop-ui/src/components/TopBanner.css | 7 +++++++
+ hyperloop-ui/src/components/TopBanner.jsx | 7 ++++---
+ 3 files changed, 13 insertions(+), 4 deletions(-)
+
+diff --git a/hyperloop-ui/src/App.jsx b/hyperloop-ui/src/App.jsx
+index 3994fea..1513fc0 100644
+--- a/hyperloop-ui/src/App.jsx
++++ b/hyperloop-ui/src/App.jsx
+@@ -764,7 +764,8 @@ function App() {
+       setReputation(progressionManager.reputation);
+       if (!auto) playReputationWorkBonusSound();
+     }
+-    onRepGain?.(earned, repEarned > 0, repEarned);
++    // The fourth argument says this press paid the Livestream bonus, so the Work button can shout about it
++    onRepGain?.(earned, repEarned > 0, repEarned, livestreamRep > 0);
+   };
+ 
+   // Best P.A. Ever: Work clicks itself every 500 ms, making up clicks a throttled background tab missed.
+diff --git a/hyperloop-ui/src/components/TopBanner.css b/hyperloop-ui/src/components/TopBanner.css
+index cafa101..da58e1d 100644
+--- a/hyperloop-ui/src/components/TopBanner.css
++++ b/hyperloop-ui/src/components/TopBanner.css
+@@ -163,6 +163,13 @@ font-size: 1rem;
+     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+ }
+ 
++.work-float-livestream {
++    background: var(--ui-accent, #f5a623);
++    border-color: var(--ui-accent, #f5a623);
++    color: #111;
++    letter-spacing: 0.5px;
++}
++
+ .work-float-earnings {
+     font-family: 'Courier New', monospace;
+     font-size: 0.72rem;
+diff --git a/hyperloop-ui/src/components/TopBanner.jsx b/hyperloop-ui/src/components/TopBanner.jsx
+index 047fd80..b672619 100644
+--- a/hyperloop-ui/src/components/TopBanner.jsx
++++ b/hyperloop-ui/src/components/TopBanner.jsx
+@@ -201,8 +201,9 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
+         const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
+         setFloats(prev => [...prev, { id, phrase, hasRep: false, x: rect.left + rect.width / 2, y: rect.top }])
+         setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
+-        onWork((earned, gotRep, repAmount) => {
+-            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: gotRep, earned, repGain: repAmount } : f))
++        onWork((earned, gotRep, repAmount, livestreamed) => {
++            // The click that pays the Livestream Everything / Streaming Mastery bonus gets its own message in place of a random one
++            setFloats(prev => prev.map(f => f.id === id ? { ...f, hasRep: gotRep, earned, repGain: repAmount, ...(livestreamed ? { phrase: 'LIVESTREAM IT!', livestream: true } : {}) } : f))
+         })
+         playWorkClickSound()
+     }
+@@ -303,7 +304,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
+             </button>
+             {floats.map(f => (
+                 <div key={f.id} className="work-float" style={{ left: f.x, top: f.y }}>
+-                    <span className="work-float-phrase">{f.phrase}</span>
++                    <span className={`work-float-phrase${f.livestream ? ' work-float-livestream' : ''}`}>{f.phrase}</span>
+                     <span className="work-float-earnings" style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+                         +<img src={cashIcon} alt="£" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{formatWorkAmount(f.earned || (workRange?.low || 0))}
+                         {f.hasRep && (
+-- 
+2.43.0
+

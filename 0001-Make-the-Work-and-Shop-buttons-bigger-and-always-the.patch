@@ -1,0 +1,40 @@
+From f62379582aa1d73d32a02f79e7620a70b09da303 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 06:43:40 +0000
+Subject: [PATCH] Make the Work and Shop buttons bigger, and always the same
+ size
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ hyperloop-ui/src/components/TopBanner.css | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/hyperloop-ui/src/components/TopBanner.css b/hyperloop-ui/src/components/TopBanner.css
+index da58e1d..02ca2c5 100644
+--- a/hyperloop-ui/src/components/TopBanner.css
++++ b/hyperloop-ui/src/components/TopBanner.css
+@@ -316,3 +316,20 @@ font-size: 1rem;
+     display: block;
+ }
+ .ShopButton:hover { background: var(--ui-accent, #f5a623); color: white; }
++
++/* The Work and Shop buttons are always the same size as each other: change the size here, in one place. Placed after both
++   rules above so it wins over their own padding and font-size. min-width is a floor, not a fixed width, so a very long
++   Work amount (e.g. "+123.4b~") can still widen the Work button rather than being clipped. */
++.work-banner-btn,
++.ShopButton {
++    box-sizing: border-box;
++    display: inline-flex;
++    align-items: center;
++    justify-content: center;
++    height: 58px;
++    min-width: 200px;
++    padding: 0 30px;
++    font-size: 1.25rem;
++}
++.ShopButton { gap: 10px; }
++.ShopButtonIcon { width: 26px; height: 26px; }
+-- 
+2.43.0
+

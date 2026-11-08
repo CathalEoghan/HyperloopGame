@@ -1,0 +1,79 @@
+From f1b93ff4269e1487836a3e0c65a68c6a272a6cba Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 06:27:13 +0000
+Subject: [PATCH] Keep page intro and schedule dialogs below app-level popups
+
+PageIntroModal (300) and ScheduleModal (320) live inside pages that App makes
+inert while a popup is showing, but sat above those popups, burying them and
+leaving themselves unclosable. Lower both to 255: still above the Terminal Board
+(250) they open from, below the popups (260+) and the farewell/delay notices (330).
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ hyperloop-ui/src/components/DelayModal.css     | 2 +-
+ hyperloop-ui/src/components/FarewellModal.css  | 2 +-
+ hyperloop-ui/src/components/PageIntroModal.css | 4 +++-
+ hyperloop-ui/src/components/ScheduleModal.css  | 5 ++++-
+ 4 files changed, 9 insertions(+), 4 deletions(-)
+
+diff --git a/hyperloop-ui/src/components/DelayModal.css b/hyperloop-ui/src/components/DelayModal.css
+index eec9744..38b9c2a 100644
+--- a/hyperloop-ui/src/components/DelayModal.css
++++ b/hyperloop-ui/src/components/DelayModal.css
+@@ -5,7 +5,7 @@
+     width: 100%;
+     height: 100%;
+     background: rgba(0, 0, 0, 0.8);
+-    /* Above ScheduleModal (320) - same reasoning as FarewellModal.css: opening Schedule while a delay notice is
++    /* Above ScheduleModal (255) - same reasoning as FarewellModal.css: opening Schedule while a delay notice is
+        up must never silently bury it. */
+     z-index: 330;
+     display: flex;
+diff --git a/hyperloop-ui/src/components/FarewellModal.css b/hyperloop-ui/src/components/FarewellModal.css
+index 6b0140e..0e7fbd1 100644
+--- a/hyperloop-ui/src/components/FarewellModal.css
++++ b/hyperloop-ui/src/components/FarewellModal.css
+@@ -5,7 +5,7 @@
+     width: 100%;
+     height: 100%;
+     background: rgba(0, 0, 0, 0.75);
+-    /* Above ScheduleModal (320) - its countdown has a real deadline (missing a farewell loses the reputation
++    /* Above ScheduleModal (255) - its countdown has a real deadline (missing a farewell loses the reputation
+        bonus), so opening Schedule from the Terminal Board while this is up must never bury it silently. */
+     z-index: 330;
+     display: flex;
+diff --git a/hyperloop-ui/src/components/PageIntroModal.css b/hyperloop-ui/src/components/PageIntroModal.css
+index c19dee2..1fba7e3 100644
+--- a/hyperloop-ui/src/components/PageIntroModal.css
++++ b/hyperloop-ui/src/components/PageIntroModal.css
+@@ -3,7 +3,9 @@
+     inset: 0;
+     background: rgba(0, 0, 0, 0.5);
+     font-family: 'Inter', sans-serif;
+-    z-index: 300;
++    /* Lives inside a page (and the Terminal Board), which App makes inert while an app-level popup shows, so it must stay
++       BELOW those popups (260 and up) or it would bury them and be unclosable. 255 keeps it above the board (250). */
++    z-index: 255;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+diff --git a/hyperloop-ui/src/components/ScheduleModal.css b/hyperloop-ui/src/components/ScheduleModal.css
+index c84cab2..3dcedb0 100644
+--- a/hyperloop-ui/src/components/ScheduleModal.css
++++ b/hyperloop-ui/src/components/ScheduleModal.css
+@@ -2,7 +2,10 @@
+     position: fixed;
+     inset: 0;
+     background: rgba(0, 0, 0, 0.7);
+-    z-index: 320;
++    /* Opened from the Terminal Board (250) and the Cities page, both inert while an app-level popup shows, so this must stay
++       BELOW those popups (260 and up) or it would bury them and be unclosable. 255 keeps it above the board, and the
++       farewell/delay notices (330) are still above it. */
++    z-index: 255;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+-- 
+2.43.0
+

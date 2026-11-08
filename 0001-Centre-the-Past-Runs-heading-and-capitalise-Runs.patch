@@ -1,0 +1,27 @@
+From 4de55374b2b9191c2c5b9bd25611bc8b708d7594 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Sun, 8 Nov 2026 06:30:22 +0000
+Subject: [PATCH] Centre the Past Runs heading and capitalise Runs
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_0115oetuNdXfmPV3rBHJ3PDF
+---
+ hyperloop-ui/src/pages/PrestigePage.jsx | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/hyperloop-ui/src/pages/PrestigePage.jsx b/hyperloop-ui/src/pages/PrestigePage.jsx
+index ae0097c..ba2e6e8 100644
+--- a/hyperloop-ui/src/pages/PrestigePage.jsx
++++ b/hyperloop-ui/src/pages/PrestigePage.jsx
+@@ -224,7 +224,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
+             {showRuns && (
+                 <div className="prestige-modal-overlay" onClick={e => { e.stopPropagation(); setShowRuns(false) }}>
+                     <div className="prestige-modal prestige-modal-wide" onClick={e => e.stopPropagation()}>
+-                        <h2>Past runs</h2>
++                        <h2 style={{ textAlign: 'center' }}>Past Runs</h2>
+                         <div className="prestige-runs">
+                             <div className="prestige-runs-row prestige-runs-head"><span>Run</span><span>Rank</span><span>Points</span><span>Cash earned</span><span>Time</span></div>
+                             {history.map((r, i) => (
+-- 
+2.43.0
+
