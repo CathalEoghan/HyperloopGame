@@ -415,13 +415,13 @@ export const SHOP_ITEMS = {
         // One opening audio per themed bundle, same as the work-click sounds above - added as the real
         // recordings come in, so there's no placeholder list to keep in sync here.
         openingSound('kitty', 'Kitty opening', 25, kittyOpening, 'Cheerful and whimsy. Part of the Kitty bundle.'),
-        openingSound('fairy', 'Fairy opening', 25, fairyOpening, 'Fantastical melody. Part of the Fairy bundle.'),
+        openingSound('fairy', 'Fairy opening', 25, fairyOpening, 'A fantastical introduction. Part of the Fairy bundle.'),
         openingSound('poltergeist', 'Poltergeist opening', 25, poltergeistOpening, 'Spooky! Part of the Poltergeist bundle.'),
         // id matches every other Buccaneer piece ('buccaneer', not 'pirate') so this card picks up the
         // Buccaneer theme photo (THEME_PICS is keyed by id) the same way its other pieces do.
         openingSound('buccaneer', 'Buccaneer opening', 25, pirateOpening, 'Salty sea shanty. Part of the Buccaneer bundle.'),
         openingSound('princess', 'Princess opening', 25, princessOpening, 'Fit for royalty! Part of the Princess bundle.'),
-        openingSound('jazz', 'Jazz opening', 25, jazzOpening, 'Jazzy vibes. Part of the Jazz bundle.'),
+        openingSound('jazz', 'Jazz opening', 25, jazzOpening, 'Classy & jazzy. Part of the Jazz bundle.'),
         openingSound('playroom', 'Playroom opening', 25, playroomOpening, 'Childhood nostalgia. Part of the Playroom bundle.'),
         openingSound('starlight', 'Starlight opening', 25, starlightOpening, 'Out of this world! Part of the Starlight bundle.'),
         openingSound('duck', 'Duck opening', 25, duckOpening, 'Silly and unserious. Part of the Duck bundle.'),
