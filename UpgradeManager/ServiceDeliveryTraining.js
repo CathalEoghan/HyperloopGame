@@ -7,6 +7,6 @@ export const serviceDeliveryTraining = new Upgrade(
     110000,
     "Enterprise",
     "delayRepCostReduction",
-    5
+    10
 )
     

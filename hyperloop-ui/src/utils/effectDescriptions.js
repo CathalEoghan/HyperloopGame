@@ -21,7 +21,7 @@ export const EFFECT_DESCRIPTIONS = {
     offlineCapExtension: () => `+24 hours offline earnings cap`,
     developmentDiscount: (v) => `-${pct(v)}% development construction cost`,
     delayCompensationReduction: (v) => `-${pct(v)}% delay compensation cost`,
-    delayRepCostReduction: (v) => `-${v} Reputation when ignoring delays`,
+    delayRepCostReduction: (v) => `Refusing compensation for loop delays costs ${v} less Reputation`,
     bonusDurationExtension: (v) => `Bonus events last ${pct(v)}% longer`,
     // Also extends the greeting window on arrivals (App.jsx derives both from this same effect), so the
     // wording says so rather than naming only the farewell half.
