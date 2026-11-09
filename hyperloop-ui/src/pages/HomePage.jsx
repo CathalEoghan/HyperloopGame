@@ -109,12 +109,17 @@ function arcPoints(from, to, segments = 64) {
 // How a route is drawn where it meets a city. A plain tube has a handful of flat sides and is cut off square at both ends, so
 // where several routes meet at one city - the home terminal, with every route fanning out of it - their blunt, open ends
 // stack up into an angular blob that even covers the flag. These routes have enough sides to look round and narrow smoothly
-// to a point at both ends instead, so they converge cleanly under the flag.
+// to a point at both ends instead, so they converge cleanly under the flag. They also fade in from fully clear at each city, so
+// the ends dissolve rather than finishing in a solid, hard-edged point (the tubes' materials turn vertexColors on to use it).
 const ROUTE_TUBE_SEGMENTS = 96
 const ROUTE_TAPER_LENGTH = 0.055   // how far from each end the route narrows to nothing (globe radius = 1)
+const ROUTE_FADE_LENGTH = 0.12     // how far from each end it takes to fade in from clear to full strength
 function routeTubeGeometry(curve, radius, sides) {
     const geo = new THREE.TubeGeometry(curve, ROUTE_TUBE_SEGMENTS, radius, sides, false)
-    const taper = Math.min(0.45, ROUTE_TAPER_LENGTH / curve.getLength())   // as a share of the route, never more than the nearer 45% of it
+    const length = curve.getLength()
+    const taper = Math.min(0.45, ROUTE_TAPER_LENGTH / length)   // as a share of the route, never more than the nearer 45% of it
+    // The fade is a share of the route too, but capped lower (30%): a short hop would otherwise be faint along its whole length
+    const fade = Math.min(0.3, ROUTE_FADE_LENGTH / length)
     const pos = geo.attributes.position
     const ring = sides + 1   // a TubeGeometry ring has one more vertex than it has sides (the seam is doubled)
     const centre = new THREE.Vector3(), v = new THREE.Vector3()
@@ -130,6 +135,16 @@ function routeTubeGeometry(curve, radius, sides) {
         }
     }
     pos.needsUpdate = true
+    // One colour per vertex: white (so the material's own colour is unchanged) with an alpha that eases from 0 at each end
+    // up to 1 by the end of the fade (smoothstep, so there is no visible edge where it reaches full strength)
+    const colors = new Float32Array((ROUTE_TUBE_SEGMENTS + 1) * ring * 4)
+    for (let i = 0; i <= ROUTE_TUBE_SEGMENTS; i++) {
+        const t = i / ROUTE_TUBE_SEGMENTS
+        const k = Math.min(1, Math.min(t, 1 - t) / fade)
+        const alpha = k * k * (3 - 2 * k)
+        for (let j = 0; j < ring; j++) colors.set([1, 1, 1, alpha], (i * ring + j) * 4)
+    }
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 4))
     geo.computeBoundingSphere()
     return geo
 }
@@ -610,9 +625,9 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 const curve = new THREE.CatmullRomCurve3(points)
                 const group = new THREE.Group()
                 // A dark underlay keeps white readable over bright land and cloud; the halo only shows when highlighted
-                const under = new THREE.Mesh(routeTubeGeometry(curve, ROUTE_UNDER_RADIUS, 10), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false }))
-                const line = new THREE.Mesh(routeTubeGeometry(curve, 0.0019, 8), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false }))
-                const halo = new THREE.Mesh(routeTubeGeometry(curve, ROUTE_HALO_RADIUS, 12), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false }))
+                const under = new THREE.Mesh(routeTubeGeometry(curve, ROUTE_UNDER_RADIUS, 10), new THREE.MeshBasicMaterial({ color: 0x000000, transparent: true, opacity: 0.35, depthWrite: false, vertexColors: true }))
+                const line = new THREE.Mesh(routeTubeGeometry(curve, 0.0019, 8), new THREE.MeshBasicMaterial({ color: LOOP_WHITE, transparent: true, opacity: 0.8, depthWrite: false, vertexColors: true }))
+                const halo = new THREE.Mesh(routeTubeGeometry(curve, ROUTE_HALO_RADIUS, 12), new THREE.MeshBasicMaterial({ color: loopColor(loop.kind), transparent: true, opacity: 0.3, depthWrite: false, vertexColors: true }))
                 halo.visible = false
                 // The shuttle: flat-faced and chamfered to a point at the nose, turned along the route.
                 // The fill stays white (readable over bright land/cloud, same as before); the edges, a
