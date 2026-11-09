@@ -942,6 +942,9 @@ beepBoop.jpg - <a href="https://www.flaticon.com/free-icons/robot" title="robot 
 theLapOfLuxury.jpg - <a href="https://www.flaticon.com/free-icons/luxury" title="luxury icons">Luxury icons created by Flat Icons - Flaticon</a>
 passengerConfusion.jpg - <a href="https://www.flaticon.com/free-icons/confused" title="confused icons">Confused icons created by kmg design - Flaticon</a>
 shoppingSpree.jpg - <a href="https://www.flaticon.com/free-icons/online-shop" title="online shop icons">Online shop icons created by HAJICON - Flaticon</a>
+candyGardenAnimals.jpg - <a href="https://www.flaticon.com/free-icons/pinata" title="piñata icons">Piñata icons created by Magnific - Flaticon</a>
+hawaiianPizza.jpg - <a href="https://www.flaticon.com/free-icons/hawaii" title="hawaii icons">Hawaii icons created by juicy_fish - Flaticon</a>
+maceToTheFace.jpg - <a href="https://www.flaticon.com/free-icons/weapon" title="weapon icons">Weapon icons created by Magnific - Flaticon</a>
 
 MISC ICONS
 

@@ -5,12 +5,20 @@
 // AchievementManager.buildContext). Event achievements have no check and are unlocked with `unlock(id)` where it happens.
 // `pending` marks one that can't be earned yet because the feature behind it isn't in the game.
 
+import { PrestigeManager } from '../PrestigeManager/PrestigeManager.js'
+
 const atLeast = (key, n) => ctx => ctx[key] >= n
 const built = (cat, n) => ctx => (ctx.categories[cat] || 0) >= n
 // Cities connected, and developments or upgrades built, at the same time (all of the names given)
 const connected = (...names) => ctx => names.every(n => ctx.cityNames.includes(n))
 const developed = (...names) => ctx => names.every(n => ctx.builtNames.includes(n))
 const developedAndConnected = (dev, city) => ctx => ctx.builtNames.includes(dev) && ctx.cityNames.includes(city)
+// One city connected, and one or more developments/upgrades built, together at the same time
+const connectedWithDeveloped = (city, ...devs) => ctx => ctx.cityNames.includes(city) && devs.every(n => ctx.builtNames.includes(n))
+// A city connected together with owning a Prestige upgrade - Prestige upgrades are permanent once bought
+// (they're not in ctx.builtNames, which is only developments and regular upgrades), so this unlocks the
+// first time the city is connected on or after buying it.
+const connectedWithPrestige = (city, prestigeId) => ctx => ctx.cityNames.includes(city) && PrestigeManager.owns(prestigeId)
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 // A loop line's length is in km here, whatever the player's Distance setting
 const LONG_LOOP_KM = 10000
@@ -132,6 +140,7 @@ export const ACHIEVEMENTS = [
     { id: 'carriedAway', group: 'Combinations', name: 'Car-ried Away', description: 'Have the Car Museum, Car Accessories and Car Rental all developed at any one time.', check: developed('Car Museum', 'Car Accessories', 'Car Rental') },
     { id: 'theLapOfLuxury', group: 'Combinations', name: 'Lap of Luxury', description: 'Have both Hyperloop Pod Refurbishments and Complementary Onboard Coffee developed at any one time.', check: developed('Hyperloop Pod Refurbishments', 'Complementary Onboard Coffee') },
     { id: 'gardener', group: 'Combinations', name: 'Gardener', description: 'Have both Indoor Garden and Outdoor Garden developed at any one time.', check: developed('Indoor Garden', 'Outdoor Garden') },
+    { id: 'gardenCandyAnimals', group: 'Combinations', name: 'Garden Candy Animals', description: 'Have Mexico City connected and Outdoor Garden and Candy Store developed at any one time.', check: connectedWithDeveloped('Mexico City', 'Outdoor Garden', 'Candy Store') },
     { id: 'waterPark', group: 'Combinations', name: 'Water Park', description: 'Have Indoor Surfing, Resort Hotel and Swimming Pool all developed at any one time.', check: developed('Indoor Surfing', 'Resort Hotel', 'Swimming Pool') },
     { id: 'mindAndBody', group: 'Combinations', name: 'Mind & Body', description: 'Have both Gym and Quiet Room developed at any one time.', check: developed('Gym', 'Quiet Room') },
     { id: 'theKims', group: 'Combinations', name: 'The Kims', description: 'Have Convenience Store developed and Toronto connected at any one time.', check: developedAndConnected('Convenience Store', 'Toronto') },
@@ -144,6 +153,10 @@ export const ACHIEVEMENTS = [
     { id: 'crazyRich', group: 'Combinations', name: 'Crazy Rich', description: 'Have Luxury Hotel developed and Singapore connected at any one time.', check: developedAndConnected('Luxury Hotel', 'Singapore') },
     { id: '42wallabyway', group: 'Combinations', name: '42 Wallaby Way', description: 'Have Aquarium developed and Sydney connected at any one time.', check: developedAndConnected('Aquarium', 'Sydney') },
     { id: 'clubObiWan', group: 'Combinations', name: 'Club Obi Wan', description: 'Have Night Lounge developed and Shanghai connected at any one time.', check: developedAndConnected('Night Lounge', 'Shanghai') },
+    { id: 'hawaiianPizza', group: 'Combinations', name: 'Hawaiian Pizza', description: 'Have Honolulu connected and Pizzeria developed at any one time.', check: developedAndConnected('Pizzeria', 'Honolulu') },
+    // Advanced Engineering is a Prestige upgrade, not a development - it's permanent once bought, so this
+    // unlocks the first time Gothenburg is connected on or after buying it (see connectedWithPrestige above).
+    { id: 'maceToTheFace', group: 'Combinations', name: 'Mace to the Face', description: 'Have Gothenburg connected and the Advanced Engineering Prestige upgrade unlocked at any one time.', check: connectedWithPrestige('Gothenburg', 'advancedEngineering') },
 
     // Secrets
     { id: 'surprise', group: 'Secrets', name: 'Surprise!', description: 'Claim the surprise in the credits section.' },
