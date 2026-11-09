@@ -524,6 +524,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                 })()
             },
             { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(createdAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
+            // Good Standing - already baked into every development/city upgrade's Reputation cost, but
+            // otherwise invisible: this is the only place that says so.
+            { label: 'Upgrade Reputation Discount', value: PrestigeManager.owns('goodStanding') ? '-50%' : '—' },
             { label: 'Weekend Bonus', value: sum('weekendBoost') > 0 ? `+${Math.round(sum('weekendBoost') * 100)}%${isWeekend ? ' ✓ active' : ''}` : '—' },
             { label: 'Work Click Bonus', value: (count('workClickBonus') > 0 || PrestigeManager.owns('speedyConveyorBelts') || economyManager.hasUpgrade('workPerAchievement')) ? `×${economyManager.getWorkMultiplier(count('workClickBonus')).toFixed(2)} to click earnings` : '—' },
             { label: 'Work Reputation Chance', value: economyManager.getWorkRepChance() > 0.005 ? `${(economyManager.getWorkRepChance() * 100).toFixed(1)}% per click` : '—' },
