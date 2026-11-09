@@ -73,3 +73,15 @@
     color: #333;
     font-weight: 500;
 }
+
+/* The Reputation bonus (Improved Accessibility Services / News Column) sits in its own smaller box right under
+   the event's main effect, rather than inside it, since it comes from an owned upgrade rather than the event
+   itself and can appear alongside any of the effect types above. */
+.event-rep-box {
+    margin-top: -12px;
+    padding: 8px 16px;
+}
+.event-rep-icon {
+    width: 15px;
+    height: 15px;
+}

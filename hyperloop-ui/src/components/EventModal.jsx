@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
+import reputationIcon from '../assets/misc/reputation.png'
 import './EventModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
@@ -62,6 +63,15 @@ function EventModal({ event, onContinue, terminalName }) {
                     </span>
                     <span className="event-effect-text">{getEffectText()}</span>
                 </div>
+                {/* Improved Accessibility Services and News Column both pay a flat Reputation bonus on every positive
+                    event, on top of whatever the event itself does - shown here so it isn't only a sound (bug: it used
+                    to be paid in total silence). */}
+                {event.eventRepBonus > 0 && (
+                    <div className="event-effect-box event-rep-box">
+                        <img src={reputationIcon} alt="reputation" className="event-rep-icon" />
+                        <span className="event-effect-text">+{event.eventRepBonus} Reputation</span>
+                    </div>
+                )}
                 <button
                     className="closeButton"
                     onMouseEnter={() => playHoverSound()}

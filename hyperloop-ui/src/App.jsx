@@ -1022,11 +1022,18 @@ function App() {
         ? { percent: Math.round((1 - resilienceFactor) * 100), direction: 'shorter' }
         : null;
 
+    // Reputation a positive event pays on top of its effect: Improved Accessibility Services' bonus, and News Column's flat
+    // bonus for every positive event however it fired (the regular roll, Opening Party, a like-triggered roll). Computed
+    // before the popup below so it can show "+N Reputation" there too, instead of only playing a sound for it.
+    let eventRep = 0;
+    if (event.type === 'positive' && economyManager.hasUpgrade('positiveEventReputationBonus')) eventRep += economyManager.getUpgradeSum('positiveEventReputationBonus');
+    if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep += PRESTIGE_VALUES.newsColumnRep;
+
     if (event.effectType === 'instantCash') {
       const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
       const bonus = Math.max(rawBonus, MIN_INSTANT_CASH_BONUS);
       progressionManager.addCash(bonus);
-      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000 };
+      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000, eventRepBonus: eventRep };
       activeEventRef.current = fullEvent;
       localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
       playEventSound();
@@ -1047,7 +1054,7 @@ function App() {
       const rawLoss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
       const loss = Math.max(rawLoss, MIN_INSTANT_CASH_LOSS);
       progressionManager.addCash(-loss);
-      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss, expiresAt: Date.now() + 8000 };
+      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss, expiresAt: Date.now() + 8000, eventRepBonus: eventRep };
       activeEventRef.current = fullEvent;
       // Persisted like every other branch (this one alone used to skip it) - without it, a reload during the
       // 8-second window loses all memory the event ever happened, even though nothing removes it either.
@@ -1066,7 +1073,7 @@ function App() {
         localStorage.removeItem('hyperloop_active_event');
       }, 8000);
     } else {
-      const fullEvent = { ...event, durationSeconds, durationModifier, expiresAt: Date.now() + durationSeconds * 1000 };
+      const fullEvent = { ...event, durationSeconds, durationModifier, expiresAt: Date.now() + durationSeconds * 1000, eventRepBonus: eventRep };
       activeEventRef.current = fullEvent;
       localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
       playEventSound();
@@ -1082,12 +1089,8 @@ function App() {
       }, durationSeconds * 1000);
     }
 
-    // Reputation a positive event pays on top of its effect: Improved Accessibility Services' bonus, and News Column's flat
-    // bonus for every positive event however it fired (the regular roll, Opening Party, a like-triggered roll). Together they
-    // get the one Reputation sound, which these two paid in silence until now.
-    let eventRep = 0;
-    if (event.type === 'positive' && economyManager.hasUpgrade('positiveEventReputationBonus')) eventRep += economyManager.getUpgradeSum('positiveEventReputationBonus');
-    if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep += PRESTIGE_VALUES.newsColumnRep;
+    // Paid and (after a short delay, so it doesn't collide with the event's own sound) announced with the usual
+    // Reputation sound; the popup above now shows the amount too, instead of this being its only sign anything happened.
     if (eventRep > 0) {
       progressionManager.addReputation(eventRep);
       setReputation(shownReputation());
