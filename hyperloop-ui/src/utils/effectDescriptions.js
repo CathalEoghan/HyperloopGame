@@ -1,9 +1,16 @@
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { EQUATOR_BONUS_MAX_LATITUDE } from 'Managers/EconomyManager/EconomyManager.js'
 
 // One list of upgrade effect descriptions, used by the unlock popup and the Developments page.
 // Whole percentages stay whole (15), fractions show properly (2.5 rather than 3) and floating point noise is removed
 const pct = v => +(v * 100).toFixed(1)
+
+// Festive Freak doubles every season/month/special-day upgrade's effect - the one multiplier shared by all
+// of them, so a description always matches what the day/month/season actually pays (see EconomyManager's
+// getFestiveFreakFactor, getSpecialDayBonus and getCurrentSeasonUpgrade/getCurrentMonthUpgrade, which apply
+// the same factor to the live, in-game figures).
+const festiveFreakFactor = () => PrestigeManager.owns('festiveFreak') ? PRESTIGE_VALUES.festiveFreakFactor : 1
 
 export const EFFECT_DESCRIPTIONS = {
     vipChanceMultiplier: (v) => `x${v} chance of a VIP passenger`,
@@ -40,7 +47,7 @@ export const EFFECT_DESCRIPTIONS = {
     dailyLoginMultiplier: () => 'Doubles your daily login cash bonus',
     progressRewardBoost: () => 'Doubles the cash and Reputation rewards from city and country discoveries on the Progress page',
     terminalAgeBoost: () => 'Multiplies all city and development income by an extra 1% for every 10 days active, on top of your other boosts',
-    seasonBoost: (v, upgrade) => { const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${pct(v)}% income during this ${isMonthly ? 'month' : 'season'}`; },
+    seasonBoost: (v, upgrade) => { const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${pct(v * festiveFreakFactor())}% income during this ${isMonthly ? 'month' : 'season'}`; },
     rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll your city choices`,
     freeRerollOnRankUp: () => `One free re-roll of your city choices each time you rank up`,
     positiveEventBoost: (v) => `+${pct(v)}% chance of positive events`,
@@ -58,12 +65,12 @@ export const EFFECT_DESCRIPTIONS = {
     nightBoost: (v) => `+${pct(v)}% income between 10pm and 6am`,
     weekendBoost: (v) => `+${pct(v)}% income on weekends`,
     smallCityBoost: (v) => `+${pct(v)}% income from cities under 100,000 population`,
-    christmasBoost: (v) => `+${pct(v)}% city and development income on Christmas Day`,
-    valentinesBoost: (v) => `+${pct(v)}% city and development income on Valentine's Day`,
-    halloweenBoost: (v) => `+${pct(v)}% city and development income on Halloween`,
-    fourthOfJulyBoost: (v) => `+${pct(v)}% city and development income on 4th of July`,
-    easterBoost: (v) => `+${pct(v)}% city and development income on Easter Sunday`,
-    newYearsBoost: (v) => `+${pct(v)}% city and development income on New Year's Day`,
+    christmasBoost: (v) => `+${pct(v * festiveFreakFactor())}% city and development income on Christmas Day`,
+    valentinesBoost: (v) => `+${pct(v * festiveFreakFactor())}% city and development income on Valentine's Day`,
+    halloweenBoost: (v) => `+${pct(v * festiveFreakFactor())}% city and development income on Halloween`,
+    fourthOfJulyBoost: (v) => `+${pct(v * festiveFreakFactor())}% city and development income on 4th of July`,
+    easterBoost: (v) => `+${pct(v * festiveFreakFactor())}% city and development income on Easter Sunday`,
+    newYearsBoost: (v) => `+${pct(v * festiveFreakFactor())}% city and development income on New Year's Day`,
     skilledNegotiationTeams: (v) => `+${v} city choices each time you rank up`,
     personalImageBranding: (v) => `Earn ${pct(v)}% of a city's daily income when giving a farewell`,
     developmentUpgradeDiscount: (v) => `-${pct(v)}% development upgrade cost`,

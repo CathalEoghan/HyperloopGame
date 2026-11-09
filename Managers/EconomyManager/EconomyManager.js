@@ -413,10 +413,17 @@ export class EconomyManager {
         return day === 0 || day === 6;
     }
 
+    // Public so a display can show what a season/month/special-day upgrade is really worth (e.g. the
+    // Progress page's Special Day Bonus row, which previously showed each upgrade's raw, undoubled
+    // effectValue even when Festive Freak was owned - this is the one place that factor lives.
+    getFestiveFreakFactor() {
+        return PrestigeManager.owns('festiveFreak') ? PV.festiveFreakFactor : 1;
+    }
+
     getSpecialDayBonus() {
         // Festive Freak doubles every one of these (and the season/month boosts below), so it's applied once
         // here rather than at each `return 1.0`.
-        const festiveFreak = PrestigeManager.owns('festiveFreak') ? PV.festiveFreakFactor : 1;
+        const festiveFreak = this.getFestiveFreakFactor();
         const now = this._now();
         const month = now.getMonth();
         const date = now.getDate();

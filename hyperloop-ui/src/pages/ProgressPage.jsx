@@ -515,7 +515,10 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                 // understated the real bonus every one of these upgrades actually grants).
                 label: 'Special Day Bonus', value: (() => {
                     const days = { christmasBoost: 'Christmas Day', valentinesBoost: "Valentine's Day", halloweenBoost: 'Halloween', fourthOfJulyBoost: '4th of July', easterBoost: 'Easter Sunday', newYearsBoost: "New Year's Day" }
-                    const owned = Object.keys(days).filter(k => has(k)).map(k => `${days[k]} +${Math.round(sum(k) * 100)}%`)
+                    // Festive Freak doubles every one of these (same factor getSpecialDayBonus() itself applies),
+                    // so the figure shown here is what the day would actually pay, not the raw purchased upgrade.
+                    const festiveFreak = economyManager.getFestiveFreakFactor()
+                    const owned = Object.keys(days).filter(k => has(k)).map(k => `${days[k]} +${Math.round(sum(k) * festiveFreak * 100)}%`)
                     if (owned.length === 0) return '—'
                     return `${owned.join(', ')}${economyManager.getSpecialDayBonus() > 0 ? ' ✓ active' : ''}`
                 })()
