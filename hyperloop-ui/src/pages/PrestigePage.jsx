@@ -1,7 +1,8 @@
 import { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT, CASH_PER_PRESTIGE_POINT } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { MAX_RANK } from 'Managers/RankManager/RankManager.js'
-import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
+import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES, PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
+import { STARTING_BALANCE } from 'Managers/ProgressionManager/economyConstants.js'
 import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialChime, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatBalance } from '../utils/formatBalance.js'
 import padlockIcon from '../assets/misc/padlock.png'
@@ -106,6 +107,18 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     // The next £50M milestone, the cash equivalent of nextStepRank above
     const cashSteps = Math.floor((runStats?.cash ?? 0) / CASH_PER_PRESTIGE_POINT)
     const nextCashStep = (cashSteps + 1) * CASH_PER_PRESTIGE_POINT
+    // How far into the current rank block and £50M block the run is, for the two progress bars in the retire dialog
+    const rankProgress = Math.min(1, (rank % RANKS_PER_PRESTIGE_POINT) / RANKS_PER_PRESTIGE_POINT)
+    const cashProgress = Math.min(1, ((runStats?.cash ?? 0) % CASH_PER_PRESTIGE_POINT) / CASH_PER_PRESTIGE_POINT)
+    // What this payout buys: the next layer that isn't complete yet, how many of its upgrades the new total covers
+    const pointsAfter = prestige.points + retirePoints
+    const nextLayer = PRESTIGE_LAYERS.find(l => !prestige.layerComplete(l.layer))
+    const nextLayerLeft = nextLayer ? prestige.layerUpgrades(nextLayer.layer).length - prestige.ownedInLayer(nextLayer.layer) : 0
+    const affordableInLayer = nextLayer ? Math.min(nextLayerLeft, Math.floor(pointsAfter / nextLayer.cost)) : 0
+    const plural = (n, word) => `${n} ${word}${n === 1 ? '' : 's'}`
+    // What the next run starts with: the standard starting cash, plus the Sign-On Bonus if it is owned
+    const signOn = PrestigeManager.owns('signOnBonus')
+    const nextRunCash = STARTING_BALANCE + (signOn ? PRESTIGE_VALUES.signOnBonus : 0)
     // Retiring wipes the run, so it takes a second click; closing the dialog disarms it
     const [armed, setArmed] = useState(false)
     const closeConfirm = () => { setArmed(false); setConfirming(false) }
@@ -157,58 +170,78 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
 
             {confirming && runStats && (
                 <div className="prestige-modal-overlay" onClick={e => { e.stopPropagation(); closeConfirm() }}>
-                    <div className="prestige-modal" onClick={e => e.stopPropagation()}>
-                        <h2 style={{ textAlign: 'center' }}>Retire this terminal?</h2>
-                        <p className="prestige-modal-sub" style={{ textAlign: 'center' }}>This ends your run and pays out Prestige Points.</p>
+                    {/* The content scrolls and the buttons stay pinned underneath it, so on a shorter window Keep playing and
+                        Retire… are never pushed out of sight at the bottom */}
+                    <div className="prestige-modal prestige-modal-retire" onClick={e => e.stopPropagation()}>
+                        <div className="prestige-modal-scroll">
+                            <h2 style={{ textAlign: 'center' }}>Retire this terminal?</h2>
+                            <p className="prestige-modal-sub" style={{ textAlign: 'center' }}>This ends your run and pays out Prestige Points.</p>
 
-                        <div className="prestige-reward">
-                            <span className="prestige-reward-label">You will earn</span>
-                            <span className="prestige-reward-value">+{retirePoints}</span>
-                            <span className="prestige-reward-sub">
-                                Rank {rank}: {payoutSteps} block{payoutSteps === 1 ? '' : 's'} of {RANKS_PER_PRESTIGE_POINT} ranks × {pointsPerStep} point{pointsPerStep === 1 ? '' : 's'} (+{rankPoints})
-                            </span>
-                            <span className="prestige-reward-sub">
-                                {fmtCashIcon(runStats?.cash ?? 0)} earned: {cashSteps} block{cashSteps === 1 ? '' : 's'} of {cashIconEl}{CASH_PER_PRESTIGE_POINT / 1e6}M (+{cashPoints})
-                            </span>
-                            <span className="prestige-reward-balance">Prestige Points: {prestige.points} → <b>{prestige.points + retirePoints}</b></span>
-                        </div>
-                        <p className="prestige-reward-next">
-                            {nextStepRank <= MAX_RANK && <>{nextStepRank - rank} more rank{nextStepRank - rank === 1 ? '' : 's'} (Rank {nextStepRank}) would earn <b>+{pointsPerStep} more</b>. </>}
-                            Another {fmtCashIcon(nextCashStep - (runStats?.cash ?? 0))} earned would earn <b>+1 more</b>.
-                        </p>
-
-                        <div className="prestige-modal-stats">
-                            <span>Total cash earned</span><b>{fmtCashIcon(runStats.cash)}</b>
-                            <span>Cities connected</span><b>{runStats.cities}</b>
-                            <span>Developments built</span><b>{runStats.developments}</b>
-                            <span>Farewells given</span><b>{runStats.farewells}</b>
-                            <span>Greets given</span><b>{runStats.greets}</b>
-                            <span>Time on this run</span><b>{fmtSpan(Date.now() - runStats.startedAt)}</b>
-                        </div>
-
-                        <div className="prestige-reset-keep">
-                            <div className="prestige-reset">
-                                <h4>Resets</h4>
-                                <ul>
-                                    <li>Cash and rank (Rank {rank})</li>
-                                    <li>Reputation ({runStats.reputation})</li>
-                                    <li>Cities ({runStats.cities})</li>
-                                    <li>Developments and upgrades ({runStats.developments})</li>
-                                    <li>Milestones ({runStats.milestones})</li>
-                                    {runStats.underConstruction > 0 && <li>Work in progress ({runStats.underConstruction})</li>}
-                                </ul>
+                            <div className="prestige-reward">
+                                <span className="prestige-reward-label">You will earn</span>
+                                <span className="prestige-reward-value">+{retirePoints}</span>
+                                <div className="prestige-progress">
+                                    <div className="prestige-progress-row">
+                                        <div className="prestige-progress-line">
+                                            <span>Rank {rank} · <b>+{rankPoints}</b></span>
+                                            {nextStepRank <= MAX_RANK && <span>{nextStepRank - rank} more ranks for +{pointsPerStep}</span>}
+                                        </div>
+                                        <div className="prestige-bar" role="progressbar" aria-label="Progress to the next rank point" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(rankProgress * 100)}>
+                                            <div className="prestige-bar-fill" style={{ width: `${rankProgress * 100}%` }} />
+                                        </div>
+                                    </div>
+                                    <div className="prestige-progress-row">
+                                        <div className="prestige-progress-line">
+                                            <span>{fmtCashIcon(runStats?.cash ?? 0)} earned · <b>+{cashPoints}</b></span>
+                                            <span>{fmtCashIcon(nextCashStep - (runStats?.cash ?? 0))} more for +1</span>
+                                        </div>
+                                        <div className="prestige-bar" role="progressbar" aria-label="Progress to the next cash point" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(cashProgress * 100)}>
+                                            <div className="prestige-bar-fill" style={{ width: `${cashProgress * 100}%` }} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <span className="prestige-reward-balance">Prestige Points: {prestige.points} → <b>{pointsAfter}</b></span>
+                                {nextLayer && (affordableInLayer > 0
+                                    ? <span className="prestige-reward-buys">Enough for {plural(affordableInLayer, 'Layer ' + nextLayer.layer + ' upgrade')} ({plural(nextLayer.cost, 'point')} each)</span>
+                                    : <span className="prestige-reward-buys">A Layer {nextLayer.layer} upgrade costs {plural(nextLayer.cost, 'point')}: you'd need {nextLayer.cost - pointsAfter} more</span>)}
                             </div>
-                            <div className="prestige-keep">
-                                <h4>Kept</h4>
-                                <ul>
-                                    <li>Prestige Points and upgrades</li>
-                                    <li>Shop purchases</li>
-                                    <li>Achievements</li>
-                                    <li>Terminal name</li>
-                                    <li>Hyper-Link likes</li>
-                                    <li>Run history</li>
-                                </ul>
+
+                            <div className="prestige-modal-stats">
+                                <span>Total cash earned</span><b>{fmtCashIcon(runStats.cash)}</b>
+                                <span>Cities connected</span><b>{runStats.cities}</b>
+                                <span>Time on this run</span><b>{fmtSpan(Date.now() - runStats.startedAt)}</b>
                             </div>
+                            <p className="prestige-modal-also">Also: {plural(runStats.developments, 'development')} built · {plural(runStats.farewells, 'farewell')} · {plural(runStats.greets, 'greet')}</p>
+
+                            <div className="prestige-reset-keep">
+                                <div className="prestige-reset">
+                                    <h4>Resets</h4>
+                                    <ul>
+                                        <li>Cash and rank (Rank {rank})</li>
+                                        <li>Reputation ({runStats.reputation})</li>
+                                        <li>Cities ({runStats.cities})</li>
+                                        <li>Developments and upgrades ({runStats.developments})</li>
+                                        <li>Milestones ({runStats.milestones})</li>
+                                        {runStats.underConstruction > 0 && <li>Work in progress ({runStats.underConstruction})</li>}
+                                    </ul>
+                                </div>
+                                <div className="prestige-keep">
+                                    <h4>Kept</h4>
+                                    <ul>
+                                        <li>Prestige Points and upgrades</li>
+                                        <li>Shop purchases</li>
+                                        <li>Achievements</li>
+                                        <li>Terminal name</li>
+                                        <li>Hyper-Link likes</li>
+                                        <li>Run history</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <p className="prestige-next-run">
+                                <b>Your next run:</b> back to Rank 1 with {fmtCashIcon(nextRunCash)}{signOn ? ' (Sign-On Bonus included)' : ''}
+                                {runStats.home ? <>, starting from {runStats.home}. You can pick a different home terminal first.</> : '.'}
+                            </p>
                         </div>
 
                         <div className="prestige-modal-actions">

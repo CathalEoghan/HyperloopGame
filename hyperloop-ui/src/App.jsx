@@ -2183,6 +2183,7 @@ function App() {
             greets: progressionManager.greetingsGiven ?? 0,
             reputation,
             milestones: claimedMilestones.current.size,
+            home: progressionManager.purchasedCities[0]?.name,
             underConstruction: progressionManager.citiesUnderConstruction.length + progressionManager.developmentsUnderConstruction.length,
             startedAt: createdAt,
           }}

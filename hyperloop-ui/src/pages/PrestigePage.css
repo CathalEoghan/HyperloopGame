@@ -720,11 +720,8 @@
 .prestige-reward-value { color: var(--pt-gold); font-size: 2.4rem; font-weight: 800; line-height: 1.1; font-family: 'Courier New', monospace; margin-bottom: 4px; }
 /* Kept small and muted on purpose - it's the breakdown for anyone curious, not the headline. The big
    +N number above should read first. */
-.prestige-reward-sub { font-size: 0.68rem; color: var(--pt-muted); opacity: 0.8; line-height: 1.4; }
 .prestige-reward-balance { margin-top: 6px; font-size: 0.85rem; color: var(--pt-muted); }
 .prestige-reward-balance b { color: var(--pt-text); }
-.prestige-reward-next { margin: 8px 0 14px; text-align: center; font-size: 0.78rem; color: var(--pt-muted); }
-.prestige-reward-next b { color: var(--pt-gold); }
 
 .prestige-reset-keep { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
 .prestige-reset-keep > div { border-radius: 10px; padding: 8px 12px; }
@@ -742,3 +739,25 @@
 .prestige-keep-btn { background: var(--pt-gold); color: #111; }
 .prestige-retire-btn.prestige-retire-danger { background: #c0392b; border-color: #c0392b; color: #fff; }
 @media (max-width: 480px) { .prestige-reset-keep { grid-template-columns: 1fr; } }
+
+/* The retire dialog: its content scrolls, and the buttons stay pinned underneath it (a shorter window used to push
+   Keep playing and Retire… out of sight below the fold) */
+/* width: the base .prestige-modal is 440px of content plus 24px of padding each side; the padding now sits on the inner areas, so the
+   content width is 488px to keep the dialog exactly as wide as it was */
+.prestige-modal-retire { display: flex; flex-direction: column; width: min(488px, 100%); padding: 0; overflow: hidden; }
+.prestige-modal-scroll { overflow-y: auto; min-height: 0; padding: 20px 24px 12px; }
+.prestige-modal-retire .prestige-modal-actions { margin: 0; padding: 12px 24px 16px; border-top: 1px solid rgba(255, 255, 255, 0.09); flex-shrink: 0; }
+
+/* Two bars under the big number: how far into the next rank point and the next £50M point the run is */
+.prestige-progress { display: flex; flex-direction: column; gap: 9px; width: 100%; margin: 6px 0 4px; }
+.prestige-progress-row { display: flex; flex-direction: column; gap: 4px; }
+.prestige-progress-line { display: flex; justify-content: space-between; gap: 12px; font-size: 0.74rem; color: var(--pt-muted); }
+.prestige-progress-line b { color: var(--pt-gold); }
+.prestige-bar { height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.1); overflow: hidden; }
+.prestige-bar-fill { height: 100%; border-radius: 3px; background: var(--pt-gold); }
+.prestige-reward-buys { margin-top: 2px; font-size: 0.74rem; color: var(--pt-muted); text-align: center; }
+
+.prestige-modal-also { margin: 6px 0 0; font-size: 0.78rem; color: var(--pt-muted); }
+.prestige-modal-retire .prestige-modal-stats { margin-top: 14px; }
+.prestige-next-run { margin: 14px 0 4px; padding: 9px 12px; border-radius: 8px; background: rgba(255, 255, 255, 0.045); font-size: 0.8rem; line-height: 1.45; color: var(--pt-muted); text-align: center; }
+.prestige-next-run b { color: var(--pt-text); }
