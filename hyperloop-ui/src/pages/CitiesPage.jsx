@@ -230,6 +230,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         className={isUnderConstruction ? "unavailable" : "city-image"}
                         src={cityThumbnails[city.name] || cityImages[city.name]}
                         style={{ width: '100%', height: '100%', display: 'block', objectFit: 'cover', filter: isAvailable ? 'grayscale(100%)' : 'none' }}
+                        loading="lazy"
                     />
                     {!isUnderConstruction && !isAvailable && lineLevel > 0 && (
                         <div className={`dev-level-strip${isMaxed ? ' dev-level-strip-maxed' : ''}`}>LVL {lineLevel}</div>

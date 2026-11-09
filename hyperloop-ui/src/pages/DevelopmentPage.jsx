@@ -582,6 +582,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 className={isUnderConstruction ? "unavailable" : "development-image"}
                                                 src={developmentThumbnails[development.name] || developmentImages[development.name]}
                                                 style={{ width: '100%', height: '180px' }}
+                                                loading="lazy"
                                             />
                                             {!isUnderConstruction && level > 0 && (
                                                 <div className={`dev-level-strip${isMaxed ? ' dev-level-strip-maxed' : ''}`}>LVL {level}</div>
@@ -641,6 +642,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <img className="unavailable"
                                     src={developmentThumbnails[development.name] || developmentImages[development.name]}
                                     style={{ width: '100%', height: '180px' }}
+                                    loading="lazy"
                                 />
                                 <div className="dev-revenue-strip" style={{ color: '#aaa' }}>
                                     {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{formatPerHour(development.revenue)}/hr</> : 'UPGRADE'}
