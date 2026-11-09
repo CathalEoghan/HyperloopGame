@@ -628,13 +628,27 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <span className="bulk-buy-cost">
                                         (<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                                         {developAllPlan.totalRep > 0 && <> + <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>})
+                                        {/* Bank's development build discount - already folded into totalCash above, but flagged
+                                            the same way the single Build button flags it, so the total isn't a mystery number. */}
+                                        {(() => {
+                                            const discount = economyManager.getUpgradeSum('developmentDiscount')
+                                            return discount > 0 ? <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
+                                        })()}
                                     </span>
                                 )}
                             </button>
                             <button className="bulk-buy-btn" style={{ opacity: developAllExcludingUpgradesPlan.toBuy.length > 0 ? 1 : 0.5 }}
                                 onMouseEnter={() => playHoverSound()} onClick={() => developAll(true)}>
                                 Develop all affordable, excluding upgrades
-                                {developAllExcludingUpgradesPlan.toBuy.length > 0 && <span className="bulk-buy-cost">(<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</span>}
+                                {developAllExcludingUpgradesPlan.toBuy.length > 0 && (
+                                    <span className="bulk-buy-cost">
+                                        (<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                        {(() => {
+                                            const discount = economyManager.getUpgradeSum('developmentDiscount')
+                                            return discount > 0 ? <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
+                                        })()})
+                                    </span>
+                                )}
                             </button>
                         </span>
                     )}
