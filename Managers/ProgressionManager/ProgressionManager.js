@@ -53,6 +53,21 @@ const LINE_LEVEL_REP_COST = 10; // per level, flat
 const LINE_LEVEL_INCOME_PCT = 40; // +40% income per level, every level
 export const MAX_LINE_LEVEL = 10;
 
+// Lifetime cash/Reputation earned (the Progress page's Lifetime Stats) - unlike totalCashEarned/reputationEarnedThisRun
+// below, which are this run only, these two keep their own tally across every run, in their own localStorage keys
+// (see SaveManager's AUX_KEYS/PRESTIGE_KEEP_KEYS: wiped by an actual Delete Save, kept through a Prestige retirement).
+const LIFETIME_CASH_KEY = 'hyperloop_lifetime_cash_earned';
+const LIFETIME_REP_KEY = 'hyperloop_lifetime_reputation_earned';
+function loadLifetimeNumber(key) {
+    try {
+        const v = Number(localStorage.getItem(key));
+        return Number.isFinite(v) && v >= 0 ? v : 0;
+    } catch { return 0; }
+}
+function saveLifetimeNumber(key, value) {
+    try { localStorage.setItem(key, String(Math.round(value))); } catch { /* storage full */ }
+}
+
 export class ProgressionManager {
     constructor(rankManager) {
         this.purchasedCities = [];
@@ -84,6 +99,14 @@ export class ProgressionManager {
         this.developmentBuiltDates = {};
         // Arriving loops greeted in this run (a prestige starts it again, like the farewell count)
         this.greetingsGiven = 0;
+        // Reputation actually earned this run (gains only, not spends) - a separate running total from
+        // `reputation` itself, which also falls when Reputation is spent. Starts again each run, unlike
+        // lifetimeReputationEarned below.
+        this.reputationEarnedThisRun = 0;
+        // This run's totalCashEarned/reputationEarnedThisRun reset every run; these two don't - see their
+        // constants above for where they're actually kept.
+        this.lifetimeCashEarned = loadLifetimeNumber(LIFETIME_CASH_KEY);
+        this.lifetimeReputationEarned = loadLifetimeNumber(LIFETIME_REP_KEY);
     }
 
     unlockReward(reward) {
@@ -100,12 +123,19 @@ export class ProgressionManager {
     if (amount > 0) {
         this.totalCashEarned += amount;
         this.balance += amount;
+        this.lifetimeCashEarned += amount;
+        saveLifetimeNumber(LIFETIME_CASH_KEY, this.lifetimeCashEarned);
     } else {
         this.balance = Math.max(0, this.balance + amount);
     }
 }
 
     addReputation(amount) {
+        if (amount > 0) {
+            this.reputationEarnedThisRun += amount;
+            this.lifetimeReputationEarned += amount;
+            saveLifetimeNumber(LIFETIME_REP_KEY, this.lifetimeReputationEarned);
+        }
         this.reputation = Math.max(0, this.reputation + amount);
     }
 

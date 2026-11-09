@@ -1022,6 +1022,11 @@ function App() {
         ? { percent: Math.round((1 - resilienceFactor) * 100), direction: 'shorter' }
         : null;
 
+    // One tally per event fired, win or lose - kept forever, feeds the Progress page's lifetime
+    // Positive/Negative events stats.
+    if (event.type === 'positive') achievements.addCounter('positiveEvents');
+    else if (event.type === 'negative') achievements.addCounter('negativeEvents');
+
     // Reputation a positive event pays on top of its effect: Improved Accessibility Services' bonus, and News Column's flat
     // bonus for every positive event however it fired (the regular roll, Opening Party, a like-triggered roll). Computed
     // before the popup below so it can show "+N Reputation" there too, instead of only playing a sound for it.

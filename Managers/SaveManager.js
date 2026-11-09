@@ -58,6 +58,9 @@ const AUX_KEYS = [
     'hyperloop_achievement_counters',
     'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
+    // Lifetime cash/Reputation earned (ProgressionManager's own keys - see its LIFETIME_CASH_KEY/LIFETIME_REP_KEY)
+    'hyperloop_lifetime_cash_earned',
+    'hyperloop_lifetime_reputation_earned',
     'hyperloop_progress_collapsed',
     // Where the departure and arrival totals had got to, so the same loops aren't counted twice
     'hyperloop_loop_counted',
@@ -152,6 +155,8 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_progress_collapsed',
     'hyperloop_loop_counted',
     'hyperloop_hyperlink_liked',
+    'hyperloop_lifetime_cash_earned',
+    'hyperloop_lifetime_reputation_earned',
     'hyperloop_last_login',
     'hyperloop_last_farewell_date',
     // The credits portrait pays its Reputation once ever, not once per run

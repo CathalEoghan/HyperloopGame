@@ -12,6 +12,7 @@ import { playHoverSound, playClickSound2, playFarewellAcceptSound, playReputatio
 import reputationIcon from '../assets/misc/reputation.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_VALUES, PRESTIGE_UPGRADES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
+import { ACHIEVEMENT_IDS } from 'Managers/AchievementManager/achievements.js'
 import { INCOME_SCALE } from 'Managers/EconomyManager/incomeScale.js'
 import PageIntroModal from '../components/PageIntroModal.jsx'
 import ClaimedRewardsModal from '../components/ClaimedRewardsModal.jsx'
@@ -362,13 +363,30 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         try { return (JSON.parse(localStorage.getItem('hyperloop_hyperlink_liked')) || []).length } catch { return 0 }
     })()
 
-    const generalStats = [
+    // This run only - every one of these starts again from scratch on a new game or a Prestige retirement.
+    const currentRunStats = [
         { label: 'Terminal age', value: terminalAge() },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
         { label: 'Income per day (at current rate)', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
         { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.totalCashEarned || 0} /> },
+        { label: 'Reputation earned', value: (Math.round(economyManager.progressionManager.reputationEarnedThisRun) || 0).toLocaleString('en-GB') },
         { label: 'Farewells given', value: farewellsGiven ?? 0 },
         { label: 'Greets given', value: economyManager.progressionManager.greetingsGiven ?? 0 },
+        // Straight from the connected cities, so a disconnect shows at once
+        { label: 'Unique cities connected', value: new Set(purchasedCities.map(c => c.name)).size },
+        { label: 'Unique countries connected', value: new Set(purchasedCities.map(c => c.country)).size },
+        { label: 'Unique continents connected', value: new Set(purchasedCities.map(c => c.continent)).size },
+        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(mostProfitableCity))} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(leastProfitableCity))} suffix="/day" /></span> : '—' },
+        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(mostProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
+        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(leastProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev))} suffix="/day" /></span> : '—' },
+        { label: 'Longest route', value: routeValue(longestRoute) },
+        { label: 'Shortest route', value: routeValue(shortestRoute) },
+    ]
+
+    // Kept for good across every run, via the achievement counters (or their own key, like the Hyper-Link likes) -
+    // a Prestige retirement never resets these.
+    const lifetimeStats = [
         { label: 'VIPs welcomed', value: (achievementManager?.counter('vips') ?? 0).toLocaleString('en-GB') },
         { label: 'Delays compensated', value: (achievementManager?.counter('delaysCompensated') ?? 0).toLocaleString('en-GB') },
         // Every departure and arrival that has happened, including the ones while you were away. Kept through a prestige.
@@ -378,22 +396,19 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Total distance travelled', value: formatDistance(achievementManager?.counter('miles') ?? 0) },
         // Time the game has been open across every run (Terminal age is this run only)
         { label: 'Total playtime', value: playtimeText(achievementManager?.counter('playtime') ?? 0) },
-        // Straight from the connected cities, so a disconnect shows at once
-        { label: 'Unique cities connected', value: new Set(purchasedCities.map(c => c.name)).size },
-        { label: 'Unique countries connected', value: new Set(purchasedCities.map(c => c.country)).size },
-        { label: 'Unique continents connected', value: new Set(purchasedCities.map(c => c.continent)).size },
         { label: 'Hyper-Link posts liked', value: likedCount },
         { label: 'Cities and developments upgraded', value: (achievementManager?.counter('devUpgrades') ?? 0) + (achievementManager?.counter('cityUpgrades') ?? 0) },
         { label: 'Retirement count', value: PrestigeManager.getHistory().length },
         { label: 'Highest rank reached', value: highestRank },
         { label: 'Work button clicks', value: (achievementManager?.counter('work') ?? 0).toLocaleString('en-GB') },
         { label: 'Daily bonuses collected', value: achievementManager?.counter('dailyBonus') ?? 0 },
-        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(mostProfitableCity))} suffix="/day" /></span> : '—' },
-        { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(leastProfitableCity))} suffix="/day" /></span> : '—' },
-        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(mostProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
-        { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(leastProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev))} suffix="/day" /></span> : '—' },
-        { label: 'Longest route', value: routeValue(longestRoute) },
-        { label: 'Shortest route', value: routeValue(shortestRoute) },
+        { label: 'Farewells given', value: (achievementManager?.counter('farewells') ?? 0).toLocaleString('en-GB') },
+        { label: 'Greets given', value: (achievementManager?.counter('greetings') ?? 0).toLocaleString('en-GB') },
+        { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.lifetimeCashEarned || 0} /> },
+        { label: 'Positive events experienced', value: (achievementManager?.counter('positiveEvents') ?? 0).toLocaleString('en-GB') },
+        { label: 'Negative events experienced', value: (achievementManager?.counter('negativeEvents') ?? 0).toLocaleString('en-GB') },
+        { label: 'Achievements unlocked', value: `${achievementManager?.count ?? 0} / ${ACHIEVEMENT_IDS.size}` },
+        { label: 'Total Reputation earned', value: Math.round(economyManager.progressionManager.lifetimeReputationEarned || 0).toLocaleString('en-GB') },
     ]
 
     const getUpgradeStats = () => {
@@ -519,17 +534,29 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             {showIntro && (
                 <PageIntroModal title="Welcome to Progress" onClose={closeIntro} points={[
                     { icon: giftIcon, text: <>Every city, country and development you've collected has a <strong>one-off reward</strong> waiting - click its card for a small, random payout of cash or Reputation.</> },
-                    { icon: growthIcon, text: <><strong>General Stats</strong> tracks this run's lifetime totals, and <strong>Active Bonuses</strong> lists every passive boost currently stacked on your income.</> },
+                    { icon: growthIcon, text: <><strong>Lifetime Stats</strong> track your whole career and survive a Prestige retirement, <strong>Current Run Stats</strong> start again with a new run, and <strong>Active Bonuses</strong> lists every passive boost currently stacked on your income.</> },
                     { icon: starIcon, text: <>Sections can be folded away to save space - a <strong>Claim all</strong> button stays on the header, folded or not, for whatever is still <strong>waiting to be claimed</strong>.</> },
                 ]} />
             )}
             <div className="progress-page" style={{ height: `calc(100vh - ${topOffset + 141}px)` }}>
                 <div className="progress-content">
-                    {sectionHeader('general', 'General Stats')}
-                    {!collapsed.general && (
+                    {sectionHeader('lifetime', 'Lifetime Stats')}
+                    {!collapsed.lifetime && (
                         <div className="progress-stats">
-                            {generalStats.map(({ label, value }) => (
+                            {lifetimeStats.map(({ label, value }) => (
                                 <div key={label} className="stat-card" onMouseEnter={() => playHoverSound()}>
+                                    <span className="stat-label">{label}</span>
+                                    <span className="stat-value">{value}</span>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+
+                    {sectionHeader('currentRun', 'Current Run Stats', { marginTop: '24px' })}
+                    {!collapsed.currentRun && (
+                        <div className="progress-stats">
+                            {currentRunStats.map(({ label, value }) => (
+                                <div key={'run-' + label} className="stat-card" onMouseEnter={() => playHoverSound()}>
                                     <span className="stat-label">{label}</span>
                                     <span className="stat-value">{value}</span>
                                 </div>
