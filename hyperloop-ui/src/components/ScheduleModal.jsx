@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import './ScheduleModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playSplitFlapShort } from '../utils/sound.js'
@@ -12,6 +13,94 @@ import cashIcon from '../assets/misc/cash.png'
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5)
 const GATES = Array.from({ length: NUM_GATES }, (_, i) => i + 1)
+
+const SELECT_LIST_EDGE = 8
+
+// A dropdown that always scrolls, however long its list is and whatever the player's screen size - a plain
+// <select>'s popup is drawn by the OS, not the page, so it can't be given a guaranteed scrollbar or a height
+// that fits every display. This one is an ordinary scrollable list in the page's own DOM instead, portalled onto
+// <body> and placed from the closed box's own position (the same approach as BoostTooltip) rather than left as
+// a child of it, so it's never clipped by the Schedule panel's rounded corners or its scrolling body.
+// `open`/`onToggle` are lifted to the parent (see openSelect in ScheduleModal) so opening one closes any other.
+function ScrollSelect({ value, options, onChange, open, onToggle, ariaLabel, disabled, className = '' }) {
+    const btnRef = useRef(null)
+    const listRef = useRef(null)
+    const [pos, setPos] = useState(null)
+    const current = options.find(o => String(o.value) === String(value))
+
+    useLayoutEffect(() => {
+        if (!open) return
+        const btn = btnRef.current, list = listRef.current
+        if (!btn || !list) return
+        const place = () => {
+            const r = btn.getBoundingClientRect()
+            const vh = window.innerHeight
+            const spaceBelow = vh - r.bottom - SELECT_LIST_EDGE, spaceAbove = r.top - SELECT_LIST_EDGE
+            const below = spaceBelow >= Math.min(220, list.scrollHeight) || spaceBelow >= spaceAbove
+            setPos({
+                left: r.left, width: r.width,
+                top: below ? r.bottom + 4 : undefined,
+                bottom: below ? undefined : vh - r.top + 4,
+                maxHeight: Math.max(80, (below ? spaceBelow : spaceAbove) - 4),
+            })
+        }
+        place()
+        // Repositions if the page is resized, and closes if the anchor scrolls away underneath it (the portal
+        // can't follow a scrolling ancestor like the Schedule panel's body without this) - simplest is treating
+        // any OTHER scroll as "close", which is what a native select's popup does too. Scrolling the open list
+        // itself must not count, or the list would slam shut the moment you tried to scroll it.
+        window.addEventListener('resize', place)
+        const onScroll = e => { if (listRef.current?.contains(e.target)) return; onToggle() }
+        window.addEventListener('scroll', onScroll, true)
+        return () => { window.removeEventListener('resize', place); window.removeEventListener('scroll', onScroll, true) }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [open])
+
+    return (
+        <div className={`sched-select ${className}`}>
+            <button
+                ref={btnRef}
+                type="button"
+                className="sched-select-btn"
+                disabled={disabled}
+                onMouseEnter={() => playHoverSound()}
+                onClick={() => { if (disabled) return; playClickSound2(); onToggle() }}
+                aria-haspopup="listbox"
+                aria-expanded={open}
+                aria-label={ariaLabel}
+            >
+                <span className="sched-select-value">{current ? current.label : ''}</span>
+                <span className="sched-select-caret" aria-hidden="true">▾</span>
+            </button>
+            {open && createPortal(
+                <ul
+                    ref={listRef}
+                    className="sched-select-list"
+                    role="listbox"
+                    style={{
+                        visibility: pos ? 'visible' : 'hidden',
+                        left: pos?.left, minWidth: pos?.width, top: pos?.top, bottom: pos?.bottom, maxHeight: pos?.maxHeight,
+                    }}
+                >
+                    {options.map(o => (
+                        <li
+                            key={o.value}
+                            role="option"
+                            aria-selected={String(o.value) === String(value)}
+                            aria-disabled={!!o.disabled}
+                            onMouseEnter={() => !o.disabled && playHoverSound()}
+                            onClick={() => { if (o.disabled) return; playClickSound2(); onChange(o.value); onToggle() }}
+                            className={`sched-select-option${o.disabled ? ' sched-select-option-disabled' : ''}${String(o.value) === String(value) ? ' sched-select-option-selected' : ''}`}
+                        >
+                            {o.label}
+                        </li>
+                    ))}
+                </ul>,
+                document.body
+            )}
+        </div>
+    )
+}
 
 // A time and gate for a city that the timetable has room for, starting about half an hour from now
 function suggestSlot(timetable, name, nowMs = Date.now()) {
@@ -56,6 +145,10 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
     const city = editing ? editing : (open.some(c => c.name === cityPick) ? cityPick : (open[0]?.name || ''))
     const [error, setError] = useState('')
     const [notice, setNotice] = useState('')
+    // Which of the five ScrollSelect dropdowns above is open, if any - lifted here so opening one closes any
+    // other, and so one Escape closes just the dropdown rather than the whole Schedule panel.
+    const [openSelect, setOpenSelect] = useState(null)
+    useEscapeToClose(() => setOpenSelect(null), openSelect !== null)
     void version
 
     const hour = Math.floor(slot.minuteOfDay / 60), minute = slot.minuteOfDay % 60
@@ -131,7 +224,17 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
     return (
         <div className="sched-overlay" onClick={onClose}>
             {/* --sched-city-ch: the longest city name this panel can ever list, so the City box is one width however the list shrinks */}
-            <div className="sched-panel" style={{ '--sched-city-ch': Math.max(8, ...purchasedCities.map(c => c.name.length)) }} onClick={e => e.stopPropagation()} role="dialog" aria-label="Schedule loop">
+            <div
+                className="sched-panel"
+                style={{ '--sched-city-ch': Math.max(8, ...purchasedCities.map(c => c.name.length)) }}
+                onClick={e => e.stopPropagation()}
+                // The open list is portalled onto <body>, so it isn't a DOM descendant of its own .sched-select -
+                // without checking for it too, a mousedown on an option closed the dropdown before its click could
+                // ever land, and nothing was selectable.
+                onMouseDown={e => { if (openSelect && !e.target.closest('.sched-select') && !e.target.closest('.sched-select-list')) setOpenSelect(null) }}
+                role="dialog"
+                aria-label="Schedule loop"
+            >
                 <div className="sched-header">
                     <span className="sched-title">Schedule departures</span>
                     <button className="sched-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close">✕</button>
@@ -149,47 +252,66 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                             <div className="sched-fields">
                                 <label className="sched-field sched-field-city">
                                     <span>City</span>
-                                    <select value={city} disabled={editing !== null} onChange={e => chooseCity(e.target.value)}>
-                                        {(editing ? [{ name: editing }] : open).map(c => <option key={c.name} value={c.name}>{c.name}</option>)}
-                                    </select>
+                                    <ScrollSelect
+                                        className="sched-select-city"
+                                        value={city}
+                                        disabled={editing !== null}
+                                        options={(editing ? [{ name: editing }] : open).map(c => ({ value: c.name, label: c.name }))}
+                                        onChange={chooseCity}
+                                        open={openSelect === 'city'}
+                                        onToggle={() => setOpenSelect(s => (s === 'city' ? null : 'city'))}
+                                        ariaLabel="City"
+                                    />
                                 </label>
                                 <label className="sched-field sched-field-time">
                                     <span>Departs</span>
                                     <span className="sched-time">
-                                        <select value={hour} onChange={e => setMinuteOfDay(Number(e.target.value) * 60 + minute)} aria-label="Hour">
-                                            {HOURS.map(h => <option key={h} value={h}>{String(h).padStart(2, '0')}</option>)}
-                                        </select>
+                                        <ScrollSelect
+                                            className="sched-select-time"
+                                            value={hour}
+                                            options={HOURS.map(h => ({ value: h, label: String(h).padStart(2, '0') }))}
+                                            onChange={h => setMinuteOfDay(Number(h) * 60 + minute)}
+                                            open={openSelect === 'hour'}
+                                            onToggle={() => setOpenSelect(s => (s === 'hour' ? null : 'hour'))}
+                                            ariaLabel="Hour"
+                                        />
                                         :
-                                        <select value={minute} onChange={e => setMinuteOfDay(hour * 60 + Number(e.target.value))} aria-label="Minute">
-                                            {MINUTES.map(m => <option key={m} value={m}>{String(m).padStart(2, '0')}</option>)}
-                                        </select>
+                                        <ScrollSelect
+                                            className="sched-select-time"
+                                            value={minute}
+                                            options={MINUTES.map(m => ({ value: m, label: String(m).padStart(2, '0') }))}
+                                            onChange={m => setMinuteOfDay(hour * 60 + Number(m))}
+                                            open={openSelect === 'minute'}
+                                            onToggle={() => setOpenSelect(s => (s === 'minute' ? null : 'minute'))}
+                                            ariaLabel="Minute"
+                                        />
                                     </span>
                                 </label>
                                 <label className="sched-field sched-field-gate">
                                     <span>Gate</span>
-                                    <select value={slot.gate} onChange={e => { setSlot(s => ({ ...s, gate: Number(e.target.value) })); setError(''); setNotice('') }}>
-                                        {GATES.map(g => (
-                                            <option key={g} value={g} disabled={!!busy[g]}>
-                                                {`Gate ${g}${busy[g] ? ` (busy: ${busy[g]})` : ''}`}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    <ScrollSelect
+                                        className="sched-select-gate"
+                                        value={slot.gate}
+                                        options={GATES.map(g => ({ value: g, label: `Gate ${g}${busy[g] ? ` (busy: ${busy[g]})` : ''}`, disabled: !!busy[g] }))}
+                                        onChange={g => { setSlot(s => ({ ...s, gate: Number(g) })); setError(''); setNotice('') }}
+                                        open={openSelect === 'gate'}
+                                        onToggle={() => setOpenSelect(s => (s === 'gate' ? null : 'gate'))}
+                                        ariaLabel="Gate"
+                                    />
                                 </label>
                                 <label className="sched-field sched-field-loop">
                                     <span>Loop No.</span>
                                     <span className="sched-loopno">
                                         <span className="sched-loopno-prefix">{mechanicalLoopCode(terminalName)}</span>
-                                        <select
+                                        <ScrollSelect
+                                            className="sched-select-loop"
                                             value={loopNumber ?? ''}
-                                            onChange={e => { setLoopNumber(Number(e.target.value)); setError(''); setNotice('') }}
-                                            aria-label="Loop number"
-                                        >
-                                            {loopPool.map(n => (
-                                                <option key={n} value={n} disabled={!!loopBusy[n]}>
-                                                    {`${String(n).padStart(3, '0')}${loopBusy[n] ? ` (busy: ${loopBusy[n]})` : ''}`}
-                                                </option>
-                                            ))}
-                                        </select>
+                                            options={loopPool.map(n => ({ value: n, label: `${String(n).padStart(3, '0')}${loopBusy[n] ? ` (busy: ${loopBusy[n]})` : ''}`, disabled: !!loopBusy[n] }))}
+                                            onChange={n => { setLoopNumber(Number(n)); setError(''); setNotice('') }}
+                                            open={openSelect === 'loop'}
+                                            onToggle={() => setOpenSelect(s => (s === 'loop' ? null : 'loop'))}
+                                            ariaLabel="Loop number"
+                                        />
                                     </span>
                                 </label>
                             </div>
