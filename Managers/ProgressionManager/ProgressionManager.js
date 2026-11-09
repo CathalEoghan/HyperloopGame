@@ -49,7 +49,10 @@ const MAX_DEV_LEVEL = UPGRADE_CASH_PCTS.length - 1; // 10
 const LINE_BASE_COST = TIER_CONNECTION_COST;
 const LINE_LEVEL_CASH_MULT = 3.00; // level 1's cost, as a multiple of the city's connection price
 const LINE_LEVEL_CASH_GROWTH = 1.6; // each further level costs this much more than the one before
-const LINE_LEVEL_REP_COST = 10; // per level, flat
+// Same curve as a development's UPGRADE_REP_COSTS (5 up to 50) rather than a flat 10 at every level - a
+// level 10 city line should cost noticeably more Reputation than a level 1 one, same as a level 10
+// development upgrade does, and the two sinks land on a comparable total income payoff (400% vs 450%).
+const LINE_LEVEL_REP_COSTS = UPGRADE_REP_COSTS;
 const LINE_LEVEL_INCOME_PCT = 40; // +40% income per level, every level
 export const MAX_LINE_LEVEL = 10;
 
@@ -353,7 +356,7 @@ export class ProgressionManager {
         return {
             nextLevel,
             cashCost: Math.floor(baseCost * LINE_LEVEL_CASH_MULT * Math.pow(LINE_LEVEL_CASH_GROWTH, nextLevel - 1) + 1e-6),
-            repCost: PrestigeManager.owns('goodStanding') ? Math.floor(LINE_LEVEL_REP_COST / 2) : LINE_LEVEL_REP_COST,
+            repCost: PrestigeManager.owns('goodStanding') ? Math.floor(LINE_LEVEL_REP_COSTS[nextLevel] / 2) : LINE_LEVEL_REP_COSTS[nextLevel],
             boostPct: LINE_LEVEL_INCOME_PCT,
             totalPct: LINE_LEVEL_INCOME_PCT * nextLevel,
         };
