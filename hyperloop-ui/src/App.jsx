@@ -2398,6 +2398,7 @@ function App() {
             waiting={pendingRankUps}
             reputation={reputation}
             rerollCost={rerollCost}
+            rerollDiscount={hasFreeReroll ? 0 : economyManager.getUpgradeSum('rerollRepDiscount')}
             onReroll={canReroll ? () => {
               if (progressionManager.reputation < rerollCost) { setShowNotEnoughRep(true); return; }
               progressionManager.addReputation(-rerollCost);

@@ -11,7 +11,7 @@ import './CityChoiceModal.css'
 // few cities are left). Choosing is a two-step (pick, then confirm) because the choice is final.
 // onReroll is left out when there is nothing else to offer. rerollCost is what the game will actually charge:
 // 0 with a free re-roll, less with the re-roll discount.
-function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rerollCost = 15, onPick, onReroll, onClaimAll }) {
+function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rerollCost = 15, rerollDiscount = 0, onPick, onReroll, onClaimAll }) {
     const [selected, setSelected] = useState(null)
     // A re-roll replaces the cities, so a selection that is no longer on offer is dropped
     const chosen = cities.includes(selected) ? selected : null
@@ -61,7 +61,13 @@ function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rero
                     >
                         {rerollCost === 0
                             ? <span>Free re-roll</span>
-                            : <span>{canReroll ? 'Re-roll choices' : 'Need'} (<img className="citychoice-rep" src={reputationIcon} alt="rep" />{rerollCost}){!canReroll && ` to re-roll (you have ${reputation})`}</span>}
+                            : <span>
+                                {canReroll ? 'Re-roll choices' : 'Need'} (<img className="citychoice-rep" src={reputationIcon} alt="rep" />{rerollCost})
+                                {/* Flexible Network Contracts' flat Reputation discount - shown the same way the Development
+                                    page's Build/Upgrade costs flag their own discounts, so it isn't invisible once owned. */}
+                                {rerollDiscount > 0 && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{rerollDiscount} Rep)</span>}
+                                {!canReroll && ` to re-roll (you have ${reputation})`}
+                            </span>}
                     </button>
                 )}
                 <div className="citychoice-actions">
