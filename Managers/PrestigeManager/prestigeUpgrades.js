@@ -78,7 +78,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'fiveStarResearchers', icon: '🔬', layer: 3, name: 'Five-Star Researchers', description: 'Experimental Technology rewards double the Prestige Points (10 instead of 5).' },
 
     // Layer 4
-    { id: 'fastLearner', icon: '🎓', layer: 4, name: 'Fast Learner', description: '+1 Prestige Point for every 1 Prestige Point gained.' },
+    { id: 'fastLearner', icon: '🎓', layer: 4, name: 'Quick Learner', description: '+1 Prestige Point for every 1 Prestige Point gained.' },
     { id: 'governmentGrants', icon: '🏛️', layer: 4, name: 'Government Grants', description: 'Start at Rank 25, with 24 cities and developments already unlocked.' },
     { id: 'speedyConveyorBelts', icon: '⚙️', layer: 4, name: 'Speedy Conveyor Belts', description: `${mult(V.speedyConveyorBelts)} Work earnings.` },
     { id: 'globalTicketCuts', icon: '🎫', layer: 4, name: 'Global Ticket Cuts', description: `${mult(V.globalTicketCuts)} city income.` },

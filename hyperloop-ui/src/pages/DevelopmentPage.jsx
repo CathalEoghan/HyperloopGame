@@ -292,6 +292,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <button className="closeButton" style={{ opacity: canConfirm ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={confirm}>
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                             Confirm (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
+                                            {/* Legal Loopholes' half-price rename - already baked into getRenameRepCost() above, but flagged
+                                                the same way other discounts are, so it isn't invisible once owned. */}
+                                            {PrestigeManager.owns('legalLoopholes') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
                                         </span>
                                     </button>
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowRenameModal(false) }}>Cancel</button>
@@ -539,6 +542,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); openRename(selectedDevelopment) }}>
                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                                             Rename (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
+                                                            {PrestigeManager.owns('legalLoopholes') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
                                                         </span>
                                                     </button>
                                                 )}

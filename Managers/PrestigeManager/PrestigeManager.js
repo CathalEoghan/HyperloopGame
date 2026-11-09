@@ -86,14 +86,14 @@ export class PrestigeManager {
         this.save()
     }
 
-    // Points a run is worth from rank alone. Fast Learner doubles them (Five-Star Researchers does not:
+    // Points a run is worth from rank alone. Quick Learner doubles them (Five-Star Researchers does not:
     // it only changes what Experimental Technology pays).
     static pointsForRank(rank) {
         const base = Math.floor(rank / RANKS_PER_PRESTIGE_POINT)
         return PrestigeManager.owns('fastLearner') ? base * 2 : base
     }
 
-    // Points a run is worth from lifetime cash earned this run alone, same Fast Learner doubling.
+    // Points a run is worth from lifetime cash earned this run alone, same Quick Learner doubling.
     static pointsForCash(totalCashEarned) {
         const base = Math.floor((totalCashEarned || 0) / CASH_PER_PRESTIGE_POINT)
         return PrestigeManager.owns('fastLearner') ? base * 2 : base
@@ -157,7 +157,7 @@ export class PrestigeManager {
     }
 
     // Hands out the Prestige Points an upgrade rewards when it is bought. Five-Star Researchers
-    // doubles the reward, then Fast Learner doubles the total (+1 for every 1 gained).
+    // doubles the reward, then Quick Learner doubles the total (+1 for every 1 gained).
     // Reads the stored state first, so it is safe to call from anywhere.
     static award(basePoints) {
         const manager = new PrestigeManager()

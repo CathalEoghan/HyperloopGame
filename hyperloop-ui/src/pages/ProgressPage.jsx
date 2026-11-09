@@ -364,51 +364,52 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     })()
 
     // This run only - every one of these starts again from scratch on a new game or a Prestige retirement.
+    // Alphabetical by label, same as the Lifetime Stats and Active Bonuses sections below.
     const currentRunStats = [
-        { label: 'Terminal age', value: terminalAge() },
-        { label: 'Total population served', value: formatPopulation(totalPopulation) },
-        { label: 'Income per day (at current rate)', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
-        { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.totalCashEarned || 0} /> },
-        { label: 'Reputation earned', value: (Math.round(economyManager.progressionManager.reputationEarnedThisRun) || 0).toLocaleString('en-GB') },
         { label: 'Farewells given', value: farewellsGiven ?? 0 },
         { label: 'Greets given', value: economyManager.progressionManager.greetingsGiven ?? 0 },
-        // Straight from the connected cities, so a disconnect shows at once
-        { label: 'Unique cities connected', value: new Set(purchasedCities.map(c => c.name)).size },
-        { label: 'Unique countries connected', value: new Set(purchasedCities.map(c => c.country)).size },
-        { label: 'Unique continents connected', value: new Set(purchasedCities.map(c => c.continent)).size },
-        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(mostProfitableCity))} suffix="/day" /></span> : '—' },
+        { label: 'Income per day (at current rate)', value: <><CashValue amount={totalRevenue} suffix="/day" /></> },
         { label: 'Least profitable city', value: leastProfitableCity ? <span><span style={{ display: 'block' }}>{leastProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(leastProfitableCity))} suffix="/day" /></span> : '—' },
-        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(mostProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
         { label: 'Least profitable development', value: leastProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(leastProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(leastProfitableDev))} suffix="/day" /></span> : '—' },
         { label: 'Longest route', value: routeValue(longestRoute) },
+        { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(mostProfitableCity))} suffix="/day" /></span> : '—' },
+        { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(mostProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
+        { label: 'Reputation earned', value: (Math.round(economyManager.progressionManager.reputationEarnedThisRun) || 0).toLocaleString('en-GB') },
         { label: 'Shortest route', value: routeValue(shortestRoute) },
+        { label: 'Terminal age', value: terminalAge() },
+        { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.totalCashEarned || 0} /> },
+        { label: 'Total population served', value: formatPopulation(totalPopulation) },
+        // Straight from the connected cities, so a disconnect shows at once
+        { label: 'Unique cities connected', value: new Set(purchasedCities.map(c => c.name)).size },
+        { label: 'Unique continents connected', value: new Set(purchasedCities.map(c => c.continent)).size },
+        { label: 'Unique countries connected', value: new Set(purchasedCities.map(c => c.country)).size },
     ]
 
     // Kept for good across every run, via the achievement counters (or their own key, like the Hyper-Link likes) -
     // a Prestige retirement never resets these.
     const lifetimeStats = [
-        { label: 'VIPs welcomed', value: (achievementManager?.counter('vips') ?? 0).toLocaleString('en-GB') },
-        { label: 'Delays compensated', value: (achievementManager?.counter('delaysCompensated') ?? 0).toLocaleString('en-GB') },
-        // Every departure and arrival that has happened, including the ones while you were away. Kept through a prestige.
-        { label: 'Total number of departures', value: (achievementManager?.counter('departures') ?? 0).toLocaleString('en-GB') },
-        { label: 'Total number of arrivals', value: (achievementManager?.counter('arrivals') ?? 0).toLocaleString('en-GB') },
-        { label: 'Total passenger count', value: (achievementManager?.counter('passengers') ?? 0).toLocaleString('en-GB') },
-        { label: 'Total distance travelled', value: formatDistance(achievementManager?.counter('miles') ?? 0) },
-        // Time the game has been open across every run (Terminal age is this run only)
-        { label: 'Total playtime', value: playtimeText(achievementManager?.counter('playtime') ?? 0) },
-        { label: 'Hyper-Link posts liked', value: likedCount },
+        { label: 'Achievements unlocked', value: `${achievementManager?.count ?? 0} / ${ACHIEVEMENT_IDS.size}` },
         { label: 'Cities and developments upgraded', value: (achievementManager?.counter('devUpgrades') ?? 0) + (achievementManager?.counter('cityUpgrades') ?? 0) },
-        { label: 'Retirement count', value: PrestigeManager.getHistory().length },
-        { label: 'Highest rank reached', value: highestRank },
-        { label: 'Work button clicks', value: (achievementManager?.counter('work') ?? 0).toLocaleString('en-GB') },
         { label: 'Daily bonuses collected', value: achievementManager?.counter('dailyBonus') ?? 0 },
+        { label: 'Delays compensated', value: (achievementManager?.counter('delaysCompensated') ?? 0).toLocaleString('en-GB') },
         { label: 'Farewells given', value: (achievementManager?.counter('farewells') ?? 0).toLocaleString('en-GB') },
         { label: 'Greets given', value: (achievementManager?.counter('greetings') ?? 0).toLocaleString('en-GB') },
-        { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.lifetimeCashEarned || 0} /> },
-        { label: 'Positive events experienced', value: (achievementManager?.counter('positiveEvents') ?? 0).toLocaleString('en-GB') },
+        { label: 'Highest rank reached', value: highestRank },
+        { label: 'Hyper-Link posts liked', value: likedCount },
         { label: 'Negative events experienced', value: (achievementManager?.counter('negativeEvents') ?? 0).toLocaleString('en-GB') },
-        { label: 'Achievements unlocked', value: `${achievementManager?.count ?? 0} / ${ACHIEVEMENT_IDS.size}` },
+        { label: 'Positive events experienced', value: (achievementManager?.counter('positiveEvents') ?? 0).toLocaleString('en-GB') },
+        { label: 'Retirement count', value: PrestigeManager.getHistory().length },
+        { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.lifetimeCashEarned || 0} /> },
+        { label: 'Total distance travelled', value: formatDistance(achievementManager?.counter('miles') ?? 0) },
+        // Every departure and arrival that has happened, including the ones while you were away. Kept through a prestige.
+        { label: 'Total number of arrivals', value: (achievementManager?.counter('arrivals') ?? 0).toLocaleString('en-GB') },
+        { label: 'Total number of departures', value: (achievementManager?.counter('departures') ?? 0).toLocaleString('en-GB') },
+        { label: 'Total passenger count', value: (achievementManager?.counter('passengers') ?? 0).toLocaleString('en-GB') },
+        // Time the game has been open across every run (Terminal age is this run only)
+        { label: 'Total playtime', value: playtimeText(achievementManager?.counter('playtime') ?? 0) },
         { label: 'Total Reputation earned', value: Math.round(economyManager.progressionManager.lifetimeReputationEarned || 0).toLocaleString('en-GB') },
+        { label: 'VIPs welcomed', value: (achievementManager?.counter('vips') ?? 0).toLocaleString('en-GB') },
+        { label: 'Work button clicks', value: (achievementManager?.counter('work') ?? 0).toLocaleString('en-GB') },
     ]
 
     const getUpgradeStats = () => {
@@ -433,66 +434,15 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         const serviceCount = (purchasedDevelopments || []).filter(d => d.category === 'Service').length
             + upgrades.filter(u => u.category === 'Service').length
 
+        // Alphabetical by label, so a bonus is always easy to find rather than in whatever order it was coded in.
         const stats = [
-            { label: 'Connection Earnings Bonus', value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
-            { label: 'Food Category Bonus', value: sum('foodIncome') > 0 ? `+${Math.round(sum('foodIncome') * 100)}%` : '—' },
-            { label: 'Recreation Category Bonus', value: sum('recreationIncome') > 0 ? `+${Math.round(sum('recreationIncome') * 100)}%` : '—' },
-            { label: 'Shopping Category Bonus', value: sum('shoppingIncome') > 0 ? `+${Math.round(sum('shoppingIncome') * 100)}%` : '—' },
-            { label: 'Service Category Bonus', value: sum('serviceIncome') > 0 ? `+${Math.round(sum('serviceIncome') * 100)}%` : '—' },
-            { label: 'All Developments Bonus', value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
-            { label: 'Dev Continent Connections', value: sum('devContinentBoost') > 0 ? `+${Math.round(sum('devContinentBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
-            { label: 'Infrastructure Count Boost', value: sum('infrastructureDevBoost') > 0 ? `+${Math.round(sum('infrastructureDevBoost') * infraCount * 100)}% (${infraCount} items)` : '—' },
-            { label: 'Enterprise Count Boost', value: sum('enterpriseDevBoost') > 0 ? `+${Math.round(sum('enterpriseDevBoost') * enterpriseCount * 100)}% (${enterpriseCount} items)` : '—' },
-            { label: 'Service Count Boost', value: sum('serviceDevBoost') > 0 ? `+${Math.round(sum('serviceDevBoost') * serviceCount * 100)}% (${serviceCount} items)` : '—' },
-            { label: 'Continent Expansion Bonus', value: sum('continentExpansionBoost') > 0 ? `+${Math.round(sum('continentExpansionBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
-            { label: 'Country Expansion Bonus', value: sum('countryExpansionBoost') > 0 ? `+${(sum('countryExpansionBoost') * uniqueCountries * 100).toFixed(1)}% (${uniqueCountries} countries)` : '—' },
-            { label: 'Local Country Bonus', value: economyManager.getLocalCountryBoost() > 0 ? `+${Math.round(economyManager.getLocalCountryBoost() * 100)}%` : '—' },
-            { label: 'Small City Bonus', value: sum('smallCityBoost') > 0 ? `+${Math.round(sum('smallCityBoost') * 100)}%` : '—' },
-            { label: 'Arctic City Bonus', value: sum('arcticBoost') > 0 ? `+${Math.round(sum('arcticBoost') * 100)}%` : '—' },
-            { label: 'Equator City Bonus', value: sum('equatorBoost') > 0 ? `+${Math.round(sum('equatorBoost') * 100)}%` : '—' },
-            { label: 'Southern Hemisphere Bonus', value: sum('southernHemisphereBoost') > 0 ? `+${Math.round(sum('southernHemisphereBoost') * 100)}%` : '—' },
-            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(createdAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
-            { label: 'Current Season Boost', value: seasonUpgrade ? `+${Math.round(seasonUpgrade.effectValue * 100)}% (${seasonUpgrade.name})` : '—' },
-            { label: 'Current Month Boost', value: monthUpgrade ? `+${Math.round(monthUpgrade.effectValue * 100)}% (${monthUpgrade.name})` : '—' },
-            { label: 'Business Week Bonus', value: sum('businessWeekBoost') > 0 ? `+${Math.round(sum('businessWeekBoost') * 100)}%${isBusinessWeek ? ' ✓ active' : ''}` : '—' },
-            { label: 'Weekend Bonus', value: sum('weekendBoost') > 0 ? `+${Math.round(sum('weekendBoost') * 100)}%${isWeekend ? ' ✓ active' : ''}` : '—' },
-            ...(has('morningBoost') ? [{ label: 'Morning Bonus', value: `+${Math.round(economyManager.getUpgradeSum('morningBoost') * 100)}%${hour >= 6 && hour < 12 ? ' (Active)' : ' (Inactive)'}` }] : []),
             ...(has('afternoonBoost') ? [{ label: 'Afternoon Bonus', value: `+${Math.round(economyManager.getUpgradeSum('afternoonBoost') * 100)}%${hour >= 12 && hour < 18 ? ' (Active)' : ' (Inactive)'}` }] : []),
-            ...(has('eveningBoost') ? [{ label: 'Evening Bonus', value: `+${Math.round(economyManager.getUpgradeSum('eveningBoost') * 100)}%${hour >= 18 && hour < 22 ? ' (Active)' : ' (Inactive)'}` }] : []),
-            ...(has('nightBoost') ? [{ label: 'Night Bonus', value: `+${Math.round(economyManager.getUpgradeSum('nightBoost') * 100)}%${(hour >= 22 || hour < 6) ? ' (Active)' : ' (Inactive)'}` }] : []),
-            { label: 'Work Click Bonus', value: (count('workClickBonus') > 0 || PrestigeManager.owns('speedyConveyorBelts') || economyManager.hasUpgrade('workPerAchievement')) ? `×${economyManager.getWorkMultiplier(count('workClickBonus')).toFixed(2)} to click earnings` : '—' },
-            { label: 'Farewell Window', value: count('farewellWindowExtension') > 0 ? `${5 + count('farewellWindowExtension') * 5} minutes` : '—' },
-            { label: 'Farewell Rep Bonus', value: (has('farewellRepDoubled') || PrestigeManager.owns('oralHygiene')) ? `×${economyManager.getFarewellRepGain(1)} per farewell` : '—' },
-            {
-                label: 'Offline Earnings Cap', value: PrestigeManager.owns('automatedScheduling') ? 'No cap' : count('offlineCapExtension') === 0 ? '—' : (() => {
-                    const hours = 48 + count('offlineCapExtension') * 24
-                    if (hours >= 168) return '1 week'
-                    return `${Math.round(hours / 24)} days`
-                })()
-            },
-            { label: 'Dev Build Discount', value: sum('developmentDiscount') > 0 ? `-${Math.round(sum('developmentDiscount') * 100)}%` : '—' },
-            { label: 'Dev Upgrade Discount', value: sum('developmentUpgradeDiscount') > 0 ? `-${Math.round(sum('developmentUpgradeDiscount') * 100)}%` : '—' },
-            { label: 'Negative Event Reduction', value: sum('negativeEventReduction') > 0 ? `${Math.round(economyManager.getNegativeEventReduction() * 100)}% chance to skip` : '—' },
-            { label: 'Event Duration Extension', value: sum('bonusDurationExtension') > 0 ? `+${Math.round(sum('bonusDurationExtension') * 100)}% longer` : '—' },
-            { label: 'Delay Compensation Cut', value: sum('delayCompensationReduction') > 0 ? `-${Math.round(sum('delayCompensationReduction') * 100)}%` : '—' },
-            { label: 'Delay Rep Cost Reduction', value: sum('delayRepCostReduction') > 0 ? `-${sum('delayRepCostReduction')} rep` : '—' },
+            { label: 'All Developments Bonus', value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
+            { label: 'Arctic City Bonus', value: sum('arcticBoost') > 0 ? `+${Math.round(sum('arcticBoost') * 100)}%` : '—' },
+            { label: 'Business Week Bonus', value: sum('businessWeekBoost') > 0 ? `+${Math.round(sum('businessWeekBoost') * 100)}%${isBusinessWeek ? ' ✓ active' : ''}` : '—' },
             { label: 'City Reroll Discount', value: sum('rerollRepDiscount') > 0 ? `-${sum('rerollRepDiscount')} rep` : '—' },
-            { label: 'Daily Login Rep Bonus', value: sum('dailyLoginRep') > 0 ? `+${sum('dailyLoginRep')} rep/day` : '—' },
-            { label: 'Free Reroll on Rank Up', value: has('freeRerollOnRankUp') ? 'Active' : '—' },
-            { label: 'Free Rep on Rank Up', value: sum('freeRepOnRankUp') > 0 ? `+${sum('freeRepOnRankUp')} rep` : '—' },
-            { label: 'Positive Event Preference', value: has('positiveEventBoost') ? 'Active' : '—' },
-            { label: 'Extra City Choices on Rank Up', value: sum('skilledNegotiationTeams') > 0 ? `+${sum('skilledNegotiationTeams')} choices` : '—' },
-            {
-                // Each holiday upgrade carries its own effectValue (currently 5.0/+500% for all six, but this
-                // reads it rather than assuming a fixed figure, since a hardcoded "+100%" here previously
-                // understated the real bonus every one of these upgrades actually grants).
-                label: 'Special Day Bonus', value: (() => {
-                    const days = { christmasBoost: 'Christmas Day', valentinesBoost: "Valentine's Day", halloweenBoost: 'Halloween', fourthOfJulyBoost: '4th of July', easterBoost: 'Easter Sunday', newYearsBoost: "New Year's Day" }
-                    const owned = Object.keys(days).filter(k => has(k)).map(k => `${days[k]} +${Math.round(sum(k) * 100)}%`)
-                    if (owned.length === 0) return '—'
-                    return `${owned.join(', ')}${economyManager.getSpecialDayBonus() > 0 ? ' ✓ active' : ''}`
-                })()
-            },
+            { label: 'Connection Earnings Bonus', value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
+            { label: 'Continent Expansion Bonus', value: sum('continentExpansionBoost') > 0 ? `+${Math.round(sum('continentExpansionBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
             {
                 label: 'Continent Travel Packages', value: (() => {
                     const owned = upgrades.filter(u => u.effectType === 'continentBoost')
@@ -507,6 +457,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     return `${owned.length} ${owned.length === 1 ? 'country' : 'countries'}${same ? `, +${Math.round(owned[0].effectValue * 100)}% each` : ''}`
                 })()
             },
+            { label: 'Country Expansion Bonus', value: sum('countryExpansionBoost') > 0 ? `+${(sum('countryExpansionBoost') * uniqueCountries * 100).toFixed(1)}% (${uniqueCountries} countries)` : '—' },
+            { label: 'Current Month Boost', value: monthUpgrade ? `+${Math.round(monthUpgrade.effectValue * 100)}% (${monthUpgrade.name})` : '—' },
+            { label: 'Current Season Boost', value: seasonUpgrade ? `+${Math.round(seasonUpgrade.effectValue * 100)}% (${seasonUpgrade.name})` : '—' },
             {
                 // The daily bonus is a quarter of a day's income, doubled by Commemorative Displays and x10 with Better Interest Rates (bug #161)
                 label: 'Daily Login Cash', value: (() => {
@@ -517,8 +470,60 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     return `${pct}% of a day's income (${[doubled && 'Commemorative Displays ×2', interest && 'Better Interest Rates ×10'].filter(Boolean).join(', ')})`
                 })()
             },
-            { label: 'Work Reputation Chance', value: economyManager.getWorkRepChance() > 0.005 ? `${(economyManager.getWorkRepChance() * 100).toFixed(1)}% per click` : '—' },
+            { label: 'Daily Login Rep Bonus', value: sum('dailyLoginRep') > 0 ? `+${sum('dailyLoginRep')} rep/day` : '—' },
+            { label: 'Delay Compensation Cut', value: sum('delayCompensationReduction') > 0 ? `-${Math.round(sum('delayCompensationReduction') * 100)}%` : '—' },
+            { label: 'Delay Rep Cost Reduction', value: sum('delayRepCostReduction') > 0 ? `-${sum('delayRepCostReduction')} rep` : '—' },
+            { label: 'Dev Build Discount', value: sum('developmentDiscount') > 0 ? `-${Math.round(sum('developmentDiscount') * 100)}%` : '—' },
+            { label: 'Dev Continent Connections', value: sum('devContinentBoost') > 0 ? `+${Math.round(sum('devContinentBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
+            { label: 'Dev Upgrade Discount', value: sum('developmentUpgradeDiscount') > 0 ? `-${Math.round(sum('developmentUpgradeDiscount') * 100)}%` : '—' },
+            // Legal Loopholes - already baked into getRenameRepCost() wherever a development is renamed, but
+            // otherwise invisible: this is the only place that says so.
+            { label: 'Development Rename Discount', value: PrestigeManager.owns('legalLoopholes') ? '-50%' : '—' },
+            { label: 'Enterprise Count Boost', value: sum('enterpriseDevBoost') > 0 ? `+${Math.round(sum('enterpriseDevBoost') * enterpriseCount * 100)}% (${enterpriseCount} items)` : '—' },
+            { label: 'Equator City Bonus', value: sum('equatorBoost') > 0 ? `+${Math.round(sum('equatorBoost') * 100)}%` : '—' },
+            ...(has('eveningBoost') ? [{ label: 'Evening Bonus', value: `+${Math.round(economyManager.getUpgradeSum('eveningBoost') * 100)}%${hour >= 18 && hour < 22 ? ' (Active)' : ' (Inactive)'}` }] : []),
+            { label: 'Event Duration Extension', value: sum('bonusDurationExtension') > 0 ? `+${Math.round(sum('bonusDurationExtension') * 100)}% longer` : '—' },
+            { label: 'Extra City Choices on Rank Up', value: sum('skilledNegotiationTeams') > 0 ? `+${sum('skilledNegotiationTeams')} choices` : '—' },
             { label: 'Farewell Cash Bonus', value: has('personalImageBranding') ? "10% of the city's daily income" : '—' },
+            { label: 'Farewell Rep Bonus', value: (has('farewellRepDoubled') || PrestigeManager.owns('oralHygiene')) ? `×${economyManager.getFarewellRepGain(1)} per farewell` : '—' },
+            { label: 'Farewell Window', value: count('farewellWindowExtension') > 0 ? `${5 + count('farewellWindowExtension') * 5} minutes` : '—' },
+            { label: 'Food Category Bonus', value: sum('foodIncome') > 0 ? `+${Math.round(sum('foodIncome') * 100)}%` : '—' },
+            { label: 'Free Rep on Rank Up', value: sum('freeRepOnRankUp') > 0 ? `+${sum('freeRepOnRankUp')} rep` : '—' },
+            { label: 'Free Reroll on Rank Up', value: has('freeRerollOnRankUp') ? 'Active' : '—' },
+            { label: 'Infrastructure Count Boost', value: sum('infrastructureDevBoost') > 0 ? `+${Math.round(sum('infrastructureDevBoost') * infraCount * 100)}% (${infraCount} items)` : '—' },
+            { label: 'Local Country Bonus', value: economyManager.getLocalCountryBoost() > 0 ? `+${Math.round(economyManager.getLocalCountryBoost() * 100)}%` : '—' },
+            ...(has('morningBoost') ? [{ label: 'Morning Bonus', value: `+${Math.round(economyManager.getUpgradeSum('morningBoost') * 100)}%${hour >= 6 && hour < 12 ? ' (Active)' : ' (Inactive)'}` }] : []),
+            { label: 'Negative Event Reduction', value: sum('negativeEventReduction') > 0 ? `${Math.round(economyManager.getNegativeEventReduction() * 100)}% chance to skip` : '—' },
+            ...(has('nightBoost') ? [{ label: 'Night Bonus', value: `+${Math.round(economyManager.getUpgradeSum('nightBoost') * 100)}%${(hour >= 22 || hour < 6) ? ' (Active)' : ' (Inactive)'}` }] : []),
+            {
+                label: 'Offline Earnings Cap', value: PrestigeManager.owns('automatedScheduling') ? 'No cap' : count('offlineCapExtension') === 0 ? '—' : (() => {
+                    const hours = 48 + count('offlineCapExtension') * 24
+                    if (hours >= 168) return '1 week'
+                    return `${Math.round(hours / 24)} days`
+                })()
+            },
+            { label: 'Positive Event Preference', value: has('positiveEventBoost') ? 'Active' : '—' },
+            { label: 'Recreation Category Bonus', value: sum('recreationIncome') > 0 ? `+${Math.round(sum('recreationIncome') * 100)}%` : '—' },
+            { label: 'Service Category Bonus', value: sum('serviceIncome') > 0 ? `+${Math.round(sum('serviceIncome') * 100)}%` : '—' },
+            { label: 'Service Count Boost', value: sum('serviceDevBoost') > 0 ? `+${Math.round(sum('serviceDevBoost') * serviceCount * 100)}% (${serviceCount} items)` : '—' },
+            { label: 'Shopping Category Bonus', value: sum('shoppingIncome') > 0 ? `+${Math.round(sum('shoppingIncome') * 100)}%` : '—' },
+            { label: 'Small City Bonus', value: sum('smallCityBoost') > 0 ? `+${Math.round(sum('smallCityBoost') * 100)}%` : '—' },
+            { label: 'Southern Hemisphere Bonus', value: sum('southernHemisphereBoost') > 0 ? `+${Math.round(sum('southernHemisphereBoost') * 100)}%` : '—' },
+            {
+                // Each holiday upgrade carries its own effectValue (currently 5.0/+500% for all six, but this
+                // reads it rather than assuming a fixed figure, since a hardcoded "+100%" here previously
+                // understated the real bonus every one of these upgrades actually grants).
+                label: 'Special Day Bonus', value: (() => {
+                    const days = { christmasBoost: 'Christmas Day', valentinesBoost: "Valentine's Day", halloweenBoost: 'Halloween', fourthOfJulyBoost: '4th of July', easterBoost: 'Easter Sunday', newYearsBoost: "New Year's Day" }
+                    const owned = Object.keys(days).filter(k => has(k)).map(k => `${days[k]} +${Math.round(sum(k) * 100)}%`)
+                    if (owned.length === 0) return '—'
+                    return `${owned.join(', ')}${economyManager.getSpecialDayBonus() > 0 ? ' ✓ active' : ''}`
+                })()
+            },
+            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(createdAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
+            { label: 'Weekend Bonus', value: sum('weekendBoost') > 0 ? `+${Math.round(sum('weekendBoost') * 100)}%${isWeekend ? ' ✓ active' : ''}` : '—' },
+            { label: 'Work Click Bonus', value: (count('workClickBonus') > 0 || PrestigeManager.owns('speedyConveyorBelts') || economyManager.hasUpgrade('workPerAchievement')) ? `×${economyManager.getWorkMultiplier(count('workClickBonus')).toFixed(2)} to click earnings` : '—' },
+            { label: 'Work Reputation Chance', value: economyManager.getWorkRepChance() > 0.005 ? `${(economyManager.getWorkRepChance() * 100).toFixed(1)}% per click` : '—' },
         ]
 
         return stats.filter(s => s.value !== '—')
