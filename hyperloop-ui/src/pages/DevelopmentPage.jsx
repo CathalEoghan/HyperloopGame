@@ -178,7 +178,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
                             onClick={() => { playClickSound2(); setActiveCategory(cat) }}
                             onMouseEnter={() => playHoverSound()}>
-                            {cat} <span className="category-count">{categoryTotal(cat)}</span>
+                            {cat} <span className="category-count">{categoryCompleted(cat)} / {categoryTotal(cat)}</span>
                         </button>
                     ))}
                 </div>
@@ -602,7 +602,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 {sortedPurchased.length > 0 && (
                     <>
                         <h2 className="section-header" style={{ top: purchased.length === 0 ? '0' : '44px' }}>
-                            <span className="section-title">Completed developments <span className="section-count">{categoryCompleted(activeCategory)} / {categoryTotal(activeCategory)}</span></span>
+                            <span className="section-title"><span className="section-label-pill">Completed developments</span> <span className="section-count">{categoryCompleted(activeCategory)} / {categoryTotal(activeCategory)}</span></span>
                         </h2>
                         <div className="development-row">
                             {sortedPurchased.map(development => {
@@ -650,7 +650,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 )}
 
                 <h2 className="section-header section-header-available" style={{ marginTop: sortedPurchased.length === 0 ? '8px' : '24px', borderTop: sortedPurchased.length === 0 ? 'none' : '2px solid #ddd', top: sortedPurchased.length === 0 ? '0' : '44px' }}>
-                    <span className="section-title">Available to build <span className="section-count">{sortedAvailable.length}</span></span>
+                    <span className="section-title"><span className="section-label-pill">Available to build</span> <span className="section-count">{sortedAvailable.length}</span></span>
                     {available.length > 0 && (
                         <span className="bulk-buy-row">
                             <button className="bulk-buy-btn" style={{ opacity: developAllPlan.toBuy.length > 0 ? 1 : 0.5 }}

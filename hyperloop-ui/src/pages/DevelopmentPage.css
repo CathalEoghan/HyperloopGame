@@ -101,8 +101,8 @@
   color: white;
 }
 
-/* How many developments/upgrades live in this category in total (locked or not) - a quieter colour than the
-   label itself so the count reads as supporting detail, not a second label. */
+/* "completed / total" for this category (same framing as the "Completed developments" header badge) - a
+   quieter colour than the label itself so the count reads as supporting detail, not a second label. */
 .category-count {
   opacity: 0.55;
   font-size: 0.78rem;
@@ -190,6 +190,22 @@
   display: inline-flex;
   align-items: center;
   gap: 12px;
+}
+
+/* "Completed developments" / "Available to build" as an accent-filled tag rather than plain text sitting
+   next to its count badge. Square corners (not the fully-rounded pill shape "Develop all affordable" and
+   the count badge use) so this reads as a distinct label, not just another chip in the same row. font-size
+   is 1em - the same size as the heading text it replaces, not larger or smaller - so the tag sits at home
+   in the row instead of fighting its neighbours for attention. --ui-accent-contrast (not a fixed colour)
+   picks readable text for the equipped theme: most themes' accent is light enough for the usual near-black
+   text, but a dark one (Gingerbread's brown, among others) would make dark text disappear, so that theme's
+   own text turns white instead - see applyCosmetics in utils/cosmetics.js. */
+.section-label-pill {
+    background: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-contrast, #222222);
+    padding: 4px 14px;
+    border-radius: 5px;
+    font-size: 1em;
 }
 
 .section-count {

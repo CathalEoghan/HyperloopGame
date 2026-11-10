@@ -113,6 +113,14 @@ export class AchievementManager {
         progressionManager.purchasedUpgrades.forEach(u => { if (!NOT_BUILT.has(u.effectType)) count(u) })
         let likes = 0
         try { likes = (JSON.parse(localStorage.getItem('hyperloop_hyperlink_liked')) || []).length } catch { likes = 0 }
+        // Every general theme id the player owns from the Shop (bought individually or as part of a bundle -
+        // either way it ends up in this same 'generalTheme:<id>' list, see utils/cosmetics.js), for achievements
+        // like I Wanna Be a Rockstar that want a theme purchased rather than currently equipped.
+        let ownedThemes = []
+        try {
+            const owned = JSON.parse(localStorage.getItem('hyperloop_cosmetics'))?.owned
+            if (Array.isArray(owned)) ownedThemes = owned.filter(k => typeof k === 'string' && k.startsWith('generalTheme:')).map(k => k.slice('generalTheme:'.length))
+        } catch { ownedThemes = [] }
         const cities = progressionManager.purchasedCities
         // Everything built, by name (developments and upgrades alike)
         const builtNames = [
@@ -136,6 +144,7 @@ export class AchievementManager {
             citiesAndDevUpgrades: this.counter('devUpgrades') + this.counter('cityUpgrades'),
             builds,
             builtNames,
+            ownedThemes,
             adCampaignsOwned: progressionManager.purchasedUpgrades.filter(u => u.effectType === 'countryAdvertisingBoost').length,
             adCampaignsTotal: AD_CAMPAIGN_TOTAL,
             passengers: this.counter('passengers'),

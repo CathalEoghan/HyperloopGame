@@ -2121,6 +2121,11 @@ function App() {
           }}
           onRemove={(development) => {
             unlockAchievement('hereTodayGoneTomorrow')
+            // Since the Ducks Left: checked at the moment of removal, not as a state check, since once the
+            // Petting Zoo is gone there's no way to tell "removed" from "never built" from the saved state alone.
+            if (development.name === 'Petting Zoo' && progressionManager.purchasedCities[0]?.name === 'New York' && isOwned(cosmetics, 'generalTheme', 'duck')) {
+              unlockAchievement('sinceTheDucksLeft')
+            }
             // development is the category (e.g. "Pharmacy"); a removed development's custom name may already be gone, so it isn't used
             const removedData = { development: development.name }
             hyperLinkTriggerRef.current = { type: 'development_removed', data: removedData }
@@ -2668,11 +2673,14 @@ function App() {
           repPerLike={PrestigeManager.owns('cultOfCelebrity') ? 1 : 0}
           // Cult of Celebrity: liking a post gives 1 Reputation (likes are permanent, so it can't be farmed)
           onLikeReward={(postId) => {
-            // A post from the account with the developer's photo: liking it is the Cameo achievement
+            // A post from the account with the developer's photo: liking it is the Cameo achievement.
+            // Orange is the New Jack: the poster's displayName is a random "<first name> <surname>" (see
+            // hyperLinkEngine.js) - only the first name counts, so "Jackson"/"Jackie" don't also qualify.
             try {
               const liked = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]').find(p => p.id === postId);
               if (liked?.usedPfpId === CAMEO_PFP_ID) unlockAchievement('cameo');
-            } catch { /* feed unreadable: no cameo this time */ }
+              if (liked?.displayName?.split(' ')[0] === 'Jack') unlockAchievement('orangeIsTheNewJack');
+            } catch { /* feed unreadable: no achievement check this time */ }
             // Free Wi-Fi: this like is now in the running for a positive event (a post won't trigger one on
             // its own - liking is what gives it a chance). Likes are permanent, so this can't be farmed either.
             if (economyManager.hasUpgrade('likePositiveEventChance') && Math.random() < economyManager.getUpgradeSum('likePositiveEventChance')) {

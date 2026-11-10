@@ -220,18 +220,42 @@
     object-fit: cover;
     border-radius: 10px;
 }
-.achievement-card-emoji { width: 22px; height: 22px; object-fit: contain; border: none; }
-.achievement-card-logo-locked img { filter: grayscale(1) brightness(0.9); opacity: 0.6; }
-.achievement-card-lock {
+/* Qualified with the parent class for the same specificity reason as .achievement-card-logo .achievement-card-lock
+   below - otherwise .achievement-card-logo img's own width/height: 100% rule would stretch this trophy/padlock
+   fallback glyph to fill the whole 48x48 box instead of sitting as a small centred icon. */
+.achievement-card-logo .achievement-card-emoji { width: 22px; height: 22px; object-fit: contain; border: none; }
+/* Only dims a real locked achievement's own artwork - not the plain padlock glyph shown in its place when
+   there's no artwork yet (.achievement-card-emoji; the corner badge below is a <span>, not an img, so it's
+   never matched here regardless). */
+.achievement-card-logo-locked img:not(.achievement-card-emoji) { filter: grayscale(1) brightness(0.9); opacity: 0.6; }
+/* padlock.png is itself a mid-grey icon (made to sit on a dark button elsewhere in the app), which reads as
+   washed-out here on a light background - brightness(0) solves it the same way close.png gets darkened for a
+   light background (see .modal-close-icon-dark in App.css), making it a crisp solid black. */
+.achievement-card-logo-locked .achievement-card-emoji { filter: brightness(0); }
+/* Qualified with the parent class (not just .achievement-card-lock alone) so this beats .achievement-card-logo
+   img's own width/height: 100% rule on specificity - without it the badge was stretching to fill the whole
+   48x48 logo box instead of sitting as a small corner badge, hiding the achievement's own artwork underneath.
+   Drawn as a mask (like HyperLink's heart icon) rather than an <img> + filter: brightness(0) - padlock.png has
+   its own background chip behind it (border + #eaeaea fill), and a filter darkens that whole chip to a solid
+   black blob along with the icon, losing the padlock shape entirely. The mask only colours the icon itself. */
+.achievement-card-logo .achievement-card-lock {
     position: absolute;
     right: -5px;
     bottom: -5px;
     width: 14px;
     height: 14px;
-    object-fit: contain;
     border: 1px solid #d0d0d0;
     padding: 2px;
     border-radius: 50%;
-    background: #eaeaea;
+    background-color: #eaeaea;
     box-sizing: content-box;
+}
+.achievement-card-lock::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+    -webkit-mask: var(--lock-icon) center / contain no-repeat;
+    mask: var(--lock-icon) center / contain no-repeat;
 }

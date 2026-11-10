@@ -112,10 +112,18 @@
     letter-spacing: 1px;
 }
 
-/* "0/hr · off timetable" is longer than an amount, so it is set tighter to sit comfortably in the card */
+/* "0/hr · off timetable" and "HOME TERMINAL" are both longer than an amount, so this tightens either to fit
+   comfortably in the card - shared by both, since it's only about length, not meaning. */
 .city-income-strip-off {
     letter-spacing: 0;
     font-size: 0.66rem;
+}
+
+/* Off timetable specifically (not the home terminal, which is expected to earn nothing) reads as a warning:
+   red, not the theme's gold/amber accent, so a glance down a row of cards catches an earning-nothing city as
+   a problem rather than reading it as just another income figure in a different shade. */
+.city-income-strip-warning {
+    color: #e04444;
 }
 
 /* Country headers */
@@ -247,6 +255,11 @@
     align-items: center;
     flex-wrap: wrap;
     gap: 8px;
+    /* Plain h1s default to a much bigger font-size than Development's h2 .section-header (1.1rem), which made
+       this page's "Connected cities" / "Cities available to connect" pills (font-size: 1em, so they track
+       whatever their heading uses) noticeably larger than Development's "Completed developments" / "Available
+       to build" ones. Matching that same 1.1rem here keeps both pages' section-label-pills the same size. */
+    font-size: 1.1rem;
 }
 
 /* The "Connect all affordable" button sits right in the header, next to the count it acts on, with a bit more
@@ -262,6 +275,22 @@
     font-weight: bold;
     padding: 2px 8px;
     border-radius: 10px;
+}
+
+/* "Connected cities" / "Cities available to connect" as an accent-filled tag rather than plain text sitting
+   next to their badges. Square corners (not the fully-rounded pill shape "Connect all affordable" and the
+   count badges use) so this reads as a distinct label, not just another chip in the same row. font-size is
+   1em - the same size as the heading text it replaces, not larger or smaller - so the tag sits at home in
+   the row instead of fighting its neighbours for attention. --ui-accent-contrast (not a fixed colour) picks
+   readable text for the equipped theme: most themes' accent is light enough for the usual near-black text,
+   but a dark one (Gingerbread's brown, among others) would make dark text disappear, so that theme's own
+   text turns white instead - see applyCosmetics in utils/cosmetics.js. */
+.section-label-pill {
+    background: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-contrast, #222222);
+    padding: 4px 14px;
+    border-radius: 5px;
+    font-size: 1em;
 }
 
 /* Stat boxes */

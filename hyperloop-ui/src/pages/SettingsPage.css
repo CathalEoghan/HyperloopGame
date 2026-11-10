@@ -8,11 +8,26 @@
     font-family: 'Inter', sans-serif;
 }
 
+/* Matches the accent-filled .section-label-pill motif used on Cities/Development ("Connected cities",
+   "Completed developments") instead of sitting as plain text - --ui-accent-contrast (not a fixed colour)
+   keeps the text readable against whichever theme's accent is equipped, same as those labels. */
 .settings-title {
-    font-size: 1.6rem;
-    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-contrast, #222222);
+    font-size: 1.5rem;
+    font-weight: 800;
+    padding: 8px 20px;
+    border-radius: 8px;
     margin: 0 0 24px;
-    color: #111;
+}
+
+.settings-title-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
 }
 
 .settings-section {

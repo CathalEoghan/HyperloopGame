@@ -55,6 +55,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [, setTimetableTick] = useState(0)   // re-draws the card once a departure has been added or moved
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)
     const [showCityBoostTip, setShowCityBoostTip] = useState(null) // the badge being hovered
+    const [showBulkBuyTip, setShowBulkBuyTip] = useState(null) // the Connect all affordable button, while hovered
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
     // then they already know how connecting and scheduling works.
     const [showIntro, setShowIntro] = useState(() =>
@@ -83,6 +84,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     )
     const connectedAndBuilding = [...purchased, ...underConstruction]
 
+    // Same grouping the continent filter pills use, reused for the "connected / total" progress badge so a
+    // continent's number always means the same thing there as it does in the filter itself.
+    const cityInContinent = (city, cont) => cont === 'All' ? true : city.continent === cont
+    const continentCityTotal = (cont) => allCities.filter(c => cityInContinent(c, cont)).length
+    const continentCityConnected = (cont) => purchased.filter(c => cityInContinent(c, cont)).length
+
     // What "Connect all affordable" would spend, right now, on the whole available list - regardless of the
     // search box or the continent filter, since those only narrow what's shown, not what the button means.
     // Connecting never costs Reputation, and a city's cost doesn't change as others are connected, so this is
@@ -92,6 +99,17 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         city => ({ cash: constructionManager.calculateTierConnectionCost(city) }),
         { cash: balance },
     )
+    // What the "Connect all affordable" hover preview lists: which cities it would actually buy, cheapest
+    // first (planBulkBuy's own order), so a player can check it isn't about to spend on three Tier 1s instead
+    // of holding out for a Tier 3 - the button itself only ever shows the total.
+    const connectAllLines = connectAllPlan.toBuy.length > 0
+        ? [
+            `${connectAllPlan.toBuy.length} ${connectAllPlan.toBuy.length === 1 ? 'city' : 'cities'}`,
+            ...connectAllPlan.toBuy.map(city =>
+                `${city.name} — £${constructionManager.calculateTierConnectionCost(city).toLocaleString('en-GB', { maximumFractionDigits: 0 })}`),
+            `Total: £${connectAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
+        ]
+        : []
     const connectAllAffordable = () => {
         playClickSound2()
         const pm = constructionManager.progressionManager
@@ -249,7 +267,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         </div>
                     )}
                     {!isUnderConstruction && !isAvailable && (
-                        <div className={`city-income-strip${(offTimetable || isHome) ? ' city-income-strip-off' : ''}`}
+                        <div className={`city-income-strip${(offTimetable || isHome) ? ' city-income-strip-off' : ''}${offTimetable ? ' city-income-strip-warning' : ''}`}
                             title={isHome ? 'Your home terminal: it earns no income of its own' : offTimetable ? 'Not on the timetable: it earns nothing until it has a scheduled departure' : undefined}>
                             {isHome
                                 ? 'HOME TERMINAL'
@@ -611,8 +629,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     <div className="cities-connected-section">
                         <div className="section-header-row">
                             <h1 className="purchasedCitiesHeader">
-                                Connected {filteredBuilt.length === 1 ? 'city' : 'cities'}
-                                <span className="city-count-badge">{filteredBuilt.length}</span>
+                                <span className="section-label-pill">Connected {filteredBuilt.length === 1 ? 'city' : 'cities'}</span>
+                                <span className="city-count-badge">{continentCityConnected(activeContinent)} / {continentCityTotal(activeContinent)}</span>
                                 <span className="city-count-badge" style={{ background: '#555' }}>{builtCountryCount} {builtCountryCount === 1 ? 'country' : 'countries'}</span>
                             </h1>
                             {!flatList && (
@@ -632,7 +650,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <strong><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />{formatPerHour(totalIncome)}/hr</strong>
                             </div>
                             <div className="city-stat-box" style={{ cursor: 'var(--cursor-help, help)' }} title="Every 2 Reputation you currently hold is worth +1% to city and development income.">
-                                <span className="city-stat-label">Reputation bonus</span>
+                                <span className="city-stat-label" style={{ color: 'white' }}>Reputation bonus:</span>
                                 <strong>+{Math.round(economyManager.getReputationIncomeBonus() * 100)}%</strong>
                             </div>
                         </div>
@@ -653,12 +671,15 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     <div className="cities-available-section">
                         <div className="section-header-row">
                             <h1 className="availableCitiesHeader">
-                                Cities available to connect
+                                <span className="section-label-pill">Cities available to connect</span>
                                 <span className="city-count-badge">{filteredAvailable.length}</span>
-                                <button className="bulk-buy-btn" style={{ opacity: connectAllPlan.toBuy.length > 0 ? 1 : 0.5 }}
-                                    onMouseEnter={() => playHoverSound()} onClick={connectAllAffordable}>
+                                <button className="bulk-buy-btn" style={{ opacity: connectAllPlan.toBuy.length > 0 ? 1 : 0.5, position: 'relative' }}
+                                    onMouseEnter={(e) => { playHoverSound(); setShowBulkBuyTip(e.currentTarget) }}
+                                    onMouseLeave={() => setShowBulkBuyTip(null)}
+                                    onClick={connectAllAffordable}>
                                     Connect all affordable
                                     {connectAllPlan.toBuy.length > 0 && <span className="bulk-buy-cost">(<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{connectAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</span>}
+                                    <BoostTooltip anchor={showBulkBuyTip} lines={connectAllLines} />
                                 </button>
                             </h1>
                             {!flatList && (

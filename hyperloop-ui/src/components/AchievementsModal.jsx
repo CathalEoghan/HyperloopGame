@@ -97,7 +97,7 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                                         {logo
                                             ? <img src={logo} alt="" loading="lazy" />
                                             : <img src={done ? trophyIcon : padlockIcon} alt="" className="achievement-card-emoji" />}
-                                        {logo && !done && <img src={padlockIcon} alt="" className="achievement-card-lock" />}
+                                        {logo && !done && <span className="achievement-card-lock" style={{ '--lock-icon': `url(${padlockIcon})` }} aria-hidden="true" />}
                                     </span>
                                     <div className="achievement-card-text">
                                         <span className="achievement-card-name">{a.name}</span>

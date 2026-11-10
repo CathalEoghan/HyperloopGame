@@ -19,6 +19,11 @@ const connectedWithDeveloped = (city, ...devs) => ctx => ctx.cityNames.includes(
 // (they're not in ctx.builtNames, which is only developments and regular upgrades), so this unlocks the
 // first time the city is connected on or after buying it.
 const connectedWithPrestige = (city, prestigeId) => ctx => ctx.cityNames.includes(city) && PrestigeManager.owns(prestigeId)
+// A development/upgrade built together with owning a Prestige upgrade - same reasoning as connectedWithPrestige
+const developedWithPrestige = (dev, prestigeId) => ctx => ctx.builtNames.includes(dev) && PrestigeManager.owns(prestigeId)
+// A development/upgrade built together with having a general theme purchased from the Shop (owned, not
+// necessarily equipped - ctx.ownedThemes is every generalTheme id the player owns, see buildContext)
+const developedWithTheme = (dev, themeId) => ctx => ctx.builtNames.includes(dev) && ctx.ownedThemes.includes(themeId)
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 // A loop line's length is in km here, whatever the player's Distance setting
 const LONG_LOOP_KM = 10000
@@ -64,6 +69,8 @@ export const ACHIEVEMENTS = [
     { id: 'socialMediaAddict', group: 'Hyper-Link', name: 'Social Media Addict', description: 'Like 100 Hyper-Link posts.', check: atLeast('likes', 100) },
     { id: 'doomscroller', group: 'Hyper-Link', name: 'Doomscroller', description: 'Like 250 Hyper-Link posts.', check: atLeast('likes', 250) },
     { id: 'cameo', group: 'Hyper-Link', name: 'Cameo', description: 'Feeling conceited?' },
+    // No check: unlocked in App.jsx's onLikeReward, the same event-achievement pattern as Cameo above
+    { id: 'orangeIsTheNewJack', group: 'Hyper-Link', name: 'Orange is the New Jack', description: 'Like a Hyper-Link post from someone called Jack.' },
     { id: 'shutUp', group: 'Hyper-Link', name: 'Shut Up!', description: 'Mute Hyper-Link.' },
 
     // Farewells
@@ -159,6 +166,16 @@ export const ACHIEVEMENTS = [
     // Advanced Engineering is a Prestige upgrade, not a development - it's permanent once bought, so this
     // unlocks the first time Gothenburg is connected on or after buying it (see connectedWithPrestige above).
     { id: 'maceToTheFace', group: 'Combinations', name: 'Mace to the Face', description: 'Have Gothenburg connected and the Advanced Engineering Prestige upgrade unlocked at any one time.', check: connectedWithPrestige('Gothenburg', 'advancedEngineering') },
+    { id: 'iWannaBeARockstar', group: 'Combinations', name: 'I Wanna Be a Rockstar', description: 'Have Rock Bar developed and the Rockstar general theme purchased at any one time.', check: developedWithTheme('Rock Bar', 'rockstar') },
+    { id: 'costumeParty', group: 'Combinations', name: 'Costume Party', description: 'Have both Costume Store and Halloween Fair developed at any one time.', check: developed('Costume Store', 'Halloween Fair') },
+    { id: 'familyGuy', group: 'Combinations', name: 'Family Guy', description: 'Have both Expanded Family Rooms developed and the Playroom general theme purchased at any one time.', check: developedWithTheme('Expanded Family Rooms', 'playroom') },
+    { id: 'vanityFare', group: 'Combinations', name: 'Vanity Fare', description: 'Have both Personal Styling Retinue launched and the Global Ticket Cuts prestige upgrade unlocked at any one time.', check: developedWithPrestige('Personal Styling Retinue', 'globalTicketCuts') },
+    { id: 'newHeights', group: 'Combinations', name: 'New Heights', description: 'Have both Observation Deck developed and Kathmandu connected at any one time.', check: developedAndConnected('Observation Deck', 'Kathmandu') },
+    { id: 'moreThanACeiling', group: 'Combinations', name: 'More Than a Ceiling', description: 'Have both Palatial Interior Renovations developed and Boston connected at any one time.', check: developedAndConnected('Palatial Interior Renovations', 'Boston') },
+    { id: 'betterCallFall', group: 'Combinations', name: 'Better Call Fall!', description: 'Have both Autumn Getaway Packages and Customer Service Centre developed at any one time.', check: developed('Autumn Getaway Packages', 'Customer Service Centre') },
+    // No check: an event achievement, unlocked in App.jsx's onRemove at the moment Petting Zoo is removed -
+    // a plain state check can't tell "removed" from "never built" once the development is gone.
+    { id: 'sinceTheDucksLeft', group: 'Combinations', name: 'Since the Ducks Left', description: 'With New York as your home city, disconnect the Petting Zoo development while having the Duck theme purchased.' },
 
     // Secrets
     { id: 'surprise', group: 'Secrets', name: 'Surprise!', description: 'Claim the surprise in the credits section.' },
