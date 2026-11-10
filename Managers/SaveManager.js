@@ -495,7 +495,9 @@ export function loadGame(progressionManager, rankManager) {
             if (totalCashEarned >= grantXp) { totalCashEarned -= grantXp; bonusXp = grantXp }
         }
         progressionManager.totalCashEarned = totalCashEarned
-        rankManager.rank = save.rank ?? 1
+        // Kept to the game's own range: a rank of 0 or above the top rank (only possible in an edited save) is put back
+        // inside it, so the XP bar and rank checks have a real rank to work from
+        rankManager.rank = Math.min(MAX_RANK, Math.max(1, Math.floor(save.rank ?? 1)))
         rankManager.bonusXp = bonusXp
         rankManager.convertCashToXP(totalCashEarned)
 
