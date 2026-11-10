@@ -100,10 +100,21 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                     {timeDisplay}
                 </p>
                 {autoSend ? (
-                    <p className="farewell-message" data-testid="video-message">
-                        <img src={cameraIcon} alt="" style={{ width: '15px', height: '15px', verticalAlign: 'middle', marginRight: '4px', border: 'none' }} />
-                        Sending your video {isArrival ? 'welcome' : 'message'}… (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
-                    </p>
+                    // A static line used to just sit there for the full 2.5s with nothing to show it was actually
+                    // doing anything - a pulsing "recording" dot plus a fill bar timed to the same 2.5s give it
+                    // something to look at, the same way the real send happens on a visible clock.
+                    <div className="farewell-sending">
+                        <p className="farewell-message farewell-sending-text" data-testid="video-message">
+                            <span className="farewell-sending-dot" aria-hidden="true" />
+                            <img src={cameraIcon} alt="" style={{ width: '15px', height: '15px', verticalAlign: 'middle', marginRight: '4px', border: 'none' }} />
+                            Sending your video {isArrival ? 'welcome' : 'message'}
+                            <span className="farewell-sending-ellipsis" aria-hidden="true">
+                                <span>.</span><span>.</span><span>.</span>
+                            </span>
+                            {' '}(+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
+                        </p>
+                        <div className="farewell-sending-bar"><div className="farewell-sending-bar-fill" /></div>
+                    </div>
                 ) : (
                     <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={() => {
                         if (sentRef.current) return
