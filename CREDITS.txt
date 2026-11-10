@@ -989,6 +989,8 @@ event.png - <a href="https://www.flaticon.com/free-icons/reminder" title="remind
 decrease.png - <a href="https://www.flaticon.com/free-icons/decrease" title="decrease icons">Decrease icons created by Andrean Prabowo - Flaticon</a>
 increase.png - <a href="https://www.flaticon.com/free-icons/increase" title="increase icons">Increase icons created by Gajah Mada - Flaticon</a>
 graduation.png - <a href="https://www.flaticon.com/free-icons/university" title="university icons">University icons created by Magnific - Flaticon</a>
+guide.png - <a href="https://www.flaticon.com/free-icons/open-book" title="open book icons">Open book icons created by Karyative - Flaticon</a>
+
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
