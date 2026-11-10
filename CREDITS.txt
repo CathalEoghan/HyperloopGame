@@ -998,6 +998,7 @@ sound.png - <a href="https://www.flaticon.com/free-icons/sound-on" title="sound 
 heart.png - <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Magnific - Flaticon</a>
 sparkle.png - <a href="https://www.flaticon.com/free-icons/sparkle" title="sparkle icons">Sparkle icons created by Magnific - Flaticon</a>
 camera.png - <a href="https://www.flaticon.com/free-icons/cinema" title="cinema icons">Cinema icons created by Magnific - Flaticon</a>
+reply.png - <a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by apien - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)

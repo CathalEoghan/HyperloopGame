@@ -211,7 +211,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <div
                                     className="total-revenue-banner"
                                     style={{ cursor: 'var(--cursor-help, help)' }}
-                                    onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `Every 2 Reputation you currently hold is worth +1% to development and city income - spend it on a reroll, a rename or Early Retirement and this drops too.` })}
+                                    onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `Every 2 Reputation you currently hold is worth +1% to development and city income.` })}
                                     onMouseLeave={() => setShowBusyTooltip(null)}
                                 >
                                     <span>Reputation bonus:</span>
