@@ -527,13 +527,29 @@
     user-select: none;
 }
 
-.hyperlink-likes-icon,
 .hyperlink-replies-icon {
     width: 12px;
     height: 12px;
     object-fit: contain;
     vertical-align: middle;
     border: none;
+}
+
+/* The like heart is a solid black icon, drawn as a CSS mask instead of a plain <img> (same technique as
+   HomePage's globe-toggle eye) so its colour can follow .hyperlink-likes-active - a plain <img> ignores the
+   `color` property that used to redden the old ❤ text glyph on like. */
+.hyperlink-likes-icon {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    vertical-align: middle;
+    background-color: #000000;
+    -webkit-mask: var(--heart-icon) center / contain no-repeat;
+    mask: var(--heart-icon) center / contain no-repeat;
+}
+
+.hyperlink-likes-active .hyperlink-likes-icon {
+    background-color: #cf3a2c;
 }
 
 .hyperlink-like-animation {

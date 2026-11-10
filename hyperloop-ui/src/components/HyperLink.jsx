@@ -8,7 +8,7 @@ import signalIcon from '../assets/misc/signal.png'
 import bellIcon from '../assets/misc/bell.png'
 import closeIcon from '../assets/misc/close.png'
 import heartIcon from '../assets/misc/heart.png'
-import chatIcon from '../assets/misc/chat.png'
+import commentIcon from '../assets/misc/comment.png'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { defaultPfp, MALE_PFPS, FEMALE_PFPS, officialPfp } from '../assets/hyperLinkAssets.js'
 export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
@@ -220,9 +220,9 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                                     onClick={(e) => likePost(post.id, e)}
                                                     style={{ cursor: isLiked ? 'var(--cursor-default, default)' : 'var(--cursor-pointer, pointer)' }}
                                                 >
-                                                    <img src={heartIcon} alt="" className="hyperlink-likes-icon" /> {displayLikes}
+                                                    <span className="hyperlink-likes-icon" style={{ '--heart-icon': `url(${heartIcon})` }} aria-hidden="true" /> {displayLikes}
                                                 </span>
-                                                <span className="hyperlink-replies"><img src={chatIcon} alt="" className="hyperlink-replies-icon" /> {displayReplies}</span>
+                                                <span className="hyperlink-replies"><img src={commentIcon} alt="" className="hyperlink-replies-icon" /> {displayReplies}</span>
                                             </div>
                                         </div>
                                     </div>

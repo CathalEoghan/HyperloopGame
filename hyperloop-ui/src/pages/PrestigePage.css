@@ -326,16 +326,18 @@
     color: #aaaaaa;
 }
 
-/* Bought */
+/* Bought - text colour follows --ui-accent-contrast (set from the equipped theme's own accent, see
+   applyThemeVars in utils/cosmetics.js) so a dark-brown theme like Gingerbread gets white text here instead
+   of the usual near-black, the same way the rest of the app picks readable text against its accent colour. */
 .prestige-node-owned {
     background: linear-gradient(160deg, color-mix(in srgb, var(--ui-accent, #f5a623) 85%, white) 0%, color-mix(in srgb, var(--ui-accent, #f5a623) 90%, black) 100%);
     border-color: color-mix(in srgb, var(--ui-accent, #f5a623) 55%, white);
-    color: #111111;
+    color: var(--ui-accent-contrast, #111111);
     box-shadow: 0 0 18px color-mix(in srgb, var(--ui-accent, #f5a623) 35%, transparent);
 }
 
 .prestige-node-owned .prestige-node-desc {
-    color: #1a1a1a;
+    color: color-mix(in srgb, var(--ui-accent-contrast, #111111) 80%, transparent);
 }
 
 .prestige-node-owned .prestige-node-tag {
@@ -539,10 +541,9 @@
     max-width: none;
 }
 
-/* Same-height cards across a row */
-.prestige-slot .prestige-node {
-    flex: 1;
-}
+/* Cards are already pinned to a uniform height via .prestige-node's own `height: var(--card-h)` above; a
+   `flex: 1` override here used to let a card's box stretch/shrink with its row's flex layout instead, which
+   is what made one row of locked cards render shorter than the rest (bug: inconsistent card sizes). */
 
 /* Buy button */
 .prestige-buy-btn {
