@@ -88,7 +88,8 @@ const TIPS = [
     "A gate can't be reused for 30 minutes after a loop leaves it - plan your timetable with some spacing.",
     "Developments earn more income the busier your terminal is - both departures and arrivals contribute to passenger footfall.",
     "Check the Guide in Settings for a full rundown of every mechanic - Working, Ranking Up, Reputation, Prestige, and more.",
-    "Turn on Browser Notifications in Settings to get alerted about departures, arrivals, delays, events or rank-ups even when the tab's in the background."
+    "Turn on Browser Notifications in Settings to get alerted about departures, arrivals, delays, events or rank-ups even when the tab's in the background.",
+    "Hold onto your Reputation when you can - every 2 you're sitting on is worth +1% to city and development income, shown as \"Reputation bonus\" on both pages."
 ]
 
 function LoadingScreen({ onComplete, globeReady = true }) {

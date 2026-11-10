@@ -631,6 +631,10 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <span className="city-stat-label">City income</span>
                                 <strong><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />{formatPerHour(totalIncome)}/hr</strong>
                             </div>
+                            <div className="city-stat-box" style={{ cursor: 'var(--cursor-help, help)' }} title="Every 2 Reputation you currently hold is worth +1% to city and development income - spend it on a reroll, a rename or Early Retirement and this drops too.">
+                                <span className="city-stat-label">Reputation bonus</span>
+                                <strong>+{Math.round(economyManager.getReputationIncomeBonus() * 100)}%</strong>
+                            </div>
                         </div>
                         {flatList
                             ? <div className="city-row">{filteredPurchased.map(city => renderCityCard(city, false, true))}</div>

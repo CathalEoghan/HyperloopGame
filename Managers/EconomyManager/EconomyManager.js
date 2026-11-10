@@ -240,6 +240,14 @@ export class EconomyManager {
         return this.progressionManager.purchasedUpgrades.some(u => u.effectType === effectType);
     }
 
+    // Every 2 Reputation currently banked is worth +1% to both development and city income (uncapped - Reputation
+    // can run well past what any other single bonus in the game reaches). It reads the live balance rather than
+    // a running total ever earned, so spending Reputation on a reroll, a rename or Early Retirement is a genuine
+    // trade-off: it costs you this bonus too, not just the Reputation itself.
+    getReputationIncomeBonus() {
+        return this.progressionManager.reputation / 200
+    }
+
     hasUpgradeByName(name) {
         return this.progressionManager.purchasedUpgrades.some(u => u.name === name);
     }
@@ -530,8 +538,9 @@ export class EconomyManager {
         const wkndBoost = this.hasUpgrade('weekendBoost') && this.isWeekend() ? this.getUpgradeSum('weekendBoost') : 0;
         const specialBoost = this.getSpecialDayBonus();
         const timeBoost = this.getTimeOfDayBonus();
+        const repBoost = this.getReputationIncomeBonus();
 
-        const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost;
+        const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost + repBoost;
         return Math.floor(base * (1 + totalBoost) * this.getPrestigeDevMultiplier() * this.getDevelopmentBusyMultiplier());
     }
 
@@ -594,6 +603,9 @@ export class EconomyManager {
         const timePeriod = hour >= 6 && hour < 12 ? 'Morning' : hour >= 12 && hour < 18 ? 'Afternoon' : hour >= 18 && hour < 22 ? 'Evening' : 'Night';
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
+
+        const repBoost = this.getReputationIncomeBonus();
+        if (repBoost > 0) { lines.push(`Reputation bonus: +${Math.round(repBoost * 100)}%`); totalBoost += repBoost; }
 
         // Terminal footfall is shown separately (the coloured Busy/Not busy status, at the top of the Development
         // page and in this development's own tooltip - see getDevelopmentBusyStatus) rather than folded in here:
@@ -699,6 +711,9 @@ export class EconomyManager {
         const timeBonus = this.getTimeOfDayBonus();
         if (timeBonus > 0) { lines.push(`${timePeriod} boost: +${Math.round(timeBonus * 100)}%`); totalBoost += timeBonus; }
 
+        const repBoost = this.getReputationIncomeBonus();
+        if (repBoost > 0) { lines.push(`Reputation bonus: +${Math.round(repBoost * 100)}%`); totalBoost += repBoost; }
+
         // Line upgrade: a straight ×multiplier (not an additive % like the lines above), shown as its own
         // "Modifiers:" line the same way a Prestige city perk would be.
         const lineLevel = this.progressionManager.getCityLineLevel(city);
@@ -736,13 +751,14 @@ export class EconomyManager {
         const wkndBoost = this.hasUpgrade('weekendBoost') && this.isWeekend() ? this.getUpgradeSum('weekendBoost') : 0;
         const specialBoost = this.getSpecialDayBonus();
         const timeBoost = this.getTimeOfDayBonus();
+        const repBoost = this.getReputationIncomeBonus();
         const prestigeMult = this.getPrestigeDevMultiplier();
 
         let developmentIncome = 0;
         this.progressionManager.purchasedDevelopments.forEach(development => {
             const base = this.getEffectiveDevRevenue(development);
             const categoryBoost = this.getCategoryBoost(development.category);
-            const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost;
+            const totalBoost = categoryBoost + devBoost + devContinentBoost + infraBoost + enterpriseBoost + serviceBoost + seasonBoost + monthBoost + bizBoost + wkndBoost + specialBoost + timeBoost + repBoost;
             developmentIncome += base * (1 + totalBoost) * prestigeMult * this.getDevelopmentBusyMultiplier();
         });
         return developmentIncome;
@@ -818,6 +834,7 @@ export class EconomyManager {
 
         totalBoost += this.getSpecialDayBonus();
         totalBoost += this.getTimeOfDayBonus();
+        totalBoost += this.getReputationIncomeBonus();
 
         income *= (1 + totalBoost) * this.getPrestigeCityMultiplier() * this.getCityLineMultiplier(city);
 

@@ -188,6 +188,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 {purchased.length > 0 && (() => {
                     const busy = economyManager.getDevelopmentBusyStatus()
                     const busyPct = economyManager.getDevelopmentBusyPercent()
+                    const repBonusPct = Math.round(economyManager.getReputationIncomeBonus() * 100)
                     return (
                         <div className="dev-sticky-header">
                             <div className="dev-banner-row">
@@ -206,6 +207,15 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 >
                                     <span>Live footfall:</span>
                                     <strong style={{ color: busy.color }}>{busy.label} ({busyPct}%)</strong>
+                                </div>
+                                <div
+                                    className="total-revenue-banner"
+                                    style={{ cursor: 'var(--cursor-help, help)' }}
+                                    onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `Every 2 Reputation you currently hold is worth +1% to development and city income - spend it on a reroll, a rename or Early Retirement and this drops too.` })}
+                                    onMouseLeave={() => setShowBusyTooltip(null)}
+                                >
+                                    <span>Reputation bonus:</span>
+                                    <strong style={{ color: 'var(--ui-accent-readable, var(--ui-accent, #f5a623))' }}>+{repBonusPct}%</strong>
                                 </div>
                             </div>
                         </div>
