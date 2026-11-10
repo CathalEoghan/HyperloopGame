@@ -79,7 +79,7 @@ export const PRESTIGE_UPGRADES = [
 
     // Layer 4
     { id: 'fastLearner', icon: '🎓', layer: 4, name: 'Quick Learner', description: '+1 Prestige Point for every 1 Prestige Point gained.' },
-    { id: 'governmentGrants', icon: '🏛️', layer: 4, name: 'Government Grants', description: 'Start at Rank 25 with 24 cities already connected and their developments unlocked. Schedule their departures from the Terminal Board to start them earning.' },
+    { id: 'governmentGrants', icon: '🏛️', layer: 4, name: 'Government Grants', description: 'Start at Rank 25 with 24 (unscheduled) cities already connected and their developments unlocked.'},
     { id: 'speedyConveyorBelts', icon: '⚙️', layer: 4, name: 'Speedy Conveyor Belts', description: `${mult(V.speedyConveyorBelts)} Work earnings.` },
     { id: 'globalTicketCuts', icon: '🎫', layer: 4, name: 'Global Ticket Cuts', description: `${mult(V.globalTicketCuts)} city income.` },
     { id: 'bestPAEver', icon: '🧑‍💼', layer: 4, name: 'Best P.A. Ever', description: 'Work clicks itself once every 500ms.' },
