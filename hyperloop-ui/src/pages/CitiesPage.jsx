@@ -56,6 +56,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)
     const [showCityBoostTip, setShowCityBoostTip] = useState(null) // the badge being hovered
     const [showBulkBuyTip, setShowBulkBuyTip] = useState(null) // the Connect all affordable button, while hovered
+    const [showRepBonusTip, setShowRepBonusTip] = useState(null) // the Reputation bonus stat box, while hovered
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
     // then they already know how connecting and scheduling works.
     const [showIntro, setShowIntro] = useState(() =>
@@ -649,9 +650,15 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <span className="city-stat-label">City income</span>
                                 <strong><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />{formatPerHour(totalIncome)}/hr</strong>
                             </div>
-                            <div className="city-stat-box" style={{ cursor: 'var(--cursor-help, help)' }} title="Every 2 Reputation you currently hold is worth +1% to city and development income.">
+                            <div
+                                className="city-stat-box"
+                                style={{ cursor: 'var(--cursor-help, help)' }}
+                                onMouseEnter={(e) => setShowRepBonusTip(e.currentTarget)}
+                                onMouseLeave={() => setShowRepBonusTip(null)}
+                            >
                                 <span className="city-stat-label" style={{ color: 'white' }}>Reputation bonus:</span>
                                 <strong>+{Math.round(economyManager.getReputationIncomeBonus() * 100)}%</strong>
+                                <BoostTooltip anchor={showRepBonusTip} lines={['Every 2 Reputation you currently hold is worth +1% to city and development income.']} text />
                             </div>
                         </div>
                         {flatList
