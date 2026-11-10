@@ -68,6 +68,7 @@ import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
 import monitorIcon from './assets/misc/monitor.png'
+import savedIcon from './assets/misc/save.png'
 import "./App.css";
 
 // Random events (Under the Weather, bonuses and so on) only start from this Rank, so a new player isn't interrupted before they have found their feet
@@ -2313,8 +2314,10 @@ function App() {
           fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
           padding: '4px 12px', borderRadius: '6px',
           zIndex: 200, pointerEvents: 'none',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px',
         }}>
-          ✓ Saved
+          <img src={savedIcon} alt="" style={{ width: '13px', height: '13px', border: 'none' }} />
+          Saved
         </div>
       )}
 

@@ -8,7 +8,6 @@ import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialCh
 import { formatBalance } from '../utils/formatBalance.js'
 import padlockIcon from '../assets/misc/padlock.png'
 import checkIcon from '../assets/misc/check.png'
-import savedIcon from '../assets/misc/save.png'
 import cashIcon from '../assets/misc/cash.png'
 import PageIntroModal from '../components/PageIntroModal.jsx'
 import starIcon from '../assets/misc/star.png'
@@ -42,7 +41,7 @@ const fmtSpan = ms => {
 // instead of a £ sign (same treatment as EventModal/TopBanner, bug #211 pattern) - same breakpoints as fmtCash.
 const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
 // Shown next to "Owned" wherever an upgrade's owned status is flagged, in place of a plain tick
-const savedIconEl = <img src={savedIcon} alt="" style={{ width: '13px', height: '13px', verticalAlign: 'middle', marginRight: '3px', border: 'none' }} />
+const ownedIconEl = <img src={checkIcon} alt="" style={{ width: '13px', height: '13px', verticalAlign: 'middle', marginRight: '3px', border: 'none' }} />
 const fmtCashIcon = n => {
     if (!Number.isFinite(n)) return '—'
     if (n >= 999_995_000) return <>{cashIconEl}{n < 1e9 ? '1.00 billion' : formatBalance(n)}</>
@@ -337,7 +336,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                                             onClick={e => { e.stopPropagation(); playClickSound2(); setSelectedId(isSelected ? null : u.id) }}>
                                                             <span className="prestige-node-art">
                                                                 <UpgradeArt upgrade={u} className="prestige-node-img" />
-                                                                <span className="prestige-node-tag">{isOwned ? <>{savedIconEl}Owned</> : unlocked ? `${u.cost} pt${u.cost === 1 ? '' : 's'}` : '🔒'}</span>
+                                                                <span className="prestige-node-tag">{isOwned ? <>{ownedIconEl}Owned</> : unlocked ? `${u.cost} pt${u.cost === 1 ? '' : 's'}` : '🔒'}</span>
                                                                 {!u.implemented && <span className="prestige-node-soon">Coming soon</span>}
                                                             </span>
                                                             <span className="prestige-node-name">{u.name}</span>
@@ -349,7 +348,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                                                 <div className="prestige-pop-meta">Layer {u.layer} · {u.cost} point{u.cost === 1 ? '' : 's'}</div>
                                                                 {!u.implemented && <div className="prestige-pop-soon">Not active yet. {u.pendingNote} You can still buy it; it switches on when the feature arrives.</div>}
                                                                 {popReason === 'Owned'
-                                                                    ? <div className="prestige-pop-owned">{savedIconEl}Owned</div>
+                                                                    ? <div className="prestige-pop-owned">{ownedIconEl}Owned</div>
                                                                     : <>
                                                                         {!popReason && <div className="prestige-pop-after">Points after buying: <b>{prestige.points - u.cost}</b></div>}
                                                                         <button className={`prestige-buy-btn ${popReason ? 'prestige-buy-btn-disabled' : ''}`}
