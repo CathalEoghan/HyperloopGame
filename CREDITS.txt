@@ -892,16 +892,16 @@ firstSteps.jpg - <a href="https://www.flaticon.com/free-icons/earth" title="eart
 connected.jpg - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
 wellConnected.jpg - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
 trulyGlobal.jpg - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
-greatManager.jpg - <a href="https://www.flaticon.com/free-icons/integrity" title="integrity icons">Integrity icons created by logisstudio - Flaticon</a>
-amazingManager.jpg - <a href="https://www.flaticon.com/free-icons/integrity" title="integrity icons">Integrity icons created by logisstudio - Flaticon</a>
-bestManagerEver.jpg - <a href="https://www.flaticon.com/free-icons/integrity" title="integrity icons">Integrity icons created by logisstudio - Flaticon</a>
+greatManager.jpg - <a href="https://www.flaticon.com/free-icons/good" title="good icons">Good icons created by Uniconlabs - Flaticon</a>
+amazingManager.jpg - <a href="https://www.flaticon.com/free-icons/good" title="good icons">Good icons created by Uniconlabs - Flaticon</a>
+bestManagerEver.jpg - <a href="https://www.flaticon.com/free-icons/good" title="good icons">Good icons created by Uniconlabs - Flaticon</a>
 welcomeToMadagascar.jpg - <a href="https://www.flaticon.com/free-icons/lion" title="lion icons">Lion icons created by Magnific - Flaticon</a>
 clubObiWan.jpg - <a href="https://www.flaticon.com/free-icons/snake" title="snake icons">Snake icons created by Magnific - Flaticon</a>
 diverse.jpg - <a href="https://www.flaticon.com/free-icons/diversity" title="diversity icons">Diversity icons created by Magnific - Flaticon</a>
 moreDiverse.jpg - <a href="https://www.flaticon.com/free-icons/diversity" title="diversity icons">Diversity icons created by Magnific - Flaticon</a>
 evenMoreDiverse.jpg - <a href="https://www.flaticon.com/free-icons/diversity" title="diversity icons">Diversity icons created by Magnific - Flaticon</a>
 noConnectionForYou.jpg - <a href="https://www.flaticon.com/free-icons/url" title="url icons">Url icons created by Fragneel - Flaticon</a>
-prestigious.jpg - <a href="https://www.flaticon.com/free-icons/likelihood" title="likelihood icons">Likelihood icons created by Three musketeers - Flaticon</a>
+prestigious.jpg - <a href="https://www.flaticon.com/free-icons/graduation-cap" title="graduation cap icons">Graduation cap icons created by Smashicons - Flaticon</a>
 topSecret.jpg - <a href="https://www.flaticon.com/free-icons/confidential" title="confidential icons">Confidential icons created by Magnific - Flaticon</a>
 wellLiked.jpg - <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Magnific - Flaticon</a>
 upgraded.jpg - <a href="https://www.flaticon.com/free-icons/upgrade" title="upgrade icons">Upgrade icons created by Smashicons - Flaticon</a>
@@ -945,6 +945,15 @@ shoppingSpree.jpg - <a href="https://www.flaticon.com/free-icons/online-shop" ti
 candyGardenAnimals.jpg - <a href="https://www.flaticon.com/free-icons/pinata" title="piñata icons">Piñata icons created by Magnific - Flaticon</a>
 hawaiianPizza.jpg - <a href="https://www.flaticon.com/free-icons/hawaii" title="hawaii icons">Hawaii icons created by juicy_fish - Flaticon</a>
 maceToTheFace.jpg - <a href="https://www.flaticon.com/free-icons/weapon" title="weapon icons">Weapon icons created by Magnific - Flaticon</a>
+newHeights.jpg - <a href="https://www.flaticon.com/free-icons/mountain" title="mountain icons">Mountain icons created by Magnific - Flaticon</a>
+moreThanACeiling.jpg - <a href="https://www.flaticon.com/free-icons/chandelier" title="chandelier icons">Chandelier icons created by Amethyst prime - Flaticon</a>
+sinceTheDucksLeft.jpg - <a href="https://www.flaticon.com/free-icons/duck" title="duck icons">Duck icons created by Magnific - Flaticon</a>
+orangeIsTheNewJack.jpg - <a href="https://www.flaticon.com/free-icons/custody" title="custody icons">Custody icons created by surang - Flaticon</a>
+iWannaBeARockstar.jpg - <a href="https://www.flaticon.com/free-icons/electric-guitar" title="electric guitar icons">Electric guitar icons created by Magnific - Flaticon</a>
+costumeParty.jpg - <a href="https://www.flaticon.com/free-icons/costume" title="costume icons">Costume icons created by Smashicons - Flaticon</a>
+familyGuy.jpg - <a href="https://www.flaticon.com/free-icons/family" title="family icons">Family icons created by monkik - Flaticon</a>
+betterCallFall.jpg - <a href="https://www.flaticon.com/free-icons/autumn" title="autumn icons">Autumn icons created by justicon - Flaticon</a>
+vanityFare.jpg - <a href="https://www.flaticon.com/free-icons/mirror" title="mirror icons">Mirror icons created by Magnific - Flaticon</a>
 
 MISC ICONS
 
@@ -999,6 +1008,7 @@ heart.png - <a href="https://www.flaticon.com/free-icons/heart" title="heart ico
 sparkle.png - <a href="https://www.flaticon.com/free-icons/sparkle" title="sparkle icons">Sparkle icons created by Magnific - Flaticon</a>
 camera.png - <a href="https://www.flaticon.com/free-icons/cinema" title="cinema icons">Cinema icons created by Magnific - Flaticon</a>
 reply.png - <a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by apien - Flaticon</a>
+cog.png - <a href="https://www.flaticon.com/free-icons/settings" title="settings icons">Settings icons created by meaicon - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
