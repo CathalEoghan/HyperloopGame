@@ -270,12 +270,16 @@
 }
 
 .prestige-node-name {
+    align-self: stretch;
+    text-align: center;
     font-weight: 800;
     font-size: 0.95rem;
     line-height: 1.2;
 }
 
 .prestige-node-desc {
+    align-self: stretch;
+    text-align: center;
     font-size: 0.78rem;
     line-height: 1.4;
     color: var(--pt-muted);
