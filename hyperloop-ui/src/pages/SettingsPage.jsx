@@ -4,6 +4,7 @@ import { fullscreenSupported, isFullscreen, setFullscreen, onFullscreenChange } 
 import { playHoverSound, playClickSound2, playSaveConfirmSound, SOUND_CATEGORIES, getCategoryVolume, setCategoryVolume, isCategoryMuted, setCategoryMuted } from '../utils/sound.js'
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
+import legalIcon from '../assets/misc/legal.png'
 import { GLOBE_QUALITY_KEY, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
 import { VERSION_LOG } from '../utils/versionLog.js'
 import { notificationsEnabled, enableNotifications, disableNotifications } from '../utils/attentionAlerts.js'
@@ -35,7 +36,7 @@ function LegalModal({ onClose }) {
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="credits-modal" onClick={e => e.stopPropagation()}>
-                <p className="credits-heading">⚖️ LEGAL & PRIVACY</p>
+                <p className="credits-heading"><img src={legalIcon} alt="" className="legal-heading-logo" />LEGAL & PRIVACY</p>
                 <div className="credits-body">
                     <p className="credits-section">PRIVACY</p>
                     <p className="credits-line">All save data is stored locally on your device using localStorage.</p>

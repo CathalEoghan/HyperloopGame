@@ -14,20 +14,31 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
     font-family: 'Courier New', monospace;
-    font-size: 0.75rem;
+    font-size: 1.3rem;
     font-weight: bold;
-    letter-spacing: 3px;
+    letter-spacing: 4px;
     color: var(--ui-accent, #f5a623);
     text-transform: uppercase;
     text-align: center;
-    margin: 0 0 16px;
+    margin: 0 0 18px;
+    padding-bottom: 14px;
+    border-bottom: 2px solid var(--ui-accent, #f5a623);
 }
 
 .credits-heading-logo {
     width: 40px;
     height: 40px;
+    object-fit: contain;
+    border: none;
+}
+
+.legal-heading-logo {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    border: none;
 }
 
 .credits-body {
