@@ -222,16 +222,18 @@
     object-fit: cover;
     border-radius: 10px;
 }
-.achievement-card-emoji { font-size: 1.35rem; line-height: 1; }
+.achievement-card-emoji { width: 22px; height: 22px; object-fit: contain; border: none; }
 .achievement-card-logo-locked img { filter: grayscale(1) brightness(0.9); opacity: 0.6; }
 .achievement-card-lock {
     position: absolute;
     right: -5px;
     bottom: -5px;
-    font-size: 0.8rem;
-    line-height: 1;
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    border: 1px solid #d0d0d0;
     padding: 2px;
     border-radius: 50%;
     background: #eaeaea;
-    border: 1px solid #d0d0d0;
+    box-sizing: content-box;
 }

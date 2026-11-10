@@ -61,6 +61,23 @@ input, textarea, [contenteditable="true"], .selectable {
     z-index: 260;
 }
 
+/* The ✕ close icon used on the various modal/panel close buttons across the app (Achievements, Tips, Shop,
+   Schedule, Departure Board, ...) - one shared size so they all match regardless of which page's CSS styles
+   the button itself. */
+.modal-close-icon {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+    border: none;
+    vertical-align: middle;
+}
+
+/* close.png is light grey, made for a dark button background (Achievements, Tips, Schedule, Departure Board). On
+   a light background (Shop's "Close" button and its lightbox) it's barely visible, so this darkens it instead. */
+.modal-close-icon-dark {
+    filter: brightness(0) opacity(0.55);
+}
+
 body, .App {
     background-color: rgb(255, 246, 239);
 }

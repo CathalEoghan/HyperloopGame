@@ -12,6 +12,9 @@ import chatIcon from '../assets/misc/chat.png'
 import musicIcon from '../assets/misc/music.png'
 import clickIcon from '../assets/misc/click.png'
 import giftIcon from '../assets/misc/gift.png'
+import closeIcon from '../assets/misc/close.png'
+import padlockIcon from '../assets/misc/padlock.png'
+import checkIcon from '../assets/misc/check.png'
 import './ShopModal.css'
 
 // One icon per sidebar entry, shown in its own square to the left of the category name.
@@ -228,7 +231,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
         const shakeKey = featured ? `featured-${item.id}` : item.id
         return (
             <div key={shakeKey} className={`shop-item${equipped ? ' shop-item-equipped' : ''}${locked ? ' shop-item-locked' : ''}${featured ? ' shop-item-featured' : ''}${shaking === shakeKey ? ' shop-item-shake' : ''}`} style={themedCardStyle(item.id)} onMouseEnter={() => playHoverSound()}>
-                <div className="shop-item-name">{item.name}{locked && <span className="shop-item-lock" aria-hidden="true">🔒</span>}</div>
+                <div className="shop-item-name">{item.name}{locked && <img src={padlockIcon} alt="" className="shop-item-lock" />}</div>
                 {item.vars && (
                     <button type="button" className="shop-preview-trigger" onClick={() => setLightbox({ categoryId, item })} aria-label={`Enlarge ${item.name} preview`}>
                         <ThemePreview categoryId={categoryId} item={item} />
@@ -273,7 +276,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                 <div className="shop-header">
                     <h2 className="shop-title">Shop</h2>
                     <div className="shop-balance" title="Your Reputation"><img src={reputationIcon} alt="Reputation" /> {Math.floor(reputation)}</div>
-                    <button className="shop-close" onClick={() => { playClickSound2(); onClose() }} onMouseEnter={() => playHoverSound()}>✕ Close</button>
+                    <button className="shop-close" onClick={() => { playClickSound2(); onClose() }} onMouseEnter={() => playHoverSound()}><img src={closeIcon} alt="" className="modal-close-icon modal-close-icon-dark" /> Close</button>
                 </div>
 
                 <div className="shop-body">
@@ -325,7 +328,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                 <div className="shop-item-name">
                                                     {bundle.name}
                                                     <span className={`shop-bundle-badge shop-bundle-badge-${bundle.tier}`}>{{ premium: 'Premium', standard: 'Standard' }[bundle.tier] || 'Special'}</span>
-                                                    {locked && <span className="shop-item-lock" aria-hidden="true">🔒</span>}
+                                                    {locked && <img src={padlockIcon} alt="" className="shop-item-lock" />}
                                                 </div>
                                                 <div className="shop-item-desc">{bundle.blurb}</div>
                                                 <div className="shop-bundle-pieces">
@@ -339,7 +342,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                                 onMouseEnter={(e) => showChipTooltip(e, tooltipText)}
                                                                 onMouseLeave={() => setChipTooltip(null)}
                                                             >
-                                                                {pieceOwned && <span className="shop-bundle-chip-check" aria-hidden="true">✓</span>}
+                                                                {pieceOwned && <img src={checkIcon} alt="" className="shop-bundle-chip-check" />}
                                                                 {PIECE_CHIPS[pc]}
                                                             </span>
                                                         )
@@ -404,7 +407,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
         {lightbox && (
             <div className="shop-lightbox-overlay" onClick={() => setLightbox(null)}>
                 <div className="shop-lightbox" onClick={e => e.stopPropagation()} role="dialog" aria-label={`${lightbox.item.name} preview`}>
-                    <button className="shop-lightbox-close" onClick={() => setLightbox(null)} aria-label="Close preview">✕</button>
+                    <button className="shop-lightbox-close" onClick={() => setLightbox(null)} aria-label="Close preview"><img src={closeIcon} alt="" className="modal-close-icon modal-close-icon-dark" /></button>
                     <div className="shop-lightbox-name">{lightbox.item.name}</div>
                     <ThemePreview categoryId={lightbox.categoryId} item={lightbox.item} />
                 </div>

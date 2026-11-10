@@ -19,7 +19,7 @@
     animation: achievement-toast-in 0.35s ease-out;
 }
 
-.achievement-toast-icon { font-size: 1.8rem; }
+.achievement-toast-icon { width: 30px; height: 30px; flex-shrink: 0; object-fit: contain; border: none; }
 
 .achievement-toast-text { display: flex; flex-direction: column; gap: 1px; }
 

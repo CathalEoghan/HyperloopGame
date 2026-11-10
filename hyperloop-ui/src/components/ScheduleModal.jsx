@@ -9,6 +9,7 @@ import { readTimetable, saveSlot, removeSlot, unscheduledCities, slotProblem, bu
 import { getDeparturePool, loopCode } from '../utils/loopCodes.js'
 import { mechanicalLoopCode } from '../data/cityLoopCodes.js'
 import cashIcon from '../assets/misc/cash.png'
+import closeIcon from '../assets/misc/close.png'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5)
@@ -237,7 +238,7 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
             >
                 <div className="sched-header">
                     <span className="sched-title">Schedule departures</span>
-                    <button className="sched-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close">✕</button>
+                    <button className="sched-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close"><img src={closeIcon} alt="" className="modal-close-icon" /></button>
                 </div>
                 <div className="sched-body">
                     <p className="sched-intro">

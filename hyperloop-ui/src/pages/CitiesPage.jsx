@@ -21,6 +21,7 @@ import poorIcon from '../assets/misc/poor.png'
 import boardIcon from '../assets/misc/board.png'
 import clockIcon from '../assets/misc/clock.png'
 import growthIcon from '../assets/misc/growth.png'
+import fireworksIcon from '../assets/misc/fireworks.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
@@ -584,7 +585,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
                                 <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
-                                    {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
+                                    {info.nextLevel === 10 && <> <img src={fireworksIcon} alt="" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /> Maximum reached!</>}
                                 </p>
                                 <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><span className="cost-cash-icon-wrap"><img src={cashIcon} alt="£" className="cash-icon" style={{ border: 'none' }} /></span>{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} />{info.repCost}</span></strong>
                                     {/* Good Standing's half-price Reputation - already baked into info.repCost above, but

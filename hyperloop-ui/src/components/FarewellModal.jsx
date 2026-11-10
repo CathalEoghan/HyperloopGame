@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { playLeavingSound, playFarewellVipSound, playFarewellConfirmSound, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
+import cameraIcon from '../assets/misc/camera.png'
 import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
@@ -100,7 +101,8 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 </p>
                 {autoSend ? (
                     <p className="farewell-message" data-testid="video-message">
-                        🎥 Sending your video {isArrival ? 'welcome' : 'message'}… (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
+                        <img src={cameraIcon} alt="" style={{ width: '15px', height: '15px', verticalAlign: 'middle', marginRight: '4px', border: 'none' }} />
+                        Sending your video {isArrival ? 'welcome' : 'message'}… (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
                     </p>
                 ) : (
                     <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={() => {

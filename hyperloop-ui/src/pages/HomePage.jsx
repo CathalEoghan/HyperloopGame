@@ -14,6 +14,7 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import cashIcon from '../assets/misc/cash.png'
 import openEyeIcon from '../assets/misc/open-eye.png'
 import reputationIcon from '../assets/misc/reputation.png'
+import fireworksIcon from '../assets/misc/fireworks.png'
 import './HomePage.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { flagSrc } from '../utils/flagSrc.js'
@@ -1381,7 +1382,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                             <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
                             <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
                                 Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
-                                {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
+                                {info.nextLevel === 10 && <> <img src={fireworksIcon} alt="" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /> Maximum reached!</>}
                             </p>
                             <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><span className="cost-cash-icon-wrap"><img src={cashIcon} alt="£" className="cash-icon" style={{ border: 'none' }} /></span>{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span></strong>{info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} />{info.repCost}</span></strong>
                                 {/* Good Standing's half-price Reputation - already baked into info.repCost above, but

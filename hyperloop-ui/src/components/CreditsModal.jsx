@@ -3,6 +3,7 @@ import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import officialLogo from '../assets/misc/officialLogo.png'
 import mePhoto from '../assets/misc/me.jpg'
+import sparkleIcon from '../assets/misc/sparkle.png'
 import { WIKIMEDIA_CREDITS, FREESOUND_CC_CREDITS, FLATICON_AUTHORS } from '../data/creditsData.js'
 import './CreditsModal.css'
 
@@ -99,7 +100,7 @@ function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
                     />
                     <p style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#111', margin: '0 0 4px' }}>Cathal Eoghan</p>
                     <p style={{ fontStyle: 'italic', color: '#888', fontSize: '0.85rem', margin: 0 }}>Thanks for playing!</p>
-                    {showToast && <p className="dev-bonus-toast">✨ +50 REPUTATION</p>}
+                    {showToast && <p className="dev-bonus-toast"><img src={sparkleIcon} alt="" className="dev-bonus-toast-icon" /> +50 REPUTATION</p>}
                 </div>
                 <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>Close</button>
             </div>

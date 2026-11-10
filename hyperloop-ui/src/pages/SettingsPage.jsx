@@ -17,7 +17,11 @@ import monitorSectionIcon from '../assets/misc/monitor.png'
 import imageIcon from '../assets/misc/image.png'
 import saveSectionIcon from '../assets/misc/save.png'
 import infoIcon from '../assets/misc/guide.png'
+import checkIcon from '../assets/misc/check.png'
 import './SettingsPage.css'
+
+// Shown next to "Saved" wherever a Settings save button flips to its confirmed state, in place of a plain tick
+const savedCheckEl = <img src={checkIcon} alt="" style={{ width: '12px', height: '12px', verticalAlign: 'middle', marginRight: '4px', border: 'none' }} />
 
 // Small icon shown to the left of each settings section's subheading (Terminal, Audio, Alerts, ...)
 const SectionIcon = ({ src }) => <img src={src} alt="" className="settings-section-icon" />
@@ -233,7 +237,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                             onKeyDown={e => e.key === 'Enter' && handleNameSave()}
                         />
                         <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); handleNameSave(); }}>
-                            {nameSaved ? '✓ Saved' : 'Save'}
+                            {nameSaved ? <>{savedCheckEl}Saved</> : 'Save'}
                         </button>
                     </div>
                 </div>
@@ -392,7 +396,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <span className="settings-label-desc">{formatLastSaved()}</span>
                     </div>
                     <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playSaveConfirmSound(); handleManualSave(); }}>
-                        {manualSaved ? '✓ Saved' : 'Save now'}
+                        {manualSaved ? <>{savedCheckEl}Saved</> : 'Save now'}
                     </button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>

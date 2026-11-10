@@ -241,7 +241,7 @@
 }
 .shop-item-equipped { border-color: var(--ui-accent, #f5a623); }
 .shop-item-locked { opacity: 0.6; background: #f3f3f3; }
-.shop-item-lock { margin-left: 6px; font-size: 0.8rem; }
+.shop-item-lock { margin-left: 6px; width: 11px; height: 11px; object-fit: contain; border: none; vertical-align: middle; }
 .shop-locked-note { font-size: 0.72rem; color: #8b5cf6; font-weight: bold; text-align: right; flex: 1; }
 .shop-item-shake { animation: shop-shake 0.35s ease; }
 @keyframes shop-shake {
@@ -388,7 +388,7 @@
     cursor: var(--cursor-default, default);
 }
 .shop-bundle-chip-owned { color: #4a8f3c; border-color: #4a8f3c; background: color-mix(in srgb, #4a8f3c 12%, white); }
-.shop-bundle-chip-check { margin-right: 2px; }
+.shop-bundle-chip-check { margin-right: 2px; width: 9px; height: 9px; object-fit: contain; border: none; vertical-align: middle; }
 
 /* Hover tooltip for a bundle piece chip - shows its full category name and owned state. Rendered through a
    React portal straight onto document.body (see ShopModal.jsx) and positioned with `left`/`top` in viewport

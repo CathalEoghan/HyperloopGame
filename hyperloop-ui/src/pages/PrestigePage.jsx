@@ -42,6 +42,8 @@ const fmtSpan = ms => {
 const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
 // Shown next to "Owned" wherever an upgrade's owned status is flagged, in place of a plain tick
 const ownedIconEl = <img src={checkIcon} alt="" style={{ width: '13px', height: '13px', verticalAlign: 'middle', marginRight: '3px', border: 'none' }} />
+// Shown on a card's tag in place of a plain lock emoji, for an upgrade that's neither owned nor unlocked yet
+const lockedTagIconEl = <img src={padlockIcon} alt="" style={{ width: '11px', height: '11px', verticalAlign: 'middle', border: 'none' }} />
 const fmtCashIcon = n => {
     if (!Number.isFinite(n)) return '—'
     if (n >= 999_995_000) return <>{cashIconEl}{n < 1e9 ? '1.00 billion' : formatBalance(n)}</>
@@ -336,7 +338,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                                             onClick={e => { e.stopPropagation(); playClickSound2(); setSelectedId(isSelected ? null : u.id) }}>
                                                             <span className="prestige-node-art">
                                                                 <UpgradeArt upgrade={u} className="prestige-node-img" />
-                                                                <span className="prestige-node-tag">{isOwned ? <>{ownedIconEl}Owned</> : unlocked ? `${u.cost} pt${u.cost === 1 ? '' : 's'}` : '🔒'}</span>
+                                                                <span className="prestige-node-tag">{isOwned ? <>{ownedIconEl}Owned</> : unlocked ? `${u.cost} pt${u.cost === 1 ? '' : 's'}` : lockedTagIconEl}</span>
                                                                 {!u.implemented && <span className="prestige-node-soon">Coming soon</span>}
                                                             </span>
                                                             <span className="prestige-node-name">{u.name}</span>

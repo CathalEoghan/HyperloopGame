@@ -15,6 +15,7 @@ import PageIntroModal from '../components/PageIntroModal.jsx'
 import boardIcon from '../assets/misc/board.png'
 import clockIcon from '../assets/misc/clock.png'
 import warningIcon from '../assets/misc/warning.png'
+import closeIcon from '../assets/misc/close.png'
 
 const TAB_KEY = 'terminalBoardTab'
 
@@ -463,7 +464,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                     }}
                     onMouseEnter={e => { playHoverSound(); e.target.style.color = 'var(--board-accent-readable, var(--board-accent, #f5a623))'; e.target.style.borderColor = 'var(--board-accent-readable, var(--board-accent, #f5a623))' }}
                     onMouseLeave={e => { e.target.style.color = '#888'; e.target.style.borderColor = '#444' }}
-                    >✕ CLOSE</button>
+                    ><img src={closeIcon} alt="" className="modal-close-icon" /> CLOSE</button>
                 )}
             </div>
             {list.length === 0 ? (

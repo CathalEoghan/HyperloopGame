@@ -22,6 +22,7 @@ import { DEV_NAME_MAX_LENGTH, getRenameRepCost, resolveDevelopmentName } from 'M
 import poorIcon from '../assets/misc/poor.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
+import fireworksIcon from '../assets/misc/fireworks.png'
 import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
 
@@ -223,7 +224,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <p>to <strong>Level {info.nextLevel}</strong> for a <strong>+{info.boostPct}% income boost</strong>!</p>
                                 <p style={{ fontSize: '0.82rem', color: '#888', margin: '4px 0 12px' }}>
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
-                                    {info.nextLevel === 10 && ' 🎉 Maximum reached!'}
+                                    {info.nextLevel === 10 && <> <img src={fireworksIcon} alt="" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /> Maximum reached!</>}
                                 </p>
                                 <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><span className="cost-cash-icon-wrap"><img src={cashIcon} alt="£" className="cash-icon" style={{ border: 'none' }} /></span>{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                                     {/* Star Architect Recruitment's discount - already baked into cashCost above, but shown

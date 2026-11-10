@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import './TipsBar.css'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import closeIcon from '../assets/misc/close.png'
 
 const TIPS = [
     "Connect more cities to increase your daily income.",
@@ -58,7 +59,7 @@ function TipsBar() {
         <div className={`tips-bar ${fading ? 'tips-fading' : ''}`}>
             <span className="tips-label">TIP</span>
             <span className="tips-text">{TIPS[tipIndex]}</span>
-            <button className="tips-dismiss" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setVisible(false) }}>✕</button>
+            <button className="tips-dismiss" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setVisible(false) }}><img src={closeIcon} alt="" className="modal-close-icon" /></button>
         </div>
     )
 }

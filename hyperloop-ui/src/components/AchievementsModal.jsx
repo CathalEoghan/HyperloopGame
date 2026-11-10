@@ -3,6 +3,8 @@ import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import './AchievementsModal.css'
 import './HyperLink.css'
 import trophyIcon from '../assets/misc/trophy.svg'
+import padlockIcon from '../assets/misc/padlock.png'
+import closeIcon from '../assets/misc/close.png'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
@@ -59,7 +61,7 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                         <span>Achievements</span>
                         <span className="achievements-count">{count} / {ACHIEVEMENTS.length}</span>
                     </div>
-                    <button className="achievements-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close">✕</button>
+                    <button className="achievements-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close"><img src={closeIcon} alt="" className="modal-close-icon" /></button>
                 </div>
                 <div className="achievements-body">
                     {bonuses.length > 0 && (
@@ -94,8 +96,8 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
                                     <span className={`achievement-card-logo${done ? '' : ' achievement-card-logo-locked'}`}>
                                         {logo
                                             ? <img src={logo} alt="" loading="lazy" />
-                                            : <span className="achievement-card-emoji" aria-hidden="true">{done ? '🏆' : '🔒'}</span>}
-                                        {logo && !done && <span className="achievement-card-lock" aria-hidden="true">🔒</span>}
+                                            : <img src={done ? trophyIcon : padlockIcon} alt="" className="achievement-card-emoji" />}
+                                        {logo && !done && <img src={padlockIcon} alt="" className="achievement-card-lock" />}
                                     </span>
                                     <div className="achievement-card-text">
                                         <span className="achievement-card-name">{a.name}</span>

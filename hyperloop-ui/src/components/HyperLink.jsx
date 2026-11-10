@@ -7,6 +7,8 @@ import batteryIcon from '../assets/misc/battery.png'
 import signalIcon from '../assets/misc/signal.png'
 import bellIcon from '../assets/misc/bell.png'
 import closeIcon from '../assets/misc/close.png'
+import heartIcon from '../assets/misc/heart.png'
+import chatIcon from '../assets/misc/chat.png'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { defaultPfp, MALE_PFPS, FEMALE_PFPS, officialPfp } from '../assets/hyperLinkAssets.js'
 export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
@@ -181,7 +183,7 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                         style={{ position: 'relative', cursor: 'var(--cursor-pointer, pointer)' }}
                                     >
                                         {likeAnimating === post.id && (
-                                            <div className="hyperlink-like-animation">❤</div>
+                                            <div className="hyperlink-like-animation"><img src={heartIcon} alt="" className="hyperlink-like-animation-icon" /></div>
                                         )}
                                         {/* Cult of Celebrity pays Reputation for every like, paid silently in App.jsx's onLikeReward -
                                             shown here, next to the same heart animation, so it isn't the only like reward with no feedback at all. */}
@@ -218,9 +220,9 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                                     onClick={(e) => likePost(post.id, e)}
                                                     style={{ cursor: isLiked ? 'var(--cursor-default, default)' : 'var(--cursor-pointer, pointer)' }}
                                                 >
-                                                    ❤ {displayLikes}
+                                                    <img src={heartIcon} alt="" className="hyperlink-likes-icon" /> {displayLikes}
                                                 </span>
-                                                <span className="hyperlink-replies">💬 {displayReplies}</span>
+                                                <span className="hyperlink-replies"><img src={chatIcon} alt="" className="hyperlink-replies-icon" /> {displayReplies}</span>
                                             </div>
                                         </div>
                                     </div>

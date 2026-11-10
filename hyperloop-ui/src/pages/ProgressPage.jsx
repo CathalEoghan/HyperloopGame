@@ -19,7 +19,11 @@ import ClaimedRewardsModal from '../components/ClaimedRewardsModal.jsx'
 import giftIcon from '../assets/misc/gift.png'
 import growthIcon from '../assets/misc/growth.png'
 import starIcon from '../assets/misc/star.png'
+import checkIcon from '../assets/misc/check.png'
 import './ProgressPage.css'
+
+// Shown after a stat's value when the bonus is active right now, in place of a plain ✓ tick
+const activeCheckEl = <img src={checkIcon} alt="" style={{ width: '11px', height: '11px', verticalAlign: 'middle', margin: '0 3px', border: 'none' }} />
 
 // Same thumbnail artwork and name-matching PrestigePage.jsx uses ("Cult of Celebrity" -> CultOfCelebrity.jpg),
 // so a Prestige upgrade's card here shows the real thumbnail rather than just its emoji.
@@ -439,7 +443,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             ...(has('afternoonBoost') ? [{ label: 'Afternoon Bonus', value: `+${Math.round(economyManager.getUpgradeSum('afternoonBoost') * 100)}%${hour >= 12 && hour < 18 ? ' (Active)' : ' (Inactive)'}` }] : []),
             { label: 'All Developments Bonus', value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
             { label: 'Arctic City Bonus', value: sum('arcticBoost') > 0 ? `+${Math.round(sum('arcticBoost') * 100)}%` : '—' },
-            { label: 'Business Week Bonus', value: sum('businessWeekBoost') > 0 ? `+${Math.round(sum('businessWeekBoost') * 100)}%${isBusinessWeek ? ' ✓ active' : ''}` : '—' },
+            { label: 'Business Week Bonus', value: sum('businessWeekBoost') > 0 ? <>+{Math.round(sum('businessWeekBoost') * 100)}%{isBusinessWeek && <>{activeCheckEl}active</>}</> : '—' },
             { label: 'City Reroll Discount', value: sum('rerollRepDiscount') > 0 ? `-${sum('rerollRepDiscount')} rep` : '—' },
             { label: 'Connection Earnings Bonus', value: sum('connectionBoost') > 0 ? `+${Math.round(sum('connectionBoost') * 100)}%` : '—' },
             { label: 'Continent Expansion Bonus', value: sum('continentExpansionBoost') > 0 ? `+${Math.round(sum('continentExpansionBoost') * uniqueContinents * 100)}% (${uniqueContinents} continents)` : '—' },
@@ -520,14 +524,14 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     const festiveFreak = economyManager.getFestiveFreakFactor()
                     const owned = Object.keys(days).filter(k => has(k)).map(k => `${days[k]} +${Math.round(sum(k) * festiveFreak * 100)}%`)
                     if (owned.length === 0) return '—'
-                    return `${owned.join(', ')}${economyManager.getSpecialDayBonus() > 0 ? ' ✓ active' : ''}`
+                    return <>{owned.join(', ')}{economyManager.getSpecialDayBonus() > 0 && <>{activeCheckEl}active</>}</>
                 })()
             },
             { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(createdAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
             // Good Standing - already baked into every development/city upgrade's Reputation cost, but
             // otherwise invisible: this is the only place that says so.
             { label: 'Upgrade Reputation Discount', value: PrestigeManager.owns('goodStanding') ? '-50%' : '—' },
-            { label: 'Weekend Bonus', value: sum('weekendBoost') > 0 ? `+${Math.round(sum('weekendBoost') * 100)}%${isWeekend ? ' ✓ active' : ''}` : '—' },
+            { label: 'Weekend Bonus', value: sum('weekendBoost') > 0 ? <>+{Math.round(sum('weekendBoost') * 100)}%{isWeekend && <>{activeCheckEl}active</>}</> : '—' },
             { label: 'Work Click Bonus', value: (count('workClickBonus') > 0 || PrestigeManager.owns('speedyConveyorBelts') || economyManager.hasUpgrade('workPerAchievement')) ? `×${economyManager.getWorkMultiplier(count('workClickBonus')).toFixed(2)} to click earnings` : '—' },
             { label: 'Work Reputation Chance', value: economyManager.getWorkRepChance() > 0.005 ? `${(economyManager.getWorkRepChance() * 100).toFixed(1)}% per click` : '—' },
         ]

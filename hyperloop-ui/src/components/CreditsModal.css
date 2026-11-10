@@ -138,6 +138,14 @@
     animation: toastFadeIn 0.3s ease;
 }
 
+.dev-bonus-toast-icon {
+    width: 12px;
+    height: 12px;
+    object-fit: contain;
+    border: none;
+    vertical-align: middle;
+}
+
 @keyframes toastFadeIn {
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }

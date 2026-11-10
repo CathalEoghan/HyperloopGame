@@ -69,6 +69,7 @@ import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
 import monitorIcon from './assets/misc/monitor.png'
 import savedIcon from './assets/misc/save.png'
+import warningIcon from './assets/misc/warning.png'
 import "./App.css";
 
 // Random events (Under the Weather, bonuses and so on) only start from this Rank, so a new player isn't interrupted before they have found their feet
@@ -2304,7 +2305,8 @@ function App() {
           fontFamily: 'Courier New, monospace', fontSize: '0.8rem', lineHeight: 1.4,
           padding: '6px 14px', borderRadius: '6px', zIndex: 200, pointerEvents: 'none',
         }}>
-          ⚠ Your progress isn't being saved: this browser's storage is full or blocked. Export your save from Settings to keep it.
+          <img src={warningIcon} alt="" style={{ width: '14px', height: '14px', verticalAlign: 'middle', marginRight: '4px', border: 'none' }} />
+          Your progress isn't being saved: this browser's storage is full or blocked. Export your save from Settings to keep it.
         </div>
       )}
       {showSaved && !saveFailed && (
