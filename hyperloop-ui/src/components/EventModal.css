@@ -23,6 +23,15 @@
 .event-positive .event-type-label { color: #27ae60; }
 .event-negative .event-type-label { color: #c0392b; }
 
+/* In place of the plain ▲/▼ triangle, both in this label and in the effect box below it */
+.event-trend-icon {
+    width: 11px;
+    height: 11px;
+    vertical-align: middle;
+    border: none;
+    object-fit: contain;
+}
+
 .event-title {
     font-family: 'Inter', sans-serif;
     font-size: 1.3rem;
@@ -64,6 +73,12 @@
     font-weight: bold;
 }
 
+/* Bigger than the same icon in the small type label above - this is the main indicator in the effect box */
+.event-effect-indicator .event-trend-icon {
+    width: 18px;
+    height: 18px;
+}
+
 .event-positive-text { color: #27ae60; }
 .event-negative-text { color: #c0392b; }
 
@@ -71,7 +86,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.85rem;
     color: #333;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 /* The Reputation bonus (Improved Accessibility Services / News Column) sits in its own smaller box right under

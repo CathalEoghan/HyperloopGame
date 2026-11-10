@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
+import increaseIcon from '../assets/misc/increase.png'
+import decreaseIcon from '../assets/misc/decrease.png'
 import './EventModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
@@ -41,6 +43,9 @@ function EventModal({ event, onContinue, terminalName }) {
     // Home cities don't all use £, so the amount is shown next to the generic cash icon rather than a £ sign (bug #211)
     const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
 
+    // In place of the plain green ▲ / red ▼ triangle, used both in the small type label and the effect box below it
+    const trendIconEl = <img src={isPositive ? increaseIcon : decreaseIcon} alt="" className="event-trend-icon" />
+
     const getEffectText = () => {
         if (event.effectType === 'instantCash') return <>{cashIconEl}{event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance{pizzaSuffix}</>
         if (event.effectType === 'instantCashLoss') return <>{cashIconEl}{Math.abs(event.instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been deducted from your balance</>
@@ -58,13 +63,13 @@ function EventModal({ event, onContinue, terminalName }) {
     return (
         <div className="modal-overlay">
             <div className={`event-modal ${isPositive ? 'event-positive' : 'event-negative'}`}>
-                <p className="event-type-label">{isPositive ? '▲ POSITIVE EVENT' : '▼ NEGATIVE EVENT'}</p>
+                <p className="event-type-label">{trendIconEl} {isPositive ? 'POSITIVE EVENT' : 'NEGATIVE EVENT'}</p>
                 <h2 className="event-title">{event.title}</h2>
                 <p className="event-description">{description}</p>
                 {event.celebrityHint && <p className="event-hint">Keep an eye on the departure board...</p>}
                 <div className="event-effect-box">
                     <span className={`event-effect-indicator ${isPositive ? 'event-positive-text' : 'event-negative-text'}`}>
-                        {isPositive ? '▲' : '▼'}
+                        {trendIconEl}
                     </span>
                     <span className="event-effect-text">{getEffectText()}</span>
                 </div>
