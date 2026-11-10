@@ -34,7 +34,11 @@ export const EFFECT_DESCRIPTIONS = {
     // wording says so rather than naming only the farewell half.
     farewellWindowExtension: (v) => `+${v} minutes to farewell and greeting windows`,
     farewellRepDoubled: () => `Reputation from farewells doubled`,
-    negativeEventReduction: (v) => `Negative events ${pct(v)}% less likely`,
+    // "stacks multiplicatively" flagged inline - several of these upgrades can be owned at once (Uniform Redesign,
+    // Staff Cafeteria Renovations, ...) and they do NOT add up the way a "+%" income upgrade does: each one only
+    // cuts whatever chance the others still let through (getNegativeEventReduction in EconomyManager.js), so five
+    // 20% upgrades together give nowhere near "100% less likely".
+    negativeEventReduction: (v) => `Negative events ${pct(v)}% less likely (stacks multiplicatively)`,
     workRepChanceDouble: () => `Double chance of Reputation from Work`,
     workRepChanceTriple: () => `Triple chance of Reputation from Work`,
     continentExpansionBoost: (v) => `+${pct(v)}% city income per unique continent connected`,
@@ -98,16 +102,8 @@ const ADDS_TO_INCOME = new Set([
 ])
 const ADDS_TO_WORK = new Set(['workClickBonus', 'workPerAchievement'])
 
-// The reverse case from the two sets above: each of these reads as "20% less likely" on its own card, which is
-// exactly right for that one upgrade alone, but owning several does NOT add up the way a "+%" income upgrade does.
-// Each one only cuts whatever chance the others still let through (getNegativeEventReduction in EconomyManager.js),
-// so five 20% upgrades together give nowhere near "100% less likely". Worth flagging here the same way the
-// Prestige page spells out "All bonuses are multiplicative" for its own perks.
-const MULTIPLIES_AGAINST_OTHERS = new Set(['negativeEventReduction'])
-
 export function stackingNote(effectType) {
     if (ADDS_TO_INCOME.has(effectType)) return 'Adds to your other income upgrades rather than multiplying them.'
     if (ADDS_TO_WORK.has(effectType)) return 'Adds to your other Work upgrades rather than multiplying them.'
-    if (MULTIPLIES_AGAINST_OTHERS.has(effectType)) return 'Stacks with other reductions multiplicatively, not added together - each one only cuts whatever chance the others still let through.'
     return null
 }
