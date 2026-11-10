@@ -1,3 +1,5 @@
+// First, so a full or blocked browser storage can't crash the game while it starts (see the file)
+import './utils/safeStorage.js'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 // The fonts ship with the game instead of coming from Google Fonts, so no player's IP address goes to Google (bug #182)
