@@ -963,7 +963,7 @@ battery.png - Photo by Stockio via flaticon.com (Flaticon license), <a href="htt
 signal.png - Photo by Andrejs Kirma via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/ui" title="ui icons">Ui icons created by Andrejs Kirma - Flaticon</a>
 wifi.png - Photo by Prosymbols Premium via flaticon.com (Flaticon license), <a href="https://www.flaticon.com/free-icons/wifi" title="wifi icons">Wifi icons created by Magnific - Flaticon</a>
 me.jpg - Photo by Cathal Eoghan (all rights reserved)
-shopping.png - Photo by Sergei Kokota (Flaticon license), <a href="https://www.flaticon.com/free-icons/paper-bag" title="paper bag icons">Paper bag icons created by Sergei Kokota - Flaticon</a>
+shopping.png - <a href="https://www.flaticon.com/free-icons/shopping-bag" title="shopping bag icons">Shopping bag icons created by flashicon - Flaticon</a>
 portfolio.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/briefcase" title="briefcase icons">Briefcase icons created by Magnific - Flaticon</a>
 music.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/music-note" title="music note icons">Music note icons created by Magnific - Flaticon</a>
 palette.png - Photo by Magnific (Flaticon license), <a href="https://www.flaticon.com/free-icons/palette" title="palette icons">Palette icons created by Magnific - Flaticon</a>
@@ -990,7 +990,14 @@ decrease.png - <a href="https://www.flaticon.com/free-icons/decrease" title="dec
 increase.png - <a href="https://www.flaticon.com/free-icons/increase" title="increase icons">Increase icons created by Gajah Mada - Flaticon</a>
 graduation.png - <a href="https://www.flaticon.com/free-icons/university" title="university icons">University icons created by Magnific - Flaticon</a>
 guide.png - <a href="https://www.flaticon.com/free-icons/open-book" title="open book icons">Open book icons created by Karyative - Flaticon</a>
-
+legal.png - <a href="https://www.flaticon.com/free-icons/legal" title="legal icons">Legal icons created by Good Ware - Flaticon</a>
+terminal.png - <a href="https://www.flaticon.com/free-icons/airfield" title="airfield icons">Airfield icons created by Vector Squad - Flaticon</a>
+image.png - <a href="https://www.flaticon.com/free-icons/photo" title="photo icons">Photo icons created by Magnific - Flaticon</a>
+ruler.png - <a href="https://www.flaticon.com/free-icons/ruler" title="ruler icons">Ruler icons created by Uniconlabs - Flaticon</a>
+sound.png - <a href="https://www.flaticon.com/free-icons/sound-on" title="sound on icons">Sound on icons created by Ian Anandara - Flaticon</a>
+heart.png - <a href="https://www.flaticon.com/free-icons/heart" title="heart icons">Heart icons created by Magnific - Flaticon</a>
+sparkle.png - <a href="https://www.flaticon.com/free-icons/sparkle" title="sparkle icons">Sparkle icons created by Magnific - Flaticon</a>
+camera.png - <a href="https://www.flaticon.com/free-icons/cinema" title="cinema icons">Cinema icons created by Magnific - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
