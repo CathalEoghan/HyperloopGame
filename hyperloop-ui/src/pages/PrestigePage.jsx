@@ -26,7 +26,8 @@ const chunk = (list, size) => Array.from({ length: Math.ceil(list.length / size)
 // From a billion up, the same names as the top bar (billion, trillion … decillion), not "£999000000.00 trillion" (bug #177)
 const fmtCash = n => {
     if (!Number.isFinite(n)) return '—'
-    if (n >= 1e9) return `£${formatBalance(n)}`
+    // From £999,995,000 the million figure would round to "1000.00 million", so it reads as a billion instead
+    if (n >= 999_995_000) return `£${n < 1e9 ? '1.00 billion' : formatBalance(n)}`
     if (n >= 1e6) return `£${(n / 1e6).toFixed(2)} million`
     return `£${Math.floor(n).toLocaleString('en-GB')}`
 }
@@ -40,7 +41,7 @@ const fmtSpan = ms => {
 const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
 const fmtCashIcon = n => {
     if (!Number.isFinite(n)) return '—'
-    if (n >= 1e9) return <>{cashIconEl}{formatBalance(n)}</>
+    if (n >= 999_995_000) return <>{cashIconEl}{n < 1e9 ? '1.00 billion' : formatBalance(n)}</>
     if (n >= 1e6) return <>{cashIconEl}{(n / 1e6).toFixed(2)} million</>
     return <>{cashIconEl}{Math.floor(n).toLocaleString('en-GB')}</>
 }
