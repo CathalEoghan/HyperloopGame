@@ -11,8 +11,9 @@ import delayIcon from '../assets/misc/delay.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import sleepIcon from '../assets/misc/sleep.png'
 import successIcon from '../assets/misc/success.png'
-import graduationIcon from '../assets/misc/graduation-hat.png'
+import graduationIcon from '../assets/misc/graduation.png'
 import eventIcon from '../assets/misc/event.png'
+import guideIcon from '../assets/misc/guide.png'
 import './GuideModal.css'
 
 const GUIDE_SECTIONS = [
@@ -36,7 +37,7 @@ function GuideModal({ onClose }) {
     return (
         <div className="modal-overlay" onClick={onClose}>
             <div className="guide-modal" onClick={e => e.stopPropagation()}>
-                <p className="guide-heading">📖 GUIDE</p>
+                <p className="guide-heading"><img src={guideIcon} alt="" className="guide-heading-icon" />GUIDE</p>
                 <div className="guide-body">
                     {GUIDE_SECTIONS.map(section => (
                         <div
