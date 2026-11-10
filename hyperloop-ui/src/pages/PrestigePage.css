@@ -272,6 +272,7 @@
 .prestige-node-name {
     align-self: stretch;
     text-align: center;
+    margin-top: 10px;
     font-weight: 800;
     font-size: 0.95rem;
     line-height: 1.2;
@@ -400,13 +401,16 @@
 /* ---- Tree layout: every card the same size, with branches from the layer above ---- */
 .prestige-page {
     --card-w: 220px;
+    --card-h: 290px;
     --card-gap: 12px;
     --lane: 26px;
 }
 
-@media (max-width: 1399px) { .prestige-page { --card-w: 190px; } }
-@media (max-width: 1150px) { .prestige-page { --card-w: 160px; } }
-@media (max-width: 960px)  { .prestige-page { --card-w: 140px; --card-gap: 8px; --lane: 20px; } }
+/* --card-h is sized to fit the longest upgrade description at each card width, so every
+   card is the same height everywhere in the tree, not just within its own row */
+@media (max-width: 1399px) { .prestige-page { --card-w: 190px; --card-h: 305px; } }
+@media (max-width: 1150px) { .prestige-page { --card-w: 160px; --card-h: 305px; } }
+@media (max-width: 960px)  { .prestige-page { --card-w: 140px; --card-h: 325px; --card-gap: 8px; --lane: 20px; } }
 
 .prestige-tree {
     overflow-x: auto;
@@ -454,7 +458,8 @@
 
 .prestige-node {
     width: 100%;
-    min-height: 196px;
+    height: var(--card-h);
+    overflow: hidden;
 }
 
 /* ---- Buy popover, attached to the selected card ---- */
