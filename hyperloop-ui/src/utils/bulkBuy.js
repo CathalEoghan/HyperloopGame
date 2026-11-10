@@ -4,9 +4,9 @@
 // ever skipped for being unaffordable, never because an earlier one happened to come first in the list.
 //
 // costOf(item, state) returns this item's price right now, as { cash, rep } (rep defaults to 0). onBought(state,
-// item), if given, returns the state after buying it - used only for Bank (-10% development cost), the one
-// upgrade in the game that changes what things cost: buying it partway through the pass makes the rest of that
-// pass's prices (recomputed from costOf each time) cheaper, same as it would buying one at a time by hand.
+// item), if given, returns the state after buying it. Nothing passes one today: Bank (-15% development cost) used
+// to, but a Bank bought in a batch only takes effect once its own construction finishes, so the rest of that batch
+// is really charged full price (see DevelopmentPage's Develop all).
 export function planBulkBuy(items, costOf, startState, onBought) {
     const order = [...items].sort((a, b) => {
         const ca = costOf(a, startState), cb = costOf(b, startState)

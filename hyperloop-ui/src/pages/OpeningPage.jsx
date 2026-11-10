@@ -46,7 +46,8 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
     const handleConfirm = () => {
         if (!localName.trim()) return
         playClickSound2()
-        setTerminalName(localName.trim())
+        // Runs of spaces become one, as the header shows it (it collapsed them anyway, but the save, ticker and posts kept them)
+        setTerminalName(localName.trim().replace(/\s+/g, ' '))
         setStep(2)
     }
 

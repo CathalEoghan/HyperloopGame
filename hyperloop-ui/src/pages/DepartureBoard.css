@@ -75,11 +75,11 @@
     align-items: center;
     justify-content: center;
     background: #1a1a1a;
-    width: 14px;
+    width: var(--flap-w, 14px);
     height: 22px;
     border-radius: 2px;
     font-family: 'B612 Mono', 'Courier New', monospace;
-    font-size: 0.82rem;
+    font-size: var(--flap-font, 0.82rem);
     position: relative;
 }
 
@@ -263,9 +263,9 @@
    destination name (19 letters), instead of hiding the right-hand Status column off to the side (bug #174) */
 @media (max-width: 1439px) {
     .flap-char {
-        width: 10px;
+        width: var(--flap-w, 10px);
         height: 20px;
-        font-size: 0.7rem;
+        font-size: var(--flap-font, 0.7rem);
     }
     .flip-card {
         padding: 6px 4px;

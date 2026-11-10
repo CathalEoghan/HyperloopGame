@@ -145,6 +145,9 @@ export class AchievementManager {
             categories,
             rank: rankManager.rank,
             balance: progressionManager.balance,
+            // Cash actually earned this run (not the starting balance, Sign-On Bonus or refunds, and since Government Grants'
+            // XP was split out, not that either)
+            runCashEarned: progressionManager.totalCashEarned,
             likes,
             farewells: this.counter('farewells'),
             greetings: this.counter('greetings'),

@@ -82,8 +82,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         if (search.trim()) result = result.filter(d => matchesSearch(nameOf(d), search) || matchesSearch(d.name, search))
         if (sortBy === 'revenue-high') result.sort((a, b) => incomeOf(b) - incomeOf(a))
         else if (sortBy === 'revenue-low') result.sort((a, b) => incomeOf(a) - incomeOf(b))
-        else if (sortBy === 'category') result.sort((a, b) => a.category.localeCompare(b.category))
-        else if (sortBy === 'upgrades-first') result.sort((a, b) => (a.revenue ? 1 : 0) - (b.revenue ? 1 : 0))
+        // Ties are A–Z rather than in whatever order the lists happen to hold them
+        else if (sortBy === 'category') result.sort((a, b) => a.category.localeCompare(b.category) || nameOf(a).localeCompare(nameOf(b)))
+        else if (sortBy === 'upgrades-first') result.sort((a, b) => (a.revenue ? 1 : 0) - (b.revenue ? 1 : 0) || nameOf(a).localeCompare(nameOf(b)))
         else result.sort((a, b) => nameOf(a).localeCompare(nameOf(b)))
         return result
     }
@@ -96,15 +97,14 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const costOfDevelopment = (item, state) => item.effectType === 'earlyRetirement'
         ? { cash: 0, rep: item.effectValue }
         : { cash: Math.floor(item.cost * (1 - state.discount) + 1e-6) }
-    // Buying Bank (-% development cost) partway through a batch makes the rest of it cheaper, same as buying
-    // one at a time by hand would.
-    const afterBought = (state, item) => item.effectType === 'developmentDiscount'
-        ? { ...state, discount: state.discount + item.effectValue }
-        : state
+    // Every item in a batch is priced at today's discount. Bank (-% development cost) bought in the same batch doesn't
+    // count yet: it only joins purchasedUpgrades once its own construction finishes, so the items after it are still
+    // charged full price. Planning them at the lower price used to show a total smaller than what was taken, and
+    // could leave some of the "affordable" items silently unbought once the real prices ran the money out.
     const developmentStartState = { cash: progressionManager.balance, rep: reputation, discount: economyManager.getUpgradeSum('developmentDiscount') }
     // "available" regardless of the search box or category filter - those only narrow what's shown.
-    const developAllPlan = planBulkBuy(available, costOfDevelopment, developmentStartState, afterBought)
-    const developAllExcludingUpgradesPlan = planBulkBuy(available.filter(item => item.revenue), costOfDevelopment, developmentStartState, afterBought)
+    const developAllPlan = planBulkBuy(available, costOfDevelopment, developmentStartState)
+    const developAllExcludingUpgradesPlan = planBulkBuy(available.filter(item => item.revenue), costOfDevelopment, developmentStartState)
 
     const buyPlannedItem = (item) => {
         if (item.effectType === 'earlyRetirement') return progressionManager.buyEarlyRetirement(item)
@@ -119,7 +119,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         // one - buyPlannedItem re-checks affordability itself, so nothing is lost even if something else spent
         // cash in between.
         const pool = restrictToRevenue ? available.filter(item => item.revenue) : available
-        const plan = planBulkBuy(pool, costOfDevelopment, { cash: progressionManager.balance, rep: progressionManager.reputation, discount: economyManager.getUpgradeSum('developmentDiscount') }, afterBought)
+        const plan = planBulkBuy(pool, costOfDevelopment, { cash: progressionManager.balance, rep: progressionManager.reputation, discount: economyManager.getUpgradeSum('developmentDiscount') })
         let boughtAny = false
         plan.toBuy.forEach(item => { if (buyPlannedItem(item)) boughtAny = true })
         if (boughtAny) { playConstructionSound(); onSave() } else playNotEnoughFundsSound()
@@ -417,10 +417,14 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             {(() => {
                                                 const busy = economyManager.getDevelopmentBusyStatus()
                                                 const busyPct = economyManager.getDevelopmentBusyPercent()
+                                                const busyFloor = economyManager.getDevelopmentBusyFloor()
+                                                // Delivery Drones raises the floor from 10% to 50% - the tooltip used to say "10% floor" even
+                                                // when it's owned, which was actively wrong rather than just silent about it.
+                                                const floorNote = PrestigeManager.owns('deliveryDrones') ? ' (Delivery Drones)' : ''
                                                 return (
                                                     <p
                                                         style={{ margin: '0 0 8px', fontSize: '0.8rem', fontWeight: 'bold', color: busy.color, cursor: 'var(--cursor-help, help)' }}
-                                                        onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `How busy the terminal is right now (10% floor, +5% per loop nearing departure or just arrived, capped at 100%) - this scales every development's income, including this one's. ${busy.explanation}` })}
+                                                        onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `How busy the terminal is right now (${busyFloor}% floor${floorNote}, +5% per loop nearing departure or just arrived, capped at 100%) - this scales every development's income, including this one's. ${busy.explanation}` })}
                                                         onMouseLeave={() => setShowBusyTooltip(null)}
                                                     >
                                                         {busy.label}: {busyPct}% footfall
@@ -577,7 +581,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 {sortedPurchased.length > 0 && (
                     <>
                         <h2 className="section-header" style={{ top: purchased.length === 0 ? '0' : '44px' }}>
-                            <span className="section-title">Completed developments <span className="section-count">{sortedPurchased.length}</span></span>
+                            <span className="section-title">Completed developments <span className="section-count">{sortedPurchased.filter(d => !underConstruction.some(u => u.name === d.name)).length}</span></span>
                         </h2>
                         <div className="development-row">
                             {sortedPurchased.map(development => {
@@ -660,6 +664,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         </span>
                     )}
                 </h2>
+                {/* A search or category that matches nothing left only a "0" under the header, with no word of why */}
+                {sortedPurchased.length === 0 && sortedAvailable.length === 0 && (search.trim() || activeCategory !== 'All') && (
+                    <p className="dev-no-results" style={{ textAlign: 'center', color: '#888', margin: '32px 16px' }}>
+                        No developments match{search.trim() ? <> "{search.trim()}"</> : null}{activeCategory !== 'All' ? <> in {activeCategory}</> : null}.
+                    </p>
+                )}
                 <div className="development-row">
                     {sortedAvailable.map(development => (
                         <button className="development" key={development.name}

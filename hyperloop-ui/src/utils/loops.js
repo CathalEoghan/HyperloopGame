@@ -345,6 +345,14 @@ export function getActiveLoops(purchasedCities, nowMs = Date.now()) {
 // getDevelopmentBusyExplanation spells them out in the busy-status tooltip - this keeps one source of truth
 // instead of two copies that could drift apart.
 
+// The player's departure timetable (saved by timetable.js, which imports this module, so it is read directly here) as a
+// day's departures: one { name, hour, minute } per scheduled city
+function timetableAsDepartures(homeCity) {
+    return readSchedule('hyperloop_timetable')
+        .filter(s => s && s.name !== homeCity.name && Number.isFinite(s.minuteOfDay))
+        .map(s => ({ name: s.name, hour: Math.floor(s.minuteOfDay / 60), minute: s.minuteOfDay % 60 }))
+}
+
 // How many loops are putting people in the home terminal right now, for the development busy bonus, split by
 // which side of the board they're on - so the UI can explain the number (e.g. "2 loops nearing departure, 1 just
 // arrived") rather than just showing a bare count. A departure counts from DEPARTURE_FOOTFALL_HOURS before it
@@ -359,7 +367,12 @@ export function getTerminalFootfallBreakdown(purchasedCities, nowMs = Date.now()
     const departureWindowMs = DEPARTURE_FOOTFALL_HOURS * 60 * 60000
     ;[0, 1].forEach(offset => {
         const dayMs = offset === 0 ? nowMs : shiftDays(nowMs, offset)
-        readSchedule(departuresKey(dayMs)).forEach(e => {
+        // Tomorrow's departures aren't written until the day starts, so late in the evening the early-morning loops
+        // (inside the 3-hour window) were missing, and live income dipped below what offline pay counts for the same
+        // hours (makeFootfallEstimator reads the timetable for a day with no board). The timetable fills in here too.
+        const key = departuresKey(dayMs)
+        const list = localStorage.getItem(key) !== null ? readSchedule(key) : timetableAsDepartures(homeCity)
+        list.forEach(e => {
             if (!connected.has(e.name)) return
             const departTs = entryTimestamp(e, dayMs)
             if (departTs >= nowMs && departTs - nowMs <= departureWindowMs) departures++

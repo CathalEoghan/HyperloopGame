@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import './TickerBar.css'
-import { minutesUntilDeparture } from '../utils/time.js'
-import { arrivalsKey, readSchedule } from '../utils/loops.js'
+import { arrivalsKey, departuresKey, readSchedule, entryTimestamp, shiftDays, timeString } from '../utils/loops.js'
+import { readTimetable } from '../utils/timetable.js'
 import { loopCode } from '../utils/loopCodes.js'
 
 function TickerBar({ terminalName, purchasedCities }) {
@@ -13,10 +13,25 @@ function TickerBar({ terminalName, purchasedCities }) {
     const purchasedCitiesRef = useRef(purchasedCities)
     useEffect(() => { purchasedCitiesRef.current = purchasedCities }, [purchasedCities])
 
-    function getActiveMessages(schedule) {
+    // Whole minutes from now until an entry on the given day's board (negative once it has gone)
+    const minutesUntil = (entry, dayMs, nowMs) => Math.round(entryTimestamp(entry, dayMs) / 60000) - Math.floor(nowMs / 60000)
+
+    // Tomorrow's departures before its board exists (it is written at midnight): the timetable, which repeats every day
+    function tomorrowsDepartures(tomorrowMs) {
+        const key = departuresKey(tomorrowMs)
+        if (localStorage.getItem(key) !== null) return readSchedule(key)
+        const cities = purchasedCitiesRef.current || []
+        const connected = new Set(cities.slice(1).map(c => c.name))
+        return readTimetable().filter(e => connected.has(e.name)).map(e => ({
+            name: e.name, gate: e.gate, loopNumber: e.loopNumber, time: timeString(e.minuteOfDay),
+            hour: Math.floor(e.minuteOfDay / 60), minute: e.minuteOfDay % 60,
+        }))
+    }
+
+    function getActiveMessages(schedule, dayMs, nowMs) {
         const msgs = []
         schedule.forEach(entry => {
-            const diff = minutesUntilDeparture(entry)
+            const diff = minutesUntil(entry, dayMs, nowMs)
             const code = loopCode(entry.name, 'departure', purchasedCitiesRef.current, terminalNameRef.current, entry.loopNumber)
             if (diff > 30 && diff <= 45) {
                 msgs.push(`Notice: Gate ${entry.gate} is now open for the ${entry.time} ${code} service to ${entry.name}.`)
@@ -30,12 +45,21 @@ function TickerBar({ terminalName, purchasedCities }) {
     }
 
     function loadMessages() {
-        const today = new Date().toDateString()
-        const saved = localStorage.getItem(`departures_${today}`)
-        const msgs = saved ? getActiveMessages(JSON.parse(saved)) : []
+        // readSchedule never throws, so an unreadable schedule can't freeze the announcements.
+        // Tomorrow's board and yesterday's are read too: late in the evening the loops leaving or arriving just after
+        // midnight were never announced (the ticker sat on its idle messages), and a loop that landed at 23:58 lost its
+        // "has arrived" notice at midnight.
+        const nowMs = Date.now()
+        const tomorrowMs = shiftDays(nowMs, 1), yesterdayMs = shiftDays(nowMs, -1)
+        const msgs = [
+            ...getActiveMessages(readSchedule(departuresKey(nowMs)), nowMs, nowMs),
+            ...getActiveMessages(tomorrowsDepartures(tomorrowMs), tomorrowMs, nowMs),
+        ]
         // Loops that have just come in, or are about to
-        readSchedule(arrivalsKey()).forEach(entry => {
-            const diff = minutesUntilDeparture(entry)
+        const arrivals = [[yesterdayMs], [nowMs], [tomorrowMs]].flatMap(([dayMs]) => readSchedule(arrivalsKey(dayMs)).map(entry => ({ entry, dayMs })))
+        const connectedNames = new Set((purchasedCitiesRef.current || []).map(c => c.name))
+        arrivals.filter(({ entry }) => connectedNames.has(entry.name)).forEach(({ entry, dayMs }) => {
+            const diff = minutesUntil(entry, dayMs, nowMs)
             const code = loopCode(entry.name, 'arrival', purchasedCitiesRef.current)
             if (diff > 0 && diff <= 10) {
                 msgs.push(`Notice: The ${code} service from ${entry.name} is now approaching Gate ${entry.gate}.`)

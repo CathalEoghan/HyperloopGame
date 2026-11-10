@@ -234,7 +234,15 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     const [showOwned, setShowOwned] = useState(() => {
         try { return localStorage.getItem('globeShowOwned') !== 'false' } catch { return true }
     })
-    const [globeReady, setGlobeReady] = useState(false)
+    // True when the browser can't run WebGL (switched off, hardware acceleration disabled, or a blocked graphics driver):
+    // the globe is skipped and the rest of the game carries on, instead of the whole game crashing to its error screen
+    const [globeUnavailable, setGlobeUnavailable] = useState(() => {
+        try {
+            const canvas = document.createElement('canvas')
+            return !(canvas.getContext('webgl2') || canvas.getContext('webgl'))
+        } catch { return true }
+    })
+    const [globeReady, setGlobeReady] = useState(globeUnavailable)
     const [selectedGlobeCity, setSelectedGlobeCity] = useState(null)
     // The city whose departure is being scheduled from its card (the Schedule modal opens straight onto it), as on the Cities page
     const [scheduleCity, setScheduleCity] = useState(null)
@@ -396,6 +404,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
 
     useEffect(() => {
         const mount = mountRef.current
+        if (globeUnavailable) { onGlobeReady?.(); return }
         const width = mount.clientWidth
         const height = mount.clientHeight
         const scene = new THREE.Scene()
@@ -419,7 +428,16 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         }
         updateCamera()
 
-        const renderer = new THREE.WebGLRenderer({ antialias: true })
+        let renderer
+        try {
+            renderer = new THREE.WebGLRenderer({ antialias: true })
+        } catch (err) {
+            // WebGL looked available but still wouldn't start: the same fallback, a moment later
+            console.warn('Hyperloop Empire: the 3D globe needs WebGL, which this browser could not start', err)
+            setTimeout(() => { setGlobeUnavailable(true); setGlobeReady(true) }, 0)
+            onGlobeReady?.()
+            return
+        }
         renderer.setSize(width, height)
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
         mount.appendChild(renderer.domElement)
@@ -1233,6 +1251,15 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             {!globeReady && (
                 <div className="globe-loading">
                     <p>Loading globe...</p>
+                </div>
+            )}
+            {globeUnavailable && (
+                <div className="globe-loading">
+                    <p style={{ maxWidth: '420px', textAlign: 'center', lineHeight: 1.5, letterSpacing: '0.5px' }}>
+                        The 3D globe can't be shown because this browser has WebGL (3D graphics) turned off.
+                        Everything else works as normal from the tabs below. Turning on hardware acceleration in
+                        your browser's settings usually brings the globe back.
+                    </p>
                 </div>
             )}
             <div ref={mountRef} className="globe-container" />

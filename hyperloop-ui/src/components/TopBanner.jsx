@@ -213,11 +213,14 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const { effectType, title, instantCashAmount } = activeEvent
         // Home cities don't all use £, so the amount is shown next to the generic cash icon rather than a £ sign (bug #211)
         const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle' }} />
-        if (effectType === 'instantCash') return <>{title} — +{cashIconEl}{instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>
+        // Pizza Parties' doubling, already in the figures below - tagged here too, same as on the event popup itself,
+        // since this banner stays up for the whole event after the popup is closed
+        const pizza = activeEvent.pizzaBoosted ? ' (×2 - Pizza Parties)' : ''
+        if (effectType === 'instantCash') return <>{title} — +{cashIconEl}{instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}{pizza}</>
         if (effectType === 'instantCashLoss') return <>{title} — -{cashIconEl}{Math.abs(instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>
-        if (effectType === 'passiveBoost') return `${title} — +${Math.round(((activeEvent.effect?.multiplier ?? 2) - 1) * 100)}% passive income`
+        if (effectType === 'passiveBoost') return `${title} — +${Math.round(((activeEvent.effect?.multiplier ?? 2) - 1) * 100)}% passive income${pizza}`
         if (effectType === 'passivePenalty') return `${title} — -50% passive income`
-        if (effectType === 'workBoost') return `${title} — +${Math.round(((activeEvent.effect?.multiplier ?? 1.5) - 1) * 100)}% work earnings`
+        if (effectType === 'workBoost') return `${title} — +${Math.round(((activeEvent.effect?.multiplier ?? 1.5) - 1) * 100)}% work earnings${pizza}`
         if (effectType === 'workPenalty') return `${title} — -50% work earnings`
         return title
     }
@@ -245,7 +248,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         <div className="TopBanner">
             <div className="TopBannerLeft">
             <div className="TerminalNameBlock">
-                <h1 className="TerminalName">{terminalName}</h1>
+                <h1 className="TerminalName" title={terminalName}>{terminalName}</h1>
                 {homeCity && (
                     <div className="HomeCity">
                         <img src={pinIcon} alt="pin" style={{ width: '10px', height: '10px', border: 'none', borderRadius: '0', opacity: 0.6 }} />

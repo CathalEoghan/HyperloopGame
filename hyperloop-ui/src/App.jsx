@@ -63,7 +63,7 @@ import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from '.
 import { pickCelebrityDeparture } from './utils/celebrity.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playClickSound3, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
-import { saveGame, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, clearSettings, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
+import { saveGame, buildSave, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, clearSettings, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
@@ -358,6 +358,9 @@ function App() {
   const [farewellsGiven, setFarewellsGiven] = useState(() => savedData?.farewellsGiven || 0);
   const [lastSaved, setLastSaved] = useState(() => savedData?.lastSaved || null);
   const [showSaved, setShowSaved] = useState(false);
+  // True while the browser is refusing to save (storage full or blocked). Saving used to throw out of the game tick
+  // every 30 seconds with nothing on screen, so progress quietly stopped being kept.
+  const [saveFailed, setSaveFailed] = useState(false);
   const [balance, setBalance] = useState(() => progressionManager.balance);
   const [totalCashEarned, setTotalCashEarned] = useState(() => progressionManager.totalCashEarned);
   const [rankSet, setRankSet] = useState(() => rankManager.rank);
@@ -563,6 +566,9 @@ function App() {
   })
   const [hyperLinkOpen, setHyperLinkOpen] = useState(false)
   const [hyperLinkBubble, setHyperLinkBubble] = useState(false)
+  // How many posts the badge was showing right as the phone opened - hyperLinkUnread itself gets zeroed in the
+  // same click, so the modal needs its own copy to know which posts to open as still "new" (see HyperLink.jsx).
+  const [hyperLinkOpenUnread, setHyperLinkOpenUnread] = useState(0)
 
   // Keep ref in sync so tick loop can check without stale closure
   useEffect(() => { hyperLinkOpenRef.current = hyperLinkOpen }, [hyperLinkOpen])
@@ -769,7 +775,9 @@ function App() {
         setMilestoneQueue(prev => prev.some(m => m.rank === milestone.rank) ? prev : [...prev, milestone]);
       }
     });
-    ensureTodaySchedule();   // there are departures to say farewell to straight away
+    // The granted cities are left for the player to schedule (from the Terminal Board), like any other connected city:
+    // they earn nothing until they have a departure. Their arrivals are drawn now, so there are greetings straight away.
+    ensureTodaySchedule();
     triggerSave();
   };
 
@@ -898,10 +906,14 @@ function App() {
     economyManager.activeEvent = savedEvent;
     const rawCashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25)) * (PrestigeManager.owns('betterInterestRates') ? 10 : 1);
     const cashBonus = Math.max(rawCashBonus, MIN_DAILY_BONUS);
-    // Passenger Loyalty Scheme and Personal Styling Retinue each add their own +5
+    // Whether Better Interest Rates' x10 is what the player is actually being paid: not when the minimum floor
+    // above paid more anyway (a new run's first days), or the popup would credit x10 for a number it didn't make.
+    // Decided here and kept with the pending bonus, so a reload shows the same thing.
+    const interestBoosted = PrestigeManager.owns('betterInterestRates') && rawCashBonus > MIN_DAILY_BONUS;
+    // Passenger Loyalty Scheme (+20) and Personal Styling Retinue (+5) each add their own
     const repBonus = economyManager.getUpgradeSum('dailyLoginRep');
-    localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus }));
-    setDailyLoginData({ cashBonus, repBonus });
+    localStorage.setItem('hyperloop_pending_daily', JSON.stringify({ cashBonus, repBonus, interestBoosted }));
+    setDailyLoginData({ cashBonus, repBonus, interestBoosted });
   }
   useEffect(() => { checkDailyLogin(); }, []);
 
@@ -912,11 +924,24 @@ function App() {
 
   const [workRange, setWorkRange] = useState(() => economyManager.calculateWorkClickRange());
 
+  // Writes the save, and says whether the browser accepted it
+  const writeSaveSafely = (farewells) => {
+    try {
+      saveGame(progressionManager, rankManager, terminalNameRef.current, farewells ?? farewellsRef.current);
+      // Every save is also a sign of life, so offline time is counted from the newest save
+      localStorage.setItem('hyperloop_heartbeat_at', Date.now());
+      return true;
+    } catch (err) {
+      console.warn('Hyperloop Empire: the browser refused to save', err);
+      return false;
+    }
+  };
+
   const triggerSave = (farewells) => {
     if (blockedRef.current || leavingRef.current) return;
-    saveGame(progressionManager, rankManager, terminalNameRef.current, farewells ?? farewellsRef.current);
-    // Every save is also a sign of life, so offline time is counted from the newest save
-    localStorage.setItem('hyperloop_heartbeat_at', Date.now());
+    const ok = writeSaveSafely(farewells);
+    setSaveFailed(!ok);
+    if (!ok) return;
     setLastSaved(Date.now());
     setShowSaved(true);
     setTimeout(() => setShowSaved(false), 2000);
@@ -1038,9 +1063,12 @@ function App() {
       const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
       const bonus = Math.max(rawBonus, MIN_INSTANT_CASH_BONUS);
       progressionManager.addCash(bonus);
-      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000, eventRepBonus: eventRep };
+      // Pizza Parties doubled this already (see rawBonus above) - flagged the same way the duration
+      // upgrades and News Column's Reputation bonus are, so the amount isn't the only boosted thing on this
+      // popup with nothing saying why. Not when the minimum floor paid more anyway: the x2 didn't make that number.
+      const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: bonus, expiresAt: Date.now() + 8000, eventRepBonus: eventRep, pizzaBoosted: pizza && rawBonus > MIN_INSTANT_CASH_BONUS };
       activeEventRef.current = fullEvent;
-      localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+      try { localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent)); } catch { /* storage full: the event still runs this session */ }
       playEventSound();
       setActiveEvent(fullEvent);
       setShowEventModal(true);
@@ -1057,13 +1085,15 @@ function App() {
       }, 8000);
     } else if (event.effectType === 'instantCashLoss') {
       const rawLoss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
-      const loss = Math.max(rawLoss, MIN_INSTANT_CASH_LOSS);
+      // The balance can't go below zero, so the popup says what was actually taken, not the full amount a nearly empty
+      // balance never had
+      const loss = Math.min(Math.max(rawLoss, MIN_INSTANT_CASH_LOSS), Math.floor(progressionManager.balance));
       progressionManager.addCash(-loss);
       const fullEvent = { ...event, durationSeconds: 0, instantCashAmount: -loss, expiresAt: Date.now() + 8000, eventRepBonus: eventRep };
       activeEventRef.current = fullEvent;
       // Persisted like every other branch (this one alone used to skip it) - without it, a reload during the
       // 8-second window loses all memory the event ever happened, even though nothing removes it either.
-      localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+      try { localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent)); } catch { /* storage full: the event still runs this session */ }
       playEventSound();
       setActiveEvent(fullEvent);
       setShowEventModal(true);
@@ -1078,9 +1108,12 @@ function App() {
         localStorage.removeItem('hyperloop_active_event');
       }, 8000);
     } else {
-      const fullEvent = { ...event, durationSeconds, durationModifier, expiresAt: Date.now() + durationSeconds * 1000, eventRepBonus: eventRep };
+      // Pizza Parties already doubled event.effect.multiplier above (scaledEvent) - flagged the same way
+      // the duration upgrades are, so the percentage isn't the only boosted thing on this popup with
+      // nothing saying why.
+      const fullEvent = { ...event, durationSeconds, durationModifier, expiresAt: Date.now() + durationSeconds * 1000, eventRepBonus: eventRep, pizzaBoosted: pizza };
       activeEventRef.current = fullEvent;
-      localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent));
+      try { localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent)); } catch { /* storage full: the event still runs this session */ }
       playEventSound();
       setActiveEvent(fullEvent);
       setShowEventModal(true);
@@ -1140,7 +1173,8 @@ function App() {
         setBlockedByOtherTab(true);
         return;
       }
-      localStorage.setItem(TAB_LOCK_KEY, JSON.stringify({ id: tabId, at: Date.now() }));
+      // Guarded: with storage full this threw every second and stopped the whole tick (no income, no autosave)
+      try { localStorage.setItem(TAB_LOCK_KEY, JSON.stringify({ id: tabId, at: Date.now() })); } catch { /* storage full */ }
       // Nothing below this point should run, or make noise, before the player has actually entered (see
       // hasEnteredRef above) - the tab-lock heartbeat above still needs to run regardless, so another tab
       // doesn't wrongly conclude this one has gone away while it's sitting on the Loading screen. Without
@@ -1184,6 +1218,13 @@ function App() {
         }
       }
       if (tickCount.current % 10 === 0 && !blockedRef.current) countLoops();
+      // Opening Party: which Tier 3 cities are mid-build right now, before this tick may finish one of them.
+      // Only a normal connection counts (not Government Grants' free bulk cities, which never go through
+      // construction at all). Taken before the long-gap branch below, which finishes builds too: a Tier 3 city
+      // that completed while the laptop slept used to finish there first, so the check further down never saw it.
+      const tier3BuildingBefore = PrestigeManager.owns('openingParty')
+        ? progressionManager.citiesUnderConstruction.filter(c => c.tier === 3 && c.underConstruction)
+        : [];
       if (gap > LONG_GAP_SECONDS && !onboarding) {
         elapsed = 0;
         constructionManager.update();
@@ -1196,7 +1237,7 @@ function App() {
             offlineSeconds: (pending?.offlineSeconds || 0) + offlineSeconds,
             offlineIncome: (pending?.offlineIncome || 0) + offlineIncome,
           };
-          localStorage.setItem('hyperloop_pending_offline', JSON.stringify(combined));
+          try { localStorage.setItem('hyperloop_pending_offline', JSON.stringify(combined)); } catch { /* storage full */ }
           setOfflineData(combined);
           setShowOfflineModal(true);
         }
@@ -1220,12 +1261,6 @@ function App() {
           }
         }
       }
-      // Opening Party: which Tier 3 cities are mid-build right now, before this tick may finish one of them.
-      // Only a normal connection counts (not Government Grants' free bulk cities, which never go through
-      // construction at all).
-      const tier3BuildingBefore = PrestigeManager.owns('openingParty')
-        ? progressionManager.citiesUnderConstruction.filter(c => c.tier === 3 && c.underConstruction)
-        : [];
       constructionManager.update();
       if (tier3BuildingBefore.some(c => !c.underConstruction)) {
         // Cut short whatever event is running (positive or negative) and start a fresh positive one, ignoring
@@ -1364,9 +1399,9 @@ function App() {
         // only ever grows within a run and is wiped by startPrestigeRun/clearGameState (SaveManager.js), unlike
         // usedPostIds above which prunes itself back down as entries age out of the 3-hour window.
         const firedDevPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
-        const todayKey = new Date().toDateString()
-        const sched = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]')
-        const todaysArrivals = JSON.parse(localStorage.getItem(`arrivals_${todayKey}`) || '[]')
+        // readSchedule never throws, so an unreadable schedule can't stop the rest of the tick (as bug #178)
+        const sched = readSchedule(departuresKey())
+        const todaysArrivals = readSchedule(arrivalsKey())
         // When each template and picture was last shown, so the engine can pick the one used longest ago
         const templateLastUsed = {}, pfpLastUsed = {}
         cleanFeed.forEach(p => {
@@ -1436,7 +1471,7 @@ function App() {
         ensureTodaySchedule();
         checkDailyLogin();
       }
-      const schedule = JSON.parse(localStorage.getItem(`departures_${todayKey}`) || '[]');
+      const schedule = readSchedule(departuresKey(now.getTime()));
 
       const windowMinutes = farewellWindowMinutes(progressionManager.purchasedUpgrades);
 
@@ -1570,7 +1605,15 @@ function App() {
               }
             : e).sort((a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute));
           if (isArrival) writeSchedule(arrivalsKey(now.getTime()), updated);
-          else localStorage.setItem(`departures_${todayKey}`, JSON.stringify(updated));
+          else {
+            writeSchedule(departuresKey(now.getTime()), updated);
+            // The celebrity's departure is marked by its time, so a delay would have left the mark on the old time and
+            // the celebrity's loop would leave as an ordinary one (no VIP, no celebrity post). The mark moves with it.
+            try {
+              const mark = JSON.parse(localStorage.getItem(CELEBRITY_DEPARTURE_KEY));
+              if (mark?.key === `${todayKey}_${entry.time}_${entry.name}`) localStorage.setItem(CELEBRITY_DEPARTURE_KEY, JSON.stringify({ ...mark, key: `${todayKey}_${newTime}_${entry.name}` }));
+            } catch { /* unreadable: no celebrity */ }
+          }
           // loopNumber is only meaningful for a departure (an arrival's code is looked up live by city name
           // instead - see delayLoopCode/loopCodes.js), but carrying it either way is harmless.
           const delay = { name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation, loopNumber: entry.loopNumber, ...(isArrival ? { kind: 'arrival' } : {}) };
@@ -1676,23 +1719,21 @@ function App() {
     // Save what happened since the last timed save, so closing or reloading the page loses nothing (bug #94).
     const saveNow = () => {
       if (blockedRef.current || leavingRef.current) return;
-      saveGame(progressionManager, rankManager, terminalNameRef.current, farewellsRef.current);
-      localStorage.setItem('hyperloop_heartbeat_at', Date.now());
+      writeSaveSafely();
     };
     const handleHidden = () => { if (document.visibilityState === 'hidden') saveNow(); };
     const handleUnload = () => {
       if (blockedRef.current) return;
       if (!leavingRef.current) {
         saveNow();
-        localStorage.setItem('hyperloop_hidden_at', Date.now());
+        try { localStorage.setItem('hyperloop_hidden_at', Date.now()); } catch { /* storage full */ }
       }
       if (readTabLock()?.id === tabId) localStorage.removeItem(TAB_LOCK_KEY);
     };
     // Another tab asked to take over: save everything now, then step aside.
     const handleStorage = (e) => {
       if (e.key !== TAKEOVER_REQUEST_KEY || !e.newValue || e.newValue === tabId || blockedRef.current) return;
-      saveGame(progressionManager, rankManager, terminalNameRef.current, farewellsRef.current);
-      localStorage.setItem('hyperloop_heartbeat_at', Date.now());
+      writeSaveSafely();
       blockedRef.current = true;
       stopTick();
       localStorage.removeItem(TAB_LOCK_KEY);
@@ -1963,7 +2004,8 @@ function App() {
         workRange={workRange}
       />
       <ExperienceBar
-        current={totalCashEarned - rankManager.getCumulativeXP(rankSet - 1)}
+        // XP is the cash earned plus Government Grants' bonus XP (RankManager.bonusXp), which the cash total no longer includes
+        current={totalCashEarned + rankManager.bonusXp - rankManager.getCumulativeXP(rankSet - 1)}
         max={rankManager.calculateNextRankXP(rankSet)}
         nextRank={rankSet + 1}
         activeEvent={activeEvent}
@@ -2018,7 +2060,8 @@ function App() {
           onPreSelectedCityHandled={() => setPreSelectedCity(null)}
           onSave={triggerSave}
           onDisconnect={(city) => {
-            const disconnectCost = constructionManager.calculateTierConnectionCost(city) / 2;
+            // Rounded down, the same as the figure on the Confirm button (it used to charge or refund the unrounded half)
+            const disconnectCost = Math.floor(constructionManager.calculateTierConnectionCost(city) / 2);
             // A city Government Grants connected for free has nothing to refund
             const grantedNames = readGrantedCities();
             const wasGranted = grantedNames.includes(city.name);
@@ -2040,6 +2083,15 @@ function App() {
               if (localStorage.getItem(key) === null) return;
               writeSchedule(key, readSchedule(key).filter(e => e.name !== city.name));
             });
+            // Its waiting farewell/greeting popups go too, the way an arrival from a city no longer connected is skipped,
+            // and so does an unanswered delay for one of its loops (otherwise you could still pay compensation for it)
+            setDepartureQueue(queue => {
+              if (!queue.some(d => d.name === city.name)) return queue;
+              const next = queue.filter(d => d.name !== city.name);
+              saveDepartureQueue(next);
+              return next;
+            });
+            if (activeDelay?.name === city.name) { localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); }
             triggerSave();
           }}
           onUpgradeCityLine={upgradeCityLine}
@@ -2215,7 +2267,7 @@ function App() {
             localStorage.removeItem('hyperloop_hidden_at');
             window.location.reload();
           }}
-          onExportSave={() => {triggerSave(); exportSave(); }}
+          onExportSave={() => { triggerSave(); exportSave(buildSave(progressionManager, rankManager, terminalNameRef.current, farewellsRef.current)); }}
           onImportSave={async (file) => {
             stopTick();
             try { await importSave(file); } catch (err) { startTick(); throw err; }
@@ -2223,7 +2275,9 @@ function App() {
             window.location.reload();
           }}
           onManualSave={triggerSave}
-          onReputationBonus={(amount) => { progressionManager.addReputation(amount); setReputation(shownReputation()); }}
+          // Saved straight away, like every other reward: the Credits screen marks its bonus as claimed in storage the moment it's
+          // clicked, so a close before the next autosave used to lose the Reputation while keeping the claim
+          onReputationBonus={(amount) => { progressionManager.addReputation(amount); setReputation(shownReputation()); triggerSave(); }}
           onSurprise={() => unlockAchievement('surprise')}
         />
       )}
@@ -2242,7 +2296,17 @@ function App() {
       }} />
       </div>
 
-      {showSaved && (
+      {saveFailed && (
+        <div role="alert" style={{
+          position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
+          background: '#7a1010', color: '#fff', maxWidth: '560px', textAlign: 'center',
+          fontFamily: 'Courier New, monospace', fontSize: '0.8rem', lineHeight: 1.4,
+          padding: '6px 14px', borderRadius: '6px', zIndex: 200, pointerEvents: 'none',
+        }}>
+          ⚠ Your progress isn't being saved: this browser's storage is full or blocked. Export your save from Settings to keep it.
+        </div>
+      )}
+      {showSaved && !saveFailed && (
         <div style={{
           position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
           background: '#222', color: 'var(--ui-accent, #f5a623)',
@@ -2259,6 +2323,11 @@ function App() {
           cashBonus={dailyLoginData.cashBonus}
           repBonus={dailyLoginData.repBonus}
           repSources={progressionManager.purchasedUpgrades.filter(u => u.effectType === 'dailyLoginRep').map(u => u.name)}
+          // Better Interest Rates: cashBonus here already has its x10 baked in (see where it's rolled, rawCashBonus
+          // above) - flagged the same way the player's own "double bonus" choice is, so it isn't the only
+          // multiplier on this number with nothing explaining it. A bonus saved before the flag existed falls
+          // back to whether the upgrade is owned.
+          interestBoosted={dailyLoginData.interestBoosted ?? PrestigeManager.owns('betterInterestRates')}
           reputation={reputation}
           onSpendRep={(amount) => { dailyDoubleRep.current = amount; }}
           onCollect={(finalBonus) => {
@@ -2344,8 +2413,8 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayCompensated', data: { delayedCity: activeDelay?.name } }; } fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
-          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(shownReputation()); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); if (activeDelay?.kind !== 'arrival') { hyperLinkTriggerRef.current = { type: 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; } fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
+          onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: activeDelay?.kind === 'arrival' ? 'arrivalDelayCompensated' : 'delayCompensated', data: { delayedCity: activeDelay?.name } }; fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
+          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(shownReputation()); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: activeDelay?.kind === 'arrival' ? 'arrivalDelayNotCompensated' : 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
         />
       )}
 
@@ -2508,6 +2577,8 @@ function App() {
               }
             } else if (upgrade) {
               progressionManager.purchasedUpgrades.push(upgrade);
+              // Dated like anything bought, so its card shows when it arrived instead of no date at all
+              progressionManager.recordBuiltDate(upgrade);
               prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
               // It is an upgrade the player now owns, so it gets the upgrade popup with its effect (bug #172)
               setRevealedUpgradeQueue(prev => [...prev, upgrade]);
@@ -2555,6 +2626,7 @@ function App() {
           showBubble={hyperLinkBubble}
           onClick={() => {
             setHyperLinkOpen(true)
+            setHyperLinkOpenUnread(hyperLinkUnread)
             setHyperLinkUnread(0)
             localStorage.setItem('hyperloop_hyperlink_unread', '0')
           }}
@@ -2585,6 +2657,10 @@ function App() {
           terminalName={terminalName}
           muted={hyperLinkMuted}
           onToggleMute={toggleHyperLinkMute}
+          initialUnread={hyperLinkOpenUnread}
+          // So the like itself shows the Reputation it's about to pay, instead of only the heart animation
+          // with the gain landing silently (see onLikeReward below).
+          repPerLike={PrestigeManager.owns('cultOfCelebrity') ? 1 : 0}
           // Cult of Celebrity: liking a post gives 1 Reputation (likes are permanent, so it can't be farmed)
           onLikeReward={(postId) => {
             // A post from the account with the developer's photo: liking it is the Cameo achievement

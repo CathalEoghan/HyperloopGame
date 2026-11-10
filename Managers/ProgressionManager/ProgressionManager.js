@@ -158,8 +158,16 @@ export class ProgressionManager {
         city.rewards.forEach(reward => this.unlockReward(reward));
         this.purchasedCities.push(city);
         this.unlockedCities = this.unlockedCities.filter(c => c !== city);
-        // Colour Theory: a newly connected city opens at Line Level 1, with no cash or Reputation paid
-        if (PrestigeManager.owns('colourTheory') && !this.cityLineLevels[city.name]) this.cityLineLevels[city.name] = 1;
+        // Colour Theory: a newly connected city opens at Line Level 1, with no cash or Reputation paid. Not the home city
+        // (the first one connected): it never earns, its line can't be upgraded, and a free level there only put a
+        // pointless "LVL 1" on its card. Nor a city whose line can't be upgraded at all (the tier 0 Antarctic Peninsula).
+        if (PrestigeManager.owns('colourTheory') && this.purchasedCities[0] !== city && this.canUpgradeCityLine(city)
+            && !this.cityLineLevels[city.name]) this.cityLineLevels[city.name] = 1;
+    }
+
+    // The date shown on a development's or upgrade's card. Kept if it already has one.
+    recordBuiltDate(item) {
+        if (!this.developmentBuiltDates[item.name]) this.developmentBuiltDates[item.name] = new Date().toISOString();
     }
 
     purchaseDevelopment(development) {
@@ -323,6 +331,9 @@ export class ProgressionManager {
     }
 
     upgradeDevelopment(development, upgradeDiscountMultiplier = 1.0) {
+        // Only a finished development can be upgraded (the page only offers it then, but the game checks too, as it does
+        // for a city's line)
+        if (!this.purchasedDevelopments.includes(development)) return false;
         const info = this.getDevelopmentUpgradeCostInfo(development, upgradeDiscountMultiplier);
         if (!info) return false;
         if (this.balance < info.cashCost || this.reputation < info.repCost) return false;
@@ -349,6 +360,9 @@ export class ProgressionManager {
     getCityLineUpgradeCostInfo(city) {
         if (!this.canUpgradeCityLine(city)) return null;
         if (!this.purchasedCities.includes(city)) return null;
+        // The home city earns nothing, and a line level on it is dropped on the next load (SaveManager.loadGame), so it
+        // can't be bought here either: only the Cities page hid the button, and a paid-for level would have vanished
+        if (city === this.purchasedCities[0]) return null;
         const currentLevel = this.getCityLineLevel(city);
         const nextLevel = currentLevel + 1;
         if (nextLevel > MAX_LINE_LEVEL) return null;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from 'react-dom'
 import './DepartureBoard.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
@@ -277,6 +277,36 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
         return { pairs, destWidth }
     }, [list, schedule, arrivals, renderTick])
 
+    // The tiles shrink until both halves of the board fit the screen. The CSS sizes (14px, or 10px below 1440px wide)
+    // assumed a shorter longest destination, so a big network still pushed the Status column off the right edge at
+    // 1440px and 1024px (bug #174 again). Measured at the CSS size first, then narrowed just enough, never below 6px.
+    const boardRef = useRef(null)
+    useLayoutEffect(() => {
+        const board = boardRef.current
+        if (!board) return
+        const fit = () => {
+            board.style.removeProperty('--flap-w')
+            board.style.removeProperty('--flap-font')
+            const table = board.querySelector('.board-table')
+            const row = table?.querySelector('tbody tr')
+            const tile = row?.querySelector('.flap-char')
+            if (!table || !tile) return
+            const style = getComputedStyle(board)
+            const room = board.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight)
+            const excess = table.scrollWidth - room
+            if (excess <= 0) return
+            const tiles = row.querySelectorAll('.flap-char').length
+            const width = parseFloat(getComputedStyle(tile).width)
+            const next = Math.max(6, Math.floor(width - excess / tiles - 0.5))
+            board.style.setProperty('--flap-w', `${next}px`)
+            board.style.setProperty('--flap-font', `${Math.min(parseFloat(getComputedStyle(tile).fontSize), next * 1.05).toFixed(1)}px`)
+        }
+        fit()
+        const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(fit) : null
+        ro?.observe(board)
+        return () => ro?.disconnect()
+    }, [tab, destWidth, pairs.length])
+
     const renderCells = (entry) => {
         const enabled = splitFlapEnabled()
         if (!entry) return (
@@ -331,7 +361,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
     }
 
     return (
-        <div className="departure-board">
+        <div className="departure-board" ref={boardRef}>
             {showIntro && (
                 <PageIntroModal title="Welcome to the Terminal Board" onClose={closeIntro} points={[
                     { icon: boardIcon, text: <>The <strong>Departures</strong> tab is your schedule - every connected city needs a scheduled departure before it earns anything, so check back here after connecting a new one.</> },

@@ -121,8 +121,9 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         const result = [...cities]
         if (sortBy === 'income-high') return result.sort((a, b) => cityIncome(b) - cityIncome(a))
         if (sortBy === 'income-low') return result.sort((a, b) => cityIncome(a) - cityIncome(b))
-        if (sortBy === 'population-high') return result.sort((a, b) => b.population - a.population)
-        if (sortBy === 'tier') return result.sort((a, b) => b.tier - a.tier)
+        // Ties (every Tier 1 city, say) are A–Z rather than in whatever order the city list happens to hold them
+        if (sortBy === 'population-high') return result.sort((a, b) => b.population - a.population || a.name.localeCompare(b.name))
+        if (sortBy === 'tier') return result.sort((a, b) => b.tier - a.tier || a.name.localeCompare(b.name))
         return result.sort((a, b) => a.name.localeCompare(b.name))
     }
 
@@ -609,7 +610,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     <div className="cities-connected-section">
                         <div className="section-header-row">
                             <h1 className="purchasedCitiesHeader">
-                                Connected {purchasedCities.length === 1 ? 'city' : 'cities'}
+                                Connected {filteredBuilt.length === 1 ? 'city' : 'cities'}
                                 <span className="city-count-badge">{filteredBuilt.length}</span>
                                 <span className="city-count-badge" style={{ background: '#555' }}>{builtCountryCount} {builtCountryCount === 1 ? 'country' : 'countries'}</span>
                             </h1>
@@ -634,6 +635,13 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             ? <div className="city-row">{filteredPurchased.map(city => renderCityCard(city, false, true))}</div>
                             : sortedPurchasedCountries.map(country => renderCountrySection(country, groupedPurchased[country]))}
                     </div>
+                )}
+
+                {/* A search or continent that matches nothing used to leave the page blank under the toolbar */}
+                {sortedPurchasedCountries.length === 0 && sortedAvailableCountries.length === 0 && (
+                    <p className="cities-no-results" style={{ textAlign: 'center', color: '#888', margin: '32px 16px' }}>
+                        No cities match{search.trim() ? <> "{search.trim()}"</> : null}{activeContinent !== 'All' ? <> in {activeContinent}</> : null}.
+                    </p>
                 )}
 
                 {sortedAvailableCountries.length > 0 && (

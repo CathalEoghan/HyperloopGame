@@ -6,7 +6,7 @@ import officialLogo from '../assets/misc/officialLogo.png'
 import './DailyLoginModal.css'
 
 // repSources: the names of the owned upgrades that pay the daily Reputation (bug #154)
-function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRep, repSources = [] }) {
+function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRep, repSources = [], interestBoosted = false }) {
     const [doubled, setDoubled] = useState(false)
     const [doubleHovered, setDoubleHovered] = useState(false)
     const canDouble = reputation >= 20 && !doubled
@@ -28,6 +28,10 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                         <span className="daily-login-reward-text">
                             £{displayBonus.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                             {doubled && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×2</span>}
+                            {/* Better Interest Rates already multiplied this by x10 before it ever reached this modal -
+                                flagged the same way the player's own double-bonus choice is, so it isn't the only
+                                multiplier on this number with nothing explaining it. */}
+                            {interestBoosted && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×10 (Better Interest Rates)</span>}
                         </span>
                     </div>
                     {repBonus > 0 && (

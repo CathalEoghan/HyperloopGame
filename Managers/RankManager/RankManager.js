@@ -9,6 +9,10 @@ export class RankManager {
     constructor() {
         this.rank = 1;
         this.xp = 0;
+        // XP handed out without any cash being earned: Government Grants' head start to Rank 25. Kept apart from the
+        // cash total so that total stays what the run really earned (the Prestige cash points, the Progress page's
+        // "Total cash earned"). Saved with the run, reset by a new one.
+        this.bonusXp = 0;
     }
 
     calculateNextRankXP(rank) {
@@ -33,8 +37,8 @@ export class RankManager {
         }
     }
 
-    // XP equals total cash earned
+    // XP equals total cash earned, plus any bonus XP (see bonusXp above)
     convertCashToXP(totalCashEarned) {
-        this.xp = Math.floor(totalCashEarned);
+        this.xp = Math.floor(totalCashEarned) + this.bonusXp;
     }
 }

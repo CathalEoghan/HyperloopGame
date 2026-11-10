@@ -5,8 +5,18 @@ import { MAX_RANK } from './RankManager/RankManager.js'
 import { sanitizeDevelopmentName } from './ProgressionManager/ProgressionManager.js'
 import { STARTING_BALANCE } from './ProgressionManager/economyConstants.js'
 import { PRESTIGE_VALUES } from './PrestigeManager/prestigeUpgrades.js'
+import { GRANT_RANK } from './PrestigeManager/governmentGrants.js'
 
 const SAVE_KEY = 'hyperloop_save'
+
+// Whether this run took Government Grants: the cities it connected for free are listed under this key (see
+// hyperloop-ui/src/utils/grantedCities.js), which only a grant ever writes to
+function hasGrantedCities() {
+    try {
+        const list = JSON.parse(localStorage.getItem('hyperloop_granted_cities'))
+        return Array.isArray(list) && list.length > 0
+    } catch { return false }
+}
 
 // Names that changed after saving was added (old name → current name). Saves store names,
 // so without this an item that was renamed silently disappears on load (bug #86).
@@ -240,6 +250,11 @@ const AUX_SHAPES = {
     hyperloop_loop_dep_numbers: listOf(Number.isFinite),
     // { cityName: number, ... } - this run's arrival-number assignments (loopCodes.js)
     hyperloop_loop_arr_numbers: v => isObj(v) && Object.values(v).every(Number.isFinite),
+    // Lifetime cash/Reputation earned (ProgressionManager's LIFETIME_CASH_KEY/LIFETIME_REP_KEY): a plain number each.
+    // Without these two lines they fell through to the list-of-names check below, failed it, and were dropped - after
+    // the import had already cleared them - so every import reset the Progress page's lifetime totals to 0.
+    hyperloop_lifetime_cash_earned: v => Number.isFinite(v) && v >= 0,
+    hyperloop_lifetime_reputation_earned: v => Number.isFinite(v) && v >= 0,
 }
 const listOfStrings = listOf(x => typeof x === 'string')
 // These two hold a plain date string ("Tue Sep 29 2026"), not JSON.
@@ -300,6 +315,7 @@ function validateSave(save) {
     if (save.createdAt !== undefined && !(Number.isFinite(save.createdAt) && save.createdAt > 0)) return false
     if (save.farewellsGiven !== undefined && !(Number.isFinite(save.farewellsGiven) && save.farewellsGiven >= 0)) return false
     if (save.greetingsGiven !== undefined && !(Number.isFinite(save.greetingsGiven) && save.greetingsGiven >= 0)) return false
+    if (save.bonusXp !== undefined && !(Number.isFinite(save.bonusXp) && save.bonusXp >= 0)) return false
     if (save.developmentUpgradeLevels !== undefined && (save.developmentUpgradeLevels === null || typeof save.developmentUpgradeLevels !== 'object' || Array.isArray(save.developmentUpgradeLevels))) return false
     if (save.cityLineLevels !== undefined && (save.cityLineLevels === null || typeof save.cityLineLevels !== 'object' || Array.isArray(save.cityLineLevels))) return false
     // No upper limit on balance or reputation: the game has none, so a long-running save must import (bug #114).
@@ -373,10 +389,20 @@ function hasLoadableShape(save) {
 }
 
 export function saveGame(progressionManager, rankManager, terminalName, farewellsGiven) {
+    const save = buildSave(progressionManager, rankManager, terminalName, farewellsGiven)
+    if (!save) return
+    localStorage.setItem(SAVE_KEY, JSON.stringify(save))
+    // The new run exists now, so the start-up note from a prestige has done its job
+    localStorage.removeItem('hyperloop_run_start')
+}
+
+// The save as it stands right now, without writing it anywhere: what saveGame stores, and what Export hands over
+// when the browser is refusing to store it. Null before the home city exists.
+export function buildSave(progressionManager, rankManager, terminalName, farewellsGiven) {
     // Nothing is saved until the home city exists. A save written during the naming screen
     // or the tutorial build made a reload skip onboarding, or let the player pick a second
     // free starter city (bug #87).
-    if (progressionManager.purchasedCities.length === 0) return
+    if (progressionManager.purchasedCities.length === 0) return null
     const existing = getSaveRaw()
     // A creation date that isn't a number is replaced rather than written back (bug #178)
     const createdAt = Number.isFinite(existing?.createdAt) && existing.createdAt > 0 ? Math.min(existing.createdAt, Date.now()) : Date.now()
@@ -391,6 +417,8 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
         balance: progressionManager.balance,
         reputation: progressionManager.reputation,
         totalCashEarned: progressionManager.totalCashEarned,
+        // Government Grants' XP head start, kept apart from the cash earned (see RankManager.bonusXp)
+        bonusXp: rankManager.bonusXp,
         rank: rankManager.rank,
         purchasedCities: progressionManager.purchasedCities.map(c => c.name),
         unlockedCities: progressionManager.unlockedCities.map(c => c.name),
@@ -414,9 +442,7 @@ export function saveGame(progressionManager, rankManager, terminalName, farewell
     }
 
     save.checksum = computeChecksum(save)
-    localStorage.setItem(SAVE_KEY, JSON.stringify(save))
-    // The new run exists now, so the start-up note from a prestige has done its job
-    localStorage.removeItem('hyperloop_run_start')
+    return save
 }
 
 export function loadGame(progressionManager, rankManager) {
@@ -460,9 +486,18 @@ export function loadGame(progressionManager, rankManager) {
 
         progressionManager.balance = save.balance ?? STARTING_BALANCE
         progressionManager.reputation = save.reputation ?? 50
-        progressionManager.totalCashEarned = save.totalCashEarned ?? 0
+        let totalCashEarned = save.totalCashEarned ?? 0
+        let bonusXp = Number.isFinite(save.bonusXp) && save.bonusXp > 0 ? Math.floor(save.bonusXp) : 0
+        // A run that took Government Grants before bonusXp existed has the grant's XP folded into its cash earned. Moved
+        // back out, once: a save with no bonusXp field, from a run with granted cities, whose total covers the grant.
+        if (save.bonusXp === undefined && hasGrantedCities()) {
+            const grantXp = rankManager.getCumulativeXP(GRANT_RANK - 1)
+            if (totalCashEarned >= grantXp) { totalCashEarned -= grantXp; bonusXp = grantXp }
+        }
+        progressionManager.totalCashEarned = totalCashEarned
         rankManager.rank = save.rank ?? 1
-        rankManager.xp = save.totalCashEarned ?? 0
+        rankManager.bonusXp = bonusXp
+        rankManager.convertCashToXP(totalCashEarned)
 
         save.purchasedCities.forEach(name => {
             const city = allCities.find(c => c.name === name)
@@ -527,6 +562,10 @@ export function loadGame(progressionManager, rankManager) {
 
         progressionManager.developmentUpgradeLevels = save.developmentUpgradeLevels || {}
         progressionManager.cityLineLevels = save.cityLineLevels || {}
+        // The home city's line can't be upgraded (the Cities page and the globe never offer it), so a level on it can only
+        // be the free one older versions of Colour Theory handed out - dropped, so its card stops showing LVL 1
+        const homeCity = progressionManager.purchasedCities[0]
+        if (homeCity) delete progressionManager.cityLineLevels[homeCity.name]
         progressionManager.cityConnectedDates = save.cityConnectedDates || {}
         progressionManager.developmentBuiltDates = save.developmentBuiltDates || {}
         progressionManager.greetingsGiven = Number.isFinite(save.greetingsGiven) && save.greetingsGiven >= 0 ? Math.floor(save.greetingsGiven) : 0
@@ -576,8 +615,10 @@ export function deleteSave() {
     localStorage.removeItem(SAVE_KEY)
 }
 
-export function exportSave() {
-    const raw = localStorage.getItem(SAVE_KEY)
+// liveSave (from buildSave) is used instead of the stored save when given, so an export still has everything up to
+// this moment even while the browser is refusing to store saves
+export function exportSave(liveSave = null) {
+    const raw = liveSave ? JSON.stringify(liveSave) : localStorage.getItem(SAVE_KEY)
     if (!raw) return
     // A save that is not valid JSON is handed over exactly as stored, so a damaged one can still be rescued
     let text = raw

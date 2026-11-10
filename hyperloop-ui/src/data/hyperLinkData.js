@@ -885,6 +885,24 @@ export const POSTS = {
         'Delay? My luck is terrible 😣',
     ],
 
+    // The same reactions from passengers on a delayed ARRIVAL, still on the loop coming in from {delayedCity}. Arrival
+    // delays used to get no passenger post at all (only the official one), which was about half of every delay.
+    arrivalDelayCompensated: [
+        'loop from #{delayedCity} running late but {terminalName} sorted us out, fair play',
+        'stuck on the loop from {delayedCity} for ages... at least they compensated us',
+        'delayed coming in from #{delayedCity} but the compensation basically paid for my dinner 😌',
+        'Arriving late from {delayedCity} but got compensated so no complaints here',
+        'whoever handles delays at {terminalName} is a legend, compensation already sorted #delayed',
+    ],
+
+    arrivalDelayNotCompensated: [
+        'loop from #{delayedCity} delayed and {terminalName} wont even compensate us?? unreal',
+        'been sat on this loop from {delayedCity} forever and not a penny back 😡 #delayed',
+        'Delayed coming into {terminalName} and they said no compensation. never again',
+        'my connection is ruined because the loop from #{delayedCity} is late and nobody cares',
+        'imagine delaying a whole loop from {delayedCity} and not even saying sorry #delayed',
+    ],
+
     // While a Celebrity Sighting's marked departure is still to come. Never names the city or the gate.
     celebrityDepartureRumour: [
         'Is it true there\'s a secret celebrity travelling out of {terminalName} today??',

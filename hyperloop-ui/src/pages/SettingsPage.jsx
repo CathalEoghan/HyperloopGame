@@ -159,7 +159,8 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     }
 
     const handleNameSave = () => {
-        const trimmed = nameInput.trim()
+        // Runs of spaces become one, as the header shows it (it collapsed them anyway, but the save, ticker and posts kept them)
+        const trimmed = nameInput.trim().replace(/\s+/g, ' ')
         if (!trimmed) return
         onTerminalNameChange(trimmed)
         setNameSaved(true)

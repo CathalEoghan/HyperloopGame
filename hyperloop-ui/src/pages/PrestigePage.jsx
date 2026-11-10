@@ -3,6 +3,7 @@ import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT, CASH_PER_
 import { MAX_RANK } from 'Managers/RankManager/RankManager.js'
 import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES, PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { STARTING_BALANCE } from 'Managers/ProgressionManager/economyConstants.js'
+import { GRANT_RANK, GRANT_CITIES } from 'Managers/PrestigeManager/governmentGrants.js'
 import { playClickSound2, playHoverSound, playFarewellAcceptSound, playSpecialChime, playNotEnoughFundsSound } from '../utils/sound.js'
 import { formatBalance } from '../utils/formatBalance.js'
 import padlockIcon from '../assets/misc/padlock.png'
@@ -102,6 +103,9 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     const retirePoints = rankPoints + cashPoints
     // How the payout adds up, and how far away the next step is (worth knowing before retiring)
     const pointsPerStep = PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)
+    // The same for cash: 1 per £50M, or 2 with Quick Learner (pointsForCash doubles it just as pointsForRank does) -
+    // the text below used to say "1" whatever was owned
+    const cashPointsPerStep = PrestigeManager.pointsForCash(CASH_PER_PRESTIGE_POINT)
     const payoutSteps = Math.floor(rank / RANKS_PER_PRESTIGE_POINT)
     const nextStepRank = (payoutSteps + 1) * RANKS_PER_PRESTIGE_POINT
     // The next £50M milestone, the cash equivalent of nextStepRank above
@@ -154,7 +158,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 <div className="prestige-retire-text">
                     <b>Early Retirement</b>
                     {canRetire
-                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)} per {RANKS_PER_PRESTIGE_POINT} ranks, 1 per £{(CASH_PER_PRESTIGE_POINT / 1e6)}M earned - you are Rank {rank}). Your run resets.</span>
+                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({pointsPerStep} per {RANKS_PER_PRESTIGE_POINT} ranks, {cashPointsPerStep} per £{(CASH_PER_PRESTIGE_POINT / 1e6)}M earned - you are Rank {rank}). Your run resets.</span>
                         : rank >= PRESTIGE_MIN_RANK
                             ? <span>Early Retirement is waiting under Development, Upgrades. Purchase it for 50 Reputation to prestige.</span>
                             : <span>Reach Rank {PRESTIGE_MIN_RANK} and purchase Early Retirement (50 Reputation) to prestige. You are Rank {rank}.</span>}
@@ -193,7 +197,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                     <div className="prestige-progress-row">
                                         <div className="prestige-progress-line">
                                             <span>{fmtCashIcon(runStats?.cash ?? 0)} earned · <b>+{cashPoints}</b></span>
-                                            <span>{fmtCashIcon(nextCashStep - (runStats?.cash ?? 0))} more for +1</span>
+                                            <span>{fmtCashIcon(nextCashStep - (runStats?.cash ?? 0))} more for +{cashPointsPerStep}</span>
                                         </div>
                                         <div className="prestige-bar" role="progressbar" aria-label="Progress to the next cash point" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(cashProgress * 100)}>
                                             <div className="prestige-bar-fill" style={{ width: `${cashProgress * 100}%` }} />
@@ -239,7 +243,9 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                             </div>
 
                             <p className="prestige-next-run">
-                                <b>Your next run:</b> back to Rank 1 with {fmtCashIcon(nextRunCash)}{signOn ? ' (Sign-On Bonus included)' : ''}
+                                <b>Your next run:</b> {PrestigeManager.owns('governmentGrants')
+                                    ? <>back to Rank {GRANT_RANK} with {GRANT_CITIES} cities already connected (Government Grants), and </>
+                                    : <>back to Rank 1 with </>}{fmtCashIcon(nextRunCash)}{signOn ? ' (Sign-On Bonus included)' : ''}
                                 {runStats.home ? <>, starting from {runStats.home}. You can pick a different home terminal first.</> : '.'}
                             </p>
                         </div>

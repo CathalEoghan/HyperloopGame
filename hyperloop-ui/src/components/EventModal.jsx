@@ -33,15 +33,20 @@ function EventModal({ event, onContinue, terminalName }) {
         ? ` (${event.durationModifier.direction === 'longer' ? '+' : ''}${event.durationModifier.percent}% ${event.durationModifier.direction})`
         : ''
 
+    // Pizza Parties doubles a positive event's strength (its cash amount or its boost %), already baked into the
+    // numbers below - this is the only place that says so, the same way durationSuffix explains a stretched
+    // or shortened duration.
+    const pizzaSuffix = event.pizzaBoosted ? ' (×2 - Pizza Parties)' : ''
+
     // Home cities don't all use £, so the amount is shown next to the generic cash icon rather than a £ sign (bug #211)
     const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
 
     const getEffectText = () => {
-        if (event.effectType === 'instantCash') return <>{cashIconEl}{event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance</>
+        if (event.effectType === 'instantCash') return <>{cashIconEl}{event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance{pizzaSuffix}</>
         if (event.effectType === 'instantCashLoss') return <>{cashIconEl}{Math.abs(event.instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been deducted from your balance</>
-        if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s${durationSuffix}`
+        if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s${durationSuffix}${pizzaSuffix}`
         if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s${durationSuffix}`
-        if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s${durationSuffix}`
+        if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s${durationSuffix}${pizzaSuffix}`
         if (event.effectType === 'workPenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% work earnings for ${secondsLeft}s${durationSuffix}`
         return ''
     }

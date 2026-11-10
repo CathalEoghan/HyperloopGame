@@ -89,7 +89,9 @@ export const ACHIEVEMENTS = [
     { id: 'toughLuck', group: 'Delays', name: 'Tough Luck', description: 'Refuse to compensate a delayed departure.' },
 
     // Money
-    { id: 'firstMillion', group: 'Money', name: 'First Million', description: 'Have a total of 2 million in your treasury.', check: atLeast('balance', 2e6) },
+    // Earned, not held: every run starts with 1.5 million in the treasury, so a balance target had to be set at 2 million
+    // to mean anything. Anyone who already has it keeps it.
+    { id: 'firstMillion', group: 'Money', name: 'First Million', description: 'Earn 1 million in a single run.', check: atLeast('runCashEarned', 1e6) },
     { id: 'billionaire', group: 'Money', name: 'Billionaire', description: 'Have a total of 1 billion in your treasury.', check: atLeast('balance', 1e9) },
     { id: 'trillionaire', group: 'Money', name: 'Trillionaire', description: 'Have a total of 1 trillion in your treasury.', check: atLeast('balance', 1e12) },
 
@@ -99,7 +101,7 @@ export const ACHIEVEMENTS = [
     { id: 'workaholic', group: 'Work', name: 'Workaholic', description: 'Press the Work button 10,000 times.', check: atLeast('work', 10000) },
     { id: 'yourPoorHand', group: 'Work', name: 'Your Poor Hand', description: 'Click 100,000 times.', check: atLeast('work', 100000) },
     // This run's manual Work clicks (it starts again with every run), so a player who has clicked before can still earn it
-    { id: 'couchPotato', group: 'Work', name: 'Couch Potato', description: 'Get to Rank 100 without ever clicking the Work button.', check: ctx => ctx.rank >= 100 && ctx.runWork === 0 },
+    { id: 'couchPotato', group: 'Work', name: 'Couch Potato', description: 'Get to Rank 100 in a run without clicking the Work button.', check: ctx => ctx.rank >= 100 && ctx.runWork === 0 },
 
     // Ranks
     { id: 'makingProgress', group: 'Ranks', name: 'Making Progress', description: 'Reach Rank 10.', check: atLeast('rank', 10) },

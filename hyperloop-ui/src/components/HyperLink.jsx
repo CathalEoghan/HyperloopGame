@@ -51,7 +51,7 @@ function formatPostText(text) {
     )
 }
 
-function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = false, onToggleMute }) {
+function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = false, onToggleMute, initialUnread = 0, repPerLike = 0 }) {
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const now = new Date()
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -63,10 +63,18 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
     const [, setTick] = useState(0)
     const lastTapRef = useRef({})
     const feedRef = useRef(null)
-    // Posts that were already there when the phone opened count as seen. One that arrives while it is open is
+    // Posts the phone's badge already counted as unread (the newest `initialUnread` in the feed, since posts are
+    // only ever appended) start out "new" too, so opening Hyper-Link after being away still shows them with the
+    // tint/pill below - otherwise every post that arrived while the phone was closed got marked seen the instant
+    // the feed mounted, and the "new post" indicator only ever fired for the rare post landing while the modal
+    // happened to already be open (reported as "finicky, I rarely see it").
+    // Anything else already there when the phone opened counts as seen. One that arrives while it is open is
     // "new" until the reader has been at the top of the feed for a moment (its tint then fades away); if they are
     // scrolled down reading older posts, a pill tells them how many are waiting instead of moving the page.
-    const [seenIds, setSeenIds] = useState(() => new Set(feed.map(p => p.id)))
+    const [seenIds, setSeenIds] = useState(() => {
+        const unseenCount = Math.max(0, Math.min(initialUnread, feed.length))
+        return new Set(feed.slice(0, feed.length - unseenCount).map(p => p.id))
+    })
     const [atTop, setAtTop] = useState(true)
     const newCount = feed.reduce((n, p) => n + (seenIds.has(p.id) ? 0 : 1), 0)
 
@@ -174,6 +182,11 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                                     >
                                         {likeAnimating === post.id && (
                                             <div className="hyperlink-like-animation">❤</div>
+                                        )}
+                                        {/* Cult of Celebrity pays Reputation for every like, paid silently in App.jsx's onLikeReward -
+                                            shown here, next to the same heart animation, so it isn't the only like reward with no feedback at all. */}
+                                        {likeAnimating === post.id && repPerLike > 0 && (
+                                            <div className="hyperlink-like-rep-animation">+{repPerLike} Reputation</div>
                                         )}
                                         <img
                                             src={pfp || defaultPfp}

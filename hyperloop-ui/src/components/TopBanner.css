@@ -322,6 +322,15 @@ font-size: 1rem;
     margin: 0;
     padding: 0;
     color: var(--ui-bar-text, #111);
+    /* A long name (up to 32 characters) stops at two lines, the rest shown on hover: it used to wrap onto four or five
+       lines on a narrower window, making the whole header twice as tall and squeezing every page under it */
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
 }
 
 .HomeCity {
@@ -398,4 +407,6 @@ font-size: 1rem;
     }
     .ShopButton { gap: 7px; }
     .ShopButtonIcon { width: 22px; height: 22px; }
+    .TerminalNameBlock { padding: 0 16px; }
+    .TerminalName { font-size: 1.35rem; }
 }

@@ -45,8 +45,11 @@ export const EFFECT_DESCRIPTIONS = {
     countryAdvertisingBoost: (v) => `+${pct(v)}% income from cities in this country`,
     localCountryBoost: () => `Bonus income from cities in your home country`,
     dailyLoginMultiplier: () => 'Doubles your daily login cash bonus',
-    progressRewardBoost: () => 'Doubles the cash and Reputation rewards from city and country discoveries on the Progress page',
-    terminalAgeBoost: () => 'Multiplies all city and development income by an extra 1% for every 10 days active, on top of your other boosts',
+    // Every Progress page reward card - cities, countries, developments and Prestige upgrades (ProgressPage's getRewardFactor)
+    progressRewardBoost: () => 'Doubles the cash and Reputation rewards you claim on the Progress page',
+    // Founders' Hall Expansion doubles the step (EconomyManager.getFoundersHallMultiplier uses 2% instead of 1%), so the
+    // description says what the hall really pays rather than always 1%
+    terminalAgeBoost: () => `Multiplies all city and development income by an extra ${PrestigeManager.owns('foundersHallExpansion') ? 2 : 1}% for every 10 days active, on top of your other boosts`,
     seasonBoost: (v, upgrade) => { const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']; const isMonthly = months.some(m => upgrade?.name?.includes(m)); return `+${pct(v * festiveFreakFactor())}% income during this ${isMonthly ? 'month' : 'season'}`; },
     rerollRepDiscount: (v) => `-${v} Reputation cost to re-roll your city choices`,
     freeRerollOnRankUp: () => `One free re-roll of your city choices each time you rank up`,
