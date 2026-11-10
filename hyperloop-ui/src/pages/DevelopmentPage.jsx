@@ -60,6 +60,13 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const nameOf = (d) => progressionManager.getDevelopmentName(d)
     const isRenamed = (d) => progressionManager.hasCustomDevelopmentName(d)
 
+    // Same grouping the category filter pills use ("Upgrades" is really everything with no revenue line,
+    // not its own `category`), reused for both the pill counts and the "completed / total" progress badge
+    // so a category's number always means the same thing in both places.
+    const inScope = (d, cat) => cat === 'Upgrades' ? !d.revenue : cat === 'All' ? true : d.category === cat
+    const categoryTotal = (cat) => allItems.filter(d => inScope(d, cat)).length
+    const categoryCompleted = (cat) => allItems.filter(d => inScope(d, cat) && (purchasedDevelopments.some(p => p.name === d.name) || purchasedUpgrades.some(p => p.name === d.name))).length
+
     const underConstruction = allItems.filter(item =>
         developmentsUnderConstruction.some(d => d.name === item.name)
     )
@@ -171,7 +178,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
                             onClick={() => { playClickSound2(); setActiveCategory(cat) }}
                             onMouseEnter={() => playHoverSound()}>
-                            {cat}
+                            {cat} <span className="category-count">{categoryTotal(cat)}</span>
                         </button>
                     ))}
                 </div>
@@ -585,7 +592,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 {sortedPurchased.length > 0 && (
                     <>
                         <h2 className="section-header" style={{ top: purchased.length === 0 ? '0' : '44px' }}>
-                            <span className="section-title">Completed developments <span className="section-count">{sortedPurchased.filter(d => !underConstruction.some(u => u.name === d.name)).length}</span></span>
+                            <span className="section-title">Completed developments <span className="section-count">{categoryCompleted(activeCategory)} / {categoryTotal(activeCategory)}</span></span>
                         </h2>
                         <div className="development-row">
                             {sortedPurchased.map(development => {

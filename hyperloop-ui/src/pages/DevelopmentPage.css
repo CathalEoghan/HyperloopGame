@@ -101,6 +101,14 @@
   color: white;
 }
 
+/* How many developments/upgrades live in this category in total (locked or not) - a quieter colour than the
+   label itself so the count reads as supporting detail, not a second label. */
+.category-count {
+  opacity: 0.55;
+  font-size: 0.78rem;
+  font-weight: bold;
+}
+
 .category-filter .category-btn-active {
   background: rgb(68, 68, 68) !important;
   border-color: rgb(68, 68, 68) !important;
