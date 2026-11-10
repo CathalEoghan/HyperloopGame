@@ -976,6 +976,19 @@ crowd.png - Photo by Umeicon (Flaticon license), <a href="https://www.flaticon.c
 bell.png - Photo by gungyoga04 (Flaticon license), <a href="https://www.flaticon.com/free-icons/notification" title="notification icons">Notification icons created by gungyoga04 - Flaticon</a>
 close.png - Photo by ariefstudio (Flaticon license), <a href="https://www.flaticon.com/free-icons/close" title="close icons">Close icons created by ariefstudio - Flaticon</a>
 open-eye.png - Photo by berkahicon (Flaticon license), <a href="https://www.flaticon.com/free-icons/eye" title="eye icons">Eye icons created by berkahicon - Flaticon</a>
+save.png - <a href="https://www.flaticon.com/free-icons/save" title="save icons">Save icons created by Magnific - Flaticon</a>
+check.png - <a href="https://www.flaticon.com/free-icons/correct" title="correct icons">Correct icons created by Dwi ridwanto - Flaticon</a>
+rocket.png - <a href="https://www.flaticon.com/free-icons/start-button" title="start button icons">Start button icons created by Magnific - Flaticon</a>
+progress.png - <a href="https://www.flaticon.com/free-icons/measurement" title="measurement icons">Measurement icons created by Canticons - Flaticon</a>
+city.png - <a href="https://www.flaticon.com/free-icons/buildings" title="buildings icons">Buildings icons created by Eucalyp - Flaticon</a>
+welcome.png - <a href="https://www.flaticon.com/free-icons/onboarding" title="onboarding icons">Onboarding icons created by Magnific - Flaticon</a>
+delay.png - <a href="https://www.flaticon.com/free-icons/delay" title="delay icons">Delay icons created by monkik - Flaticon</a>
+sleep.png - <a href="https://www.flaticon.com/free-icons/zzz" title="zzz icons">Zzz icons created by Magnific - Flaticon</a>
+success.png - <a href="https://www.flaticon.com/free-icons/achievement" title="achievement icons">Achievement icons created by syafii5758 - Flaticon</a>
+event.png - <a href="https://www.flaticon.com/free-icons/reminder" title="reminder icons">Reminder icons created by Magnific - Flaticon</a>
+decrease.png - <a href="https://www.flaticon.com/free-icons/decrease" title="decrease icons">Decrease icons created by Andrean Prabowo - Flaticon</a>
+increase.png - <a href="https://www.flaticon.com/free-icons/increase" title="increase icons">Increase icons created by Gajah Mada - Flaticon</a>
+graduation.png - <a href="https://www.flaticon.com/free-icons/university" title="university icons">University icons created by Magnific - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
