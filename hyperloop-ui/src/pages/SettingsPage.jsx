@@ -9,7 +9,18 @@ import { GLOBE_QUALITY_KEY, savedGlobeQuality, autoGlobeQuality } from '../utils
 import { VERSION_LOG } from '../utils/versionLog.js'
 import { notificationsEnabled, enableNotifications, disableNotifications } from '../utils/attentionAlerts.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
+import terminalIcon from '../assets/misc/terminal.png'
+import soundIcon from '../assets/misc/sound.png'
+import bellIcon from '../assets/misc/bell.png'
+import rulerIcon from '../assets/misc/ruler.png'
+import monitorSectionIcon from '../assets/misc/monitor.png'
+import imageIcon from '../assets/misc/image.png'
+import saveSectionIcon from '../assets/misc/save.png'
+import infoIcon from '../assets/misc/guide.png'
 import './SettingsPage.css'
+
+// Small icon shown to the left of each settings section's subheading (Terminal, Audio, Alerts, ...)
+const SectionIcon = ({ src }) => <img src={src} alt="" className="settings-section-icon" />
 
 const OptionBtn = ({ active, onClick, children }) => {
     const [hovered, setHovered] = useState(false)
@@ -206,7 +217,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             <h1 className="settings-title">Settings</h1>
 
             <div className="settings-section">
-                <h2 className="settings-section-title">Terminal</h2>
+                <h2 className="settings-section-title"><SectionIcon src={terminalIcon} />Terminal</h2>
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Terminal Name</span>
@@ -229,7 +240,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             </div>
 
             <div className="settings-section">
-                <h2 className="settings-section-title">Audio</h2>
+                <h2 className="settings-section-title"><SectionIcon src={soundIcon} />Audio</h2>
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Sounds</span>
@@ -283,7 +294,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             </div>
 
             <div className="settings-section">
-                <h2 className="settings-section-title">Alerts</h2>
+                <h2 className="settings-section-title"><SectionIcon src={bellIcon} />Alerts</h2>
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Browser Notifications</span>
@@ -298,7 +309,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             </div>
 
             <div className="settings-section">
-                <h2 className="settings-section-title">Units</h2>
+                <h2 className="settings-section-title"><SectionIcon src={rulerIcon} />Units</h2>
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Distance</span>
@@ -313,7 +324,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
 
             {fullscreenSupported() && (
                 <div className="settings-section">
-                    <h2 className="settings-section-title">Display</h2>
+                    <h2 className="settings-section-title"><SectionIcon src={monitorSectionIcon} />Display</h2>
                     <div className="settings-row">
                         <div className="settings-label">
                             <span className="settings-label-title">Fullscreen</span>
@@ -328,7 +339,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             )}
 
             <div className="settings-section">
-                <h2 className="settings-section-title">Graphics</h2>
+                <h2 className="settings-section-title"><SectionIcon src={imageIcon} />Graphics</h2>
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Globe Texture Quality</span>
@@ -374,7 +385,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             </div>
 
             <div className="settings-section">
-                <h2 className="settings-section-title">Save Data</h2>
+                <h2 className="settings-section-title"><SectionIcon src={saveSectionIcon} />Save Data</h2>
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Last Saved</span>
@@ -441,7 +452,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             </div>
 
             <div className="settings-section">
-                <h2 className="settings-section-title">Info</h2>
+                <h2 className="settings-section-title"><SectionIcon src={infoIcon} />Info</h2>
                 <div className="settings-row">
                     <div className="settings-label">
                         <span className="settings-label-title">Game Guide</span>
