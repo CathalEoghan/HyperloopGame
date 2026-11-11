@@ -453,15 +453,15 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 )
                                             })()}
                                             {(() => {
-                                                // Base revenue (the sticker rate), then boosted (all the + and x upgrade modifiers), then what
-                                                // it's actually earning right now - which also factors in the level multiplier and, critically,
-                                                // how busy the terminal is this moment (busyPct, shown above). That last factor is why "live"
-                                                // can land well below "boosted": a quiet terminal earns a fraction of its full-capacity rate,
-                                                // not because anything is broken, but because the floor-to-100% footfall curve always applies.
+                                                // Base revenue (the sticker rate), then boosted (every upgrade modifier, including this
+                                                // development's own Level upgrade - the same way a city's own line upgrade is already rolled
+                                                // into its "Boosted income" rather than held back for "live"), then what it's actually earning
+                                                // right now - which on top of all that only adds how busy the terminal is this moment (busyPct,
+                                                // shown above). That's why "live" can land below "boosted": a quiet terminal earns a fraction of
+                                                // its full-capacity rate, not because anything is broken, but because the floor-to-100% footfall
+                                                // curve always applies.
                                                 const { lines: tooltipLines, totalBoost } = economyManager.getDevBoostBreakdown(selectedDevelopment)
                                                 const totalBoostPct = Math.round(totalBoost * 100)
-                                                const level = getLevel(selectedDevelopment)
-                                                const levelMult = economyManager.getDevLevelMultiplier(selectedDevelopment)
                                                 const liveRevenue = economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(selectedDevelopment))
                                                 const busyPct = economyManager.getDevelopmentBusyPercent()
                                                 return (
@@ -482,10 +482,10 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                         <IncomeRow label="Live revenue right now" amount={liveRevenue} last>
                                                             <span
                                                                 style={{ color: '#27ae60', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'var(--cursor-help, help)', position: 'relative' }}
-                                                                onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `What this earns this moment: ${level > 0 ? `the Level ${level} upgrade (×${+levelMult.toFixed(2)}) and ` : ''}how busy the terminal is right now (${busyPct}% footfall) ${level > 0 ? 'are both' : 'is'} applied on top of the figures above.` })}
+                                                                onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `What this earns this moment: how busy the terminal is right now (${busyPct}% footfall) applied on top of the figures above.` })}
                                                                 onMouseLeave={() => setShowBusyTooltip(null)}
                                                             >
-                                                                {level > 0 ? `(×${+levelMult.toFixed(2)} · ` : '('}{busyPct}% busy)
+                                                                ({busyPct}% busy)
                                                             </span>
                                                         </IncomeRow>
                                                     </>

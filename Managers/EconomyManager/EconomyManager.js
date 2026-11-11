@@ -612,8 +612,19 @@ export class EconomyManager {
         // unlike every other line in this breakdown it can pull income below the base, and the "Boosted revenue"
         // row this feeds only ever renders for a net bonus (totalBoost > 0), so a reduction here would silently
         // disappear from the breakdown instead of showing up as a markdown.
+
+        // Level upgrade: a straight ×multiplier (not an additive % like the lines above), shown as its own
+        // "Modifiers:" line - the same way a city's own line upgrade already is in getCityBoostBreakdown below.
+        // This used to be left out of both this breakdown and "Boosted revenue" entirely, only appearing once
+        // "Live revenue right now" applied it, which made that row jump for a reason this popup never explained
+        // (cities show their line upgrade the moment it's bought; developments only showed it once "live" did).
+        const devLevel = this.progressionManager.getDevelopmentUpgradeLevel(development);
+        const devExtra = devLevel > 0
+            ? { mult: this.getDevLevelMultiplier(development), label: `Level upgrade (Lv.${devLevel}): ×${this.getDevLevelMultiplier(development).toFixed(2).replace(/0$/, '').replace(/\.$/, '')}` }
+            : null;
+
         // totalBoost covers everything paid over the base, Founders' Hall included, as shown next to the income
-        return this.finishBreakdown(lines, totalBoost, 'dev');
+        return this.finishBreakdown(lines, totalBoost, 'dev', devExtra);
     }
 
         getCityBoostBreakdown(city, coordinates = null) {
