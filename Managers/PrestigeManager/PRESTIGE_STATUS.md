@@ -33,7 +33,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 3 | Pizza Parties | Positive events +200% stronger (effect tripled, instant cash x3) | App.jsx event trigger |
 | 3 | Irresistible Discounts | x3 development income | `getPrestigeDevMultiplier` |
 | 3 | Bulletproof Planning | No delays | App.jsx delay block |
-| 3 | Founders Hall Expansion | Founders' Hall step 1% to 2% per 10 days | `getFoundersHallMultiplier` |
+| 3 | Founders Hall Expansion | Founders' Hall flat rate 5% to 10% per day active this run | `getFoundersHallMultiplier` |
 | 3 | Trophy Cabinet | City and development income x(1 + 2% per unique achievement), x2 at 50 (passive income only, not Work) | `getTrophyCabinetMultiplier` |
 | 3 | Delivery Drones | Development footfall never drops below 50% (10% without it) and starts there, so each loop's +5% adds on top: 10 loops fill the terminal instead of 18 | `getDevelopmentBusyFloor` |
 | 3 | Five-Star Researchers | Experimental Technology gives 10 Prestige Points | `PrestigeManager.award` |

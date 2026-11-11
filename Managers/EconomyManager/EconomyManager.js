@@ -1072,8 +1072,10 @@ export class EconomyManager {
         if (!this.hasUpgradeByName("Founders' Hall") || !Number.isFinite(createdAt) || createdAt <= 0) return 1.0;
         // Never below 0: a save created while the computer's clock was ahead must not turn the bonus into a penalty (bug #179)
         const daysActive = Math.max(0, Math.floor((Date.now() - createdAt) / 86400000));
-        const stepPct = PrestigeManager.owns('foundersHallExpansion') ? 0.02 : 0.01;
-        const boostPct = Math.floor(daysActive / 10) * stepPct;
+        // A flat rate per day active (not a step every 10 days): 5%/day, doubled to 10%/day by Founders' Hall
+        // Expansion, counted from this run's own start - a prestige starts the clock over.
+        const dailyPct = PrestigeManager.owns('foundersHallExpansion') ? 0.10 : 0.05;
+        const boostPct = daysActive * dailyPct;
         return 1 + boostPct;
     }
 

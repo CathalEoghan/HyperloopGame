@@ -33,22 +33,32 @@ const prestigeImageFor = u => PRESTIGE_IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-
 import { flagSrc } from '../utils/flagSrc.js'
 import { distanceMiles } from '../utils/loops.js'
 import { formatDistance } from '../utils/units.js'
-import { formatBalance } from '../utils/formatBalance.js'
+import { scaleToTier, BIG_NUMBER_TIERS } from '../utils/bigNumbers.js'
 
-// Below a billion this reads the same as before (formatBalance keeps full digits there too, matching the top
-// bar and Prestige page - bug #177); a nine-figure-plus stat here used to just run on as one long string of
-// digits, so from a billion up it shows the short form ("2.06 billion") with the real figure a hover away,
-// swapped in with pure CSS (see .progress-cash-full/.progress-cash-compact in ProgressPage.css) rather than a
-// native title tooltip, so it reads as the number itself changing, not a popup appearing over it.
+// Same tier names/short form as the top bar's formatBalance (bug #177), but starting a tier earlier: this
+// page's per-stat cash figures ("43,812,592/day" for Most profitable development) are already long well
+// below a billion, unlike the top bar's running balance, so "really long" starts at a million here instead.
+const formatCashCompact = (value) => {
+    if (!Number.isFinite(value)) return '0'
+    if (value < 1_000_000) return Math.floor(value).toLocaleString('en-GB', { maximumFractionDigits: 0 })
+    const { tier, scaled } = scaleToTier(value, 2)
+    const name = BIG_NUMBER_TIERS[tier]?.[0]
+    if (!name) return value.toExponential(2).replace('e+', 'e')
+    return `${scaled.toFixed(2)} ${name}`
+}
+
+// Shows the abbreviated figure ("43.81 million") by default; hovering the stat card swaps in the exact one,
+// in place - not a tooltip appearing over it - with pure CSS (see .progress-cash-full/.progress-cash-compact
+// in ProgressPage.css) rather than a native title tooltip, so it reads as the number itself changing.
 const CashValue = ({ amount, suffix = '' }) => (
     <span className="progress-cash-value" style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
         <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />
-        <span className="progress-cash-compact">{formatBalance(amount)}{suffix}</span>
+        <span className="progress-cash-compact">{formatCashCompact(amount)}{suffix}</span>
         <span className="progress-cash-full">{Math.floor(amount).toLocaleString('en-GB', { maximumFractionDigits: 0 })}{suffix}</span>
     </span>
 )
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, lifetimeCreatedAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
     // then they already know how claiming and the stat sections work.
     const [showIntro, setShowIntro] = useState(() =>
@@ -537,7 +547,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     return <>{owned.join(', ')}{economyManager.getSpecialDayBonus() > 0 && <>{activeCheckEl}active</>}</>
                 })()
             },
-            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(lifetimeCreatedAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
+            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(createdAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
             // Good Standing - already baked into every development/city upgrade's Reputation cost, but
             // otherwise invisible: this is the only place that says so.
             { label: 'Upgrade Reputation Discount', value: PrestigeManager.owns('goodStanding') ? '-50%' : '—' },
