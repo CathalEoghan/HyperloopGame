@@ -1088,7 +1088,8 @@ export class EconomyManager {
         // Never below 0: a save created while the computer's clock was ahead must not turn the bonus into a penalty (bug #179)
         const daysActive = Math.max(0, Math.floor((Date.now() - createdAt) / 86400000));
         // A flat rate per day active (not a step every 10 days): 5%/day, doubled to 10%/day by Founders' Hall
-        // Expansion, counted from this run's own start - a prestige starts the clock over.
+        // Expansion - counted from the terminal's own lifetime creation (App.jsx passes lifetimeCreatedAt in as
+        // `createdAt` here), not any one run's start, so retiring never resets the clock or costs a day of it.
         const dailyPct = PrestigeManager.owns('foundersHallExpansion') ? 0.10 : 0.05;
         const boostPct = daysActive * dailyPct;
         return 1 + boostPct;

@@ -58,7 +58,7 @@ const CashValue = ({ amount, suffix = '' }) => (
     </span>
 )
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, lifetimeCreatedAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
     // then they already know how claiming and the stat sections work.
     const [showIntro, setShowIntro] = useState(() =>
@@ -129,8 +129,10 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         </h2>
     )
 
-    const terminalAge = () => {
-        const totalSeconds = Math.floor((Date.now() - createdAt) / 1000)
+    // How long ago `fromMs` was, in the same shape for both Run age (this run's own createdAt) and the lifetime
+    // Terminal age (lifetimeCreatedAt, which a prestige never resets) below.
+    const ageText = (fromMs) => {
+        const totalSeconds = Math.floor((Date.now() - fromMs) / 1000)
         const weeks = Math.floor(totalSeconds / 604800)
         const days = Math.floor((totalSeconds % 604800) / 86400)
         const h = Math.floor((totalSeconds % 86400) / 3600)
@@ -396,8 +398,10 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Most profitable city', value: mostProfitableCity ? <span><span style={{ display: 'block' }}>{mostProfitableCity.name}</span><CashValue amount={economyManager.withFoundersHall(economyManager.calculateCityEarning(mostProfitableCity))} suffix="/day" /></span> : '—' },
         { label: 'Most profitable development', value: mostProfitableDev ? <span><span style={{ display: 'block' }}>{economyManager.progressionManager.getDevelopmentName(mostProfitableDev)}</span><CashValue amount={economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(mostProfitableDev))} suffix="/day" /></span> : '—' },
         { label: 'Reputation earned', value: (Math.round(economyManager.progressionManager.reputationEarnedThisRun) || 0).toLocaleString('en-GB') },
+        // How long this run itself has been going - unlike Terminal age in Lifetime Stats below, this starts
+        // again from zero on a new game or a Prestige retirement.
+        { label: 'Run age', value: ageText(createdAt) },
         { label: 'Shortest route', value: routeValue(shortestRoute) },
-        { label: 'Terminal age', value: terminalAge() },
         { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.totalCashEarned || 0} /> },
         { label: 'Total population served', value: formatPopulation(totalPopulation) },
         // Straight from the connected cities, so a disconnect shows at once
@@ -413,6 +417,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Cities and developments upgraded', value: (achievementManager?.counter('devUpgrades') ?? 0) + (achievementManager?.counter('cityUpgrades') ?? 0) },
         { label: 'Daily bonuses collected', value: achievementManager?.counter('dailyBonus') ?? 0 },
         { label: 'Delays compensated', value: (achievementManager?.counter('delaysCompensated') ?? 0).toLocaleString('en-GB') },
+        // How many times Experimental Technology has ever been claimed - every claim doubles the Prestige
+        // Points/cost it next offers (see ExperimentalTechnology.js), so this is also a readout of its current tier.
+        { label: 'Experimental Technology Claims', value: (economyManager.progressionManager.lifetimeExperimentalTechClaims ?? 0).toLocaleString('en-GB') },
         { label: 'Farewells given', value: (achievementManager?.counter('farewells') ?? 0).toLocaleString('en-GB') },
         { label: 'Greets given', value: (achievementManager?.counter('greetings') ?? 0).toLocaleString('en-GB') },
         { label: 'Highest rank reached', value: highestRank },
@@ -420,13 +427,17 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Negative events experienced', value: (achievementManager?.counter('negativeEvents') ?? 0).toLocaleString('en-GB') },
         { label: 'Positive events experienced', value: (achievementManager?.counter('positiveEvents') ?? 0).toLocaleString('en-GB') },
         { label: 'Retirement count', value: PrestigeManager.getHistory().length },
+        // How long the terminal itself has existed - unlike Run age in Current Run Stats above, a prestige never
+        // resets this (see App.jsx's lifetimeCreatedAt, which this reads).
+        { label: 'Terminal age', value: ageText(lifetimeCreatedAt) },
         { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.lifetimeCashEarned || 0} /> },
         { label: 'Total distance travelled', value: formatDistance(achievementManager?.counter('miles') ?? 0) },
         // Every departure and arrival that has happened, including the ones while you were away. Kept through a prestige.
         { label: 'Total number of arrivals', value: (achievementManager?.counter('arrivals') ?? 0).toLocaleString('en-GB') },
         { label: 'Total number of departures', value: (achievementManager?.counter('departures') ?? 0).toLocaleString('en-GB') },
         { label: 'Total passenger count', value: (achievementManager?.counter('passengers') ?? 0).toLocaleString('en-GB') },
-        // Time the game has been open across every run (Terminal age is this run only)
+        // Time the game has actually been open and played, across every run - unlike Terminal age above, which is
+        // wall-clock time since the terminal was created and keeps ticking whether or not the game is open.
         { label: 'Total playtime', value: playtimeText(achievementManager?.counter('playtime') ?? 0) },
         { label: 'Total Reputation earned', value: Math.round(economyManager.progressionManager.lifetimeReputationEarned || 0).toLocaleString('en-GB') },
         { label: 'VIPs welcomed', value: (achievementManager?.counter('vips') ?? 0).toLocaleString('en-GB') },
@@ -547,7 +558,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     return <>{owned.join(', ')}{economyManager.getSpecialDayBonus() > 0 && <>{activeCheckEl}active</>}</>
                 })()
             },
-            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(createdAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
+            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(lifetimeCreatedAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
             // Good Standing - already baked into every development/city upgrade's Reputation cost, but
             // otherwise invisible: this is the only place that says so.
             { label: 'Upgrade Reputation Discount', value: PrestigeManager.owns('goodStanding') ? '-50%' : '—' },

@@ -64,7 +64,7 @@ import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from '.
 import { pickCelebrityDeparture } from './utils/celebrity.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playClickSound3, playHoverSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
-import { saveGame, buildSave, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, clearSettings, startPrestigeRun, readRunStart } from 'Managers/SaveManager.js'
+import { saveGame, buildSave, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, clearSettings, startPrestigeRun, readRunStart, getLifetimeCreatedAt } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
 import { allUpgrades } from "../../UpgradeManager/UpgradeRegistry.js"
@@ -228,6 +228,12 @@ function App() {
 
   const [savedData] = useState(() => hasSave() ? loadGame(progressionManager, rankManager) : null);
 
+  // The terminal's own lifetime creation date - unlike createdAt below (this run's own start, reset by every
+  // prestige), this never resets, so Founders' Hall and the Progress page's Terminal Age stat both read this
+  // instead. Declared here (ahead of offlineData's own useState below) because calculateFreshOffline, called
+  // synchronously inside that initializer, needs it in scope before createdAt itself exists.
+  const [lifetimeCreatedAt] = useState(() => getLifetimeCreatedAt(savedData?.createdAt || Date.now()));
+
   // Achievements are kept apart from the run, so a prestige doesn't touch them. A game from before achievements
   // starts its farewell total from the farewells already given.
   const [achievements] = useState(() => {
@@ -342,10 +348,9 @@ function App() {
     ensureDepartures(progressionManager.purchasedCities);
     primeIncomeInputs();
     // Paid from the moment the player left; if the absence passes the cap, it is the first stretch that counts.
-    // Founders' Hall counts from this run's own start, so this reads savedData directly rather than the
-    // createdAt state below, which isn't set up yet this early (this runs inside offlineData's own useState
-    // initializer) - it's seeded from the exact same value, so they always agree.
-    const offlineIncome = offlineIncomeFor(parseInt(hiddenAt), totalSeconds, savedData?.createdAt || Date.now());
+    // Founders' Hall counts from the terminal's lifetime creation - lifetimeCreatedAt above is already set up by
+    // this point (it's declared ahead of offlineData's own useState, unlike createdAt below, which isn't).
+    const offlineIncome = offlineIncomeFor(parseInt(hiddenAt), totalSeconds, lifetimeCreatedAt);
     if (offlineIncome < 1) return null;
     return { offlineSeconds: totalSeconds, offlineIncome };
   }
@@ -359,7 +364,7 @@ function App() {
   const [showOfflineModal, setShowOfflineModal] = useState(!!offlineData);
   const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || runStart?.terminalName || 'Hyperloop Empire');
   const [createdAt] = useState(() => savedData?.createdAt || Date.now());
-  economyManager.createdAt = createdAt; // so the income figures on screen include the Founders' Hall bonus
+  economyManager.createdAt = lifetimeCreatedAt; // so the income figures on screen include the Founders' Hall bonus
   const [farewellsGiven, setFarewellsGiven] = useState(() => savedData?.farewellsGiven || 0);
   const [lastSaved, setLastSaved] = useState(() => savedData?.lastSaved || null);
   const [showSaved, setShowSaved] = useState(false);
@@ -919,7 +924,7 @@ function App() {
     primeIncomeInputs();
     const savedEvent = economyManager.activeEvent;
     economyManager.activeEvent = null;
-    const dailyIncome = economyManager.calculateDailyIncome(null, createdAt) * 86400;
+    const dailyIncome = economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 86400;
     economyManager.activeEvent = savedEvent;
     const rawCashBonus = Math.floor(dailyIncome * (hasCommemorativeDisplays ? 0.5 : 0.25)) * (PrestigeManager.owns('betterInterestRates') ? 10 : 1);
     const cashBonus = Math.max(rawCashBonus, MIN_DAILY_BONUS);
@@ -1077,7 +1082,7 @@ function App() {
     if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep += PRESTIGE_VALUES.newsColumnRep;
 
     if (event.effectType === 'instantCash') {
-      const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
+      const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
       const bonus = Math.max(rawBonus, MIN_INSTANT_CASH_BONUS);
       progressionManager.addCash(bonus);
       // Pizza Parties doubled this already (see rawBonus above) - flagged the same way the duration
@@ -1101,7 +1106,7 @@ function App() {
         localStorage.removeItem('hyperloop_active_event');
       }, 8000);
     } else if (event.effectType === 'instantCashLoss') {
-      const rawLoss = Math.round(economyManager.calculateDailyIncome(null, createdAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
+      const rawLoss = Math.round(economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * SECONDS_IN_A_DAY * 0.02 / 100) * 100;
       // The balance can't go below zero, so the popup says what was actually taken, not the full amount a nearly empty
       // balance never had
       const loss = Math.min(Math.max(rawLoss, MIN_INSTANT_CASH_LOSS), Math.floor(progressionManager.balance));
@@ -1213,8 +1218,8 @@ function App() {
             const now2 = Date.now();
       const gap = Math.max(0, (now2 - lastTickTimeRef.current) / 1000);
       lastTickTimeRef.current = now2;
-      // Founders' Hall counts from this run's own start, so the tick's own createdAt is the one used throughout
-      const savedCreatedAt = createdAt;
+      // Founders' Hall counts from the terminal's lifetime creation, not this run's own start
+      const savedCreatedAt = lifetimeCreatedAt;
       // Credit the real time since the last tick, so a background tab earns in full. A long gap
       // is offline time instead: it's paid through the offline popup, capped like offline
       // income, and added to any offline reward that's still waiting (bug #57).
@@ -1618,7 +1623,7 @@ function App() {
           // delay during "Profits Through the Roof" isn't compensated at 6-11x while refusing still costs a flat 20.
           const savedDelayEvent = economyManager.activeEvent;
           economyManager.activeEvent = null;
-          const incomePerSecond = economyManager.calculateDailyIncome(null, createdAt);
+          const incomePerSecond = economyManager.calculateDailyIncome(null, lifetimeCreatedAt);
           economyManager.activeEvent = savedDelayEvent;
           const rawCompensation = Math.round(incomePerSecond * SECONDS_IN_A_DAY * (delayMinutes / 1440) * DELAY_COMPENSATION_MULTIPLIER / 100) * 100;
           const compensation = Math.max(rawCompensation, MIN_DELAY_COMPENSATION);
@@ -2194,6 +2199,7 @@ function App() {
           farewellsGiven={farewellsGiven}
           achievementManager={achievements}
           createdAt={createdAt}
+          lifetimeCreatedAt={lifetimeCreatedAt}
           onCollectReward={(reward) => {
             if (reward.type === 'cash') {
               progressionManager.addCash(reward.amount);

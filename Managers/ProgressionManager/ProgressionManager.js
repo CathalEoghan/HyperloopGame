@@ -61,6 +61,10 @@ export const MAX_LINE_LEVEL = 10;
 // (see SaveManager's AUX_KEYS/PRESTIGE_KEEP_KEYS: wiped by an actual Delete Save, kept through a Prestige retirement).
 const LIFETIME_CASH_KEY = 'hyperloop_lifetime_cash_earned';
 const LIFETIME_REP_KEY = 'hyperloop_lifetime_reputation_earned';
+// How many times Experimental Technology has ever been claimed, across every run - see claimExperimentalTechnology()
+// below (the only place that bumps it) and ExperimentalTechnology.js, which reads this same key to work out the
+// Prestige Points/cost tier it's currently offering.
+const LIFETIME_EXPTECH_CLAIMS_KEY = 'hyperloop_lifetime_exptech_claims';
 function loadLifetimeNumber(key) {
     try {
         const v = Number(localStorage.getItem(key));
@@ -110,6 +114,15 @@ export class ProgressionManager {
         // constants above for where they're actually kept.
         this.lifetimeCashEarned = loadLifetimeNumber(LIFETIME_CASH_KEY);
         this.lifetimeReputationEarned = loadLifetimeNumber(LIFETIME_REP_KEY);
+        this.lifetimeExperimentalTechClaims = loadLifetimeNumber(LIFETIME_EXPTECH_CLAIMS_KEY);
+    }
+
+    // Bumps Experimental Technology's lifetime claim count - see purchaseDevelopment below, the only place
+    // this is called, right after the current tier's Prestige Points have already been paid out. Doubling the
+    // count here, rather than when it's claimed, is what makes the NEXT claim (a future run's) twice as rich.
+    claimExperimentalTechnology() {
+        this.lifetimeExperimentalTechClaims += 1;
+        saveLifetimeNumber(LIFETIME_EXPTECH_CLAIMS_KEY, this.lifetimeExperimentalTechClaims);
     }
 
     unlockReward(reward) {
@@ -177,7 +190,12 @@ export class ProgressionManager {
         if (!this.developmentBuiltDates[development.name]) this.developmentBuiltDates[development.name] = new Date().toISOString();
         if (development instanceof Upgrade) {
             this.purchasedUpgrades.push(development);
-            if (development.effectType === 'prestigePoints') PrestigeManager.award(development.effectValue);
+            if (development.effectType === 'prestigePoints') {
+                PrestigeManager.award(development.effectValue);
+                // Experimental Technology's own tier (see ExperimentalTechnology.js) only climbs once it's actually
+                // been bought - not just by time or runs passing - so the claim is counted here, after the payout.
+                if (development.name === 'Experimental Technology') this.claimExperimentalTechnology();
+            }
             this.unlockedUpgrades = this.unlockedUpgrades.filter(u => u !== development);
         } else {
             this.purchasedDevelopments.push(development);

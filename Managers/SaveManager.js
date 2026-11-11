@@ -75,6 +75,12 @@ const AUX_KEYS = [
     // Lifetime cash/Reputation earned (ProgressionManager's own keys - see its LIFETIME_CASH_KEY/LIFETIME_REP_KEY)
     'hyperloop_lifetime_cash_earned',
     'hyperloop_lifetime_reputation_earned',
+    // The terminal's own creation date, kept across every prestige - see getLifetimeCreatedAt below. Founders'
+    // Hall and the Progress page's Terminal Age stat both count from this, not from any one run's own createdAt.
+    'hyperloop_lifetime_created_at',
+    // How many times Experimental Technology has ever been claimed (ProgressionManager's own key - see its
+    // LIFETIME_EXPTECH_CLAIMS_KEY), which decides the Prestige Points/cost tier it's currently on.
+    'hyperloop_lifetime_exptech_claims',
     'hyperloop_progress_collapsed',
     // Where the departure and arrival totals had got to, so the same loops aren't counted twice
     'hyperloop_loop_counted',
@@ -171,6 +177,8 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_hyperlink_liked',
     'hyperloop_lifetime_cash_earned',
     'hyperloop_lifetime_reputation_earned',
+    'hyperloop_lifetime_created_at',
+    'hyperloop_lifetime_exptech_claims',
     'hyperloop_last_login',
     'hyperloop_last_farewell_date',
     // The credits portrait pays its Reputation once ever, not once per run
@@ -203,6 +211,21 @@ export function readRunStart() {
         const note = JSON.parse(localStorage.getItem('hyperloop_run_start'))
         return note && typeof note.terminalName === 'string' ? note : null
     } catch { return null }
+}
+
+// The terminal's own creation date (ms since epoch), kept for good - unlike a save's own createdAt (the CURRENT
+// RUN's start, reset by every prestige), this is written once, the very first time a terminal exists, and never
+// again: Founders' Hall and the Progress page's Terminal Age stat both read it so neither is reset by retiring.
+// `fallbackCreatedAt` seeds it the first time there's nothing saved yet - normally the save's own createdAt, so
+// a game that already has a save (one from before this existed) starts its lifetime clock from that run's start
+// rather than from right now.
+export function getLifetimeCreatedAt(fallbackCreatedAt) {
+    try {
+        const v = Number(localStorage.getItem('hyperloop_lifetime_created_at'))
+        if (Number.isFinite(v) && v > 0) return v
+    } catch { /* storage unavailable */ }
+    try { localStorage.setItem('hyperloop_lifetime_created_at', String(fallbackCreatedAt)) } catch { /* storage full */ }
+    return fallbackCreatedAt
 }
 
 function bundleAuxState() {
@@ -259,6 +282,10 @@ const AUX_SHAPES = {
     // the import had already cleared them - so every import reset the Progress page's lifetime totals to 0.
     hyperloop_lifetime_cash_earned: v => Number.isFinite(v) && v >= 0,
     hyperloop_lifetime_reputation_earned: v => Number.isFinite(v) && v >= 0,
+    // The terminal's own creation date (ms since epoch) and Experimental Technology's lifetime claim count - see
+    // getLifetimeCreatedAt below and ProgressionManager's LIFETIME_EXPTECH_CLAIMS_KEY.
+    hyperloop_lifetime_created_at: v => Number.isFinite(v) && v > 0,
+    hyperloop_lifetime_exptech_claims: v => Number.isFinite(v) && v >= 0,
 }
 const listOfStrings = listOf(x => typeof x === 'string')
 // These two hold a plain date string ("Tue Sep 29 2026"), not JSON.
