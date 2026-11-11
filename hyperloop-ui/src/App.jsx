@@ -1277,7 +1277,14 @@ function App() {
       constructionManager.update();
       if (tier3BuildingBefore.some(c => !c.underConstruction)) {
         // Cut short whatever event is running (positive or negative) and start a fresh positive one, ignoring
-        // the usual rank gate - this is a deliberate trigger, not the regular random roll.
+        // the usual rank gate - this is a deliberate trigger, not the regular random roll. Ended here, before
+        // firing, rather than left for the tick's own "Sync active event to EconomyManager" line further below:
+        // fireEvent's instant-cash math reads economyManager.activeEvent, and without this it would still see
+        // the event being cut short (that sync only runs once a tick), so an Insurance Payout that interrupted a
+        // Pizza-Parties-doubled passive-income event used to take its 10% out of that boosted rate instead of
+        // the normal one - a normal roll never hits this because it never fires while an event is still running.
+        activeEventRef.current = null;
+        economyManager.activeEvent = null;
         fireEvent(getRandomEvent(true));
       }
       if (grantPending.current && progressionManager.purchasedCities.length > 0) {
