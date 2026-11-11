@@ -236,12 +236,20 @@ export function ensureSchedules(purchasedCities, nowMs = Date.now()) {
 // A city connected during the day gets a loop that sets off from it in 30-60 minutes and arrives today if the trip
 // is short enough to get back before the day's cutoff — otherwise the arrival rolls onto tomorrow's board instead,
 // rather than vanishing (bug #182). Its departure is not added: the player schedules that.
-export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now()) {
+// `batchIndex`/`batchSize` are for connecting several cities in one go (a bulk-buy on the Cities page): without
+// them every one of those cities would land in the SAME "30-60 minutes from now" window, so the board showed a
+// wall of arrivals back to back and then nothing for hours. With them, only the first city in the batch keeps
+// that immediate feel; the rest are spread across however much of today is left, the same idea as a normal day's
+// arrivals (generateSchedule) - some still land soon, some later, some (if today's run out) roll to tomorrow via
+// the existing day-rollover below.
+export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(), batchIndex = 0, batchSize = 1) {
     const homeCity = purchasedCities[0]
     if (!homeCity || city.name === homeCity.name) return
     const now = new Date(nowMs)
     const currentMins = now.getHours() * 60 + now.getMinutes()
     const lastMins = 23 * 60 + 30
+    const spanMins = Math.max(30, lastMins - (currentMins + 30))
+    const batchOffset = batchSize > 1 ? Math.floor(batchIndex * spanMins / batchSize) : 0
 
     const place = (kind, earliestMins, durationMin) => {
         let dayMs = nowMs
@@ -270,7 +278,7 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
     }
 
     const inbound = tripMinutes(city.name, homeCity.name, `${dayKey(nowMs)}|arrival`)
-    place('arrival', currentMins + 30 + inbound, inbound)
+    place('arrival', currentMins + 30 + batchOffset + inbound, inbound)
     // Tomorrow's arrivals are drawn once, earlier (see ensureSchedules), before this city was connected - so
     // without this, tomorrow's board would have no arrival from it at all, and that day would lose its greeting
     // Reputation, footfall and passenger totals. (A board not drawn yet will include the city when it is.)

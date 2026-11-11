@@ -133,16 +133,24 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                         </div>
                     ))}
                 </div>
-                {runStart && !choosingFreely && (
-                    <button className="opening-btn starter-any-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setChangingHome(true) }}>
-                        Change home terminal
-                    </button>
-                )}
-                {canPickAny && (
-                    <button className="opening-btn starter-any-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setPickerOpen(true) }}>
-                        Or choose any city in the world
-                    </button>
-                )}
+                {(() => {
+                    const showChangeHome = runStart && !choosingFreely
+                    if (!showChangeHome && !canPickAny) return null
+                    return (
+                        <div className="opening-secondary-actions">
+                            {showChangeHome && (
+                                <button className="opening-btn starter-any-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setChangingHome(true) }}>
+                                    Change home terminal
+                                </button>
+                            )}
+                            {canPickAny && (
+                                <button className="opening-btn starter-any-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setPickerOpen(true) }}>
+                                    Or choose any city in the world
+                                </button>
+                            )}
+                        </div>
+                    )
+                })()}
             </div>
             {pickerOpen && (
                 <CityPickerModal

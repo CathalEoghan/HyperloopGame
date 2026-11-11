@@ -250,7 +250,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
 
                             <p className="prestige-next-run">
                                 <b>Your next run:</b> {PrestigeManager.owns('governmentGrants')
-                                    ? <>back to Rank {GRANT_RANK} with {GRANT_CITIES} cities already connected (Government Grants), and </>
+                                    ? <>back to Rank {GRANT_RANK} with {GRANT_CITIES} extra cities already unlocked (Government Grants), and </>
                                     : <>back to Rank 1 with </>}{fmtCashIcon(nextRunCash)}{signOn ? ' (Sign-On Bonus included)' : ''}
                                 {runStats.home ? <>, starting from {runStats.home}. You can pick a different home terminal first.</> : '.'}
                             </p>

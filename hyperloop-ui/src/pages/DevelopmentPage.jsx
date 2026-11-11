@@ -14,7 +14,7 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime, formatDate } from '../utils/time.js'
-import { formatPerHour, perHour } from '../utils/income.js'
+import { perHour } from '../utils/income.js'
 import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.js'
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound, playBigMomentSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
@@ -255,6 +255,17 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <span>Reputation bonus:</span>
                                     <strong style={{ color: 'var(--ui-accent-readable, var(--ui-accent, #f5a623))' }}>+{repBonusPct}%</strong>
                                 </div>
+                                {PrestigeManager.owns('generationalWisdom') && (
+                                    <div
+                                        className="total-revenue-banner"
+                                        style={{ cursor: 'var(--cursor-help, help)' }}
+                                        onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: 'Every unspent Prestige Point you currently hold is worth +5% to development and city income.' })}
+                                        onMouseLeave={() => setShowBusyTooltip(null)}
+                                    >
+                                        <span>Generational Wisdom Bonus:</span>
+                                        <strong style={{ color: 'var(--ui-accent-readable, var(--ui-accent, #f5a623))' }}>+{Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100)}%</strong>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )
@@ -559,7 +570,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             const canAfford = removal.amicable || progressionManager.reputation >= removal.repCost
                                             // What removing it costs you, listed in plain terms rather than lumping a future rebuild cost in as if it were also "lost"
                                             const losses = []
-                                            if (income > 0) losses.push(<><strong>£{formatPerHour(income)}/hr</strong> income</>)
+                                            if (income > 0) losses.push(<><strong><AbbreviatedNumber value={perHour(income)} prefix="£" suffix="/hr" /></strong> income</>)
                                             if (level > 0) losses.push(<>its upgrade level (<strong>LVL {level}</strong>)</>)
                                             if (isRenamed(selectedDevelopment)) losses.push(<>its name</>)
                                             return (
@@ -677,7 +688,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             {!isUnderConstruction && (
                                                 <div className="dev-revenue-strip">
                                                     {development.revenue
-                                                        ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{formatPerHour(economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)))}/hr</>
+                                                        ? <AbbreviatedNumber value={perHour(economyManager.withFoundersHall(economyManager.getEffectiveDevIncomeWithBoosts(development)))} icon={cashIcon} iconAlt="£" iconSize={11} suffix="/hr" />
                                                         : 'UPGRADE'}
                                                 </div>
                                             )}
@@ -756,7 +767,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     loading="lazy"
                                 />
                                 <div className="dev-revenue-strip" style={{ color: '#aaa' }}>
-                                    {development.revenue ? <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{formatPerHour(development.revenue)}/hr</> : 'UPGRADE'}
+                                    {development.revenue ? <AbbreviatedNumber value={perHour(development.revenue)} icon={cashIcon} iconAlt="£" iconSize={11} suffix="/hr" /> : 'UPGRADE'}
                                     <div className="dev-cost-line">
                                         Cost {development.effectType === 'earlyRetirement'
                                             ? <><img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.effectValue}</>

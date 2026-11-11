@@ -32,7 +32,7 @@ const PRESTIGE_IMAGES_BY_NAME = Object.fromEntries(Object.entries(PRESTIGE_IMAGE
 const prestigeImageFor = u => PRESTIGE_IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-9]/g, '').toLowerCase()]
 import { flagSrc } from '../utils/flagSrc.js'
 import { distanceMiles } from '../utils/loops.js'
-import { formatDistance } from '../utils/units.js'
+import { formatDistance, convertDistance, getDistanceUnit } from '../utils/units.js'
 import AbbreviatedNumber from '../components/AbbreviatedNumber.jsx'
 
 // Shows the abbreviated figure ("43.81 million") by default; hovering the stat card (or the number itself -
@@ -438,7 +438,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         // resets this (see App.jsx's lifetimeCreatedAt, which this reads).
         { label: 'Terminal age', value: ageText(lifetimeCreatedAt) },
         { label: 'Total cash earned', value: <CashValue amount={economyManager.progressionManager.lifetimeCashEarned || 0} /> },
-        { label: 'Total distance travelled', value: formatDistance(achievementManager?.counter('miles') ?? 0) },
+        { label: 'Total distance travelled', value: <AbbreviatedNumber value={convertDistance(achievementManager?.counter('miles') ?? 0)} suffix={getDistanceUnit() === 'km' ? ' km' : ' miles'} /> },
         // Every departure and arrival that has happened, including the ones while you were away. Kept through a prestige.
         { label: 'Total number of arrivals', value: (achievementManager?.counter('arrivals') ?? 0).toLocaleString('en-GB') },
         { label: 'Total number of departures', value: (achievementManager?.counter('departures') ?? 0).toLocaleString('en-GB') },

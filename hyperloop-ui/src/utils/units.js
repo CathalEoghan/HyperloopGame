@@ -10,8 +10,13 @@ export function setDistanceUnit(unit) {
     try { localStorage.setItem(KEY, unit === 'km' ? 'km' : 'mi') } catch { /* storage unavailable */ }
 }
 
+// The raw number a distance in miles becomes in the player's chosen unit, with no rounding or suffix - for a
+// caller (Progress page's Total distance travelled) that abbreviates it itself rather than just printing it.
+export function convertDistance(miles, unit = getDistanceUnit()) {
+    return unit === 'km' ? miles * KM_PER_MILE : miles
+}
+
 // "10,560 miles" or "16,994 km", whole numbers
 export function formatDistance(miles, unit = getDistanceUnit()) {
-    const value = unit === 'km' ? miles * KM_PER_MILE : miles
-    return `${Math.round(value).toLocaleString('en-GB')} ${unit === 'km' ? 'km' : 'miles'}`
+    return `${Math.round(convertDistance(miles, unit)).toLocaleString('en-GB')} ${unit === 'km' ? 'km' : 'miles'}`
 }

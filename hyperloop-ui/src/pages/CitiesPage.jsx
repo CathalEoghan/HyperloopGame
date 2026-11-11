@@ -15,7 +15,7 @@ import countryFlags from '../data/countryFlags.js'
 import { matchesPlace } from '../utils/search.js'
 import cityCoordinates from '../data/cityCoordinates.js'
 import cashIcon from '../assets/misc/cash.png'
-import { formatPerHour, perHour } from '../utils/income.js'
+import { perHour } from '../utils/income.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import poorIcon from '../assets/misc/poor.png'
@@ -58,6 +58,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [showCityBoostTip, setShowCityBoostTip] = useState(null) // the badge being hovered
     const [showBulkBuyTip, setShowBulkBuyTip] = useState(null) // the Connect all affordable button, while hovered
     const [showRepBonusTip, setShowRepBonusTip] = useState(null) // the Reputation bonus stat box, while hovered
+    const [showWisdomBonusTip, setShowWisdomBonusTip] = useState(null) // the Generational Wisdom Bonus stat box, while hovered
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
     // then they already know how connecting and scheduling works.
     const [showIntro, setShowIntro] = useState(() =>
@@ -276,7 +277,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             title={isHome ? 'Your home terminal: it earns no income of its own' : offTimetable ? 'Not on the timetable: it earns nothing until it has a scheduled departure' : undefined}>
                             {isHome
                                 ? 'HOME TERMINAL'
-                                : <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle', marginBottom: '1px' }} />{formatPerHour(dailyIncome)}/hr{offTimetable ? ' · off timetable' : ''}</>}
+                                : <><AbbreviatedNumber value={perHour(dailyIncome)} icon={cashIcon} iconAlt="£" iconSize={11} iconStyle={{ marginBottom: '1px' }} suffix="/hr" />{offTimetable ? ' · off timetable' : ''}</>}
                         </div>
                     )}
                 </div>
@@ -665,6 +666,18 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <strong>+{Math.round(economyManager.getReputationIncomeBonus() * 100)}%</strong>
                                 <BoostTooltip anchor={showRepBonusTip} lines={['Every 2 Reputation you currently hold is worth +1% to city and development income.']} text />
                             </div>
+                            {PrestigeManager.owns('generationalWisdom') && (
+                                <div
+                                    className="city-stat-box"
+                                    style={{ cursor: 'var(--cursor-help, help)' }}
+                                    onMouseEnter={(e) => setShowWisdomBonusTip(e.currentTarget)}
+                                    onMouseLeave={() => setShowWisdomBonusTip(null)}
+                                >
+                                    <span className="city-stat-label" style={{ color: 'white' }}>Generational Wisdom Bonus:</span>
+                                    <strong>+{Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100)}%</strong>
+                                    <BoostTooltip anchor={showWisdomBonusTip} lines={['Every unspent Prestige Point you currently hold is worth +5% to city and development income.']} text />
+                                </div>
+                            )}
                         </div>
                         {flatList
                             ? <div className="city-row">{filteredPurchased.map(city => renderCityCard(city, false, true))}</div>

@@ -225,3 +225,29 @@
 .starter-any-btn {
     margin-top: 24px;
 }
+
+/* "Change home terminal" and "Or choose any city in the world" (Personal Favours) can both show at once. As two
+   plain .opening-btn (solid accent orange, no border), sitting right next to each other with no gap, they read
+   as one merged pill of two buttons fighting for attention rather than two separate choices. Here they're white
+   with a neutral border instead, spaced apart, and the border - not the fill - picks up the accent colour on
+   hover, so hovering one doesn't make it look like a third, different button. */
+.opening-secondary-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 24px;
+}
+.opening-secondary-actions .starter-any-btn {
+    margin-top: 0;
+    background: white;
+    color: #333;
+    border: 2px solid #999;
+}
+.opening-secondary-actions .starter-any-btn:hover {
+    background: white;
+    color: var(--ui-accent, #f5a623);
+    border-color: var(--ui-accent, #f5a623);
+    transform: translateY(-1px);
+}

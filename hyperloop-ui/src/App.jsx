@@ -664,6 +664,53 @@ function App() {
   // A milestone can be noticed by more than one path (the load check, a rank-up while playing, a skipped rank), so it
   // goes into the queue once however often it is asked for: a second entry handed the reward over twice.
   const queueMilestone = (milestone) => setMilestoneQueue(prev => prev.some(m => m.rank === milestone.rank) ? prev : [...prev, milestone]);
+
+  // Hands a milestone's reward straight to the player and marks it claimed - the same thing MilestoneModal's own
+  // "Continue" does. `silent` skips the reveal popup (and Expanded Family Rooms' bonus popup) entirely instead of
+  // queueing it: Government Grants uses this for every milestone its rank jump skips past (giveGovernmentGrant,
+  // below), since popping up a "Continue" screen for Rank 10 and another for Rank 25 right as a fresh run starts
+  // would get in the way of the grant itself rather than feel like an earned reward.
+  const claimMilestone = (milestone, { silent = false } = {}) => {
+    const upgrade = allUpgrades.find(u => u.name === milestone.upgradeName);
+    // Already handed over (a duplicate queue entry, or already owned some other way): mark it claimed, pay nothing twice
+    if (claimedMilestones.current.has(milestoneKey(milestone)) || (upgrade && progressionManager.purchasedUpgrades.some(u => u.name === upgrade.name))) {
+      claimedMilestones.current.add(milestoneKey(milestone));
+      localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
+      return;
+    }
+    if (upgrade && upgrade.effectType === 'earlyRetirement') {
+      // Unlocked, not owned: the reveal popup comes from the unlock itself
+      if (!progressionManager.unlockedUpgrades.includes(upgrade) && !progressionManager.hasEarlyRetirement()) {
+        progressionManager.unlockedUpgrades.push(upgrade);
+      }
+    } else if (upgrade) {
+      progressionManager.purchasedUpgrades.push(upgrade);
+      // Dated like anything bought, so its card shows when it arrived instead of no date at all
+      progressionManager.recordBuiltDate(upgrade);
+      prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
+      // It is an upgrade the player now owns, so it gets the upgrade popup with its effect (bug #172)
+      if (!silent) setRevealedUpgradeQueue(prev => [...prev, upgrade]);
+    }
+    // Expanded Family Rooms (Bologna): every milestone also pays a flat reputation bonus on top of its usual
+    // special-unlock reward.
+    if (progressionManager.purchasedUpgrades.some(u => u.effectType === 'milestoneReputationBonus')) {
+      const bonus = progressionManager.purchasedUpgrades
+        .filter(u => u.effectType === 'milestoneReputationBonus')
+        .reduce((sum, u) => sum + u.effectValue, 0);
+      // Into the save now; the counter and sound wait for the popup that follows the upgrade reveal
+      progressionManager.addReputation(bonus);
+      heldRepRef.current += bonus;
+      if (!silent) {
+        setBonusQueue(prev => [...prev, {
+          title: 'EXPANDED FAMILY ROOMS',
+          message: 'Your new family rooms are open, and passengers and staff with small children are joining in the milestone celebrations!',
+          amount: bonus, buttonLabel: 'Yay!', afterUpgradeReveal: true,
+        }]);
+      }
+    }
+    claimedMilestones.current.add(milestoneKey(milestone));
+    localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
+  };
   const claimedCityRef = useRef(null);
 
   const activeEventRef = useRef((() => {
@@ -793,24 +840,28 @@ function App() {
   // earned, so it can't count towards XP or the cash-earned total.
   const signOnPending = useRef(!!runStart && PrestigeManager.owns('signOnBonus'));
   const giveGovernmentGrant = () => {
-    const grant = applyGovernmentGrant(progressionManager, rankManager, allCities);
-    writeGrantedCities(grant.cities.map(c => c.name));
-    // Dozens of developments arrive at once, so they count as already seen instead of each getting a popup
+    // The 24 cities are unlocked, not connected: the player still picks when (and whether) to actually build each
+    // one from the Cities page, same as any other unlocked city - Government Grants' own reward is the rank head
+    // start and having that many choices waiting, not 24 free connections. So there is nothing to pre-schedule
+    // here, and nothing for Amicable Breakups to treat specially later (writeGrantedCities, used to flag these as
+    // "connected for free" for its refund rule, no longer applies).
+    applyGovernmentGrant(progressionManager, rankManager, allCities);
+    // Dozens of developments arrive at once for a city the instant it's unlocked (some city reveals come with an
+    // unlocked development or two of their own), so they count as already seen instead of each getting a popup
     const seen = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
     [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades].forEach(d => {
       seen.add(d.name);
       queuedRevealNames.current.add(d.name);
     });
     localStorage.setItem('hyperloop_shown_reveals', JSON.stringify([...seen]));
-    // The milestone upgrades for the ranks skipped (Rank 10 and 25)
+    // The milestone upgrades for the ranks skipped (Rank 10 and 25) are handed over immediately, with no
+    // "Continue" popup - the jump itself is the moment, not two more screens before the player even sees
+    // their new cities (see claimMilestone's silent option).
     MILESTONES.forEach(milestone => {
       if (milestone.rank <= rankManager.rank && !claimedMilestones.current.has(milestoneKey(milestone))) {
-        setMilestoneQueue(prev => prev.some(m => m.rank === milestone.rank) ? prev : [...prev, milestone]);
+        claimMilestone(milestone, { silent: true });
       }
     });
-    // The granted cities are left for the player to schedule (from the Terminal Board), like any other connected city:
-    // they earn nothing until they have a departure. Their arrivals are drawn now, so there are greetings straight away.
-    ensureTodaySchedule();
     triggerSave();
   };
 
@@ -1180,7 +1231,8 @@ function App() {
   // A city connected during the day joins today's departures and arrivals. With no schedule yet (the first city
   // connected on a new game's first day), it starts today's schedule on its own, so its departure and farewell don't
   // wait for the Terminal Board to be opened (bug #144).
-  const injectCityIntoSchedule = (city) => injectCityIntoSchedules(city, progressionManager.purchasedCities);
+  const injectCityIntoSchedule = (city, batchIndex = 0, batchSize = 1) =>
+    injectCityIntoSchedules(city, progressionManager.purchasedCities, Date.now(), batchIndex, batchSize);
 
   const tickIntervalRef = useRef(null);
   const lastWaitCheckRef = useRef(Date.now());
@@ -1362,9 +1414,14 @@ function App() {
         const newCities = progressionManager.purchasedCities.slice(prevPurchasedCount.current);
         const homeCity = progressionManager.purchasedCities[0];
         markTimetableAutofilled();
+        // A bulk buy ("Connect all affordable") can land many of these in one tick - batchSize tells
+        // injectCityIntoSchedule to spread their first loops across the day instead of bunching them all
+        // into the same near-term window (see the comment on injectCityIntoSchedules).
+        const batchSize = newCities.filter(city => !homeCity || city.name !== homeCity.name).length;
+        let batchIndex = 0;
         newCities.forEach(city => {
           if (homeCity && city.name === homeCity.name) return;
-          injectCityIntoSchedule(city);
+          injectCityIntoSchedule(city, batchIndex++, batchSize);
           // The first city connected: nothing leaves until a departure is scheduled, so say so once
           try {
             if (localStorage.getItem(FIRST_LOOP_PROMPT_KEY) === null && readTimetable().length === 0) {
@@ -2641,44 +2698,7 @@ function App() {
           milestone={milestoneQueue[0]}
           onContinue={() => {
             const milestone = milestoneQueue[0];
-            const upgrade = allUpgrades.find(u => u.name === milestone.upgradeName);
-            // Already handed over (a duplicate in the queue, say): drop it without paying out again
-            if (claimedMilestones.current.has(milestoneKey(milestone)) || (upgrade && progressionManager.purchasedUpgrades.some(u => u.name === upgrade.name))) {
-              claimedMilestones.current.add(milestoneKey(milestone));
-              localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
-              setMilestoneQueue(prev => prev.filter(m => m.rank !== milestone.rank));
-              return;
-            }
-            if (upgrade && upgrade.effectType === 'earlyRetirement') {
-              // Unlocked, not owned: the reveal popup comes from the unlock itself
-              if (!progressionManager.unlockedUpgrades.includes(upgrade) && !progressionManager.hasEarlyRetirement()) {
-                progressionManager.unlockedUpgrades.push(upgrade);
-              }
-            } else if (upgrade) {
-              progressionManager.purchasedUpgrades.push(upgrade);
-              // Dated like anything bought, so its card shows when it arrived instead of no date at all
-              progressionManager.recordBuiltDate(upgrade);
-              prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
-              // It is an upgrade the player now owns, so it gets the upgrade popup with its effect (bug #172)
-              setRevealedUpgradeQueue(prev => [...prev, upgrade]);
-            }
-            // Expanded Family Rooms (Bologna): every milestone also pays a flat reputation bonus on top of
-            // its usual special-unlock reward.
-            if (progressionManager.purchasedUpgrades.some(u => u.effectType === 'milestoneReputationBonus')) {
-              const bonus = progressionManager.purchasedUpgrades
-                .filter(u => u.effectType === 'milestoneReputationBonus')
-                .reduce((sum, u) => sum + u.effectValue, 0);
-              // Into the save now; the counter and sound wait for the popup that follows the upgrade reveal
-              progressionManager.addReputation(bonus);
-              heldRepRef.current += bonus;
-              setBonusQueue(prev => [...prev, {
-                title: 'EXPANDED FAMILY ROOMS',
-                message: 'Your new family rooms are open, and passengers and staff with small children are joining in the milestone celebrations!',
-                amount: bonus, buttonLabel: 'Yay!', afterUpgradeReveal: true,
-              }]);
-            }
-            claimedMilestones.current.add(milestoneKey(milestone));
-            localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
+            claimMilestone(milestone);
             setMilestoneQueue(prev => prev.filter(m => m.rank !== milestone.rank));
             triggerSave();
           }}
