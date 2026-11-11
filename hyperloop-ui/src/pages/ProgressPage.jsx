@@ -33,11 +33,18 @@ const prestigeImageFor = u => PRESTIGE_IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-
 import { flagSrc } from '../utils/flagSrc.js'
 import { distanceMiles } from '../utils/loops.js'
 import { formatDistance } from '../utils/units.js'
+import { formatBalance } from '../utils/formatBalance.js'
 
+// Below a billion this reads the same as before (formatBalance keeps full digits there too, matching the top
+// bar and Prestige page - bug #177); a nine-figure-plus stat here used to just run on as one long string of
+// digits, so from a billion up it shows the short form ("2.06 billion") with the real figure a hover away,
+// swapped in with pure CSS (see .progress-cash-full/.progress-cash-compact in ProgressPage.css) rather than a
+// native title tooltip, so it reads as the number itself changing, not a popup appearing over it.
 const CashValue = ({ amount, suffix = '' }) => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
+    <span className="progress-cash-value" style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
         <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />
-        {amount.toLocaleString('en-GB', { maximumFractionDigits: 0 })}{suffix}
+        <span className="progress-cash-compact">{formatBalance(amount)}{suffix}</span>
+        <span className="progress-cash-full">{Math.floor(amount).toLocaleString('en-GB', { maximumFractionDigits: 0 })}{suffix}</span>
     </span>
 )
 

@@ -317,8 +317,11 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                             Confirm (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
                                             {/* Legal Loopholes' half-price rename - already baked into getRenameRepCost() above, but flagged
-                                                the same way other discounts are, so it isn't invisible once owned. */}
-                                            {PrestigeManager.owns('legalLoopholes') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
+                                                the same way other discounts are, so it isn't invisible once owned. Its own class (rather than
+                                                relying on the button's own hover color) is what lets .closeButton:hover swap it to a readable
+                                                color too - the button's hover background is the same orange, so this text used to vanish into
+                                                it the moment you hovered Confirm. */}
+                                            {PrestigeManager.owns('legalLoopholes') && <span className="rename-discount-tag" style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
                                         </span>
                                     </button>
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowRenameModal(false) }}>Cancel</button>
@@ -570,7 +573,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); openRename(selectedDevelopment) }}>
                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                                             Rename (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
-                                                            {PrestigeManager.owns('legalLoopholes') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
+                                                            {/* Same hover-contrast fix as the Confirm button's discount tag above - see that comment. */}
+                                                            {PrestigeManager.owns('legalLoopholes') && <span className="rename-discount-tag" style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
                                                         </span>
                                                     </button>
                                                 )}

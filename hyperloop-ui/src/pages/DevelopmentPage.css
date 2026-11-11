@@ -458,6 +458,15 @@
   color: var(--ui-accent-contrast, #222222) !important;
 }
 
+/* The Legal Loopholes "(-50%)" tag next to Rename/Confirm is set inline to the same accent orange as the
+   button's own hover background above, so it disappeared into it the instant you hovered. !important here
+   beats that inline color (importance wins over specificity, inline or not), swapping it to the same
+   hover-contrast color the rest of the button's text already gets. Not page-scoped for the same reason as
+   .modal .closeButton:hover above - this one rule covers every ".rename-discount-tag" in the app too. */
+.modal .closeButton:hover .rename-discount-tag {
+  color: var(--ui-accent-contrast, #222222) !important;
+}
+
 .construction-overlay {
   position: absolute;
   top: 0; left: 0; right: 0; bottom: 0;

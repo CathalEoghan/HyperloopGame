@@ -57,6 +57,22 @@
     font-family: 'Courier New', monospace;
 }
 
+/* A cash stat (see CashValue in ProgressPage.jsx) shows the abbreviated figure ("2.06 billion") by default and
+   swaps in the exact one on hover, in place - not a tooltip appearing over it. Scoped to the whole .stat-card,
+   not just the number, so it's consistent with the card's own hover (it already lifts/glows and plays a sound
+   on hover as one unit) rather than needing a pixel-precise hover over tiny text. */
+.progress-cash-full {
+    display: none;
+}
+
+.stat-card:hover .progress-cash-compact {
+    display: none;
+}
+
+.stat-card:hover .progress-cash-full {
+    display: inline;
+}
+
 /* Section headers */
 .progress-section-header {
     font-size: 1.3rem;
