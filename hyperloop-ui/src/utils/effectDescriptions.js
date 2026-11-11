@@ -59,6 +59,7 @@ export const EFFECT_DESCRIPTIONS = {
     freeRerollOnRankUp: () => `One free re-roll of your city choices each time you rank up`,
     positiveEventBoost: (v) => `+${pct(v)}% chance of positive events`,
     dailyLoginRep: (v) => `+${v} Reputation every day you log in`,
+    firstLoopTripleRep: (v) => `The first arrival or departure you greet or farewell each day pays ${v}x Reputation`,
     freeRepOnRankUp: (v) => `+${v} Reputation each time you rank up`,
     businessWeekBoost: (v) => `+${pct(v)}% income Monday to Friday`,
     equatorBoost: (v) => `+${pct(v)}% income from cities within ${EQUATOR_BONUS_MAX_LATITUDE}° of the equator`,

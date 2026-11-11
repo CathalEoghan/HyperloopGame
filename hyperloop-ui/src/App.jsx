@@ -446,8 +446,15 @@ function App() {
   // Everything a farewell pays out and records. Used by the farewell popup's button, and by Video Message, which sends
   // it straight from the tick so a popup that is open (the daily bonus overnight, say) can't make the farewell expire.
   function giveFarewell(dep, repGain) {
+    // Personal Styling Retinue's first-loop-of-the-day bonus (see getFarewellRepGain/isFirstLoopToday in
+    // EconomyManager) is spent the moment a greet or farewell is actually credited - checked and marked here, the
+    // one place every path (the farewell popup, Video Message for both departures and arrivals) funnels through,
+    // so it can never pay out twice in the same day. An arrival counts for this (unlike the farewell total below).
+    if (economyManager.hasUpgrade('firstLoopTripleRep') && economyManager.isFirstLoopToday()) {
+      localStorage.setItem('hyperloop_last_farewell_date', new Date().toDateString());
+    }
     // Greeting an arrival pays the same Reputation (and VIP bonus, and Personal Image Branding cash) as a farewell.
-    // It doesn't count as the day's first farewell or towards the farewell total, and it sets off its own kind of post.
+    // It doesn't count towards the farewell total, and it sets off its own kind of post.
     if (dep?.kind === 'arrival') {
       progressionManager.addReputation(repGain ?? 5);
       const arrivalCity = allCities.find(c => c.name === dep.name);

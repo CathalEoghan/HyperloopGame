@@ -1044,8 +1044,23 @@ export class EconomyManager {
         let factor = 1;
         if (this.hasUpgrade('farewellRepDoubled')) factor *= 2;
         if (PrestigeManager.owns('oralHygiene')) factor *= PV.oralHygiene;
+        // Personal Styling Retinue: the first arrival or departure you greet/farewell each calendar day pays this
+        // many times the Reputation. Read-only (never marks the day used itself) - see isFirstLoopToday below and
+        // giveFarewell in App.jsx, the only place that actually consumes it - so a popup or toast still open can
+        // safely preview this figure without spending it before the player has actually clicked anything.
+        const firstLoopMult = this.getUpgradeSum('firstLoopTripleRep');
+        if (firstLoopMult > 0 && this.isFirstLoopToday()) factor *= firstLoopMult;
         // A VIP farewell is worth more, on top of everything else.
         return baseRep * factor * (isVip ? VIP_REP_MULTIPLIER : 1);
+    }
+
+    // Whether today's Personal Styling Retinue bonus (see getFarewellRepGain above) is still unclaimed. Read-only:
+    // checking this never marks it used - only giveFarewell in App.jsx does that, at the single point every path
+    // (the farewell popup, Video Message for both departures and arrivals) funnels through to actually credit it.
+    isFirstLoopToday() {
+        let last = null;
+        try { last = localStorage.getItem('hyperloop_last_farewell_date'); } catch { /* storage unavailable */ }
+        return last !== new Date().toDateString();
     }
 
     // The chance that a departure's passenger is a VIP, rolled when its farewell window opens.
