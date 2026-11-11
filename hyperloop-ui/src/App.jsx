@@ -51,6 +51,7 @@ import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { PrestigeManager, PRESTIGE_MIN_RANK } from "Managers/PrestigeManager/PrestigeManager.js";
 import { AUTO_WORK_INTERVAL_MS, workClicksDue, autoWorkEnabled } from "Managers/PrestigeManager/autoWork.js";
+import { autoClaimRankUpsEnabled, AUTO_CLAIM_RANKUPS_KEY } from "./utils/autoClaimRankUps.js";
 import { bumpLivestreamClicks, livestreamRepFor } from "Managers/PrestigeManager/livestream.js";
 import { PRESTIGE_VALUES } from "Managers/PrestigeManager/prestigeUpgrades.js";
 import { readGrantedCities, writeGrantedCities } from "./utils/grantedCities.js";
@@ -867,6 +868,18 @@ function App() {
     if (gained.length > 0) setClaimAllCities(gained);
     triggerSave();
   };
+
+  // Auto-claim rank-ups (Settings): the Claim all above, run as soon as the rank-up popup would have appeared, i.e. when
+  // no other popup is up. Runs after every render on purpose: it only acts when there is something to claim, and the
+  // checks are the same ones the rank-up popup waits on.
+  useEffect(() => {
+    if (pendingRankUps < 1 || !hasEnteredRef.current || !autoClaimRankUpsEnabled()) return;
+    if (dailyLoginData || showOfflineModal || activeDelay || activeDeparture || devRevealQueue.length > 0) return;
+    if (claimedCity || claimAllCities || claimAllDevs || paBonus || cityChoices || showCityPicker) return;
+    // Next tick rather than inside the effect itself: claiming sets state, and the popup state above must settle first
+    const id = setTimeout(claimAllRankUps, 0);
+    return () => clearTimeout(id);
+  });
 
   // Government Grants: the first tick after a new run's starter city is connected (and only then).
   const grantPending = useRef(!!runStart && PrestigeManager.owns('governmentGrants'));
@@ -2639,7 +2652,7 @@ function App() {
       )}
 
       {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
-        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
+        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} onEnableAuto={() => { try { localStorage.setItem(AUTO_CLAIM_RANKUPS_KEY, 'true') } catch { /* storage blocked: this one still claims */ } claimAllRankUps() }} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
          // The city offer or picker is already open: claiming again would swap in a fresh offer without the re-roll cost

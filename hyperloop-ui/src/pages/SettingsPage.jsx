@@ -20,6 +20,7 @@ import infoIcon from '../assets/misc/guide.png'
 import checkIcon from '../assets/misc/check.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { AUTO_WORK_SETTING_KEY, autoWorkEnabled } from 'Managers/PrestigeManager/autoWork.js'
+import { AUTO_CLAIM_RANKUPS_KEY, autoClaimRankUpsEnabled } from '../utils/autoClaimRankUps.js'
 import './SettingsPage.css'
 
 // Shown next to "Saved" wherever a Settings save button flips to its confirmed state, in place of a plain tick
@@ -156,6 +157,12 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         localStorage.setItem(AUTO_WORK_SETTING_KEY, enabled)
     }
 
+    const [autoClaimRankUps, setAutoClaimRankUps] = useState(autoClaimRankUpsEnabled())
+    const handleAutoClaimToggle = (enabled) => {
+        setAutoClaimRankUps(enabled)
+        localStorage.setItem(AUTO_CLAIM_RANKUPS_KEY, enabled)
+    }
+
     const handleEventTintToggle = (enabled) => {
         setEventTint(enabled)
         localStorage.setItem('hyperloop_event_tint', enabled)
@@ -253,6 +260,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); handleNameSave(); }}>
                             {nameSaved ? <>{savedCheckEl}Saved</> : 'Save'}
                         </button>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Auto-claim Rank-ups</span>
+                        <span className="settings-label-desc">Claims every rank-up for you with random cities and shows one summary, so ranking up fast isn't a popup per rank. You give up choosing and re-rolling.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={autoClaimRankUps} onClick={() => handleAutoClaimToggle(true)}>On</OptionBtn>
+                        <OptionBtn active={!autoClaimRankUps} onClick={() => handleAutoClaimToggle(false)}>Off</OptionBtn>
                     </div>
                 </div>
                 {PrestigeManager.owns('bestPAEver') && (

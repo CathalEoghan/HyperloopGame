@@ -9,7 +9,7 @@ export const CLAIM_ALL_FROM = 3
 // Escape does what the main button does - moves on to choosing the city - rather than closing the popup: this is the only
 // way to claim the rank-up, so it can't simply be dismissed. A stray Escape is harmless: it only opens the city choice,
 // which shows the cities and ignores Escape itself, so nothing is picked or paid for by it. (Never "Claim all".)
-function RankUpModal({ onClaim, choose = false, waiting = 0, onClaimAll }) {
+function RankUpModal({ onClaim, choose = false, waiting = 0, onClaimAll, onEnableAuto }) {
   useEscapeToClose(() => { playClickSound2(); onClaim() })
   return (
     <div className="modal-overlay">
@@ -31,6 +31,20 @@ function RankUpModal({ onClaim, choose = false, waiting = 0, onClaimAll }) {
             </button>
           )}
         </div>
+        {/* The way out for a player ranking up faster than they can click through: turns the Settings option on and
+            claims everything waiting now. Never what Escape does. */}
+        {onEnableAuto && (
+          <>
+            <button
+              className="rankup-auto-btn"
+              onMouseEnter={() => playHoverSound()}
+              onClick={() => { playClickSound2(); onEnableAuto(); }}
+            >
+              Enable automatic random selection
+            </button>
+            <p className="rankup-auto-note">Claims every rank-up with a random city. Turn it off any time in Settings.</p>
+          </>
+        )}
       </div>
     </div>
   );
