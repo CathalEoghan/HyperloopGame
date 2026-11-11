@@ -27,6 +27,7 @@ import ConstructionScreen from "./components/ConstructionScreen"
 import LoadingScreen from "./components/LoadingScreen"
 import DevelopmentRevealModal from "./components/DevelopmentRevealModal"
 import FarewellModal from "./components/FarewellModal"
+import VideoMessageToast from "./components/VideoMessageToast"
 import NotEnoughRepModal from "./components/NotEnoughRepModal"
 import ShopModal from "./components/ShopModal"
 import { readCosmetics, writeCosmetics, applyCosmetics, isOwned, withPurchase, withEquipped, bundlePieces, isBundleOwned, bundlePrice } from "./utils/cosmetics.js"
@@ -428,6 +429,11 @@ function App() {
     return queue;
   });
   const activeDeparture = departureQueue[0] || null;
+  // Video Message: a purely cosmetic queue. The farewell/greeting itself is credited the instant it fires (see
+  // giveFarewellRef below), never queued here, so nothing in this list can expire or be missed - this is only
+  // what VideoMessageToast shows once nothing more important is already on screen. Not persisted: if the game
+  // closes before it's shown, the credit already happened, so there's nothing left to show it for.
+  const [videoMessageFlashQueue, setVideoMessageFlashQueue] = useState([]);
   // Removes this particular departure (not just "the first one"), so running twice is harmless.
   const finishDeparture = (dep) => setDepartureQueue(queue => {
     const next = queue.filter(d => departureId(d) !== departureId(dep));
@@ -1503,10 +1509,14 @@ function App() {
           try { celebrity = JSON.parse(localStorage.getItem(CELEBRITY_DEPARTURE_KEY))?.key === key; } catch { /* unreadable: no celebrity */ }
           if (celebrity) localStorage.removeItem(CELEBRITY_DEPARTURE_KEY);
           const depEntry = { ...entry, secondsRemaining, expiresAt, vip: celebrity || Math.random() < economyManager.getVipChance(), ...(celebrity ? { celebrity: true } : {}) };
-          // Video Message sends the farewell on the spot, whatever popup is open, instead of queueing it behind them
+          // Video Message sends the farewell on the spot, whatever popup is open, instead of queueing it behind them -
+          // then queues the SAME entry on the purely cosmetic videoMessageFlashQueue, which VideoMessageToast shows
+          // once nothing more important is on screen. The credit above can never be missed; the toast can be delayed.
           if (PrestigeManager.owns('videoMessage')) {
             playFarewellAcceptSound();
-            giveFarewellRef.current(depEntry, economyManager.getFarewellRepGain(5, !!depEntry.vip));
+            const repGain = economyManager.getFarewellRepGain(5, !!depEntry.vip);
+            giveFarewellRef.current(depEntry, repGain);
+            setVideoMessageFlashQueue(queue => [...queue, { ...depEntry, repGain }]);
             return;
           }
           setDepartureQueue(queue => {
@@ -1535,10 +1545,12 @@ function App() {
           const secondsRemaining = Math.max(30, Math.floor((windowEndTs - now.getTime()) / 1000));
           const expiresAt = Date.now() + secondsRemaining * 1000;
           const arrEntry = { ...entry, kind: 'arrival', secondsRemaining, expiresAt, vip: Math.random() < economyManager.getVipChance() };
-          // Video Message welcomes them on the spot too
+          // Video Message welcomes them on the spot too - same cosmetic-flash pattern as the departure branch above
           if (PrestigeManager.owns('videoMessage')) {
             playFarewellAcceptSound();
-            giveFarewellRef.current(arrEntry, economyManager.getFarewellRepGain(5, !!arrEntry.vip));
+            const repGain = economyManager.getFarewellRepGain(5, !!arrEntry.vip);
+            giveFarewellRef.current(arrEntry, repGain);
+            setVideoMessageFlashQueue(queue => [...queue, { ...arrEntry, repGain }]);
             return;
           }
           setDepartureQueue(queue => {
@@ -2435,6 +2447,18 @@ function App() {
           economyManager={economyManager}
           onFarewell={(repGain) => giveFarewell(activeDeparture, repGain)}
           onMiss={() => { finishDeparture(activeDeparture); if (activeDeparture.kind !== 'arrival') { const missedPost = { type: 'farewellMissed', readyAt: socialPostDelay() }; hyperLinkTriggerRef.current = missedPost; } }}
+        />
+      )}
+
+      {/* Video Message: the farewell/greeting is already credited by the time this shows (see the tick effect above) -
+          this is cosmetic only, so it waits behind anything that actually needs the player, same gating as the real
+          FarewellModal plus !activeDeparture (an older real departure, from before Video Message was owned, still
+          gets to go first). */}
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && videoMessageFlashQueue.length > 0 && (
+        <VideoMessageToast
+          key={departureId(videoMessageFlashQueue[0])}
+          entry={videoMessageFlashQueue[0]}
+          onDone={() => setVideoMessageFlashQueue(queue => queue.slice(1))}
         />
       )}
 

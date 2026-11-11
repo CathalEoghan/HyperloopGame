@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
-import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { playLeavingSound, playFarewellVipSound, playFarewellConfirmSound, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
-import cameraIcon from '../assets/misc/camera.png'
 import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
@@ -50,23 +48,14 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const gateClosed = !isArrival && minutesUntilDeparture(departure) <= 5
     const repGain = economyManager ? economyManager.getFarewellRepGain(5, !!departure.vip) : 5
 
+    // Guards against a fast double-click crediting the same farewell twice before the parent re-render removes this modal
+    const sentRef = useRef(false)
     const accept = () => {
+        if (sentRef.current) return
+        sentRef.current = true
         playFarewellConfirmSound()
         onFarewell(repGain)
     }
-
-    // Video Message: the farewell is accepted automatically, after a moment so it can still be seen
-    const autoSend = PrestigeManager.owns('videoMessage')
-    const sentRef = useRef(false)
-    useEffect(() => {
-        if (!autoSend) return
-        const t = setTimeout(() => {
-            if (sentRef.current) return
-            sentRef.current = true
-            accept()
-        }, 2500)
-        return () => clearTimeout(t)
-    }, [])
 
     return (
         <div className="farewell-overlay">
@@ -99,33 +88,14 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 <p className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}>
                     {timeDisplay}
                 </p>
-                {autoSend ? (
-                    // A static line used to just sit there for the full 2.5s with nothing to show it was actually
-                    // doing anything - a pulsing "recording" dot plus a fill bar timed to the same 2.5s give it
-                    // something to look at, the same way the real send happens on a visible clock.
-                    <div className="farewell-sending">
-                        <p className="farewell-message farewell-sending-text" data-testid="video-message">
-                            <span className="farewell-sending-dot" aria-hidden="true" />
-                            <img src={cameraIcon} alt="" style={{ width: '15px', height: '15px', verticalAlign: 'middle', marginRight: '4px', border: 'none' }} />
-                            Sending your video {isArrival ? 'welcome' : 'message'}
-                            <span className="farewell-sending-ellipsis" aria-hidden="true">
-                                <span>.</span><span>.</span><span>.</span>
-                            </span>
-                            {' '}(+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
-                        </p>
-                        <div className="farewell-sending-bar"><div className="farewell-sending-bar-fill" /></div>
-                    </div>
-                ) : (
-                    <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={() => {
-                        if (sentRef.current) return
-                        sentRef.current = true
-                        accept()
-                    }}>
-                        {isArrival
-                            ? (departure.vip ? 'Give a VIP welcome' : 'Greet the passengers')
-                            : (departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell')} (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
-                    </button>
-                )}
+                {/* Video Message owners never see this modal at all - App.jsx credits and shows their own
+                    VideoMessageToast instead (see giveFarewell/the videoMessageFlashQueue render site), since
+                    this popup's window can expire and must stay interactive for everyone else. */}
+                <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={accept}>
+                    {isArrival
+                        ? (departure.vip ? 'Give a VIP welcome' : 'Greet the passengers')
+                        : (departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell')} (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
+                </button>
             </div>
         </div>
     )
