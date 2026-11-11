@@ -62,7 +62,12 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
     setDoubled(true)
 }}
                     >
-                        {bonusWord} earnings (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '-0.7px' }} />20)
+                        {/* The button itself is a flex row (see its style above), so flex centers this icon against
+                            the text already - no relative offset needed, unlike an icon sitting inline in plain text. */}
+                        {/* The trophy icon sits flush to the top of its own canvas (no built-in headroom like text's
+                            ascender space), so centering its box against the text's line box alone leaves it looking
+                            like it's floating above the text - nudging it down a touch brings the two into visual line. */}
+                        {bonusWord} earnings (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20)
                     </button>
                 )}
                 <button

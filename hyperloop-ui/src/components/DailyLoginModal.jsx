@@ -69,7 +69,10 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                             setDoubled(true)
                         }}
                     >
-                        Double bonus (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '-0.7px' }} />20)
+                        {/* Same nudge as OfflineModal's identical "Double/Triple earnings" button: the trophy icon
+                            is flush to its own canvas with no ascender-style headroom, so it needs to sit a couple
+                            of px lower than its box-center to look level with the text next to it. */}
+                        Double bonus (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20)
                     </button>
                 )}
                 <button
