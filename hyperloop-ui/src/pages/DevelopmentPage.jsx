@@ -266,6 +266,17 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         <strong style={{ color: 'var(--ui-accent-readable, var(--ui-accent, #f5a623))' }}>+{Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100)}%</strong>
                                     </div>
                                 )}
+                                {economyManager.hasUpgradeByName("Founders' Hall") && (
+                                    <div
+                                        className="total-revenue-banner"
+                                        style={{ cursor: 'var(--cursor-help, help)' }}
+                                        onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: `Founders' Hall adds +${PrestigeManager.owns('foundersHallExpansion') ? 10 : 5}% to all city and development income for every day your terminal has existed - as its own multiplier on top of every other boost.` })}
+                                        onMouseLeave={() => setShowBusyTooltip(null)}
+                                    >
+                                        <span>Founders' Hall Bonus:</span>
+                                        <strong style={{ color: 'var(--ui-accent-readable, var(--ui-accent, #f5a623))' }}>+{+((economyManager.getFoundersHallMultiplier() - 1) * 100).toFixed(1)}%</strong>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     )

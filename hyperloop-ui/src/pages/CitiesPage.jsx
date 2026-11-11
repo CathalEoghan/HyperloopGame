@@ -62,6 +62,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [showBulkBuyTip, setShowBulkBuyTip] = useState(null) // the Connect all affordable button, while hovered
     const [showRepBonusTip, setShowRepBonusTip] = useState(null) // the Reputation bonus stat box, while hovered
     const [showWisdomBonusTip, setShowWisdomBonusTip] = useState(null) // the Generational Wisdom Bonus stat box, while hovered
+    const [showFoundersTip, setShowFoundersTip] = useState(null) // the Founders' Hall Bonus stat box, while hovered
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
     // then they already know how connecting and scheduling works.
     const [showIntro, setShowIntro] = useState(() =>
@@ -683,6 +684,18 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     <span className="city-stat-label" style={{ color: 'white' }}>Generational Wisdom Bonus:</span>
                                     <strong>+{Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100)}%</strong>
                                     <BoostTooltip anchor={showWisdomBonusTip} lines={['Every unspent Prestige Point you currently hold is worth +5% to city and development income - as its own multiplier on top of every other boost (including Reputation bonus), not added together with them.']} text />
+                                </div>
+                            )}
+                            {economyManager.hasUpgradeByName("Founders' Hall") && (
+                                <div
+                                    className="city-stat-box"
+                                    style={{ cursor: 'var(--cursor-help, help)' }}
+                                    onMouseEnter={(e) => setShowFoundersTip(e.currentTarget)}
+                                    onMouseLeave={() => setShowFoundersTip(null)}
+                                >
+                                    <span className="city-stat-label" style={{ color: 'white' }}>Founders' Hall Bonus:</span>
+                                    <strong>+{+((economyManager.getFoundersHallMultiplier() - 1) * 100).toFixed(1)}%</strong>
+                                    <BoostTooltip anchor={showFoundersTip} lines={[`Founders' Hall adds +${PrestigeManager.owns('foundersHallExpansion') ? 10 : 5}% to all city and development income for every day your terminal has existed - as its own multiplier on top of every other boost.`]} text />
                                 </div>
                             )}
                         </div>

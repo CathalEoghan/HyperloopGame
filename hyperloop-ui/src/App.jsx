@@ -849,7 +849,7 @@ function App() {
   // "Claim all": one random city for every waiting rank-up, and one summary instead of a reveal for each.
   // There is no re-roll here; the single Claim button is still there for that. If the cities run out, the rest
   // of the ranks still pay their Reputation.
-  const claimAllRankUps = () => {
+  const claimAllRankUps = (silent = false) => {
     if (claimedCityRef.current || pendingRankUps < 1) return;
     const gained = [];
     for (let i = 0; i < pendingRankUps; i++) {
@@ -861,11 +861,13 @@ function App() {
     const freeRep = economyManager.getUpgradeSum('freeRepOnRankUp') * pendingRankUps;
     if (freeRep > 0) {
       progressionManager.addReputation(freeRep);
-      if (gained.length > 0) { paBonusPending.current = { amount: freeRep, cityNames: gained.map(c => c.name) }; heldRepRef.current += freeRep }
+      // Silent (auto-claim): no Passenger Appreciation popup either, the Reputation just goes straight in
+      if (gained.length > 0 && !silent) { paBonusPending.current = { amount: freeRep, cityNames: gained.map(c => c.name) }; heldRepRef.current += freeRep }
       else setReputation(shownReputation());
     }
     setPendingRankUps(0);
-    if (gained.length > 0) setClaimAllCities(gained);
+    // Silent: the cities are simply unlocked, with no summary popup
+    if (gained.length > 0 && !silent) setClaimAllCities(gained);
     triggerSave();
   };
 
@@ -877,7 +879,7 @@ function App() {
     if (dailyLoginData || showOfflineModal || activeDelay || activeDeparture || devRevealQueue.length > 0) return;
     if (claimedCity || claimAllCities || claimAllDevs || paBonus || cityChoices || showCityPicker) return;
     // Next tick rather than inside the effect itself: claiming sets state, and the popup state above must settle first
-    const id = setTimeout(claimAllRankUps, 0);
+    const id = setTimeout(() => claimAllRankUps(true), 0);
     return () => clearTimeout(id);
   });
 
@@ -2652,7 +2654,7 @@ function App() {
       )}
 
       {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
-        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} onEnableAuto={() => { try { localStorage.setItem(AUTO_CLAIM_RANKUPS_KEY, 'true') } catch { /* storage blocked: this one still claims */ } claimAllRankUps() }} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
+        <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} onEnableAuto={() => { try { localStorage.setItem(AUTO_CLAIM_RANKUPS_KEY, 'true') } catch { /* storage blocked: this one still claims */ } claimAllRankUps(true) }} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
          // The city offer or picker is already open: claiming again would swap in a fresh offer without the re-roll cost
