@@ -13,7 +13,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 1 | Staff Feedback Forms | x2 city and development income | EconomyManager `prestigeMultipliers`, `getPrestigeDevMultiplier` / `getPrestigeCityMultiplier` |
 | 1 | Livestream Everything | Guaranteed +5 Reputation every 100 Work clicks in a run, manual or Best P.A. Ever's auto-clicks alike (the count starts again with each run) | `livestream.js` (`livestreamRepFor`), App.jsx `performWork` |
 | 1 | Amicable Breakups | Disconnect costs nothing and refunds half the connection cost | App.jsx `onDisconnect`, CitiesPage |
-| 1 | Opening Party | Finishing construction on a Tier 3 city clears any active event (positive or negative) and starts a new positive one, ignoring the usual rank gate - at most once every 15 seconds, so mass-buying several Tier 3 cities at once with Advanced Engineering grants one positive event, not one per city | App.jsx tick loop, around `constructionManager.update()` - calls `fireEvent(getRandomEvent(true))`, gated by `OPENING_PARTY_COOLDOWN_MS` against the shared `lastEventTime` |
+| 1 | Opening Party | Finishing construction on a Tier 3 city clears any active event (positive or negative) and starts a new positive one, ignoring the usual rank gate - once per city per run (so disconnecting and reconnecting a city with Amicable Breakups can't repeat it), and at most once every 5 seconds, so mass-buying several Tier 3 cities at once with Advanced Engineering grants one positive event, not one per city | App.jsx tick loop, around `constructionManager.update()` - calls `fireEvent(getRandomEvent(true))`, gated by `recordOpeningPartyCities` (`hyperloop_opening_party_cities`) and by `OPENING_PARTY_COOLDOWN_MS` against Opening Party's own `lastOpeningPartyTime` |
 | 1 | News Column | +5 Reputation on every positive event, on top of anything Improved Accessibility Services gives | App.jsx `fireEvent` |
 | 1 | Resilience | A negative event with a duration (passivePenalty/workPenalty - the three instant-loss ones have none to shorten) lasts half as long | App.jsx `fireEvent` |
 | 1 | Festive Freak | Doubles the six single-day boosts (Halloween, July 4th, New Year's, Christmas, Valentine's, Easter) and the currently-active season/month `seasonBoost` upgrade's effect; does not touch weekday/weekend or time-of-day boosts | EconomyManager `getSpecialDayBonus`, `_applyFestiveFreak` (used by `getCurrentSeasonUpgrade`/`getCurrentMonthUpgrade`) |
@@ -30,7 +30,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 2 | Viral Superstar | x3 Progress rewards (x6 with the x2 upgrade) | ProgressPage `handleCardClick` |
 | 3 | Skeleton Staff | No cap on offline earnings | `calculateOfflineCap` returns Infinity |
 | 3 | Personal Favours | After a prestige you choose your starter city from the six starters or any city in the world (city picker); without it the city is drawn for you | OpeningPage `runStart` |
-| 3 | Pizza Parties | Positive events +200% stronger (effect tripled, instant cash x3) | App.jsx event trigger |
+| 3 | Pizza Parties | Positive events twice as strong (x2 effect and instant cash) | App.jsx event trigger |
 | 3 | Irresistible Discounts | x3 development income | `getPrestigeDevMultiplier` |
 | 3 | Bulletproof Planning | No delays | App.jsx delay block |
 | 3 | Founders Hall Expansion | Founders' Hall flat rate 5% to 10% per day the terminal has existed (lifetime, not reset by a prestige) | `getFoundersHallMultiplier` |
@@ -53,7 +53,7 @@ None: all 36 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 
 ## Milestone upgrades
 
-- **Early Retirement** (Rank 50, built): arrives unlocked under Development > Upgrades and costs 250 Reputation (no cash, no build time). Owning it enables **Retire** on the Prestige page. Re-earned every run.
+- **Early Retirement** (Rank 50, built): arrives unlocked under Development > Upgrades and costs 50 Reputation (no cash, no build time). Owning it enables **Retire** on the Prestige page. Re-earned every run.
 - **Anniversary Sales** (Rank 25, built, live): +5% Work earnings per unique achievement (additive).
 - **VIP Pods** (Rank 200, built, live): x10 VIP chance (2% becomes 20%). It used to be a Prestige upgrade; Delivery Drones took its place in layer 3, and anyone who owned the old one was refunded its 3 points (`RETIRED_UPGRADES` in `PrestigeManager.js`).
 

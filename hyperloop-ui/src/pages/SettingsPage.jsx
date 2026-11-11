@@ -18,6 +18,8 @@ import imageIcon from '../assets/misc/image.png'
 import saveSectionIcon from '../assets/misc/save.png'
 import infoIcon from '../assets/misc/guide.png'
 import checkIcon from '../assets/misc/check.png'
+import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { AUTO_WORK_SETTING_KEY, autoWorkEnabled } from 'Managers/PrestigeManager/autoWork.js'
 import './SettingsPage.css'
 
 // Shown next to "Saved" wherever a Settings save button flips to its confirmed state, in place of a plain tick
@@ -148,6 +150,12 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         setSoundMutes(m => ({ ...m, [key]: muted }))
     }
 
+    const [autoWork, setAutoWork] = useState(autoWorkEnabled())
+    const handleAutoWorkToggle = (enabled) => {
+        setAutoWork(enabled)
+        localStorage.setItem(AUTO_WORK_SETTING_KEY, enabled)
+    }
+
     const handleEventTintToggle = (enabled) => {
         setEventTint(enabled)
         localStorage.setItem('hyperloop_event_tint', enabled)
@@ -247,6 +255,18 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         </button>
                     </div>
                 </div>
+                {PrestigeManager.owns('bestPAEver') && (
+                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                        <div className="settings-label">
+                            <span className="settings-label-title">Best P.A. Ever</span>
+                            <span className="settings-label-desc">Your assistant presses Work for you. Turn it off to press Work yourself.</span>
+                        </div>
+                        <div className="settings-options">
+                            <OptionBtn active={autoWork} onClick={() => handleAutoWorkToggle(true)}>On</OptionBtn>
+                            <OptionBtn active={!autoWork} onClick={() => handleAutoWorkToggle(false)}>Off</OptionBtn>
+                        </div>
+                    </div>
+                )}
             </div>
 
             <div className="settings-section">
@@ -489,7 +509,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <span className="settings-label-title">Report a Bug</span>
                         <span className="settings-label-desc">Found something broken? Let us know.</span>
                     </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); window.open('https://github.com/CathalEoghan/HyperloopGame/issues/new', '_blank'); }}>Report</button>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); window.open('https://github.com/CathalEoghan/HyperloopGame/issues/new', '_blank', 'noopener,noreferrer'); }}>Report</button>
                 </div>
             </div>
 

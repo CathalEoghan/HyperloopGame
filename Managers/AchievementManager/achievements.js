@@ -92,8 +92,8 @@ export const ACHIEVEMENTS = [
     { id: 'frequentLooper', group: 'Daily bonus', name: 'Frequent Looper', description: 'Collect your daily bonus 7 times.', check: atLeast('dailyBonus', 7) },
 
     // Delays
-    { id: 'sorry', group: 'Delays', name: 'Sorry!', description: 'Compensate a delayed departure.' },
-    { id: 'toughLuck', group: 'Delays', name: 'Tough Luck', description: 'Refuse to compensate a delayed departure.' },
+    { id: 'sorry', group: 'Delays', name: 'Sorry!', description: 'Compensate a delayed loop.' },
+    { id: 'toughLuck', group: 'Delays', name: 'Tough Luck', description: 'Refuse to compensate a delayed loop.' },
 
     // Money
     // Earned, not held: every run starts with 1.5 million in the treasury, so a balance target had to be set at 2 million
@@ -175,7 +175,7 @@ export const ACHIEVEMENTS = [
     { id: 'betterCallFall', group: 'Combinations', name: 'Better Call Fall!', description: 'Have both Autumn Getaway Packages and Customer Service Centre developed at any one time.', check: developed('Autumn Getaway Packages', 'Customer Service Centre') },
     // No check: an event achievement, unlocked in App.jsx's onRemove at the moment Petting Zoo is removed -
     // a plain state check can't tell "removed" from "never built" once the development is gone.
-    { id: 'sinceTheDucksLeft', group: 'Combinations', name: 'Since the Ducks Left', description: 'With New York as your home city, disconnect the Petting Zoo development while having the Duck theme purchased.' },
+    { id: 'sinceTheDucksLeft', group: 'Combinations', name: 'Since the Ducks Left', description: 'With New York as your home city, remove the Petting Zoo development while having the Duck theme purchased.' },
 
     // Secrets
     { id: 'surprise', group: 'Secrets', name: 'Surprise!', description: 'Claim the surprise in the credits section.' },

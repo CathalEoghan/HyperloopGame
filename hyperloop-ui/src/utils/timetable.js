@@ -205,17 +205,25 @@ const entryFor = (slot, home, nowMs) => ({
     loopNumber: slot.loopNumber,
 })
 
+// The departures the timetable gives the day `dayMs` falls on, without storing them. Today's board is made from
+// this; the Terminal Board's Tomorrow view and the late-evening farewell check use it for tomorrow, whose board
+// isn't written until that day starts. Trip times are seeded by the day, so this matches what that day's board
+// will hold.
+export function departuresForDay(purchasedCities, dayMs = Date.now()) {
+    if (!purchasedCities || purchasedCities.length <= 1) return []
+    const home = purchasedCities[0]
+    const countries = new Map(purchasedCities.map(c => [c.name, c.country]))
+    return readTimetable()
+        .filter(e => e.name !== home.name && countries.has(e.name) && isRealMinute(e.minuteOfDay, dayMs))
+        .map(e => entryFor({ ...e, country: countries.get(e.name) }, home, dayMs))
+}
+
 // Makes today's departures from the timetable, if the day doesn't have them yet
 export function ensureDepartures(purchasedCities, nowMs = Date.now()) {
     if (!purchasedCities || purchasedCities.length <= 1) return
     const key = departuresKey(nowMs)
     if (localStorage.getItem(key) !== null) return
-    const home = purchasedCities[0]
-    const countries = new Map(purchasedCities.map(c => [c.name, c.country]))
-    const list = readTimetable()
-        .filter(e => e.name !== home.name && countries.has(e.name) && isRealMinute(e.minuteOfDay, nowMs))
-        .map(e => entryFor({ ...e, country: countries.get(e.name) }, home, nowMs))
-    writeSchedule(key, list)
+    writeSchedule(key, departuresForDay(purchasedCities, nowMs))
 }
 
 // Applies one city's timetable change (slot, or null for taking it off) to today's departures, as far as today allows.

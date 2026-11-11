@@ -15,7 +15,7 @@ import HomePage from "./pages/HomePage"
 import ProgressPage from './pages/ProgressPage.jsx'
 import DepartureBoard from "./pages/DepartureBoard"
 import FirstLoopModal from './components/FirstLoopModal.jsx'
-import { ensureDepartures, readTimetable, dropCityFromTimetable, autoScheduleExisting, markTimetableAutofilled } from './utils/timetable.js'
+import { ensureDepartures, departuresForDay, readTimetable, dropCityFromTimetable, autoScheduleExisting, markTimetableAutofilled } from './utils/timetable.js'
 import { loopCode } from './utils/loopCodes.js'
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
@@ -50,7 +50,7 @@ import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
 import { PrestigeManager, PRESTIGE_MIN_RANK } from "Managers/PrestigeManager/PrestigeManager.js";
-import { AUTO_WORK_INTERVAL_MS, workClicksDue } from "Managers/PrestigeManager/autoWork.js";
+import { AUTO_WORK_INTERVAL_MS, workClicksDue, autoWorkEnabled } from "Managers/PrestigeManager/autoWork.js";
 import { bumpLivestreamClicks, livestreamRepFor } from "Managers/PrestigeManager/livestream.js";
 import { PRESTIGE_VALUES } from "Managers/PrestigeManager/prestigeUpgrades.js";
 import { readGrantedCities, writeGrantedCities } from "./utils/grantedCities.js";
@@ -78,12 +78,32 @@ const EVENT_MIN_RANK = 3
 // A positive event's Reputation bonuses (News Column, Improved Accessibility Services) play the Reputation sound this long after the event's own
 // chime starts: both are about two seconds long, and started together the chime would drown it out
 const EVENT_REPUTATION_SOUND_DELAY_MS = 1000
-// Opening Party only refires if it's been at least this long since the last event (of any kind). Advanced
-// Engineering finishes a Tier 3 city the moment it's bought, so mass-buying several - or just clicking "Connect
-// all affordable" a few times in a row as cash refills - used to cut short and restart a fresh positive event,
-// with its own instant-cash payout, on every single completion. This treats a burst of Tier 3 completions as
-// one trigger instead of one per city (bug reported: "multiple lump payments").
-const OPENING_PARTY_COOLDOWN_MS = 15000
+// Opening Party only refires if it's been at least this long since the LAST OPENING PARTY. Advanced Engineering
+// finishes a Tier 3 city the moment it's bought, so mass-buying several - or just clicking "Connect all
+// affordable" a few times in a row as cash refills - used to cut short and restart a fresh positive event, with
+// its own instant-cash payout, on every single completion. This treats a burst of Tier 3 completions as one
+// trigger instead of one per city (bug reported: "multiple lump payments"). It is measured against Opening Party
+// itself, not against events in general: an ordinary build that happens to finish soon after the game opens or
+// after some other event still gets its party.
+const OPENING_PARTY_COOLDOWN_MS = 5000
+// Set while the game loads if a Tier 3 city finished building during an absence (it finishes before the first tick
+// can see it); the tick turns it into a pending Opening Party the same way a build finishing live does.
+const openingPartyOffline = { pending: false }
+// Each city throws its Opening Party once per run. Without this, Amicable Breakups (a free disconnect with half the
+// cost refunded) let one Tier 3 city be disconnected and reconnected over and over for a fresh positive event every
+// few seconds. Part of the run: a retire or a new game clears it (SaveManager's AUX_KEYS).
+const OPENING_PARTY_CITIES_KEY = 'hyperloop_opening_party_cities'
+// Notes these finished cities as having had their party, and returns how many had not had one yet this run
+function recordOpeningPartyCities(cities) {
+  if (cities.length === 0) return 0
+  let done
+  try { done = new Set(JSON.parse(localStorage.getItem(OPENING_PARTY_CITIES_KEY)) || []) } catch { done = new Set() }
+  const fresh = cities.filter(c => !done.has(c.name))
+  if (fresh.length === 0) return 0
+  fresh.forEach(c => done.add(c.name))
+  try { localStorage.setItem(OPENING_PARTY_CITIES_KEY, JSON.stringify([...done])) } catch { /* storage full */ }
+  return fresh.length
+}
 
 const OFFLINE_RATE = 1.0;
 
@@ -343,8 +363,13 @@ function App() {
     const totalSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
     if (totalSeconds < 60) return null;
     // Finish any builds that completed while the player was away, so they count towards
-    // offline income instead of being treated as unbuilt for the whole absence (bug #85).
+    // offline income instead of being treated as unbuilt for the whole absence (bug #85). A Tier 3 city that
+    // finishes here is noted for Opening Party, which the first tick fires once the game is entered.
+    const tier3WhileAway = PrestigeManager.owns('openingParty')
+      ? progressionManager.citiesUnderConstruction.filter(c => c.tier === 3 && c.underConstruction)
+      : [];
     constructionManager.update();
+    if (recordOpeningPartyCities(tier3WhileAway.filter(c => !c.underConstruction)) > 0) openingPartyOffline.pending = true;
     // A game from before cities needed a scheduled departure to earn gets its timetable filled in first, so its
     // offline income isn't worked out from an empty timetable.
     autoScheduleExisting(progressionManager.purchasedCities);
@@ -758,6 +783,9 @@ function App() {
   const playtimePending = useRef(0);
   const lastModalClearedAt = useRef(Date.now() + 180000);
   const lastEventTime = useRef(Date.now());
+  const lastOpeningPartyTime = useRef(0);
+  // An Opening Party owed but not yet shown: it waits for the player to have entered and for any other popup to close
+  const openingPartyPendingRef = useRef(false);
   // See the otherPopupOpen effect below, which keeps this in sync each render - read by the tick's
   // event-firing checks so a new event can't start counting down while its own modal couldn't show yet.
   const otherPopupOpenRef = useRef(false);
@@ -905,7 +933,7 @@ function App() {
       // Delete Save/Import (stopTick() only stops the main tick; this interval is separate and a stray
       // auto-click here would otherwise still call progressionManager/performWork against the run that's
       // about to be wiped, same family of bug as #184).
-      if (!PrestigeManager.owns('bestPAEver') || blockedRef.current || leavingRef.current || progressionManager.purchasedCities.length === 0 || onboardingPending()) {
+      if (!PrestigeManager.owns('bestPAEver') || !autoWorkEnabled() || blockedRef.current || leavingRef.current || progressionManager.purchasedCities.length === 0 || onboardingPending() || !hasEnteredRef.current) {
         lastClickAt = now;
         return;
       }
@@ -913,11 +941,11 @@ function App() {
       lastClickAt = due.lastClickAt;
       // The Work button pulses and shows a message for these clicks, silently. Clicks made up after a background
       // tab was throttled arrive together, so they show as one message with the total.
-      let clicks = 0, earned = 0, reps = 0;
+      let clicks = 0, earned = 0, reps = 0, livestreamed = false;
       for (let i = 0; i < due.clicks; i++) {
-        performWork((e, gotRep) => { clicks++; earned += e; if (gotRep) reps++; }, { auto: true });
+        performWork((e, gotRep, repAmount, ls) => { clicks++; earned += e; reps += repAmount || 0; if (ls) livestreamed = true; }, { auto: true });
       }
-      if (clicks > 0) setAutoWorkTick({ clicks, earned, reps });
+      if (clicks > 0) setAutoWorkTick({ clicks, earned, reps, livestreamed });
     }, AUTO_WORK_INTERVAL_MS);
     return () => clearInterval(id);
   }, []);
@@ -985,6 +1013,11 @@ function App() {
     const today = new Date().toDateString();
     const lastLogin = localStorage.getItem('hyperloop_last_login');
     if (lastLogin === today) return;
+    // Only a day after the last bonus pays a new one. Turning the computer's clock back used to pay it again (the
+    // stored date just had to differ from today's), and turning it forward and back again repeated that endlessly.
+    // A bonus dated in the future stays as it is, so nothing is paid until the real date has passed it.
+    const lastLoginMs = Date.parse(lastLogin);
+    if (Number.isFinite(lastLoginMs) && lastLoginMs > Date.parse(today)) return;
     localStorage.setItem('hyperloop_last_login', today);
     const hasCommemorativeDisplays = progressionManager.purchasedUpgrades.some(u => u.name === 'Commemorative Displays');
     // The bonus is worked out without any running event, so an event can't double or halve it
@@ -1352,7 +1385,18 @@ function App() {
         }
       }
       constructionManager.update();
-      if (tier3BuildingBefore.some(c => !c.underConstruction) && Date.now() - lastEventTime.current > OPENING_PARTY_COOLDOWN_MS) {
+      // A Tier 3 city finishing owes a party, unless one has just been thrown (that is the mass-building guard:
+      // a burst of Tier 3 completions is one party, not one each). An owed party is not dropped when something
+      // else is in the way: it stays owed until the player has entered and no other popup is open, so its
+      // countdown can't run out behind the Shop or the Offline popup.
+      if (openingPartyOffline.pending) { openingPartyOffline.pending = false; openingPartyPendingRef.current = true; }
+      // Every finished city is noted, even one inside the cooldown, so it can't come back for a party later
+      const newPartyCities = recordOpeningPartyCities(tier3BuildingBefore.filter(c => !c.underConstruction));
+      if (newPartyCities > 0 && Date.now() - lastOpeningPartyTime.current > OPENING_PARTY_COOLDOWN_MS) {
+        openingPartyPendingRef.current = true;
+      }
+      if (openingPartyPendingRef.current && hasEnteredRef.current && !otherPopupOpenRef.current) {
+        openingPartyPendingRef.current = false;
         // Cut short whatever event is running (positive or negative) and start a fresh positive one, ignoring
         // the usual rank gate - this is a deliberate trigger, not the regular random roll. Ended here, before
         // firing, rather than left for the tick's own "Sync active event to EconomyManager" line further below:
@@ -1360,9 +1404,11 @@ function App() {
         // the event being cut short (that sync only runs once a tick), so an Insurance Payout that interrupted a
         // Pizza-Parties-doubled passive-income event used to take its 10% out of that boosted rate instead of
         // the normal one - a normal roll never hits this because it never fires while an event is still running.
-        // The cooldown check above (shared with the normal roll's own lastEventTime) is what keeps a burst of
+        // The cooldown check above (Opening Party's own clock, lastOpeningPartyTime) is what keeps a burst of
         // several Tier 3 completions - one bulk-buy, or a few clicks of "Connect all affordable" in a row as
-        // cash refills - down to a single positive event instead of one per city.
+        // cash refills - down to a single positive event instead of one per city. lastEventTime is still reset
+        // so the normal random roll waits its turn after the party.
+        lastOpeningPartyTime.current = Date.now();
         lastEventTime.current = Date.now();
         activeEventRef.current = null;
         economyManager.activeEvent = null;
@@ -1566,8 +1612,10 @@ function App() {
       const storedDeparturesDate = localStorage.getItem('hyperloop_departures_date');
             if (storedDeparturesDate !== todayKey) {
         localStorage.setItem('hyperloop_departures_date', todayKey);
-        localStorage.removeItem('hyperloop_triggered_departures');
-        triggeredDepartures.current = new Set();
+        // Yesterday's farewells are forgotten, but not one for today opened just before midnight (an early
+        // departure whose window starts the evening before), or it would open a second time now
+        triggeredDepartures.current = new Set([...triggeredDepartures.current].filter(key => key.startsWith(`${todayKey}_`)));
+        localStorage.setItem('hyperloop_triggered_departures', JSON.stringify([...triggeredDepartures.current]));
         localStorage.removeItem(CELEBRITY_DEPARTURE_KEY);
         // A new day while the game is open: build its schedule and offer the daily bonus (bug #66),
         // and drop earlier days' schedules so they don't pile up in storage (bug #78).
@@ -1588,11 +1636,11 @@ function App() {
         return next;
       });
 
-      schedule.forEach(entry => {
+      const checkDepartures = (list, dayKeyStr, dayMs) => list.forEach(entry => {
         // The city is part of the key, so two departures at the same minute both get a farewell.
-        const key = `${todayKey}_${entry.time}_${entry.name}`;
+        const key = `${dayKeyStr}_${entry.time}_${entry.name}`;
         // Real moments in time, so the clocks changing can't skip or repeat a departure
-        const depTs = departureTimestamp(entry, now.getTime());
+        const depTs = departureTimestamp(entry, dayMs);
         const windowStartTs = depTs - windowMinutes * 60000;
         const nowMinuteTs = Math.floor(now.getTime() / 60000) * 60000;
         if (nowMinuteTs >= windowStartTs && nowMinuteTs < depTs && !triggeredDepartures.current.has(key)) {
@@ -1627,6 +1675,20 @@ function App() {
           });
         }
       });
+      checkDepartures(schedule, todayKey, now.getTime());
+      // A departure just after midnight can have a farewell window that opens before it (00:05 with a 10-minute
+      // window opens at 23:55), while today's board is still the one being read. Tomorrow's first departures are
+      // checked too in those last minutes, so the farewell opens on time rather than at midnight with half its
+      // window gone. Tomorrow's board isn't written until the day starts, so it comes from the timetable.
+      const msToMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1).getTime() - now.getTime();
+      if (msToMidnight <= windowMinutes * 60000) {
+        const tomorrowMs = shiftDays(now.getTime(), 1);
+        const tomorrowKey = departuresKey(tomorrowMs);
+        const tomorrowList = localStorage.getItem(tomorrowKey) !== null
+          ? readSchedule(tomorrowKey)
+          : departuresForDay(progressionManager.purchasedCities, tomorrowMs);
+        checkDepartures(tomorrowList, new Date(tomorrowMs).toDateString(), tomorrowMs);
+      }
 
       // Arrivals: the greeting opens as the loop gets in, and stays open as long as a farewell window would.
       // The city is part of the key, so two arrivals at the same minute both get a greeting.
@@ -1747,19 +1809,20 @@ function App() {
       // the 5-minute guarantee both just keep re-checking every tick, so holding off here only delays the event
       // until the blocking popup clears, it never skips one.
       if (hasEnteredRef.current && (Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000 && !otherPopupOpenRef.current) {
-        lastEventTime.current = Date.now();
         const noNegatives = PrestigeManager.owns('crisisAvoidanceSpecialists');
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
         const event = getRandomEvent(positiveOnly);
 
         const skipEvent = event.type === 'negative' && (noNegatives || Math.random() < economyManager.getNegativeEventReduction());
-        if (!skipEvent) fireEvent(event);
+        // The 5-minute timer only restarts when an event actually fires. A negative event that gets skipped
+        // (Crisis Avoidance, or a negative-event reduction) leaves it running, so the roll is tried again next tick.
+        if (!skipEvent) { lastEventTime.current = Date.now(); fireEvent(event); }
       }
 
       // Free Wi-Fi (Vientiane): liking a Hyper-Link post has a small chance of triggering a positive event of
       // its own, independent of the regular random-interval roll above - queued by onLikeReward below and
       // picked up here on the next tick, so it still goes through the same rank/cooldown/active-event guards.
-      if (likeEventPendingRef.current && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && !otherPopupOpenRef.current) {
+      if (likeEventPendingRef.current && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000 && !otherPopupOpenRef.current) {
         likeEventPendingRef.current = false;
         lastEventTime.current = Date.now();
         fireEvent(getRandomEvent(true));
@@ -1887,6 +1950,9 @@ function App() {
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
     || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || !!paBonus || pendingRankUps > 0
     || milestoneQueue.length > 0 || showSecretCityModal
+    // The Achievements panel and the Hyper-Link phone sit above the event popup, so an event fired while either was
+    // open ran its course hidden (and Escape closed the hidden event instead of the panel or phone)
+    || achievementsOpen || hyperLinkOpen
   const popupOpen = otherPopupOpen || (showEventModal && !!activeEvent)
   // Mirrored into a ref so the tick's event-firing checks (a stale closure set up once by startTick, same
   // reason every other thing it reads is a ref) see this render's up-to-date value instead of whatever
@@ -2112,7 +2178,7 @@ function App() {
         onWork={(onRepGain) => performWork(onRepGain)}
         // Popups block the mouse, but a focused Work button could still be pressed from the keyboard behind them (bug #159)
         workDisabled={popupOpen || hyperLinkOpen || achievementsOpen}
-        autoWork={PrestigeManager.owns('bestPAEver')}
+        autoWork={PrestigeManager.owns('bestPAEver') && autoWorkEnabled()}
         autoWorkTick={autoWorkTick}
         workRange={workRange}
       />
@@ -2188,6 +2254,8 @@ function App() {
             }
             progressionManager.disconnectCity(city);
             dropCityFromTimetable(city.name);
+            // Passengers react on Hyper-Link (the disconnected_city posts)
+            hyperLinkTriggerRef.current = { type: 'disconnected_city', data: { city: city.name } };
             if (achievements.unlock('noConnectionForYou')) announceAchievements(['noConnectionForYou']);
             // Its loops still to come are taken off the timetable: today's departures, and today's and tomorrow's
             // arrivals (otherwise the ticker still announced them, and reconnecting today brought the old ones back)
@@ -2543,7 +2611,7 @@ function App() {
           delay={activeDelay}
           economyManager={economyManager}
           balance={balance}
-          onCompensate={(cost) => { unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: activeDelay?.kind === 'arrival' ? 'arrivalDelayCompensated' : 'delayCompensated', data: { delayedCity: activeDelay?.name } }; fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
+          onCompensate={(cost) => { if (progressionManager.balance < cost) return; unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: activeDelay?.kind === 'arrival' ? 'arrivalDelayCompensated' : 'delayCompensated', data: { delayedCity: activeDelay?.name } }; fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
           onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(shownReputation()); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: activeDelay?.kind === 'arrival' ? 'arrivalDelayNotCompensated' : 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
         />
       )}

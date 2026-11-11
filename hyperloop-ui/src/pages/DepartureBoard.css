@@ -363,3 +363,6 @@
 }
 @keyframes board-dot-blink { 50% { opacity: 0.2; } }
 @media (prefers-reduced-motion: reduce) { .board-tab-dot { animation: none; } }
+
+/* The Arrivals/Departures tabs and the Today/Tomorrow switch sit together, with the action buttons after them */
+.board-tabgroup { display: inline-flex; flex-wrap: wrap; gap: 10px; align-self: flex-start; }

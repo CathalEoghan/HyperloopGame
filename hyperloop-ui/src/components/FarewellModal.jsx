@@ -1,15 +1,18 @@
 import { useState, useEffect, useRef } from 'react'
 import { playLeavingSound, playFarewellVipSound, playFarewellConfirmSound, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
-import { minutesUntilDeparture } from '../utils/time.js'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
 import { flagSrc } from '../utils/flagSrc.js'
 import { farewellWindowMinutes } from '../utils/loops.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 const secondsUntil = expiresAt => Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000))
 
 function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
+    // Escape does nothing here (the farewell has to be answered or left to run out), but it is caught here so it
+    // stops at this popup instead of closing the Shop or another panel hidden underneath it
+    useEscapeToClose(() => {})
     const [secondsLeft, setSecondsLeft] = useState(() => {
         if (departure.expiresAt) return secondsUntil(departure.expiresAt);
         if (departure.secondsRemaining) return departure.secondsRemaining;
@@ -44,8 +47,11 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const flagCode = countryFlags[departure.country]
     // An arriving loop uses the same popup, to greet its passengers instead of saying goodbye
     const isArrival = departure.kind === 'arrival'
-    // The board shows GATE CLOSED for the last 5 minutes, so the announcement matches it
-    const gateClosed = !isArrival && minutesUntilDeparture(departure) <= 5
+    // The board shows GATE CLOSED for the last 5 minutes. The standard farewell window opens right at that point,
+    // so the popup gives the "final call" wording for its first minute and says the gate is closed after that.
+    // Read from the countdown (the window ends as the loop leaves), not the departure's time of day: a farewell
+    // that opens just before midnight belongs to tomorrow's 00:05 loop, which a time-of-day check took as gone.
+    const gateClosed = !isArrival && Math.ceil(secondsLeft / 60) <= 4
     const repGain = economyManager ? economyManager.getFarewellRepGain(5, !!departure.vip) : 5
 
     // Guards against a fast double-click crediting the same farewell twice before the parent re-render removes this modal

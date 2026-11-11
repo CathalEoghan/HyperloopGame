@@ -6,8 +6,9 @@ import { useEffect, useRef, useState } from 'react'
 //
 // Only use it for dialogs that are safe to dismiss with no decision made (Shop, Guide, Credits, Achievements,
 // the Schedule, page intros, Hyper-Link, event notices and the "you've unlocked..." reveals - where Escape does what
-// their own Continue/Accept button does). Never for a popup the player has to answer: a farewell or greeting, a
-// delay, or the city choice and city picker, where a stray Escape would pick a result for them. (The one odd case is
+// their own Continue/Accept button does). Never to dismiss a popup the player has to answer: a farewell or greeting,
+// a delay, or the city choice and city picker, where a stray Escape would pick a result for them. The farewell and
+// delay popups register a handler that does nothing, so Escape stops at them rather than closing whatever is under them. (The one odd case is
 // the "You've ranked up!" popup: it can't be dismissed, so there Escape means "continue" - the same as its button.)
 //
 // onEscape is what runs: pass the same function the dialog's own Close button runs. enabled=false opts out

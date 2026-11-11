@@ -27,7 +27,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                     <div className="daily-login-reward-row">
                         <img src={cashIcon} alt="cash" className="daily-login-icon" />
                         <span className="daily-login-reward-text">
-                            <AbbreviatedNumber value={displayBonus} prefix="£" />
+                            <AbbreviatedNumber value={displayBonus} />
                             {doubled && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×2</span>}
                             {/* Better Interest Rates already multiplied this by x10 before it ever reached this modal -
                                 flagged the same way the player's own double-bonus choice is, so it isn't the only

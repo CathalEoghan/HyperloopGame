@@ -1,5 +1,12 @@
 // Best P.A. Ever: the Work button clicks itself once every 500 ms.
 export const AUTO_WORK_INTERVAL_MS = 500
+// Best P.A. Ever can be switched off in Settings (Terminal) for players who would rather press Work themselves.
+// On unless the player turned it off; the upgrade itself stays owned either way.
+export const AUTO_WORK_SETTING_KEY = 'hyperloop_auto_work'
+export function autoWorkEnabled() {
+    try { return localStorage.getItem(AUTO_WORK_SETTING_KEY) !== 'false' } catch { return true }
+}
+
 // A tab in the background is slowed by the browser to one tick a second, or one a minute after a while. The
 // clicks it missed are made up, but never more than this many at once, so a long sleep can't pay out for hours.
 export const AUTO_WORK_MAX_CATCHUP = 150

@@ -57,6 +57,8 @@ const AUX_KEYS = [
     'hyperloop_rankup_offer',
     // Cities Government Grants connected for free: Amicable Breakups refunds nothing for them
     'hyperloop_granted_cities',
+    // The cities that have had their Opening Party this run (each gets one, see App.jsx)
+    'hyperloop_opening_party_cities',
     // Kept with the save so a backup can't re-offer today's daily bonus, and an uncollected
     // reward travels with the balance it belongs to (bug #67).
     'hyperloop_last_login',
@@ -151,6 +153,9 @@ export function clearGameState() {
 // delete that) and the tab-lock keys (they only stop two tabs running the game at once).
 const SETTINGS_KEYS = [
     'hyperloop_event_tint',
+    // Best P.A. Ever's On/Off. A retire keeps it, so a player who switched it off stays switched off in every new run
+    // (Couch Potato needs a run with no Work presses at all, which auto-clicks would spoil)
+    'hyperloop_auto_work',
     'globeNightMode',
     'globeQuality',
     'globeView',

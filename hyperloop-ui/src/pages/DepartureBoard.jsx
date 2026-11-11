@@ -3,9 +3,9 @@ import { createPortal } from 'react-dom'
 import './DepartureBoard.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playSplitFlapLong, playSplitFlapShort, playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
-import { minutesUntilDeparture } from '../utils/time.js'
+import { minutesUntilDeparture, departureTimestamp } from '../utils/time.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
-import { ensureDepartures, readTimetable, unscheduledCities, automateTimetable, clearTimetable } from '../utils/timetable.js'
+import { ensureDepartures, departuresForDay, readTimetable, unscheduledCities, automateTimetable, clearTimetable } from '../utils/timetable.js'
 import { ensureSchedules, departuresKey, arrivalsKey, readSchedule, getArrivalStatus, farewellWindowMinutes } from '../utils/loops.js'
 import { loopCode } from '../utils/loopCodes.js'
 import { AUTOMATE_SCHEDULE_REP_COST } from 'Managers/ProgressionManager/ProgressionManager.js'
@@ -18,6 +18,12 @@ import warningIcon from '../assets/misc/warning.png'
 import closeIcon from '../assets/misc/close.png'
 
 const TAB_KEY = 'terminalBoardTab'
+const DAYS = [['today', 'TODAY'], ['tomorrow', 'TOMORROW']]
+// Midday tomorrow, as a moment on that day (the same as loops.js's shiftDays(now, 1))
+const tomorrowNoon = () => {
+    const d = new Date()
+    return new Date(d.getFullYear(), d.getMonth(), d.getDate() + 1, 12).getTime()
+}
 
 function getOrdinal(n) {
     const s = ['th', 'st', 'nd', 'rd']
@@ -35,8 +41,13 @@ function padText(text, width, padChar = '-') {
     return text.length >= width ? text : text + padChar.repeat(width - text.length)
 }
 
-function getStatus(hour, minute, delayed, lag = 0) {
-    const diff = minutesUntilDeparture({ hour, minute }, Date.now() - lag * 1000)
+// `dayMs` is the day being shown when it isn't today (the Tomorrow view), so tomorrow's 08:00 isn't taken for
+// today's and shown as DEPARTED
+function getStatus(hour, minute, delayed, lag = 0, dayMs = null) {
+    const nowMs = Date.now() - lag * 1000
+    const diff = dayMs === null
+        ? minutesUntilDeparture({ hour, minute }, nowMs)
+        : Math.round(departureTimestamp({ hour, minute }, dayMs) / 60000) - Math.floor(nowMs / 60000)
     if (diff <= 0)  return { label: 'DEPARTED',    color: '#666' }
     if (diff <= 5)  return { label: 'GATE CLOSED', color: '#e74c3c' }
     if (diff <= 10) return { label: 'FINAL CALL',  color: 'red' }
@@ -89,6 +100,12 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
         try { return localStorage.getItem(TAB_KEY) === 'arrivals' ? 'arrivals' : 'departures' } catch { return 'departures' }
     })
     const tabRef = useRef(tab)
+    // Today's board, or tomorrow's (the timetable repeats, so tomorrow's departures can be shown before that day's
+    // board exists). Not remembered: the board always opens on today.
+    const [day, setDay] = useState('today')
+    const dayRef = useRef(day)
+    // The day being shown, as a moment on it, or null for today (what the status helpers expect)
+    const viewDayMs = () => dayRef.current === 'tomorrow' ? tomorrowNoon() : null
     const [renderTick, setRenderTick] = useState(0)
     const [lagMap, setLagMap] = useState({})
     const prevStatusRef = useRef({})
@@ -157,14 +174,31 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
         hasPlayedLongRef.current = false
     }, [])
 
-    // Today's lists, for the cities still connected, in time order
+    // The shown day's lists, for the cities still connected, in time order. Tomorrow's departures come from the
+    // timetable until that day's board is written.
     const readLists = () => {
         const names = new Set(purchasedCities.map(c => c.name))
         const byTime = (a, b) => (a.hour * 60 + a.minute) - (b.hour * 60 + b.minute)
+        const dayMs = viewDayMs() ?? new Date().getTime()
+        const depKey = departuresKey(dayMs)
+        const deps = dayRef.current === 'tomorrow' && localStorage.getItem(depKey) === null
+            ? departuresForDay(purchasedCities, dayMs)
+            : readSchedule(depKey)
         return {
-            deps: readSchedule(departuresKey()).filter(e => names.has(e.name)).sort(byTime),
-            arrs: readSchedule(arrivalsKey()).filter(e => names.has(e.name)).sort(byTime),
+            deps: deps.filter(e => names.has(e.name)).sort(byTime),
+            arrs: readSchedule(arrivalsKey(dayMs)).filter(e => names.has(e.name)).sort(byTime),
         }
+    }
+
+    const chooseDay = (next) => {
+        if (next === dayRef.current) return
+        playClickSound2()
+        dayRef.current = next
+        setDay(next)
+        const { deps, arrs } = readLists()
+        if ((tabRef.current === 'arrivals' ? arrs : deps).length > 0 && splitFlapEnabled()) playSplitFlapShort()
+        setSchedule(deps)
+        setArrivals(arrs)
     }
 
     const countScheduled = () => {
@@ -238,10 +272,11 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                 prevStatusRef.current[key] = state
             }
             const onArrivals = tabRef.current === 'arrivals'
-            deps.forEach(e => note(`dep|${e.name}`, getStatus(e.hour, e.minute, e.delayed, lm[`dep|${e.name}`] || 0).label, !onArrivals))
+            const dayMs = viewDayMs()
+            deps.forEach(e => note(`dep|${e.name}`, getStatus(e.hour, e.minute, e.delayed, lm[`dep|${e.name}`] || 0, dayMs).label, !onArrivals))
             arrs.forEach(e => {
                 // Fading out counts as a change too, though the label stays ARRIVED
-                const st = getArrivalStatus(e, homeName, Date.now(), lm[`arr|${e.name}`] || 0, litMinutes)
+                const st = getArrivalStatus(e, homeName, Date.now(), lm[`arr|${e.name}`] || 0, litMinutes, dayMs)
                 note(`arr|${e.name}`, st.label + (st.gone ? '|gone' : ''), onArrivals)
             })
             if (shownChanged && splitFlapEnabled()) playSplitFlapShort()
@@ -254,12 +289,13 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
         return () => clearInterval(interval)
     }, [purchasedCities, litMinutes])
 
-    const now = new Date()
+    const isTomorrow = day === 'tomorrow'
+    const now = isTomorrow ? new Date(tomorrowNoon()) : new Date()
     const weekday = now.toLocaleDateString('en-GB', { weekday: 'long' })
-    const day = getOrdinal(now.getDate())
+    const dayOrdinal = getOrdinal(now.getDate())
     const month = now.toLocaleDateString('en-GB', { month: 'long' })
     const year = now.getFullYear()
-    const today = `for ${weekday}, ${day} ${month} ${year}`
+    const today = `for ${weekday}, ${dayOrdinal} ${month} ${year}`
     const isArrivals = tab === 'arrivals'
     const totalCities = Math.max(0, purchasedCities.length - 1)
     const canSchedule = totalCities > 0
@@ -320,9 +356,10 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
             </>
         )
         const lag = lagMap[`${isArrivals ? 'arr' : 'dep'}|${entry.name}`] || 0
+        const dayMs = isTomorrow ? now.getTime() : null
         const status = isArrivals
-            ? getArrivalStatus(entry, homeName, undefined, lag, litMinutes)
-            : getStatus(entry.hour, entry.minute, entry.delayed, lag)
+            ? getArrivalStatus(entry, homeName, undefined, lag, litMinutes, dayMs)
+            : getStatus(entry.hour, entry.minute, entry.delayed, lag, dayMs)
         const isGone = isArrivals ? !!status.gone : status.label === 'DEPARTED'
         // An arrival's gate goes up as it gets close, like a departure's when it's time to go to the gate
         const showGate = isArrivals
@@ -373,6 +410,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px', gap: '12px', flexWrap: 'wrap' }}>
                 <div className="board-heading">
                   <div className="board-tabrow">
+                    <div className="board-tabgroup">
                     <div className="board-tabs" role="tablist" aria-label="Terminal Board">
                         {[['arrivals', 'ARRIVALS'], ['departures', 'DEPARTURES']].map(([id, label]) => (
                             <button
@@ -384,6 +422,18 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                                 onClick={() => chooseTab(id)}
                             >{label}{id === 'departures' && nothingScheduled && <span className="board-tab-dot" title="Nothing is scheduled for departure" />}</button>
                         ))}
+                    </div>
+                    <div className="board-tabs" role="group" aria-label="Day shown">
+                        {DAYS.map(([id, label]) => (
+                            <button
+                                key={id}
+                                aria-pressed={day === id}
+                                className={`board-tab${day === id ? ' board-tab-active' : ''}`}
+                                onMouseEnter={() => { if (day !== id) playHoverSound() }}
+                                onClick={() => chooseDay(id)}
+                            >{label}</button>
+                        ))}
+                    </div>
                     </div>
                     {canSchedule && !isArrivals && (() => {
                         const tooPoor = reputation < AUTOMATE_SCHEDULE_REP_COST
@@ -475,10 +525,10 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                 ) : (
                     <p style={{ color: 'var(--board-accent-readable, var(--board-accent, #f5a623))', fontFamily: 'Courier New' }}>
                         {isArrivals
-                            ? 'No arrivals today. New loops will arrive tomorrow.'
+                            ? (isTomorrow ? "Tomorrow's arrivals aren't on the board yet." : 'No arrivals today. New loops will arrive tomorrow.')
                             : nothingScheduled
                                 ? 'No departures are scheduled, so no loops will leave. Use Schedule loop or Automate schedule to start serving passengers.'
-                                : 'No departures left today. Your timetable runs again tomorrow.'}
+                                : (isTomorrow ? 'No departures are scheduled for tomorrow.' : 'No departures left today. Your timetable runs again tomorrow.')}
                     </p>
                 )
             ) : (

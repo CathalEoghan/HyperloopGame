@@ -112,8 +112,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
             `${connectAllPlan.toBuy.length} ${connectAllPlan.toBuy.length === 1 ? 'city' : 'cities'}`,
             ...(activeContinent !== 'All' || search.trim() !== '' ? ['(every continent, ignoring the current filter)'] : []),
             ...connectAllPlan.toBuy.map(city =>
-                `${city.name} — £${constructionManager.calculateTierConnectionCost(city).toLocaleString('en-GB', { maximumFractionDigits: 0 })}`),
-            `Total: £${connectAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
+                `${city.name} — ${constructionManager.calculateTierConnectionCost(city).toLocaleString('en-GB', { maximumFractionDigits: 0 })}`),
+            `Total: ${connectAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
         ]
         : []
     const connectAllAffordable = () => {

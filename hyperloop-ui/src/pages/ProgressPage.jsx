@@ -421,7 +421,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Delays compensated', value: (achievementManager?.counter('delaysCompensated') ?? 0).toLocaleString('en-GB') },
         // How many times Experimental Technology has ever been claimed - every claim doubles the Prestige
         // Points/cost it next offers (see ExperimentalTechnology.js), so this is also a readout of its current tier.
-        { label: 'Experimental Technology Claims', value: (economyManager.progressionManager.lifetimeExperimentalTechClaims ?? 0).toLocaleString('en-GB') },
+        { label: 'Experimental Technology claims', value: (economyManager.progressionManager.lifetimeExperimentalTechClaims ?? 0).toLocaleString('en-GB') },
         { label: 'Farewells given', value: (achievementManager?.counter('farewells') ?? 0).toLocaleString('en-GB') },
         { label: 'Greets given', value: (achievementManager?.counter('greetings') ?? 0).toLocaleString('en-GB') },
         { label: 'Highest rank reached', value: highestRank },
@@ -431,8 +431,8 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         // Suavity's direct search-picker has nothing to skip from, so it only ever bumps a claim. Neither "Claim
         // all" (a rank-up's own, or Lobbying Suavity's "Claim all cities, randomised") shows any choice at all,
         // so it counts towards neither.
-        { label: 'Most Claimed City', value: mostClaimedCity ? `${mostClaimedCity.name} (${mostClaimedCity.count.toLocaleString('en-GB')})` : '—' },
-        { label: 'Most Skipped City', value: mostSkippedCity ? `${mostSkippedCity.name} (${mostSkippedCity.count.toLocaleString('en-GB')})` : '—' },
+        { label: 'Most claimed city', value: mostClaimedCity ? `${mostClaimedCity.name} (${mostClaimedCity.count.toLocaleString('en-GB')})` : '—' },
+        { label: 'Most skipped city', value: mostSkippedCity ? `${mostSkippedCity.name} (${mostSkippedCity.count.toLocaleString('en-GB')})` : '—' },
         { label: 'Negative events experienced', value: (achievementManager?.counter('negativeEvents') ?? 0).toLocaleString('en-GB') },
         { label: 'Positive events experienced', value: (achievementManager?.counter('positiveEvents') ?? 0).toLocaleString('en-GB') },
         { label: 'Retirement count', value: PrestigeManager.getHistory().length },

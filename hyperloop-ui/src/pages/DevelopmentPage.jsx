@@ -123,9 +123,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const costLineFor = (item) => {
         const cost = costOfDevelopment(item, developmentStartState)
         const parts = []
-        if (cost.cash) parts.push(`£${cost.cash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`)
+        if (cost.cash) parts.push(`${cost.cash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`)
         if (cost.rep) parts.push(`${cost.rep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep`)
-        return parts.join(' + ') || '£0'
+        return parts.join(' + ') || '0'
     }
     // Both buttons act on "available" (every category, ignoring the search box too - see the comment above), so
     // whenever a category or search filter is actually narrowing the visible list, the hover preview says so up
@@ -141,7 +141,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
             `${developAllPlan.toBuy.length} ${developAllPlan.toBuy.length === 1 ? 'development' : 'developments'}`,
             ...bulkBuyFilterNote,
             ...developAllPlan.toBuy.map(item => `${nameOf(item)} — ${costLineFor(item)}`),
-            `Total: £${developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}${developAllPlan.totalRep > 0 ? ` + ${developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep` : ''}`,
+            `Total: ${developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}${developAllPlan.totalRep > 0 ? ` + ${developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep` : ''}`,
         ]
         : []
     const developAllExcludingUpgradesLines = developAllExcludingUpgradesPlan.toBuy.length > 0
@@ -149,7 +149,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
             `${developAllExcludingUpgradesPlan.toBuy.length} ${developAllExcludingUpgradesPlan.toBuy.length === 1 ? 'development' : 'developments'}`,
             ...bulkBuyFilterNote,
             ...developAllExcludingUpgradesPlan.toBuy.map(item => `${nameOf(item)} — ${costLineFor(item)}`),
-            `Total: £${developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
+            `Total: ${developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
         ]
         : []
 
@@ -570,7 +570,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             const canAfford = removal.amicable || progressionManager.reputation >= removal.repCost
                                             // What removing it costs you, listed in plain terms rather than lumping a future rebuild cost in as if it were also "lost"
                                             const losses = []
-                                            if (income > 0) losses.push(<><strong><AbbreviatedNumber value={perHour(income)} prefix="£" suffix="/hr" /></strong> income</>)
+                                            if (income > 0) losses.push(<><strong><AbbreviatedNumber value={perHour(income)} icon={cashIcon} iconAlt="cash" iconSize={13} suffix="/hr" /></strong> income</>)
                                             if (level > 0) losses.push(<>its upgrade level (<strong>LVL {level}</strong>)</>)
                                             if (isRenamed(selectedDevelopment)) losses.push(<>its name</>)
                                             return (

@@ -12,6 +12,8 @@ import './FarewellModal.css'
 // been paid out, so there's nothing to accept and nothing that can be missed - it just gives the upgrade something
 // to see, for the same 2.5s the real send takes, then dismisses itself. It only renders once nothing more important
 // is already on screen (see the render site in App.jsx), so it never competes with a real popup for attention.
+// The heading matches the farewell popup's own (ATTENTION, not DEPARTED): it shows when the farewell window opens,
+// minutes before the loop actually leaves.
 function VideoMessageToast({ entry, onDone }) {
     const isArrival = entry.kind === 'arrival'
     const flagCode = countryFlags[entry.country]
@@ -28,7 +30,7 @@ function VideoMessageToast({ entry, onDone }) {
     return (
         <div className="farewell-overlay">
             <div className="farewell-modal" data-vip={entry.vip ? 'true' : undefined}>
-                <p className="farewell-attention">{entry.vip ? (isArrival ? 'VIP ARRIVAL' : 'VIP PASSENGER') : (isArrival ? 'NOW ARRIVED' : 'DEPARTED')}</p>
+                <p className="farewell-attention">{entry.vip ? (isArrival ? 'VIP ARRIVAL' : 'VIP PASSENGER') : (isArrival ? 'NOW ARRIVED' : 'ATTENTION')}</p>
                 <div className="farewell-divider">━━━━━━━━━━━━━━━━━━━━</div>
                 <div className="farewell-destination">
                     {flagCode && (

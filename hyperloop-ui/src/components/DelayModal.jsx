@@ -4,11 +4,14 @@ import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import AbbreviatedNumber from './AbbreviatedNumber.jsx'
 import './DelayModal.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 // Base reputation cost for refusing compensation outright, before any delayRepCostReduction upgrade.
 const BASE_DELAY_REP_COST = 20
 
 function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance }) {
+    // Escape does nothing here (a delay has to be answered), but it is caught so it doesn't close a panel hidden underneath
+    useEscapeToClose(() => {})
     const adjustedCompensation = economyManager
         ? economyManager.calculateDelayCompensation(delay.compensation)
         : delay.compensation

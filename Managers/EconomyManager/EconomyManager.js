@@ -870,8 +870,7 @@ export class EconomyManager {
     // moment the player came back: each step takes the footfall at that point (footfallAt(ms), which the UI layer
     // supplies since the schedules live there) for the developments, and that day's own capacity roll for each
     // connection - both are things a live session would have changed through the absence. Event effects are left
-    // out, as for every other offline payout. Boosts that go by the clock (time of day, season, weekend...) are
-    // still the ones in force when this is called.
+    // out, as for every other offline payout.
     calculateOfflineIncome(startMs, endMs, footfallAt, createdAt = null) {
         if (!(endMs > startMs)) return 0;
         const savedEvent = this.activeEvent;

@@ -14,6 +14,7 @@ import successIcon from '../assets/misc/success.png'
 import graduationIcon from '../assets/misc/graduation.png'
 import eventIcon from '../assets/misc/event.png'
 import guideIcon from '../assets/misc/guide.png'
+import { withCashIcon } from '../utils/cashText.js'
 import './GuideModal.css'
 
 const GUIDE_SECTIONS = [
@@ -46,7 +47,7 @@ function GuideModal({ onClose }) {
                             onMouseEnter={() => playHoverSound()}
                         >
                             <p className="guide-section-title"><img src={section.icon} alt="" className="guide-section-icon" />{section.title}</p>
-                            <p className="guide-section-content">{section.content}</p>
+                            <p className="guide-section-content">{withCashIcon(section.content)}</p>
                         </div>
                     ))}
                 </div>

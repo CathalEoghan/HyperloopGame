@@ -2,8 +2,5 @@
     "type": "module",
     "dependencies": {
         "sharp": "^0.35.4"
-    },
-    "scripts": {
-        "start": "node Main/main.js"
     }
 }

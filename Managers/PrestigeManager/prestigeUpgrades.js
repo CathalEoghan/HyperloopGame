@@ -38,6 +38,7 @@ export const PRESTIGE_VALUES = {
 }
 const mult = v => `x${v}`
 const pct = v => `${Math.round(v * 100)}%`
+// Written with £ for convenience: the Prestige page draws every £ in a description as the cash icon (withCashIcon)
 const money = v => `£${v.toLocaleString('en-GB')}`
 const V = PRESTIGE_VALUES
 
@@ -49,7 +50,7 @@ export const PRESTIGE_UPGRADES = [
 
     { id: 'legalLoopholes', icon: '📑', layer: 1, name: 'Legal Loopholes', description: `Renaming a development costs half the Reputation.` },
     { id: 'amicableBreakups', icon: '🤝', layer: 1, name: 'Amicable Breakups', description: 'Disconnecting a city or removing a development costs nothing and refunds half the cost.' },
-    { id: 'openingParty', icon: '🎉', layer: 1, name: 'Opening Party', description: 'Connecting a Tier 3 city immediately clears any active event and starts a new positive one.' },
+    { id: 'openingParty', icon: '🎉', layer: 1, name: 'Opening Party', description: 'Connecting a Tier 3 city for the first time in a run immediately clears any active event and starts a new positive one.' },
     { id: 'newsColumn', icon: '📰', layer: 1, name: 'News Column', description: `Positive events grant a bonus +${V.newsColumnRep} Reputation.` },
     { id: 'resilience', icon: '💪', layer: 1, name: 'Resilience', description: 'Negative events last half as long.' },
     { id: 'festiveFreak', icon: '🎃', layer: 1, name: 'Festive Freak', description: 'Seasonal, month-specific and special-day upgrade effects are twice as strong.' },
@@ -75,7 +76,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'personalFavours', icon: '🎁', layer: 3, name: 'Personal Favours', description: 'Choose any city in the world as your starting city every run.' },
     { id: 'deliveryDrones', icon: '🚁', layer: 3, name: 'Delivery Drones', description: `Development footfall never drops below ${V.deliveryDronesFootfallFloor}% (instead of 10%). Each loop adds as normal.` },
 
-    { id: 'fiveStarResearchers', icon: '🔬', layer: 3, name: 'Five-Star Researchers', description: 'Experimental Technology rewards double the Prestige Points (10 instead of 5).' },
+    { id: 'fiveStarResearchers', icon: '🔬', layer: 3, name: 'Five-Star Researchers', description: 'Experimental Technology pays double the Prestige Points.' },
 
     // Layer 4
     { id: 'fastLearner', icon: '🎓', layer: 4, name: 'Quick Learner', description: '+1 Prestige Point for every 1 Prestige Point gained.' },

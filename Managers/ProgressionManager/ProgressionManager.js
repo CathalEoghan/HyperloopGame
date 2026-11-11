@@ -147,8 +147,8 @@ export class ProgressionManager {
         saveLifetimeNumber(LIFETIME_EXPTECH_CLAIMS_KEY, this.lifetimeExperimentalTechClaims);
     }
 
-    // See claimRankUp in App.jsx, the only place either of these is called: a city picked from a rank-up's offer
-    // of several bumps its claim count; every other city that offer showed (whether passed over for the one
+    // Called from App.jsx's pickCityFromOffer and the Lobbying Suavity picker (which only claims): a city picked from
+    // a rank-up's offer of several bumps its claim count; every other city that offer showed (whether passed over for the one
     // chosen, or rerolled away without being chosen at all) bumps its skip count instead.
     recordCityClaim(cityName) {
         this.lifetimeCityClaims[cityName] = (this.lifetimeCityClaims[cityName] || 0) + 1;

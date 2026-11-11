@@ -255,7 +255,13 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
         let dayMs = nowMs
         let mins = Math.ceil((earliestMins + Math.floor(Math.random() * 30)) / 5) * 5
         // Doesn't fit before today's cutoff: push the whole thing a day later rather than dropping it
-        if (mins >= lastMins) { dayMs = shiftDays(nowMs, 1); mins = Math.max(5, mins - 24 * 60) }
+        // - at a random time from when it would really have landed to the cutoff, so a late-day bulk-buy doesn't
+        // pile every one of them into the first hour of tomorrow
+        if (mins >= lastMins) {
+            dayMs = shiftDays(nowMs, 1)
+            const floor = Math.min(lastMins, Math.max(5, mins - 24 * 60))
+            mins = floor + 5 * Math.floor(Math.random() * ((lastMins - floor) / 5 + 1))
+        }
         addEntry(kind, dayMs, mins, durationMin)
     }
 
@@ -263,6 +269,13 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
     const addEntry = (kind, dayMs, startMins, durationMin) => {
         let mins = startMins
         const key = scheduleKey(kind, dayMs)
+        // Tomorrow's arrivals board isn't made until the day before it (ensureSchedules), so an arrival that rolls
+        // over into tomorrow from a late connection would otherwise be the only entry on a brand-new board - and
+        // every city connected earlier today would then have no arrival tomorrow. A board made here starts out
+        // with every connected city, as the normal one would have.
+        if (kind === 'arrival' && key !== arrivalsKey(nowMs) && localStorage.getItem(key) === null) {
+            writeSchedule(key, generateSchedule(purchasedCities, 'arrival', dayMs))
+        }
         const schedule = readSchedule(key)
         if (schedule.some(e => e.name === city.name)) return
         for (let attempts = 0; attempts < 24; attempts++) {
@@ -298,10 +311,11 @@ export function injectCityIntoSchedules(city, purchasedCities, nowMs = Date.now(
 // The board status of an arrival. `lag` (seconds) lets each row flip a moment apart, like a real board.
 // `litMinutes` is how long it stays lit as ARRIVED — as long as its greeting can still be open, i.e. the
 // player's actual farewell window (farewellWindowMinutes), not a fixed one that assumes every upgrade is owned.
-export function getArrivalStatus(entry, homeName, nowMs = Date.now(), lag = 0, litMinutes = 5) {
+// `dayMs` is the day the arrival belongs to, when it isn't today (the Terminal Board's Tomorrow view).
+export function getArrivalStatus(entry, homeName, nowMs = Date.now(), lag = 0, litMinutes = 5, dayMs = null) {
     const t = nowMs - lag * 1000
-    const arriveTs = entryTimestamp(entry, t)
-    const startTs = arriveTs - entryDuration(entry, 'arrival', homeName, t) * 60000
+    const arriveTs = entryTimestamp(entry, dayMs ?? t)
+    const startTs = arriveTs - entryDuration(entry, 'arrival', homeName, dayMs ?? t) * 60000
     const minutesLeft = (arriveTs - t) / 60000
     if (minutesLeft <= -litMinutes) return { label: 'ARRIVED', color: '#666', gone: true }
     if (minutesLeft <= 0) return { label: 'ARRIVED', color: 'limegreen' }

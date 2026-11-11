@@ -189,7 +189,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         const id = floatId++
         const rect = btn.getBoundingClientRect()
         const phrase = WORK_PHRASES[Math.floor(Math.random() * WORK_PHRASES.length)]
-        setFloats(prev => [...prev, { id, phrase, hasRep: autoWorkTick.reps > 0, repGain: autoWorkTick.reps * 5, earned: autoWorkTick.earned, x: rect.left + rect.width / 2, y: rect.top }])
+        setFloats(prev => [...prev, { id, phrase: autoWorkTick.livestreamed ? 'LIVESTREAM IT!' : phrase, livestream: !!autoWorkTick.livestreamed, hasRep: autoWorkTick.reps > 0, repGain: autoWorkTick.reps, earned: autoWorkTick.earned, x: rect.left + rect.width / 2, y: rect.top }])
         // Not cancelled when the next click arrives: each message removes itself, as the manual ones do
         setTimeout(() => setFloats(prev => prev.filter(f => f.id !== id)), 1500)
     }, [autoWorkTick])  // eslint-disable-line react-hooks/exhaustive-deps
@@ -281,7 +281,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <img src={starIcon} alt="rank" /> Rank {rank}
                 </div>
                 <div className="balance" style={{ color: balanceColor, transition: 'color 0.3s ease', position: 'relative' }}>
-                    <img src={cashIcon} alt="balance" /> £{formatBalance(displayBalance)}
+                    <img src={cashIcon} alt="balance" /> {formatBalance(displayBalance)}
                     {balanceFloat && (
                         <span key={balanceFloat.id} style={{
                             position: 'absolute', left: 10, top: 5, width: 'calc(100% - 10px)',
@@ -291,7 +291,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                             display: 'flex', alignItems: 'center', gap: '6px'
                         }}>
                             <img src={cashIcon} alt="£" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
-                            £{formatBalance(balanceFloat.value)}
+                            {formatBalance(balanceFloat.value)}
                         </span>
                     )}
                 </div>

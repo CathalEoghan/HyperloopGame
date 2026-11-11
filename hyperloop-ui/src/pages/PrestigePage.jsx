@@ -13,6 +13,7 @@ import PageIntroModal from '../components/PageIntroModal.jsx'
 import starIcon from '../assets/misc/star.png'
 import trophyIcon from '../assets/misc/trophy.svg'
 import './PrestigePage.css'
+import { withCashIcon } from '../utils/cashText.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 // Artwork: 600px copies of the originals in assets/prestige-upgrades, named after the upgrade
@@ -24,21 +25,14 @@ const imageFor = u => IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-9]/g, '').toLower
 const CARDS_PER_ROW = 5
 const chunk = (list, size) => Array.from({ length: Math.ceil(list.length / size) }, (_, i) => list.slice(i * size, i * size + size))
 
-// From a billion up, the same names as the top bar (billion, trillion … decillion), not "£999000000.00 trillion" (bug #177)
-const fmtCash = n => {
-    if (!Number.isFinite(n)) return '—'
-    // From £999,995,000 the million figure would round to "1000.00 million", so it reads as a billion instead
-    if (n >= 999_995_000) return `£${n < 1e9 ? '1.00 billion' : formatBalance(n)}`
-    if (n >= 1e6) return `£${(n / 1e6).toFixed(2)} million`
-    return `£${Math.floor(n).toLocaleString('en-GB')}`
-}
 const fmtSpan = ms => {
     if (!Number.isFinite(ms) || ms < 0) return '—'
     const d = Math.floor(ms / 86400000), h = Math.floor((ms % 86400000) / 3600000), m = Math.floor((ms % 3600000) / 60000)
     return d > 0 ? `${d}d ${h}h` : h > 0 ? `${h}h ${m}m` : `${m}m`
 }
-// Home cities don't all use £, so the retire-confirmation modal shows the generic cash icon next to the figure
-// instead of a £ sign (same treatment as EventModal/TopBanner, bug #211 pattern) - same breakpoints as fmtCash.
+// Home cities don't all use £, so cash figures (the retire confirmation, the past-runs table) show the generic cash
+// icon next to the figure instead of a £ sign (same treatment as EventModal/TopBanner, bug #211 pattern). From a
+// billion up, the same names as the top bar (billion, trillion … decillion), not "999000000.00 trillion" (bug #177).
 const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
 // Shown next to "Owned" wherever an upgrade's owned status is flagged, in place of a plain tick
 const ownedIconEl = <img src={checkIcon} alt="" style={{ width: '13px', height: '13px', verticalAlign: 'middle', marginRight: '3px', border: 'none' }} />
@@ -88,6 +82,8 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
         PrestigeManager.getHistory().length === 0 && localStorage.getItem('hyperloop_prestige_intro_seen') !== 'true'
     )
     const closeIntro = () => { localStorage.setItem('hyperloop_prestige_intro_seen', 'true'); setShowIntro(false) }
+    // Buying Best P.A. Ever tells the player it can be switched off in Settings
+    const [showPAInfo, setShowPAInfo] = useState(false)
     const refresh = () => setTick(t => t + 1)
     // Points can be paid out while this page is open (Experimental Technology finishing a build), so re-read them
     useEffect(() => {
@@ -149,6 +145,12 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                     { icon: trophyIcon, text: <>Prestige Points and upgrades are <strong>kept forever</strong>, even after retiring - only the current run's cash, rank, cities and developments reset.</> },
                 ]} />
             )}
+            {showPAInfo && (
+                <PageIntroModal title="Best P.A. Ever" onClose={() => setShowPAInfo(false)} points={[
+                    { icon: starIcon, text: <>Your assistant now <strong>presses Work for you</strong>, all day long, even while you're busy elsewhere.</> },
+                    { icon: padlockIcon, text: <>Prefer to press it yourself? You can <strong>switch Best P.A. Ever off</strong> any time in <strong>Settings</strong>, under <strong>Terminal</strong>.</> },
+                ]} />
+            )}
             <div className="prestige-header">
                 <div className="prestige-header-text">
                     <h1 className="prestige-title">Prestige Upgrades</h1>
@@ -164,7 +166,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 <div className="prestige-retire-text">
                     <b>Early Retirement</b>
                     {canRetire
-                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({pointsPerStep} per {RANKS_PER_PRESTIGE_POINT} ranks, {cashPointsPerStep} per £{(CASH_PER_PRESTIGE_POINT / 1e6)}M earned - you are Rank {rank}). Your run resets.</span>
+                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({pointsPerStep} per {RANKS_PER_PRESTIGE_POINT} ranks, {cashPointsPerStep} per {cashIconEl}{(CASH_PER_PRESTIGE_POINT / 1e6)}M earned - you are Rank {rank}). Your run resets.</span>
                         : rank >= PRESTIGE_MIN_RANK
                             ? <span>Early Retirement is waiting under Development, Upgrades. Purchase it for 50 Reputation to prestige.</span>
                             : <span>Reach Rank {PRESTIGE_MIN_RANK} and purchase Early Retirement (50 Reputation) to prestige. You are Rank {rank}.</span>}
@@ -274,7 +276,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                             <div className="prestige-runs-row prestige-runs-head"><span>Run</span><span>Rank</span><span>Points</span><span>Cash earned</span><span>Time</span></div>
                             {history.map((r, i) => (
                                 <div className="prestige-runs-row" key={i}>
-                                    <span>{i + 1}</span><span>{r.rank}</span><span>+{r.points}</span><span>{fmtCash(r.cash)}</span><span>{fmtSpan(r.endedAt - r.startedAt)}</span>
+                                    <span>{i + 1}</span><span>{r.rank}</span><span>+{r.points}</span><span>{fmtCashIcon(r.cash)}</span><span>{fmtSpan(r.endedAt - r.startedAt)}</span>
                                 </div>
                             ))}
                         </div>
@@ -342,7 +344,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                                                 {!u.implemented && <span className="prestige-node-soon">Coming soon</span>}
                                                             </span>
                                                             <span className="prestige-node-name">{u.name}</span>
-                                                            <span className="prestige-node-desc">{u.description}</span>
+                                                            <span className="prestige-node-desc">{withCashIcon(u.description)}</span>
                                                         </button>
                                                         {isSelected && (
                                                             <div ref={popRef} className={`prestige-pop ${colIndex >= CARDS_PER_ROW - 2 && row.length === CARDS_PER_ROW ? 'prestige-pop-left' : ''}`} onClick={e => e.stopPropagation()}>
@@ -357,7 +359,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                                                             onMouseEnter={() => playHoverSound()}
                                                                             onClick={() => {
                                                                                 if (popReason) { playNotEnoughFundsSound(); return }
-                                                                                if (prestige.buy(u.id)) { playSpecialChime(); setSelectedId(null); refresh() }
+                                                                                if (prestige.buy(u.id)) { playSpecialChime(); setSelectedId(null); refresh(); if (u.id === 'bestPAEver') setShowPAInfo(true) }
                                                                             }}>
                                                                             {popReason ?? `Buy for ${u.cost} point${u.cost === 1 ? '' : 's'}`}
                                                                         </button>
