@@ -38,6 +38,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [showUpgradeModal, setShowUpgradeModal] = useState(false)
     const [showBoostTooltip, setShowBoostTooltip] = useState(null) // the badge being hovered
     const [showBusyTooltip, setShowBusyTooltip] = useState(null) // the busy-status badge being hovered (banner or modal)
+    // The two "Develop all" buttons, while hovered - same idea as Cities' "Connect all affordable" preview
+    const [showDevelopAllTip, setShowDevelopAllTip] = useState(null)
+    const [showDevelopAllExclTip, setShowDevelopAllExclTip] = useState(null)
     // The upgrade card being hovered and what it does, so the player does not have to open it to find out
     const [upgradeTip, setUpgradeTip] = useState(null)
     const showUpgradeTip = (e, development) => {
@@ -113,6 +116,33 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     // "available" regardless of the search box or category filter - those only narrow what's shown.
     const developAllPlan = planBulkBuy(available, costOfDevelopment, developmentStartState)
     const developAllExcludingUpgradesPlan = planBulkBuy(available.filter(item => item.revenue), costOfDevelopment, developmentStartState)
+
+    // One item's cost, written out for the hover preview below - cash, Reputation, or (Early Retirement
+    // alongside a Bank-style cash cost, in theory) both.
+    const costLineFor = (item) => {
+        const cost = costOfDevelopment(item, developmentStartState)
+        const parts = []
+        if (cost.cash) parts.push(`£${cost.cash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`)
+        if (cost.rep) parts.push(`${cost.rep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep`)
+        return parts.join(' + ') || '£0'
+    }
+    // What each "Develop all" button's hover preview lists: which developments it would actually buy, cheapest
+    // first (planBulkBuy's own order), the same idea as Cities' "Connect all affordable" preview - the button
+    // itself only ever shows the total.
+    const developAllLines = developAllPlan.toBuy.length > 0
+        ? [
+            `${developAllPlan.toBuy.length} ${developAllPlan.toBuy.length === 1 ? 'development' : 'developments'}`,
+            ...developAllPlan.toBuy.map(item => `${nameOf(item)} — ${costLineFor(item)}`),
+            `Total: £${developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}${developAllPlan.totalRep > 0 ? ` + ${developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep` : ''}`,
+        ]
+        : []
+    const developAllExcludingUpgradesLines = developAllExcludingUpgradesPlan.toBuy.length > 0
+        ? [
+            `${developAllExcludingUpgradesPlan.toBuy.length} ${developAllExcludingUpgradesPlan.toBuy.length === 1 ? 'development' : 'developments'}`,
+            ...developAllExcludingUpgradesPlan.toBuy.map(item => `${nameOf(item)} — ${costLineFor(item)}`),
+            `Total: £${developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
+        ]
+        : []
 
     const buyPlannedItem = (item) => {
         if (item.effectType === 'earlyRetirement') return progressionManager.buyEarlyRetirement(item)
@@ -657,8 +687,10 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     <span className="section-title"><span className="section-label-pill">Available to build</span> <span className="section-count">{sortedAvailable.length}</span></span>
                     {available.length > 0 && (
                         <span className="bulk-buy-row">
-                            <button className="bulk-buy-btn" style={{ opacity: developAllPlan.toBuy.length > 0 ? 1 : 0.5 }}
-                                onMouseEnter={() => playHoverSound()} onClick={() => developAll(false)}>
+                            <button className="bulk-buy-btn" style={{ opacity: developAllPlan.toBuy.length > 0 ? 1 : 0.5, position: 'relative' }}
+                                onMouseEnter={(e) => { playHoverSound(); setShowDevelopAllTip(e.currentTarget) }}
+                                onMouseLeave={() => setShowDevelopAllTip(null)}
+                                onClick={() => developAll(false)}>
                                 Develop all affordable
                                 {developAllPlan.toBuy.length > 0 && (
                                     <span className="bulk-buy-cost">
@@ -675,9 +707,12 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         })()}
                                     </span>
                                 )}
+                                <BoostTooltip anchor={showDevelopAllTip} lines={developAllLines} />
                             </button>
-                            <button className="bulk-buy-btn" style={{ opacity: developAllExcludingUpgradesPlan.toBuy.length > 0 ? 1 : 0.5 }}
-                                onMouseEnter={() => playHoverSound()} onClick={() => developAll(true)}>
+                            <button className="bulk-buy-btn" style={{ opacity: developAllExcludingUpgradesPlan.toBuy.length > 0 ? 1 : 0.5, position: 'relative' }}
+                                onMouseEnter={(e) => { playHoverSound(); setShowDevelopAllExclTip(e.currentTarget) }}
+                                onMouseLeave={() => setShowDevelopAllExclTip(null)}
+                                onClick={() => developAll(true)}>
                                 Develop all affordable, excluding upgrades
                                 {developAllExcludingUpgradesPlan.toBuy.length > 0 && (
                                     <span className="bulk-buy-cost">
@@ -689,6 +724,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         })()})
                                     </span>
                                 )}
+                                <BoostTooltip anchor={showDevelopAllExclTip} lines={developAllExcludingUpgradesLines} />
                             </button>
                         </span>
                     )}
