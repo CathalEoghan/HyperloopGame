@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playEventSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
+import AbbreviatedNumber from './AbbreviatedNumber.jsx'
 import './DelayModal.css'
 
 // Base reputation cost for refusing compensation outright, before any delayRepCostReduction upgrade.
@@ -52,7 +53,7 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
                             onCompensate(adjustedCompensation);
                         }}>
                         <span className="delay-btn-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                            Issue compensation (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{adjustedCompensation.toLocaleString('en-GB', { maximumFractionDigits: 0 })})
+                            Issue compensation (<AbbreviatedNumber value={adjustedCompensation} icon={cashIcon} iconAlt="£" iconSize={14} />)
                         </span>
                         {compensationCutPct > 0 && <span className="delay-btn-note">-{compensationCutPct}% reduced cost</span>}
                     </button>

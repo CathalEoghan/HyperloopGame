@@ -3,6 +3,7 @@ import helloIcon from '../assets/misc/hello.png'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import { playClickSound2, playHoverSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import AbbreviatedNumber from './AbbreviatedNumber.jsx'
 import './OfflineModal.css'
 
 function formatDuration(seconds) {
@@ -33,8 +34,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                 <div className="offline-earnings-box">
                     <span className="offline-earnings-label">Offline earnings</span>
                     <span className="offline-earnings-amount" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
-                        <img src={cashIcon} alt="£" className="cash-icon" style={{ width: '22px', height: '22px', border: 'none', borderRadius: '0', objectFit: 'contain', marginTop: '3px' }} />
-                        {displayIncome.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                        <AbbreviatedNumber value={displayIncome} icon={cashIcon} iconAlt="£" iconSize={22} iconStyle={{ objectFit: 'contain', marginTop: '3px' }} />
                         {doubled && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold' }}>×{bonusFactor}</span>}
                     </span>
                     <span className="offline-earnings-note">{Number.isFinite(capHours) ? `Capped at ${capHours} hours` : 'No cap on offline earnings'}</span>

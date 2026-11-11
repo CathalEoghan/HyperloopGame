@@ -753,6 +753,17 @@ function App() {
     triggerSave();
   };
 
+  // A city picked from an offer (CityChoiceModal's onPick, below): the picked city is claimed, and every other
+  // city that was on offer counts as skipped (Most Claimed/Skipped City on the Progress page) - same definition
+  // as a whole offer being skipped via onReroll above. Kept as its own top-level function, rather than inlined
+  // into the onPick prop, so claimRankUp's ref read isn't buried in a multi-statement closure built during render.
+  const pickCityFromOffer = (city) => {
+    progressionManager.recordCityClaim(city.name);
+    cityChoices.filter(c => c.name !== city.name).forEach(c => progressionManager.recordCitySkip(c.name));
+    setCityChoices(null);
+    claimRankUp(city, true);
+  };
+
   // "Claim all": one random city for every waiting rank-up, and one summary instead of a reveal for each.
   // There is no re-roll here; the single Claim button is still there for that. If the cities run out, the rest
   // of the ranks still pay their Reputation.
@@ -2538,11 +2549,14 @@ function App() {
               progressionManager.addReputation(-rerollCost);
               setReputation(shownReputation());
               setHasFreeReroll(false);
+              // The whole offer is being replaced without any of it being chosen - each of these cities is
+              // skipped (Most Skipped City on the Progress page), same as the cities passed over in pickCityFromOffer.
+              cityChoices.forEach(c => progressionManager.recordCitySkip(c.name));
               setCityChoices(progressionManager.getCityChoices(allCities, economyManager.getCityChoiceCount(), cityChoices));
               triggerSave();
             } : undefined}
             onClaimAll={() => { setCityChoices(null); claimAllRankUps(); }}
-            onPick={(city) => { setCityChoices(null); claimRankUp(city, true); }}
+            onPick={pickCityFromOffer}
           />
         );
       })()}

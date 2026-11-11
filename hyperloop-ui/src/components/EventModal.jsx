@@ -4,6 +4,7 @@ import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import increaseIcon from '../assets/misc/increase.png'
 import decreaseIcon from '../assets/misc/decrease.png'
+import AbbreviatedNumber from './AbbreviatedNumber.jsx'
 import './EventModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
@@ -45,8 +46,8 @@ function EventModal({ event, onContinue, terminalName }) {
     const trendIconEl = <img src={isPositive ? increaseIcon : decreaseIcon} alt="" className="event-trend-icon" />
 
     const getEffectText = () => {
-        if (event.effectType === 'instantCash') return <>{cashIconEl}{event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance</>
-        if (event.effectType === 'instantCashLoss') return <>{cashIconEl}{Math.abs(event.instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been deducted from your balance</>
+        if (event.effectType === 'instantCash') return <>{cashIconEl}{Number.isFinite(event.instantCashAmount) && <AbbreviatedNumber value={event.instantCashAmount} />} has been added to your balance</>
+        if (event.effectType === 'instantCashLoss') return <>{cashIconEl}{Number.isFinite(event.instantCashAmount) && <AbbreviatedNumber value={Math.abs(event.instantCashAmount)} />} has been deducted from your balance</>
         if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s`
         if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s`
         if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s`

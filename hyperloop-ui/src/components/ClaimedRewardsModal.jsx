@@ -2,6 +2,7 @@ import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
+import AbbreviatedNumber from './AbbreviatedNumber.jsx'
 import './RankUpModal.css'
 import './ClaimedCitiesModal.css'
 import './ClaimedRewardsModal.css'
@@ -21,7 +22,7 @@ function ClaimedRewardsModal({ summary, onClose }) {
                     {cash > 0 && (
                         <div className="claimed-rewards-line">
                             <img src={cashIcon} alt="£" />
-                            <span>+{cash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</span>
+                            <span><AbbreviatedNumber value={cash} prefix="+" /></span>
                         </div>
                     )}
                     {rep > 0 && (

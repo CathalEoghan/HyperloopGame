@@ -1,0 +1,11 @@
+.abbrev-number-full {
+    display: none;
+}
+
+.abbrev-number:hover .abbrev-number-compact {
+    display: none;
+}
+
+.abbrev-number:hover .abbrev-number-full {
+    display: inline;
+}

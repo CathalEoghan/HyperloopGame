@@ -57,19 +57,16 @@
     font-family: 'Courier New', monospace;
 }
 
-/* A cash stat (see CashValue in ProgressPage.jsx) shows the abbreviated figure ("2.06 billion") by default and
-   swaps in the exact one on hover, in place - not a tooltip appearing over it. Scoped to the whole .stat-card,
-   not just the number, so it's consistent with the card's own hover (it already lifts/glows and plays a sound
-   on hover as one unit) rather than needing a pixel-precise hover over tiny text. */
-.progress-cash-full {
+/* A cash stat (AbbreviatedNumber, shared across the game - see components/AbbreviatedNumber.jsx) shows the
+   abbreviated figure ("2.06 billion") by default and swaps in the exact one on hover, in place - not a tooltip
+   appearing over it. AbbreviatedNumber.css already makes the number itself hoverable; this adds the whole
+   .stat-card as a second, easier target, so it's consistent with the card's own hover (it already lifts/glows
+   and plays a sound on hover as one unit) rather than needing a pixel-precise hover over tiny text. */
+.stat-card:hover .abbrev-number-compact {
     display: none;
 }
 
-.stat-card:hover .progress-cash-compact {
-    display: none;
-}
-
-.stat-card:hover .progress-cash-full {
+.stat-card:hover .abbrev-number-full {
     display: inline;
 }
 

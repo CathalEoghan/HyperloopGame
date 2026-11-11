@@ -1,3 +1,4 @@
+import AbbreviatedNumber from './AbbreviatedNumber.jsx'
 import './ExperienceBar.css'
 
 function ExperienceBar({current, max, nextRank, activeEvent}) {
@@ -14,7 +15,14 @@ return (
 
     <div className="fill" style={{ width: `${percent}%`, backgroundColor: fillColour, transition: 'width 0.8s ease-out, background-color 0.5s ease' }}></div>
     <div className="text">
-            {atMaxRank ? 'Max rank reached' : xpRemaining <= 0 ? `Rank ${nextRank} reached` : `${xpRemaining.toLocaleString('en-GB', { maximumFractionDigits: 0 })} XP to Rank ${nextRank}`}
+            {atMaxRank ? 'Max rank reached' : xpRemaining <= 0 ? `Rank ${nextRank} reached` : (
+                <>
+                    {/* .text above switches off pointer-events for the whole bar (so clicks pass through); this
+                        number is the one part of it that needs hovering to reveal the exact XP, so it turns
+                        them back on just for itself. */}
+                    <AbbreviatedNumber value={xpRemaining} suffix=" XP" style={{ pointerEvents: 'auto' }} /> to Rank {nextRank}
+                </>
+            )}
     </div>
 
     </div>

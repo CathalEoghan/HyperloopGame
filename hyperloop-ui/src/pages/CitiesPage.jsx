@@ -5,6 +5,7 @@ import ScheduleModal from '../components/ScheduleModal.jsx'
 import { readTimetable } from '../utils/timetable.js'
 import IncomeRow from '../components/IncomeRow.jsx'
 import PageIntroModal from '../components/PageIntroModal.jsx'
+import AbbreviatedNumber from '../components/AbbreviatedNumber.jsx'
 import './CitiesPage.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { allCities } from '../../../CityManager/CityRegistry'
@@ -14,7 +15,7 @@ import countryFlags from '../data/countryFlags.js'
 import { matchesPlace } from '../utils/search.js'
 import cityCoordinates from '../data/cityCoordinates.js'
 import cashIcon from '../assets/misc/cash.png'
-import { formatPerHour } from '../utils/income.js'
+import { formatPerHour, perHour } from '../utils/income.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import poorIcon from '../assets/misc/poor.png'
@@ -103,9 +104,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     // What the "Connect all affordable" hover preview lists: which cities it would actually buy, cheapest
     // first (planBulkBuy's own order), so a player can check it isn't about to spend on three Tier 1s instead
     // of holding out for a Tier 3 - the button itself only ever shows the total.
+    // The plan itself ignores the search box and continent filter (see the comment above it), so whenever either
+    // is actually narrowing the visible list, the preview says so up front rather than looking scoped to what's shown.
     const connectAllLines = connectAllPlan.toBuy.length > 0
         ? [
             `${connectAllPlan.toBuy.length} ${connectAllPlan.toBuy.length === 1 ? 'city' : 'cities'}`,
+            ...(activeContinent !== 'All' || search.trim() !== '' ? ['(every continent, ignoring the current filter)'] : []),
             ...connectAllPlan.toBuy.map(city =>
                 `${city.name} — £${constructionManager.calculateTierConnectionCost(city).toLocaleString('en-GB', { maximumFractionDigits: 0 })}`),
             `Total: £${connectAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
@@ -649,7 +653,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             </div>
                             <div className="city-stat-box">
                                 <span className="city-stat-label">City income</span>
-                                <strong><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '13px', height: '13px', verticalAlign: 'middle' }} />{formatPerHour(totalIncome)}/hr</strong>
+                                <strong><AbbreviatedNumber value={perHour(totalIncome)} icon={cashIcon} iconAlt="£" iconSize={13} suffix="/hr" /></strong>
                             </div>
                             <div
                                 className="city-stat-box"

@@ -2,6 +2,7 @@ import { useState, useMemo, Fragment } from 'react'
 import BoostTooltip from '../components/BoostTooltip.jsx'
 import IncomeRow from '../components/IncomeRow.jsx'
 import PageIntroModal from '../components/PageIntroModal.jsx'
+import AbbreviatedNumber from '../components/AbbreviatedNumber.jsx'
 import crowdIcon from '../assets/misc/crowd.png'
 import growthIcon from '../assets/misc/growth.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
@@ -13,7 +14,7 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { allUpgrades } from '../../../UpgradeManager/UpgradeRegistry.js'
 import { formatTime, formatDate } from '../utils/time.js'
-import { formatPerHour } from '../utils/income.js'
+import { formatPerHour, perHour } from '../utils/income.js'
 import { EFFECT_DESCRIPTIONS, stackingNote } from '../utils/effectDescriptions.js'
 import { playClickSound2, playHoverSound, playConstructionSound, playNotEnoughFundsSound, playFarewellAcceptSound, playBigMomentSound } from '../utils/sound.js'
 import cashIcon from '../assets/misc/cash.png'
@@ -126,12 +127,19 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         if (cost.rep) parts.push(`${cost.rep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep`)
         return parts.join(' + ') || '£0'
     }
+    // Both buttons act on "available" (every category, ignoring the search box too - see the comment above), so
+    // whenever a category or search filter is actually narrowing the visible list, the hover preview says so up
+    // front - otherwise the list of what's about to be bought looks like it's scoped to what's on screen.
+    const bulkBuyFilterNote = (activeCategory !== 'All' || search.trim() !== '')
+        ? ['(every category, ignoring the current filter)']
+        : []
     // What each "Develop all" button's hover preview lists: which developments it would actually buy, cheapest
     // first (planBulkBuy's own order), the same idea as Cities' "Connect all affordable" preview - the button
     // itself only ever shows the total.
     const developAllLines = developAllPlan.toBuy.length > 0
         ? [
             `${developAllPlan.toBuy.length} ${developAllPlan.toBuy.length === 1 ? 'development' : 'developments'}`,
+            ...bulkBuyFilterNote,
             ...developAllPlan.toBuy.map(item => `${nameOf(item)} — ${costLineFor(item)}`),
             `Total: £${developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}${developAllPlan.totalRep > 0 ? ` + ${developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep` : ''}`,
         ]
@@ -139,6 +147,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const developAllExcludingUpgradesLines = developAllExcludingUpgradesPlan.toBuy.length > 0
         ? [
             `${developAllExcludingUpgradesPlan.toBuy.length} ${developAllExcludingUpgradesPlan.toBuy.length === 1 ? 'development' : 'developments'}`,
+            ...bulkBuyFilterNote,
             ...developAllExcludingUpgradesPlan.toBuy.map(item => `${nameOf(item)} — ${costLineFor(item)}`),
             `Total: £${developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
         ]
@@ -225,8 +234,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <div className="total-revenue-banner">
                                     <span>Total development income:</span>
                                     <strong style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-                                        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', border: 'none', borderRadius: '0' }} />
-                                        {formatPerHour(totalRevenue)}/hr
+                                        <AbbreviatedNumber value={perHour(totalRevenue)} icon={cashIcon} iconAlt="£" suffix="/hr" />
                                     </strong>
                                 </div>
                                 <div

@@ -81,6 +81,10 @@ const AUX_KEYS = [
     // How many times Experimental Technology has ever been claimed (ProgressionManager's own key - see its
     // LIFETIME_EXPTECH_CLAIMS_KEY), which decides the Prestige Points/cost tier it's currently on.
     'hyperloop_lifetime_exptech_claims',
+    // Per-city lifetime claim/skip counts for the Progress page's Most Claimed/Skipped City (ProgressionManager's
+    // own keys - see its LIFETIME_CITY_CLAIMS_KEY/LIFETIME_CITY_SKIPS_KEY).
+    'hyperloop_lifetime_city_claims',
+    'hyperloop_lifetime_city_skips',
     'hyperloop_progress_collapsed',
     // Where the departure and arrival totals had got to, so the same loops aren't counted twice
     'hyperloop_loop_counted',
@@ -179,6 +183,8 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_lifetime_reputation_earned',
     'hyperloop_lifetime_created_at',
     'hyperloop_lifetime_exptech_claims',
+    'hyperloop_lifetime_city_claims',
+    'hyperloop_lifetime_city_skips',
     'hyperloop_last_login',
     'hyperloop_last_farewell_date',
     // The credits portrait pays its Reputation once ever, not once per run
@@ -286,6 +292,9 @@ const AUX_SHAPES = {
     // getLifetimeCreatedAt below and ProgressionManager's LIFETIME_EXPTECH_CLAIMS_KEY.
     hyperloop_lifetime_created_at: v => Number.isFinite(v) && v > 0,
     hyperloop_lifetime_exptech_claims: v => Number.isFinite(v) && v >= 0,
+    // { cityName: number, ... } each - ProgressionManager's LIFETIME_CITY_CLAIMS_KEY/LIFETIME_CITY_SKIPS_KEY
+    hyperloop_lifetime_city_claims: v => isObj(v) && Object.values(v).every(Number.isFinite),
+    hyperloop_lifetime_city_skips: v => isObj(v) && Object.values(v).every(Number.isFinite),
 }
 const listOfStrings = listOf(x => typeof x === 'string')
 // These two hold a plain date string ("Tue Sep 29 2026"), not JSON.

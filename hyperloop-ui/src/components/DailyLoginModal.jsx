@@ -3,6 +3,7 @@ import { playClickSound2, playHoverSound, playDailyLoginSound, playNotEnoughFund
 import reputationIcon from '../assets/misc/reputation.png'
 import cashIcon from '../assets/misc/cash.png'
 import officialLogo from '../assets/misc/officialLogo.png'
+import AbbreviatedNumber from './AbbreviatedNumber.jsx'
 import './DailyLoginModal.css'
 
 // repSources: the names of the owned upgrades that pay the daily Reputation (bug #154)
@@ -26,7 +27,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                     <div className="daily-login-reward-row">
                         <img src={cashIcon} alt="cash" className="daily-login-icon" />
                         <span className="daily-login-reward-text">
-                            £{displayBonus.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                            <AbbreviatedNumber value={displayBonus} prefix="£" />
                             {doubled && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×2</span>}
                             {/* Better Interest Rates already multiplied this by x10 before it ever reached this modal -
                                 flagged the same way the player's own double-bonus choice is, so it isn't the only

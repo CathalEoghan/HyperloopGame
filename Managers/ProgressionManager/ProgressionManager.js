@@ -65,6 +65,12 @@ const LIFETIME_REP_KEY = 'hyperloop_lifetime_reputation_earned';
 // below (the only place that bumps it) and ExperimentalTechnology.js, which reads this same key to work out the
 // Prestige Points/cost tier it's currently offering.
 const LIFETIME_EXPTECH_CLAIMS_KEY = 'hyperloop_lifetime_exptech_claims';
+// Per-city lifetime counts for the Progress page's Most Claimed/Skipped City - see recordCityClaim/recordCitySkip
+// below, the only places that bump them. Only a rank-up's offer of several cities ever counts towards either one:
+// the city actually picked from it is a claim, every other city shown in that offer (including one rerolled away
+// entirely) is a skip. Lobbying Suavity's direct picker and "Claim all" never show an offer, so neither counts.
+const LIFETIME_CITY_CLAIMS_KEY = 'hyperloop_lifetime_city_claims';
+const LIFETIME_CITY_SKIPS_KEY = 'hyperloop_lifetime_city_skips';
 function loadLifetimeNumber(key) {
     try {
         const v = Number(localStorage.getItem(key));
@@ -73,6 +79,18 @@ function loadLifetimeNumber(key) {
 }
 function saveLifetimeNumber(key, value) {
     try { localStorage.setItem(key, String(Math.round(value))); } catch { /* storage full */ }
+}
+function loadLifetimeMap(key) {
+    try {
+        const parsed = JSON.parse(localStorage.getItem(key));
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+            return Object.fromEntries(Object.entries(parsed).filter(([, v]) => Number.isFinite(v) && v >= 0));
+        }
+    } catch { /* nothing saved yet, or unreadable */ }
+    return {};
+}
+function saveLifetimeMap(key, map) {
+    try { localStorage.setItem(key, JSON.stringify(map)); } catch { /* storage full */ }
 }
 
 export class ProgressionManager {
@@ -115,6 +133,8 @@ export class ProgressionManager {
         this.lifetimeCashEarned = loadLifetimeNumber(LIFETIME_CASH_KEY);
         this.lifetimeReputationEarned = loadLifetimeNumber(LIFETIME_REP_KEY);
         this.lifetimeExperimentalTechClaims = loadLifetimeNumber(LIFETIME_EXPTECH_CLAIMS_KEY);
+        this.lifetimeCityClaims = loadLifetimeMap(LIFETIME_CITY_CLAIMS_KEY);
+        this.lifetimeCitySkips = loadLifetimeMap(LIFETIME_CITY_SKIPS_KEY);
     }
 
     // Bumps Experimental Technology's lifetime claim count - see purchaseDevelopment below, the only place
@@ -123,6 +143,19 @@ export class ProgressionManager {
     claimExperimentalTechnology() {
         this.lifetimeExperimentalTechClaims += 1;
         saveLifetimeNumber(LIFETIME_EXPTECH_CLAIMS_KEY, this.lifetimeExperimentalTechClaims);
+    }
+
+    // See claimRankUp in App.jsx, the only place either of these is called: a city picked from a rank-up's offer
+    // of several bumps its claim count; every other city that offer showed (whether passed over for the one
+    // chosen, or rerolled away without being chosen at all) bumps its skip count instead.
+    recordCityClaim(cityName) {
+        this.lifetimeCityClaims[cityName] = (this.lifetimeCityClaims[cityName] || 0) + 1;
+        saveLifetimeMap(LIFETIME_CITY_CLAIMS_KEY, this.lifetimeCityClaims);
+    }
+
+    recordCitySkip(cityName) {
+        this.lifetimeCitySkips[cityName] = (this.lifetimeCitySkips[cityName] || 0) + 1;
+        saveLifetimeMap(LIFETIME_CITY_SKIPS_KEY, this.lifetimeCitySkips);
     }
 
     unlockReward(reward) {

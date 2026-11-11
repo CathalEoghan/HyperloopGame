@@ -59,7 +59,9 @@ export const EFFECT_DESCRIPTIONS = {
     freeRerollOnRankUp: () => `One free re-roll of your city choices each time you rank up`,
     positiveEventBoost: (v) => `+${pct(v)}% chance of positive events`,
     dailyLoginRep: (v) => `+${v} Reputation every day you log in`,
-    firstLoopTripleRep: (v) => `The first arrival or departure you greet or farewell each day pays ${v}x Reputation`,
+    // Same word choice as the offline-earnings popup's Double/Triple/Quadruple bonus (OfflineModal.jsx) - only this
+    // one upgrade uses this effectType, and always at v=3, but the wording still scales if that ever changes.
+    firstLoopTripleRep: (v) => `The first arrival or departure you greet or farewell each day pays ${v === 2 ? 'double' : v === 3 ? 'triple' : v === 4 ? 'quadruple' : `${v}x`} Reputation`,
     freeRepOnRankUp: (v) => `+${v} Reputation each time you rank up`,
     businessWeekBoost: (v) => `+${pct(v)}% income Monday to Friday`,
     equatorBoost: (v) => `+${pct(v)}% income from cities within ${EQUATOR_BONUS_MAX_LATITUDE}° of the equator`,

@@ -65,6 +65,9 @@ function BoostTooltip({ anchor, lines, text = false, liftTo = 0 }) {
                 <div key={i} style={{
                     ...(i === 0 && !text ? { fontWeight: 'bold', marginBottom: '2px' } : {}),
                     ...(line.startsWith('Total:') ? { fontWeight: 'bold', borderTop: '1px solid #666', marginTop: '3px', paddingTop: '3px' } : {}),
+                    // A parenthesised aside - right now just the "ignoring the current filter" note on the two
+                    // "all affordable" buttons - reads as a caption on the line above it, not another list item.
+                    ...(line.startsWith('(') && line.endsWith(')') ? { fontStyle: 'italic', color: '#aaa', marginBottom: '2px' } : {}),
                 }}>{line}</div>
             ))}
         </div>,

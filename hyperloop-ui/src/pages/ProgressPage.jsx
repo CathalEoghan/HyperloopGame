@@ -33,29 +33,14 @@ const prestigeImageFor = u => PRESTIGE_IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-
 import { flagSrc } from '../utils/flagSrc.js'
 import { distanceMiles } from '../utils/loops.js'
 import { formatDistance } from '../utils/units.js'
-import { scaleToTier, BIG_NUMBER_TIERS } from '../utils/bigNumbers.js'
+import AbbreviatedNumber from '../components/AbbreviatedNumber.jsx'
 
-// Same tier names/short form as the top bar's formatBalance (bug #177), but starting a tier earlier: this
-// page's per-stat cash figures ("43,812,592/day" for Most profitable development) are already long well
-// below a billion, unlike the top bar's running balance, so "really long" starts at a million here instead.
-const formatCashCompact = (value) => {
-    if (!Number.isFinite(value)) return '0'
-    if (value < 1_000_000) return Math.floor(value).toLocaleString('en-GB', { maximumFractionDigits: 0 })
-    const { tier, scaled } = scaleToTier(value, 2)
-    const name = BIG_NUMBER_TIERS[tier]?.[0]
-    if (!name) return value.toExponential(2).replace('e+', 'e')
-    return `${scaled.toFixed(2)} ${name}`
-}
-
-// Shows the abbreviated figure ("43.81 million") by default; hovering the stat card swaps in the exact one,
-// in place - not a tooltip appearing over it - with pure CSS (see .progress-cash-full/.progress-cash-compact
-// in ProgressPage.css) rather than a native title tooltip, so it reads as the number itself changing.
+// Shows the abbreviated figure ("43.81 million") by default; hovering the stat card (or the number itself -
+// see AbbreviatedNumber.css) swaps in the exact one, in place - not a tooltip appearing over it. This page's
+// per-stat cash figures ("43,812,592/day" for Most profitable development) are already long well below a
+// billion, unlike the top bar's running balance, so the threshold here starts a tier earlier, at a million.
 const CashValue = ({ amount, suffix = '' }) => (
-    <span className="progress-cash-value" style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
-        <img src={cashIcon} alt="£" style={{ width: '13px', height: '13px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />
-        <span className="progress-cash-compact">{formatCashCompact(amount)}{suffix}</span>
-        <span className="progress-cash-full">{Math.floor(amount).toLocaleString('en-GB', { maximumFractionDigits: 0 })}{suffix}</span>
-    </span>
+    <AbbreviatedNumber value={amount} icon={cashIcon} iconAlt="£" suffix={suffix} threshold={1_000_000} />
 )
 
 function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, lifetimeCreatedAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
@@ -386,6 +371,23 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         try { return (JSON.parse(localStorage.getItem('hyperloop_hyperlink_liked')) || []).length } catch { return 0 }
     })()
 
+    // The city with the highest count in a claim/skip map ({ cityName: count }) - see recordCityClaim/
+    // recordCitySkip in ProgressionManager.js for what actually counts as either. A genuine tie (more than one
+    // city sharing the top count) picks one of just those - arbitrarily, but deterministically (a hash of their
+    // own names) rather than with Math.random, which this page's render can't call (react-hooks/purity) - so
+    // the pick doesn't reroll and flicker between tied candidates on every tick.
+    const mostFrequentCity = (counts) => {
+        const entries = Object.entries(counts || {}).filter(([, n]) => n > 0)
+        if (entries.length === 0) return null
+        const max = Math.max(...entries.map(([, n]) => n))
+        const tied = entries.filter(([, n]) => n === max).map(([name]) => name).sort()
+        let hash = 0
+        for (const ch of tied.join('|')) hash = (hash * 31 + ch.charCodeAt(0)) | 0
+        return { name: tied[Math.abs(hash) % tied.length], count: max }
+    }
+    const mostClaimedCity = mostFrequentCity(economyManager.progressionManager.lifetimeCityClaims)
+    const mostSkippedCity = mostFrequentCity(economyManager.progressionManager.lifetimeCitySkips)
+
     // This run only - every one of these starts again from scratch on a new game or a Prestige retirement.
     // Alphabetical by label, same as the Lifetime Stats and Active Bonuses sections below.
     const currentRunStats = [
@@ -424,6 +426,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Greets given', value: (achievementManager?.counter('greetings') ?? 0).toLocaleString('en-GB') },
         { label: 'Highest rank reached', value: highestRank },
         { label: 'Hyper-Link posts liked', value: likedCount },
+        // Which city gets picked most/passed over most when a rank-up offers a choice of several - see
+        // recordCityClaim/recordCitySkip in ProgressionManager.js. Neither Lobbying Suavity's direct picker nor
+        // "Claim all" ever shows such a choice, so neither counts towards either one.
+        { label: 'Most Claimed City', value: mostClaimedCity ? `${mostClaimedCity.name} (${mostClaimedCity.count.toLocaleString('en-GB')})` : '—' },
+        { label: 'Most Skipped City', value: mostSkippedCity ? `${mostSkippedCity.name} (${mostSkippedCity.count.toLocaleString('en-GB')})` : '—' },
         { label: 'Negative events experienced', value: (achievementManager?.counter('negativeEvents') ?? 0).toLocaleString('en-GB') },
         { label: 'Positive events experienced', value: (achievementManager?.counter('positiveEvents') ?? 0).toLocaleString('en-GB') },
         { label: 'Retirement count', value: PrestigeManager.getHistory().length },
