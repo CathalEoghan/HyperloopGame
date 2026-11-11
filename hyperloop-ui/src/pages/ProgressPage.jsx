@@ -426,9 +426,11 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         { label: 'Greets given', value: (achievementManager?.counter('greetings') ?? 0).toLocaleString('en-GB') },
         { label: 'Highest rank reached', value: highestRank },
         { label: 'Hyper-Link posts liked', value: likedCount },
-        // Which city gets picked most/passed over most when a rank-up offers a choice of several - see
-        // recordCityClaim/recordCitySkip in ProgressionManager.js. Neither Lobbying Suavity's direct picker nor
-        // "Claim all" ever shows such a choice, so neither counts towards either one.
+        // Which city gets picked/passed over most - see recordCityClaim/recordCitySkip in ProgressionManager.js.
+        // A rank-up's randomized offer of several cities bumps the one picked and skips the rest; Lobbying
+        // Suavity's direct search-picker has nothing to skip from, so it only ever bumps a claim. Neither "Claim
+        // all" (a rank-up's own, or Lobbying Suavity's "Claim all cities, randomised") shows any choice at all,
+        // so it counts towards neither.
         { label: 'Most Claimed City', value: mostClaimedCity ? `${mostClaimedCity.name} (${mostClaimedCity.count.toLocaleString('en-GB')})` : '—' },
         { label: 'Most Skipped City', value: mostSkippedCity ? `${mostSkippedCity.name} (${mostSkippedCity.count.toLocaleString('en-GB')})` : '—' },
         { label: 'Negative events experienced', value: (achievementManager?.counter('negativeEvents') ?? 0).toLocaleString('en-GB') },

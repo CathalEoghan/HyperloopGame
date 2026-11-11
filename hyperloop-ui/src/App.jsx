@@ -2594,7 +2594,7 @@ function App() {
           waiting={pendingRankUps}
           onClaimAll={() => { setShowCityPicker(false); claimAllRankUps(); }}
           onCancel={() => setShowCityPicker(false)}
-          onPick={(city) => { setShowCityPicker(false); claimRankUp(city, true); }}
+          onPick={(city) => { progressionManager.recordCityClaim(city.name); setShowCityPicker(false); claimRankUp(city, true); }}
         />
       )}
 

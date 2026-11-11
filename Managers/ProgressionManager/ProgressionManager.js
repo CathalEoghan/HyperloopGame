@@ -66,9 +66,11 @@ const LIFETIME_REP_KEY = 'hyperloop_lifetime_reputation_earned';
 // Prestige Points/cost tier it's currently offering.
 const LIFETIME_EXPTECH_CLAIMS_KEY = 'hyperloop_lifetime_exptech_claims';
 // Per-city lifetime counts for the Progress page's Most Claimed/Skipped City - see recordCityClaim/recordCitySkip
-// below, the only places that bump them. Only a rank-up's offer of several cities ever counts towards either one:
-// the city actually picked from it is a claim, every other city shown in that offer (including one rerolled away
-// entirely) is a skip. Lobbying Suavity's direct picker and "Claim all" never show an offer, so neither counts.
+// below, the only places that bump them. A rank-up's offer of several cities counts towards both: the city
+// actually picked from it is a claim, every other city shown in that offer (including one rerolled away
+// entirely) is a skip. Lobbying Suavity's direct search-picker has no offer to skip from, so picking a city
+// there is a claim with no corresponding skip. "Claim all" (either kind) shows no choice at all, so it counts
+// towards neither.
 const LIFETIME_CITY_CLAIMS_KEY = 'hyperloop_lifetime_city_claims';
 const LIFETIME_CITY_SKIPS_KEY = 'hyperloop_lifetime_city_skips';
 function loadLifetimeNumber(key) {

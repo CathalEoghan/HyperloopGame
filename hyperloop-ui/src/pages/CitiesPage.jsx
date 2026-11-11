@@ -349,7 +349,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             onClick={() => { playClickSound2(); setActiveContinent(c) }}
                             onMouseEnter={() => playHoverSound()}
                         >
-                            {c}
+                            {c} <span className="category-count">{continentCityConnected(c)} / {continentCityTotal(c)}</span>
                         </button>
                     ))}
                 </div>
@@ -649,12 +649,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         </div>
                         <div className="city-stats-row">
                             <div className="city-stat-box">
-                                <span className="city-stat-label" style={{ color: 'white' }}>Population served</span>
+                                <span className="city-stat-label" style={{ color: 'white' }}>Population served:</span>
                                 <strong>{formatPopulation(totalPopulation)}</strong>
                             </div>
                             <div className="city-stat-box">
-                                <span className="city-stat-label" style={{ color: 'white' }}>City income</span>
-                                <strong><AbbreviatedNumber value={perHour(totalIncome)} icon={cashIcon} iconAlt="£" iconSize={13} iconStyle={{ transform: 'translateY(-1.5px)' }} suffix="/hr" /></strong>
+                                <span className="city-stat-label" style={{ color: 'white' }}>City income:</span>
+                                <strong><AbbreviatedNumber value={perHour(totalIncome)} icon={cashIcon} iconAlt="£" iconSize={13} iconStyle={{ transform: 'translateY(1.5px)' }} suffix="/hr" /></strong>
                             </div>
                             <div
                                 className="city-stat-box"
