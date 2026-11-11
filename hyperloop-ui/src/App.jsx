@@ -2160,9 +2160,17 @@ function App() {
             if (success) {
               achievements.addCounter('devUpgrades');
               triggerSave();
-              // developmentName is sent only for a development the player renamed; otherwise the engine falls back to "the <category>"
-              const upgradedDevData = { development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined };
-              hyperLinkTriggerRef.current = { type: 'developmentUpgraded', data: upgradedDevData }
+              // A "got upgraded!" HyperLink post only ever fires once per development per run - without this,
+              // buying several levels in quick succession each pushed their own trigger, so a dev upgraded 10
+              // times in a row could flood the feed with several near-identical posts about the very same place.
+              const firedDevUpgrades = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_dev_upgrades') || '[]')
+              if (!firedDevUpgrades.includes(development.name)) {
+                firedDevUpgrades.push(development.name)
+                localStorage.setItem('hyperloop_hyperlink_fired_dev_upgrades', JSON.stringify(firedDevUpgrades))
+                // developmentName is sent only for a development the player renamed; otherwise the engine falls back to "the <category>"
+                const upgradedDevData = { development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined };
+                hyperLinkTriggerRef.current = { type: 'developmentUpgraded', data: upgradedDevData }
+              }
             }
             return success;
           }}

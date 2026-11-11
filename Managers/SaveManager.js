@@ -45,6 +45,10 @@ const AUX_KEYS = [
     'hyperloop_hyperlink_used_pfps',
     'hyperloop_hyperlink_user_pfps',
     'hyperloop_hyperlink_fired_devposts',
+    // Development names a "got upgraded!" HyperLink post has already fired for this run - a development only
+    // ever gets one of these, however many levels it's bought (see onUpgrade in App.jsx). Wiped each prestige
+    // the same way as hyperloop_hyperlink_fired_devposts above, since it's part of the current run.
+    'hyperloop_hyperlink_fired_dev_upgrades',
     'hyperloop_hyperlink_liked',
     'hyperloop_hyperlink_used_month_posts',
     'hyperloop_pending_rankups',
