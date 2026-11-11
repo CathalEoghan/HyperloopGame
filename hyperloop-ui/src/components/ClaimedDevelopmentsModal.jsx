@@ -11,7 +11,7 @@ function ClaimedDevelopmentsModal({ developments, onClose }) {
     return (
         <div className="modal-overlay">
             <div className="modal claimed-modal" role="dialog" aria-label="Developments unlocked">
-                <h2 className="reveal-heading">You've unlocked the following developments:</h2>
+                <h2 className="reveal-heading"><strong>You've unlocked the following developments:</strong></h2>
                 <div className="claimed-list">
                     {developments.map(dev => (
                         <div className="claimed-box" key={dev.name}>

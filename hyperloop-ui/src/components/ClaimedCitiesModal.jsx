@@ -11,7 +11,7 @@ function ClaimedCitiesModal({ cities, onClose }) {
     return (
         <div className="modal-overlay">
             <div className="modal claimed-modal" role="dialog" aria-label="Cities unlocked">
-                <h2 className="reveal-heading">You've unlocked the following cities:</h2>
+                <h2 className="reveal-heading"><strong>You've unlocked the following cities:</strong></h2>
                 <div className="claimed-list">
                     {cities.map(city => (
                         <div className="claimed-box" key={city.name}>
