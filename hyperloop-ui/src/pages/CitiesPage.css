@@ -79,6 +79,32 @@
         0 0 8px 3px rgba(212, 175, 55, 0.5);
 }
 
+/* A slim diagonal glint that sweeps across a maxed-out card every few seconds - the wrapper's own overflow:
+   hidden (above) clips it to the card, and it spends most of each cycle parked just off-screen so it reads as
+   an occasional glint, not a constant shimmer. Confined to the gold frame alone: unclaimed-reward cards
+   elsewhere already use a pulsing glow for "needs attention", so this never gets confused with that. */
+.city-image-wrapper-maxed::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(100deg,
+        transparent 40%,
+        rgba(255, 255, 255, 0.55) 50%,
+        transparent 60%);
+    transform: translateX(-150%);
+    animation: card-shine-sweep 5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes card-shine-sweep {
+    0% { transform: translateX(-150%); }
+    30%, 100% { transform: translateX(150%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .city-image-wrapper-maxed::after { animation: none; display: none; }
+}
+
 .city-image {
     width: 100%;
     height: 100%;

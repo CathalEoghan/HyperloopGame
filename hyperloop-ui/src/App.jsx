@@ -63,7 +63,7 @@ import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
 import { pickCelebrityDeparture } from './utils/celebrity.js'
 import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
-import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playClickSound3, playHoverSound, playFarewellAcceptSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
+import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playClickSound3, playHoverSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
 import { saveGame, buildSave, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, clearSettings, startPrestigeRun, readRunStart, getLifetimeCreatedAt } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
 import cityCoordinates from "./data/cityCoordinates.js"
@@ -1525,7 +1525,9 @@ function App() {
           // then queues the SAME entry on the purely cosmetic videoMessageFlashQueue, which VideoMessageToast shows
           // once nothing more important is on screen. The credit above can never be missed; the toast can be delayed.
           if (PrestigeManager.owns('videoMessage')) {
-            playFarewellAcceptSound();
+            // The Reputation confirm sound plays once VideoMessageToast's send animation actually finishes, not
+            // here at trigger time - it's meant to land on "sent", the same way the real popup's confirm sound
+            // plays on acceptance rather than the moment the popup first appeared.
             const repGain = economyManager.getFarewellRepGain(5, !!depEntry.vip);
             giveFarewellRef.current(depEntry, repGain);
             setVideoMessageFlashQueue(queue => [...queue, { ...depEntry, repGain }]);
@@ -1559,7 +1561,6 @@ function App() {
           const arrEntry = { ...entry, kind: 'arrival', secondsRemaining, expiresAt, vip: Math.random() < economyManager.getVipChance() };
           // Video Message welcomes them on the spot too - same cosmetic-flash pattern as the departure branch above
           if (PrestigeManager.owns('videoMessage')) {
-            playFarewellAcceptSound();
             const repGain = economyManager.getFarewellRepGain(5, !!arrEntry.vip);
             giveFarewellRef.current(arrEntry, repGain);
             setVideoMessageFlashQueue(queue => [...queue, { ...arrEntry, repGain }]);

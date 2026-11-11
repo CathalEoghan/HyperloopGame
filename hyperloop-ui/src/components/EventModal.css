@@ -59,18 +59,46 @@
 
 .event-effect-box {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: 8px;
     background: rgb(255, 239, 224);
     border-radius: 10px;
     padding: 12px 16px;
     margin-bottom: 20px;
 }
 
+.event-effect-main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
 .event-effect-indicator {
     font-size: 1.1rem;
     font-weight: bold;
+}
+
+/* Duration/Pizza Parties modifiers: their own small tags under the main effect line, rather than folded into
+   that sentence, so a long combination (both active at once) never makes the sentence itself wrap awkwardly. */
+.event-modifier-tags {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.event-modifier-tag {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: #555;
+    background: rgba(0, 0, 0, 0.06);
+    border-radius: 20px;
+    padding: 3px 10px;
+    white-space: nowrap;
 }
 
 /* Bigger than the same icon in the small type label above - this is the main indicator in the effect box */

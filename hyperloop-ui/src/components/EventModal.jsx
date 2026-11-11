@@ -29,16 +29,14 @@ function EventModal({ event, onContinue, terminalName }) {
 
     const isPositive = event.type === 'positive'
 
-    // Follows "for Ns" when a duration upgrade changed how long the event runs: "(+x% longer)" for a positive
-    // event's bonusDurationExtension upgrades, "(x% shorter)" when Resilience cut a negative event short.
-    const durationSuffix = event.durationModifier
-        ? ` (${event.durationModifier.direction === 'longer' ? '+' : ''}${event.durationModifier.percent}% ${event.durationModifier.direction})`
-        : ''
-
-    // Pizza Parties doubles a positive event's strength (its cash amount or its boost %), already baked into the
-    // numbers below - this is the only place that says so, the same way durationSuffix explains a stretched
-    // or shortened duration.
-    const pizzaSuffix = event.pizzaBoosted ? ' (×2 - Pizza Parties)' : ''
+    // Shown as their own small tags under the main effect line, rather than folded into that sentence - with
+    // both a duration change and Pizza Parties active, the sentence ran long enough to wrap mid-phrase inside
+    // the fixed-width effect box, which read as cramped rather than just long.
+    const durationTag = event.durationModifier
+        ? `${event.durationModifier.direction === 'longer' ? '+' : ''}${event.durationModifier.percent}% ${event.durationModifier.direction}`
+        : null
+    const pizzaTag = event.pizzaBoosted ? '×2 - Pizza Parties' : null
+    const modifierTags = [durationTag, pizzaTag].filter(Boolean)
 
     // Home cities don't all use £, so the amount is shown next to the generic cash icon rather than a £ sign (bug #211)
     const cashIconEl = <img src={cashIcon} alt="cash" className="cash-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle' }} />
@@ -47,12 +45,12 @@ function EventModal({ event, onContinue, terminalName }) {
     const trendIconEl = <img src={isPositive ? increaseIcon : decreaseIcon} alt="" className="event-trend-icon" />
 
     const getEffectText = () => {
-        if (event.effectType === 'instantCash') return <>{cashIconEl}{event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance{pizzaSuffix}</>
+        if (event.effectType === 'instantCash') return <>{cashIconEl}{event.instantCashAmount?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been added to your balance</>
         if (event.effectType === 'instantCashLoss') return <>{cashIconEl}{Math.abs(event.instantCashAmount)?.toLocaleString('en-GB', { maximumFractionDigits: 0 })} has been deducted from your balance</>
-        if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s${durationSuffix}${pizzaSuffix}`
-        if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s${durationSuffix}`
-        if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s${durationSuffix}${pizzaSuffix}`
-        if (event.effectType === 'workPenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% work earnings for ${secondsLeft}s${durationSuffix}`
+        if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s`
+        if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s`
+        if (event.effectType === 'workBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% work earnings for ${secondsLeft}s`
+        if (event.effectType === 'workPenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% work earnings for ${secondsLeft}s`
         return ''
     }
 
@@ -68,10 +66,17 @@ function EventModal({ event, onContinue, terminalName }) {
                 <p className="event-description">{description}</p>
                 {event.celebrityHint && <p className="event-hint">Keep an eye on the departure board...</p>}
                 <div className="event-effect-box">
-                    <span className={`event-effect-indicator ${isPositive ? 'event-positive-text' : 'event-negative-text'}`}>
-                        {trendIconEl}
-                    </span>
-                    <span className="event-effect-text">{getEffectText()}</span>
+                    <div className="event-effect-main">
+                        <span className={`event-effect-indicator ${isPositive ? 'event-positive-text' : 'event-negative-text'}`}>
+                            {trendIconEl}
+                        </span>
+                        <span className="event-effect-text">{getEffectText()}</span>
+                    </div>
+                    {modifierTags.length > 0 && (
+                        <div className="event-modifier-tags">
+                            {modifierTags.map(tag => <span key={tag} className="event-modifier-tag">{tag}</span>)}
+                        </div>
+                    )}
                 </div>
                 {/* Improved Accessibility Services and News Column both pay a flat Reputation bonus on every positive
                     event, on top of whatever the event itself does - shown here so it isn't only a sound (bug: it used

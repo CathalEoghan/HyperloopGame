@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { playFarewellVipSound, playLeavingSound } from '../utils/sound.js'
+import { playFarewellVipSound, playLeavingSound, playFarewellAcceptSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import cameraIcon from '../assets/misc/camera.png'
 import countryFlags from '../data/countryFlags.js'
@@ -17,8 +17,11 @@ function VideoMessageToast({ entry, onDone }) {
     const flagCode = countryFlags[entry.country]
 
     useEffect(() => {
+        // The arrival/departure chime plays now, when the toast appears, but the Reputation confirm sound is
+        // held until the send animation actually finishes (matching the real FarewellModal, where it plays on
+        // acceptance, not the moment the popup appears) - it should land on "sent", not "sending".
         if (entry.vip) playFarewellVipSound(); else playLeavingSound()
-        const t = setTimeout(onDone, 2500)
+        const t = setTimeout(() => { playFarewellAcceptSound(); onDone() }, 2500)
         return () => clearTimeout(t)
     }, [])
 

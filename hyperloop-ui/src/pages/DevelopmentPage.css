@@ -325,6 +325,30 @@
   border-color: transparent;
 }
 
+/* Same periodic glint as a maxed city's gold frame (see city-image-wrapper-maxed in CitiesPage.css) - defined
+   again here rather than shared, since each page already keeps its own maxed-card styling self-contained. */
+.dev-card-frame-maxed::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(100deg,
+    transparent 40%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 60%);
+  transform: translateX(-150%);
+  animation: card-shine-sweep 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes card-shine-sweep {
+  0% { transform: translateX(-150%); }
+  30%, 100% { transform: translateX(150%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dev-card-frame-maxed::after { animation: none; display: none; }
+}
+
 .dev-revenue-strip {
   position: absolute;
   bottom: 0;
