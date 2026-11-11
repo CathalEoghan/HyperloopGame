@@ -7,6 +7,8 @@ import shoppingIcon from '../assets/misc/shopping.png'
 import starIcon from '../assets/misc/star.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import pinIcon from '../assets/misc/pin.png'
+import increaseIcon from '../assets/misc/increase.png'
+import decreaseIcon from '../assets/misc/decrease.png'
 import countryFlags from '../data/countryFlags.js'
 import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } from '../utils/sound.js'
 import { formatBalance } from '../utils/formatBalance.js'
@@ -325,7 +327,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         </div>
         {activeEvent && (
             <div className={`event-indicator ${activeEvent.type === 'positive' ? 'event-indicator-positive' : 'event-indicator-negative'}`}>
-                <span className="event-indicator-icon">{activeEvent.type === 'positive' ? '▲' : '▼'}</span>
+                <img className="event-indicator-icon" src={activeEvent.type === 'positive' ? increaseIcon : decreaseIcon} alt="" />
                 <span className="event-indicator-text">{getEventIndicatorText()}</span>
                 {!isInstantEvent && <span className="event-indicator-timer">{eventSecondsLeft}s remaining{durationModifierText}</span>}
             </div>

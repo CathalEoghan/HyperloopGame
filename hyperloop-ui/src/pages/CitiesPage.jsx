@@ -32,6 +32,8 @@ import { formatTime, formatDate } from '../utils/time.js';
 import { flagSrc } from '../utils/flagSrc.js'
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
+// Antarctica only joins the filter once the secret Antarctic Peninsula has been unlocked, so it doesn't give the finale away
+const ALL_CONTINENTS = [...CONTINENTS, 'Antarctica']
 const CONTINENT_COLOURS = {
     'Europe': '#4a90d9',
     'Asia': '#e67e22',
@@ -39,6 +41,7 @@ const CONTINENT_COLOURS = {
     'North America': '#8e44ad',
     'South America': '#c0392b',
     'Oceania': '#16a085',
+    'Antarctica': '#5dade2',
     'All': '#444'
 }
 
@@ -47,7 +50,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [showLineUpgradeModal, setShowLineUpgradeModal] = useState(false)
     const [search, setSearch] = useState('')
-    const [activeContinent, setActiveContinent] = usePersistedChoice('citiesContinent', CONTINENTS, 'All')
+    const [storedContinent, setActiveContinent] = usePersistedChoice('citiesContinent', ALL_CONTINENTS, 'All')
     const [sortBy, setSortBy] = usePersistedChoice('citiesSort', ['alphabetical', 'income-high', 'income-low', 'population-high', 'tier'], 'alphabetical')
     const [collapsedCountries, setCollapsedCountries] = useState(new Set())
     const [enlargedImage, setEnlargedImage] = useState(null)
@@ -86,6 +89,10 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         !underConstruction.some(c => c.name === city.name)
     )
     const connectedAndBuilding = [...purchased, ...underConstruction]
+    const antarcticaKnown = [...purchased, ...underConstruction, ...available].some(c => c.continent === 'Antarctica')
+    const continentTabs = antarcticaKnown ? ALL_CONTINENTS : CONTINENTS
+    // A saved Antarctica choice means nothing before the Peninsula is unlocked (a new run, say): show All instead
+    const activeContinent = continentTabs.includes(storedContinent) ? storedContinent : 'All'
 
     // Same grouping the continent filter pills use, reused for the "connected / total" progress badge so a
     // continent's number always means the same thing there as it does in the filter itself.
@@ -341,7 +348,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     </select>
                 </div>
                 <div className="continent-filter">
-                    {CONTINENTS.map(c => (
+                    {continentTabs.map(c => (
                         <button
                             key={c}
                             className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}

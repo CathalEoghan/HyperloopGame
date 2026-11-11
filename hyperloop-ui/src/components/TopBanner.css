@@ -277,7 +277,11 @@ font-size: 1rem;
 }
 
 .event-indicator-icon {
-    font-size: 0.8rem;
+    width: 13px;
+    height: 13px;
+    object-fit: contain;
+    vertical-align: middle;
+    border: none;
 }
 
 .event-indicator-text {

@@ -46,7 +46,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [upgradeTip, setUpgradeTip] = useState(null)
     const showUpgradeTip = (e, development) => {
         const describe = !development.revenue && EFFECT_DESCRIPTIONS[development.effectType]
-        setUpgradeTip(describe ? { anchor: e.currentTarget, text: describe(development.effectValue, development) } : null)
+        setUpgradeTip(describe ? { anchor: e.currentTarget, text: describe(development.effectValue, development, progressionManager.purchasedUpgrades.includes(development)) } : null)
     }
     const [showRenameModal, setShowRenameModal] = useState(false)
     const [renameText, setRenameText] = useState('')
@@ -456,7 +456,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 {developmentVerb(selectedDevelopment.name)} (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
                                                 {(() => {
                                                     const discount = economyManager.getUpgradeSum('developmentDiscount')
-                                                    return discount > 0 ? <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
+                                                    return discount > 0 ? <span className="rename-discount-tag" style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
                                                 })()})
                                             </span>
                                         </button>
@@ -553,7 +553,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             <strong>Effect:</strong> {(() => {
                                                 const effects = EFFECT_DESCRIPTIONS
                                                 const fn = effects[selectedDevelopment.effectType]
-                                                return fn ? fn(selectedDevelopment.effectValue, selectedDevelopment) : 'Special effect'
+                                                return fn ? fn(selectedDevelopment.effectValue, selectedDevelopment, true) : 'Special effect'
                                             })()}
                                         </p>
                                     )}

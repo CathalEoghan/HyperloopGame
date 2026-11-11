@@ -22,7 +22,13 @@ export const EFFECT_DESCRIPTIONS = {
     earlyRetirement: (v) => `Ready to pass it on? Purchasing this upgrade with ${v} Reputation will allow you to prestige`,
     workPerAchievement: (v) => `+${pct(v)}% Work earnings for every unique achievement unlocked`,
     // What it really pays: Five-Star Researchers doubles it, then Quick Learner doubles the total
-    prestigePoints: (v) => `Rewards ${v * (PrestigeManager.owns('fiveStarResearchers') ? 2 : 1) * (PrestigeManager.owns('fastLearner') ? 2 : 1)} Prestige Points`,
+    // Experimental Technology's tier doubles the moment it is claimed (see ExperimentalTechnology.js), so once it has been
+    // built, v is already NEXT time's figure: say what it just paid (half of v) and what the next claim will pay.
+    prestigePoints: (v, upgrade, owned) => {
+        const m = (PrestigeManager.owns('fiveStarResearchers') ? 2 : 1) * (PrestigeManager.owns('fastLearner') ? 2 : 1)
+        if (owned && upgrade?.name === 'Experimental Technology') return `Rewarded ${v / 2 * m} Prestige Points. The next claim pays double: ${v * m} Prestige Points, for double the cost`
+        return `Rewards ${v * m} Prestige Points`
+    },
     connectionBoost: (v) => `+${pct(v)}% income from all city connections`,
     workClickBonus: () => `+45% Work click earnings`,
     offlineCapExtension: () => `+24 hours offline earnings cap`,

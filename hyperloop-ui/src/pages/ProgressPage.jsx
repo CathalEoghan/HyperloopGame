@@ -252,7 +252,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         setClaimedSummary({ cash, rep, count, label: title })
     }
 
-    const antarcticaUnlocked = purchasedCities.some(p => p.continent === 'Antarctica')
+    const antarcticaUnlocked = purchasedCities.some(p => p.continent === 'Antarctica') || (unlockedCities || []).some(p => p.continent === 'Antarctica')
     const visibleCities = allCities.filter(c => c.continent !== 'Antarctica' || antarcticaUnlocked)
     // The collection totals count the Antarctic Peninsula and Antarctica from the start (350 cities, 155 countries
     // reads better than 349/154) even though the city itself stays out of the grid - and out of the normal unlock

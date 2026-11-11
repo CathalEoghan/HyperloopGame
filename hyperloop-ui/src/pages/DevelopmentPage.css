@@ -463,7 +463,8 @@
    beats that inline color (importance wins over specificity, inline or not), swapping it to the same
    hover-contrast color the rest of the button's text already gets. Not page-scoped for the same reason as
    .modal .closeButton:hover above - this one rule covers every ".rename-discount-tag" in the app too. */
-.modal .closeButton:hover .rename-discount-tag {
+.modal .closeButton:hover .rename-discount-tag,
+.modal .constructionButton:hover .rename-discount-tag {
   color: var(--ui-accent-contrast, #222222) !important;
 }
 

@@ -2787,9 +2787,9 @@ function App() {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');
           if (antarcticCity) {
-            // Unlocked first, so it stays on the Cities page if the connection can't be paid for yet (bug #165)
+            // Only unlocked, like every other city a rank-up hands out: the player connects it from the Cities page
+            // when they choose to (and can afford it), rather than it being connected and paid for automatically
             progressionManager.unlockCity(antarcticCity);
-            constructionManager.startStationConstruction(antarcticCity);
             triggerSave();
             setClaimedCity(antarcticCity);
           }
