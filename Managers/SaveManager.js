@@ -94,6 +94,9 @@ const AUX_KEYS = [
     // arrival number. A new run gets fresh numbers rather than inheriting the last one's.
     'hyperloop_loop_dep_numbers',
     'hyperloop_loop_arr_numbers',
+    // When the player's very first run began (see getLifetimeCreatedAt below) - Founders' Hall counts from this,
+    // not the current run's own createdAt.
+    'hyperloop_lifetime_created_at',
 ]
 
 // Today's live state for the current game. Never exported: an imported or new game starts
@@ -177,7 +180,22 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_prestige_upgrade_rewards',
     // Seen it once, don't show "Your first city is connected!" again after a prestige
     'hyperloop_first_loop_prompt',
+    // Founders' Hall counts from this terminal's very first run, not the current one - otherwise every prestige
+    // reset the Terminal Age Bonus to zero (see getLifetimeCreatedAt below)
+    'hyperloop_lifetime_created_at',
 ]
+
+// The real-world date Founders' Hall counts from. Set once, the first time this key is missing (seeded from the
+// current run's own createdAt, so an existing player keeps credit for how long their current run has already
+// been open), and kept forever after - including across every prestige, via PRESTIGE_KEEP_KEYS - so the Terminal
+// Age Bonus reflects how long the player has actually been playing in total, not just the current run.
+export function getLifetimeCreatedAt(fallbackCreatedAt) {
+    const raw = Number(localStorage.getItem('hyperloop_lifetime_created_at'))
+    if (Number.isFinite(raw) && raw > 0) return Math.min(raw, Date.now())
+    const initial = Number.isFinite(fallbackCreatedAt) && fallbackCreatedAt > 0 ? Math.min(fallbackCreatedAt, Date.now()) : Date.now()
+    try { localStorage.setItem('hyperloop_lifetime_created_at', String(initial)) } catch { /* storage full */ }
+    return initial
+}
 
 // Wipes the current run and leaves a note for the next start-up: keep the terminal name, and the starter
 // city that was drawn for it (the player only gets to choose with Personal Favours).
@@ -255,6 +273,7 @@ const AUX_SHAPES = {
     // the import had already cleared them - so every import reset the Progress page's lifetime totals to 0.
     hyperloop_lifetime_cash_earned: v => Number.isFinite(v) && v >= 0,
     hyperloop_lifetime_reputation_earned: v => Number.isFinite(v) && v >= 0,
+    hyperloop_lifetime_created_at: v => Number.isFinite(v) && v > 0,
 }
 const listOfStrings = listOf(x => typeof x === 'string')
 // These two hold a plain date string ("Tue Sep 29 2026"), not JSON.

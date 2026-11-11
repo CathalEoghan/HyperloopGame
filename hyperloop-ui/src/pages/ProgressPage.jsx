@@ -41,7 +41,7 @@ const CashValue = ({ amount, suffix = '' }) => (
     </span>
 )
 
-function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
+function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, lifetimeCreatedAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
     // then they already know how claiming and the stat sections work.
     const [showIntro, setShowIntro] = useState(() =>
@@ -440,7 +440,10 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
 
         // Alphabetical by label, so a bonus is always easy to find rather than in whatever order it was coded in.
         const stats = [
-            ...(has('afternoonBoost') ? [{ label: 'Afternoon Bonus', value: `+${Math.round(economyManager.getUpgradeSum('afternoonBoost') * 100)}%${hour >= 12 && hour < 18 ? ' (Active)' : ' (Inactive)'}` }] : []),
+            // Afternoon/Morning/Evening/Night all share the same "currently active" treatment as Business Week/Weekend/
+            // Special Day below - an icon + "active" when the window is open right now, nothing extra otherwise - rather
+            // than their own plain "(Active)"/"(Inactive)" text, which looked and read differently for no real reason.
+            ...(has('afternoonBoost') ? [{ label: 'Afternoon Bonus', value: <>+{Math.round(economyManager.getUpgradeSum('afternoonBoost') * 100)}%{hour >= 12 && hour < 18 && <>{activeCheckEl}active</>}</> }] : []),
             { label: 'All Developments Bonus', value: sum('developmentBoost') > 0 ? `+${Math.round(sum('developmentBoost') * 100)}%` : '—' },
             { label: 'Arctic City Bonus', value: sum('arcticBoost') > 0 ? `+${Math.round(sum('arcticBoost') * 100)}%` : '—' },
             { label: 'Business Week Bonus', value: sum('businessWeekBoost') > 0 ? <>+{Math.round(sum('businessWeekBoost') * 100)}%{isBusinessWeek && <>{activeCheckEl}active</>}</> : '—' },
@@ -485,7 +488,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Development Rename Discount', value: PrestigeManager.owns('legalLoopholes') ? '-50%' : '—' },
             { label: 'Enterprise Count Boost', value: sum('enterpriseDevBoost') > 0 ? `+${Math.round(sum('enterpriseDevBoost') * enterpriseCount * 100)}% (${enterpriseCount} items)` : '—' },
             { label: 'Equator City Bonus', value: sum('equatorBoost') > 0 ? `+${Math.round(sum('equatorBoost') * 100)}%` : '—' },
-            ...(has('eveningBoost') ? [{ label: 'Evening Bonus', value: `+${Math.round(economyManager.getUpgradeSum('eveningBoost') * 100)}%${hour >= 18 && hour < 22 ? ' (Active)' : ' (Inactive)'}` }] : []),
+            ...(has('eveningBoost') ? [{ label: 'Evening Bonus', value: <>+{Math.round(economyManager.getUpgradeSum('eveningBoost') * 100)}%{hour >= 18 && hour < 22 && <>{activeCheckEl}active</>}</> }] : []),
             { label: 'Event Duration Extension', value: sum('bonusDurationExtension') > 0 ? `+${Math.round(sum('bonusDurationExtension') * 100)}% longer` : '—' },
             { label: 'Extra City Choices on Rank Up', value: sum('skilledNegotiationTeams') > 0 ? `+${sum('skilledNegotiationTeams')} choices` : '—' },
             { label: 'Farewell Cash Bonus', value: has('personalImageBranding') ? "10% of the city's daily income" : '—' },
@@ -496,9 +499,9 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             { label: 'Free Reroll on Rank Up', value: has('freeRerollOnRankUp') ? 'Active' : '—' },
             { label: 'Infrastructure Count Boost', value: sum('infrastructureDevBoost') > 0 ? `+${Math.round(sum('infrastructureDevBoost') * infraCount * 100)}% (${infraCount} items)` : '—' },
             { label: 'Local Country Bonus', value: economyManager.getLocalCountryBoost() > 0 ? `+${Math.round(economyManager.getLocalCountryBoost() * 100)}%` : '—' },
-            ...(has('morningBoost') ? [{ label: 'Morning Bonus', value: `+${Math.round(economyManager.getUpgradeSum('morningBoost') * 100)}%${hour >= 6 && hour < 12 ? ' (Active)' : ' (Inactive)'}` }] : []),
+            ...(has('morningBoost') ? [{ label: 'Morning Bonus', value: <>+{Math.round(economyManager.getUpgradeSum('morningBoost') * 100)}%{hour >= 6 && hour < 12 && <>{activeCheckEl}active</>}</> }] : []),
             { label: 'Negative Event Reduction', value: sum('negativeEventReduction') > 0 ? `${Math.round(economyManager.getNegativeEventReduction() * 100)}% chance to skip` : '—' },
-            ...(has('nightBoost') ? [{ label: 'Night Bonus', value: `+${Math.round(economyManager.getUpgradeSum('nightBoost') * 100)}%${(hour >= 22 || hour < 6) ? ' (Active)' : ' (Inactive)'}` }] : []),
+            ...(has('nightBoost') ? [{ label: 'Night Bonus', value: <>+{Math.round(economyManager.getUpgradeSum('nightBoost') * 100)}%{(hour >= 22 || hour < 6) && <>{activeCheckEl}active</>}</> }] : []),
             {
                 label: 'Offline Earnings Cap', value: PrestigeManager.owns('automatedScheduling') ? 'No cap' : count('offlineCapExtension') === 0 ? '—' : (() => {
                     const hours = 48 + count('offlineCapExtension') * 24
@@ -527,7 +530,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
                     return <>{owned.join(', ')}{economyManager.getSpecialDayBonus() > 0 && <>{activeCheckEl}active</>}</>
                 })()
             },
-            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(createdAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
+            { label: 'Terminal Age Bonus', value: has('terminalAgeBoost') ? `×${+economyManager.getFoundersHallMultiplier(lifetimeCreatedAt).toFixed(2)} on top of all boosts (grows over time)` : '—' },
             // Good Standing - already baked into every development/city upgrade's Reputation cost, but
             // otherwise invisible: this is the only place that says so.
             { label: 'Upgrade Reputation Discount', value: PrestigeManager.owns('goodStanding') ? '-50%' : '—' },

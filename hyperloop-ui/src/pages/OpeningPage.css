@@ -1,5 +1,9 @@
 .opening-background {
     min-height: 100vh;
+    /* Without this, the 40px top+bottom padding below was added ON TOP of the 100vh min-height (the default
+       content-box sizing), so this screen's real height was always at least 100vh + 80px - guaranteeing a page
+       scrollbar even for a one-line screen like step 1, regardless of whether the content needed the room. */
+    box-sizing: border-box;
     background-color: #1c1c1c;
     font-family: 'Inter', sans-serif;
     display: flex;
