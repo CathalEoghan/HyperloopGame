@@ -26,7 +26,7 @@ export const PRESTIGE_VALUES = {
     oralHygiene: 2,                    // x2 Reputation from farewells
     viralSuperstar: 3,                 // x3 Progress rewards
     livestreamRep: 5,                  // Livestream Everything: Reputation paid ...
-    livestreamEvery: 100,              // ... every this many manual Work clicks in a run
+    livestreamEvery: 100,              // ... every this many Work clicks in a run (manual or Best P.A. Ever)
     streamingMasteryFactor: 2,         // Streaming Mastery: the bonus is doubled ...
     streamingMasteryEvery: 50,         // ... and paid every this many clicks instead
     signOnBonus: 1500000,              // Sign-On Bonus: extra cash at the start of every new run (the standard starting balance again, so double)
@@ -44,7 +44,7 @@ const V = PRESTIGE_VALUES
 export const PRESTIGE_UPGRADES = [
     // Layer 1
     { id: 'staffFeedbackForms', icon: '📝', layer: 1, name: 'Staff Feedback Forms', description: `${mult(V.staffFeedbackForms)} city and development income.` },
-    { id: 'livestreamEverything', icon: '📡', layer: 1, name: 'Livestream Everything', description: `Guaranteed +${V.livestreamRep} Reputation every ${V.livestreamEvery} manual Work clicks (counted each run).` },
+    { id: 'livestreamEverything', icon: '📡', layer: 1, name: 'Livestream Everything', description: `Guaranteed +${V.livestreamRep} Reputation every ${V.livestreamEvery} Work clicks (counted each run).` },
     { id: 'signOnBonus', icon: '✍️', layer: 1, name: 'Sign-On Bonus', description: `${money(V.signOnBonus)} extra cash when you start a new run.` },
 
     { id: 'legalLoopholes', icon: '📑', layer: 1, name: 'Legal Loopholes', description: `Renaming a development costs half the Reputation.` },
@@ -85,7 +85,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'bestPAEver', icon: '🧑‍💼', layer: 4, name: 'Best P.A. Ever', description: 'Work clicks itself once every 500ms.' },
     { id: 'lobbyingSuavity', icon: '🕶️', layer: 4, name: 'Lobbying Suavity', description: 'Choose any city to connect when ranking up.' },
     { id: 'generationalWisdom', icon: '📜', layer: 4, name: 'Generational Wisdom', description: `City and development income multiplied by an extra ${pct(V.generationalWisdomPerPoint)} for every Prestige Point you currently hold (x${1 + 10 * V.generationalWisdomPerPoint} with 10).` },
-    { id: 'streamingMastery', icon: '🎬', layer: 4, name: 'Streaming Mastery', description: `The Livestream Everything bonus is doubled, and now paid every ${V.streamingMasteryEvery} manual Work clicks instead of every ${V.livestreamEvery}.` },
+    { id: 'streamingMastery', icon: '🎬', layer: 4, name: 'Streaming Mastery', description: `The Livestream Everything bonus is doubled, and now paid every ${V.streamingMasteryEvery} Work clicks instead of every ${V.livestreamEvery}.` },
     { id: 'crisisAvoidanceSpecialists', icon: '🚨', layer: 4, name: 'Crisis Avoidance Specialists', description: 'No negative events, ever.' },
 ].map(u => ({
     ...u,

@@ -259,7 +259,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <div
                                         className="total-revenue-banner"
                                         style={{ cursor: 'var(--cursor-help, help)' }}
-                                        onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: 'Every unspent Prestige Point you currently hold is worth +5% to development and city income.' })}
+                                        onMouseEnter={(e) => setShowBusyTooltip({ anchor: e.currentTarget, text: 'Every unspent Prestige Point you currently hold is worth +5% to development and city income - as its own multiplier on top of every other boost (including Reputation bonus), not added together with them.' })}
                                         onMouseLeave={() => setShowBusyTooltip(null)}
                                     >
                                         <span>Generational Wisdom Bonus:</span>

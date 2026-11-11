@@ -1,6 +1,6 @@
-// Livestream Everything and Streaming Mastery: a guaranteed Reputation bonus for manual Work clicks.
-// The count is of this run's manual clicks only (Best P.A. Ever's own presses are not counted), kept under its own key
-// so it starts again with every new run. The Work button's total on the Progress page is a separate, lifetime count.
+// Livestream Everything and Streaming Mastery: a guaranteed Reputation bonus for Work clicks, manual or Best
+// P.A. Ever's own auto-clicks alike. The count is of this run's clicks only, kept under its own key so it starts
+// again with every new run. The Work button's total on the Progress page is a separate, lifetime count.
 import { PRESTIGE_VALUES as V } from './prestigeUpgrades.js'
 
 export const LIVESTREAM_KEY = 'hyperloop_livestream_clicks'

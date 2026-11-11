@@ -11,9 +11,9 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | Layer | Upgrade | Effect in the game | Where |
 |---|---|---|---|
 | 1 | Staff Feedback Forms | x2 city and development income | EconomyManager `prestigeMultipliers`, `getPrestigeDevMultiplier` / `getPrestigeCityMultiplier` |
-| 1 | Livestream Everything | Guaranteed +5 Reputation every 100 manual Work clicks in a run (Best P.A. Ever's auto-clicks don't count; the count starts again with each run) | `livestream.js` (`livestreamRepFor`), App.jsx `performWork` |
+| 1 | Livestream Everything | Guaranteed +5 Reputation every 100 Work clicks in a run, manual or Best P.A. Ever's auto-clicks alike (the count starts again with each run) | `livestream.js` (`livestreamRepFor`), App.jsx `performWork` |
 | 1 | Amicable Breakups | Disconnect costs nothing and refunds half the connection cost | App.jsx `onDisconnect`, CitiesPage |
-| 1 | Opening Party | Finishing construction on a Tier 3 city clears any active event (positive or negative) and starts a new positive one, ignoring the usual rank gate | App.jsx tick loop, around `constructionManager.update()` - calls `fireEvent(getRandomEvent(true))` |
+| 1 | Opening Party | Finishing construction on a Tier 3 city clears any active event (positive or negative) and starts a new positive one, ignoring the usual rank gate - at most once every 15 seconds, so mass-buying several Tier 3 cities at once with Advanced Engineering grants one positive event, not one per city | App.jsx tick loop, around `constructionManager.update()` - calls `fireEvent(getRandomEvent(true))`, gated by `OPENING_PARTY_COOLDOWN_MS` against the shared `lastEventTime` |
 | 1 | News Column | +5 Reputation on every positive event, on top of anything Improved Accessibility Services gives | App.jsx `fireEvent` |
 | 1 | Resilience | A negative event with a duration (passivePenalty/workPenalty - the three instant-loss ones have none to shorten) lasts half as long | App.jsx `fireEvent` |
 | 1 | Festive Freak | Doubles the six single-day boosts (Halloween, July 4th, New Year's, Christmas, Valentine's, Easter) and the currently-active season/month `seasonBoost` upgrade's effect; does not touch weekday/weekend or time-of-day boosts | EconomyManager `getSpecialDayBonus`, `_applyFestiveFreak` (used by `getCurrentSeasonUpgrade`/`getCurrentMonthUpgrade`) |
@@ -45,7 +45,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 4 | Generational Wisdom | City and development income x(1 + 5% per Prestige Point currently held, unspent), x1.5 with 10 | EconomyManager `getGenerationalWisdomMultiplier`, `PrestigeManager.pointsHeld` |
 | 4 | Lobbying Suavity | Claiming a rank-up opens a searchable city picker instead of drawing a random city (no re-roll) | `CityPickerModal`, `claimRankUp` in App.jsx, `getUnlockableCities` |
 | 4 | Best P.A. Ever | Work clicks itself every 500 ms (silent, not counted for the Work achievements); a background tab makes up missed clicks, up to 150 | `workClicksDue` (autoWork.js), `performWork` in App.jsx |
-| 4 | Streaming Mastery | Livestream Everything pays double (10 Reputation) and every 50 manual Work clicks instead of 100 | `livestreamSettings` (livestream.js) |
+| 4 | Streaming Mastery | Livestream Everything pays double (10 Reputation) and every 50 Work clicks instead of 100 | `livestreamSettings` (livestream.js) |
 
 ## Not live yet
 

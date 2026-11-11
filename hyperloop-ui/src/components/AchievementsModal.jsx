@@ -49,7 +49,7 @@ export default function AchievementsModal({ achievementManager, purchasedUpgrade
         bonuses.push({ name: 'Anniversary Sales', value: `+${count * 5}%`, what: 'Work earnings' })
     }
     if (count > 0 && PrestigeManager.owns('trophyCabinet')) {
-        bonuses.push({ name: 'Trophy Cabinet', value: `×${(1 + count * PRESTIGE_VALUES.trophyCabinetPerAchievement).toFixed(2)}`, what: 'city and development income' })
+        bonuses.push({ name: 'Trophy Cabinet', value: `×${(1 + count * PRESTIGE_VALUES.trophyCabinetPerAchievement).toFixed(2)}`, what: 'City and development income' })
     }
 
     return (

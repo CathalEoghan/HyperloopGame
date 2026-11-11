@@ -370,7 +370,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                     { icon: warningIcon, text: <><strong>Clear Timetable</strong> wipes every scheduled departure at once, with a confirmation step so it's never a misclick - handy for rebuilding a schedule from scratch.</> },
                 ]} />
             )}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', gap: '12px', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px', gap: '12px', flexWrap: 'wrap' }}>
                 <div className="board-heading">
                   <div className="board-tabrow">
                     <div className="board-tabs" role="tablist" aria-label="Terminal Board">

@@ -649,12 +649,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                         </div>
                         <div className="city-stats-row">
                             <div className="city-stat-box">
-                                <span className="city-stat-label">Population served</span>
+                                <span className="city-stat-label" style={{ color: 'white' }}>Population served</span>
                                 <strong>{formatPopulation(totalPopulation)}</strong>
                             </div>
                             <div className="city-stat-box">
-                                <span className="city-stat-label">City income</span>
-                                <strong><AbbreviatedNumber value={perHour(totalIncome)} icon={cashIcon} iconAlt="£" iconSize={13} suffix="/hr" /></strong>
+                                <span className="city-stat-label" style={{ color: 'white' }}>City income</span>
+                                <strong><AbbreviatedNumber value={perHour(totalIncome)} icon={cashIcon} iconAlt="£" iconSize={13} iconStyle={{ transform: 'translateY(-1.5px)' }} suffix="/hr" /></strong>
                             </div>
                             <div
                                 className="city-stat-box"
@@ -675,7 +675,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 >
                                     <span className="city-stat-label" style={{ color: 'white' }}>Generational Wisdom Bonus:</span>
                                     <strong>+{Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100)}%</strong>
-                                    <BoostTooltip anchor={showWisdomBonusTip} lines={['Every unspent Prestige Point you currently hold is worth +5% to city and development income.']} text />
+                                    <BoostTooltip anchor={showWisdomBonusTip} lines={['Every unspent Prestige Point you currently hold is worth +5% to city and development income - as its own multiplier on top of every other boost (including Reputation bonus), not added together with them.']} text />
                                 </div>
                             )}
                         </div>

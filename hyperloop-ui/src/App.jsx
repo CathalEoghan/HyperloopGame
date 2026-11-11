@@ -78,6 +78,12 @@ const EVENT_MIN_RANK = 3
 // A positive event's Reputation bonuses (News Column, Improved Accessibility Services) play the Reputation sound this long after the event's own
 // chime starts: both are about two seconds long, and started together the chime would drown it out
 const EVENT_REPUTATION_SOUND_DELAY_MS = 1000
+// Opening Party only refires if it's been at least this long since the last event (of any kind). Advanced
+// Engineering finishes a Tier 3 city the moment it's bought, so mass-buying several - or just clicking "Connect
+// all affordable" a few times in a row as cash refills - used to cut short and restart a fresh positive event,
+// with its own instant-cash payout, on every single completion. This treats a burst of Tier 3 completions as
+// one trigger instead of one per city (bug reported: "multiple lump payments").
+const OPENING_PARTY_COOLDOWN_MS = 15000
 
 const OFFLINE_RATE = 1.0;
 
@@ -866,18 +872,17 @@ function App() {
   };
 
   // One press of Work. A manual press counts towards the Work achievements and plays the bonus sound;
-  // Best P.A. Ever's presses (auto) earn the same money and Reputation, quietly.
+  // Best P.A. Ever's presses (auto) earn the same money and Reputation, quietly - including the Livestream
+  // Everything / Streaming Mastery bonus, which counts every press either way (only the achievement counter
+  // stays manual-only).
   const [autoWorkTick, setAutoWorkTick] = useState(null);
   const performWork = (onRepGain, { auto = false } = {}) => {
     // Nothing is earned until the welcome popup is closed (bug #159)
     if (onboardingPending()) return;
     const earned = economyManager.calculateWorkClickEarnings();
-    // Livestream Everything / Streaming Mastery: a guaranteed bonus every so many manual clicks this run
-    let livestreamRep = 0;
-    if (!auto) {
-      achievements.addCounter('work');
-      livestreamRep = livestreamRepFor(bumpLivestreamClicks(), id => PrestigeManager.owns(id));
-    }
+    if (!auto) achievements.addCounter('work');
+    // Livestream Everything / Streaming Mastery: a guaranteed bonus every so many clicks this run, manual or auto
+    const livestreamRep = livestreamRepFor(bumpLivestreamClicks(), id => PrestigeManager.owns(id));
     progressionManager.addCash(earned);
     setBalance(progressionManager.balance);
     const gotRep = Math.random() < economyManager.getWorkRepChance();
@@ -1347,7 +1352,7 @@ function App() {
         }
       }
       constructionManager.update();
-      if (tier3BuildingBefore.some(c => !c.underConstruction)) {
+      if (tier3BuildingBefore.some(c => !c.underConstruction) && Date.now() - lastEventTime.current > OPENING_PARTY_COOLDOWN_MS) {
         // Cut short whatever event is running (positive or negative) and start a fresh positive one, ignoring
         // the usual rank gate - this is a deliberate trigger, not the regular random roll. Ended here, before
         // firing, rather than left for the tick's own "Sync active event to EconomyManager" line further below:
@@ -1355,6 +1360,10 @@ function App() {
         // the event being cut short (that sync only runs once a tick), so an Insurance Payout that interrupted a
         // Pizza-Parties-doubled passive-income event used to take its 10% out of that boosted rate instead of
         // the normal one - a normal roll never hits this because it never fires while an event is still running.
+        // The cooldown check above (shared with the normal roll's own lastEventTime) is what keeps a burst of
+        // several Tier 3 completions - one bulk-buy, or a few clicks of "Connect all affordable" in a row as
+        // cash refills - down to a single positive event instead of one per city.
+        lastEventTime.current = Date.now();
         activeEventRef.current = null;
         economyManager.activeEvent = null;
         fireEvent(getRandomEvent(true));
