@@ -1950,6 +1950,9 @@ function App() {
   // then stops taking that path the moment Construction's "enter" is clicked - which was exactly "fewer hooks,
   // then more hooks" on the very next render, and crashed the app right as a new run or a prestige's fresh run
   // was getting started (bug #189).
+  // With Auto-claim rank-ups on, a waiting rank-up is claimed silently within a tick, so it must not draw anything (the
+  // popup, the busy-screen state, the notification) even for that one frame - it used to flash up before being claimed
+  const autoClaimOn = autoClaimRankUpsEnabled()
   const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus
     && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !dailyLoginData && !(showOfflineModal && !!offlineData)
     && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0;
@@ -1963,7 +1966,7 @@ function App() {
   // started, until it quietly expires unseen (bug report finding #1).
   const otherPopupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
-    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || !!paBonus || pendingRankUps > 0
+    || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || !!paBonus || (pendingRankUps > 0 && !autoClaimOn)
     || milestoneQueue.length > 0 || showSecretCityModal
     // The Achievements panel and the Hyper-Link phone sit above the event popup, so an event fired while either was
     // open ran its course hidden (and Escape closed the hidden event instead of the panel or phone)
@@ -2007,7 +2010,7 @@ function App() {
         body: activeEvent.type === 'positive' ? 'Something good has happened at your terminal.' : 'Something has gone wrong at your terminal.',
       })
     }
-    if (pendingRankUps > 0) {
+    if (pendingRankUps > 0 && !autoClaimOn) {
       attentionItems.push({ key: `rank:${pendingRankUps}`, title: 'Rank up', body: 'You have ranked up. A new city is waiting to be claimed.' })
     }
   }
@@ -2574,6 +2577,7 @@ function App() {
         <UpgradeRevealModal
           key={revealedUpgradeQueue[0].name}
           upgrade={revealedUpgradeQueue[0]}
+          owned={progressionManager.purchasedUpgrades.includes(revealedUpgradeQueue[0])}
           waiting={revealedUpgradeQueue.length}
           onContinueAll={() => setRevealedUpgradeQueue([])}
           onContinue={() => setRevealedUpgradeQueue(q => q.slice(1))}
@@ -2653,7 +2657,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && !autoClaimOn && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
         <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} onEnableAuto={() => { try { localStorage.setItem(AUTO_CLAIM_RANKUPS_KEY, 'true') } catch { /* storage blocked: this one still claims */ } claimAllRankUps(true) }} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
@@ -2797,7 +2801,8 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && showSecretCityModal && devRevealQueue.length === 0 && (
+      {/* Waits for everything the last city brought with it (its reveal, the developments it unlocked, the Passenger Appreciation popup) so the finale lands last */}
+      {!dailyLoginData && !showOfflineModal && showSecretCityModal && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && (
         <SecretCityModal onContinue={() => {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');

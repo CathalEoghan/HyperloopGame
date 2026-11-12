@@ -62,6 +62,7 @@ export const SOUND_CATEGORIES = [
     { key: 'departureBoard', label: 'Departure Board Flaps' },
     { key: 'event', label: 'Event Notification' },
     { key: 'dailyBonus', label: 'Daily Bonus Notification' },
+    { key: 'rankUp', label: 'Rank-Up Notification' },
     { key: 'progressClaim', label: 'Progress Claim' },
     { key: 'clickSounds', label: 'Click Sounds' },
     { key: 'construction', label: 'Construction Sound' },
@@ -273,7 +274,8 @@ export function playSpecialChime()              { play(specialChime, 'progressCl
 export function playFarewellVipSound()          { play(specialChime, 'farewellGreeting') }
 export function playClickSound2()               { play(click_sound_2, 'clickSounds') }
 export function playClickSound3()               { play(click_sound_3, 'clickSounds') }
-export function playRankUpSound()               { play(rankUpSound, 'progressClaim') }
+// Also the Rank Milestone popup's sound, which is the same moment from the player's side.
+export function playRankUpSound()               { play(rankUpSound, 'rankUp') }
 export function playHoverSound()                { playHover() }
 export function playReputationWorkBonusSound()  { play(reputationWorkBonus, 'progressClaim') }
 export function playBottomNavbarHoverSound()    { play(bottomNavbarHover, 'hover') }

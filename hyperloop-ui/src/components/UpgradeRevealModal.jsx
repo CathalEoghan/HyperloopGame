@@ -13,7 +13,7 @@ import './UpgradeRevealModal.css'
 // announcements. Same threshold as the development reveals' "Claim all".
 export const CONTINUE_ALL_UPGRADES_FROM = 3
 
-function UpgradeRevealModal({ upgrade, onContinue, waiting = 0, onContinueAll }) {
+function UpgradeRevealModal({ upgrade, onContinue, waiting = 0, onContinueAll, owned = false }) {
     // Escape = Continue (this one only, not Continue all)
     useEscapeToClose(() => { playClickSound2(); onContinue() })
     useEffect(() => {
@@ -25,7 +25,7 @@ function UpgradeRevealModal({ upgrade, onContinue, waiting = 0, onContinueAll })
     const effectDesc = isRetirement
         ? 'You can now retire from the Prestige tab whenever you are ready.'
         : EFFECT_DESCRIPTIONS[upgrade.effectType]
-        ? EFFECT_DESCRIPTIONS[upgrade.effectType](upgrade.effectValue, upgrade)
+        ? EFFECT_DESCRIPTIONS[upgrade.effectType](upgrade.effectValue, upgrade, owned)
         : 'Special effect unlocked'
 
     return (
