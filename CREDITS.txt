@@ -501,7 +501,7 @@ SportsStore.jpg - Photo by BI ravencrow via Pexels
 LocalTours.jpg - Photo by Lorna Pauli via Pexels
 BiryaniRestaurant.jpg - Photo by Prabal Pratap Singh via Pexels
 ClimbingCentre.jpg - Photo by cottonbro studio via Pexels
-CreditCardLounges.jpg - Photo by Наталья Маркина via Pexels
+CreditCardLounges.jpg - Photo by Anthony Rahayel via Pexels
 CraftBeerBar.jpg - Photo by Jibbe Jaartsveld via Pexels
 MezeRestaurant.jpg - Photo by Eyüpcan Timur via Pexels
 HookahLounge.jpg - Photo by Pavel Danilyuk via Pexels
