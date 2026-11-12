@@ -271,7 +271,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
-                        <span className="settings-label-title">Auto-claim Rank-ups</span>
+                        <span className="settings-label-title">Auto-Claim Rank-Ups</span>
                         <span className="settings-label-desc">Claims every rank-up for you with a random city, silently in the background with no popups. You give up choosing and re-rolling.</span>
                     </div>
                     <div className="settings-options">
