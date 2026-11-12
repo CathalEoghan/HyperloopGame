@@ -63,6 +63,7 @@ export const SOUND_CATEGORIES = [
     { key: 'event', label: 'Event Notification' },
     { key: 'dailyBonus', label: 'Daily Bonus Notification' },
     { key: 'rankUp', label: 'Rank-Up Notification' },
+    { key: 'reputation', label: 'Reputation Awarded' },
     { key: 'progressClaim', label: 'Progress Claim' },
     { key: 'clickSounds', label: 'Click Sounds' },
     { key: 'construction', label: 'Construction Sound' },
@@ -277,7 +278,9 @@ export function playClickSound3()               { play(click_sound_3, 'clickSoun
 // Also the Rank Milestone popup's sound, which is the same moment from the player's side.
 export function playRankUpSound()               { play(rankUpSound, 'rankUp') }
 export function playHoverSound()                { playHover() }
-export function playReputationWorkBonusSound()  { play(reputationWorkBonus, 'progressClaim') }
+// Every time Reputation is awarded by chance or as a bonus: the Work click's lucky Reputation, positive events' Reputation,
+// the Passenger Appreciation popup and Reputation claimed from the Progress page.
+export function playReputationWorkBonusSound()  { play(reputationWorkBonus, 'reputation') }
 export function playBottomNavbarHoverSound()    { play(bottomNavbarHover, 'hover') }
 // The sound that plays the two times you "arrive": clicking through the loading screen, and finishing
 // construction on your first city. Whichever one is equipped in the Shop's Opening audios (the classic chime
