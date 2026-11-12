@@ -32,6 +32,7 @@ export const PRESTIGE_VALUES = {
     signOnBonus: 1500000,              // Sign-On Bonus: extra cash at the start of every new run (the standard starting balance again, so double)
     pizzaParties: 2,                   // x2 positive event strength
     deliveryDronesFootfallFloor: 50,   // Delivery Drones: development footfall never drops below this % (10% without it)
+    passiveEventRep: 10,               // Reputation a positive passive-income event pays and a negative one takes (Legal Loopholes: not the negative)
     newsColumnRep: 5,                  // News Column: +5 Reputation whenever a positive event fires
     resilienceDurationFactor: 0.5,     // Resilience: negative events (the ones with a duration) last x0.5 as long
     festiveFreakFactor: 2,             // Festive Freak: x2 season/month/special-day upgrade bonuses
@@ -48,7 +49,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'livestreamEverything', icon: '📡', layer: 1, name: 'Livestream Everything', description: `Guaranteed +${V.livestreamRep} Reputation every ${V.livestreamEvery} Work clicks (counted each run).` },
     { id: 'signOnBonus', icon: '✍️', layer: 1, name: 'Sign-On Bonus', description: `${money(V.signOnBonus)} extra cash when you start a new run.` },
 
-    { id: 'legalLoopholes', icon: '📑', layer: 1, name: 'Legal Loopholes', description: `Renaming a development costs half the Reputation.` },
+    { id: 'legalLoopholes', icon: '📑', layer: 1, name: 'Legal Loopholes', description: `Renaming a development costs half the Reputation, and negative passive income events no longer take Reputation.` },
     { id: 'amicableBreakups', icon: '🤝', layer: 1, name: 'Amicable Breakups', description: 'Disconnecting a city or removing a development costs nothing and refunds half the cost.' },
     { id: 'openingParty', icon: '🎉', layer: 1, name: 'Opening Party', description: 'Connecting a Tier 3 city for the first time in a run immediately clears any active event and starts a new positive one.' },
     { id: 'newsColumn', icon: '📰', layer: 1, name: 'News Column', description: `Positive events grant a bonus +${V.newsColumnRep} Reputation.` },

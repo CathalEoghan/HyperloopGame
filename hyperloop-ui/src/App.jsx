@@ -1199,6 +1199,12 @@ function App() {
     let eventRep = 0;
     if (event.type === 'positive' && economyManager.hasUpgrade('positiveEventReputationBonus')) eventRep += economyManager.getUpgradeSum('positiveEventReputationBonus');
     if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep += PRESTIGE_VALUES.newsColumnRep;
+    // Passive income events carry Reputation of their own: a boost pays it, a penalty takes it (Legal Loopholes spares you the
+    // penalty). Reputation can't go below zero, so what the popup shows is what was actually taken.
+    if (event.effectType === 'passiveBoost') eventRep += PRESTIGE_VALUES.passiveEventRep;
+    const eventRepLoss = event.effectType === 'passivePenalty' && !PrestigeManager.owns('legalLoopholes')
+      ? Math.min(PRESTIGE_VALUES.passiveEventRep, Math.max(0, Math.floor(progressionManager.reputation)))
+      : 0;
 
     if (event.effectType === 'instantCash') {
       const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * SECONDS_IN_A_DAY * INSTANT_CASH_DAY_FRACTION) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
@@ -1252,7 +1258,7 @@ function App() {
       // Pizza Parties already doubled event.effect.multiplier above (scaledEvent) - flagged the same way
       // the duration upgrades are, so the percentage isn't the only boosted thing on this popup with
       // nothing saying why.
-      const fullEvent = { ...event, durationSeconds, durationModifier, expiresAt: Date.now() + durationSeconds * 1000, eventRepBonus: eventRep, pizzaBoosted: pizza };
+      const fullEvent = { ...event, durationSeconds, durationModifier, expiresAt: Date.now() + durationSeconds * 1000, eventRepBonus: eventRep, eventRepLoss, pizzaBoosted: pizza };
       activeEventRef.current = fullEvent;
       try { localStorage.setItem('hyperloop_active_event', JSON.stringify(fullEvent)); } catch { /* storage full: the event still runs this session */ }
       playEventSound();
@@ -1274,6 +1280,10 @@ function App() {
       progressionManager.addReputation(eventRep);
       setReputation(shownReputation());
       setTimeout(playReputationWorkBonusSound, EVENT_REPUTATION_SOUND_DELAY_MS);
+    }
+    if (eventRepLoss > 0) {
+      progressionManager.addReputation(-eventRepLoss);
+      setReputation(shownReputation());
     }
   };
 

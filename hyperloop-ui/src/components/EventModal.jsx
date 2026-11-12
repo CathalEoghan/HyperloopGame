@@ -88,6 +88,13 @@ function EventModal({ event, onContinue, terminalName }) {
                         <span className="event-effect-text">+{event.eventRepBonus} Reputation</span>
                     </div>
                 )}
+                {/* A negative passive income event takes Reputation too (Legal Loopholes stops it), shown as what was actually taken */}
+                {event.eventRepLoss > 0 && (
+                    <div className="event-effect-box event-rep-box">
+                        <img src={reputationIcon} alt="reputation" className="event-rep-icon" />
+                        <span className="event-effect-text event-negative-text">-{event.eventRepLoss} Reputation</span>
+                    </div>
+                )}
                 <button
                     className="closeButton"
                     onMouseEnter={() => playHoverSound()}

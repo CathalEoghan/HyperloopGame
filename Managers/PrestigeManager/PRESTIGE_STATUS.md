@@ -17,7 +17,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 1 | News Column | +5 Reputation on every positive event, on top of anything Improved Accessibility Services gives | App.jsx `fireEvent` |
 | 1 | Resilience | A negative event with a duration (passivePenalty/workPenalty - the three instant-loss ones have none to shorten) lasts half as long | App.jsx `fireEvent` |
 | 1 | Festive Freak | Doubles the six single-day boosts (Halloween, July 4th, New Year's, Christmas, Valentine's, Easter) and the currently-active season/month `seasonBoost` upgrade's effect; does not touch weekday/weekend or time-of-day boosts | EconomyManager `getSpecialDayBonus`, `_applyFestiveFreak` (used by `getCurrentSeasonUpgrade`/`getCurrentMonthUpgrade`) |
-| 1 | Legal Loopholes | Renaming a development costs 10 Reputation instead of 20 | ProgressionManager `getRenameRepCost`, DevelopmentPage |
+| 1 | Legal Loopholes | Renaming a development costs 10 Reputation instead of 20, and a negative passive income event no longer takes its 10 Reputation (`PRESTIGE_VALUES.passiveEventRep`) | ProgressionManager `getRenameRepCost`, DevelopmentPage |
 | 1 | Sign-On Bonus | +£1,500,000 when a new run's starter city connects (added to the balance directly, so it is not earned cash and gives no XP) | App.jsx `signOnPending` |
 | 2 | Colour Theory | A development that earns money, or a newly connected city, opens at Level 1 (no cash or Reputation paid; not applied to developments/cities already built) | ProgressionManager `purchaseDevelopment`, `purchaseCity` |
 | 2 | Oral Hygiene | x2 farewell Reputation (x4 with the x2 upgrade) | `getFarewellRepGain` |
