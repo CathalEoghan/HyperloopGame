@@ -52,6 +52,7 @@ import { ConstructionManager } from "Managers/ConstructionManager/ConstructionMa
 import { PrestigeManager, PRESTIGE_MIN_RANK } from "Managers/PrestigeManager/PrestigeManager.js";
 import { AUTO_WORK_INTERVAL_MS, workClicksDue, autoWorkEnabled } from "Managers/PrestigeManager/autoWork.js";
 import { autoClaimRankUpsEnabled, AUTO_CLAIM_RANKUPS_KEY } from "./utils/autoClaimRankUps.js";
+import { videoMessagePopupsEnabled } from "./utils/videoMessagePopups.js";
 import { bumpLivestreamClicks, livestreamRepFor } from "Managers/PrestigeManager/livestream.js";
 import { PRESTIGE_VALUES } from "Managers/PrestigeManager/prestigeUpgrades.js";
 import { readGrantedCities, writeGrantedCities } from "./utils/grantedCities.js";
@@ -1679,7 +1680,8 @@ function App() {
             // plays on acceptance rather than the moment the popup first appeared.
             const repGain = economyManager.getFarewellRepGain(5, !!depEntry.vip);
             giveFarewellRef.current(depEntry, repGain);
-            setVideoMessageFlashQueue(queue => [...queue, { ...depEntry, repGain }]);
+            // Settings can switch the toast off: it is still sent and paid above, just with nothing shown
+            if (videoMessagePopupsEnabled()) setVideoMessageFlashQueue(queue => [...queue, { ...depEntry, repGain }]);
             return;
           }
           setDepartureQueue(queue => {
@@ -1726,7 +1728,7 @@ function App() {
           if (PrestigeManager.owns('videoMessage')) {
             const repGain = economyManager.getFarewellRepGain(5, !!arrEntry.vip);
             giveFarewellRef.current(arrEntry, repGain);
-            setVideoMessageFlashQueue(queue => [...queue, { ...arrEntry, repGain }]);
+            if (videoMessagePopupsEnabled()) setVideoMessageFlashQueue(queue => [...queue, { ...arrEntry, repGain }]);
             return;
           }
           setDepartureQueue(queue => {
@@ -2596,7 +2598,7 @@ function App() {
         <OnboardingModal
                     onDismiss={() => {
             localStorage.removeItem('hyperloop_onboarding_pending');
-            // A new game's first day counts as already welcomed: the daily bonus ("Welcome back!") starts tomorrow,
+            // A new game's first day counts as already welcomed: the daily bonus ("Hello!") starts tomorrow,
             // rather than on the first reload of day one (bug #181)
             localStorage.setItem('hyperloop_last_login', new Date().toDateString());
             setShowOnboarding(false);

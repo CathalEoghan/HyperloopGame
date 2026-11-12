@@ -32,7 +32,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
         <div className="modal-overlay">
             <div className="daily-login-modal">
                 <p className="daily-login-heading">DAILY BONUS</p>
-                <h2 className="daily-login-title">Welcome back!</h2>
+                <h2 className="daily-login-title">Hello!</h2>
                 <p className="daily-login-subtitle">Your daily reward is ready.</p>
                 <div className="daily-login-rewards">
                     <div className="daily-login-reward-row">

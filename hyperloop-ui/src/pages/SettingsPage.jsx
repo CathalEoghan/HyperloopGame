@@ -21,6 +21,7 @@ import checkIcon from '../assets/misc/check.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { AUTO_WORK_SETTING_KEY, autoWorkEnabled } from 'Managers/PrestigeManager/autoWork.js'
 import { AUTO_CLAIM_RANKUPS_KEY, autoClaimRankUpsEnabled } from '../utils/autoClaimRankUps.js'
+import { VIDEO_MESSAGE_POPUPS_KEY, videoMessagePopupsEnabled } from '../utils/videoMessagePopups.js'
 import './SettingsPage.css'
 
 // Shown next to "Saved" wherever a Settings save button flips to its confirmed state, in place of a plain tick
@@ -163,6 +164,12 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         localStorage.setItem(AUTO_CLAIM_RANKUPS_KEY, enabled)
     }
 
+    const [videoMessagePopups, setVideoMessagePopups] = useState(videoMessagePopupsEnabled())
+    const handleVideoMessagePopupsToggle = (enabled) => {
+        setVideoMessagePopups(enabled)
+        localStorage.setItem(VIDEO_MESSAGE_POPUPS_KEY, enabled)
+    }
+
     const handleEventTintToggle = (enabled) => {
         setEventTint(enabled)
         localStorage.setItem('hyperloop_event_tint', enabled)
@@ -272,6 +279,18 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <OptionBtn active={!autoClaimRankUps} onClick={() => handleAutoClaimToggle(false)}>Off</OptionBtn>
                     </div>
                 </div>
+                {PrestigeManager.owns('videoMessage') && (
+                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                        <div className="settings-label">
+                            <span className="settings-label-title">Video Message Pop-ups</span>
+                            <span className="settings-label-desc">Video Message keeps sending every farewell and welcome for you. Off hides the "Sending your video message" pop-up each time, with no popups and no sound.</span>
+                        </div>
+                        <div className="settings-options">
+                            <OptionBtn active={videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(true)}>On</OptionBtn>
+                            <OptionBtn active={!videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(false)}>Off</OptionBtn>
+                        </div>
+                    </div>
+                )}
                 {PrestigeManager.owns('bestPAEver') && (
                     <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                         <div className="settings-label">
