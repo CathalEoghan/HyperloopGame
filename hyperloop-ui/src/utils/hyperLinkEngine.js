@@ -532,7 +532,7 @@ export function generateOfficialEventPost(gameState) {
     const text = pool[Math.floor(Math.random() * pool.length)]
     const substituted = text
         .replace(/\{terminalName\}/g, () => terminalName)
-        .replace(/\{occasion\}/g, trigger.data?.occasion || 'a big event')
+        .replace(/\{occasion\}/g, (trigger.data?.occasion || 'a big event').replace(/^an? /i, '')) // official posts say "the Grand Prix", not "a Grand Prix"
         .replace(/\{delayedCity\}/g, trigger.data?.delayedCity || '')
         .replace(/\{loopCode\}/g, trigger.data?.loopCode || '')
         .replace(/\{cityCount\}/g, gameState.purchasedCities?.length || 0)
