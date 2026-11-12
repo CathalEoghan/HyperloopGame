@@ -106,15 +106,15 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     const retirePoints = rankPoints + cashPoints
     // How the payout adds up, and how far away the next step is (worth knowing before retiring)
     const pointsPerStep = PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)
-    // The same for cash: 1 per £50M, or 2 with Quick Learner (pointsForCash doubles it just as pointsForRank does) -
+    // The same for cash: 1 per £500M, or 2 with Quick Learner (pointsForCash doubles it just as pointsForRank does) -
     // the text below used to say "1" whatever was owned
     const cashPointsPerStep = PrestigeManager.pointsForCash(CASH_PER_PRESTIGE_POINT)
     const payoutSteps = Math.floor(rank / RANKS_PER_PRESTIGE_POINT)
     const nextStepRank = (payoutSteps + 1) * RANKS_PER_PRESTIGE_POINT
-    // The next £50M milestone, the cash equivalent of nextStepRank above
+    // The next £500M milestone, the cash equivalent of nextStepRank above
     const cashSteps = Math.floor((runStats?.cash ?? 0) / CASH_PER_PRESTIGE_POINT)
     const nextCashStep = (cashSteps + 1) * CASH_PER_PRESTIGE_POINT
-    // How far into the current rank block and £50M block the run is, for the two progress bars in the retire dialog
+    // How far into the current rank block and £500M block the run is, for the two progress bars in the retire dialog
     const rankProgress = Math.min(1, (rank % RANKS_PER_PRESTIGE_POINT) / RANKS_PER_PRESTIGE_POINT)
     const cashProgress = Math.min(1, ((runStats?.cash ?? 0) % CASH_PER_PRESTIGE_POINT) / CASH_PER_PRESTIGE_POINT)
     // What this payout buys: the next layer that isn't complete yet, how many of its upgrades the new total covers
