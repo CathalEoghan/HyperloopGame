@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import helloIcon from '../assets/misc/hello.png'
 import cashIcon from '../assets/misc/cash.png'
 import reputationIcon from '../assets/misc/reputation.png'
@@ -23,6 +23,21 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
     const displayIncome = doubled ? Math.floor(offlineIncome * bonusFactor) : Math.floor(offlineIncome)
     const bonusWord = bonusFactor >= 4 ? 'Quadruple' : bonusFactor >= 3 ? 'Triple' : 'Double'
 
+    // Enter collects, unless a button has focus (then Enter already does that button's own job)
+    const collectRef = useRef(null)
+    useEffect(() => { collectRef.current = () => { playClickSound2(); onCollect(displayIncome) } })
+    useEffect(() => {
+        const onKey = (e) => { if (e.key === 'Enter' && !(e.target instanceof HTMLElement && e.target.closest('button'))) collectRef.current() }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+    }, [])
+
+    // The payout is stepped through the absence hour by hour (it varies with the time of day, the timetable and so
+    // on), so what can honestly be shown is the average it came to over the time that counted: the whole absence, or
+    // the cap if it was longer
+    const countedSeconds = Math.min(offlineSeconds, Number.isFinite(capHours) ? capHours * 3600 : Infinity)
+    const averagePerHour = countedSeconds > 0 ? offlineIncome / (countedSeconds / 3600) : 0
+
     return (
         <div className="modal-overlay">
             <div className="modal offline-modal">
@@ -33,9 +48,13 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                 </p>
                 <div className="offline-earnings-box">
                     <span className="offline-earnings-label">Offline earnings</span>
-                    <span className="offline-earnings-amount" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px' }}>
+                    <span className="offline-earnings-amount">
                         <AbbreviatedNumber value={displayIncome} icon={cashIcon} iconAlt="£" iconSize={22} iconStyle={{ objectFit: 'contain', marginTop: '3px' }} />
-                        {doubled && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold' }}>×{bonusFactor}</span>}
+                    </span>
+                    {/* What the figure is made of, so a multiplier reads as a breakdown rather than as part of the number */}
+                    <span className="offline-earnings-breakdown">
+                        {averagePerHour > 0 && <>Averaging <AbbreviatedNumber value={averagePerHour} suffix="/hr" /></>}
+                        {doubled && <> × {bonusFactor} {bonusWord} earnings</>}
                     </span>
                     <span className="offline-earnings-note">{Number.isFinite(capHours) ? `Capped at ${capHours} hours` : 'No cap on offline earnings'}</span>
                 </div>
@@ -62,12 +81,13 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
     setDoubled(true)
 }}
                     >
-                        {/* The button itself is a flex row (see its style above), so flex centers this icon against
-                            the text already - no relative offset needed, unlike an icon sitting inline in plain text. */}
-                        {/* The trophy icon sits flush to the top of its own canvas (no built-in headroom like text's
-                            ascender space), so centering its box against the text's line box alone leaves it looking
-                            like it's floating above the text - nudging it down a touch brings the two into visual line. */}
-                        {bonusWord} earnings (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20)
+                        {/* The trophy icon sits flush to the top of its own canvas (no built-in headroom like text's ascender space),
+                            so it is nudged down a touch to look level with the text beside it. */}
+                        {canDouble ? (
+                            <>{bonusWord} it for <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20 → <AbbreviatedNumber value={Math.floor(offlineIncome * bonusFactor)} /></>
+                        ) : (
+                            <>{bonusWord} it: needs <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20 (you have {reputation})</>
+                        )}
                     </button>
                 )}
                 <button

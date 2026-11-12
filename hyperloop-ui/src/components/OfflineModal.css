@@ -24,7 +24,6 @@
 
 .offline-earnings-box {
     background: #f8f8f8;
-    border: 2px solid var(--ui-accent, #f5a623);
     border-radius: 12px;
     padding: 16px 24px;
     display: flex;
@@ -37,20 +36,38 @@
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 1.5px;
-    color: #888;
+    color: #666;
     font-family: 'Inter', sans-serif;
 }
 
 .offline-earnings-amount {
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: bold;
-    color: var(--ui-accent, #f5a623);
+    /* the darker shade of the accent: the plain accent orange is hard to read on this pale box */
+    color: color-mix(in srgb, var(--ui-accent, #f5a623) 62%, black);
+    /* the icon and the figure stay on one line (a long figure used to wrap, leaving the icon floating beside two lines) */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    white-space: nowrap;
     font-family: 'Courier New', monospace;
     font-variant-numeric: tabular-nums;
 }
 
 .offline-earnings-note {
     font-size: 0.72rem;
-    color: #aaa;
+    color: #777;
     font-family: 'Inter', sans-serif;
+}
+
+.offline-earnings-breakdown {
+    font-size: 0.78rem;
+    color: #555;
+    font-family: 'Inter', sans-serif;
+    text-align: center;
+}
+
+.offline-earnings-breakdown .abbrev-number {
+    display: inline-flex;
 }
