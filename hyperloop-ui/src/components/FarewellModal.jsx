@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { playLeavingSound, playFarewellVipSound, playFarewellConfirmSound, playBoardHoverSound as playHoverSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
+import PersonalStylingBadge from './PersonalStylingBadge.jsx'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
 import { flagSrc } from '../utils/flagSrc.js'
@@ -53,6 +54,8 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     // that opens just before midnight belongs to tomorrow's 00:05 loop, which a time-of-day check took as gone.
     const gateClosed = !isArrival && Math.ceil(secondsLeft / 60) <= 4
     const repGain = economyManager ? economyManager.getFarewellRepGain(5, !!departure.vip) : 5
+    // Personal Styling Retinue's x3 on the first greet/farewell of the day, named below instead of hiding in the figure
+    const retinue = economyManager ? economyManager.getFirstLoopBonus() : 0
 
     // Guards against a fast double-click crediting the same farewell twice before the parent re-render removes this modal
     const sentRef = useRef(false)
@@ -94,6 +97,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                 <p className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}>
                     {timeDisplay}
                 </p>
+                <PersonalStylingBadge mult={retinue} />
                 {/* Video Message owners never see this modal at all - App.jsx credits and shows their own
                     VideoMessageToast instead (see giveFarewell/the videoMessageFlashQueue render site), since
                     this popup's window can expire and must stay interactive for everyone else. */}

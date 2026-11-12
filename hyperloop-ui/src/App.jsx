@@ -1679,9 +1679,11 @@ function App() {
             // here at trigger time - it's meant to land on "sent", the same way the real popup's confirm sound
             // plays on acceptance rather than the moment the popup first appeared.
             const repGain = economyManager.getFarewellRepGain(5, !!depEntry.vip);
+            // Read before giveFarewell spends it, so the toast can say the Personal Styling Retinue bonus is in this figure
+            const retinue = economyManager.getFirstLoopBonus();
             giveFarewellRef.current(depEntry, repGain);
             // Settings can switch the toast off: it is still sent and paid above, just with nothing shown
-            if (videoMessagePopupsEnabled()) setVideoMessageFlashQueue(queue => [...queue, { ...depEntry, repGain }]);
+            if (videoMessagePopupsEnabled()) setVideoMessageFlashQueue(queue => [...queue, { ...depEntry, repGain, retinue }]);
             return;
           }
           setDepartureQueue(queue => {
@@ -1727,8 +1729,9 @@ function App() {
           // Video Message welcomes them on the spot too - same cosmetic-flash pattern as the departure branch above
           if (PrestigeManager.owns('videoMessage')) {
             const repGain = economyManager.getFarewellRepGain(5, !!arrEntry.vip);
+            const retinue = economyManager.getFirstLoopBonus();
             giveFarewellRef.current(arrEntry, repGain);
-            if (videoMessagePopupsEnabled()) setVideoMessageFlashQueue(queue => [...queue, { ...arrEntry, repGain }]);
+            if (videoMessagePopupsEnabled()) setVideoMessageFlashQueue(queue => [...queue, { ...arrEntry, repGain, retinue }]);
             return;
           }
           setDepartureQueue(queue => {

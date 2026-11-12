@@ -184,3 +184,41 @@
     0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--board-accent-readable, var(--board-accent, #f5a623)) 40%, transparent); }
     50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--board-accent-readable, var(--board-accent, #f5a623)) 0%, transparent); }
 }
+/* Personal Styling Retinue's x3, named on the farewell, greeting, VIP and Video Message popups alike */
+.farewell-retinue {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 4px auto 14px;
+    padding: 6px 14px 6px 6px;
+    width: fit-content;
+    border: 1px solid var(--board-accent-readable, var(--board-accent, #f5a623));
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--board-accent, #f5a623) 14%, transparent);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.farewell-retinue-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
+}
+
+.farewell-retinue-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    line-height: 1.25;
+    color: var(--board-accent-readable, var(--board-accent, #f5a623));
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.farewell-retinue-text strong {
+    font-size: 0.85rem;
+}

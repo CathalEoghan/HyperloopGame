@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { playFarewellVipSound, playLeavingSound, playFarewellAcceptSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
+import PersonalStylingBadge from './PersonalStylingBadge.jsx'
 import cameraIcon from '../assets/misc/camera.png'
 import countryFlags from '../data/countryFlags.js'
 import { flagSrc } from '../utils/flagSrc.js'
@@ -42,6 +43,7 @@ function VideoMessageToast({ entry, onDone }) {
                     )}
                     <span className="farewell-city-name">{entry.name}</span>
                 </div>
+                <PersonalStylingBadge mult={entry.retinue} />
                 <div className="farewell-sending">
                     <p className="farewell-message farewell-sending-text" data-testid="video-message">
                         <span className="farewell-sending-dot" aria-hidden="true" />
