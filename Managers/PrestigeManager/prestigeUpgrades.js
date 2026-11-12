@@ -33,7 +33,7 @@ export const PRESTIGE_VALUES = {
     pizzaParties: 2,                   // x2 positive event strength
     deliveryDronesFootfallFloor: 50,   // Delivery Drones: development footfall never drops below this % (10% without it)
     passiveEventRep: 10,               // Reputation a positive passive-income event pays and a negative one takes (Legal Loopholes: not the negative)
-    newsColumnRep: 5,                  // News Column: +5 Reputation whenever a positive event fires
+    newsColumnFactor: 2,               // News Column: the Reputation a positive event awards is doubled
     resilienceDurationFactor: 0.5,     // Resilience: negative events (the ones with a duration) last x0.5 as long
     festiveFreakFactor: 2,             // Festive Freak: x2 season/month/special-day upgrade bonuses
 }
@@ -52,7 +52,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'legalLoopholes', icon: '📑', layer: 1, name: 'Legal Loopholes', description: `Renaming a development costs half the Reputation, and negative passive income events no longer take Reputation.` },
     { id: 'amicableBreakups', icon: '🤝', layer: 1, name: 'Amicable Breakups', description: 'Disconnecting a city or removing a development costs nothing and refunds half the cost.' },
     { id: 'openingParty', icon: '🎉', layer: 1, name: 'Opening Party', description: 'Connecting a Tier 3 city for the first time in a run immediately clears any active event and starts a new positive one.' },
-    { id: 'newsColumn', icon: '📰', layer: 1, name: 'News Column', description: `Positive events grant a bonus +${V.newsColumnRep} Reputation.` },
+    { id: 'newsColumn', icon: '📰', layer: 1, name: 'News Column', description: `Doubles the Reputation that positive events award.` },
     { id: 'resilience', icon: '💪', layer: 1, name: 'Resilience', description: 'Negative events last half as long.' },
     { id: 'festiveFreak', icon: '🎃', layer: 1, name: 'Festive Freak', description: 'Seasonal, month-specific and special-day upgrade effects are twice as strong.' },
 

@@ -79,7 +79,7 @@ function EventModal({ event, onContinue, terminalName }) {
                         </div>
                     )}
                 </div>
-                {/* Improved Accessibility Services and News Column both pay a flat Reputation bonus on every positive
+                {/* A positive event's Reputation (its own passive boost, Improved Accessibility Services, doubled by News Column) on every positive
                     event, on top of whatever the event itself does - shown here so it isn't only a sound (bug: it used
                     to be paid in total silence). */}
                 {event.eventRepBonus > 0 && (

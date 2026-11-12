@@ -77,7 +77,7 @@ import "./App.css";
 
 // Random events (Under the Weather, bonuses and so on) only start from this Rank, so a new player isn't interrupted before they have found their feet
 const EVENT_MIN_RANK = 3
-// A positive event's Reputation bonuses (News Column, Improved Accessibility Services) play the Reputation sound this long after the event's own
+// A positive event's Reputation (the passive boost's own, Improved Accessibility Services' bonus, News Column's doubling) play the Reputation sound this long after the event's own
 // chime starts: both are about two seconds long, and started together the chime would drown it out
 const EVENT_REPUTATION_SOUND_DELAY_MS = 1000
 // Opening Party only refires if it's been at least this long since the LAST OPENING PARTY. Advanced Engineering
@@ -1193,15 +1193,16 @@ function App() {
     if (event.type === 'positive') achievements.addCounter('positiveEvents');
     else if (event.type === 'negative') achievements.addCounter('negativeEvents');
 
-    // Reputation a positive event pays on top of its effect: Improved Accessibility Services' bonus, and News Column's flat
-    // bonus for every positive event however it fired (the regular roll, Opening Party, a like-triggered roll). Computed
+    // Reputation a positive event pays on top of its effect: Improved Accessibility Services' bonus, doubled by News Column,
+    // however the event fired (the regular roll, Opening Party, a like-triggered roll). Computed
     // before the popup below so it can show "+N Reputation" there too, instead of only playing a sound for it.
     let eventRep = 0;
     if (event.type === 'positive' && economyManager.hasUpgrade('positiveEventReputationBonus')) eventRep += economyManager.getUpgradeSum('positiveEventReputationBonus');
-    if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep += PRESTIGE_VALUES.newsColumnRep;
     // Passive income events carry Reputation of their own: a boost pays it, a penalty takes it (Legal Loopholes spares you the
     // penalty). Reputation can't go below zero, so what the popup shows is what was actually taken.
     if (event.effectType === 'passiveBoost') eventRep += PRESTIGE_VALUES.passiveEventRep;
+    // News Column doubles everything a positive event awards (the passive boost's own 10 and Improved Accessibility Services' bonus alike)
+    if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep *= PRESTIGE_VALUES.newsColumnFactor;
     const eventRepLoss = event.effectType === 'passivePenalty' && !PrestigeManager.owns('legalLoopholes')
       ? Math.min(PRESTIGE_VALUES.passiveEventRep, Math.max(0, Math.floor(progressionManager.reputation)))
       : 0;
