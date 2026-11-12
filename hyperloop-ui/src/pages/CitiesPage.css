@@ -143,6 +143,12 @@
 .city-income-strip-off {
     letter-spacing: 0;
     font-size: 0.66rem;
+    /* the amount is an inline-flex box (icon + number) and the words after it are plain text: left to inline layout their
+       baselines disagree and the figure sits higher than "off timetable", so line them up as one centred row */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
 }
 
 /* Off timetable specifically (not the home terminal, which is expected to earn nothing) reads as a warning:

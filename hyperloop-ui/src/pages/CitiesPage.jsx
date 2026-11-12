@@ -1,3 +1,4 @@
+import { formatCompact } from '../utils/formatCompact.js'
 import { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom'
 import BoostTooltip from '../components/BoostTooltip.jsx'
@@ -682,7 +683,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     onMouseLeave={() => setShowWisdomBonusTip(null)}
                                 >
                                     <span className="city-stat-label" style={{ color: 'white' }}>Generational Wisdom Bonus:</span>
-                                    <strong>+{Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100)}%</strong>
+                                    <strong>+{formatCompact(Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100), 1e9)}%</strong>
                                     <BoostTooltip anchor={showWisdomBonusTip} lines={['Every unspent Prestige Point you currently hold is worth +5% to city and development income - as its own multiplier on top of every other boost (including Reputation bonus), not added together with them.']} text />
                                 </div>
                             )}

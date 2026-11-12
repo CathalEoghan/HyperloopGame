@@ -1,3 +1,4 @@
+import { formatCompact } from '../utils/formatCompact.js'
 import { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT, CASH_PER_PRESTIGE_POINT } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { MAX_RANK } from 'Managers/RankManager/RankManager.js'
@@ -158,7 +159,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 </div>
                 <div className="prestige-points">
                     <span className="prestige-points-label">Prestige Points</span>
-                    <span className="prestige-points-value">{prestige.points}</span>
+                    <span className="prestige-points-value">{formatCompact(prestige.points, 1e9)}</span>
                 </div>
             </div>
 
@@ -212,7 +213,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                         </div>
                                     </div>
                                 </div>
-                                <span className="prestige-reward-balance">Prestige Points: {prestige.points} → <b>{pointsAfter}</b></span>
+                                <span className="prestige-reward-balance">Prestige Points: {formatCompact(prestige.points, 1e9)} → <b>{formatCompact(pointsAfter, 1e9)}</b></span>
                                 {nextLayer && (affordableInLayer > 0
                                     ? <span className="prestige-reward-buys">Enough for {plural(affordableInLayer, 'Layer ' + nextLayer.layer + ' upgrade')} ({plural(nextLayer.cost, 'point')} each)</span>
                                     : <span className="prestige-reward-buys">A Layer {nextLayer.layer} upgrade costs {plural(nextLayer.cost, 'point')}: you'd need {nextLayer.cost - pointsAfter} more</span>)}

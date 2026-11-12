@@ -3,6 +3,7 @@ import BoostTooltip from '../components/BoostTooltip.jsx'
 import IncomeRow from '../components/IncomeRow.jsx'
 import PageIntroModal from '../components/PageIntroModal.jsx'
 import AbbreviatedNumber from '../components/AbbreviatedNumber.jsx'
+import { formatCompact } from '../utils/formatCompact.js'
 import crowdIcon from '../assets/misc/crowd.png'
 import growthIcon from '../assets/misc/growth.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
@@ -26,6 +27,11 @@ import constructionIcon from '../assets/misc/construction.png'
 import fireworksIcon from '../assets/misc/fireworks.png'
 import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
+
+// Experimental Technology doubles in price every claim, so its cost climbs into the billions and beyond: costs from a
+// billion up are shown as "1.28 billion" etc. instead of a row of digits that overflows the button. Everything
+// cheaper keeps its full figure.
+const fmtCash = (n) => formatCompact(n, 1e9)
 
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
@@ -123,7 +129,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const costLineFor = (item) => {
         const cost = costOfDevelopment(item, developmentStartState)
         const parts = []
-        if (cost.cash) parts.push(`${cost.cash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`)
+        if (cost.cash) parts.push(`${fmtCash(cost.cash)}`)
         if (cost.rep) parts.push(`${cost.rep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep`)
         return parts.join(' + ') || '0'
     }
@@ -141,7 +147,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
             `${developAllPlan.toBuy.length} ${developAllPlan.toBuy.length === 1 ? 'development' : 'developments'}`,
             ...bulkBuyFilterNote,
             ...developAllPlan.toBuy.map(item => `${nameOf(item)} — ${costLineFor(item)}`),
-            `Total: ${developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}${developAllPlan.totalRep > 0 ? ` + ${developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep` : ''}`,
+            `Total: ${fmtCash(developAllPlan.totalCash)}${developAllPlan.totalRep > 0 ? ` + ${developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })} Rep` : ''}`,
         ]
         : []
     const developAllExcludingUpgradesLines = developAllExcludingUpgradesPlan.toBuy.length > 0
@@ -149,7 +155,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
             `${developAllExcludingUpgradesPlan.toBuy.length} ${developAllExcludingUpgradesPlan.toBuy.length === 1 ? 'development' : 'developments'}`,
             ...bulkBuyFilterNote,
             ...developAllExcludingUpgradesPlan.toBuy.map(item => `${nameOf(item)} — ${costLineFor(item)}`),
-            `Total: ${developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}`,
+            `Total: ${fmtCash(developAllExcludingUpgradesPlan.totalCash)}`,
         ]
         : []
 
@@ -263,7 +269,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         onMouseLeave={() => setShowBusyTooltip(null)}
                                     >
                                         <span>Generational Wisdom Bonus:</span>
-                                        <strong style={{ color: 'var(--ui-accent-readable, var(--ui-accent, #f5a623))' }}>+{Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100)}%</strong>
+                                        <strong style={{ color: 'var(--ui-accent-readable, var(--ui-accent, #f5a623))' }}>+{formatCompact(Math.round((economyManager.getGenerationalWisdomMultiplier() - 1) * 100), 1e9)}%</strong>
                                     </div>
                                 )}
                                 {economyManager.hasUpgradeByName("Founders' Hall") && (
@@ -303,7 +309,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     Cumulative total after this upgrade: <strong style={{ color: '#333' }}>+{info.totalPct}%</strong>
                                     {info.nextLevel === 10 && <> <img src={fireworksIcon} alt="" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} /> Maximum reached!</>}
                                 </p>
-                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><span className="cost-cash-icon-wrap"><img src={cashIcon} alt="£" className="cash-icon" style={{ border: 'none' }} /></span>{info.cashCost.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                <p>Cost: <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><span className="cost-cash-icon-wrap"><img src={cashIcon} alt="£" className="cash-icon" style={{ border: 'none' }} /></span>{fmtCash(info.cashCost)}
                                     {/* Star Architect Recruitment's discount - already baked into cashCost above, but shown
                                         the same way the Build button flags its own discount, so it isn't invisible here too.
                                         Kept inside the same inline-flex row (rather than after it) so it sits next to the
@@ -464,7 +470,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             }
                                         }}>
                                             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                {developmentVerb(selectedDevelopment.name)} (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                                {developmentVerb(selectedDevelopment.name)} (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{fmtCash(economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost))}
                                                 {(() => {
                                                     const discount = economyManager.getUpgradeSum('developmentDiscount')
                                                     return discount > 0 ? <span className="rename-discount-tag" style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
@@ -613,7 +619,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     >
                                                         <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
                                                             {removal.amicable
-                                                                ? (removal.refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon cash-icon-refund-gap" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{removal.refund.toLocaleString('en-GB', { maximumFractionDigits: 0 })})</>)
+                                                                ? (removal.refund === 0 ? <>Confirm (free)</> : <>Confirm (refund <img className="cash-icon cash-icon-refund-gap" src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0' }} />{fmtCash(removal.refund)})</>)
                                                                 : <>Confirm (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{removal.repCost})</>}
                                                         </span>
                                                     </button>
@@ -724,7 +730,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 Develop all affordable
                                 {developAllPlan.toBuy.length > 0 && (
                                     <span className="bulk-buy-cost">
-                                        (<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                        (<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{fmtCash(developAllPlan.totalCash)}
                                         {developAllPlan.totalRep > 0 && <> + <img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllPlan.totalRep.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>})
                                         {/* Bank's development build discount - already folded into totalCash above, but flagged
                                             the same way the single Build button flags it, so the total isn't a mystery number.
@@ -746,7 +752,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 Develop all affordable, excluding upgrades
                                 {developAllExcludingUpgradesPlan.toBuy.length > 0 && (
                                     <span className="bulk-buy-cost">
-                                        (<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{developAllExcludingUpgradesPlan.totalCash.toLocaleString('en-GB', { maximumFractionDigits: 0 })}
+                                        (<img src={cashIcon} alt="£" className="cash-icon" style={{ width: '12px', height: '12px', verticalAlign: 'middle', border: 'none' }} />{fmtCash(developAllExcludingUpgradesPlan.totalCash)}
                                         {/* Same white-not-accent fix as "Develop all affordable" above. */}
                                         {(() => {
                                             const discount = economyManager.getUpgradeSum('developmentDiscount')
@@ -782,7 +788,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <div className="dev-cost-line">
                                         Cost {development.effectType === 'earlyRetirement'
                                             ? <><img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.effectValue}</>
-                                            : <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{economyManager.calculateDiscountedBuildCost(development.cost).toLocaleString('en-GB', { maximumFractionDigits: 0 })}</>}
+                                            : <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{fmtCash(economyManager.calculateDiscountedBuildCost(development.cost))}</>}
                                     </div>
                                 </div>
                             </div>

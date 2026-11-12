@@ -1,4 +1,5 @@
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { formatCompact } from './formatCompact.js'
 import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { EQUATOR_BONUS_MAX_LATITUDE } from 'Managers/EconomyManager/EconomyManager.js'
 
@@ -26,8 +27,10 @@ export const EFFECT_DESCRIPTIONS = {
     // built, v is already NEXT time's figure: say what it just paid (half of v) and what the next claim will pay.
     prestigePoints: (v, upgrade, owned) => {
         const m = (PrestigeManager.owns('fiveStarResearchers') ? 2 : 1) * (PrestigeManager.owns('fastLearner') ? 2 : 1)
-        if (owned && upgrade?.name === 'Experimental Technology') return `Rewarded ${v / 2 * m} Prestige Points. The next claim pays double: ${v * m} Prestige Points, for double the cost`
-        return `Rewards ${v * m} Prestige Points`
+        // Compact from a million up: it doubles every claim, so it gets into the billions and further
+        const fmt = (n) => formatCompact(n, 1e6)
+        if (owned && upgrade?.name === 'Experimental Technology') return `Rewarded ${fmt(v / 2 * m)} Prestige Points. The next claim pays double: ${fmt(v * m)} Prestige Points, for double the cost`
+        return `Rewards ${fmt(v * m)} Prestige Points`
     },
     connectionBoost: (v) => `+${pct(v)}% income from all city connections`,
     workClickBonus: () => `+45% Work click earnings`,
