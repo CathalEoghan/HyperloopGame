@@ -84,9 +84,9 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                         {/* The trophy icon sits flush to the top of its own canvas (no built-in headroom like text's ascender space),
                             so it is nudged down a touch to look level with the text beside it. */}
                         {canDouble ? (
-                            <>{bonusWord} it for <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20 → <AbbreviatedNumber value={Math.floor(offlineIncome * bonusFactor)} /></>
+                            <span>{bonusWord} it for <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px', margin: '0 3px' }} />20 (<AbbreviatedNumber value={Math.floor(offlineIncome * bonusFactor)} />)</span>
                         ) : (
-                            <>{bonusWord} it: needs <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20 (you have {reputation})</>
+                            <span>{bonusWord} it: needs <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px', margin: '0 3px' }} />20 (you have {reputation})</span>
                         )}
                     </button>
                 )}
