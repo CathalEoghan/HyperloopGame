@@ -22,7 +22,10 @@ const POPULATION_INCOME_MODIFIER = 0.0001 * INCOME_SCALE;
 const VIP_BASE_CHANCE = 0.02;
 const VIP_REP_MULTIPLIER = 5;
 
+// Tier 0 is the Antarctic Peninsula: a research base that sees about 20 people a departure, so it earns tier 1's
+// rate per passenger (£40 a day each) and no more - a little pocket money, not a real line.
 const TIER_INCOME = {
+    0: 800 * INCOME_SCALE,
     1: 10000 * INCOME_SCALE,
     2: 50000 * INCOME_SCALE,
     3: 100000 * INCOME_SCALE
@@ -1060,6 +1063,13 @@ export class EconomyManager {
         let last = null;
         try { last = localStorage.getItem('hyperloop_last_farewell_date'); } catch { /* storage unavailable */ }
         return last !== new Date().toDateString();
+    }
+
+    // The Personal Styling Retinue multiplier that applies to the next greet/farewell (3 while today's bonus is unclaimed),
+    // or 0 when it doesn't - so the popups can name it instead of it being folded invisibly into the Reputation figure.
+    getFirstLoopBonus() {
+        const mult = this.getUpgradeSum('firstLoopTripleRep');
+        return mult > 0 && this.isFirstLoopToday() ? mult : 0;
     }
 
     // The chance that a departure's passenger is a VIP, rolled when its farewell window opens.

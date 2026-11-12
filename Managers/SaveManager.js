@@ -156,6 +156,9 @@ const SETTINGS_KEYS = [
     // Best P.A. Ever's On/Off. A retire keeps it, so a player who switched it off stays switched off in every new run
     // (Couch Potato needs a run with no Work presses at all, which auto-clicks would spoil)
     'hyperloop_auto_work',
+    // Auto-claim rank-ups: kept across a retire like the other settings
+    'hyperloop_auto_claim_rankups',
+    'hyperloop_video_message_popups',
     'globeNightMode',
     'globeQuality',
     'globeView',
