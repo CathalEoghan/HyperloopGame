@@ -83,9 +83,9 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                     >
                         {/* The trophy icon is flush to its own canvas, so it sits a couple of px lower to look level with the text */}
                         {canDouble ? (
-                            <span>Double it for <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px', margin: '0 3px' }} />20 (<AbbreviatedNumber value={cashBonus * 2} />)</span>
+                            <span>Double it for <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '-1px', margin: '0 3px' }} />20 (<AbbreviatedNumber value={cashBonus * 2} />)</span>
                         ) : (
-                            <span>Double it: needs <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px', margin: '0 3px' }} />20 (you have {reputation})</span>
+                            <span>Double it: needs <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '-1px', margin: '0 3px' }} />20 (you have {reputation})</span>
                         )}
                     </button>
                 )}
