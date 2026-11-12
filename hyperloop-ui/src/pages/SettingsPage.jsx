@@ -282,7 +282,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 {PrestigeManager.owns('videoMessage') && (
                     <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                         <div className="settings-label">
-                            <span className="settings-label-title">Video Message Pop-ups</span>
+                            <span className="settings-label-title">Video Message Pop-Ups</span>
                             <span className="settings-label-desc">Video Message keeps sending every farewell and welcome for you. Off hides the "Sending your video message" pop-up each time, with no popups and no sound.</span>
                         </div>
                         <div className="settings-options">
