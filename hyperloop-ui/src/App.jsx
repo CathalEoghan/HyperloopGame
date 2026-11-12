@@ -128,9 +128,11 @@ function readSavedCityOffer(progressionManager, waitingRankUps) {
 // pile up behind the welcome popup.
 const onboardingPending = () => localStorage.getItem('hyperloop_onboarding_pending') === '1';
 const SECONDS_IN_A_DAY = 86400;
-// A positive instant-cash event (Government Grant, Prestigious Award, Insurance Payout) pays 10% of a day's
-// income - which is £0 if nothing is earning yet (e.g. a freshly unlocked city with no developments built).
-// A reward that gives nothing reads as broken, so it never pays out less than this floor.
+// A positive instant-cash event (Government Grant, Prestigious Award, Insurance Payout) pays 5% of a day's income
+// (it was 10%, which with how often these fire made lump payments a major income source; Pizza Parties still doubles it).
+const INSTANT_CASH_DAY_FRACTION = 0.05;
+// That is £0 if nothing is earning yet (e.g. a freshly unlocked city with no developments built). A reward that
+// gives nothing reads as broken, so it never pays out less than this floor.
 const MIN_INSTANT_CASH_BONUS = 10000;
 // Same problem in reverse for the negative instant-cash-loss events (Lawsuit Filed, Regulatory Fine, Emergency
 // Repairs): they cost 2% of a day's income, which is £0 for a new or quiet terminal and reads as a broken event.
@@ -1198,7 +1200,7 @@ function App() {
     if (event.type === 'positive' && PrestigeManager.owns('newsColumn')) eventRep += PRESTIGE_VALUES.newsColumnRep;
 
     if (event.effectType === 'instantCash') {
-      const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * SECONDS_IN_A_DAY * 0.1) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
+      const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * SECONDS_IN_A_DAY * INSTANT_CASH_DAY_FRACTION) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
       const bonus = Math.max(rawBonus, MIN_INSTANT_CASH_BONUS);
       progressionManager.addCash(bonus);
       // Pizza Parties doubled this already (see rawBonus above) - flagged the same way the duration
