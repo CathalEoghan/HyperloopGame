@@ -4,9 +4,9 @@ export const PRESTIGE_KEY = 'hyperloop_prestige'
 export const PRESTIGE_HISTORY_KEY = 'hyperloop_prestige_history'
 // Prestige Points for ending a run: 1 for every 50 ranks reached (2 at Rank 100)
 export const RANKS_PER_PRESTIGE_POINT = 50
-// ...plus 1 for every £50M earned this run. Rank caps out at 354 (one point per city, bar the Antarctic Peninsula), but cash never does, so
+// ...plus 1 for every £500M earned this run. Rank caps out at 354 (one point per city, bar the Antarctic Peninsula), but cash never does, so
 // this is what keeps a run worth ending even once every rank-up has already happened.
-export const CASH_PER_PRESTIGE_POINT = 50000000
+export const CASH_PER_PRESTIGE_POINT = 500000000
 export const PRESTIGE_MIN_RANK = 50
 // Past runs kept for the history list and the Retirement count (a run takes hours, so this is never reached in practice)
 const HISTORY_LIMIT = 1000
