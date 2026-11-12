@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { playClickSound2, playHoverSound, playDailyLoginSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import cashIcon from '../assets/misc/cash.png'
-import officialLogo from '../assets/misc/officialLogo.png'
 import AbbreviatedNumber from './AbbreviatedNumber.jsx'
 import './DailyLoginModal.css'
 
@@ -17,24 +16,37 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
         playDailyLoginSound()
     }, [])
 
+    // Enter collects, unless a button has focus (then Enter already does that button's own job)
+    const collectRef = useRef(null)
+    useEffect(() => { collectRef.current = () => { playClickSound2(); onCollect(displayBonus) } })
+    useEffect(() => {
+        const onKey = (e) => { if (e.key === 'Enter' && !(e.target instanceof HTMLElement && e.target.closest('button'))) collectRef.current() }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+    }, [])
+
+    // What the headline figure is made of, so the multipliers read as a breakdown rather than as part of the number
+    const multipliers = [interestBoosted && '10 Better Interest Rates', doubled && '2 Double bonus'].filter(Boolean)
+
     return (
         <div className="modal-overlay">
             <div className="daily-login-modal">
-                <p className="daily-login-heading"><img src={officialLogo} alt="Hyperloop Empire" className="daily-login-heading-logo" /> DAILY BONUS</p>
+                <p className="daily-login-heading">DAILY BONUS</p>
                 <h2 className="daily-login-title">Welcome back!</h2>
-                <p className="daily-login-subtitle">Your terminal has been busy while you were away. Here's your daily reward:</p>
+                <p className="daily-login-subtitle">Your daily reward is ready.</p>
                 <div className="daily-login-rewards">
                     <div className="daily-login-reward-row">
                         <img src={cashIcon} alt="cash" className="daily-login-icon" />
                         <span className="daily-login-reward-text">
                             <AbbreviatedNumber value={displayBonus} />
-                            {doubled && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×2</span>}
-                            {/* Better Interest Rates already multiplied this by x10 before it ever reached this modal -
-                                flagged the same way the player's own double-bonus choice is, so it isn't the only
-                                multiplier on this number with nothing explaining it. */}
-                            {interestBoosted && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.8rem', fontWeight: 'bold', marginLeft: '6px' }}>×10 (Better Interest Rates)</span>}
                         </span>
                     </div>
+                    {multipliers.length > 0 && (
+                        <p className="daily-login-breakdown">
+                            <AbbreviatedNumber value={cashBonus / (interestBoosted ? 10 : 1)} />
+                            {multipliers.map(m => <span key={m}> × {m}</span>)}
+                        </p>
+                    )}
                     {repBonus > 0 && (
                         <div className="daily-login-reward-row">
                             <img src={reputationIcon} alt="reputation" className="daily-login-icon" />
@@ -69,10 +81,12 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                             setDoubled(true)
                         }}
                     >
-                        {/* Same nudge as OfflineModal's identical "Double/Triple earnings" button: the trophy icon
-                            is flush to its own canvas with no ascender-style headroom, so it needs to sit a couple
-                            of px lower than its box-center to look level with the text next to it. */}
-                        Double bonus (<img src={reputationIcon} alt="rep" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20)
+                        {/* The trophy icon is flush to its own canvas, so it sits a couple of px lower to look level with the text */}
+                        {canDouble ? (
+                            <>Double it for <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20 → <AbbreviatedNumber value={cashBonus * 2} /></>
+                        ) : (
+                            <>Double it: needs <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '2px' }} />20 (you have {reputation})</>
+                        )}
                     </button>
                 )}
                 <button
@@ -83,6 +97,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                 >
                     Collect
                 </button>
+                <p className="daily-login-next">Next daily bonus: tomorrow</p>
             </div>
         </div>
     )
