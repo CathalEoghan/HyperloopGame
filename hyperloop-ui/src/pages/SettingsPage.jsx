@@ -249,60 +249,18 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
             </h1>
 
             <div className="settings-section">
-                <h2 className="settings-section-title"><SectionIcon src={terminalIcon} />Terminal</h2>
+                <h2 className="settings-section-title"><SectionIcon src={bellIcon} />Alerts</h2>
                 <div className="settings-row">
                     <div className="settings-label">
-                        <span className="settings-label-title">Terminal Name</span>
-                        <span className="settings-label-desc">The name displayed in the top banner.</span>
-                    </div>
-                    <div className="settings-name-input-row">
-                        <input
-                            className="settings-name-input"
-                            type="text"
-                            value={nameInput}
-                            maxLength={32}
-                            onChange={e => { setNameInput(e.target.value); setNameSaved(false) }}
-                            onKeyDown={e => e.key === 'Enter' && handleNameSave()}
-                        />
-                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); handleNameSave(); }}>
-                            {nameSaved ? <>{savedCheckEl}Saved</> : 'Save'}
-                        </button>
-                    </div>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
-                        <span className="settings-label-title">Auto-Claim Rank-Ups</span>
-                        <span className="settings-label-desc">Claims every rank-up for you with a random city, silently in the background with no popups. You give up choosing and re-rolling.</span>
+                        <span className="settings-label-title">Browser Notifications</span>
+                        <span className="settings-label-desc">Get a notification when a departure, arrival, delay, event or rank-up needs you while this tab is in the background. They are shown by your browser on this device. Either way, the tab title shows how many things are waiting.</span>
+                        {notifyMessage && <span className="settings-label-desc" style={{ color: '#c0392b' }}>{notifyMessage}</span>}
                     </div>
                     <div className="settings-options">
-                        <OptionBtn active={autoClaimRankUps} onClick={() => handleAutoClaimToggle(true)}>On</OptionBtn>
-                        <OptionBtn active={!autoClaimRankUps} onClick={() => handleAutoClaimToggle(false)}>Off</OptionBtn>
+                        <OptionBtn active={notify} onClick={() => handleNotifyToggle(true)}>On</OptionBtn>
+                        <OptionBtn active={!notify} onClick={() => handleNotifyToggle(false)}>Off</OptionBtn>
                     </div>
                 </div>
-                {PrestigeManager.owns('videoMessage') && (
-                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                        <div className="settings-label">
-                            <span className="settings-label-title">Video Message Pop-Ups</span>
-                            <span className="settings-label-desc">Video Message keeps sending every farewell and welcome for you. Off hides the "Sending your video message" pop-up each time, with no popups and no sound.</span>
-                        </div>
-                        <div className="settings-options">
-                            <OptionBtn active={videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(true)}>On</OptionBtn>
-                            <OptionBtn active={!videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(false)}>Off</OptionBtn>
-                        </div>
-                    </div>
-                )}
-                {PrestigeManager.owns('bestPAEver') && (
-                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                        <div className="settings-label">
-                            <span className="settings-label-title">Best P.A. Ever</span>
-                            <span className="settings-label-desc">Your assistant presses Work for you. Turn it off to press Work yourself.</span>
-                        </div>
-                        <div className="settings-options">
-                            <OptionBtn active={autoWork} onClick={() => handleAutoWorkToggle(true)}>On</OptionBtn>
-                            <OptionBtn active={!autoWork} onClick={() => handleAutoWorkToggle(false)}>Off</OptionBtn>
-                        </div>
-                    </div>
-                )}
             </div>
 
             <div className="settings-section">
@@ -332,7 +290,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <div className={`version-log-drop ${soundVolOpen ? 'version-log-drop-open' : ''}`}>
                 <div className="version-log-drop-inner">
                 <div className="sound-volumes-list">
-                    {SOUND_CATEGORIES.map(({ key, label }) => (
+                    {[...SOUND_CATEGORIES].sort((a, b) => (a.key === 'master' ? -1 : b.key === 'master' ? 1 : a.label.localeCompare(b.label))).map(({ key, label }) => (
                         <div className="sound-volume-row" key={key}>
                             <span className="sound-volume-label">{label}</span>
                             <input
@@ -359,35 +317,6 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
             </div>
 
-            <div className="settings-section">
-                <h2 className="settings-section-title"><SectionIcon src={bellIcon} />Alerts</h2>
-                <div className="settings-row">
-                    <div className="settings-label">
-                        <span className="settings-label-title">Browser Notifications</span>
-                        <span className="settings-label-desc">Get a notification when a departure, arrival, delay, event or rank-up needs you while this tab is in the background. They are shown by your browser on this device. Either way, the tab title shows how many things are waiting.</span>
-                        {notifyMessage && <span className="settings-label-desc" style={{ color: '#c0392b' }}>{notifyMessage}</span>}
-                    </div>
-                    <div className="settings-options">
-                        <OptionBtn active={notify} onClick={() => handleNotifyToggle(true)}>On</OptionBtn>
-                        <OptionBtn active={!notify} onClick={() => handleNotifyToggle(false)}>Off</OptionBtn>
-                    </div>
-                </div>
-            </div>
-
-            <div className="settings-section">
-                <h2 className="settings-section-title"><SectionIcon src={rulerIcon} />Units</h2>
-                <div className="settings-row">
-                    <div className="settings-label">
-                        <span className="settings-label-title">Distance</span>
-                        <span className="settings-label-desc">Show distances in miles or kilometres, such as the Longest route and Total distance travelled on the Progress page.</span>
-                    </div>
-                    <div className="settings-options">
-                        <OptionBtn active={distanceUnit === 'mi'} onClick={() => handleDistanceUnit('mi')}>Miles</OptionBtn>
-                        <OptionBtn active={distanceUnit === 'km'} onClick={() => handleDistanceUnit('km')}>Kilometres</OptionBtn>
-                    </div>
-                </div>
-            </div>
-
             {fullscreenSupported() && (
                 <div className="settings-section">
                     <h2 className="settings-section-title"><SectionIcon src={monitorSectionIcon} />Display</h2>
@@ -408,14 +337,12 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <h2 className="settings-section-title"><SectionIcon src={imageIcon} />Graphics</h2>
                 <div className="settings-row">
                     <div className="settings-label">
-                        <span className="settings-label-title">Globe Texture Quality</span>
-                        <span className="settings-label-desc">Higher quality requires more loading time. Auto picks for your device: Max on the most capable computers, Ultra on other capable ones, Standard on slower ones. Changes take effect on next visit to the home screen.</span>
+                        <span className="settings-label-title">Event Screen Tint</span>
+                        <span className="settings-label-desc">Subtle gold or red tint when a positive or negative event is active.</span>
                     </div>
                     <div className="settings-options">
-                        <OptionBtn active={globeQuality === 'auto'} onClick={() => handleQualityChange('auto')}>Auto ({{ '2k': 'Standard', '8k': 'Ultra', '16k': 'Max' }[autoGlobeQuality()]})</OptionBtn>
-                        <OptionBtn active={globeQuality === '2k'} onClick={() => handleQualityChange('2k')}>Standard (2K)</OptionBtn>
-                        <OptionBtn active={globeQuality === '8k'} onClick={() => handleQualityChange('8k')}>Ultra (8K)</OptionBtn>
-                        <OptionBtn active={globeQuality === '16k'} onClick={() => handleQualityChange('16k')}>Max (16K)</OptionBtn>
+                        <OptionBtn active={eventTint} onClick={() => handleEventTintToggle(true)}>On</OptionBtn>
+                        <OptionBtn active={!eventTint} onClick={() => handleEventTintToggle(false)}>Off</OptionBtn>
                     </div>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
@@ -430,12 +357,14 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
-                        <span className="settings-label-title">Event Screen Tint</span>
-                        <span className="settings-label-desc">Subtle gold or red tint when a positive or negative event is active.</span>
+                        <span className="settings-label-title">Globe Texture Quality</span>
+                        <span className="settings-label-desc">Higher quality requires more loading time. Auto picks for your device: Max on the most capable computers, Ultra on other capable ones, Standard on slower ones. Changes take effect on next visit to the home screen.</span>
                     </div>
                     <div className="settings-options">
-                        <OptionBtn active={eventTint} onClick={() => handleEventTintToggle(true)}>On</OptionBtn>
-                        <OptionBtn active={!eventTint} onClick={() => handleEventTintToggle(false)}>Off</OptionBtn>
+                        <OptionBtn active={globeQuality === 'auto'} onClick={() => handleQualityChange('auto')}>Auto ({{ '2k': 'Standard', '8k': 'Ultra', '16k': 'Max' }[autoGlobeQuality()]})</OptionBtn>
+                        <OptionBtn active={globeQuality === '2k'} onClick={() => handleQualityChange('2k')}>Standard (2K)</OptionBtn>
+                        <OptionBtn active={globeQuality === '8k'} onClick={() => handleQualityChange('8k')}>Ultra (8K)</OptionBtn>
+                        <OptionBtn active={globeQuality === '16k'} onClick={() => handleQualityChange('16k')}>Max (16K)</OptionBtn>
                     </div>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
@@ -446,6 +375,77 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <div className="settings-options">
                         <OptionBtn active={splitFlap} onClick={() => handleSplitFlapToggle(true)}>On</OptionBtn>
                         <OptionBtn active={!splitFlap} onClick={() => handleSplitFlapToggle(false)}>Off</OptionBtn>
+                    </div>
+                </div>
+            </div>
+
+            <div className="settings-section">
+                <h2 className="settings-section-title"><SectionIcon src={terminalIcon} />Terminal</h2>
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Auto-Claim Rank-Ups</span>
+                        <span className="settings-label-desc">Claims every rank-up for you with a random city, silently in the background with no popups. You give up choosing and re-rolling.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={autoClaimRankUps} onClick={() => handleAutoClaimToggle(true)}>On</OptionBtn>
+                        <OptionBtn active={!autoClaimRankUps} onClick={() => handleAutoClaimToggle(false)}>Off</OptionBtn>
+                    </div>
+                </div>
+                {PrestigeManager.owns('bestPAEver') && (
+                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                        <div className="settings-label">
+                            <span className="settings-label-title">Best P.A. Ever</span>
+                            <span className="settings-label-desc">Your assistant presses Work for you. Turn it off to press Work yourself.</span>
+                        </div>
+                        <div className="settings-options">
+                            <OptionBtn active={autoWork} onClick={() => handleAutoWorkToggle(true)}>On</OptionBtn>
+                            <OptionBtn active={!autoWork} onClick={() => handleAutoWorkToggle(false)}>Off</OptionBtn>
+                        </div>
+                    </div>
+                )}
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Terminal Name</span>
+                        <span className="settings-label-desc">The name displayed in the top banner.</span>
+                    </div>
+                    <div className="settings-name-input-row">
+                        <input
+                            className="settings-name-input"
+                            type="text"
+                            value={nameInput}
+                            maxLength={32}
+                            onChange={e => { setNameInput(e.target.value); setNameSaved(false) }}
+                            onKeyDown={e => e.key === 'Enter' && handleNameSave()}
+                        />
+                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); handleNameSave(); }}>
+                            {nameSaved ? <>{savedCheckEl}Saved</> : 'Save'}
+                        </button>
+                    </div>
+                </div>
+                {PrestigeManager.owns('videoMessage') && (
+                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                        <div className="settings-label">
+                            <span className="settings-label-title">Video Message Pop-Ups</span>
+                            <span className="settings-label-desc">Video Message keeps sending every farewell and welcome for you. Off hides the "Sending your video message" pop-up each time, with no popups and no sound.</span>
+                        </div>
+                        <div className="settings-options">
+                            <OptionBtn active={videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(true)}>On</OptionBtn>
+                            <OptionBtn active={!videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(false)}>Off</OptionBtn>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            <div className="settings-section">
+                <h2 className="settings-section-title"><SectionIcon src={rulerIcon} />Units</h2>
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Distance</span>
+                        <span className="settings-label-desc">Show distances in miles or kilometres, such as the Longest route and Total distance travelled on the Progress page.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={distanceUnit === 'mi'} onClick={() => handleDistanceUnit('mi')}>Miles</OptionBtn>
+                        <OptionBtn active={distanceUnit === 'km'} onClick={() => handleDistanceUnit('km')}>Kilometres</OptionBtn>
                     </div>
                 </div>
             </div>
