@@ -918,9 +918,9 @@ function App() {
   };
 
   // One press of Work. A manual press counts towards the Work achievements and plays the bonus sound;
-  // Best P.A. Ever's presses (auto) earn the same money and Reputation, quietly - including the Livestream
-  // Everything / Streaming Mastery bonus, which counts every press either way (only the achievement counter
-  // stays manual-only).
+  // Best P.A. Ever's presses (auto) earn the same money and Reputation, quietly - except that a Livestream
+  // Everything / Streaming Mastery payout still plays the Reputation sound. Those bonuses count every press either
+  // way (only the achievement counter stays manual-only).
   const [autoWorkTick, setAutoWorkTick] = useState(null);
   const performWork = (onRepGain, { auto = false } = {}) => {
     // Nothing is earned until the welcome popup is closed (bug #159)
@@ -936,7 +936,8 @@ function App() {
     if (repEarned > 0) {
       progressionManager.addReputation(repEarned);
       setReputation(shownReputation());
-      if (!auto) playReputationWorkBonusSound();
+      // Best P.A. Ever's ordinary Reputation procs stay silent, but a Livestream Everything / Streaming Mastery payout is rare enough to deserve the sound
+      if (!auto || livestreamRep > 0) playReputationWorkBonusSound();
     }
     // The fourth argument says this press paid the Livestream bonus, so the Work button can shout about it
     onRepGain?.(earned, repEarned > 0, repEarned, livestreamRep > 0);
