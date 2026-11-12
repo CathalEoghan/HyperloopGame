@@ -49,11 +49,11 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                 <div className="offline-earnings-box">
                     <span className="offline-earnings-label">Offline earnings</span>
                     <span className="offline-earnings-amount">
-                        <AbbreviatedNumber value={displayIncome} icon={cashIcon} iconAlt="£" iconSize={22} iconStyle={{ objectFit: 'contain', marginTop: '3px' }} />
+                        <AbbreviatedNumber value={displayIncome} icon={cashIcon} iconAlt="£" iconSize={22} iconStyle={{ objectFit: 'contain', marginTop: '3px' }} exact={false} />
                     </span>
                     {/* What the figure is made of, so a multiplier reads as a breakdown rather than as part of the number */}
                     <span className="offline-earnings-breakdown">
-                        {averagePerHour > 0 && <>Averaging <AbbreviatedNumber value={averagePerHour} suffix="/hr" /></>}
+                        {averagePerHour > 0 && <>Averaging <AbbreviatedNumber value={averagePerHour} suffix="/hr" exact={false} /></>}
                         {doubled && <> × {bonusFactor} {bonusWord} earnings</>}
                     </span>
                     <span className="offline-earnings-note">{Number.isFinite(capHours) ? `Capped at ${capHours} hours` : 'No cap on offline earnings'}</span>

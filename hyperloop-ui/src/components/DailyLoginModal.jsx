@@ -38,12 +38,12 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                     <div className="daily-login-reward-row">
                         <img src={cashIcon} alt="cash" className="daily-login-icon" />
                         <span className="daily-login-reward-text">
-                            <AbbreviatedNumber value={displayBonus} />
+                            <AbbreviatedNumber value={displayBonus} exact={false} />
                         </span>
                     </div>
                     {multipliers.length > 0 && (
                         <p className="daily-login-breakdown">
-                            <AbbreviatedNumber value={cashBonus / (interestBoosted ? 10 : 1)} />
+                            <AbbreviatedNumber value={cashBonus / (interestBoosted ? 10 : 1)} exact={false} />
                             {multipliers.map(m => <span key={m}> × {m}</span>)}
                         </p>
                     )}
