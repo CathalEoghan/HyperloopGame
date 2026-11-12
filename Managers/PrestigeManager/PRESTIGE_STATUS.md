@@ -33,11 +33,11 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 3 | Pizza Parties | Positive events twice as strong (x2 effect and instant cash) | App.jsx event trigger |
 | 3 | Irresistible Discounts | x3 development income | `getPrestigeDevMultiplier` |
 | 3 | Bulletproof Planning | No delays | App.jsx delay block |
-| 3 | Founders Hall Expansion | Founders' Hall flat rate 5% to 10% per day the terminal has existed (lifetime, not reset by a prestige) | `getFoundersHallMultiplier` |
+| 3 | Founders' Hall Expansion | Founders' Hall flat rate 5% to 10% per day the terminal has existed (lifetime, not reset by a prestige) | `getFoundersHallMultiplier` |
 | 3 | Trophy Cabinet | City and development income x(1 + 2% per unique achievement), x2 at 50 (passive income only, not Work) | `getTrophyCabinetMultiplier` |
 | 3 | Delivery Drones | Development footfall never drops below 50% (10% without it) and starts there, so each loop's +5% adds on top: 10 loops fill the terminal instead of 18 | `getDevelopmentBusyFloor` |
 | 3 | Five-Star Researchers | Doubles Experimental Technology's Prestige Point reward (whatever tier it's currently on) | `PrestigeManager.award` |
-| 4 | Fast Learner | Prestige Points gained are doubled (applied after Five-Star) | `PrestigeManager.award` |
+| 4 | Quick Learner | Prestige Points gained are doubled (applied after Five-Star) | `PrestigeManager.award` |
 | 4 | Speedy Conveyor Belts | x2 Work earnings, on top of the Work upgrades and Anniversary Sales | `getWorkMultiplier` |
 | 4 | Global Ticket Cuts | x3 city income | `getPrestigeCityMultiplier` |
 | 4 | Crisis Avoidance Specialists | No negative events | App.jsx event trigger |
@@ -59,9 +59,9 @@ None: all 36 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 
 ## Prestige runs
 
-- Points for a run: 1 per 50 ranks reached (2 at Rank 100), doubled by Fast Learner. Five-Star Researchers only affects Experimental Technology.
+- Points for a run: 1 per 50 ranks reached (2 at Rank 100) plus 1 per £500M of cash earned that run (`CASH_PER_PRESTIGE_POINT`), both doubled by Quick Learner. Five-Star Researchers only affects Experimental Technology.
 - Retire resets: cash, rank, Reputation, cities, developments, upgrades, milestones, farewell count, and the Livestream click count (`hyperloop_livestream_clicks`; the Work button total on the Progress page is a separate lifetime count that a prestige keeps). Founders' Hall's own clock (the terminal's lifetime creation date) and Experimental Technology's claim tier are not reset either - see `getLifetimeCreatedAt` in SaveManager.js and ProgressionManager's `lifetimeExperimentalTechClaims`.
-- Retire keeps: Prestige Points and upgrades, run history, terminal name, Hyper-Link likes, and the daily-bonus and first-farewell date stamps (so a new run can't be handed today's bonuses twice).
+- Retire keeps: Prestige Points and upgrades, Shop purchases, achievements, Settings-page choices, run history, terminal name, Hyper-Link likes, and the daily-bonus and first-farewell date stamps (so a new run can't be handed today's bonuses twice).
 - New run: a fresh start screen; the starter city is drawn (Personal Favours lets you choose any city). No first-time walkthrough.
 - Each finished run is logged (`hyperloop_prestige_history`) and shown under Past runs.
 - Experimental Technology is a reward of the Antarctic Peninsula, which only opens once every regular city is connected, so claiming it needs a complete run. It starts at 10 Prestige Points for £10,000,000 and doubles both figures (always £1,000,000 per point) every time it's actually claimed, lifetime across every run - see `lifetimeExperimentalTechClaims` and `UpgradeManager/ExperimentalTechnology.js`.

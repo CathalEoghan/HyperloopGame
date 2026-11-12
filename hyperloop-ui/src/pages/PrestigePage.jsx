@@ -143,7 +143,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 <PageIntroModal title="Welcome to Prestige" onClose={closeIntro} points={[
                     { icon: starIcon, text: <>Once you've unlocked <strong>Early Retirement</strong>, retiring ends this run early in exchange for Prestige Points - earned from both your rank and the cash you've made this run.</> },
                     { icon: padlockIcon, text: <>Spend Prestige Points on <strong>permanent upgrades</strong> across several layers - each layer unlocks once every upgrade in the one before it is owned.</> },
-                    { icon: trophyIcon, text: <>Prestige Points and upgrades are <strong>kept forever</strong>, even after retiring - only the current run's cash, rank, cities and developments reset.</> },
+                    { icon: trophyIcon, text: <>Prestige Points and upgrades are <strong>kept forever</strong>, even after retiring - only the current run's cash, rank, Reputation, cities, developments and milestones reset.</> },
                 ]} />
             )}
             {showPAInfo && (
