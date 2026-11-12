@@ -2,7 +2,7 @@
     display: none;
 }
 
-.abbrev-number:hover .abbrev-number-compact {
+.abbrev-number:hover .abbrev-number-compact:not(:last-child) {
     display: none;
 }
 

@@ -43,8 +43,7 @@
 .offline-earnings-amount {
     font-size: 1.8rem;
     font-weight: bold;
-    /* the darker shade of the accent: the plain accent orange is hard to read on this pale box */
-    color: color-mix(in srgb, var(--ui-accent, #f5a623) 62%, black);
+    color: var(--ui-accent, #f5a623);
     /* the icon and the figure stay on one line (a long figure used to wrap, leaving the icon floating beside two lines) */
     display: flex;
     align-items: center;
