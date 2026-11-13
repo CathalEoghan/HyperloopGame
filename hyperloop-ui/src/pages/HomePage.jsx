@@ -519,8 +519,11 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     vec4 dayColor = texture2D(dayTexture, vUv);
                     vec4 nightColor = texture2D(nightTexture, vUv) * 1.8;
                     float cosAngle = dot(vNormal, sunDirection);
-                    float blend = nightMode > 0.5 ? smoothstep(-0.1, 0.2, cosAngle) : 1.0;
-                    gl_FragColor = mix(nightColor, dayColor, blend);
+                    // A wide, soft dawn/dusk band, and the day side easing down towards it, so the two textures meet
+                    // gradually instead of at a visible line (the day ocean is much brighter than the night one)
+                    float blend = nightMode > 0.5 ? smoothstep(-0.15, 0.4, cosAngle) : 1.0;
+                    float dusk = nightMode > 0.5 ? mix(0.45, 1.0, smoothstep(-0.05, 0.6, cosAngle)) : 1.0;
+                    gl_FragColor = mix(nightColor, vec4(dayColor.rgb * dusk, dayColor.a), blend);
                 }
             `,
         })

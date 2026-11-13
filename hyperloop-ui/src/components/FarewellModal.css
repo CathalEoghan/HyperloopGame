@@ -231,10 +231,13 @@
 }
 
 .farewell-local {
+    color: #e8e8e8;
     font-size: 1rem;
     font-weight: 600;
-    margin: -8px 0 8px;
+    margin: -16px 0 8px;
 }
+/* The passengers line pulls up under the message; with a phrase in between it follows the phrase instead */
+.farewell-local + .farewell-passengers { margin-top: 0; }
 .farewell-local span {
     color: #8a8a8a;
     font-size: .75rem;
