@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import './Emails.css'
 import emailIcon from '../assets/misc/email.png'
+import bellIcon from '../assets/misc/bell.png'
+import BoostTooltip from './BoostTooltip.jsx'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { CHARACTERS, isOpen, progressLabel, timeLeft, formatLeft } from '../utils/emailEngine.js'
@@ -39,7 +41,7 @@ function Typed({ text, animate, onDone }) {
     return <>{text.slice(0, n)}{n < text.length && <span className="emails-caret">|</span>}</>
 }
 
-export default function EmailsModal({ emails, onRespond, onRead, onClose, cult = false }) {
+export default function EmailsModal({ emails, onRespond, onRead, onClose, cult = false, muted = false, onToggleMute }) {
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const sorted = [...emails].sort((a, b) => b.createdAt - a.createdAt)
     const [selectedId, setSelectedId] = useState(() => (sorted.find(e => !e.read) || sorted[0])?.id || null)
@@ -48,6 +50,7 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
     useEffect(() => { const id = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(id) }, [])
     const selected = emails.find(e => e.id === selectedId) || null
     const threadRef = useRef(null)
+    const [muteTip, setMuteTip] = useState(null)
     useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = el.scrollHeight }, [selected?.state, selected?.reply])
     useEffect(() => { if (selected && !selected.read) onRead(selected.id) }, [selected, onRead])
     const unreadOthers = sorted.filter(e => !e.read).length
@@ -55,12 +58,25 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
     const respond = (e, agree) => { playClickSound2(); setTypingId(e.id); onRespond(e.id, agree) }
 
     return (
-        <div className="hyperlink-overlay" onClick={() => { playClickSound2(); onClose() }}>
+        <div className="hyperlink-overlay emails-overlay" onClick={() => { playClickSound2(); onClose() }}>
             <div className="emails-window" onClick={ev => ev.stopPropagation()} role="dialog" aria-label="Emails">
                 <div className="emails-head">
                     <span className="emails-title"><MailIcon size={20} /> Inbox{unreadOthers > 0 ? ` (${unreadOthers})` : ''}</span>
+                    <span className="emails-head-actions">
+                    {onToggleMute && (
+                        <button
+                            className={`emails-close emails-mute${muted ? ' emails-mute-off' : ' emails-mute-on'}`}
+                            onMouseEnter={e => { playHoverSound(); setMuteTip(e.currentTarget) }}
+                            onMouseLeave={() => setMuteTip(null)}
+                            onClick={() => { playClickSound2(); onToggleMute() }}
+                            aria-label={muted ? 'Unmute notifications' : 'Mute notifications'}
+                            aria-pressed={muted}
+                        ><img src={bellIcon} alt="" draggable={false} /></button>
+                    )}
                     <button className="emails-close" onClick={() => { playClickSound2(); onClose() }} onMouseEnter={() => playHoverSound()} aria-label="Close">✕</button>
+                    </span>
                 </div>
+                {muteTip && <BoostTooltip anchor={muteTip} lines={[muted ? 'New emails are muted. Click to turn the sound and bubble back on.' : 'New emails make a sound and show a bubble. Click to mute them.']} text />}
                 <div className="emails-body">
                     <div className="emails-list">
                         {sorted.length === 0 && <div className="emails-empty">No emails yet. People write when they need something from the Manager.</div>}

@@ -320,6 +320,18 @@ function App() {
     if (next) unlockAchievement('shutUp');
   };
 
+  // Emails can be muted the same way: no sound or bubble for new emails (they still arrive).
+  const [emailsMuted, setEmailsMuted] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('hyperloop_emails_muted')) === true; } catch { return false; }
+  });
+  const emailsMutedRef = useRef(emailsMuted);
+  const toggleEmailsMute = () => {
+    const next = !emailsMutedRef.current;
+    emailsMutedRef.current = next;
+    setEmailsMuted(next);
+    try { localStorage.setItem('hyperloop_emails_muted', JSON.stringify(next)); } catch { /* storage full */ }
+  };
+
   // After a prestige: the terminal name carries over and the starter city is drawn for the player (null otherwise).
   const [runStart] = useState(() => hasSave() ? null : readRunStart());
 
@@ -767,8 +779,10 @@ function App() {
     emailEngine.writeCast(emailEngine.noteOutcome(emailEngine.readCast(), email.character, email.state))
   }
   const announceEmail = () => {
-    if (emailsOpenRef.current) return
+    if (emailsMutedRef.current) return
     playNewEmailSound()
+    // The sound plays wherever the player is, including in the inbox; the bubble only when it isn't open
+    if (emailsOpenRef.current) return
     setEmailBubble(true)
     setTimeout(() => setEmailBubble(false), 3000)
   }
@@ -3138,6 +3152,8 @@ function App() {
         <EmailsModal
           emails={emails}
           cult={PrestigeManager.owns('cultOfCelebrity')}
+          muted={emailsMuted}
+          onToggleMute={toggleEmailsMute}
           onRespond={respondToEmail}
           onRead={readEmail}
           onClose={() => setEmailsOpen(false)}

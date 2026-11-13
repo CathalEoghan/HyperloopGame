@@ -46,3 +46,10 @@
 .emails-avatar { border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .emails-avatar-initial { display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; }
 .emails-from { display: flex; align-items: center; gap: 10px; line-height: 1.25; }
+.emails-head-actions { display: flex; align-items: center; gap: 10px; }
+.emails-mute { position: relative; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; padding: 0; }
+.emails-mute img { width: 18px; height: 18px; display: block; pointer-events: none; }
+.emails-mute-on { background: rgba(255, 255, 255, 0.55); box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.9); }
+.emails-mute-off { background: rgba(255, 255, 255, 0.12); }
+.emails-mute-off img { filter: grayscale(1); opacity: 0.6; }
+.emails-mute-off::after { content: ''; position: absolute; left: 50%; top: 50%; width: 22px; height: 2px; border-radius: 1px; background: #fff; transform: translate(-50%, -50%) rotate(-45deg); }

@@ -83,6 +83,7 @@ const AUX_KEYS = [
     'hyperloop_achievement_counters',
     'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
+    'hyperloop_emails_muted',
     // Lifetime cash/Reputation earned (ProgressionManager's own keys - see its LIFETIME_CASH_KEY/LIFETIME_REP_KEY)
     'hyperloop_lifetime_cash_earned',
     'hyperloop_lifetime_reputation_earned',
@@ -227,6 +228,7 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_achievement_counters',
     'hyperloop_achievements_unseen',
     'hyperloop_hyperlink_muted',
+    'hyperloop_emails_muted',
     'hyperloop_progress_collapsed',
     'hyperloop_loop_counted',
     'hyperloop_hyperlink_liked',
@@ -305,6 +307,7 @@ const AUX_SHAPES = {
     hyperloop_hyperlink_user_pfps: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_hyperlink_unread: v => Number.isFinite(v),
     hyperloop_hyperlink_muted: v => typeof v === 'boolean',
+    hyperloop_emails_muted: v => typeof v === 'boolean',
     hyperloop_progress_collapsed: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     hyperloop_achievement_counters: v => v !== null && typeof v === 'object' && !Array.isArray(v),
     // { departure: { t, left }, arrival: { t, left } }: the moment each total was last counted
