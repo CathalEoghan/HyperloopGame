@@ -56,20 +56,20 @@ export const DEVELOPMENT_MILESTONES = {
 // above: the highest city tier under "Cities", and "continent:<name>" = 1 for a finished continent.
 export const CITY_MILESTONES = [
     { count: 5, reputation: 10, text: 'Five cities connected! Your loops are starting to feel like a real network.' },
-    { count: 15, reputation: 20, text: 'Fifteen cities. Passengers are planning journeys you had not even thought of!' },
+    { count: 15, reputation: 20, text: 'Fifteen cities. Passengers are eagerly planning new journeys.' },
     { count: 30, reputation: 40, text: 'Thirty cities on the network, and the departure board is filling up nicely.' },
-    { count: 50, reputation: 50, text: 'Fifty cities! You are linking up places most travellers can only dream of visiting.' },
-    { count: 100, reputation: 75, text: 'One hundred cities! Your network spans the world, and everybody has noticed.' },
-    { count: 250, reputation: 150, text: 'Two hundred and fifty cities. Hardly anywhere is out of reach of a Hyperloop now, and the whole world knows who to thank.' },
+    { count: 50, reputation: 50, text: 'Fifty cities! Your network is growing huge.' },
+    { count: 100, reputation: 75, text: 'One hundred cities! Your network spans the world!' },
+    { count: 250, reputation: 150, text: 'Two hundred and fifty cities. Hardly anywhere is out of reach of a Hyperloop now.' },
 ]
 
 export const CONTINENT_MILESTONES = {
     Oceania: { reputation: 30, text: 'Every city in Oceania is now on your network! The islands and the coast are all one loop away.' },
-    'South America': { reputation: 40, text: 'All of South America is connected! From the mountains to the rainforest, the whole continent is on your network.' },
-    Africa: { reputation: 50, text: 'Every city in Africa is connected! A whole continent, from the northern coast to the southern tip, is now one loop away.' },
+    'South America': { reputation: 40, text: 'All of South America is connected! From the mountains to the rainforests, the whole continent is on your network.' },
+    Africa: { reputation: 50, text: 'Every city in Africa is connected! A whole continent, from the northern coast to the southern cape, is now just a loop away!' },
     'North America': { reputation: 60, text: 'North America is complete! Coast to coast, every city is connected.' },
-    Asia: { reputation: 75, text: 'All of Asia is connected! The biggest continent on Earth is now one network.' },
-    Europe: { reputation: 100, text: 'Europe is complete! Every city on the continent is connected, and it has never felt so close together.' },
+    Asia: { reputation: 75, text: 'All of Asia is connected! The biggest continent on Earth is now one network. What a feat!' },
+    Europe: { reputation: 100, text: 'Europe is complete! Every city on the continent is connected, and it has never felt so connected.' },
 }
 
 // The city tier after the one at `count`, or null when it was the last
