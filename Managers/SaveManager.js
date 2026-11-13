@@ -33,6 +33,8 @@ const currentName = name => RENAMES[name] ?? name
 const AUX_KEYS = [
     'hyperloop_shown_reveals',
     'hyperloop_claimed_milestones',
+    // The highest development-count milestone paid in each category this run ({ Food: 5, ... }); wiped by a prestige
+    'hyperloop_dev_milestones',
     'hyperloop_progress_rewards',
     // Claimed Prestige-upgrade reward cards. Kept separate from hyperloop_progress_rewards (and also listed in
     // PRESTIGE_KEEP_KEYS below) because Prestige upgrades themselves are never reset by a prestige, so a claim

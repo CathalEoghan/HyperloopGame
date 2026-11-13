@@ -37,6 +37,8 @@ import DailyLoginModal from "./components/DailyLoginModal"
 import OnboardingModal from "./components/OnboardingModal"
 import SecretCityModal from "./components/SecretCityModal"
 import MilestoneModal from "./components/MilestoneModal"
+import DevelopmentMilestoneModal from "./components/DevelopmentMilestoneModal"
+import { DEVELOPMENT_MILESTONES, MILESTONE_CATEGORIES } from "./data/developmentMilestones.js"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
 import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
@@ -598,6 +600,8 @@ function App() {
   const [showSecretCityModal, setShowSecretCityModal] = useState(false);
   const [preSelectedCity, setPreSelectedCity] = useState(null);
   const [milestoneQueue, setMilestoneQueue] = useState([]);
+  // Development-count milestones waiting to be shown (see checkDevelopmentMilestones and data/developmentMilestones.js)
+  const [devMilestoneQueue, setDevMilestoneQueue] = useState([]);
   const [cityClaimPending, setCityClaimPending] = useState(false);
   const [showDepartureBoard, setShowDepartureBoard] = useState(false)
   // The prompt after the first city is connected (nothing departs until it is scheduled), and whether the board opens
@@ -748,6 +752,33 @@ function App() {
     }
     claimedMilestones.current.add(milestoneKey(milestone));
     localStorage.setItem('hyperloop_claimed_milestones', JSON.stringify([...claimedMilestones.current]));
+  };
+  // Reputation for building the first, 5th, 10th... development of a category this run (data/developmentMilestones.js).
+  // The highest tier already reached in each category is remembered for the run in hyperloop_dev_milestones, so removing a
+  // development and building it again can't pay twice. Reaching several tiers in one go (a save from before milestones
+  // existed, or a bulk claim) shows one popup per category for the highest tier, paying every tier passed. The Reputation
+  // goes into the save at once and is held back from the counter until the popup's button, the way Passenger Appreciation does.
+  const checkDevelopmentMilestones = () => {
+    let claimed = {};
+    try {
+      const saved = JSON.parse(localStorage.getItem('hyperloop_dev_milestones'));
+      if (saved && typeof saved === 'object' && !Array.isArray(saved)) claimed = saved;
+    } catch { /* nothing saved yet, or damaged: start from none */ }
+    const reachedNow = [];
+    MILESTONE_CATEGORIES.forEach(category => {
+      const built = progressionManager.purchasedDevelopments.filter(d => d.category === category).length;
+      const done = Number.isFinite(claimed[category]) ? claimed[category] : 0;
+      const reached = DEVELOPMENT_MILESTONES[category].filter(t => t.count <= built && t.count > done);
+      if (reached.length === 0) return;
+      const top = reached[reached.length - 1];
+      claimed[category] = top.count;
+      reachedNow.push({ category, count: top.count, reputation: reached.reduce((sum, t) => sum + t.reputation, 0) });
+    });
+    if (reachedNow.length === 0) return;
+    localStorage.setItem('hyperloop_dev_milestones', JSON.stringify(claimed));
+    reachedNow.forEach(m => { progressionManager.addReputation(m.reputation); heldRepRef.current += m.reputation; });
+    setDevMilestoneQueue(prev => [...prev, ...reachedNow]);
+    triggerSave();
   };
   const claimedCityRef = useRef(null);
 
@@ -1500,6 +1531,8 @@ function App() {
         prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
       }
 
+      checkDevelopmentMilestones();
+
       const nonSecretPurchased = progressionManager.purchasedCities.filter(c => c.continent !== 'Antarctica');
       // Already unlocked counts too: after a disconnect it waits on the Cities page to be reconnected, without the popup (bug #165)
       const secretCityOwned = progressionManager.purchasedCities.some(c => c.continent === 'Antarctica') ||
@@ -1998,7 +2031,7 @@ function App() {
   const autoClaimOn = autoClaimRankUpsEnabled()
   const firstLoopVisible = showFirstLoop && !showDepartureBoard && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus
     && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !dailyLoginData && !(showOfflineModal && !!offlineData)
-    && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0;
+    && !activeDeparture && !activeDelay && pendingRankUps === 0 && milestoneQueue.length === 0 && devMilestoneQueue.length === 0;
   // Every OTHER blocking popup, i.e. everything that isn't the event modal itself - used below to decide whether
   // a random event is allowed to actually show its popup right now. Without this, the event-firing check (which
   // only looks at its own small set of guards) could fire while, say, the Shop, Achievements, Schedule or a
@@ -2010,7 +2043,7 @@ function App() {
   const otherPopupOpen = firstLoopVisible || showOnboarding || showDepartureBoard || showMobileWarning || showNotEnoughRep || showShop
     || !!dailyLoginData || (showOfflineModal && !!offlineData) || !!activeDelay || !!activeDeparture
     || revealedUpgradeQueue.length > 0 || devRevealQueue.length > 0 || !!claimedCity || !!claimAllCities || !!claimAllDevs || !!paBonus || (pendingRankUps > 0 && !autoClaimOn)
-    || milestoneQueue.length > 0 || showSecretCityModal
+    || milestoneQueue.length > 0 || devMilestoneQueue.length > 0 || showSecretCityModal
     // The Achievements panel and the Hyper-Link phone sit above the event popup, so an event fired while either was
     // open ran its course hidden (and Escape closed the hidden event instead of the panel or phone)
     || achievementsOpen || hyperLinkOpen
@@ -2845,9 +2878,26 @@ function App() {
         />
       )}
 
+      {/* A development milestone (Reputation for the first, 5th, 10th... of a category) waits for everything else on screen,
+          including a rank milestone still waiting, and lands before the secret-city finale */}
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && devMilestoneQueue.length > 0 && milestoneQueue.length === 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && pendingRankUps === 0 && !cityChoices && !showCityPicker && (
+        <DevelopmentMilestoneModal
+          key={devMilestoneQueue[0].category + devMilestoneQueue[0].count}
+          milestone={devMilestoneQueue[0]}
+          onContinue={() => {
+            const milestone = devMilestoneQueue[0];
+            heldRepRef.current = Math.max(0, heldRepRef.current - milestone.reputation);
+            setReputation(shownReputation());
+            playReputationWorkBonusSound();
+            setDevMilestoneQueue(prev => prev.slice(1));
+            triggerSave();
+          }}
+        />
+      )}
+
       {/* Waits for everything the last city brought with it (its reveal, the developments it unlocked, the Passenger Appreciation popup)
           and for any milestone still waiting, so the finale lands last and never on top of another popup */}
-      {!dailyLoginData && !showOfflineModal && showSecretCityModal && milestoneQueue.length === 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && (
+      {!dailyLoginData && !showOfflineModal && showSecretCityModal && milestoneQueue.length === 0 && devMilestoneQueue.length === 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && (
         <SecretCityModal onContinue={() => {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');
