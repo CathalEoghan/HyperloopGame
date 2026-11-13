@@ -1027,6 +1027,11 @@ sparkle.png - <a href="https://www.flaticon.com/free-icons/sparkle" title="spark
 camera.png - <a href="https://www.flaticon.com/free-icons/cinema" title="cinema icons">Cinema icons created by Magnific - Flaticon</a>
 reply.png - <a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by apien - Flaticon</a>
 cog.png - <a href="https://www.flaticon.com/free-icons/settings" title="settings icons">Settings icons created by meaicon - Flaticon</a>
+foodCategory.png - <a href="https://www.flaticon.com/free-icons/fast-food" title="fast food icons">Fast food icons created by Magnific - Flaticon</a>
+enterpriseCategory.png - <a href="https://www.flaticon.com/free-icons/enterprise" title="enterprise icons">Enterprise icons created by Dewi Sari - Flaticon</a>
+serviceCategory.png - <a href="https://www.flaticon.com/free-icons/customer-service" title="customer service icons">Customer service icons created by Eucalyp - Flaticon</a>
+shoppingCategory.png - <a href="https://www.flaticon.com/free-icons/shopping-bag" title="shopping bag icons">Shopping bag icons created by iconixar - Flaticon</a>
+recreationCategory.png - <a href="https://www.flaticon.com/free-icons/pub" title="pub icons">Pub icons created by Magnific - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
