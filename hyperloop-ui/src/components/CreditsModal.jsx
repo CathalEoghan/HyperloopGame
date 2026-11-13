@@ -53,7 +53,7 @@ function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
 
                     <p className="credits-section">City &amp; Development Photography</p>
                     <p className="credits-line">Most city and development photos are sourced from Pexels, which doesn't require attribution - but thank you to every photographer whose work appears here regardless.</p>
-                    <p className="credits-subheading">Individually licensed (Wikimedia Commons)</p>
+                    <p className="credits-subheading">Individually licensed (Wikimedia Commons and Flickr)</p>
                     {WIKIMEDIA_CREDITS.map((c, i) => <CreditLine key={i} {...c} />)}
 
                     <p className="credits-section">Theme, Profile &amp; Prestige Artwork</p>

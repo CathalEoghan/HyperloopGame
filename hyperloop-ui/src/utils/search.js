@@ -62,12 +62,25 @@ function aliasCountries(query) {
     return { exact: null, partial }
 }
 
+// Nicknames for single cities. Each key is the nickname (as normaliseForSearch makes it); each value is the city names the
+// game stores it under. A nickname adds its cities on top of the normal name matches, so "ny" still finds Sydney and the
+// rest, and "la" still finds every city with "la" in it - it just also brings up New York / Los Angeles.
+const CITY_ALIASES = {
+    nyc: ['New York'], ny: ['New York'], bigapple: ['New York'], newyorkcity: ['New York'],
+    la: ['Los Angeles'], sf: ['San Francisco'], frisco: ['San Francisco'], nola: ['New Orleans'],
+    kl: ['Kuala Lumpur'], hcmc: ['Ho Chi Minh City'], saigon: ['Ho Chi Minh City'], cdmx: ['Mexico City'],
+    stpetersburg: ['Saint Petersburg'], stpete: ['Saint Petersburg'],
+}
+const cityAliasMatches = (cityName, query) =>
+    (CITY_ALIASES[normaliseForSearch(query)] || []).some(n => normaliseForSearch(n) === normaliseForSearch(cityName))
+
 // True when a city (its name + country) matches what was typed in a city/country search box,
 // including shorthands like UK, USA, UAE. A shorthand still finds cities whose own name contains it ("uk" finds Nuuk,
 // "pr" finds Prague), it just doesn't match other countries' names by it, so "UK" doesn't bring up Ukraine.
 export function matchesPlace(cityName, country, query) {
     const { exact, partial } = aliasCountries(query)
     const c = normaliseForSearch(country)
+    if (cityAliasMatches(cityName, query)) return true
     if (exact) return exact.includes(c) || matchesSearch(cityName, query)
     return matchesSearch(cityName, query) || matchesSearch(country, query) || partial.includes(c)
 }
