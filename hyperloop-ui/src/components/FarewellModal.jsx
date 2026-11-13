@@ -47,7 +47,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const isUrgent = secondsLeft <= 60
 
     const flagCode = countryFlags[departure.country]
-    // A word in the destination's own language, for the farewell or the greeting
+    // The button says the farewell or greeting in the destination's own language (the plain English label is the fallback)
     const phrase = localPhrase(departure.country, departure.kind)
     // An arriving loop uses the same popup, to greet its passengers instead of saying goodbye
     const isArrival = departure.kind === 'arrival'
@@ -109,9 +109,6 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                             ? <>Gate <strong>{departure.gate}</strong> is now closed for <strong>{departure.name}</strong>. There is still time to give passengers a personal farewell.</>
                             : <>Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Gate <strong>{departure.gate}</strong>.</>}
                 </p>
-                {phrase && (
-                    <p className="farewell-local">“{phrase.text}” <span>{phrase.language}</span></p>
-                )}
                 {passengers !== null && (
                     <p className="farewell-passengers">
                         {isArrival
@@ -127,9 +124,11 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                     VideoMessageToast instead (see giveFarewell/the videoMessageFlashQueue render site), since
                     this popup's window can expire and must stay interactive for everyone else. */}
                 <button className="farewell-button" onMouseEnter={() => playHoverSound()} onClick={accept}>
-                    {isArrival
-                        ? (departure.vip ? 'Give a VIP welcome' : 'Greet the passengers')
-                        : (departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell')} (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
+                    {phrase
+                        ? phrase.text
+                        : isArrival
+                            ? (departure.vip ? 'Give a VIP welcome' : 'Greet the passengers')
+                            : (departure.vip ? 'Give a VIP farewell' : 'Give a personal farewell')} (+<img src={reputationIcon} alt="reputation" style={{ width: '16px', height: '16px', verticalAlign: 'middle' }} />{repGain})
                 </button>
             </div>
         </div>

@@ -15,7 +15,7 @@ const EN = ['English', 'Safe travels!', 'Welcome!']
 const localPhrases = {
     France: FR, Monaco: FR,
     Belgium: NL, 'The Netherlands': NL,
-    Ireland: ['Irish', 'Go n-éirí an bóthar leat!', 'Céad míle fáilte!'],
+    Ireland: ['Irish', 'Slán!', 'Fáilte!'],
     Scotland: ['Scottish Gaelic', 'Slàn leibh!', 'Fàilte!'],
     Wales: ['Welsh', 'Taith dda!', 'Croeso!'],
     'United States of America': EN, Australia: EN, 'New Zealand': EN, Canada: EN,
