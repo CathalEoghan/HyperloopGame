@@ -28,6 +28,7 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
 import { usePersistedChoice } from '../utils/usePersistedChoice.js'
 import { isGrantedCity } from '../utils/grantedCities.js'
+import { CITY_MILESTONES, CONTINENT_MILESTONES, readClaimedMilestones } from '../data/developmentMilestones.js'
 import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHoverSound, playNotEnoughFundsSound, playBigMomentSound } from '../utils/sound.js'
 import { formatTime, formatDate } from '../utils/time.js';
 import { flagSrc } from '../utils/flagSrc.js'
@@ -61,6 +62,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const [confirmDisconnect, setConfirmDisconnect] = useState(false)
     const [showCityBoostTip, setShowCityBoostTip] = useState(null) // the badge being hovered
     const [showBulkBuyTip, setShowBulkBuyTip] = useState(null) // the Connect all affordable button, while hovered
+    const [continentTip, setContinentTip] = useState(null) // the continent filter button being hovered ({ anchor, continent })
     const [showRepBonusTip, setShowRepBonusTip] = useState(null) // the Reputation bonus stat box, while hovered
     const [showWisdomBonusTip, setShowWisdomBonusTip] = useState(null) // the Generational Wisdom Bonus stat box, while hovered
     const [showFoundersTip, setShowFoundersTip] = useState(null) // the Founders' Hall Bonus stat box, while hovered
@@ -101,6 +103,20 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
     const cityInContinent = (city, cont) => cont === 'All' ? true : city.continent === cont
     const continentCityTotal = (cont) => allCities.filter(c => cityInContinent(c, cont)).length
     const continentCityConnected = (cont) => purchased.filter(c => cityInContinent(c, cont)).length
+    // What the milestone behind a filter button says: the next city tier on All, the continent's bonus on a continent. Worked
+    // out from what has been claimed this run on every draw, so once a reward is collected its tooltip is simply gone.
+    const continentMilestoneTip = (cont) => {
+        const claimed = readClaimedMilestones()
+        if (cont === 'All') {
+            const done = Number.isFinite(claimed.Cities) ? claimed.Cities : 0
+            const next = CITY_MILESTONES.find(t => t.count > Math.max(done, purchased.length))
+            if (!next || done >= CITY_MILESTONES[CITY_MILESTONES.length - 1].count) return null
+            return `${purchased.length} ${purchased.length === 1 ? 'city' : 'cities'} connected. Next city milestone at ${next.count}: +${next.reputation} Reputation`
+        }
+        const tier = CONTINENT_MILESTONES[cont]
+        if (!tier || claimed[`continent:${cont}`]) return null
+        return `Collect every city from this continent for a bonus ${tier.reputation} Reputation`
+    }
 
     // What "Connect all affordable" would spend, right now, on the whole available list - regardless of the
     // search box or the continent filter, since those only narrow what's shown, not what the button means.
@@ -356,12 +372,16 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                             className={`continent-btn ${activeContinent === c ? 'continent-btn-active' : ''}`}
                             style={activeContinent === c ? { background: CONTINENT_COLOURS[c], borderColor: CONTINENT_COLOURS[c] } : {}}
                             onClick={() => { playClickSound2(); setActiveContinent(c) }}
-                            onMouseEnter={() => playHoverSound()}
+                            onMouseEnter={(e) => { playHoverSound(); setContinentTip({ anchor: e.currentTarget, continent: c }) }}
+                            onMouseLeave={() => setContinentTip(null)}
                         >
                             {c} <span className="category-count">{continentCityConnected(c)} / {continentCityTotal(c)}</span>
                         </button>
                     ))}
                 </div>
+                {continentTip && continentTip.anchor.isConnected && continentMilestoneTip(continentTip.continent) && (
+                    <BoostTooltip anchor={continentTip.anchor} lines={[continentMilestoneTip(continentTip.continent)]} text />
+                )}
             </div>
 
             <div className="cities-content">
