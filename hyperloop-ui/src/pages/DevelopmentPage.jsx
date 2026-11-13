@@ -114,7 +114,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     // one upgrade bought with it instead). Used to plan both "Develop all" buttons; see utils/bulkBuy.js.
     const costOfDevelopment = (item, state) => item.effectType === 'earlyRetirement'
         ? { cash: 0, rep: item.effectValue }
-        : { cash: Math.floor(item.cost * (1 - state.discount) + 1e-6) }
+        : { cash: economyManager.isBuildDiscountExempt(item) ? Math.floor(item.cost) : Math.floor(item.cost * (1 - state.discount) + 1e-6) }
     // Every item in a batch is priced at today's discount. Bank (-% development cost) bought in the same batch doesn't
     // count yet: it only joins purchasedUpgrades once its own construction finishes, so the items after it are still
     // charged full price. Planning them at the lower price used to show a total smaller than what was taken, and
@@ -161,7 +161,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
     const buyPlannedItem = (item) => {
         if (item.effectType === 'earlyRetirement') return progressionManager.buyEarlyRetirement(item)
-        const cost = economyManager.calculateDiscountedBuildCost(item.cost)
+        const cost = economyManager.calculateBuildCost(item)
         if (progressionManager.balance < cost) return false
         constructionManager.startDevelopmentConstruction(item, cost)
         return true
@@ -458,7 +458,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         </button>
                                     ) : (
                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
-                                            const cost = economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost)
+                                            const cost = economyManager.calculateBuildCost(selectedDevelopment)
                                             // The real balance, and only report a build that really started (bug #170)
                                             if (progressionManager.balance >= cost) constructionManager.startDevelopmentConstruction(selectedDevelopment, cost)
                                             if (!progressionManager.developmentsUnderConstruction.includes(selectedDevelopment)) { playClickSound2(); playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
@@ -470,9 +470,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             }
                                         }}>
                                             <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
-                                                {developmentVerb(selectedDevelopment.name)} (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{fmtCash(economyManager.calculateDiscountedBuildCost(selectedDevelopment.cost))}
+                                                {developmentVerb(selectedDevelopment.name)} (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{fmtCash(economyManager.calculateBuildCost(selectedDevelopment))}
                                                 {(() => {
-                                                    const discount = economyManager.getUpgradeSum('developmentDiscount')
+                                                    const discount = economyManager.isBuildDiscountExempt(selectedDevelopment) ? 0 : economyManager.getUpgradeSum('developmentDiscount')
                                                     return discount > 0 ? <span className="rename-discount-tag" style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
                                                 })()})
                                             </span>
@@ -788,7 +788,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     <div className="dev-cost-line">
                                         Cost {development.effectType === 'earlyRetirement'
                                             ? <><img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{development.effectValue}</>
-                                            : <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{fmtCash(economyManager.calculateDiscountedBuildCost(development.cost))}</>}
+                                            : <><img src={cashIcon} alt="£" className="cash-icon" style={{ width: '11px', height: '11px', border: 'none', borderRadius: '0', verticalAlign: 'middle' }} />{fmtCash(economyManager.calculateBuildCost(development))}</>}
                                     </div>
                                 </div>
                             </div>

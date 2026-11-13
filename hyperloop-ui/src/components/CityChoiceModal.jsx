@@ -3,6 +3,7 @@ import cityThumbnails from '../data/cityThumbnails.js'
 import countryFlags from '../data/countryFlags.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { flagSrc } from '../utils/flagSrc.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { CLAIM_ALL_FROM } from './RankUpModal.jsx'
 import { playClickSound2, playHoverSound, playDiceRollSound, playNotEnoughFundsSound, playTier3CitySound } from '../utils/sound.js'
 import './CityChoiceModal.css'
@@ -13,6 +14,9 @@ import './CityChoiceModal.css'
 // 0 with a free re-roll, less with the re-roll discount.
 function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rerollCost = 15, rerollDiscount = 0, onPick, onReroll, onClaimAll }) {
     const [selected, setSelected] = useState(null)
+    // Escape must not pick a city (the choice is final), but it must not reach a dialog underneath either, so it is
+    // held here and does nothing. Not while hidden: then the popup on top of this one gets Escape.
+    useEscapeToClose(() => {}, !hidden)
     // A re-roll replaces the cities, so a selection that is no longer on offer is dropped
     const chosen = cities.includes(selected) ? selected : null
     const canReroll = reputation >= rerollCost

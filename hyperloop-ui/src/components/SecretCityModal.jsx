@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react'
 import { playClickSound2, playHoverSound, playBigMomentSound } from '../utils/sound.js'
 import './SecretCityModal.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 function SecretCityModal({ onContinue }) {
+    // A notice, so Escape does what its button does
+    useEscapeToClose(() => { playClickSound2(); onContinue() })
     const [hovered, setHovered] = useState(false)
 
     useEffect(() => {

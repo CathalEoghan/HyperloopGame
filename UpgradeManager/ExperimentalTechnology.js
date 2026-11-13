@@ -14,7 +14,7 @@ function claimsSoFar() {
 
 // Doubles every time it's claimed, however many runs apart: 10 Prestige Points for £10,000,000 the first time,
 // 20 for £20,000,000 the next, 40 for £40,000,000 after that, and so on forever - always a flat £1,000,000 per
-// Prestige Point. Unlike every other source of Prestige Points (rank, lifetime cash), this is meant to keep
+// Prestige Point (Bank's build discount doesn't apply to it - see EconomyManager.isBuildDiscountExempt). Unlike every other source of Prestige Points (rank, lifetime cash), this is meant to keep
 // paying out at a scale that matters deep into a very dedicated player's save, rather than becoming cheaper and
 // cheaper to ignore as the economy grows past its original, static price.
 const PP_PER_TIER_BASE = 10

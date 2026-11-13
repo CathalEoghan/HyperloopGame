@@ -411,6 +411,14 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         scene.background = new THREE.Color(0x0a0a1a)
         const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000)
         let camLon = 0, camLat = 0, camDist = 2.5
+        // Open looking at the home city (aimed the same way focusLoopRef aims at a loop below), not at whatever side of the
+        // world the camera's default angle happens to face (90 degrees West, the Americas)
+        const homeCoords = cityCoordinates[purchasedCities[0]?.name]
+        if (homeCoords) {
+            const p = latLngToVector3(homeCoords.lat, homeCoords.lng, 1).normalize()
+            camLon = THREE.MathUtils.radToDeg(Math.atan2(p.x, p.z))
+            camLat = THREE.MathUtils.radToDeg(Math.asin(p.y))
+        }
 
         // Globe zoom limits (globe radius = 1)
         const MIN_CAM_DIST = 1.25

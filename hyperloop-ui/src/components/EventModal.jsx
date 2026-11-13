@@ -47,6 +47,8 @@ function EventModal({ event, onContinue, terminalName }) {
 
     const getEffectText = () => {
         if (event.effectType === 'instantCash') return <>{cashIconEl}{Number.isFinite(event.instantCashAmount) && <AbbreviatedNumber value={event.instantCashAmount} />} has been added to your balance</>
+        // The loss is capped at the balance, so with an empty treasury there is nothing to take
+        if (event.effectType === 'instantCashLoss' && event.instantCashAmount === 0) return <>Nothing has been deducted, as your treasury is already at {cashIconEl}<AbbreviatedNumber value={0} /></>
         if (event.effectType === 'instantCashLoss') return <>{cashIconEl}{Number.isFinite(event.instantCashAmount) && <AbbreviatedNumber value={Math.abs(event.instantCashAmount)} />} has been deducted from your balance</>
         if (event.effectType === 'passiveBoost') return `+${Math.round((event.effect.multiplier - 1) * 100)}% passive income for ${secondsLeft}s`
         if (event.effectType === 'passivePenalty') return `-${Math.round((1 - event.effect.multiplier) * 100)}% passive income for ${secondsLeft}s`

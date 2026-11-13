@@ -7,5 +7,5 @@ export const arcticTourismInitiatives = new Upgrade(
     67000,
     "Enterprise",
     "arcticBoost",
-    0.1
+    0.2
 )

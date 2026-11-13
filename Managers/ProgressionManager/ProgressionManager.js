@@ -403,9 +403,9 @@ export class ProgressionManager {
         return this.cityLineLevels[city.name] || 0;
     }
 
-    // Whether a city's line can ever be upgraded. The secret tier 0 Antarctic Peninsula earns a small fixed income
-    // (about 20 passengers a departure) but has no line upgrade pricing (LINE_BASE_COST has no tier 0), so it is never
-    // offered rather than selling free levels. If tier 0 is ever given line prices, this is the one place to lift that.
+    // Whether a city's line can ever be upgraded. The secret tier 0 Antarctic Peninsula is the finale, a research base
+    // that earns a small fixed income (about 20 passengers a departure), so its line is simply never offered for upgrade,
+    // even though the price table has a tier 0 connection price. This is the one place to lift that.
     canUpgradeCityLine(city) {
         return !!city && city.tier > 0;
     }

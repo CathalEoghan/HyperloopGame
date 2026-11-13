@@ -20,6 +20,7 @@ import infoIcon from '../assets/misc/guide.png'
 import checkIcon from '../assets/misc/check.png'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { AUTO_WORK_SETTING_KEY, autoWorkEnabled } from 'Managers/PrestigeManager/autoWork.js'
+import { PERK_TOGGLE_KEYS, perkSwitchedOn } from 'Managers/PrestigeManager/perkToggles.js'
 import { AUTO_CLAIM_RANKUPS_KEY, autoClaimRankUpsEnabled } from '../utils/autoClaimRankUps.js'
 import { VIDEO_MESSAGE_POPUPS_KEY, videoMessagePopupsEnabled } from '../utils/videoMessagePopups.js'
 import './SettingsPage.css'
@@ -156,6 +157,13 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleAutoWorkToggle = (enabled) => {
         setAutoWork(enabled)
         localStorage.setItem(AUTO_WORK_SETTING_KEY, enabled)
+    }
+
+    // Crisis Avoidance Specialists and Government Grants: owned perks that can be switched off (Terminal)
+    const [perkOn, setPerkOn] = useState({ crisisAvoidanceSpecialists: perkSwitchedOn('crisisAvoidanceSpecialists'), governmentGrants: perkSwitchedOn('governmentGrants') })
+    const handlePerkToggle = (id, enabled) => {
+        setPerkOn(p => ({ ...p, [id]: enabled }))
+        localStorage.setItem(PERK_TOGGLE_KEYS[id], enabled)
     }
 
     const [autoClaimRankUps, setAutoClaimRankUps] = useState(autoClaimRankUpsEnabled())
@@ -400,6 +408,30 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <div className="settings-options">
                             <OptionBtn active={autoWork} onClick={() => handleAutoWorkToggle(true)}>On</OptionBtn>
                             <OptionBtn active={!autoWork} onClick={() => handleAutoWorkToggle(false)}>Off</OptionBtn>
+                        </div>
+                    </div>
+                )}
+                {PrestigeManager.owns('crisisAvoidanceSpecialists') && (
+                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                        <div className="settings-label">
+                            <span className="settings-label-title">Crisis Avoidance Specialists</span>
+                            <span className="settings-label-desc">Your specialists keep every negative event away. Switch them off to let negative events happen again.</span>
+                        </div>
+                        <div className="settings-options">
+                            <OptionBtn active={perkOn.crisisAvoidanceSpecialists} onClick={() => handlePerkToggle('crisisAvoidanceSpecialists', true)}>On</OptionBtn>
+                            <OptionBtn active={!perkOn.crisisAvoidanceSpecialists} onClick={() => handlePerkToggle('crisisAvoidanceSpecialists', false)}>Off</OptionBtn>
+                        </div>
+                    </div>
+                )}
+                {PrestigeManager.owns('governmentGrants') && (
+                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                        <div className="settings-label">
+                            <span className="settings-label-title">Government Grants</span>
+                            <span className="settings-label-desc">Each new run starts at Rank 25 with 24 cities unlocked. Switch off to start from Rank 1 instead, from your next retirement.</span>
+                        </div>
+                        <div className="settings-options">
+                            <OptionBtn active={perkOn.governmentGrants} onClick={() => handlePerkToggle('governmentGrants', true)}>On</OptionBtn>
+                            <OptionBtn active={!perkOn.governmentGrants} onClick={() => handlePerkToggle('governmentGrants', false)}>Off</OptionBtn>
                         </div>
                     </div>
                 )}

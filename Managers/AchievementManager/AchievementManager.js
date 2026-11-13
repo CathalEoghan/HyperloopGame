@@ -137,6 +137,14 @@ export class AchievementManager {
             continents: new Set(cities.map(c => c.continent).filter(c => c !== 'Antarctica')).size,
             continentsTotal: REGULAR_CONTINENTS,
             cityNames: cities.map(c => c.name),
+            // The run's home city: the first city connected (Nom Nom Nomsk, Costa del Nuuk, Czech Mate)
+            homeCity: cities[0]?.name ?? null,
+            // Any Food development upgraded all the way to its top level (10)
+            maxedFood: progressionManager.purchasedDevelopments.some(d => d.category === 'Food' && progressionManager.getDevelopmentUpgradeLevel(d) >= 10),
+            positiveEvents: this.counter('positiveEvents'),
+            negativeEvents: this.counter('negativeEvents'),
+            // Runs ended by retiring (the Past Runs list), for Groundhog Day
+            retirements: PrestigeManager.getHistory().length,
             reputation: progressionManager.reputation,
             dailyBonus: this.counter('dailyBonus'),
             devUpgrades: this.counter('devUpgrades'),
@@ -162,7 +170,8 @@ export class AchievementManager {
             greetings: this.counter('greetings'),
             farewellsAndGreetings: this.counter('farewells') + this.counter('greetings'),
             work: this.counter('work'),
-            // Manual Work clicks in this run only: it is cleared by a new game or a prestige
+            // Work presses in this run only (cleared by a new game or a prestige). Best P.A. Ever's automatic presses count
+            // too, since this is the Livestream click counter, so Couch Potato needs Best P.A. Ever switched off
             runWork: readLivestreamClicks(),
             prestigeEarned: prestige.points > 0 || prestige.owned.length > 0 || PrestigeManager.getHistory().length > 0,
             prestigeOwned: prestige.owned.length,

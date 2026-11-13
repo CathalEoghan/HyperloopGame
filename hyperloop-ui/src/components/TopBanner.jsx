@@ -11,7 +11,7 @@ import increaseIcon from '../assets/misc/increase.png'
 import decreaseIcon from '../assets/misc/decrease.png'
 import countryFlags from '../data/countryFlags.js'
 import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } from '../utils/sound.js'
-import { formatBalance } from '../utils/formatBalance.js'
+import { formatCompact } from '../utils/formatCompact.js'
 import { BIG_NUMBER_TIERS, scaleToTier } from '../utils/bigNumbers.js'
 import { flagSrc } from '../utils/flagSrc.js'
 
@@ -32,6 +32,9 @@ const WORK_PHRASES = [
 ]
 
 let floatId = 0
+
+// The cash and Reputation counters: full digits with commas below a million, then "1.50 million", "4.56 billion" and so on
+const formatCounter = (value) => formatCompact(Math.floor(value), 1_000_000)
 
 // 1.2k, 3.4m, 5.6b ... through the short names in bigNumbers.js; scientific notation for a tier with no name
 const formatWorkAmount = (value, tilde = false) => {
@@ -105,9 +108,9 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             setBalanceFlash('down')
             balanceFlashTimerRef.current = setTimeout(() => setBalanceFlash(null), 400)
         }
-        // The old value only floats away when the balance reads differently: at 1.20 billion it takes millions to move
+        // The old value only floats away when the balance reads differently: at 1.20 million it takes ten thousand to move
         // the printed number, and until then the same text would float up on every tick
-        if (Math.abs(diff) >= 100 && formatBalance(prevBalanceRef.current) !== formatBalance(balance)) {
+        if (Math.abs(diff) >= 100 && formatCounter(prevBalanceRef.current) !== formatCounter(balance)) {
             clearTimeout(balanceFloatTimerRef.current)
             setBalanceFloat({ value: prevBalanceRef.current, id: Date.now(), dir: diff >= 0 ? 'up' : 'down' })
             balanceFloatTimerRef.current = setTimeout(() => setBalanceFloat(null), 600)
@@ -283,7 +286,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <img src={starIcon} alt="rank" /> Rank {rank}
                 </div>
                 <div className="balance" style={{ color: balanceColor, transition: 'color 0.3s ease', position: 'relative' }}>
-                    <img src={cashIcon} alt="balance" /> {formatBalance(displayBalance)}
+                    <img src={cashIcon} alt="balance" /> {formatCounter(displayBalance)}
                     {balanceFloat && (
                         <span key={balanceFloat.id} style={{
                             position: 'absolute', left: 10, top: 5, width: 'calc(100% - 10px)',
@@ -293,12 +296,12 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                             display: 'flex', alignItems: 'center', gap: '6px'
                         }}>
                             <img src={cashIcon} alt="£" style={{ height: '16px', width: '16px', objectFit: 'contain' }} />
-                            {formatBalance(balanceFloat.value)}
+                            {formatCounter(balanceFloat.value)}
                         </span>
                     )}
                 </div>
                 <div className="reputation" style={{ color: repColor, transition: 'color 0.3s ease' }}>
-                    <img src={reputationIcon} alt="reputation" /> {displayReputation}
+                    <img src={reputationIcon} alt="reputation" /> {formatCounter(displayReputation)}
                 </div>
             </div>
             <button

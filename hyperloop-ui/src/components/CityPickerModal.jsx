@@ -4,6 +4,7 @@ import { matchesPlace } from '../utils/search.js'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import './CityPickerModal.css'
 import { flagSrc } from '../utils/flagSrc.js'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 const TIERS = [3, 2, 1]
 
@@ -14,6 +15,9 @@ function CityPickerModal({ hidden = false, cities, onPick, onCancel, title = 'Lo
     const [query, setQuery] = useState('')
     const [tier, setTier] = useState(0)          // 0 = every tier
     const [selected, setSelected] = useState(null)
+    // Escape must not pick a city (the choice is final), but it must not reach a dialog underneath either, so it is
+    // held here and does nothing. Not while hidden: then the popup on top of this one gets Escape.
+    useEscapeToClose(() => {}, !hidden)
 
     // The best earners first, then alphabetical
     const sorted = useMemo(

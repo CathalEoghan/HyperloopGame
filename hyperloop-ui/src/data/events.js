@@ -18,7 +18,7 @@ export const TOURISM_OCCASIONS = [
 
 export const EVENTS = [
 
-    // POSITIVE — Instant cash (10% of daily earnings)
+    // POSITIVE — Instant cash (5% of daily earnings)
     {
         id: 'award_won',
         type: 'positive',
@@ -120,7 +120,7 @@ export const EVENTS = [
         duration: () => Math.floor(Math.random() * 60 + 30),
     },
 
-    // NEGATIVE — Instant cash loss (10% of daily earnings)
+    // NEGATIVE — Instant cash loss (2% of daily earnings)
     {
         id: 'lawsuit',
         type: 'negative',

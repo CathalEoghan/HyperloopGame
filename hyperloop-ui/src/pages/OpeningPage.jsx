@@ -109,8 +109,13 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                         <div
     className="starter-city-card"
     key={city.name}
+    // A card, not a <button> (its layout is a column of blocks), so it is made reachable and pressable from the keyboard here
+    role="button"
+    tabIndex={0}
+    aria-label={`Choose ${city.name}, ${city.country}`}
     onMouseEnter={() => playHoverSound()}
     onClick={() => startCity(city)}
+    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startCity(city) } }}
                         >
                            <img
     className="starter-city-image"

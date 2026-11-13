@@ -13,6 +13,9 @@ const built = (cat, n) => ctx => (ctx.categories[cat] || 0) >= n
 const connected = (...names) => ctx => names.every(n => ctx.cityNames.includes(n))
 const developed = (...names) => ctx => names.every(n => ctx.builtNames.includes(n))
 const developedAndConnected = (dev, city) => ctx => ctx.builtNames.includes(dev) && ctx.cityNames.includes(city)
+// A development built with a given city as the home city (the first city of the run - only reachable outside the six starters
+// with Personal Favours)
+const developedWithHome = (dev, home) => ctx => ctx.homeCity === home && ctx.builtNames.includes(dev)
 // One city connected, and one or more developments/upgrades built, together at the same time
 const connectedWithDeveloped = (city, ...devs) => ctx => ctx.cityNames.includes(city) && devs.every(n => ctx.builtNames.includes(n))
 // A city connected together with owning a Prestige upgrade - Prestige upgrades are permanent once bought
@@ -43,6 +46,8 @@ export const ACHIEVEMENTS = [
     { id: 'continentalSpan', group: 'Cities', name: 'Continental Span', description: 'Connect a city on every continent in one run (excluding Antarctica).', check: ctx => ctx.continentsTotal > 0 && ctx.continents >= ctx.continentsTotal },
     { id: 'bestCityInTheWorld', group: 'Cities', name: 'Best City in the World', description: 'Connect Belfast to your network.', check: ctx => ctx.cityNames.includes('Belfast') },
     { id: 'noConnectionForYou', group: 'Cities', name: 'No Connection for You!', description: 'Disconnect a city.' },
+    // No check: an event achievement, unlocked in App.jsx's onDisconnect when the city's country is France
+    { id: 'theFrenchDisconnection', group: 'Cities', name: 'The French Disconnection', description: 'Disconnect a French city from your network.' },
     { id: 'islander', group: 'Cities', name: 'Islander', description: 'Start a run using Palikir or Apia as your home city.' },
 
     // Developments
@@ -95,12 +100,19 @@ export const ACHIEVEMENTS = [
     { id: 'sorry', group: 'Delays', name: 'Sorry!', description: 'Compensate a delayed loop.' },
     { id: 'toughLuck', group: 'Delays', name: 'Tough Luck', description: 'Refuse to compensate a delayed loop.' },
 
+    // Events
+    // A lifetime total: the positive-event counter is never reset, not even by a prestige
+    { id: 'favoured', group: 'Events', name: 'Favoured', description: 'Experience a lifetime total of 50 positive events.', check: atLeast('positiveEvents', 50) },
+    // Needs Crisis Avoidance Specialists switched off if it is owned (Settings, Terminal), since it stops every negative event
+    { id: 'cursed', group: 'Events', name: 'Cursed', description: 'Experience a lifetime total of 50 negative events.', check: atLeast('negativeEvents', 50) },
+
     // Money
     // Earned, not held: every run starts with 1.5 million in the treasury, so a balance target had to be set at 2 million
     // to mean anything. Anyone who already has it keeps it.
     { id: 'firstMillion', group: 'Money', name: 'First Million', description: 'Earn 1 million in a single run.', check: atLeast('runCashEarned', 1e6) },
     { id: 'billionaire', group: 'Money', name: 'Billionaire', description: 'Have a total of 1 billion in your treasury.', check: atLeast('balance', 1e9) },
     { id: 'trillionaire', group: 'Money', name: 'Trillionaire', description: 'Have a total of 1 trillion in your treasury.', check: atLeast('balance', 1e12) },
+    { id: 'quadrillionaire', group: 'Money', name: 'Quadrillionaire', description: 'Have a total of 1 quadrillion in your treasury.', check: atLeast('balance', 1e15) },
 
     // Work
     { id: 'hardWorker', group: 'Work', name: 'Hard Worker', description: 'Press the Work button 100 times.', check: atLeast('work', 100) },
@@ -163,6 +175,18 @@ export const ACHIEVEMENTS = [
     { id: '42wallabyway', group: 'Combinations', name: '42 Wallaby Way', description: 'Have Aquarium developed and Sydney connected at any one time.', check: developedAndConnected('Aquarium', 'Sydney') },
     { id: 'clubObiWan', group: 'Combinations', name: 'Club Obi Wan', description: 'Have Night Lounge developed and Shanghai connected at any one time.', check: developedAndConnected('Night Lounge', 'Shanghai') },
     { id: 'hawaiianPizza', group: 'Combinations', name: 'Hawaiian Pizza', description: 'Have Honolulu connected and Pizzeria developed at any one time.', check: developedAndConnected('Pizzeria', 'Honolulu') },
+    { id: 'tokyoStool', group: 'Combinations', name: 'Tokyo Stool', description: 'Have Improved Restroom Facilities developed and Tokyo connected at any one time.', check: developedAndConnected('Improved Restroom Facilities', 'Tokyo') },
+    { id: 'costaDelNuuk', group: 'Combinations', name: 'Costa del Nuuk', description: 'With Nuuk as your home city, develop Beach-Themed Bar.', check: developedWithHome('Beach-Themed Bar', 'Nuuk') },
+    { id: 'czechMate', group: 'Combinations', name: 'Czech Mate', description: 'With Prague as your home city, develop Chess Club.', check: developedWithHome('Chess Club', 'Prague') },
+    { id: 'nomNomNomsk', group: 'Combinations', name: 'Nom Nom Nomsk', description: 'With Omsk as your home city, fully upgrade a Food development to Level 10.', check: ctx => ctx.homeCity === 'Omsk' && ctx.maxedFood },
+    { id: 'coolForCuts', group: 'Combinations', name: 'Cool for Cuts', description: 'Have Barber Shop or Hair Salon developed and the Kitty general theme purchased at any one time.', check: ctx => ctx.ownedThemes.includes('kitty') && (ctx.builtNames.includes('Barber Shop') || ctx.builtNames.includes('Hair Salon')) },
+    { id: '343GuiltyBark', group: 'Combinations', name: '343 Guilty Bark', description: 'Have Gaming Arcade developed and the Woof general theme purchased at any one time.', check: developedWithTheme('Gaming Arcade', 'woof') },
+    // No check: event achievements, unlocked in App.jsx the moment a build starts (see startedBuildAchievements below)
+    { id: 'priorities', group: 'Combinations', name: 'Priorities', description: 'Build a Dance Studio while a Security Incident is active.' },
+    { id: 'makesSense', group: 'Combinations', name: 'Makes Sense', description: 'Build a Health Clinic while a Sickness Outbreak event is active.' },
+    { id: 'biggerBoat', group: 'Combinations', name: 'Gonna Need a Bigger Boat', description: 'Develop Water Taxi Transfers or Ferry Terminal while a Record Passenger Day event is active.' },
+    { id: 'poolsClosed', group: 'Combinations', name: 'Pool\'s Closed', description: 'Develop Swimming Pool while a Severe Weather event is active.' },
+    { id: 'hungerGames', group: 'Combinations', name: 'Hunger Games', description: 'With no Food developments constructed, build a Gaming Arcade.' },
     // Advanced Engineering is a Prestige upgrade, not a development - it's permanent once bought, so this
     // unlocks the first time Gothenburg is connected on or after buying it (see connectedWithPrestige above).
     { id: 'maceToTheFace', group: 'Combinations', name: 'Mace to the Face', description: 'Have Gothenburg connected and the Advanced Engineering Prestige upgrade unlocked at any one time.', check: connectedWithPrestige('Gothenburg', 'advancedEngineering') },
@@ -177,9 +201,30 @@ export const ACHIEVEMENTS = [
     // a plain state check can't tell "removed" from "never built" once the development is gone.
     { id: 'sinceTheDucksLeft', group: 'Combinations', name: 'Since the Ducks Left', description: 'With New York as your home city, remove the Petting Zoo development while having the Duck theme purchased.' },
 
+    // Prestige
+    { id: 'groundhogDay', group: 'Prestige', name: 'Groundhog Day', description: 'Retire 5 times.', check: atLeast('retirements', 5) },
+
     // Secrets
     { id: 'surprise', group: 'Secrets', name: 'Surprise!', description: 'Claim the surprise in the credits section.' },
 ]
 
 export const ACHIEVEMENT_IDS = new Set(ACHIEVEMENTS.map(a => a.id))
 export const ACHIEVEMENT_BY_ID = Object.fromEntries(ACHIEVEMENTS.map(a => [a.id, a]))
+
+// The event achievements a build earns the moment it starts. `activeEventId` is the id of the event running right now (or
+// null); `foodBuilt` is how many Food developments are built or under construction (the one starting is not counted).
+// Builds that earn an achievement only while a particular event is running: the development (any of the names given), the id of the
+// event, and the achievement. Which event is running is checked when the build starts.
+const BUILD_DURING_EVENT = [
+    { names: ['Dance Studio'], event: 'security_incident', id: 'priorities' },
+    { names: ['Health Clinic'], event: 'sickness_outbreak', id: 'makesSense' },
+    { names: ['Water Taxi Transfers', 'Ferry Terminal'], event: 'record_day', id: 'biggerBoat' },
+    { names: ['Swimming Pool'], event: 'bad_weather', id: 'poolsClosed' },
+]
+
+export function startedBuildAchievements(development, { activeEventId = null, foodBuilt = 0 } = {}) {
+    const ids = []
+    BUILD_DURING_EVENT.forEach(r => { if (activeEventId === r.event && r.names.includes(development?.name)) ids.push(r.id) })
+    if (development?.name === 'Gaming Arcade' && foodBuilt === 0) ids.push('hungerGames')
+    return ids
+}

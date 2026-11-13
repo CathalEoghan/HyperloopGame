@@ -5,12 +5,15 @@ import { timeString } from '../utils/loops.js'
 import { automateTimetable } from '../utils/timetable.js'
 import { AUTOMATE_SCHEDULE_REP_COST } from 'Managers/ProgressionManager/ProgressionManager.js'
 import reputationIcon from '../assets/misc/reputation.png'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 // Shown after the first city is connected: nothing runs until a departure is scheduled, so this points the player at
 // both ways of doing it. `onSchedule` opens the board on the Schedule loop screen; `onViewBoard` opens it as it is.
 // Automate here costs the same Reputation as the Departure Board's own button (see AUTOMATE_SCHEDULE_REP_COST) -
 // kept in step so a first-time player isn't taught a different price to the one they'll see from then on.
 export default function FirstLoopModal({ purchasedCities, reputation = 0, progressionManager = null, onSchedule, onViewBoard, onAutomated = () => {}, onSave = () => {}, onClose }) {
+    // Escape is Close / Later: the prompt is only a reminder, and scheduling stays the player's choice
+    useEscapeToClose(() => { playClickSound2(); onClose() })
     const [result, setResult] = useState(null)
 
     // The real Reputation, not the prop, which can be a second old (bug #170) - same convention as the board.

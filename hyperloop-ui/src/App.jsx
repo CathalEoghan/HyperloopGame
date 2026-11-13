@@ -15,7 +15,7 @@ import HomePage from "./pages/HomePage"
 import ProgressPage from './pages/ProgressPage.jsx'
 import DepartureBoard from "./pages/DepartureBoard"
 import FirstLoopModal from './components/FirstLoopModal.jsx'
-import { ensureDepartures, departuresForDay, readTimetable, dropCityFromTimetable, autoScheduleExisting, markTimetableAutofilled } from './utils/timetable.js'
+import { ensureDepartures, departuresForDay, readTimetable, dropCityFromTimetable, autoScheduleExisting, markTimetableAutofilled, GATE_COOLDOWN } from './utils/timetable.js'
 import { loopCode } from './utils/loopCodes.js'
 import DevelopmentPage from "./pages/DevelopmentPage";
 import OpeningPage from './pages/OpeningPage'
@@ -57,14 +57,17 @@ import { bumpLivestreamClicks, livestreamRepFor } from "Managers/PrestigeManager
 import { PRESTIGE_VALUES } from "Managers/PrestigeManager/prestigeUpgrades.js";
 import { readGrantedCities, writeGrantedCities } from "./utils/grantedCities.js";
 import { applyGovernmentGrant } from "Managers/PrestigeManager/governmentGrants.js";
+import { perkActive } from "Managers/PrestigeManager/perkToggles.js";
 import { AchievementManager } from "Managers/AchievementManager/AchievementManager.js";
+import { startedBuildAchievements } from "Managers/AchievementManager/achievements.js";
 import AchievementToast from "./components/AchievementToast.jsx";
 import AchievementsModal, { AchievementsButton } from "./components/AchievementsModal.jsx";
 import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
 import { pickCelebrityDeparture } from './utils/celebrity.js'
-import { ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
+import { NUM_GATES, ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
+import { readStoredList } from './utils/storedList.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playClickSound3, playHoverSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
 import { saveGame, buildSave, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, clearSettings, startPrestigeRun, readRunStart, getLifetimeCreatedAt } from 'Managers/SaveManager.js'
 import { getRandomEvent } from "./data/events.js"
@@ -552,13 +555,13 @@ function App() {
     // Mark home city rewards as shown BEFORE building the queue
     if (progressionManager.purchasedCities.length > 0) {
       const homeCity = progressionManager.purchasedCities[0];
-      const shownEarly = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]');
+      const shownEarly = readStoredList('hyperloop_shown_reveals');
       homeCity.rewards.forEach(r => {
         if (!shownEarly.includes(r.name)) shownEarly.push(r.name);
       });
       localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shownEarly));
     }
-    const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+    const shown = readStoredList('hyperloop_shown_reveals')
     const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
     if (progressionManager.purchasedCities.length <= 1) return []
     const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
@@ -607,7 +610,7 @@ function App() {
   // doesn't show week-old posts or an old unread count (bug #135).
   const [hyperLinkFeed, setHyperLinkFeed] = useState(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
+      const stored = readStoredList('hyperloop_hyperlink_feed')
       // Posts from older versions also carried their whole picture; drop it, the id is enough (bug #134)
       const fresh = stored.filter(p => p.timestamp > Date.now() - 172800000).map(p => { const rest = { ...p }; delete rest.pfp; return rest })
       if (fresh.length !== stored.length || stored.some(p => 'pfp' in p)) localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(fresh))
@@ -659,7 +662,7 @@ function App() {
     nextAllowedPostTimeRef.current = runAt + MIN_POST_GAP_MS
     const run = () => {
       post.timestamp = Date.now()
-      const newFeed = [...JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]'), post]
+      const newFeed = [...readStoredList('hyperloop_hyperlink_feed'), post]
       localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(newFeed))
       setHyperLinkFeed(newFeed)
       if (!hyperLinkOpenRef.current) {
@@ -685,7 +688,7 @@ function App() {
   const LEGACY_MILESTONE_CLAIMS = { rank_10: 'Commemorative Displays', rank_25: 'Anniversary Sales', rank_50: "Founders' Hall", rank_100: 'Early Retirement' };
   const milestoneKey = (milestone) => `milestone_${milestone.upgradeName}`;
   const claimedMilestones = useRef(new Set(
-    JSON.parse(localStorage.getItem('hyperloop_claimed_milestones') || '[]')
+    readStoredList('hyperloop_claimed_milestones')
       .flatMap(key => LEGACY_MILESTONE_CLAIMS[key] ? [key, `milestone_${LEGACY_MILESTONE_CLAIMS[key]}`] : [key])
   ));
   const MILESTONES = [
@@ -773,7 +776,7 @@ function App() {
     queuedRevealNames.current = new Set(devRevealQueue.map(d => d.name));
   }
   const triggeredDepartures = useRef(new Set(
-    JSON.parse(localStorage.getItem('hyperloop_triggered_departures') || '[]')
+    readStoredList('hyperloop_triggered_departures')
   ));
   const triggeredDelays = useRef(new Set());
   const tickCount = useRef(0);
@@ -887,7 +890,7 @@ function App() {
   });
 
   // Government Grants: the first tick after a new run's starter city is connected (and only then).
-  const grantPending = useRef(!!runStart && PrestigeManager.owns('governmentGrants'));
+  const grantPending = useRef(!!runStart && perkActive('governmentGrants'));
   // Sign-On Bonus: extra cash once the new run's starter city is connected. Put straight into the balance, not
   // earned, so it can't count towards XP or the cash-earned total.
   const signOnPending = useRef(!!runStart && PrestigeManager.owns('signOnBonus'));
@@ -900,7 +903,7 @@ function App() {
     applyGovernmentGrant(progressionManager, rankManager, allCities);
     // Dozens of developments arrive at once for a city the instant it's unlocked (some city reveals come with an
     // unlocked development or two of their own), so they count as already seen instead of each getting a popup
-    const seen = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
+    const seen = new Set(readStoredList('hyperloop_shown_reveals'));
     [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades].forEach(d => {
       seen.add(d.name);
       queuedRevealNames.current.add(d.name);
@@ -1159,6 +1162,18 @@ function App() {
     }
     return success;
   };
+
+  // Builds that earn an event achievement the moment they start: a Dance Studio during a Security Incident (Priorities), and a
+  // Gaming Arcade with no Food development built or being built (Hunger Games). ConstructionManager calls this for every
+  // build however it was started (the Build button, or Develop all).
+  useEffect(() => {
+    constructionManager.onDevelopmentStart = (development) => {
+      const isFood = d => d.category === 'Food';
+      const foodBuilt = progressionManager.purchasedDevelopments.filter(isFood).length + progressionManager.developmentsUnderConstruction.filter(d => d !== development && isFood(d)).length;
+      startedBuildAchievements(development, { activeEventId: activeEventRef.current?.id ?? null, foodBuilt }).forEach(unlockAchievement);
+    };
+    return () => { constructionManager.onDevelopmentStart = null; };
+  });
 
   const fireEvent = (rawEvent) => {
     // This event's own generation number, so its expiry setTimeout below can tell later whether it is still
@@ -1458,7 +1473,7 @@ function App() {
       const currentUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades];
       if (progressionManager.purchasedCities.length > 1 && !claimedCityRef.current) {
         const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
-        const alreadyShown = new Set(JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]'));
+        const alreadyShown = new Set(readStoredList('hyperloop_shown_reveals'));
         const newOnes = currentUnlocked.filter(d =>
           !homeCityRewardNames.has(d.name) &&
           !alreadyShown.has(d.name) &&
@@ -1551,7 +1566,7 @@ function App() {
       if (postDue && tickCount.current > 0 && progressionManager.purchasedCities.length > 0) {
         // Clean up posts older than 2 days
         const twoDaysAgo = Date.now() - 172800000
-        const storedFeed = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]')
+        const storedFeed = readStoredList('hyperloop_hyperlink_feed')
         const cleanFeed = storedFeed.filter(p => p.timestamp > twoDaysAgo)
         // Only write when something was actually removed, not every second (bug #134)
         if (cleanFeed.length !== storedFeed.length) localStorage.setItem('hyperloop_hyperlink_feed', JSON.stringify(cleanFeed))
@@ -1560,7 +1575,7 @@ function App() {
         // wait ran the feed dry after about 12 hours (bug #71)
         const reuseAfter = Date.now() - 3 * 3600000
         const validPostIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPostId).filter(Boolean))
-        const storedPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_posts') || '[]')
+        const storedPostIds = readStoredList('hyperloop_hyperlink_used_posts')
         const cleanedPostIds = storedPostIds.filter(id => validPostIds.has(id))
         if (cleanedPostIds.length !== storedPostIds.length) localStorage.setItem('hyperloop_hyperlink_used_posts', JSON.stringify(cleanedPostIds))
 
@@ -1570,17 +1585,17 @@ function App() {
         // holds {id, year} entries; only keep ones from the current year, so it naturally clears
         // itself out and each post becomes eligible again once that month comes back around.
         const currentYear = new Date().getFullYear()
-        const usedMonthPostRecords = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_month_posts') || '[]')
+        const usedMonthPostRecords = readStoredList('hyperloop_hyperlink_used_month_posts')
           .filter(e => e && e.year === currentYear)   // a bad entry must not stop the game loop (bug #178)
         const usedMonthPostIds = usedMonthPostRecords.map(e => e.id)
         // Only pictures used in the last 3 hours count as used, so they come round again instead of running out (bug #71)
         const feedPfpIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPfpId).filter(Boolean))
-        const usedPfps = JSON.parse(localStorage.getItem('hyperloop_hyperlink_used_pfps') || '[]').filter(id => feedPfpIds.has(id))
+        const usedPfps = readStoredList('hyperloop_hyperlink_used_pfps').filter(id => feedPfpIds.has(id))
         // Posts about owned developments/upgrades/prestige items (see OWNED_POSTS_WEIGHT in hyperLinkEngine.js):
         // once one has fired, it stays excluded for the rest of the run, not just the usual 3 hours - this list
         // only ever grows within a run and is wiped by startPrestigeRun/clearGameState (SaveManager.js), unlike
         // usedPostIds above which prunes itself back down as entries age out of the 3-hour window.
-        const firedDevPostIds = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_devposts') || '[]')
+        const firedDevPostIds = readStoredList('hyperloop_hyperlink_fired_devposts')
         // readSchedule never throws, so an unreadable schedule can't stop the rest of the tick (as bug #178)
         const sched = readSchedule(departuresKey())
         const todaysArrivals = readSchedule(arrivalsKey())
@@ -1804,9 +1819,18 @@ function App() {
           // The delayed loop takes its new place in the day's order (bug #103).
           // Matched on the city too: a delayed loop can land on another's time, and only this one moves (bug #171)
           const list = isArrival ? arrivals : schedule;
-          const updated = list.map(e => e.time === entry.time && e.name === entry.name
+          // A gate takes no other loop within GATE_COOLDOWN minutes of its last one, the same rule the timetable uses, so a
+          // delayed loop that lands next to another loop on its own gate moves to a free gate (any gate, if none is free)
+          const isThisLoop = e => e.time === entry.time && e.name === entry.name;
+          const gateBusy = gate => list.some(e => !isThisLoop(e) && e.gate === gate && Math.abs((e.hour * 60 + e.minute) - newTotalMins) < GATE_COOLDOWN);
+          let newGate = entry.gate;
+          if (gateBusy(newGate)) {
+            const freeGates = Array.from({ length: NUM_GATES }, (_, i) => i + 1).filter(gate => !gateBusy(gate));
+            if (freeGates.length > 0) newGate = freeGates[Math.floor(Math.random() * freeGates.length)];
+          }
+          const updated = list.map(e => isThisLoop(e)
             ? {
-                ...e, hour: newHour, minute: newMinute, time: newTime, minuteOfDay: newTotalMins, delayed: true,
+                ...e, hour: newHour, minute: newMinute, time: newTime, minuteOfDay: newTotalMins, delayed: true, gate: newGate,
                 // Kept so the loop's passenger count stays the same after the delay
                 originalTime: e.originalTime || e.time,
                 // An arrival set off at the same time as before, so its journey is longer by the delay
@@ -1843,7 +1867,7 @@ function App() {
       // the 5-minute guarantee both just keep re-checking every tick, so holding off here only delays the event
       // until the blocking popup clears, it never skips one.
       if (hasEnteredRef.current && (Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000 && !otherPopupOpenRef.current) {
-        const noNegatives = PrestigeManager.owns('crisisAvoidanceSpecialists');
+        const noNegatives = perkActive('crisisAvoidanceSpecialists');
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
         const event = getRandomEvent(positiveOnly);
 
@@ -2278,7 +2302,7 @@ function App() {
           onDisconnect={(city) => {
             // Rounded down, the same as the figure on the Confirm button (it used to charge or refund the unrounded half)
             const disconnectCost = Math.floor(constructionManager.calculateTierConnectionCost(city) / 2);
-            // A city Government Grants connected for free has nothing to refund
+            // A city an older Government Grants connected for free has nothing to refund
             const grantedNames = readGrantedCities();
             const wasGranted = grantedNames.includes(city.name);
             if (wasGranted) writeGrantedCities(grantedNames.filter(n => n !== city.name));
@@ -2294,6 +2318,7 @@ function App() {
             // Passengers react on Hyper-Link (the disconnected_city posts)
             hyperLinkTriggerRef.current = { type: 'disconnected_city', data: { city: city.name } };
             if (achievements.unlock('noConnectionForYou')) announceAchievements(['noConnectionForYou']);
+            if (city.country === 'France') unlockAchievement('theFrenchDisconnection');
             // Its loops still to come are taken off the timetable: today's departures, and today's and tomorrow's
             // arrivals (otherwise the ticker still announced them, and reconnecting today brought the old ones back)
             const nowMs = Date.now();
@@ -2354,7 +2379,7 @@ function App() {
               // A "got upgraded!" HyperLink post only ever fires once per development per run - without this,
               // buying several levels in quick succession each pushed their own trigger, so a dev upgraded 10
               // times in a row could flood the feed with several near-identical posts about the very same place.
-              const firedDevUpgrades = JSON.parse(localStorage.getItem('hyperloop_hyperlink_fired_dev_upgrades') || '[]')
+              const firedDevUpgrades = readStoredList('hyperloop_hyperlink_fired_dev_upgrades')
               if (!firedDevUpgrades.includes(development.name)) {
                 firedDevUpgrades.push(development.name)
                 localStorage.setItem('hyperloop_hyperlink_fired_dev_upgrades', JSON.stringify(firedDevUpgrades))
@@ -2592,7 +2617,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && revealedUpgradeQueue.length > 0 && (
+      {!dailyLoginData && !showOfflineModal && revealedUpgradeQueue.length > 0 && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && (
         <UpgradeRevealModal
           key={revealedUpgradeQueue[0].name}
           upgrade={revealedUpgradeQueue[0]}
@@ -2676,7 +2701,7 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && !autoClaimOn && devRevealQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && !autoClaimOn && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
         <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} onEnableAuto={() => { try { localStorage.setItem(AUTO_CLAIM_RANKUPS_KEY, 'true') } catch { /* storage blocked: this one still claims */ } claimAllRankUps(true) }} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
@@ -2695,7 +2720,7 @@ function App() {
       {showCityPicker && pendingRankUps > 0 && !claimedCity && (
         <CityPickerModal
           // Hidden, not removed, while another popup is on top, so the search and the chosen city survive it (bug #142)
-          hidden={!!dailyLoginData || showOfflineModal || !!activeDelay || !!activeDeparture || devRevealQueue.length > 0}
+          hidden={!!dailyLoginData || showOfflineModal || !!activeDelay || !!activeDeparture || devRevealQueue.length > 0 || revealedUpgradeQueue.length > 0}
           cities={progressionManager.getUnlockableCities(allCities)}
           waiting={pendingRankUps}
           onClaimAll={() => { setShowCityPicker(false); claimAllRankUps(); }}
@@ -2710,7 +2735,7 @@ function App() {
         return (
           <CityChoiceModal
             // Hidden, not removed, while another popup is on top, so the offer survives it
-            hidden={!!dailyLoginData || showOfflineModal || !!activeDelay || !!activeDeparture || devRevealQueue.length > 0}
+            hidden={!!dailyLoginData || showOfflineModal || !!activeDelay || !!activeDeparture || devRevealQueue.length > 0 || revealedUpgradeQueue.length > 0}
             cities={cityChoices}
             waiting={pendingRankUps}
             reputation={reputation}
@@ -2740,14 +2765,14 @@ function App() {
           waiting={devRevealQueue.length}
           onClaimAll={() => {
             const all = devRevealQueue
-            const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+            const shown = readStoredList('hyperloop_shown_reveals')
             all.forEach(d => { if (!shown.includes(d.name)) shown.push(d.name) })
             localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shown))
             setDevRevealQueue([])
             setClaimAllDevs([...all].sort((a, b) => (a.category || '').localeCompare(b.category || '') || a.name.localeCompare(b.name)))
           }}
           onContinue={() => {
-            const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+            const shown = readStoredList('hyperloop_shown_reveals')
             shown.push(devRevealQueue[0].name)
             localStorage.setItem('hyperloop_shown_reveals', JSON.stringify(shown))
             setDevRevealQueue(q => q.slice(1))
@@ -2762,7 +2787,7 @@ function App() {
           reputation={reputation}
           onClose={() => {
             if (progressionManager.purchasedCities.length > 1) {
-              const shown = JSON.parse(localStorage.getItem('hyperloop_shown_reveals') || '[]')
+              const shown = readStoredList('hyperloop_shown_reveals')
               const allUnlocked = [...progressionManager.unlockedDevelopments, ...progressionManager.unlockedUpgrades]
               const homeCityRewardNames = new Set((progressionManager.purchasedCities[0]?.rewards || []).map(r => r.name));
               const unshown = allUnlocked.filter(d => !shown.includes(d.name) && !homeCityRewardNames.has(d.name))
@@ -2820,8 +2845,9 @@ function App() {
         />
       )}
 
-      {/* Waits for everything the last city brought with it (its reveal, the developments it unlocked, the Passenger Appreciation popup) so the finale lands last */}
-      {!dailyLoginData && !showOfflineModal && showSecretCityModal && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && (
+      {/* Waits for everything the last city brought with it (its reveal, the developments it unlocked, the Passenger Appreciation popup)
+          and for any milestone still waiting, so the finale lands last and never on top of another popup */}
+      {!dailyLoginData && !showOfflineModal && showSecretCityModal && milestoneQueue.length === 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && (
         <SecretCityModal onContinue={() => {
           setShowSecretCityModal(false);
           const antarcticCity = allCities.find(c => c.name === 'Antarctic Peninsula');
@@ -2882,7 +2908,7 @@ function App() {
             // Orange is the New Jack: the poster's displayName is a random "<first name> <surname>" (see
             // hyperLinkEngine.js) - only the first name counts, so "Jackson"/"Jackie" don't also qualify.
             try {
-              const liked = JSON.parse(localStorage.getItem('hyperloop_hyperlink_feed') || '[]').find(p => p.id === postId);
+              const liked = readStoredList('hyperloop_hyperlink_feed').find(p => p.id === postId);
               if (liked?.usedPfpId === CAMEO_PFP_ID) unlockAchievement('cameo');
               if (liked?.displayName?.split(' ')[0] === 'Jack') unlockAchievement('orangeIsTheNewJack');
             } catch { /* feed unreadable: no achievement check this time */ }

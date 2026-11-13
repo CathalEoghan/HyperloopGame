@@ -1,6 +1,7 @@
 import { formatCompact } from '../utils/formatCompact.js'
 import { useState, useRef, useLayoutEffect, useEffect } from 'react'
 import { PrestigeManager, PRESTIGE_MIN_RANK, RANKS_PER_PRESTIGE_POINT, CASH_PER_PRESTIGE_POINT } from 'Managers/PrestigeManager/PrestigeManager.js'
+import { perkActive } from 'Managers/PrestigeManager/perkToggles.js'
 import { MAX_RANK } from 'Managers/RankManager/RankManager.js'
 import { PRESTIGE_LAYERS, PRESTIGE_UPGRADES, PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
 import { STARTING_BALANCE } from 'Managers/ProgressionManager/economyConstants.js'
@@ -104,6 +105,8 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
     const rankPoints = PrestigeManager.pointsForRank(rank)
     const cashPoints = PrestigeManager.pointsForCash(runStats?.cash ?? 0)
     const retirePoints = rankPoints + cashPoints
+    // Point counts read like the points total at the top of the page: full digits with commas, then "1.25 billion" and so on
+    const fmtPoints = n => formatCompact(n, 1e9)
     // How the payout adds up, and how far away the next step is (worth knowing before retiring)
     const pointsPerStep = PrestigeManager.pointsForRank(RANKS_PER_PRESTIGE_POINT)
     // The same for cash: 1 per £500M, or 2 with Quick Learner (pointsForCash doubles it just as pointsForRank does) -
@@ -167,7 +170,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 <div className="prestige-retire-text">
                     <b>Early Retirement</b>
                     {canRetire
-                        ? <span>Retire now for <b className="prestige-gold">{retirePoints} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({pointsPerStep} per {RANKS_PER_PRESTIGE_POINT} ranks, {cashPointsPerStep} per {cashIconEl}{(CASH_PER_PRESTIGE_POINT / 1e6)}M earned - you are Rank {rank}). Your run resets.</span>
+                        ? <span>Retire now for <b className="prestige-gold">{fmtPoints(retirePoints)} Prestige Point{retirePoints === 1 ? '' : 's'}</b> ({pointsPerStep} per {RANKS_PER_PRESTIGE_POINT} ranks, {cashPointsPerStep} per {cashIconEl}{(CASH_PER_PRESTIGE_POINT / 1e6)}M earned - you are Rank {rank}). Your run resets.</span>
                         : rank >= PRESTIGE_MIN_RANK
                             ? <span>Early Retirement is waiting under Development, Upgrades. Purchase it for 50 Reputation to prestige.</span>
                             : <span>Reach Rank {PRESTIGE_MIN_RANK} and purchase Early Retirement (50 Reputation) to prestige. You are Rank {rank}.</span>}
@@ -192,11 +195,11 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
 
                             <div className="prestige-reward">
                                 <span className="prestige-reward-label">You will earn</span>
-                                <span className="prestige-reward-value">+{retirePoints}</span>
+                                <span className="prestige-reward-value">+{fmtPoints(retirePoints)}</span>
                                 <div className="prestige-progress">
                                     <div className="prestige-progress-row">
                                         <div className="prestige-progress-line">
-                                            <span>Rank {rank} · <b>+{rankPoints}</b></span>
+                                            <span>Rank {rank} · <b>+{fmtPoints(rankPoints)}</b></span>
                                             {nextStepRank <= MAX_RANK && <span>{nextStepRank - rank} more ranks for +{pointsPerStep}</span>}
                                         </div>
                                         <div className="prestige-bar" role="progressbar" aria-label="Progress to the next rank point" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(rankProgress * 100)}>
@@ -205,7 +208,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                     </div>
                                     <div className="prestige-progress-row">
                                         <div className="prestige-progress-line">
-                                            <span>{fmtCashIcon(runStats?.cash ?? 0)} earned · <b>+{cashPoints}</b></span>
+                                            <span>{fmtCashIcon(runStats?.cash ?? 0)} earned · <b>+{fmtPoints(cashPoints)}</b></span>
                                             <span>{fmtCashIcon(nextCashStep - (runStats?.cash ?? 0))} more for +{cashPointsPerStep}</span>
                                         </div>
                                         <div className="prestige-bar" role="progressbar" aria-label="Progress to the next cash point" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(cashProgress * 100)}>
@@ -252,7 +255,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                             </div>
 
                             <p className="prestige-next-run">
-                                <b>Your next run:</b> {PrestigeManager.owns('governmentGrants')
+                                <b>Your next run:</b> {perkActive('governmentGrants')
                                     ? <>back to Rank {GRANT_RANK} with {GRANT_CITIES} extra cities already unlocked (Government Grants), and </>
                                     : <>back to Rank 1 with </>}{fmtCashIcon(nextRunCash)}{signOn ? ' (Sign-On Bonus included)' : ''}
                                 {runStats.home ? <>, starting from {runStats.home}. You can pick a different home terminal first.</> : '.'}
@@ -277,7 +280,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                             <div className="prestige-runs-row prestige-runs-head"><span>Run</span><span>Rank</span><span>Points</span><span>Cash earned</span><span>Time</span></div>
                             {history.map((r, i) => (
                                 <div className="prestige-runs-row" key={i}>
-                                    <span>{i + 1}</span><span>{r.rank}</span><span>+{r.points}</span><span>{fmtCashIcon(r.cash)}</span><span>{fmtSpan(r.endedAt - r.startedAt)}</span>
+                                    <span>{i + 1}</span><span>{r.rank}</span><span>+{fmtPoints(r.points)}</span><span>{fmtCashIcon(r.cash)}</span><span>{fmtSpan(r.endedAt - r.startedAt)}</span>
                                 </div>
                             ))}
                         </div>
@@ -355,7 +358,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                                                                 {popReason === 'Owned'
                                                                     ? <div className="prestige-pop-owned">{ownedIconEl}Owned</div>
                                                                     : <>
-                                                                        {!popReason && <div className="prestige-pop-after">Points after buying: <b>{prestige.points - u.cost}</b></div>}
+                                                                        {!popReason && <div className="prestige-pop-after">Points after buying: <b>{fmtPoints(prestige.points - u.cost)}</b></div>}
                                                                         <button className={`prestige-buy-btn ${popReason ? 'prestige-buy-btn-disabled' : ''}`}
                                                                             onMouseEnter={() => playHoverSound()}
                                                                             onClick={() => {

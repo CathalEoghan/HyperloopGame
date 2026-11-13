@@ -931,6 +931,17 @@ export class EconomyManager {
         return Math.floor(baseCost * (1 - discount) + 1e-6);   // tolerance: no £1 lost to decimal rounding
     }
 
+    // Bank's discount (developmentDiscount) covers everything built except Experimental Technology, whose price is a flat
+    // £1,000,000 per Prestige Point it pays (see ExperimentalTechnology.js)
+    isBuildDiscountExempt(item) {
+        return item?.effectType === 'prestigePoints';
+    }
+
+    // What building this development or upgrade costs right now
+    calculateBuildCost(item) {
+        return this.isBuildDiscountExempt(item) ? Math.floor(item.cost) : this.calculateDiscountedBuildCost(item.cost);
+    }
+
     // What removing a built development costs and pays back. Amicable Breakups: no Reputation, and half of what the
     // development costs to build now comes back as a refund (the same deal as disconnecting a city).
     getDevelopmentRemoval(development) {

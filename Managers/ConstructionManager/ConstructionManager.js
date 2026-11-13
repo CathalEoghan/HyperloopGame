@@ -116,6 +116,8 @@ export class ConstructionManager {
         development.finishTime = this.timeManager.getFinishTime(duration);
         development.underConstruction = true;
         this.progressionManager.developmentsUnderConstruction.push(development);
+        // The game screen hooks this to notice builds that unlock achievements (Priorities, Hunger Games)
+        this.onDevelopmentStart?.(development);
         return true;
     }
 

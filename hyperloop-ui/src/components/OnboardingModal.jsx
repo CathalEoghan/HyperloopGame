@@ -5,8 +5,11 @@ import growthIcon from '../assets/misc/growth.png'
 import planetEarthIcon from '../assets/misc/planet-earth.png'
 import constructionIcon from '../assets/misc/construction.png'
 import './OnboardingModal.css'
+import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 function OnboardingModal({ onDismiss }) {
+    // A notice, so Escape does what its button does
+    useEscapeToClose(() => { playClickSound2(); onDismiss() })
     return (
         <div className="modal-overlay">
             <div className="modal onboarding-modal">

@@ -120,7 +120,12 @@ export const loopId = (kind, dayMs, entry) => `${kind === 'arrival' ? 'arr' : 'd
 // of the city name) rolled a different number for the same city/hour/day, so the departure board could show a
 // loop as full while the City modal - correctly - showed what it was actually earning at a lower capacity.
 export const stablePassengers = (kind, dayMs, name, hour) => loopPassengers(name, hour, `${name}|${dayKey(dayMs)}|${hour}`)
-const passengersOf = (kind, dayMs, entry) => stablePassengers(kind, dayMs, entry.name, entry.hour)
+// A delayed loop keeps the hour it was timetabled for (`originalTime`), so a delay never changes who is on board
+const scheduledHour = entry => {
+    const m = /^(\d{1,2}):\d{2}$/.exec(entry.originalTime || '')
+    return m ? Number(m[1]) : entry.hour
+}
+const passengersOf = (kind, dayMs, entry) => stablePassengers(kind, dayMs, entry.name, scheduledHour(entry))
 
 export function loopSpeedMph(seed) {
     return LOOP_MPH_MIN + (hashString(seed) % (LOOP_MPH_MAX - LOOP_MPH_MIN + 1))

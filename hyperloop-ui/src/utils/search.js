@@ -63,10 +63,11 @@ function aliasCountries(query) {
 }
 
 // True when a city (its name + country) matches what was typed in a city/country search box,
-// including shorthands like UK, USA, UAE.
+// including shorthands like UK, USA, UAE. A shorthand still finds cities whose own name contains it ("uk" finds Nuuk,
+// "pr" finds Prague), it just doesn't match other countries' names by it, so "UK" doesn't bring up Ukraine.
 export function matchesPlace(cityName, country, query) {
     const { exact, partial } = aliasCountries(query)
     const c = normaliseForSearch(country)
-    if (exact) return exact.includes(c)
+    if (exact) return exact.includes(c) || matchesSearch(cityName, query)
     return matchesSearch(cityName, query) || matchesSearch(country, query) || partial.includes(c)
 }

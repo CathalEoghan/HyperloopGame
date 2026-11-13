@@ -9,8 +9,9 @@ import { GRANT_RANK } from './PrestigeManager/governmentGrants.js'
 
 const SAVE_KEY = 'hyperloop_save'
 
-// Whether this run took Government Grants: the cities it connected for free are listed under this key (see
-// hyperloop-ui/src/utils/grantedCities.js), which only a grant ever writes to
+// Whether this run still has cities listed that an older Government Grants connected for free (see
+// hyperloop-ui/src/utils/grantedCities.js). The current grant only unlocks cities, so it never writes to this key; it is
+// only ever filled in a game begun under the old rule
 function hasGrantedCities() {
     try {
         const list = JSON.parse(localStorage.getItem('hyperloop_granted_cities'))
@@ -55,7 +56,7 @@ const AUX_KEYS = [
     // The cities a rank-up is currently offering (and whether its free re-roll is still unused), so a reload
     // can't hand out a fresh offer without the Reputation re-roll
     'hyperloop_rankup_offer',
-    // Cities Government Grants connected for free: Amicable Breakups refunds nothing for them
+    // Cities an older Government Grants connected for free: Amicable Breakups refunds nothing for them
     'hyperloop_granted_cities',
     // The cities that have had their Opening Party this run (each gets one, see App.jsx)
     'hyperloop_opening_party_cities',
@@ -156,6 +157,9 @@ const SETTINGS_KEYS = [
     // Best P.A. Ever's On/Off. A retire keeps it, so a player who switched it off stays switched off in every new run
     // (Couch Potato needs a run with no Work presses at all, which auto-clicks would spoil)
     'hyperloop_auto_work',
+    // Crisis Avoidance Specialists and Government Grants can be switched off in Settings; a retire keeps the choice
+    'hyperloop_perk_crisis_avoidance',
+    'hyperloop_perk_government_grants',
     // Auto-claim rank-ups: kept across a retire like the other settings
     'hyperloop_auto_claim_rankups',
     'hyperloop_video_message_popups',
@@ -173,6 +177,35 @@ const SETTINGS_KEYS = [
 
 export function clearSettings() {
     removeKeys(SETTINGS_KEYS)
+}
+
+// The settings that change how the game plays, not just how it looks: they travel with an exported save, so an import on
+// another browser or device doesn't quietly switch a perk back on. Each is the string 'true' or 'false'. They stay in
+// SETTINGS_KEYS (not AUX_KEYS) so a retire keeps them, and they are written back apart from the other extras, which
+// the file's own `_aux` list covers.
+const EXPORTED_SETTING_KEYS = [
+    'hyperloop_auto_work',
+    'hyperloop_auto_claim_rankups',
+    'hyperloop_perk_crisis_avoidance',
+    'hyperloop_perk_government_grants',
+]
+
+function bundleSettings() {
+    const state = {}
+    EXPORTED_SETTING_KEYS.forEach(key => {
+        const val = localStorage.getItem(key)
+        if (val === 'true' || val === 'false') state[key] = val
+    })
+    return state
+}
+
+// A file from before settings were exported has none, and leaves the current ones alone
+function restoreSettings(state) {
+    if (!state || typeof state !== 'object' || Array.isArray(state)) return
+    EXPORTED_SETTING_KEYS.forEach(key => {
+        if (state[key] !== 'true' && state[key] !== 'false') return
+        try { localStorage.setItem(key, state[key]) } catch { /* skip this setting */ }
+    })
 }
 
 // What a prestige keeps. Everything else about the run is cleared. The two date stamps stay so that the
@@ -674,7 +707,7 @@ export function exportSave(liveSave = null) {
     let text = raw
     try {
         const save = JSON.parse(raw)
-        if (save && typeof save === 'object' && !Array.isArray(save)) text = JSON.stringify({ ...save, _aux: bundleAuxState() })
+        if (save && typeof save === 'object' && !Array.isArray(save)) text = JSON.stringify({ ...save, _aux: bundleAuxState(), _settings: bundleSettings() })
     } catch { /* keep the raw text */ }
     const blob = new Blob([text], { type: 'application/json' })
     const url = URL.createObjectURL(blob)
@@ -699,8 +732,10 @@ export function importSave(file) {
 
                 // Extract and strip aux state before validation
                 const auxState = bundle._aux || null
+                const settingsState = bundle._settings || null
                 const data = { ...bundle }
                 delete data._aux
+                delete data._settings
 
                 // Validate structure
                 if (!validateSave(data)) throw new Error('Invalid save file')
@@ -730,6 +765,7 @@ export function importSave(file) {
                     // all put on a fresh timetable when the game starts.
                     removeKeys(['hyperloop_timetable', 'hyperloop_timetable_autofilled', 'hyperloop_first_loop_prompt'])
                 }
+                restoreSettings(settingsState)
 
                 resolve()
             } catch {
