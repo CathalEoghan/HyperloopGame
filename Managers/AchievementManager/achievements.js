@@ -76,6 +76,8 @@ export const ACHIEVEMENTS = [
     { id: 'cameo', group: 'Hyper-Link', name: 'Cameo', description: 'Feeling conceited?' },
     // No check: unlocked in App.jsx's onLikeReward, the same event-achievement pattern as Cameo above
     { id: 'orangeIsTheNewJack', group: 'Hyper-Link', name: 'Orange is the New Jack', description: 'Like a Hyper-Link post from someone called Jack.' },
+    // No check: unlocked in App.jsx's onLikeReward on the player's own date, 31 October
+    { id: 'tooMuchScreamtime', group: 'Hyper-Link', name: 'Too Much Screamtime', description: 'Like a Hyper-Link post on Halloween (October 31st).' },
     { id: 'shutUp', group: 'Hyper-Link', name: 'Shut Up!', description: 'Mute Hyper-Link.' },
 
     // Farewells
@@ -187,6 +189,9 @@ export const ACHIEVEMENTS = [
     { id: 'biggerBoat', group: 'Combinations', name: 'Gonna Need a Bigger Boat', description: 'Develop Water Taxi Transfers or Ferry Terminal while a Record Passenger Day event is active.' },
     { id: 'poolsClosed', group: 'Combinations', name: 'Pool\'s Closed', description: 'Develop Swimming Pool while a Severe Weather event is active.' },
     { id: 'hungerGames', group: 'Combinations', name: 'Hunger Games', description: 'With no Food developments constructed, build a Gaming Arcade.' },
+    // Everything built (ctx.builds, which leaves out what the rank milestones hand over) is the Outdoor Garden or an Enterprise
+    // development, and there are at least 10 of those
+    { id: 'lotusOperandi', group: 'Combinations', name: 'Lotus Operandi', description: 'Have an Outdoor Garden developed and 10 Enterprise-category developments constructed, with no other developments constructed.', check: ctx => ctx.builtNames.includes('Outdoor Garden') && (ctx.categories.Enterprise || 0) >= 10 && ctx.builds === 1 + (ctx.categories.Enterprise || 0) },
     // Advanced Engineering is a Prestige upgrade, not a development - it's permanent once bought, so this
     // unlocks the first time Gothenburg is connected on or after buying it (see connectedWithPrestige above).
     { id: 'maceToTheFace', group: 'Combinations', name: 'Mace to the Face', description: 'Have Gothenburg connected and the Advanced Engineering Prestige upgrade unlocked at any one time.', check: connectedWithPrestige('Gothenburg', 'advancedEngineering') },

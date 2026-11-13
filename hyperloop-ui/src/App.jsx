@@ -40,6 +40,7 @@ import MilestoneModal from "./components/MilestoneModal"
 import DevelopmentMilestoneModal from "./components/DevelopmentMilestoneModal"
 import { DEVELOPMENT_MILESTONES, MILESTONE_CATEGORIES, builtCount } from "./data/developmentMilestones.js"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
+import { pickDelayReason } from "./data/delayReasons.js"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
 import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
 import { POSTS } from "./data/hyperLinkData.js"
@@ -68,7 +69,7 @@ import starterCities from "./data/starterCities.js"
 import { allCities } from "../../CityManager/CityRegistry.js";
 import { departureTimestamp, minutesUntilDeparture, skipMissingMinutes } from './utils/time.js'
 import { pickCelebrityDeparture } from './utils/celebrity.js'
-import { NUM_GATES, ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles } from './utils/loops.js'
+import { NUM_GATES, ensureSchedules, tallyLoops, injectCityIntoSchedules, pruneSchedules, arrivalsKey, departuresKey, shiftDays, readSchedule, writeSchedule, entryTimestamp, entryDuration, farewellWindowMinutes, ARRIVAL_DELAY_MAX_MINUTES, getActiveLoops, getTerminalFootfallBreakdown, makeFootfallEstimator, distanceMiles, trafficBetween } from './utils/loops.js'
 import { readStoredList } from './utils/storedList.js'
 import { playRankUpSound, playReputationWorkBonusSound, playEventSound, playDepartureBoardSound, playClickSound2, playClickSound3, playHoverSound, playOpeningAudio, resetSoundSettings, setEntered } from './utils/sound.js'
 import { saveGame, buildSave, loadGame, hasSave, deleteSave, exportSave, importSave, clearGameState, clearSettings, startPrestigeRun, readRunStart, getLifetimeCreatedAt } from 'Managers/SaveManager.js'
@@ -330,6 +331,7 @@ function App() {
     const combined = {
       offlineSeconds: (pending?.offlineSeconds || 0) + (fresh?.offlineSeconds || 0),
       offlineIncome: (pending?.offlineIncome || 0) + (fresh?.offlineIncome || 0),
+      ...mergeTraffic(pending, fresh),
     };
     localStorage.setItem('hyperloop_pending_offline', JSON.stringify(combined));
     return combined;
@@ -355,6 +357,19 @@ function App() {
     primeIncomeInputs();
     const footfallAt = makeFootfallEstimator(progressionManager.purchasedCities, readTimetable());
     return economyManager.calculateOfflineIncome(startMs, startMs + seconds * 1000, footfallAt, bonusCreatedAt) * OFFLINE_RATE;
+  }
+
+  // The loops and passengers that passed through while away, added up across the absences waiting to be collected
+  function mergeTraffic(a, b) {
+    return {
+      arrived: (a?.arrived || 0) + (b?.arrived || 0),
+      departed: (a?.departed || 0) + (b?.departed || 0),
+      passengers: (a?.passengers || 0) + (b?.passengers || 0),
+    };
+  }
+  function offlineTrafficFor(startMs, seconds) {
+    try { return trafficBetween(progressionManager.purchasedCities, readTimetable(), startMs, startMs + seconds * 1000); }
+    catch { return { arrived: 0, departed: 0, passengers: 0 }; }
   }
 
   function calculateFreshOffline() {
@@ -392,7 +407,7 @@ function App() {
     // this point (it's declared ahead of offlineData's own useState, unlike createdAt below, which isn't).
     const offlineIncome = offlineIncomeFor(parseInt(hiddenAt), totalSeconds, lifetimeCreatedAt);
     if (offlineIncome < 1) return null;
-    return { offlineSeconds: totalSeconds, offlineIncome };
+    return { offlineSeconds: totalSeconds, offlineIncome, ...offlineTrafficFor(parseInt(hiddenAt), totalSeconds) };
   }
 
   const [isLoading, setIsLoading] = useState(() => hasSave() && progressionManager.purchasedCities.length > 0);
@@ -602,6 +617,9 @@ function App() {
   const [milestoneQueue, setMilestoneQueue] = useState([]);
   // Development-count milestones waiting to be shown (see checkDevelopmentMilestones and data/developmentMilestones.js)
   const [devMilestoneQueue, setDevMilestoneQueue] = useState([]);
+  // Categories a rank milestone has just handed an item to (Commemorative Displays, Anniversary Sales, ...), so a development
+  // milestone that item reaches says "You now have" rather than "You've built" (see checkDevelopmentMilestones)
+  const rankGiftCategories = useRef(new Set());
   const [cityClaimPending, setCityClaimPending] = useState(false);
   const [showDepartureBoard, setShowDepartureBoard] = useState(false)
   // The prompt after the first city is connected (nothing departs until it is scheduled), and whether the board opens
@@ -727,6 +745,7 @@ function App() {
       }
     } else if (upgrade) {
       progressionManager.purchasedUpgrades.push(upgrade);
+      rankGiftCategories.current.add(upgrade.category);
       // Dated like anything bought, so its card shows when it arrived instead of no date at all
       progressionManager.recordBuiltDate(upgrade);
       prevUpgradesCount.current = progressionManager.purchasedUpgrades.length;
@@ -758,7 +777,8 @@ function App() {
   // development and building it again can't pay twice. Reaching several tiers in one go (a save from before milestones
   // existed, or a bulk claim) shows one popup per category for the highest tier, paying every tier passed. The Reputation
   // goes into the save at once and is held back from the counter until the popup's button, the way Passenger Appreciation does.
-  const checkDevelopmentMilestones = () => {
+  // `silent` pays at once with no popup: for Government Grants' jump, whose rank-milestone items are handed over quietly too.
+  const checkDevelopmentMilestones = ({ silent = false } = {}) => {
     let claimed = {};
     try {
       const saved = JSON.parse(localStorage.getItem('hyperloop_dev_milestones'));
@@ -772,12 +792,20 @@ function App() {
       if (reached.length === 0) return;
       const top = reached[reached.length - 1];
       claimed[category] = top.count;
-      reachedNow.push({ category, count: top.count, reputation: reached.reduce((sum, t) => sum + t.reputation, 0) });
+      // Reached because a rank milestone just handed over an item of this category: the popup says "You now have"
+      const gifted = rankGiftCategories.current.has(category);
+      reachedNow.push({ category, count: top.count, reputation: reached.reduce((sum, t) => sum + t.reputation, 0), gifted });
     });
+    rankGiftCategories.current.clear();
     if (reachedNow.length === 0) return;
     localStorage.setItem('hyperloop_dev_milestones', JSON.stringify(claimed));
-    reachedNow.forEach(m => { progressionManager.addReputation(m.reputation); heldRepRef.current += m.reputation; });
-    setDevMilestoneQueue(prev => [...prev, ...reachedNow]);
+    if (silent) {
+      reachedNow.forEach(m => progressionManager.addReputation(m.reputation));
+      setReputation(shownReputation());
+    } else {
+      reachedNow.forEach(m => { progressionManager.addReputation(m.reputation); heldRepRef.current += m.reputation; });
+      setDevMilestoneQueue(prev => [...prev, ...reachedNow]);
+    }
     triggerSave();
   };
   const claimedCityRef = useRef(null);
@@ -948,6 +976,8 @@ function App() {
         claimMilestone(milestone, { silent: true });
       }
     });
+    // The development milestones those items reach are paid quietly as well, rather than as popups straight after the jump
+    checkDevelopmentMilestones({ silent: true });
     triggerSave();
   };
 
@@ -1256,7 +1286,9 @@ function App() {
     if (event.effectType === 'instantCash') {
       const rawBonus = Math.floor(economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * SECONDS_IN_A_DAY * INSTANT_CASH_DAY_FRACTION) * (pizza ? PRESTIGE_VALUES.pizzaParties : 1);
       const bonus = Math.max(rawBonus, MIN_INSTANT_CASH_BONUS);
-      progressionManager.addCash(bonus);
+      // A lump sum, so balance only (see addBonusCash): earned income is what moves ranks, not a one-off payout
+      progressionManager.addBonusCash(bonus);
+      setBalance(progressionManager.balance);
       // Pizza Parties doubled this already (see rawBonus above) - flagged the same way the duration
       // upgrades and News Column's Reputation bonus are, so the amount isn't the only boosted thing on this
       // popup with nothing saying why. Not when the minimum floor paid more anyway: the x2 didn't make that number.
@@ -1435,6 +1467,7 @@ function App() {
           const combined = {
             offlineSeconds: (pending?.offlineSeconds || 0) + offlineSeconds,
             offlineIncome: (pending?.offlineIncome || 0) + offlineIncome,
+            ...mergeTraffic(pending, offlineTrafficFor(now2 - gap * 1000, offlineSeconds)),
           };
           try { localStorage.setItem('hyperloop_pending_offline', JSON.stringify(combined)); } catch { /* storage full */ }
           setOfflineData(combined);
@@ -1621,6 +1654,12 @@ function App() {
         const usedMonthPostRecords = readStoredList('hyperloop_hyperlink_used_month_posts')
           .filter(e => e && e.year === currentYear)   // a bad entry must not stop the game loop (bug #178)
         const usedMonthPostIds = usedMonthPostRecords.map(e => e.id)
+        // Special-day and home-city lines are used once per calendar day (see isOncePerDay in hyperLinkEngine.js):
+        // storage holds {id, day} entries and only today's are kept
+        const todayText = new Date().toDateString()
+        const usedDailyPostRecords = readStoredList('hyperloop_hyperlink_used_daily_posts')
+          .filter(e => e && e.day === todayText)
+        const usedDailyPostIds = usedDailyPostRecords.map(e => e.id)
         // Only pictures used in the last 3 hours count as used, so they come round again instead of running out (bug #71)
         const feedPfpIds = new Set(cleanFeed.filter(p => p.timestamp > reuseAfter).map(p => p.usedPfpId).filter(Boolean))
         const usedPfps = readStoredList('hyperloop_hyperlink_used_pfps').filter(id => feedPfpIds.has(id))
@@ -1651,6 +1690,7 @@ function App() {
           arrivals: todaysArrivals,
           usedPostIds,
           usedMonthPostIds,
+          usedDailyPostIds,
           usedPfps,
           templateLastUsed,
           pfpLastUsed,
@@ -1670,6 +1710,10 @@ function App() {
           if (post.monthPostId) {
             usedMonthPostRecords.push({ id: post.monthPostId, year: currentYear })
             localStorage.setItem('hyperloop_hyperlink_used_month_posts', JSON.stringify(usedMonthPostRecords))
+          }
+          if (post.dailyPostId) {
+            usedDailyPostRecords.push({ id: post.dailyPostId, day: todayText })
+            localStorage.setItem('hyperloop_hyperlink_used_daily_posts', JSON.stringify(usedDailyPostRecords))
           }
           if (post.isOwnedPost) {
             firedDevPostIds.push(post.usedPostId)
@@ -1882,7 +1926,7 @@ function App() {
           }
           // loopNumber is only meaningful for a departure (an arrival's code is looked up live by city name
           // instead - see delayLoopCode/loopCodes.js), but carrying it either way is harmless.
-          const delay = { name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation, loopNumber: entry.loopNumber, ...(isArrival ? { kind: 'arrival' } : {}) };
+          const delay = { name: entry.name, originalTime: entry.time, newTime, delayMinutes, compensation, loopNumber: entry.loopNumber, reason: pickDelayReason(isArrival), ...(isArrival ? { kind: 'arrival' } : {}) };
           localStorage.setItem('hyperloop_pending_delay', JSON.stringify(delay));
           setActiveDelay(delay);
         }
@@ -2442,9 +2486,9 @@ function App() {
           lifetimeCreatedAt={lifetimeCreatedAt}
           onCollectReward={(reward) => {
             if (reward.type === 'cash') {
-              progressionManager.addCash(reward.amount);
+              // Balance only: not earned, so it can't jump ranks or inflate the Prestige cash points
+              progressionManager.addBonusCash(reward.amount);
               setBalance(progressionManager.balance);
-              setTotalCashEarned(progressionManager.totalCashEarned);
             } else {
               progressionManager.addReputation(reward.amount);
               setReputation(shownReputation());
@@ -2685,6 +2729,9 @@ function App() {
         <OfflineModal
           offlineSeconds={offlineData.offlineSeconds}
           offlineIncome={offlineData.offlineIncome}
+          arrived={offlineData.arrived}
+          departed={offlineData.departed}
+          passengers={offlineData.passengers}
           capHours={Math.round(economyManager.calculateOfflineCap() / 3600)}
           bonusFactor={PrestigeManager.owns('eliteAccountants') ? 3 : 2}
           reputation={reputation}
@@ -2957,6 +3004,9 @@ function App() {
             // A post from the account with the developer's photo: liking it is the Cameo achievement.
             // Orange is the New Jack: the poster's displayName is a random "<first name> <surname>" (see
             // hyperLinkEngine.js) - only the first name counts, so "Jackson"/"Jackie" don't also qualify.
+            // Too Much Screamtime: any like on Halloween, by the player's own calendar
+            const today = new Date();
+            if (today.getMonth() === 9 && today.getDate() === 31) unlockAchievement('tooMuchScreamtime');
             try {
               const liked = readStoredList('hyperloop_hyperlink_feed').find(p => p.id === postId);
               if (liked?.usedPfpId === CAMEO_PFP_ID) unlockAchievement('cameo');

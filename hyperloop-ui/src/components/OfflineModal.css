@@ -70,3 +70,11 @@
 .offline-earnings-breakdown .abbrev-number {
     display: inline-flex;
 }
+
+.offline-traffic {
+    color: #666;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    margin: -8px 0 16px;
+    font-family: 'Inter', sans-serif;
+}

@@ -170,6 +170,13 @@ export class ProgressionManager {
         if (!this.unlockedCities.includes(city)) this.unlockedCities.push(city);
     }
 
+    // Cash that is handed over rather than earned: Progress page rewards and the lump sum of a positive event. It goes into
+    // the balance only, so it can't count towards XP (a single payout used to skip several ranks), the Prestige cash points or
+    // the cash-earned totals. Same as the Sign-On Bonus, which also goes straight into the balance.
+    addBonusCash(amount) {
+        if (Number.isFinite(amount) && amount > 0) this.balance += amount;
+    }
+
     addCash(amount) {
     if (amount > 0) {
         this.totalCashEarned += amount;

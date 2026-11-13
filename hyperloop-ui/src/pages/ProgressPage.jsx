@@ -588,7 +588,7 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
         <>
             {showIntro && (
                 <PageIntroModal title="Welcome to Progress" onClose={closeIntro} points={[
-                    { icon: giftIcon, text: <>Every city, country and development you've collected has a <strong>one-off reward</strong> waiting - click its card for a small, random payout of cash or Reputation.</> },
+                    { icon: giftIcon, text: <>Every city, country and development you've collected has a <strong>one-off reward</strong> waiting - click its card for a small, random payout of cash or Reputation. Cash rewards go straight to your balance and do not count towards ranking up.</> },
                     { icon: growthIcon, text: <><strong>Lifetime Stats</strong> track your whole career and survive a Prestige retirement, <strong>Current Run Stats</strong> start again with a new run, and <strong>Active Bonuses</strong> lists every passive boost currently stacked on your income.</> },
                     { icon: starIcon, text: <>Sections can be folded away to save space - a <strong>Claim all</strong> button stays on the header, folded or not, for whatever is still <strong>waiting to be claimed</strong>.</> },
                 ]} />

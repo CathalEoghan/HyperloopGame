@@ -7,6 +7,7 @@ import './ConstructionScreen.css'
 const TIPS = [
     "Connect more cities to increase your daily income.",
     "Rank up to unlock new cities to connect.",
+    "Only passive earnings or income from work clicks count towards ranking up.",
     "Build developments to boost your revenue beyond city income.",
     "Re-roll your city choices for 15 reputation if none of them suit you.",
     "Give personal farewells and greet arrivals at the Terminal Board to earn reputation.",

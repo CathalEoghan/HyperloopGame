@@ -7,7 +7,7 @@ import serviceIcon from '../assets/misc/serviceCategory.png'
 import infrastructureIcon from '../assets/misc/infrastructureCategory.png'
 import enterpriseIcon from '../assets/misc/enterpriseCategory.png'
 import reputationIcon from '../assets/misc/reputation.png'
-import { milestoneTier, nextMilestoneCount, itemNoun } from '../data/developmentMilestones.js'
+import { milestoneTier, nextMilestoneCount } from '../data/developmentMilestones.js'
 import './MilestoneModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
@@ -22,12 +22,13 @@ function DevelopmentMilestoneModal({ milestone, onContinue }) {
     useEscapeToClose(() => { playClickSound2(); onContinue() })
     useEffect(() => { playDevelopmentMilestoneSound() }, [])
 
-    const { category, count, reputation } = milestone
+    const { category, count, reputation, gifted } = milestone
     const next = nextMilestoneCount(category, count)
-    const noun = itemNoun(category)
+    // An item handed over at a rank milestone wasn't built by the player, so that one says "You now have"
+    const opener = gifted ? 'You now have' : "You've built"
     const heading = count === 1
-        ? `You've built your first ${category} ${noun}!`
-        : `You've built ${count} ${category} ${noun}s!`
+        ? `${opener} your first ${category} development!`
+        : `${opener} ${count} ${category} developments!`
 
     return (
         <div className="modal-overlay">
@@ -43,7 +44,7 @@ function DevelopmentMilestoneModal({ milestone, onContinue }) {
                     </span>
                 </div>
                 {next
-                    ? <p className="milestone-next">Next {category} milestone at {next} {category} {noun}s built</p>
+                    ? <p className="milestone-next">Next {category} milestone at {next} {category} developments built</p>
                     : <p className="milestone-next">That was the last {category} milestone. Well done!</p>}
                 <button
                     className="closeButton"

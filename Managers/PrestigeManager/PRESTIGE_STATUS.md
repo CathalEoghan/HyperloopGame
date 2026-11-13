@@ -27,7 +27,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 2 | Good Standing | Developments and cities upgrade for half the Rep | ProgressionManager `getDevelopmentUpgradeCostInfo`, `getCityLineUpgradeCostInfo` |
 | 2 | Advanced Engineering | Cities and developments build immediately (finish on the next tick) | ConstructionManager |
 | 2 | Video Message | Farewell is sent automatically after 2.5 s | FarewellModal |
-| 2 | Viral Superstar | x3 Progress rewards (x6 with the x2 upgrade) | ProgressPage `handleCardClick` |
+| 2 | Viral Superstar | x3 Progress rewards (x6 with the x2 upgrade); the cash goes to the balance only, like a positive event's lump sum, so it gives no XP | ProgressPage `handleCardClick` |
 | 3 | Skeleton Staff | No cap on offline earnings | `calculateOfflineCap` returns Infinity |
 | 3 | Personal Favours | After a prestige you choose your starter city from the six starters or any city in the world (city picker); without it the city is drawn for you | OpeningPage `runStart` |
 | 3 | Pizza Parties | Positive events twice as strong (x2 effect and instant cash) | App.jsx event trigger |
@@ -68,10 +68,10 @@ None: all 36 upgrades are live. `NOT_IMPLEMENTED` in `prestigeUpgrades.js` is em
 
 ## Achievements
 
-- 127 achievements in `Managers/AchievementManager/achievements.js`. Unlocked ids are stored in `hyperloop_achievements`, running totals (Work presses, farewells, greetings, departures, arrivals, playtime) in `hyperloop_achievement_counters`, the Hyper-Link mute in `hyperloop_hyperlink_muted`.
+- 129 achievements in `Managers/AchievementManager/achievements.js`. Unlocked ids are stored in `hyperloop_achievements`, running totals (Work presses, farewells, greetings, departures, arrivals, playtime) in `hyperloop_achievement_counters`, the Hyper-Link mute in `hyperloop_hyperlink_muted`.
 - They are permanent: a prestige keeps all three, only Delete Save clears them. Importing a save replaces them with the file's.
 - State achievements (cities, builds, balance, rank, likes, counters, Prestige) are checked every second; event ones are unlocked where they happen (mute, credits portrait, retiring).
-- Upgrades count as developments (the Enterprise and Infrastructure categories only exist as upgrades). Milestone upgrades (Anniversary Sales, Early Retirement, Founders' Hall, Commemorative Displays) do not count.
+- Upgrades count as developments (the Enterprise and Infrastructure categories only exist as upgrades). Milestone upgrades (Anniversary Sales, Early Retirement, Founders' Hall, Commemorative Displays) do not count for achievements. The development milestones (data/developmentMilestones.js) are different: they count everything in a category, milestone upgrades included, to match the category pills on the Development page.
 - Only manual Work presses count (Best P.A. Ever will not). Treasury achievements check the balance at any moment.
 - Truly Global = every regular city; Top Secret = the Antarctic Peninsula.
 - **Very Important Person** is earned by giving a farewell or a greeting to a VIP passenger (see below).

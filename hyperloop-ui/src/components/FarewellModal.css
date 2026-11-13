@@ -71,6 +71,13 @@
     margin: 0 0 28px;
 }
 
+/* Tucked under the message: how many passengers are waiting (or have arrived) */
+.farewell-passengers {
+    color: #8a8a8a;
+    font-size: 0.85rem;
+    margin: -16px 0 24px;
+}
+
 .farewell-message strong {
     color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-weight: bold;
@@ -221,4 +228,16 @@
 
 .farewell-retinue-text strong {
     font-size: 0.85rem;
+}
+
+.farewell-local {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: -8px 0 8px;
+}
+.farewell-local span {
+    color: #8a8a8a;
+    font-size: .75rem;
+    font-weight: 400;
+    margin-left: 4px;
 }

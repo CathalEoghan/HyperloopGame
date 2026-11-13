@@ -204,6 +204,10 @@ function getMonthCategory() {
 // not just for 3 hours, and only clear when a new run starts.
 const OWNED_POSTS_WEIGHT = 4
 
+// Posts for the home city (the list is `homeCity_<name in lower case letters only>` in hyperLinkData.js, for the six starter
+// cities). The weight puts them at roughly 1 post in 15, so they are noticed without becoming the whole feed.
+const HOME_CITY_POSTS_WEIGHT = 1.5
+
 // Ranks that have their own milestone posts (the list is `milestone<rank>` in hyperLinkData.js). To add one, add the
 // rank here and the list there. A milestone shows from that rank until MILESTONE_WINDOW ranks after it; the weight is
 // higher than the old 1 so that the short window is reliably seen.
@@ -239,6 +243,86 @@ const OWNED_POST_WINDOWS = {
     },
 }
 
+// Special days: posts for a day of the year (the lists are `specialDay_<key>` in hyperLinkData.js), shown to every player,
+// whether or not they own anything, while the day's window is on. The windows use the player's own calendar date.
+// Diwali (the main day) and Lunar New Year (the first day) follow the lunar calendar, so they come from a table of real
+// dates, 2026 to 2035; after the last year their posts simply stop until the table is extended. Pancake Day is Shrove
+// Tuesday, 47 days before Easter, and Thanksgiving the 4th Thursday of November.
+const DIWALI = ['2026-11-08', '2027-10-29', '2028-10-17', '2029-11-05', '2030-10-26', '2031-11-14', '2032-11-02', '2033-10-22', '2034-11-10', '2035-10-30']
+const LUNAR_NEW_YEAR = ['2026-02-17', '2027-02-06', '2028-01-26', '2029-02-13', '2030-02-03', '2031-01-23', '2032-02-11', '2033-01-31', '2034-02-19', '2035-02-08']
+const SPECIAL_DAY_WEIGHT = 3
+
+// Whole days from `target` (a date at local midnight) to the day `d` falls on: negative before it, positive after
+const daysFrom = (d, target) => Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - target) / 86400000)
+// In a window around any of the dates in a table of 'YYYY-MM-DD': `before` days before to `after` days after
+const nearTableDate = (table, d, before, after) => table.some(text => {
+    const [y, m, day] = text.split('-').map(Number)
+    const n = daysFrom(d, new Date(y, m - 1, day))
+    return n >= -before && n <= after
+})
+
+const SPECIAL_DAYS = {
+    stPatricksDay: d => d.getMonth() === 2 && d.getDate() >= 16 && d.getDate() <= 17,
+    // The day before Shrove Tuesday too, so the pancakes are talked about ahead of it
+    pancakeDay: d => { const n = daysFrom(d, easterSunday(d.getFullYear())); return n === -48 || n === -47 },
+    bonfireNight: d => d.getMonth() === 10 && d.getDate() >= 4 && d.getDate() <= 6,
+    // The Tuesday before to the Sunday after: the travelling is the point
+    thanksgiving: d => {
+        const firstThursday = 1 + ((4 - new Date(d.getFullYear(), 10, 1).getDay() + 7) % 7)
+        const n = daysFrom(d, new Date(d.getFullYear(), 10, firstThursday + 21))
+        return n >= -2 && n <= 3
+    },
+    // Black Friday (the day after Thanksgiving) to Cyber Monday: the Friday to the Monday after
+    blackFriday: d => {
+        const firstThursday = 1 + ((4 - new Date(d.getFullYear(), 10, 1).getDay() + 7) % 7)
+        const n = daysFrom(d, new Date(d.getFullYear(), 10, firstThursday + 21))
+        return n >= 1 && n <= 4
+    },
+    diwali: d => nearTableDate(DIWALI, d, 2, 2),
+    // The eve to the third day
+    lunarNewYear: d => nearTableDate(LUNAR_NEW_YEAR, d, 1, 2),
+    friday13th: d => d.getDay() === 5 && d.getDate() === 13,
+    // The same dates as the seasonal upgrades' own posts (OWNED_POST_WINDOWS above), now for every player
+    halloween: d => OWNED_POST_WINDOWS.halloweenFair(d),
+    christmas: d => OWNED_POST_WINDOWS.christmasDayFestival(d),
+    newYear: d => OWNED_POST_WINDOWS.newYearsCelebrations(d),
+    valentines: d => OWNED_POST_WINDOWS.valentinesDaySales(d),
+    fourthOfJuly: d => OWNED_POST_WINDOWS.fourthOfJulyShows(d),
+    easter: d => OWNED_POST_WINDOWS.easterWeekendDeals(d),
+}
+
+// What the terminal wishes everyone on a special day (the ticker reads these): "From everyone here at X, we wish you ..."
+// Black Friday has no greeting. The windows are the ones the posts above use.
+const SPECIAL_DAY_WISHES = {
+    stPatricksDay: "a happy St. Patrick's Day!",
+    pancakeDay: 'a happy Pancake Day!',
+    bonfireNight: 'a safe and happy Bonfire Night!',
+    thanksgiving: 'a happy Thanksgiving!',
+    diwali: 'a very happy Diwali!',
+    lunarNewYear: 'a happy Lunar New Year!',
+    friday13th: 'a lucky Friday the 13th!',
+    halloween: 'a happy Halloween!',
+    christmas: 'a happy holiday season!',
+    newYear: 'a happy New Year!',
+    valentines: "a happy Valentine's Day!",
+    fourthOfJuly: 'a happy Fourth of July!',
+    easter: 'a happy Easter!',
+}
+// Ramadan and Eid are for the ticker only (they have no posts). The dates follow the moon, and the sighting can move a
+// day either way, so these are the expected dates, 2026 to 2035. Ramadan is the 29 days before Eid al-Fitr.
+const EID_AL_FITR = ['2026-03-20', '2027-03-09', '2028-02-26', '2029-02-14', '2030-02-04', '2031-01-24', '2032-01-14', '2033-01-02', '2033-12-23', '2034-12-12', '2035-12-01']
+const EID_AL_ADHA = ['2026-05-27', '2027-05-17', '2028-05-05', '2029-04-24', '2030-04-14', '2031-04-03', '2032-03-22', '2033-03-12', '2034-03-01', '2035-02-18']
+const TICKER_ONLY_WISHES = [
+    ['a blessed Ramadan!', d => EID_AL_FITR.some(text => { const [y, m, day] = text.split('-').map(Number); const n = daysFrom(d, new Date(y, m - 1, day)); return n >= -29 && n <= -1 })],
+    ['a happy Eid!', d => nearTableDate(EID_AL_FITR, d, 0, 2) || nearTableDate(EID_AL_ADHA, d, 0, 2)],
+]
+export function specialDayWishes(d = new Date()) {
+    return [
+        ...Object.entries(SPECIAL_DAY_WISHES).filter(([key]) => SPECIAL_DAYS[key]?.(d)).map(([, wish]) => wish),
+        ...TICKER_ONLY_WISHES.filter(([, inWindow]) => inWindow(d)).map(([wish]) => wish),
+    ]
+}
+
 function buildEligibleCategories(gameState) {
     const {
         purchasedCities, purchasedDevelopments, purchasedUpgrades,
@@ -256,6 +340,10 @@ function buildEligibleCategories(gameState) {
     add(getDayCategory(), 2)
     const monthCategory = getMonthCategory()
     if (POSTS[monthCategory]?.length) add(monthCategory, 2)
+    const today = new Date()
+    Object.entries(SPECIAL_DAYS).forEach(([key, inWindow]) => {
+        if (POSTS['specialDay_' + key]?.length && inWindow(today)) add('specialDay_' + key, SPECIAL_DAY_WEIGHT)
+    })
 
     // A seasonal upgrade (Valentine's Day Sales, Halloween Fair, ...) fires this trigger the instant it's bought
     // (see App.jsx, "bug #70"), whatever the real date is - OWNED_POST_WINDOWS below exists precisely to stop a
@@ -299,6 +387,8 @@ function buildEligibleCategories(gameState) {
     // A Celebrity Sighting that marked a departure (the popup showed its hint): rumours about it. Only then, because
     // they would hint at a flight that doesn't exist otherwise.
     if (activeEvent?.id === 'celebrity_visit' && activeEvent.celebrityHint) add('celebrityDepartureRumour', 8)
+    const homeCityKey = gameState.homeCity?.name ? 'homeCity_' + String(gameState.homeCity.name).toLowerCase().replace(/[^a-z]/g, '') : null
+    if (homeCityKey && POSTS[homeCityKey]?.length) add(homeCityKey, HOME_CITY_POSTS_WEIGHT)
     if (gameState.reputation < 40) add('lowReputation', 3)
     if (gameState.reputation > 200) add('highReputation', 3)
 
@@ -424,8 +514,13 @@ function generateUser(gender, usedPfps, pfpLastUsed = {}) {
     return { pfpId: pickLeastRecent(available, pfpLastUsed).id }
 }
 
+// Special-day and home-city pools are small (6-8 lines) and on all day, so with only the usual 3-hour reuse window the same
+// line came back 2-3 times in a day of play. Each of their lines shows at most once per calendar day instead; once a pool
+// is used up for the day it simply drops out of the draw.
+const isOncePerDay = category => category.startsWith('specialDay_') || category.startsWith('homeCity_')
+
 export function generateHyperLinkPost(gameState) {
-    const { terminalName, usedPostIds, usedMonthPostIds = [], usedPfps, trigger, templateLastUsed = {}, pfpLastUsed = {}, firedDevPostIds = [] } = gameState
+    const { terminalName, usedPostIds, usedMonthPostIds = [], usedDailyPostIds = [], usedPfps, trigger, templateLastUsed = {}, pfpLastUsed = {}, firedDevPostIds = [] } = gameState
 
     // firedDevPostIds holds the IDs of owned-development/upgrade/prestige posts already shown this run (see
     // OWNED_POSTS_WEIGHT above) - it never expires the way usedPostIds does, only clearing on a new run. Folded
@@ -438,6 +533,7 @@ export function generateHyperLinkPost(gameState) {
     const hasTemplateLeft = c => (POSTS[c.category] || []).some((_, i) => {
         const id = `${c.category}_${i}`
         return !excludedPostIds.includes(id) && !(MONTH_NAMES.includes(c.category) && usedMonthPostIds.includes(id))
+            && !(isOncePerDay(c.category) && usedDailyPostIds.includes(id))
     })
     const cats = buildEligibleCategories(gameState).filter(hasTemplateLeft)
     if (cats.length === 0) return null
@@ -472,6 +568,7 @@ export function generateHyperLinkPost(gameState) {
     if (!categoryPosts?.length) return null
 
     const isMonthPost = MONTH_NAMES.includes(selected.category)
+    const isDailyPost = isOncePerDay(selected.category)
     const available = categoryPosts
         .map((text, i) => ({ id: `${selected.category}_${i}`, text }))
         // Month posts have tiny pools (4-5 templates) that stay eligible for a whole month, so on
@@ -479,6 +576,8 @@ export function generateHyperLinkPost(gameState) {
         // shown this calendar year. Otherwise the same handful of posts would cycle every couple of
         // days for the entire month instead of each firing once before next year's version of it.
         .filter(p => !excludedPostIds.includes(p.id) && !(isMonthPost && usedMonthPostIds.includes(p.id)))
+        // Special-day and home-city lines show once each per calendar day (see isOncePerDay)
+        .filter(p => !(isDailyPost && usedDailyPostIds.includes(p.id)))
 
     if (available.length === 0) return null
 
@@ -508,6 +607,8 @@ export function generateHyperLinkPost(gameState) {
         usedPfpId: pfpId,
         gender,
         monthPostId: isMonthPost ? chosenPost.id : null,
+        // App.jsx records it in hyperloop_hyperlink_used_daily_posts so it isn't shown again today
+        dailyPostId: isDailyPost ? chosenPost.id : null,
         // Tells App.jsx to also record this one in firedDevPostIds, so it's excluded for the rest of the
         // run - not just the next 3 hours - the same as every other owned-category post.
         isOwnedPost: !!selected.isOwned,

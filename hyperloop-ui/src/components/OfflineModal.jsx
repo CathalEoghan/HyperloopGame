@@ -16,7 +16,7 @@ function formatDuration(seconds) {
     return 'a moment'
 }
 
-function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, onSpendRep, capHours = 48, bonusFactor = 2 }) {
+function OfflineModal({ offlineSeconds, offlineIncome, arrived = 0, departed = 0, passengers = 0, onCollect, reputation, onSpendRep, capHours = 48, bonusFactor = 2 }) {
     const [doubled, setDoubled] = useState(false)
     const [doubleHovered, setDoubleHovered] = useState(false)
     const canDouble = reputation >= 20 && !doubled
@@ -46,6 +46,12 @@ function OfflineModal({ offlineSeconds, offlineIncome, onCollect, reputation, on
                 <p className="offline-subtitle">
                     You were away for <strong>{formatDuration(offlineSeconds)}</strong>
                 </p>
+                {(arrived > 0 || departed > 0) && (
+                    <p className="offline-traffic">
+                        While you were away, {arrived} {arrived === 1 ? 'loop' : 'loops'} arrived, {departed} {departed === 1 ? 'loop' : 'loops'} departed
+                        {passengers > 0 && <>, and around <strong>{passengers.toLocaleString('en-GB')}</strong> passengers commuted through your terminal</>}.
+                    </p>
+                )}
                 <div className="offline-earnings-box">
                     <span className="offline-earnings-label">Offline earnings</span>
                     <span className="offline-earnings-amount">

@@ -5,7 +5,8 @@ import PersonalStylingBadge from './PersonalStylingBadge.jsx'
 import countryFlags from '../data/countryFlags.js'
 import './FarewellModal.css'
 import { flagSrc } from '../utils/flagSrc.js'
-import { farewellWindowMinutes } from '../utils/loops.js'
+import { farewellWindowMinutes, entryPassengers, entryTimestamp } from '../utils/loops.js'
+import { localPhrase } from '../data/localPhrases.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
 const secondsUntil = expiresAt => Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000))
@@ -46,6 +47,8 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     const isUrgent = secondsLeft <= 60
 
     const flagCode = countryFlags[departure.country]
+    // A word in the destination's own language, for the farewell or the greeting
+    const phrase = localPhrase(departure.country, departure.kind)
     // An arriving loop uses the same popup, to greet its passengers instead of saying goodbye
     const isArrival = departure.kind === 'arrival'
     // The board shows GATE CLOSED for the last 5 minutes. The standard farewell window opens right at that point,
@@ -54,6 +57,18 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
     // that opens just before midnight belongs to tomorrow's 00:05 loop, which a time-of-day check took as gone.
     const gateClosed = !isArrival && Math.ceil(secondsLeft / 60) <= 4
     const repGain = economyManager ? economyManager.getFarewellRepGain(5, !!departure.vip) : 5
+    // How many passengers are waiting (or have just arrived): the board's own count for this loop, so the two always agree.
+    // The loop's day is the one its time lands nearest to - a farewell that opens just before midnight is for tomorrow's loop.
+    const [passengers] = useState(() => {
+        try {
+            const windowMs = farewellWindowMinutes(economyManager?.progressionManager.purchasedUpgrades) * 60000
+            const anchor = departure.expiresAt ? (isArrival ? departure.expiresAt - windowMs : departure.expiresAt) : Date.now()
+            const dayMs = [-86400000, 0, 86400000].map(d => Date.now() + d)
+                .reduce((best, d) => Math.abs(entryTimestamp(departure, d) - anchor) < Math.abs(entryTimestamp(departure, best) - anchor) ? d : best)
+            const n = entryPassengers(isArrival ? 'arrival' : 'departure', dayMs, departure)
+            return Number.isFinite(n) && n > 0 ? n : null
+        } catch { return null }
+    })
     // Personal Styling Retinue's x3 on the first greet/farewell of the day, named below instead of hiding in the figure
     const retinue = economyManager ? economyManager.getFirstLoopBonus() : 0
 
@@ -94,6 +109,16 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                             ? <>Gate <strong>{departure.gate}</strong> is now closed for <strong>{departure.name}</strong>. There is still time to give passengers a personal farewell.</>
                             : <>Final call for passengers travelling to <strong>{departure.name}</strong>. Please proceed to Gate <strong>{departure.gate}</strong>.</>}
                 </p>
+                {phrase && (
+                    <p className="farewell-local">“{phrase.text}” <span>{phrase.language}</span></p>
+                )}
+                {passengers !== null && (
+                    <p className="farewell-passengers">
+                        {isArrival
+                            ? `About ${passengers} ${passengers === 1 ? 'passenger has' : 'passengers have'} just arrived${departure.vip ? ', including a VIP' : ''}.`
+                            : `About ${passengers} ${passengers === 1 ? 'passenger is' : 'passengers are'} waiting${departure.vip ? ', including a VIP' : ''}.`}
+                    </p>
+                )}
                 <p className={`farewell-timer ${isUrgent ? 'farewell-timer-urgent' : ''}`}>
                     {timeDisplay}
                 </p>

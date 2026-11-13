@@ -60,6 +60,7 @@ const SOUNDS = [
 const TIPS = [
     "Connect more cities to increase your daily income.",
     "Rank up to unlock new cities to connect.",
+    "Only passive earnings or income from work clicks count towards ranking up.",
     "Build developments to boost your revenue beyond city income.",
     "Re-roll your city choices for Reputation if none of them suit you.",
     "When a departure or arrival is announced, give a personal farewell or greeting to earn reputation.",

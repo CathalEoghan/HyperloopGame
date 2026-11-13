@@ -54,6 +54,7 @@ const AUX_KEYS = [
     'hyperloop_hyperlink_fired_dev_upgrades',
     'hyperloop_hyperlink_liked',
     'hyperloop_hyperlink_used_month_posts',
+    'hyperloop_hyperlink_used_daily_posts',
     'hyperloop_pending_rankups',
     // The cities a rank-up is currently offering (and whether its free re-roll is still unused), so a reload
     // can't hand out a fresh offer without the Reputation re-roll
@@ -310,6 +311,7 @@ const AUX_SHAPES = {
     hyperloop_pending_offline: v => v !== null && typeof v === 'object' && Number.isFinite(v.offlineSeconds) && Number.isFinite(v.offlineIncome),
     hyperloop_hyperlink_feed: listOf(p => isObj(p) && typeof p.id === 'string' && typeof p.text === 'string' && Number.isFinite(p.timestamp)),
     hyperloop_hyperlink_used_month_posts: listOf(e => isObj(e) && typeof e.id === 'string' && Number.isFinite(e.year)),
+    hyperloop_hyperlink_used_daily_posts: listOf(e => isObj(e) && typeof e.id === 'string' && typeof e.day === 'string'),
     hyperloop_prestige_history: listOf(isObj),
     // { owned: ['workSound:soft', ...], equipped: { workSound: 'soft', ... } }
     hyperloop_timetable: listOf(e => isObj(e) && typeof e.name === 'string' && Number.isFinite(e.minuteOfDay) && Number.isFinite(e.gate)),

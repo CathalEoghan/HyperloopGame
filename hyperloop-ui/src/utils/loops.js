@@ -126,6 +126,8 @@ const scheduledHour = entry => {
     return m ? Number(m[1]) : entry.hour
 }
 const passengersOf = (kind, dayMs, entry) => stablePassengers(kind, dayMs, entry.name, scheduledHour(entry))
+// The same count for one loop on its own (the farewell and greeting popup shows it), so it can't disagree with the board
+export const entryPassengers = passengersOf
 
 export function loopSpeedMph(seed) {
     return LOOP_MPH_MIN + (hashString(seed) % (LOOP_MPH_MAX - LOOP_MPH_MIN + 1))
@@ -467,6 +469,48 @@ export function makeFootfallEstimator(purchasedCities, timetable = []) {
         })
         return count
     }
+}
+
+// What passed through the terminal between two moments, for the "While you were away" popup: loops that arrived,
+// loops that departed, and the passengers on them. A day with a stored board is read from it (so delays and the
+// day's own passenger roll are respected); a day without one is rebuilt, departures from the player's timetable
+// (which repeats every day) and arrivals as the average a window of that length holds. The timetable is passed in
+// because its module imports this one.
+export function trafficBetween(purchasedCities, timetable, startMs, endMs) {
+    const out = { arrived: 0, departed: 0, passengers: 0 }
+    const homeCity = purchasedCities?.[0]
+    if (!homeCity || !(endMs > startMs)) return out
+    const others = purchasedCities.slice(1)
+    if (others.length === 0) return out
+    const connected = new Set(purchasedCities.map(c => c.name))
+    const slots = (timetable || [])
+        .filter(s => s && s.name !== homeCity.name && connected.has(s.name) && Number.isFinite(s.minuteOfDay))
+        .map(s => ({ name: s.name, hour: Math.floor(s.minuteOfDay / 60), minute: s.minuteOfDay % 60 }))
+    const stored = k => (localStorage.getItem(k) !== null ? readSchedule(k) : null)
+    const averagePassengers = others.reduce((sum, c) => sum + loopPassengers(c.name, 12, `estimate|${c.name}`), 0) / others.length
+    let estimatedArrivals = 0
+    let dayMs = startMs
+    for (let i = 0; i < 400; i++) {
+        const dayStart = entryTimestamp({ hour: 0, minute: 0 }, dayMs)
+        const dayEnd = entryTimestamp({ hour: 0, minute: 0 }, shiftDays(dayMs, 1))
+        if (dayStart >= endMs) break
+        const within = e => { const t = entryTimestamp(e, dayMs); return t > startMs && t <= endMs }
+        const departures = (stored(departuresKey(dayMs)) ?? slots).filter(e => connected.has(e.name) && within(e))
+        departures.forEach(e => { out.departed++; out.passengers += passengersOf('departure', dayMs, e) })
+        const arrivals = stored(arrivalsKey(dayMs))
+        if (arrivals) {
+            arrivals.filter(e => connected.has(e.name) && within(e)).forEach(e => { out.arrived++; out.passengers += passengersOf('arrival', dayMs, e) })
+        } else {
+            const overlap = Math.max(0, Math.min(endMs, dayEnd) - Math.max(startMs, dayStart))
+            const n = others.length * overlap / (dayEnd - dayStart)
+            estimatedArrivals += n
+            out.passengers += n * averagePassengers
+        }
+        dayMs = shiftDays(dayMs, 1)
+    }
+    out.arrived += Math.round(estimatedArrivals)
+    out.passengers = Math.round(out.passengers)
+    return out
 }
 
 // How many loops are putting people in the home terminal right now, for the development busy bonus (see

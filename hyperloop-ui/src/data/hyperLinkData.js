@@ -1654,10 +1654,12 @@ export const POSTS = {
         'It\'s the small things that matter. The free coffees onboard elevate the overall experience in a minor but meaningful way #GoodManagement ☕️',
     ],
 
+    // The seasonal upgrades' own lists only hold lines that need the upgrade. The greetings anyone could post are in the
+    // specialDay_ lists at the end of this file, which every player gets in the same dates.
     christmasDayFestival: [
-        'happy holidays!! 🎄',
-        'travelling on Christmas Day - wasnt expecting it to be this busy!!',
-        'wishing everyone a merry Christmas 🎅',
+        'didnt think id enjoy travelling over Christmas but the festival here changed my mind 🎄',
+        'the Christmas Day festival has me feeling so festive 🎄',
+        'the festival is the best part of travelling at Christmas 🎅',
     ],
 
     fineWhiskyImports: [
@@ -1709,9 +1711,9 @@ export const POSTS = {
     ],
 
     halloweenFair: [
-        'Happy Halloween! Have fun and stay safe 🎃',
         'The halloween fair is so fun! I came second place in the costume contest 🧟',
-        'Let me know in the comments. Couple costumes for Halloween: cringe or cute? 👻',
+        'the halloween fair is giving me a proper fright, in the best way 🎃',
+        'rating the halloween fair costumes. the skeleton in the tutu wins 💀',
     ],
 
     improvedRestroomFacilities: [
@@ -1769,27 +1771,27 @@ export const POSTS = {
     ],
 
     newYearsCelebrations: [
-        'Happy new years guys. Whats everyones resolutions for the new year?',
-        'Cannot believe thats the year over and done with already. Maybe time is accelerating',
-        'Any parties happening for new years?? beyond the terminal i mean lol',
+        'the countdown at the new years celebrations here is unreal 🎉',
+        'the new years celebrations here beat any party i had planned 🎆',
+        'never thought id be spending new year at a terminal, but the celebrations here are class 🥂',
     ],
 
     fourthOfJulyShows: [
-        'happy fourth of july yankees! 🇺🇸',
-        'only americans may like this post #fourthofjuly',
-        'Fourth of July just reminds me of all the history essays i wrote in school lol',
+        'the fourth of july shows are so good. very patriotic in here 🇺🇸',
+        'catching the fourth of july shows between loops. best idea ever #fourthofjuly',
+        'ok the fourth of july shows are a LOT louder than i expected 😂',
     ],
 
     valentinesDaySales: [
-        'Another year alone. Sigh. #ValentinesDay',
-        'Good dates for valentines? Literally no idea what to do',
-        'Happy valentines to everyone regardless of your relationship status 💘',
+        'the valentines day sales are dangerous for my wallet. so many heart-shaped things 💸',
+        'bought myself a valentines gift in the sales. self love is important 💘',
+        'valentines day sales on and i have no valentine. the chocolates will do 🍫',
     ],
 
     easterWeekendDeals: [
         'keep finding coloured eggs around the terminal 🤣',
         'whos this annoying ass kid in the bunny suit? somebodys mother come and get her please',
-        'Happy easter!! 🐣',
+        'the easter weekend deals are too good to skip 🐰',
     ],
 
     hotDogRestaurant: [
@@ -2528,5 +2530,189 @@ export const POSTS = {
         'bring the {development} back!',
         'rip the {development}',
         'I miss the {development} already 😭'
+    ],
+
+    // Posts for each of the six starter cities, used only when it is the terminal's home city (see HOME_CITY_POSTS_WEIGHT in
+    // hyperLinkEngine.js). The list is named homeCity_ plus the city's name in lower case letters only: homeCity_london,
+    // homeCity_newyork, homeCity_riodejaneiro. A home city with no list here (Personal Favours can start the run anywhere)
+    // just gets the ordinary posts.
+    homeCity_london: [
+        'typical london weather. packed an umbrella AND a sunhat just in case ☔',
+        'just apologised to someone who bumped into ME. very British of me honestly 🫖',
+        'Overheard: "its not cold, its just a bit fresh". welcome to London 🌧️',
+        'only in London would someone say "sorry" to a door they walked into 😅',
+        'tea at 6am, tea at 6pm, tea at midnight. this city runs on it 🫖',
+        'packed a meal deal for the loop. sandwich, crisps, drink. a London classic #LondonLife',
+    ],
+    homeCity_tokyo: [
+        'Tokyo has a vending machine for literally everything. hot coffee AND cold coffee. i love this city 🥤',
+        'everyone in Tokyo queues so politely. i have never felt so impatient in my life',
+        'Tokyo trains are famous for being on time. no pressure, hyperloop ⏱️',
+        'just saw a person bow to a ticket machine. i respect it 🙇',
+        'had ramen before my loop. best decision ive made all week. thank you Tokyo 🍜',
+        'the cherry blossoms on the posters here are making me homesick for a place i havent even been 🌸',
+    ],
+    homeCity_newyork: [
+        'everyone in New York is walking at 200mph and im stood here like 🐢',
+        'dollar slice at the terminal when. asking for the whole city 🍕',
+        'heard three different people say "im walking here" today. peak New York #NYC',
+        'New York terminal energy: loud, fast, and somehow it works',
+        'saw a pigeon with more confidence than me. only in New York 🐦',
+        'bagel with cream cheese for breakfast again. no regrets 🥯',
+    ],
+    homeCity_sydney: [
+        'everyone in Sydney wears thongs. on their feet. calm down 🩴',
+        'flat white, extra hot, no judgement. only Sydney gets this right ☕',
+        'a seagull stole my chips on the beach yesterday. peak Sydney 🍟',
+        'cant decide between the beach and the opera house. why not both in one day 🏖️',
+        'g\'day to everyone arriving at the terminal! first time in Sydney? 🦘',
+        'sunscreen on, loop booked, ready for Sydney #SydneyLife ☀️',
+    ],
+    homeCity_dubai: [
+        'the heat in Dubai is no joke. never been so grateful for aircon ❄️',
+        'the gold prices here are making my wallet cry 💸 #Dubai',
+        'saw the tallest building from the terminal window and almost forgot my loop 🏙️',
+        'every shop in Dubai has something shiny. i have no self control ✨',
+        'my host welcomed me with dates and arabic coffee. Dubai hospitality is unreal ☕',
+        'cant wait to see a desert sunset while im in Dubai 🌅',
+    ],
+    homeCity_riodejaneiro: [
+        'already planning my next caipirinha. Rio does that to you 🍹',
+        'Rio locals hit the beach before most people are even awake. respect 🏖️',
+        'someone is playing samba in the terminal and now nobody can sit still 🎶',
+        'in Rio football isnt a sport, its a religion ⚽',
+        'everyone here greets you like youre family. love it Rio ❤️',
+        'saw Christ the Redeemer in person for the first time yesterday. goosebumps 🌄',
+    ],
+
+    // Posts for a particular day of the year, shown to every player while the day's window is on (see SPECIAL_DAYS in
+    // hyperLinkEngine.js for the dates). Named specialDay_ plus the key there. They only describe what passengers do, wear,
+    // eat at home and feel, or decorations: never a facility the terminal might not have, or a live condition (a delay, a crowd).
+    specialDay_stPatricksDay: [
+        'happy St Patrick\'s Day!! 🍀',
+        'forgot to wear green today. bracing myself to get pinched 😬',
+        'so much green around the terminal today. everyone got the memo except me ☘️',
+        'safe travels to everyone heading to the St Patrick\'s Day parades!',
+        'someone is playing Irish music on their phone and now half the departures hall is tapping their feet 🎻',
+        'anyone else feeling lucky today? asking for my loop\'s sake 🍀',
+    ],
+    specialDay_pancakeDay: [
+        'Pancake Day!! lemon and sugar or chocolate spread, fight me 🥞',
+        'is it acceptable to have pancakes for breakfast, lunch AND dinner today. asking for me',
+        'thinking about pancakes for my entire loop. #PancakeDay 🥞',
+        'toppings debate: maple syrup, lemon & sugar, or nutella. the comments are divided',
+        'hoping my family saved me some pancakes for when i get home 🥞',
+        'Pancake Day is the best day of the year. no notes',
+    ],
+    specialDay_bonfireNight: [
+        'Remember remember the fifth of November 🎆',
+        'Bonfire Night this week! hope everyone gets a good view of the fireworks 🎇',
+        'toffee apple and a sparkler. bonfire night essentials 🔥',
+        'hoping to catch some fireworks on my way home tonight 🎆',
+        'hope everyone is keeping their dogs calm tonight 🐶 #BonfireNight',
+        'bonfire night means hot chocolate and way too many layers 🔥',
+    ],
+    specialDay_thanksgiving: [
+        'Thanksgiving week means half the country is travelling. safe trips everyone 😅',
+        'on my way home for Thanksgiving! cant wait for the pie 🥧',
+        'dreading the "so when are you getting married" questions at the Thanksgiving table lol',
+        'turkey, stuffing, mashed potatoes... thinking about it all loop long 🦃',
+        'happy Thanksgiving to everyone travelling this week, and to everyone working it! 🧡',
+        'just landed for Thanksgiving! cant wait to see everyone 🍂',
+    ],
+    // Black Friday to Cyber Monday. Nothing here assumes the terminal has a shop, or how busy anywhere is.
+    specialDay_blackFriday: [
+        'black friday has me weak. my bank account has already left the chat 💸',
+        'telling myself i only need one thing from the Black Friday sales. i do not need one thing 😅',
+        'who else is "just browsing" the Black Friday deals on the loop?',
+        'is it really a deal if you werent going to buy it?? asking for me 🤔',
+        'Black Friday and Cyber Monday should come with a spending warning 😂',
+        'hope everyone grabbing a Black Friday bargain finds exactly what they were after 🛍️',
+        'my wishlist is longer than my loop journey. Black Friday is not helping 📝',
+        'Black Friday survival tip: set a budget BEFORE you open the app. i didnt 😬',
+    ],
+    specialDay_diwali: [
+        'Happy Diwali everyone!! ✨🪔',
+        'travelling home to be with family for Diwali. cant wait for the sweets 🍬',
+        'wishing everyone celebrating a very happy Diwali! may the light win ✨',
+        'hoping to get home in time to light the diyas for Diwali 🪔',
+        'my family sent me a photo of the rangoli they made this year. so colourful 🌈',
+        'happy Diwali to everyone travelling today. safe journey! 🪔',
+        'the lights around the terminal for Diwali are so pretty 🪔',
+        'rangoli on the floor of the terminal for Diwali. so colourful 🌈',
+    ],
+    specialDay_lunarNewYear: [
+        'Happy Lunar New Year!! 🧧🏮',
+        'red envelopes at the ready. travelling home for Lunar New Year 🧧',
+        'travelling for Lunar New Year, the biggest trip of the year for so many people ✈️',
+        'cant wait for the reunion dinner. dumplings for days 🥟',
+        'Xin nian kuai le to everyone celebrating! 🎉',
+        'wearing red for luck today. happy Lunar New Year to everyone travelling! 🧧',
+        'the terminal is covered in red lanterns for Lunar New Year, so pretty 🏮',
+    ],
+    specialDay_friday13th: [
+        'its Friday the 13th and i just walked under a ladder in the terminal. brilliant 🪜',
+        'not superstitious but im still not sitting in row 13 🙈',
+        'ok who booked a loop on Friday the 13th. oh wait, me 🙃',
+        'a black cat just walked across the departures hall. well that\'s it, today is cursed 🐈‍⬛',
+        'avoiding mirrors today. Friday the 13th rules 🪞',
+        'happy Friday the 13th everyone, touch wood 🤞',
+    ],
+    // Posts that fire for every player on the days the seasonal upgrades cover (Halloween 25-31 October, Christmas 20-26
+    // December, New Year 28 December-2 January, Valentine's 10-14 February, Fourth of July 2-5 July, Good Friday to Easter
+    // Monday - see SPECIAL_DAYS). Owners of the matching upgrade also get the lines in its own list above.
+    specialDay_halloween: [
+        'Happy Halloween week! Have fun and stay safe 🎃',
+        'Let me know in the comments. Couple costumes for Halloween: cringe or cute? 👻',
+        'what are you all dressing up as this halloween?? 🎃',
+        'saw someone travelling in a full skeleton onesie today. commitment 💀',
+        'candy corn: treat or trick? genuinely cannot decide 🍬',
+        'spooky season is the best season. fight me 👻',
+        'trick or treating on a hyperloop. do the neighbours count if theyre in the next city?? 🍬',
+    ],
+    specialDay_christmas: [
+        'happy holidays!! 🎄',
+        'wishing everyone a merry Christmas 🎅',
+        'safe travels to everyone getting home for Christmas ❤️',
+        'travelling home for Christmas. hope the turkey survives without me 🦃',
+        'please let Santa know im on the loop and not at home 🎅',
+        'anyone else wrapping presents at the last minute? just me? 🎁',
+        'wearing my Christmas jumper on the loop and i regret nothing 🎄',
+    ],
+    specialDay_newYear: [
+        'Whats everyones resolutions for the new year?',
+        'Cannot believe thats the year over and done with already. Maybe time is accelerating',
+        'Any parties happening for new years??',
+        'my resolution is to go to the gym more. my other resolution is to stop posting about the gym 😅',
+        'new year, new loop. lets go 🥂',
+        'does anyone actually keep their resolutions past January?? asking for a friend (me)',
+        'whatever this year threw at you, hope the next one is kinder ❤️',
+    ],
+    specialDay_valentines: [
+        'Another year alone. Sigh. #ValentinesDay',
+        'Good dates for valentines? Literally no idea what to do',
+        'Happy valentines to everyone regardless of your relationship status 💘',
+        'roses or chocolates? the people need to know 🌹🍫',
+        'valentines is just a good excuse to text someone you like 💌',
+        'travelling to see my valentine and im so nervous 😬',
+        'single and travelling over valentines. thriving 💅',
+    ],
+    specialDay_fourthOfJuly: [
+        'happy fourth of july yankees! 🇺🇸',
+        'only americans may like this post #fourthofjuly',
+        'Fourth of July just reminds me of all the history essays i wrote in school lol',
+        'happy Fourth of July to everyone celebrating this week! 🎆',
+        'who is grilling for the 4th?? asking for a friend 🌭',
+        'red white and blue everywhere i look today 🇺🇸',
+        'to everyone not American: enjoy your regular day lol',
+    ],
+    specialDay_easter: [
+        'Happy easter!! 🐣',
+        'already eaten more chocolate eggs this weekend than i care to admit 🍫',
+        'easter egg hunt rules: finders keepers, right?? 🥚',
+        'how many mini eggs is too many mini eggs. asking for me 🐣',
+        'travelling for easter. hope someone is saving me an egg 🐇',
+        'happy Easter to everyone celebrating! 🌷',
+        'hot cross buns: toasted or not. i need answers 🥯',
     ]
 }

@@ -3,9 +3,12 @@ import './TickerBar.css'
 import { arrivalsKey, departuresKey, readSchedule, entryTimestamp, shiftDays, timeString } from '../utils/loops.js'
 import { readTimetable } from '../utils/timetable.js'
 import { loopCode } from '../utils/loopCodes.js'
+import { specialDayWishes } from '../utils/hyperLinkEngine.js'
 
 function TickerBar({ terminalName, purchasedCities }) {
     const [messages, setMessages] = useState([])
+    // What the terminal wishes everyone today, if it's a special day (see specialDayWishes)
+    const [wishes, setWishes] = useState(() => specialDayWishes())
     // The announcements are refreshed by a timer set up once, so they read the name and the connected
     // cities (for loopCode's departure-pool reconciliation) through these rather than stale closures
     const terminalNameRef = useRef(terminalName)
@@ -68,6 +71,7 @@ function TickerBar({ terminalName, purchasedCities }) {
             }
         })
         setMessages(msgs)
+        setWishes(specialDayWishes(new Date(nowMs)))
     }
 
     useEffect(() => {
@@ -85,7 +89,11 @@ function TickerBar({ terminalName, purchasedCities }) {
     'Departure and arrival updates will display here.',
 ]
 
-    const displayMessages = messages.length > 0 ? messages : idleMessages
+    // Special-day greetings come after the announcements, but ahead of the "updates will display here" line
+    const greetings = wishes.map(w => `From everyone here at ${terminalName}, we wish you ${w}`)
+    const displayMessages = messages.length > 0
+        ? [...messages, ...greetings]
+        : [...idleMessages.slice(0, -1), ...greetings, idleMessages[idleMessages.length - 1]]
     const text = displayMessages.join('     ✦     ') + '     ✦     '
     // The text moves at the same speed however long it is: a busy timetable can have a dozen announcements at once,
     // and squeezing them all into the usual 60 seconds made them race past too fast to read

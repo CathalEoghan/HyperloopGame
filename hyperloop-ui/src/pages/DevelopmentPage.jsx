@@ -26,7 +26,7 @@ import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import fireworksIcon from '../assets/misc/fireworks.png'
 import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.js'
-import { DEVELOPMENT_MILESTONES, readClaimedMilestones, builtCount, itemNoun } from '../data/developmentMilestones.js'
+import { DEVELOPMENT_MILESTONES, readClaimedMilestones, builtCount } from '../data/developmentMilestones.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
 
 // Experimental Technology doubles in price every claim, so its cost climbs into the billions and beyond: costs from a
@@ -79,9 +79,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const categoryCompleted = (cat) => allItems.filter(d => inScope(d, cat) && (purchasedDevelopments.some(p => p.name === d.name) || purchasedUpgrades.some(p => p.name === d.name))).length
 
     // The hover text on a category pill: how many of it are built and what the next milestone pays. The milestones count
-    // developments for Food, Shopping, Recreation and Service and upgrades for Infrastructure and Enterprise (not the ones
-    // handed over as rank milestones), so the number can be lower than the pill's, which counts everything in the
-    // category. Categories without milestones (All, Upgrades) have none. A tier already paid this run is skipped even if
+    // everything in the category, rank-milestone items included, so the number matches the pill's. Categories without milestones (All, Upgrades) have none. A tier already paid this run is skipped even if
     // removing items has put the count back under it, since it won't pay again.
     const milestoneHint = (cat) => {
         const tiers = DEVELOPMENT_MILESTONES[cat]
@@ -89,7 +87,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         const built = builtCount(cat, purchasedDevelopments, purchasedUpgrades)
         const paid = Number(readClaimedMilestones()[cat]) || 0
         const next = tiers.find(t => t.count > Math.max(built, paid))
-        const builtText = `${built} ${cat} ${itemNoun(cat)}${built === 1 ? '' : 's'} built.`
+        // "in the terminal", not "built": the count includes what rank milestones handed over
+        const builtText = `${built} ${cat} development${built === 1 ? '' : 's'} in the terminal.`
         return next
             ? `${builtText} Next milestone at ${next.count}: +${next.reputation} Reputation`
             : `${builtText} Every ${cat} milestone reached.`
