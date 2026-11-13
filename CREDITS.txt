@@ -1036,6 +1036,7 @@ serviceCategory.png - <a href="https://www.flaticon.com/free-icons/customer-serv
 shoppingCategory.png - <a href="https://www.flaticon.com/free-icons/shopping-bag" title="shopping bag icons">Shopping bag icons created by iconixar - Flaticon</a>
 recreationCategory.png - <a href="https://www.flaticon.com/free-icons/pub" title="pub icons">Pub icons created by Magnific - Flaticon</a>
 infrastructureCategory.png - <a href="https://www.flaticon.com/free-icons/obra" title="obra icons">Obra icons created by Magnific - Flaticon</a>
+globe.png - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
