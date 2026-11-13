@@ -38,7 +38,7 @@ import OnboardingModal from "./components/OnboardingModal"
 import SecretCityModal from "./components/SecretCityModal"
 import MilestoneModal from "./components/MilestoneModal"
 import DevelopmentMilestoneModal from "./components/DevelopmentMilestoneModal"
-import { DEVELOPMENT_MILESTONES, MILESTONE_CATEGORIES, builtCount } from "./data/developmentMilestones.js"
+import { DEVELOPMENT_MILESTONES, MILESTONE_CATEGORIES, CITY_MILESTONES, CONTINENT_MILESTONES, builtCount } from "./data/developmentMilestones.js"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
 import { pickDelayReason } from "./data/delayReasons.js"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
@@ -797,6 +797,23 @@ function App() {
       reachedNow.push({ category, count: top.count, reputation: reached.reduce((sum, t) => sum + t.reputation, 0), gifted });
     });
     rankGiftCategories.current.clear();
+    // Cities connected, and whole continents (see CITY_MILESTONES / CONTINENT_MILESTONES)
+    const ownedNames = new Set(progressionManager.purchasedCities.map(c => c.name));
+    const cityDone = Number.isFinite(claimed.Cities) ? claimed.Cities : 0;
+    const cityTiers = CITY_MILESTONES.filter(t => t.count <= ownedNames.size && t.count > cityDone);
+    if (cityTiers.length > 0) {
+      const top = cityTiers[cityTiers.length - 1];
+      claimed.Cities = top.count;
+      reachedNow.push({ kind: 'cities', category: 'Cities', count: top.count, reputation: cityTiers.reduce((sum, t) => sum + t.reputation, 0) });
+    }
+    Object.entries(CONTINENT_MILESTONES).forEach(([continent, tier]) => {
+      const key = `continent:${continent}`;
+      if (claimed[key]) return;
+      const cities = allCities.filter(c => c.continent === continent);
+      if (cities.length === 0 || !cities.every(c => ownedNames.has(c.name))) return;
+      claimed[key] = 1;
+      reachedNow.push({ kind: 'continent', category: continent, count: cities.length, reputation: tier.reputation });
+    });
     if (reachedNow.length === 0) return;
     localStorage.setItem('hyperloop_dev_milestones', JSON.stringify(claimed));
     if (silent) {

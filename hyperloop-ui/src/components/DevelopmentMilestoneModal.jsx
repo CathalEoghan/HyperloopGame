@@ -7,7 +7,9 @@ import serviceIcon from '../assets/misc/serviceCategory.png'
 import infrastructureIcon from '../assets/misc/infrastructureCategory.png'
 import enterpriseIcon from '../assets/misc/enterpriseCategory.png'
 import reputationIcon from '../assets/misc/reputation.png'
-import { milestoneTier, nextMilestoneCount } from '../data/developmentMilestones.js'
+import cityIcon from '../assets/misc/city.png'
+import globeIcon from '../assets/misc/globe.png'
+import { milestoneTier, nextMilestoneCount, nextCityMilestone, CITY_MILESTONES, CONTINENT_MILESTONES } from '../data/developmentMilestones.js'
 import './MilestoneModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
@@ -22,30 +24,46 @@ function DevelopmentMilestoneModal({ milestone, onContinue }) {
     useEscapeToClose(() => { playClickSound2(); onContinue() })
     useEffect(() => { playDevelopmentMilestoneSound() }, [])
 
-    const { category, count, reputation, gifted } = milestone
-    const next = nextMilestoneCount(category, count)
+    const { category, count, reputation, gifted, kind } = milestone
+    const isCities = kind === 'cities'
+    const isContinent = kind === 'continent'
+    const next = isCities ? nextCityMilestone(count) : isContinent ? null : nextMilestoneCount(category, count)
     // An item handed over at a rank milestone wasn't built by the player, so that one says "You now have"
     const opener = gifted ? 'You now have' : "You've built"
-    const heading = count === 1
-        ? `${opener} your first ${category} development!`
-        : `${opener} ${count} ${category} developments!`
+    const heading = isCities
+        ? `You've connected ${count} cities!`
+        : isContinent
+            ? `You've connected every city in ${category}!`
+            : count === 1
+                ? `${opener} your first ${category} development!`
+                : `${opener} ${count} ${category} developments!`
+    const label = isCities ? 'CITY MILESTONE' : isContinent ? 'CONTINENT COMPLETE' : `${category.toUpperCase()} MILESTONE`
+    const text = isCities ? CITY_MILESTONES.find(t => t.count === count)?.text
+        : isContinent ? CONTINENT_MILESTONES[category]?.text
+        : milestoneTier(category, count)?.text
 
     return (
         <div className="modal-overlay">
             <div className="milestone-modal" role="dialog" aria-label={heading}>
-                <p className="milestone-rank-label">{category.toUpperCase()} MILESTONE</p>
-                <img src={CATEGORY_ICONS[category]} alt="" style={{ width: '72px', height: '72px', objectFit: 'contain', border: 'none', borderRadius: '0' }} />
+                <p className="milestone-rank-label">{label}</p>
+                <img src={isCities ? cityIcon : isContinent ? globeIcon : CATEGORY_ICONS[category]} alt="" style={{ width: '72px', height: '72px', objectFit: 'contain', border: 'none', borderRadius: '0' }} />
                 <h2 className="milestone-heading">{heading}</h2>
-                <p className="milestone-message">{milestoneTier(category, count)?.text}</p>
+                <p className="milestone-message">{text}</p>
                 <div className="milestone-reward-box">
                     <span className="milestone-reward-label">Reputation Reward</span>
                     <span className="milestone-reward-name" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                         <img src={reputationIcon} alt="" style={{ width: '20px', height: '20px', border: 'none', borderRadius: '0' }} />+{reputation}
                     </span>
                 </div>
-                {next
-                    ? <p className="milestone-next">Next {category} milestone at {next} {category} developments built</p>
-                    : <p className="milestone-next">That was the last {category} milestone. Well done!</p>}
+                {isContinent
+                    ? <p className="milestone-next">{category} complete. Which continent is next?</p>
+                    : isCities
+                        ? (next
+                            ? <p className="milestone-next">Next city milestone at {next} cities connected</p>
+                            : <p className="milestone-next">That was the last city milestone. Well done!</p>)
+                        : next
+                            ? <p className="milestone-next">Next {category} milestone at {next} {category} developments built</p>
+                            : <p className="milestone-next">That was the last {category} milestone. Well done!</p>}
                 <button
                     className="closeButton"
                     autoFocus
