@@ -1138,6 +1138,7 @@ export const POSTS = {
         'sitting in a foodless wasteland at {terminalName} contemplating my life choices !!',
         'is fasting mandatory at {terminalName} or did someone just forget to build a food court??',
         'pls build a café before i collapse on the terminal floor ☕️🙏',
+        'omg get a restaurant open i have a big back lolls',
     ],
 
     noShopping: [
