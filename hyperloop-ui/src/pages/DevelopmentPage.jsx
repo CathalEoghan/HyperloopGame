@@ -51,6 +51,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [showDevelopAllExclTip, setShowDevelopAllExclTip] = useState(null)
     // The upgrade card being hovered and what it does, so the player does not have to open it to find out
     const [upgradeTip, setUpgradeTip] = useState(null)
+    const [categoryTip, setCategoryTip] = useState(null) // the category button being hovered, with its milestone hint
     const showUpgradeTip = (e, development) => {
         const describe = !development.revenue && EFFECT_DESCRIPTIONS[development.effectType]
         setUpgradeTip(describe ? { anchor: e.currentTarget, text: describe(development.effectValue, development, progressionManager.purchasedUpgrades.includes(development)) } : null)
@@ -238,13 +239,14 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 <div className="category-filter">
                     {CATEGORIES.map(cat => (
                         <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
-                            title={milestoneHint(cat)}
                             onClick={() => { playClickSound2(); setActiveCategory(cat) }}
-                            onMouseEnter={() => playHoverSound()}>
+                            onMouseEnter={(e) => { playHoverSound(); const text = milestoneHint(cat); if (text) setCategoryTip({ anchor: e.currentTarget, text }) }}
+                            onMouseLeave={() => setCategoryTip(null)}>
                             {cat} <span className="category-count">{categoryCompleted(cat)} / {categoryTotal(cat)}</span>
                         </button>
                     ))}
                 </div>
+                {categoryTip && <BoostTooltip anchor={categoryTip.anchor} lines={[categoryTip.text]} text />}
             </div>
 
             <div className="dev-content">
