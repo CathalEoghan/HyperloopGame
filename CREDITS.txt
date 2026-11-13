@@ -843,6 +843,7 @@ splitFlapLong.wav - Sound by matucha via Freesound (Attribution NonCommercial 4.
 splitFlapShort.wav - Sound by matucha via Freesound (Attribution NonCommercial 4.0)
 rankUpSound.mp3 - Sound by ALEXIS_GAMING_CAM via Pixabay (Pixabay Content License)
 developmentMilestone.mp3 - Sound by SoundReality via Pixabay (Pixabay Content License)
+newEmail.mp3 - Sound by Universfield (Pixabay Content License)
 
 ACHIEVEMENT LOGOS
 

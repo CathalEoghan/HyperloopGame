@@ -4,6 +4,7 @@ import './TopBanner.css'
 import clockIcon from '../assets/misc/clock.png'
 import cashIcon from '../assets/misc/cash.png'
 import shoppingIcon from '../assets/misc/shopping.png'
+import emailIcon from '../assets/misc/email.png'
 import starIcon from '../assets/misc/star.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import pinIcon from '../assets/misc/pin.png'
@@ -47,7 +48,7 @@ const formatWorkAmount = (value, tilde = false) => {
     return `${scaled.toFixed(1)}${suffix}${t}`
 }
 
-function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, autoWorkTick, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, onOpenShop, workDisabled = false }) {
+function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, autoWorkTick, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, onOpenShop, onOpenEmails, unreadEmails = 0, emailBubble = false, workDisabled = false }) {
     const [floats, setFloats] = useState([])
     // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
     const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
@@ -270,6 +271,16 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                         <span>Shop</span>
                     </button>
                 </>
+            )}
+            {onOpenEmails && (
+                <div className="EmailsButtonWrap">
+                    {emailBubble && <div className="EmailsBubble">New email!</div>}
+                    <button className="ShopButton EmailsButton" onClick={() => { playClickSound2(); onOpenEmails() }} onMouseEnter={() => playHoverSound()} aria-label="Open your emails">
+                        <img src={emailIcon} alt="" className="ShopButtonIcon" />
+                        <span>Emails</span>
+                        {unreadEmails > 0 && <span className="EmailsBadge">{unreadEmails > 9 ? '9+' : unreadEmails}</span>}
+                    </button>
+                </div>
             )}
             </div>
            <button ref={btnRef} className={`work-banner-btn${autoWork ? ' work-banner-auto' : ''}${workEventTone ? ` work-event-${workEventTone}` : ''}`} onClick={handleWork} onKeyDown={e => { if (e.repeat) e.preventDefault() }} onMouseEnter={() => playHoverSound()}>

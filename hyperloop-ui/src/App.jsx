@@ -40,7 +40,7 @@ import MilestoneModal from "./components/MilestoneModal"
 import DevelopmentMilestoneModal from "./components/DevelopmentMilestoneModal"
 import { DEVELOPMENT_MILESTONES, MILESTONE_CATEGORIES, CITY_MILESTONES, CONTINENT_MILESTONES, builtCount } from "./data/developmentMilestones.js"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
-import EmailsModal, { EmailsButton } from "./components/Emails.jsx"
+import EmailsModal from "./components/Emails.jsx"
 import * as emailEngine from "./utils/emailEngine.js"
 import { SHOP_ITEMS } from "./data/shopCatalog.js"
 import { pickDelayReason } from "./data/delayReasons.js"
@@ -2419,6 +2419,9 @@ function App() {
       <div className="behind-popups" style={BEHIND_POPUPS_STYLE} inert={popupCoversApp}>
       <TopBanner
         onOpenShop={() => setShowShop(true)}
+        onOpenEmails={() => setEmailsOpen(true)}
+        unreadEmails={unreadEmails}
+        emailBubble={emailBubble}
         terminalName={terminalName}
         balance={balance}
         rank={rankSet}
@@ -3108,14 +3111,6 @@ function App() {
             setHyperLinkUnread(0)
             localStorage.setItem('hyperloop_hyperlink_unread', '0')
           }}
-        />
-      )}
-
-      {activeTab === "Home" && !popupOpen && (
-        <EmailsButton
-          unread={unreadEmails}
-          showBubble={emailBubble}
-          onClick={() => setEmailsOpen(true)}
         />
       )}
 

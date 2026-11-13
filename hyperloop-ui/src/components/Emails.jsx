@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import './Emails.css'
+import emailIcon from '../assets/misc/email.png'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { CHARACTERS, isOpen, progressLabel, timeLeft, formatLeft } from '../utils/emailEngine.js'
@@ -15,29 +16,7 @@ function Avatar({ email, size = 34 }) {
         : <span className="emails-avatar emails-avatar-initial" style={{ width: size, height: size, background: color, fontSize: size * 0.45 }}>{email.sender.name.charAt(0)}</span>
 }
 
-const MailIcon = ({ size = 34 }) => (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <rect x="3" y="5" width="18" height="14" rx="2" />
-        <path d="M3.5 6.5 12 13l8.5-6.5" />
-    </svg>
-)
-
-export function EmailsButton({ unread, onClick, showBubble }) {
-    return (
-        <div style={{ position: 'fixed', bottom: 110, left: 'calc(12px + var(--phone-btn-size) + 12px)', zIndex: 150 }}>
-            {showBubble && <div className="hyperlink-notification-bubble">New email!</div>}
-            <button
-                className={`hyperlink-phone-btn emails-btn${unread > 0 ? ' hyperlink-phone-btn-pulse' : ''}`}
-                onClick={() => { playClickSound2(); onClick() }}
-                onMouseEnter={() => playHoverSound()}
-                aria-label="Emails"
-            >
-                <MailIcon />
-                {unread > 0 && <span className="hyperlink-badge">{unread > 9 ? '9+' : unread}</span>}
-            </button>
-        </div>
-    )
-}
+const MailIcon = ({ size = 34 }) => <img src={emailIcon} alt="" width={size} height={size} style={{ display: 'block', border: 'none', borderRadius: 0 }} />
 
 const STATE_TEXT = { new: 'Waiting for you', agreed: 'In progress', fulfilled: 'Done', failed: 'Missed', refused: 'Declined', ignored: 'No reply' }
 const sign = (n) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${Math.abs(n)}`
