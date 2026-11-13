@@ -26,6 +26,7 @@ import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import fireworksIcon from '../assets/misc/fireworks.png'
 import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.js'
+import { DEVELOPMENT_MILESTONES, readClaimedMilestones } from '../data/developmentMilestones.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
 
 // Experimental Technology doubles in price every claim, so its cost climbs into the billions and beyond: costs from a
@@ -76,6 +77,22 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const inScope = (d, cat) => cat === 'Upgrades' ? !d.revenue : cat === 'All' ? true : d.category === cat
     const categoryTotal = (cat) => allItems.filter(d => inScope(d, cat)).length
     const categoryCompleted = (cat) => allItems.filter(d => inScope(d, cat) && (purchasedDevelopments.some(p => p.name === d.name) || purchasedUpgrades.some(p => p.name === d.name))).length
+
+    // The hover text on a category pill: how many developments of it are built (developments only, the way the milestones
+    // count them, so it can be lower than the pill's number, which also counts the category's upgrades) and what the next
+    // milestone pays. Categories without milestones (Upgrades, Infrastructure...) have none. A tier already paid this run
+    // is skipped even if removing developments has put the count back under it, since it won't pay again.
+    const milestoneHint = (cat) => {
+        const tiers = DEVELOPMENT_MILESTONES[cat]
+        if (!tiers) return undefined
+        const built = purchasedDevelopments.filter(d => d.category === cat).length
+        const paid = Number(readClaimedMilestones()[cat]) || 0
+        const next = tiers.find(t => t.count > Math.max(built, paid))
+        const builtText = `${built} ${cat} development${built === 1 ? '' : 's'} built.`
+        return next
+            ? `${builtText} Next milestone at ${next.count}: +${next.reputation} Reputation`
+            : `${builtText} Every ${cat} milestone reached.`
+    }
 
     const underConstruction = allItems.filter(item =>
         developmentsUnderConstruction.some(d => d.name === item.name)
@@ -221,6 +238,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                 <div className="category-filter">
                     {CATEGORIES.map(cat => (
                         <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
+                            title={milestoneHint(cat)}
                             onClick={() => { playClickSound2(); setActiveCategory(cat) }}
                             onMouseEnter={() => playHoverSound()}>
                             {cat} <span className="category-count">{categoryCompleted(cat)} / {categoryTotal(cat)}</span>

@@ -2208,7 +2208,7 @@ export const POSTS = {
         'Our cleaning team works around the clock to keep {terminalName} spotless. Please help them by using the bins 🧹',
         'Please use the designated seating areas and keep exits clear. Thank you 💺',
         'Free drinking water is available throughout the terminal. Stay hydrated on your journey 💧',
-        'Lost something? Our information desk will do all it can to return it to you 🔎',
+        'Lost something? Our information desk will do all they can to return it to you 🔎',
         'Feeling unwell? Please speak to a member of staff and we will arrange assistance 🩺',
         'Reminder: please follow staff instructions in the event of an announcement or evacuation 🚨',
         'Delays are rare but they happen. Check the departure board for the latest updates 🔄',
