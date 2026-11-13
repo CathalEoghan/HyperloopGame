@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { playClickSound2, playRankUpSound, playHoverSound } from '../utils/sound.js'
+import { playClickSound2, playDevelopmentMilestoneSound, playHoverSound } from '../utils/sound.js'
 import foodIcon from '../assets/misc/foodCategory.png'
 import shoppingIcon from '../assets/misc/shoppingCategory.png'
 import recreationIcon from '../assets/misc/recreationCategory.png'
@@ -18,7 +18,7 @@ const CATEGORY_ICONS = { Food: foodIcon, Shopping: shoppingIcon, Recreation: rec
 function DevelopmentMilestoneModal({ milestone, onContinue }) {
     // A notice, so Escape does what its button does
     useEscapeToClose(() => { playClickSound2(); onContinue() })
-    useEffect(() => { playRankUpSound() }, [])
+    useEffect(() => { playDevelopmentMilestoneSound() }, [])
 
     const { category, count, reputation } = milestone
     const next = nextMilestoneCount(category, count)

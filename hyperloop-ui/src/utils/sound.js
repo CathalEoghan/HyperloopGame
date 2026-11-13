@@ -2,6 +2,7 @@ import { createVoiceManager } from './workVoices.js'
 import click_sound_2 from '../assets/sounds/click_sound_2.mp3'
 import click_sound_3 from '../assets/sounds/click_sound_3.mp3'
 import rankUpSound from '../assets/sounds/rankUpSound.mp3'
+import developmentMilestoneSound from '../assets/sounds/developmentMilestone.mp3'
 import leavingSound from '../assets/sounds/leavingSound.mp3'
 import farewellAcceptSound from '../assets/sounds/farewellAccept.mp3'
 import specialChime from '../assets/sounds/specialChime.mp3'
@@ -63,6 +64,7 @@ export const SOUND_CATEGORIES = [
     { key: 'event', label: 'Event Notification' },
     { key: 'dailyBonus', label: 'Daily Bonus Notification' },
     { key: 'rankUp', label: 'Rank-Up Notification' },
+    { key: 'developmentMilestone', label: 'Development Milestone Notification' },
     { key: 'reputation', label: 'Reputation Awarded' },
     { key: 'progressClaim', label: 'Progress Claim' },
     { key: 'clickSounds', label: 'Click Sounds' },
@@ -277,6 +279,7 @@ export function playClickSound2()               { play(click_sound_2, 'clickSoun
 export function playClickSound3()               { play(click_sound_3, 'clickSounds') }
 // Also the Rank Milestone popup's sound, which is the same moment from the player's side.
 export function playRankUpSound()               { play(rankUpSound, 'rankUp') }
+export function playDevelopmentMilestoneSound() { play(developmentMilestoneSound, 'developmentMilestone') }
 export function playHoverSound()                { playHover() }
 // Every time Reputation is awarded by chance or as a bonus: the Work click's lucky Reputation, positive events' Reputation,
 // the Passenger Appreciation popup and Reputation claimed from the Progress page.
