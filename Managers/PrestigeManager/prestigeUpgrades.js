@@ -61,7 +61,7 @@ export const PRESTIGE_UPGRADES = [
     { id: 'oralHygiene', icon: '🦷', layer: 2, name: 'Oral Hygiene', description: `${mult(V.oralHygiene)} Reputation from farewells.` },
     { id: 'betterInterestRates', icon: '🏦', layer: 2, name: 'Better Interest Rates', description: 'x10 cash from the daily bonus.' },
     { id: 'eliteAccountants', icon: '🧮', layer: 2, name: 'Elite Accountants', description: 'The optional double bonus when claiming offline earnings becomes a triple bonus, for the same cost.' },
-    { id: 'cultOfCelebrity', icon: '❤️', layer: 2, name: 'Cult of Celebrity', description: 'Liking a Hyper-Link post now gives 1 Reputation.' },
+    { id: 'cultOfCelebrity', icon: '❤️', layer: 2, name: 'Cult of Celebrity', description: 'Liking a Hyper-Link post now gives 1 Reputation, and refusing an email request no longer costs any Reputation.' },
     { id: 'goodStanding', icon: '🎖️', layer: 2, name: 'Good Standing', description: 'Upgrading developments and cities costs half the Reputation.' },
     { id: 'advancedEngineering', icon: '🏗️', layer: 2, name: 'Advanced Engineering', description: 'Cities and developments are constructed immediately.' },
     { id: 'videoMessage', icon: '🎥', layer: 2, name: 'Video Message', description: 'Farewells and greetings are accepted automatically.' },

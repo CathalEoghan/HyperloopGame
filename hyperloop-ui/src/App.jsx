@@ -40,6 +40,9 @@ import MilestoneModal from "./components/MilestoneModal"
 import DevelopmentMilestoneModal from "./components/DevelopmentMilestoneModal"
 import { DEVELOPMENT_MILESTONES, MILESTONE_CATEGORIES, CITY_MILESTONES, CONTINENT_MILESTONES, builtCount } from "./data/developmentMilestones.js"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
+import EmailsModal, { EmailsButton } from "./components/Emails.jsx"
+import * as emailEngine from "./utils/emailEngine.js"
+import { SHOP_ITEMS } from "./data/shopCatalog.js"
 import { pickDelayReason } from "./data/delayReasons.js"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
 import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
@@ -704,6 +707,123 @@ function App() {
     if (wait > 0) setTimeout(run, wait)
     else run()
   }
+
+  // ---- Emails (utils/emailEngine.js): requests to the Manager. Kept in storage; the tick below sends new ones, checks
+  // the agreed ones against the game, and applies the Reputation. A ref holds the latest list so the tick never reads a stale one.
+  const [emails, setEmailsState] = useState(() => emailEngine.readEmails())
+  const emailsRef = useRef(emails)
+  const [emailsOpen, setEmailsOpen] = useState(false)
+  const [emailBubble, setEmailBubble] = useState(false)
+  const emailsOpenRef = useRef(false)
+  useEffect(() => { emailsOpenRef.current = emailsOpen }, [emailsOpen])
+  const setEmails = (list) => { const kept = emailEngine.writeEmails(list); emailsRef.current = kept; setEmailsState(kept) }
+  const playerName = () => { try { return localStorage.getItem(emailEngine.PLAYER_NAME_KEY) || '' } catch { return '' } }
+  const applyEmailRep = (change) => {
+    if (!change) return
+    progressionManager.addReputation(change)
+    setReputation(shownReputation())
+    triggerSave()
+  }
+  // Every number a request can be measured by, read fresh from the game
+  const emailSnapshot = () => {
+    const pm = progressionManager
+    const continentCities = {}
+    pm.purchasedCities.forEach(c => { continentCities[c.continent] = (continentCities[c.continent] || 0) + 1 })
+    const sum = (o) => Object.values(o || {}).reduce((a, b) => a + (Number(b) || 0), 0)
+    return {
+      built: Object.fromEntries(MILESTONE_CATEGORIES.map(c => [c, builtCount(c, pm.purchasedDevelopments, pm.purchasedUpgrades)])),
+      cities: pm.purchasedCities.length, continentCities,
+      farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
+      timetable: readStoredList('hyperloop_timetable').length,
+      cash: pm.totalCashEarned, repEarned: pm.lifetimeReputationEarned, reputation: pm.reputation,
+      rank: rankManager.rank, devUpgrades: sum(pm.developmentUpgradeLevels), cityUpgrades: sum(pm.cityLineLevels),
+      shopOwned: readCosmetics().owned.length, work: achievements.counter('work'),
+      likes: readStoredList('hyperloop_hyperlink_liked').length, renames: Object.keys(pm.developmentNames || {}).length,
+    }
+  }
+  // What a new request may ask for right now: only things the player can actually do
+  const emailContext = (snap) => {
+    const pm = progressionManager
+    const cats = new Set([...pm.unlockedDevelopments, ...pm.unlockedUpgrades].map(d => d.category).filter(c => MILESTONE_CATEGORIES.includes(c)))
+    const continents = {}
+    pm.unlockedCities.forEach(c => { continents[c.continent] = (continents[c.continent] || 0) + 1 })
+    const owned = readCosmetics()
+    let cheapest = Infinity
+    Object.entries(SHOP_ITEMS).forEach(([category, items]) => items.forEach(item => {
+      if (item.tier === 'supporter' || !(item.cost > 0) || isOwned(owned, category, item.id)) return
+      cheapest = Math.min(cheapest, item.cost)
+    }))
+    return {
+      snap, incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
+      available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length },
+      shopCheapest: cheapest === Infinity ? 0 : cheapest,
+      unrenamed: pm.purchasedDevelopments.filter(d => !pm.developmentNames?.[d.name]).length,
+      devsWithUpgrade: pm.purchasedDevelopments.filter(d => d.revenue).length,
+    }
+  }
+  // How the player treated a character's request is remembered, and mentioned in their next email
+  const noteEmailOutcome = (email) => {
+    if (!email.character) return
+    emailEngine.writeCast(emailEngine.noteOutcome(emailEngine.readCast(), email.character, email.state))
+  }
+  const announceEmail = () => {
+    if (emailsOpenRef.current) return
+    if (!hyperLinkMutedRef.current) {
+      playPhoneNotificationSound()
+      setEmailBubble(true)
+      setTimeout(() => setEmailBubble(false), 3000)
+    }
+  }
+  // Called every few seconds from the game tick, once the player is in the game
+  const emailTick = () => {
+    const now = Date.now()
+    const snap = emailSnapshot()
+    let list = emailsRef.current
+    let changed = false
+    let announced = false
+    list = list.map(e => {
+      let next = e
+      if (e.state === 'new' && now - e.createdAt >= emailEngine.IGNORE_AFTER_MS) {
+        next = emailEngine.refuse(e, playerName(), PrestigeManager.owns('cultOfCelebrity'), now, true)
+        applyEmailRep(next.repChange)
+        noteEmailOutcome(next)
+      } else if (e.state === 'agreed') {
+        next = emailEngine.updateAgreed(e, snap, now)
+        if (next.state !== 'agreed') { applyEmailRep(next.repChange); noteEmailOutcome(next) }
+      }
+      if (next !== e) { changed = true; if (next.state !== e.state) announced = true }
+      return next
+    })
+    let meta = emailEngine.readMeta()
+    if (progressionManager.purchasedCities.length >= 2 && emailEngine.mayArrive(list, meta, now)) {
+      const cast = emailEngine.ensureCast(emailEngine.readCast())
+      emailEngine.writeCast(cast)
+      const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), cast })
+      if (email) {
+        list = [...list, email]
+        meta = emailEngine.afterArrival(meta, now)
+        changed = true
+        announced = true
+      } else meta = emailEngine.retryLater(meta, now)
+      emailEngine.writeMeta(meta)
+    }
+    if (changed) { setEmails(list); if (announced) announceEmail() }
+  }
+  const emailTickRef = useRef(null)
+  emailTickRef.current = emailTick
+  useEffect(() => { emailEngine.writeMeta(emailEngine.onOpen(emailEngine.readMeta())) }, [])
+  const respondToEmail = (id, agree) => {
+    const e = emailsRef.current.find(x => x.id === id)
+    if (!e || e.state !== 'new') return
+    const next = agree
+      ? emailEngine.agree(e, emailSnapshot(), playerName())
+      : emailEngine.refuse(e, playerName(), PrestigeManager.owns('cultOfCelebrity'))
+    applyEmailRep(next.repChange)
+    if (!agree) noteEmailOutcome(next)
+    setEmails(emailsRef.current.map(x => x.id === id ? next : x))
+  }
+  const readEmail = (id) => setEmails(emailsRef.current.map(x => x.id === id && !x.read ? { ...x, read: true } : x))
+  const unreadEmails = emails.filter(e => !e.read).length
   const secretCityTriggered = useRef(false);
   // Claims are remembered by the upgrade's name. Saves from before Early Retirement and Founders' Hall swapped ranks
   // remember them by rank (rank_50 was Founders' Hall, rank_100 was Early Retirement), so those are turned into names.
@@ -1642,6 +1762,9 @@ function App() {
       if (tickCount.current % 30 === 0) {
         triggerSave();
       }
+
+      // Emails: new requests, and progress on the ones the player agreed to
+      if (tickCount.current % 5 === 0 && !blockedRef.current && !onboarding) emailTickRef.current?.();
 
       // Hyper-Link post generation every 1-3 minutes, from the first connected city on (it used to wait for a second city,
       // which left a one-city network with only the official account's posts)
@@ -2989,6 +3112,14 @@ function App() {
       )}
 
       {activeTab === "Home" && !popupOpen && (
+        <EmailsButton
+          unread={unreadEmails}
+          showBubble={emailBubble}
+          onClick={() => setEmailsOpen(true)}
+        />
+      )}
+
+      {activeTab === "Home" && !popupOpen && (
         <AchievementsButton
           unseen={unseenAchievements}
           showBubble={achievementBubble > 0}
@@ -3003,6 +3134,16 @@ function App() {
           purchasedUpgrades={progressionManager.purchasedUpgrades}
           onSeen={markAchievementSeen}
           onClose={() => setAchievementsOpen(false)}
+        />
+      )}
+
+      {emailsOpen && (
+        <EmailsModal
+          emails={emails}
+          cult={PrestigeManager.owns('cultOfCelebrity')}
+          onRespond={respondToEmail}
+          onRead={readEmail}
+          onClose={() => setEmailsOpen(false)}
         />
       )}
 

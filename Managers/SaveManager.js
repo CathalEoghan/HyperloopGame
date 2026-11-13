@@ -53,6 +53,11 @@ const AUX_KEYS = [
     // the same way as hyperloop_hyperlink_fired_devposts above, since it's part of the current run.
     'hyperloop_hyperlink_fired_dev_upgrades',
     'hyperloop_hyperlink_liked',
+    // Emails (requests to the Manager): the list and when the next one may arrive. Both belong to the run, so a prestige cancels open requests with no penalty.
+    'hyperloop_emails',
+    'hyperloop_email_meta',
+    // The recurring email characters: their names and how you last answered each. Kept across a retire (PRESTIGE_KEEP_KEYS)
+    'hyperloop_email_cast',
     'hyperloop_hyperlink_used_month_posts',
     'hyperloop_hyperlink_used_daily_posts',
     'hyperloop_pending_rankups',
@@ -176,6 +181,8 @@ const SETTINGS_KEYS = [
     'hyperloop_notifications',
     'terminalBoardTab',
     'hyperloop_shop_last_category',
+    // The name emails address the player by
+    'hyperloop_player_name',
 ]
 
 export function clearSettings() {
@@ -223,6 +230,7 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_progress_collapsed',
     'hyperloop_loop_counted',
     'hyperloop_hyperlink_liked',
+    'hyperloop_email_cast',
     'hyperloop_lifetime_cash_earned',
     'hyperloop_lifetime_reputation_earned',
     'hyperloop_lifetime_created_at',
@@ -318,6 +326,9 @@ const AUX_SHAPES = {
     hyperloop_first_loop_prompt: v => v === 1,
     hyperloop_timetable_autofilled: v => v === 1,
     hyperloop_cosmetics: v => isObj(v) && listOfStrings(v.owned) && isObj(v.equipped) && Object.values(v.equipped).every(x => typeof x === 'string'),
+    hyperloop_emails: listOf(e => isObj(e) && typeof e.id === 'string' && typeof e.type === 'string' && typeof e.state === 'string' && Number.isFinite(e.target) && Number.isFinite(e.createdAt) && isObj(e.sender) && typeof e.sender.name === 'string' && typeof e.body === 'string'),
+    hyperloop_email_cast: v => isObj(v) && Object.values(v).every(c => isObj(c) && typeof c.name === 'string' && c.name.length <= 60),
+    hyperloop_email_meta: v => isObj(v) && Number.isFinite(v.nextAt) && Number.isFinite(v.lastAt),
     hyperloop_cities_intro_seen: v => typeof v === 'boolean',
     hyperloop_development_intro_seen: v => typeof v === 'boolean',
     hyperloop_progress_intro_seen: v => typeof v === 'boolean',

@@ -110,6 +110,9 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     // input would keep showing the old name instead of following the prop like the rest of the game does.
     useEffect(() => { setNameInput(terminalName) }, [terminalName])
     const [nameSaved, setNameSaved] = useState(false)
+    // The name emails use to address and sign for the player
+    const [playerNameInput, setPlayerNameInput] = useState(() => localStorage.getItem('hyperloop_player_name') || '')
+    const [playerNameSaved, setPlayerNameSaved] = useState(false)
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [importError, setImportError] = useState(null)
     const [showCredits, setShowCredits] = useState(false)
@@ -211,6 +214,14 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         onTerminalNameChange(trimmed)
         setNameSaved(true)
         setTimeout(() => setNameSaved(false), 2000)
+    }
+
+    const handlePlayerNameSave = () => {
+        const trimmed = playerNameInput.trim().replace(/\s+/g, ' ')
+        try { if (trimmed) localStorage.setItem('hyperloop_player_name', trimmed); else localStorage.removeItem('hyperloop_player_name') } catch { /* storage full */ }
+        setPlayerNameInput(trimmed)
+        setPlayerNameSaved(true)
+        setTimeout(() => setPlayerNameSaved(false), 2000)
     }
 
     const handleManualSave = () => {
@@ -451,6 +462,26 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         />
                         <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); handleNameSave(); }}>
                             {nameSaved ? <>{savedCheckEl}Saved</> : 'Save'}
+                        </button>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Your Name</span>
+                        <span className="settings-label-desc">What emails call you, and how your replies are signed. Leave empty to be addressed as Manager.</span>
+                    </div>
+                    <div className="settings-name-input-row">
+                        <input
+                            className="settings-name-input"
+                            type="text"
+                            value={playerNameInput}
+                            maxLength={32}
+                            placeholder="Manager"
+                            onChange={e => { setPlayerNameInput(e.target.value); setPlayerNameSaved(false) }}
+                            onKeyDown={e => e.key === 'Enter' && handlePlayerNameSave()}
+                        />
+                        <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); handlePlayerNameSave(); }}>
+                            {playerNameSaved ? <>{savedCheckEl}Saved</> : 'Save'}
                         </button>
                     </div>
                 </div>

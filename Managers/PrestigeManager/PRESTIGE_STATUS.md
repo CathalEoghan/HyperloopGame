@@ -23,7 +23,7 @@ The income, Work, farewell and Progress perks are true multipliers: they apply a
 | 2 | Oral Hygiene | x2 farewell Reputation (x4 with the x2 upgrade) | `getFarewellRepGain` |
 | 2 | Better Interest Rates | Daily bonus cash x10 | App.jsx `checkDailyLogin` |
 | 2 | Elite Accountants | Offline "double" becomes x3, same 20 Rep | OfflineModal `bonusFactor` |
-| 2 | Cult of Celebrity | +1 Rep for each Hyper-Link post liked (likes are permanent) | HyperLink `onLikeReward` |
+| 2 | Cult of Celebrity | +1 Rep for each Hyper-Link post liked (likes are permanent); refusing (or ignoring) an email request costs no Reputation | HyperLink `onLikeReward`; `emailEngine.refuse` via App.jsx `respondToEmail`/`emailTick` |
 | 2 | Good Standing | Developments and cities upgrade for half the Rep | ProgressionManager `getDevelopmentUpgradeCostInfo`, `getCityLineUpgradeCostInfo` |
 | 2 | Advanced Engineering | Cities and developments build immediately (finish on the next tick) | ConstructionManager |
 | 2 | Video Message | Farewell is sent automatically after 2.5 s | FarewellModal |
