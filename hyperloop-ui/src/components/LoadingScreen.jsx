@@ -231,6 +231,19 @@ function LoadingScreen({ onComplete, globeReady = true }) {
         setTimeout(onComplete, 600)
     }
 
+    // Space or Enter enters too, once the prompt is showing (a held key repeating, or a browser shortcut, doesn't count)
+    const enterRef = useRef(null)
+    useEffect(() => { enterRef.current = handleEnter })
+    useEffect(() => {
+        const onKey = (e) => {
+            if ((e.key !== ' ' && e.key !== 'Enter') || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return
+            e.preventDefault()
+            enterRef.current?.()
+        }
+        window.addEventListener('keydown', onKey)
+        return () => window.removeEventListener('keydown', onKey)
+    }, [])
+
     return (
         <div
             className={`loading-screen ${fading ? 'loading-fading' : ''} ${ready ? 'loading-clickable' : ''}`}
