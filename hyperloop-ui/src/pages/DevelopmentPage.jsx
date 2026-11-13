@@ -51,7 +51,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const [showDevelopAllExclTip, setShowDevelopAllExclTip] = useState(null)
     // The upgrade card being hovered and what it does, so the player does not have to open it to find out
     const [upgradeTip, setUpgradeTip] = useState(null)
-    const [categoryTip, setCategoryTip] = useState(null) // the category button being hovered, with its milestone hint
+    const [categoryTip, setCategoryTip] = useState(null) // the category button being hovered ({ anchor, cat }); its milestone hint is worked out on each draw
     const showUpgradeTip = (e, development) => {
         const describe = !development.revenue && EFFECT_DESCRIPTIONS[development.effectType]
         setUpgradeTip(describe ? { anchor: e.currentTarget, text: describe(development.effectValue, development, progressionManager.purchasedUpgrades.includes(development)) } : null)
@@ -87,12 +87,14 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         if (!tiers) return undefined
         const built = builtCount(cat, purchasedDevelopments, purchasedUpgrades)
         const paid = Number(readClaimedMilestones()[cat]) || 0
+        // The last tier is paid: nothing left to show, so no tooltip
+        if (paid >= tiers[tiers.length - 1].count) return undefined
         const next = tiers.find(t => t.count > Math.max(built, paid))
         // "in the terminal", not "built": the count includes what rank milestones handed over
         const builtText = `${built} ${cat} development${built === 1 ? '' : 's'} in the terminal.`
         return next
             ? `${builtText} Next milestone at ${next.count}: +${next.reputation} Reputation`
-            : `${builtText} Every ${cat} milestone reached.`
+            : undefined
     }
 
     const underConstruction = allItems.filter(item =>
@@ -240,13 +242,13 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     {CATEGORIES.map(cat => (
                         <button key={cat} className={`category-btn ${activeCategory === cat ? 'category-btn-active' : ''}`}
                             onClick={() => { playClickSound2(); setActiveCategory(cat) }}
-                            onMouseEnter={(e) => { playHoverSound(); const text = milestoneHint(cat); if (text) setCategoryTip({ anchor: e.currentTarget, text }) }}
+                            onMouseEnter={(e) => { playHoverSound(); setCategoryTip({ anchor: e.currentTarget, cat }) }}
                             onMouseLeave={() => setCategoryTip(null)}>
                             {cat} <span className="category-count">{categoryCompleted(cat)} / {categoryTotal(cat)}</span>
                         </button>
                     ))}
                 </div>
-                {categoryTip && <BoostTooltip anchor={categoryTip.anchor} lines={[categoryTip.text]} text />}
+                {categoryTip && categoryTip.anchor.isConnected && milestoneHint(categoryTip.cat) && <BoostTooltip anchor={categoryTip.anchor} lines={[milestoneHint(categoryTip.cat)]} text />}
             </div>
 
             <div className="dev-content">
