@@ -973,6 +973,8 @@ biggerBoat.jpg - <a href="https://www.flaticon.com/free-icons/ferry-boat" title=
 poolsClosed.png - <a href="https://www.flaticon.com/free-icons/swimming-pool" title="swimming pool icons">Swimming pool icons created by Magnific - Flaticon</a>
 hungerGames.png - <a href="https://www.flaticon.com/free-icons/fast-food" title="fast food icons">Fast food icons created by Magnific - Flaticon</a>
 groundhogDay.png - <a href="https://www.flaticon.com/free-icons/groundhog" title="groundhog icons">Groundhog icons created by Magnific - Flaticon</a>
+lotusOperandi.png - <a href="https://www.flaticon.com/free-icons/yoga" title="yoga icons">Yoga icons created by Magnific - Flaticon</a>
+
 
 MISC ICONS
 
