@@ -21,6 +21,7 @@ import dailyLoginSound from '../assets/sounds/dailyLogin.wav'
 import notEnoughFundsSound from '../assets/sounds/notEnoughFunds.wav'
 import departureBoardSound from '../assets/sounds/departureBoard.mp3'
 import phoneNotificationSound from '../assets/sounds/phoneNotification.mp3'
+import newEmailSound from '../assets/sounds/newEmail.mp3'
 import splitFlapLong from '../assets/sounds/splitFlapLong.wav'
 import splitFlapShort from '../assets/sounds/splitFlapShort.wav'
 import bigMomentSound from '../assets/sounds/bigMoment.mp3'
@@ -60,6 +61,7 @@ export const SOUND_CATEGORIES = [
     { key: 'workClicks', label: 'Work Clicks' },
     { key: 'hover', label: 'Hover Sound Effect' },
     { key: 'hyperlink', label: 'Hyper-Link Notification' },
+    { key: 'newEmail', label: 'New Email Notification' },
     { key: 'departureBoard', label: 'Departure Board Flaps' },
     { key: 'event', label: 'Event Notification' },
     { key: 'dailyBonus', label: 'Daily Bonus Notification' },
@@ -317,6 +319,7 @@ export function playSplitFlapShort() {
     shortFlapAudio.play().catch(() => {})
 }
 export function playPhoneNotificationSound() { play(phoneNotificationSound, 'hyperlink') }
+export function playNewEmailSound() { play(newEmailSound, 'newEmail') }
 export function playDepartureBoardSound() {
     if (!canPlay() || !entered) return null
     const volume = categoryMultiplier('departureBoard')

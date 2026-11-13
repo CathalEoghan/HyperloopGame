@@ -147,6 +147,8 @@ export class AchievementManager {
             retirements: PrestigeManager.getHistory().length,
             reputation: progressionManager.reputation,
             dailyBonus: this.counter('dailyBonus'),
+            // Email requests fulfilled, ever (counted in App.jsx when a request is met in time)
+            emailsFulfilled: this.counter('emailsFulfilled'),
             devUpgrades: this.counter('devUpgrades'),
             cityUpgrades: this.counter('cityUpgrades'),
             citiesAndDevUpgrades: this.counter('devUpgrades') + this.counter('cityUpgrades'),

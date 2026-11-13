@@ -47,7 +47,7 @@ import { pickDelayReason } from "./data/delayReasons.js"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
 import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
 import { POSTS } from "./data/hyperLinkData.js"
-import { playPhoneNotificationSound } from "./utils/sound.js"
+import { playPhoneNotificationSound, playNewEmailSound } from "./utils/sound.js"
 import { useAttentionAlerts } from "./utils/attentionAlerts.js"
 import { useEscapeToClose } from "./utils/useEscapeToClose.js"
 import { RankManager } from "Managers/RankManager/RankManager.js";
@@ -768,11 +768,9 @@ function App() {
   }
   const announceEmail = () => {
     if (emailsOpenRef.current) return
-    if (!hyperLinkMutedRef.current) {
-      playPhoneNotificationSound()
-      setEmailBubble(true)
-      setTimeout(() => setEmailBubble(false), 3000)
-    }
+    playNewEmailSound()
+    setEmailBubble(true)
+    setTimeout(() => setEmailBubble(false), 3000)
   }
   // Called every few seconds from the game tick, once the player is in the game
   const emailTick = () => {
@@ -789,7 +787,11 @@ function App() {
         noteEmailOutcome(next)
       } else if (e.state === 'agreed') {
         next = emailEngine.updateAgreed(e, snap, now)
-        if (next.state !== 'agreed') { applyEmailRep(next.repChange); noteEmailOutcome(next) }
+        if (next.state !== 'agreed') {
+          applyEmailRep(next.repChange)
+          noteEmailOutcome(next)
+          if (next.state === 'fulfilled') achievements.addCounter('emailsFulfilled')
+        }
       }
       if (next !== e) { changed = true; if (next.state !== e.state) announced = true }
       return next
@@ -819,7 +821,7 @@ function App() {
       ? emailEngine.agree(e, emailSnapshot(), playerName())
       : emailEngine.refuse(e, playerName(), PrestigeManager.owns('cultOfCelebrity'))
     applyEmailRep(next.repChange)
-    if (!agree) noteEmailOutcome(next)
+    if (!agree) { noteEmailOutcome(next); unlockAchievement('stopAsking') }
     setEmails(emailsRef.current.map(x => x.id === id ? next : x))
   }
   const readEmail = (id) => setEmails(emailsRef.current.map(x => x.id === id && !x.read ? { ...x, read: true } : x))

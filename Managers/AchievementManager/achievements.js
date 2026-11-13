@@ -80,6 +80,11 @@ export const ACHIEVEMENTS = [
     { id: 'tooMuchScreamtime', group: 'Hyper-Link', name: 'Too Much Screamtime', description: 'Like a Hyper-Link post on Halloween (October 31st).' },
     { id: 'shutUp', group: 'Hyper-Link', name: 'Shut Up!', description: 'Mute Hyper-Link.' },
 
+    // Emails
+    { id: 'atYourService', group: 'Emails', name: 'At Your Service', description: 'Fulfil an email request.', check: atLeast('emailsFulfilled', 1) },
+    { id: 'fiveStars', group: 'Emails', name: 'Five Stars', description: 'Fulfil 10 email requests.', check: atLeast('emailsFulfilled', 10) },
+    { id: 'stopAsking', group: 'Emails', name: 'Stop Asking', description: 'Refuse an email request.' },
+
     // Farewells
     { id: 'veryImportantPassenger', group: 'Farewells', name: 'Very Important Person', description: 'Give a farewell or a greeting to a VIP passenger.' },
     // (The id niceManager is kept so it stays unlocked for players who have it)

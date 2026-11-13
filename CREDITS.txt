@@ -975,6 +975,9 @@ poolsClosed.png - <a href="https://www.flaticon.com/free-icons/swimming-pool" ti
 hungerGames.png - <a href="https://www.flaticon.com/free-icons/fast-food" title="fast food icons">Fast food icons created by Magnific - Flaticon</a>
 groundhogDay.png - <a href="https://www.flaticon.com/free-icons/groundhog" title="groundhog icons">Groundhog icons created by Magnific - Flaticon</a>
 lotusOperandi.png - <a href="https://www.flaticon.com/free-icons/yoga" title="yoga icons">Yoga icons created by Magnific - Flaticon</a>
+atYourService.png - <a href="https://www.flaticon.com/free-icons/email" title="email icons">Email icons created by Smashicons - Flaticon</a>
+fiveStars.png - <a href="https://www.flaticon.com/free-icons/message" title="message icons">Message icons created by lapiyee - Flaticon</a>
+stopAsking.png - <a href="https://www.flaticon.com/free-icons/email" title="email icons">Email icons created by Fragneel - Flaticon</a>
 
 
 MISC ICONS
