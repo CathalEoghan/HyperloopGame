@@ -10,7 +10,7 @@ const EL = ['Greek', 'Καλό ταξίδι!', 'Καλώς ήρθατε!']
 const ZH = ['Chinese', '一路平安！', '欢迎！']
 const MS = ['Malay', 'Selamat jalan!', 'Selamat datang!']
 const SW = ['Swahili', 'Safari njema!', 'Karibu!']
-const EN = ['English', 'Safe travels!', 'Welcome!']
+const EN = ['English', 'Goodbye!', 'Welcome!']
 
 const localPhrases = {
     France: FR, Monaco: FR,
@@ -18,7 +18,14 @@ const localPhrases = {
     Ireland: ['Irish', 'Slán!', 'Fáilte!'],
     Scotland: ['Scottish Gaelic', 'Slàn leibh!', 'Fàilte!'],
     Wales: ['Welsh', 'Taith dda!', 'Croeso!'],
-    'United States of America': EN, Australia: EN, 'New Zealand': EN, Canada: EN,
+    'United States of America': EN, Australia: EN, 'New Zealand': EN, Canada: EN, England: EN, Singapore: EN,
+    Nigeria: EN, Uganda: EN, Zimbabwe: EN, Namibia: EN, Liberia: EN, 'Sierra Leone': EN, Botswana: EN, Zambia: EN,
+    'Papua New Guinea': EN, 'Federated States of Micronesia': EN, 'The Bahamas': EN, Barbados: EN, Guyana: EN,
+    'Trinidad and Tobago': EN,
+    Jamaica: ['Jamaican Patois', 'Walk good!', 'Welcome!'],
+    Ghana: ['Twi', 'Nante yiye!', 'Akwaaba!'],
+    'South Africa': ['Zulu', 'Hamba kahle!', 'Siyakwemukela!'],
+    Rwanda: ['Kinyarwanda', 'Urugendo rwiza!', 'Murakaza neza!'],
     Italy: ['Italian', 'Buon viaggio!', 'Benvenuti!'],
     Japan: ['Japanese', 'いってらっしゃい！', 'ようこそ！'],
     'South Korea': ['Korean', '안녕히 가세요!', '환영합니다!'],
@@ -36,6 +43,8 @@ const localPhrases = {
     Cuba: ES, Mexico: ES, Spain: ES, Argentina: ES, Colombia: ES, Chile: ES, Peru: ES, Venezuela: ES, Uruguay: ES,
     Paraguay: ES, Bolivia: ES, Ecuador: ES, Guatemala: ES, 'Costa Rica': ES, Panama: ES, Nicaragua: ES,
     'Dominican Republic': ES, 'Puerto Rico': ES,
+    Senegal: FR, Mali: FR, 'Ivory Coast': FR, Cameroon: FR, Chad: FR, Niger: FR, Guinea: FR, Haiti: FR, Madagascar: FR,
+    Mauritius: FR, Vanuatu: FR, 'Democratic Republic of the Congo': FR, 'Republic of the Congo': FR,
     Brazil: PT, Portugal: PT, Angola: PT, Mozambique: PT,
     Greece: EL, Cyprus: EL,
     Malaysia: MS, Indonesia: ['Indonesian', 'Selamat jalan!', 'Selamat datang!'],
@@ -54,6 +63,11 @@ const localPhrases = {
     Slovakia: ['Slovak', 'Šťastnú cestu!', 'Vitajte!'],
     Slovenia: ['Slovenian', 'Srečno pot!', 'Dobrodošli!'],
     Croatia: ['Croatian', 'Sretan put!', 'Dobrodošli!'],
+    'Bosnia and Herzegovina': ['Bosnian', 'Sretan put!', 'Dobrodošli!'],
+    'North Macedonia': ['Macedonian', 'Среќен пат!', 'Добредојдовте!'],
+    Moldova: ['Romanian', 'Drum bun!', 'Bine ați venit!'],
+    Belarus: ['Russian', 'Счастливого пути!', 'Добро пожаловать!'],
+    Kyrgyzstan: ['Russian', 'Счастливого пути!', 'Добро пожаловать!'],
     Serbia: ['Serbian', 'Srećan put!', 'Dobrodošli!'],
     Romania: ['Romanian', 'Drum bun!', 'Bine ați venit!'],
     Bulgaria: ['Bulgarian', 'Лек път!', 'Добре дошли!'],
