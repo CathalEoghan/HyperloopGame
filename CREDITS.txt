@@ -853,7 +853,7 @@ trainspotting.jpg - <a href="https://www.flaticon.com/free-icons/train" title="t
 crazyRich.jpg - <a href="https://www.flaticon.com/free-icons/expensive" title="expensive icons">Expensive icons created by Magnific - Flaticon</a>
 soFancy.jpg - <a href="https://www.flaticon.com/free-icons/premiere" title="Premiere icons">Premiere icons created by Magnific - Flaticon</a>
 weDidntStartTheFire.jpg -<a href="https://www.flaticon.com/free-icons/fire" title="fire icons">Fire icons created by kosonicon - Flaticon</a>
-universalBrand.jpg - <a href="https://www.flaticon.com/free-icons/shopping-cart" title="shopping cart icons">Shopping cart icons created by Rashad - Flaticon</a>
+universalBrand.jpg - <a href="https://www.flaticon.com/free-icons/generic" title="generic icons">Generic icons created by Vectors Tank - Flaticon</a>
 iLikeIt.jpg - <a href="https://www.flaticon.com/free-icons/good-job" title="good job icons">Good job icons created by Magnific - Flaticon</a>
 socialMediaAddict.jpg - <a href="https://www.flaticon.com/free-icons/good-job" title="good job icons">Good job icons created by Magnific - Flaticon</a>
 doomscroller.jpg - <a href="https://www.flaticon.com/free-icons/good-job" title="good job icons">Good job icons created by Magnific - Flaticon</a>
@@ -956,6 +956,22 @@ costumeParty.jpg - <a href="https://www.flaticon.com/free-icons/costume" title="
 familyGuy.jpg - <a href="https://www.flaticon.com/free-icons/family" title="family icons">Family icons created by monkik - Flaticon</a>
 betterCallFall.jpg - <a href="https://www.flaticon.com/free-icons/autumn" title="autumn icons">Autumn icons created by justicon - Flaticon</a>
 vanityFare.jpg - <a href="https://www.flaticon.com/free-icons/mirror" title="mirror icons">Mirror icons created by Magnific - Flaticon</a>
+theFrenchDisconnection.jpg - <a href="https://www.flaticon.com/free-icons/pistol" title="pistol icons">Pistol icons created by Magnific - Flaticon</a>
+favoured.jpg - <a href="https://www.flaticon.com/free-icons/shamrock" title="shamrock icons">Shamrock icons created by Magnific - Flaticon</a>
+quadrillionaire.jpg - <a href="https://www.flaticon.com/free-icons/money" title="money icons">Money icons created by Magnific - Flaticon</a>
+cursed.jpg - <a href="https://www.flaticon.com/free-icons/mood" title="mood icons">Mood icons created by bukeicon - Flaticon</a>
+tokyoStool.jpg - <a href="https://www.flaticon.com/free-icons/poop" title="poop icons">Poop icons created by Smashicons - Flaticon</a>
+costaDelNuuk.jpg - <a href="https://www.flaticon.com/free-icons/iceland" title="iceland icons">Iceland icons created by Indielogy - Flaticon</a>
+czechMate.jpg - <a href="https://www.flaticon.com/free-icons/chess" title="chess icons">Chess icons created by Good Ware - Flaticon</a>
+nomNomNomsk.jpg - <a href="https://www.flaticon.com/free-icons/hamburger" title="hamburger icons">Hamburger icons created by Magnific - Flaticon</a>
+coolForCuts.jpg - <a href="https://www.flaticon.com/free-icons/scissors" title="scissors icons">Scissors icons created by Gulraiz - Flaticon</a>
+priorities.jpg - <a href="https://www.flaticon.com/free-icons/adhd" title="adhd icons">Adhd icons created by Magnific - Flaticon</a>
+343GuiltyBark.jpg - <a href="https://www.flaticon.com/free-icons/dog-food" title="dog food icons">Dog food icons created by Prashanth Rapolu 15 - Flaticon</a>
+makesSense.jpg - <a href="https://www.flaticon.com/free-icons/headache" title="headache icons">Headache icons created by Eucalyp - Flaticon</a>
+biggerBoat.jpg - <a href="https://www.flaticon.com/free-icons/ferry-boat" title="ferry boat icons">Ferry boat icons created by Magnific - Flaticon</a>
+poolsClosed.png - <a href="https://www.flaticon.com/free-icons/swimming-pool" title="swimming pool icons">Swimming pool icons created by Magnific - Flaticon</a>
+hungerGames.png - <a href="https://www.flaticon.com/free-icons/fast-food" title="fast food icons">Fast food icons created by Magnific - Flaticon</a>
+groundhogDay.png - <a href="https://www.flaticon.com/free-icons/groundhog" title="groundhog icons">Groundhog icons created by Magnific - Flaticon</a>
 
 MISC ICONS
 
