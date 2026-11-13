@@ -201,7 +201,7 @@ function loadFlagTexture(url, { grayscale = false } = {}, onLoad) {
 // The Max (16k) day texture is a different, much darker picture of the Earth than the 2k/8k ones: its ocean is
 // about (2,7,23) against (30,59,117), so the lit side came out darker than the night side's blue ocean and the
 // day/night line looked backwards. A gamma lift brings it back in line with the others (their land is unchanged).
-const dayGammaFor = quality => (quality === '16k' ? 0.6 : 1.0)
+const dayGammaFor = quality => (quality === '16k' ? 0.75 : 1.0)
 
 function getSunWorldPosition() {
     const now = new Date()
@@ -525,7 +525,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 void main() {
                     vec4 dayColor = texture2D(dayTexture, vUv);
                     dayColor.rgb = pow(dayColor.rgb, vec3(dayGamma));
-                    vec4 nightColor = texture2D(nightTexture, vUv) * 1.8;
+                    // Dark ground and ocean on the night side stay dark; only the lit parts (cities) get the 1.8 boost
+                    vec4 nightSample = texture2D(nightTexture, vUv);
+                    float nightLum = dot(nightSample.rgb, vec3(0.3, 0.6, 0.1));
+                    vec4 nightColor = nightSample * mix(1.0, 1.8, smoothstep(0.04, 0.3, nightLum));
                     float cosAngle = dot(vNormal, sunDirection);
                     // A wide, soft dawn/dusk band, and the day side easing down towards it, so the two textures meet
                     // gradually instead of at a visible line (the day ocean is much brighter than the night one)
