@@ -191,7 +191,7 @@ export const ACHIEVEMENTS = [
     { id: 'hungerGames', group: 'Combinations', name: 'Hunger Games', description: 'With no Food developments constructed, build a Gaming Arcade.' },
     // Everything built (ctx.builds, which leaves out what the rank milestones hand over) is the Outdoor Garden or an Enterprise
     // development, and there are at least 10 of those
-    { id: 'lotusOperandi', group: 'Combinations', name: 'Lotus Operandi', description: 'Have an Outdoor Garden developed and 10 Enterprise-category developments constructed, with no other developments constructed.', check: ctx => ctx.builtNames.includes('Outdoor Garden') && (ctx.categories.Enterprise || 0) >= 10 && ctx.builds === 1 + (ctx.categories.Enterprise || 0) },
+    { id: 'lotusOperandi', group: 'Combinations', name: 'Lotus Operandi', description: 'Have an Outdoor Garden developed and 10 Enterprise-category developments launched, with no other developments constructed.', check: ctx => ctx.builtNames.includes('Outdoor Garden') && (ctx.categories.Enterprise || 0) >= 10 && ctx.builds === 1 + (ctx.categories.Enterprise || 0) },
     // Advanced Engineering is a Prestige upgrade, not a development - it's permanent once bought, so this
     // unlocks the first time Gothenburg is connected on or after buying it (see connectedWithPrestige above).
     { id: 'maceToTheFace', group: 'Combinations', name: 'Mace to the Face', description: 'Have Gothenburg connected and the Advanced Engineering Prestige upgrade unlocked at any one time.', check: connectedWithPrestige('Gothenburg', 'advancedEngineering') },
