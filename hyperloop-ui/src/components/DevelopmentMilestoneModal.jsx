@@ -4,12 +4,14 @@ import foodIcon from '../assets/misc/foodCategory.png'
 import shoppingIcon from '../assets/misc/shoppingCategory.png'
 import recreationIcon from '../assets/misc/recreationCategory.png'
 import serviceIcon from '../assets/misc/serviceCategory.png'
+import infrastructureIcon from '../assets/misc/infrastructureCategory.png'
+import enterpriseIcon from '../assets/misc/enterpriseCategory.png'
 import reputationIcon from '../assets/misc/reputation.png'
-import { milestoneTier, nextMilestoneCount } from '../data/developmentMilestones.js'
+import { milestoneTier, nextMilestoneCount, itemNoun } from '../data/developmentMilestones.js'
 import './MilestoneModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
-const CATEGORY_ICONS = { Food: foodIcon, Shopping: shoppingIcon, Recreation: recreationIcon, Service: serviceIcon }
+const CATEGORY_ICONS = { Food: foodIcon, Shopping: shoppingIcon, Recreation: recreationIcon, Service: serviceIcon, Infrastructure: infrastructureIcon, Enterprise: enterpriseIcon }
 
 // Shown when the number of developments built in a category reaches one of its milestones. The Reputation is already in
 // the save by the time this shows (App.jsx holds it back from the counter); the button is what makes it land.
@@ -22,9 +24,10 @@ function DevelopmentMilestoneModal({ milestone, onContinue }) {
 
     const { category, count, reputation } = milestone
     const next = nextMilestoneCount(category, count)
+    const noun = itemNoun(category)
     const heading = count === 1
-        ? `You've built your first ${category} development!`
-        : `You've built ${count} ${category} developments!`
+        ? `You've built your first ${category} ${noun}!`
+        : `You've built ${count} ${category} ${noun}s!`
 
     return (
         <div className="modal-overlay">
@@ -40,7 +43,7 @@ function DevelopmentMilestoneModal({ milestone, onContinue }) {
                     </span>
                 </div>
                 {next
-                    ? <p className="milestone-next">Next {category} milestone at {next} {category} developments built</p>
+                    ? <p className="milestone-next">Next {category} milestone at {next} {category} {noun}s built</p>
                     : <p className="milestone-next">That was the last {category} milestone. Well done!</p>}
                 <button
                     className="closeButton"

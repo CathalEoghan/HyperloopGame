@@ -13,7 +13,7 @@ export const UNSEEN_KEY = 'hyperloop_achievements_unseen'
 const REGULAR_CITIES = allCities.filter(c => c.continent !== 'Antarctica')
 const REGULAR_CONTINENTS = new Set(REGULAR_CITIES.map(c => c.continent)).size
 // Upgrades handed out as milestone rewards (or Early Retirement) aren't "constructed" by the player
-const NOT_BUILT = new Set(['dailyLoginMultiplier', 'terminalAgeBoost', 'workPerAchievement', 'earlyRetirement'])
+export const NOT_BUILT = new Set(['dailyLoginMultiplier', 'terminalAgeBoost', 'workPerAchievement', 'earlyRetirement'])
 // One Advertising Campaign upgrade for each country: Universal Brand wants them all
 const AD_CAMPAIGN_TOTAL = allUpgrades.filter(u => u.effectType === 'countryAdvertisingBoost').length
 

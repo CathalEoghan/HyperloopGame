@@ -26,7 +26,7 @@ import reputationIcon from '../assets/misc/reputation.png'
 import constructionIcon from '../assets/misc/construction.png'
 import fireworksIcon from '../assets/misc/fireworks.png'
 import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.js'
-import { DEVELOPMENT_MILESTONES, readClaimedMilestones } from '../data/developmentMilestones.js'
+import { DEVELOPMENT_MILESTONES, readClaimedMilestones, builtCount, itemNoun } from '../data/developmentMilestones.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
 
 // Experimental Technology doubles in price every claim, so its cost climbs into the billions and beyond: costs from a
@@ -78,17 +78,18 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
     const categoryTotal = (cat) => allItems.filter(d => inScope(d, cat)).length
     const categoryCompleted = (cat) => allItems.filter(d => inScope(d, cat) && (purchasedDevelopments.some(p => p.name === d.name) || purchasedUpgrades.some(p => p.name === d.name))).length
 
-    // The hover text on a category pill: how many developments of it are built (developments only, the way the milestones
-    // count them, so it can be lower than the pill's number, which also counts the category's upgrades) and what the next
-    // milestone pays. Categories without milestones (Upgrades, Infrastructure...) have none. A tier already paid this run
-    // is skipped even if removing developments has put the count back under it, since it won't pay again.
+    // The hover text on a category pill: how many of it are built and what the next milestone pays. The milestones count
+    // developments for Food, Shopping, Recreation and Service and upgrades for Infrastructure and Enterprise (not the ones
+    // handed over as rank milestones), so the number can be lower than the pill's, which counts everything in the
+    // category. Categories without milestones (All, Upgrades) have none. A tier already paid this run is skipped even if
+    // removing items has put the count back under it, since it won't pay again.
     const milestoneHint = (cat) => {
         const tiers = DEVELOPMENT_MILESTONES[cat]
         if (!tiers) return undefined
-        const built = purchasedDevelopments.filter(d => d.category === cat).length
+        const built = builtCount(cat, purchasedDevelopments, purchasedUpgrades)
         const paid = Number(readClaimedMilestones()[cat]) || 0
         const next = tiers.find(t => t.count > Math.max(built, paid))
-        const builtText = `${built} ${cat} development${built === 1 ? '' : 's'} built.`
+        const builtText = `${built} ${cat} ${itemNoun(cat)}${built === 1 ? '' : 's'} built.`
         return next
             ? `${builtText} Next milestone at ${next.count}: +${next.reputation} Reputation`
             : `${builtText} Every ${cat} milestone reached.`

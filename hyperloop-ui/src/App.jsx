@@ -38,7 +38,7 @@ import OnboardingModal from "./components/OnboardingModal"
 import SecretCityModal from "./components/SecretCityModal"
 import MilestoneModal from "./components/MilestoneModal"
 import DevelopmentMilestoneModal from "./components/DevelopmentMilestoneModal"
-import { DEVELOPMENT_MILESTONES, MILESTONE_CATEGORIES } from "./data/developmentMilestones.js"
+import { DEVELOPMENT_MILESTONES, MILESTONE_CATEGORIES, builtCount } from "./data/developmentMilestones.js"
 import HyperLinkModal, { HyperLinkButton } from "./components/HyperLink.jsx"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
 import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
@@ -766,7 +766,7 @@ function App() {
     } catch { /* nothing saved yet, or damaged: start from none */ }
     const reachedNow = [];
     MILESTONE_CATEGORIES.forEach(category => {
-      const built = progressionManager.purchasedDevelopments.filter(d => d.category === category).length;
+      const built = builtCount(category, progressionManager.purchasedDevelopments, progressionManager.purchasedUpgrades);
       const done = Number.isFinite(claimed[category]) ? claimed[category] : 0;
       const reached = DEVELOPMENT_MILESTONES[category].filter(t => t.count <= built && t.count > done);
       if (reached.length === 0) return;
