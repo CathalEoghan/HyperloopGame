@@ -733,7 +733,7 @@ function App() {
       // It is an upgrade the player now owns, so it gets the upgrade popup with its effect (bug #172)
       if (!silent) setRevealedUpgradeQueue(prev => [...prev, upgrade]);
     }
-    // Expanded Family Rooms (Bologna): every milestone also pays a flat reputation bonus on top of its usual
+    // Expanded Family Rooms (Bologna): every rank-based milestone also pays a flat reputation bonus on top of its usual
     // special-unlock reward.
     if (progressionManager.purchasedUpgrades.some(u => u.effectType === 'milestoneReputationBonus')) {
       const bonus = progressionManager.purchasedUpgrades
@@ -745,7 +745,7 @@ function App() {
       if (!silent) {
         setBonusQueue(prev => [...prev, {
           title: 'EXPANDED FAMILY ROOMS',
-          message: 'Your new family rooms are open, and passengers and staff with small children are joining in the milestone celebrations!',
+          message: 'Your new family rooms are open, and passengers and staff with small children are joining in the rank milestone celebrations!',
           amount: bonus, buttonLabel: 'Yay!', afterUpgradeReveal: true,
         }]);
       }
