@@ -842,6 +842,7 @@ tier3City.mp3 - Sound by BenKirb (Pixabay Content License)
 splitFlapLong.wav - Sound by matucha via Freesound (Attribution NonCommercial 4.0)
 splitFlapShort.wav - Sound by matucha via Freesound (Attribution NonCommercial 4.0)
 rankUpSound.mp3 - Sound by ALEXIS_GAMING_CAM via Pixabay (Pixabay Content License)
+developmentMilestone.mp3 - Sound by SoundReality via Pixabay (Pixabay Content License)
 
 ACHIEVEMENT LOGOS
 
@@ -1032,6 +1033,7 @@ enterpriseCategory.png - <a href="https://www.flaticon.com/free-icons/enterprise
 serviceCategory.png - <a href="https://www.flaticon.com/free-icons/customer-service" title="customer service icons">Customer service icons created by Eucalyp - Flaticon</a>
 shoppingCategory.png - <a href="https://www.flaticon.com/free-icons/shopping-bag" title="shopping bag icons">Shopping bag icons created by iconixar - Flaticon</a>
 recreationCategory.png - <a href="https://www.flaticon.com/free-icons/pub" title="pub icons">Pub icons created by Magnific - Flaticon</a>
+infrastructureCategory.png - <a href="https://www.flaticon.com/free-icons/obra" title="obra icons">Obra icons created by Magnific - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
