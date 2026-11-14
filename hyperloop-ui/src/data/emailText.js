@@ -688,6 +688,20 @@ export const EMAILS = {
             },
         ],
     },
+    journalist: {
+        cash: [
+            {
+                id: 'journalist-the-figures',
+                subject: 'A few figures, if I may',
+                body: "Dear {formal},\n\nI am putting together a piece on the terminal, and I have a few questions. First of all, how much do you actually take home from all this? Sorry, that is far too personal. Please ignore it.\n\nWhat I can ask, professionally, is whether you could earn {n} for the terminal. People will want to know it can be done, and I would love to be able to say so. And is it true you check the balance before breakfast? No, no, forget I said that.\n\nLooking forward to hearing from you,\n{from}",
+                agree: 'Dear {from},\n\nI will earn {n} for the terminal. And no, I will not be telling you what I do before breakfast.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot promise {n} right now, and my breakfast routine is my own business.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nA no. Might I ask what is behind it? Actually, never mind, that is not my business at all.\n\nLooking forward to hearing from you,\n{from}',
+                fulfilled: 'Dear {formal},\n\nYou did it! How does it feel? Did you celebrate? Please ignore that, I am getting ahead of myself.\n\nLooking forward to hearing from you,\n{from}',
+                failed: 'Dear {formal},\n\nThe figure was not reached. Was it the numbers, or something more personal? Forget the second part, I should not have asked.\n\nLooking forward to hearing from you,\n{from}',
+            },
+        ],
+    },
     public: {
     },
 }
