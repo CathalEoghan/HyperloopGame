@@ -2842,7 +2842,8 @@ function App() {
             setReputation(shownReputation()); // so the next popup does not offer a double the player can no longer afford (bug #122)
             localStorage.removeItem('hyperloop_pending_daily');
             achievements.addCounter('dailyBonus');
-            progressionManager.addCash(finalBonus);
+            // Straight into the balance: the daily bonus doesn't count towards XP or the cash-earned totals
+            progressionManager.addBonusCash(finalBonus);
             if (dailyLoginData.repBonus > 0) progressionManager.addReputation(dailyLoginData.repBonus);
             setDailyLoginData(null);
             lastModalClearedAt.current = Date.now() + 180000;
