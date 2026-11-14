@@ -449,7 +449,7 @@ export const EMAILS = {
             {
                 id: 'assistant-overheard',
                 subject: 'Something I overheard',
-                body: "Dear {formal},\n\nI'm so sorry to mention this. I overheard some people by the coffee machine talking about the terminal's reputation. They weren't talking about you! Not specifically. I'd never let them.\n\nI just thought, very quietly, that a little more Reputation might, um, give them something else to talk about. Like the weather.\n\nVery respectfully,\n{from}",
+                body: "Dear {formal},\n\nI'm so sorry to mention this. I overheard some people by the coffee machine talking about the terminal's reputation. They weren't talking about you! Not specifically. I'd never let them.\n\nI just thought, very quietly, that a slightly better reputation might, um, give them something else to talk about. Like the weather.\n\nVery respectfully,\n{from}",
                 agree: 'Dear {from},\n\nThanks for the heads up. I will work on improving our reputation.\n\nBest,\n{fullName}',
                 refuse: 'Dear {from},\n\nThanks, but I cannot promise to improve our reputation in this timeframe.\n\nBest regards,\n{fullName}',
                 refused: "Dear {formal},\n\nOf course! The weather is lovely anyway. I'll just keep, um, listening. Not that I listen. Sorry.\n\nVery respectfully,\n{from}",
@@ -667,12 +667,12 @@ export const EMAILS = {
             {
                 id: 'marketing-brand-awareness',
                 subject: 'Getting the word out',
-                body: "Dear {formal},\n\nCircling back with a quick win for the brand: awareness is the engine of everything we do, and our Reputation is the best measure of it we have!\n\nCould you earn {n} Reputation for the terminal? Every bit of it means more people know who we are. It would really elevate us.\n\nOnwards and upwards,\n{from}",
-                agree: 'Dear {from},\n\nHappy to help! I will earn the {n} Reputation.\n\nBest regards,\n{fullName}',
+                body: "Dear {formal},\n\nCircling back with a quick win for the brand: awareness is the engine of everything we do, and our reputation is the best measure of it we have!\n\nCould you improve the reputation of the terminal? Every bit of good cred means more people know who we are. It would really elevate us.\n\nOnwards and upwards,\n{from}",
+                agree: 'Dear {from},\n\nHappy to help! I will try and improve the reputation of the terminal.\n\nBest regards,\n{fullName}',
                 refuse: 'Dear {from},\n\nThanks for the push, but I cannot take that on right now.\n\nBest regards,\n{fullName}',
                 refused: 'Dear {formal},\n\nNo problem, we will circle back to this! The word will get out in its own time.\n\nOnwards and upwards,\n{from}',
                 fulfilled: 'Dear {formal},\n\nSmashed it! The awareness numbers are looking brilliant, and it is all down to you. Thank you!\n\nOnwards and upwards,\n{from}',
-                failed: 'Dear {formal},\n\nThe Reputation did not come in time, but let us not dwell on it! We will pivot and go again.\n\nOnwards and upwards,\n{from}',
+                failed: 'Dear {formal},\n\nWe did not reach as high as we could have, but let us not dwell on it! We will pivot and go again.\n\nOnwards and upwards,\n{from}',
             },
         ],
         work: [
@@ -1504,12 +1504,12 @@ export const EMAILS = {
             {
                 id: 'public-fiance',
                 subject: 'Convincing my fiancé',
-                body: "Dear {formal},\n\nI am trying to persuade my fiancé to travel by loop instead of by plane, and it has not been easy. They are nervous about trying something new, and they keep asking whether the loops are really as good as I say. I have been telling them how well run the terminal is, but they would like to see some proof.\n\nWould you be able to earn {n} Reputation for the terminal? I think it would help them to trust it, and to take that first trip with me. Thank you for taking the time to read this.\n\nKind regards,\n{from}",
-                agree: 'Dear {from},\n\nOf course. I will earn {n} Reputation for the terminal.\n\nBest regards,\n{fullName}',
-                refuse: 'Dear {from},\n\nI am sorry, I cannot earn {n} Reputation right now.\n\nBest regards,\n{fullName}',
+                body: "Dear {formal},\n\nI am trying to persuade my fiancé to travel by loop instead of by plane, and it has not been easy. They are nervous about trying something new, and they keep asking whether the loops are really as good as I say. I have been telling them how well run the terminal is, but they would like to see some proof.\n\nWould you be able to improve the reputation of the terminal a little? I think it would help them to trust it, and to take that first trip with me. Thank you for taking the time to read this.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will try and improve the reputation of the terminal.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot dedicate any time to the reputation of the terminal right now.\n\nBest regards,\n{fullName}',
                 refused: 'Dear {formal},\n\nThat is quite all right, and thank you for replying. I will keep trying to persuade them in my own way. I am sure they will come round in time.\n\nKind regards,\n{from}',
                 fulfilled: 'Dear {formal},\n\nThank you! I showed my fiancé how well the terminal is regarded, and they agreed to try it. We took our first loop together last weekend, and they loved it. They are even talking about the next one.\n\nKind regards,\n{from}',
-                failed: 'Dear {formal},\n\nThe Reputation did not come in time, but thank you for considering it. I will keep trying to persuade my fiancé. I am sure that the terminal will win them over, in the end.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe terminal is still not trusted by my fiancé, but thank you for trying. I will keep trying to persuade them. I am sure that the terminal will win them over, in the end.\n\nKind regards,\n{from}',
             },
         ],
         payUpfront: [
