@@ -505,6 +505,31 @@ export const EMAILS = {
                 failed: 'Dear {formal},\n\nThe service developments were not built in time. I will not make a fuss, but I did say it was worth doing.\n\nKind regards,\n{from}',
             },
         ],
+        upgradeDev: [
+            {
+                id: 'lawyer-development-upgrades',
+                target: 2,
+                subject: 'Upgrading our developments',
+                body: "Dear {formal},\n\nI will be upfront: several of our developments have been left as they were for some time, and I would like you to upgrade two of them.\n\nI would sooner we looked after what we already own than had to explain why we did not.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nThank you for being so clear. I will upgrade two developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate you raising it, but I cannot upgrade developments at the moment.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood, and thank you for being plain with me. I would only ask that you keep it in mind.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you. The upgrades are exactly what I hoped for, and I am glad we did not leave it any longer.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe developments were not upgraded in time. I will not labour the point, but I did say it mattered.\n\nKind regards,\n{from}',
+            },
+        ],
+        rankUp: [
+            {
+                id: 'lawyer-moving-up',
+                subject: 'Moving up',
+                body: "Dear {formal},\n\nI will say this plainly: the terminal is ready for a higher rank, and I would like you to take it up one.\n\nA higher rank carries more weight with everyone we deal with, and I would rather we had it than needed it.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nThank you for being so direct. I will take the terminal up a rank.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate you saying so, but I cannot take the terminal up a rank just now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood, and thank you for a straight answer. I will raise it again when the timing is better.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nCongratulations on the new rank. I am pleased, and I think it will serve us well.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe terminal has not moved up a rank. I will not press the matter, but it was an opportunity worth taking.\n\nKind regards,\n{from}',
+            },
+        ],
     },
     public: {
     },
