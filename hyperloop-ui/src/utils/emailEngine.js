@@ -456,7 +456,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             const last = now - (cast[character.id].lastAt || 0) <= MEMORY_MS ? cast[character.id].last : null
             const memory = last && character.after[last] ? `${character.after[last]}\n\n` : ''
             referredBack = memory !== ''
-            text = `${memory}${pick(character.intros, rnd)(req.ask)}\n\n${character.deadline(within)}\n${pick(character.outros, rnd)}\n\n${character.signoff}\n${sender.name}\n${sender.role}`
+            text = `${memory}${pick(character.intros, rnd)(req.ask)}\n\n${character.deadline(within)}\n\n${pick(character.outros, rnd)}\n\n${character.signoff}\n${sender.name}\n${sender.role}`
         } else {
             text = `${pick(INTROS, rnd)(req.ask)}\n\nI need this done within ${within} of you agreeing.\n${pick(OUTROS, rnd)}\n\nKind regards,\n${sender.name}\n${sender.role}`
         }

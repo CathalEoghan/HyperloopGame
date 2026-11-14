@@ -2,10 +2,12 @@ import { useState, useEffect, useRef } from 'react'
 import './Emails.css'
 import emailIcon from '../assets/misc/email.png'
 import bellIcon from '../assets/misc/bell.png'
+import reputationIcon from '../assets/misc/reputation.png'
+import clockIcon from '../assets/misc/clock.png'
 import BoostTooltip from './BoostTooltip.jsx'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
-import { CHARACTERS, isOpen, progressLabel, timeLeft, formatLeft } from '../utils/emailEngine.js'
+import { CHARACTERS, isOpen, progressLabel, timeLeft, formatLeft, readMeta, MAX_PER_DAY } from '../utils/emailEngine.js'
 
 // Optional pictures: assets/emailPictures/thumbs/<picture name>.(jpg|png|webp), small copies of the full-size ones in
 // assets/emailPictures. A character's picture name is `picture` in CHARACTERS (utils/emailEngine.js). Without one, a coloured initial.
@@ -21,6 +23,25 @@ function Avatar({ email, size = 34 }) {
 }
 
 const MailIcon = ({ size = 34 }) => <img src={emailIcon} alt="" width={size} height={size} style={{ display: 'block', border: 'none', borderRadius: 0 }} />
+
+const Rep = ({ n }) => <span className="emails-rep"><img src={reputationIcon} alt="" />{n}</span>
+
+// How long ago an email arrived, in the few words a mail list uses
+const ago = (ms) => { const m = Math.floor(ms / 60000); return m < 1 ? 'just now' : m < 60 ? `${m}m ago` : m < 1440 ? `${Math.floor(m / 60)}h ago` : `${Math.floor(m / 1440)}d ago` }
+
+// Under the list: how many of today's emails have come and when the next may
+function TodayFooter({ now }) {
+    const meta = readMeta()
+    const today = new Date(now).toDateString()
+    const sent = meta.day === today ? meta.sent : 0
+    const waitMin = Math.max(1, Math.ceil((meta.wait || 0) / 60000))
+    return (
+        <div className="emails-today">
+            <b>Today: {Math.min(sent, MAX_PER_DAY)} of {MAX_PER_DAY} emails</b>
+            <span>{sent >= MAX_PER_DAY ? 'That is everyone for today. More arrive tomorrow.' : meta.day === today ? `Next one in about ${waitMin} min of play.` : 'The first one arrives a few minutes into play.'}</span>
+        </div>
+    )
+}
 
 const STATE_TEXT = { new: 'Waiting for you', agreed: 'In progress', fulfilled: 'Done', failed: 'Missed', refused: 'Declined', ignored: 'No reply' }
 const sign = (n) => `${n > 0 ? '+' : n < 0 ? '−' : ''}${Math.abs(n)}`
@@ -59,6 +80,16 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
     useEffect(() => { if (selected && !selected.read) onRead(selected.id) }, [selected, onRead])
     const unreadOthers = sorted.filter(e => !e.read).length
 
+    const requestCard = selected?.ask ? (
+        <div className="emails-request">
+            <span className="emails-request-label">The request</span>
+            <span className="emails-request-text">{selected.ask.charAt(0).toUpperCase() + selected.ask.slice(1)}</span>
+            {selected.state === 'new'
+                ? <span className="emails-request-time"><img src={clockIcon} alt="" />Answer within <b>{formatLeft(timeLeft(selected, now))}</b> · then <b>{selected.hours} hours</b> to do it</span>
+                : <span className="emails-request-time"><img src={clockIcon} alt="" />Done by {new Date(selected.deadline).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })}</span>}
+        </div>
+    ) : null
+
     const respond = (e, agree) => { playClickSound2(); setTypingId(e.id); onRespond(e.id, agree) }
 
     return (
@@ -83,17 +114,20 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                 {muteTip && <BoostTooltip anchor={muteTip} lines={[muted ? 'New emails are muted. Click to turn the sound and bubble back on.' : 'New emails make a sound and show a bubble. Click to mute them.']} text />}
                 <div className="emails-body">
                     <div className="emails-list">
+                      <div className="emails-list-rows">
                         {sorted.length === 0 && <div className="emails-empty">No emails yet. People write when they need something from the Manager.</div>}
                         {sorted.map(e => (
                             <button key={e.id} className={`emails-row${e.id === selectedId ? ' emails-row-active' : ''}${!e.read ? ' emails-row-unread' : ''}`}
                                 onClick={() => { playClickSound2(); setSelectedId(e.id) }} onMouseEnter={() => playHoverSound()}>
                                 <Avatar email={e} size={34} />
                                 <span className="emails-row-main">
-                                    <span className="emails-row-top"><span className="emails-row-from">{!e.read && <i className="emails-dot" />}{e.sender.name}</span><span className={`emails-tag emails-tag-${e.state}`}>{STATE_TEXT[e.state]}</span></span>
-                                    <span className="emails-row-subject">{e.subject}</span>
+                                    <span className="emails-row-top"><span className="emails-row-from">{!e.read && <i className="emails-dot" />}{e.sender.name}</span><span className={`emails-tag emails-tag-${e.state}${e.state === 'agreed' && timeLeft(e, now) < 3600000 ? ' emails-tag-urgent' : ''}`}>{e.state === 'agreed' ? `${formatLeft(timeLeft(e, now))} left` : STATE_TEXT[e.state]}</span></span>
+                                    <span className="emails-row-subject">{e.subject}<i> · {ago(now - e.createdAt)}</i></span>
                                 </span>
                             </button>
                         ))}
+                      </div>
+                      <TodayFooter now={now} />
                     </div>
                     <div className="emails-thread" ref={threadRef}>
                         {!selected && <div className="emails-empty">Select an email to read it.</div>}
@@ -104,13 +138,7 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                                     <div className="emails-subject">{selected.subject}</div>
                                     <div className="emails-text">{selected.body}</div>
                                 </div>
-                                {selected.ask && (
-                                    <div className="emails-request">
-                                        <span className="emails-request-label">The request</span>
-                                        <span className="emails-request-text">{selected.ask.charAt(0).toUpperCase() + selected.ask.slice(1)}</span>
-                                        <span className="emails-request-time">{selected.state === 'new' ? `${selected.hours} hours to do it once you agree` : `Done by ${new Date(selected.deadline).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })}`}</span>
-                                    </div>
-                                )}
+                                {selected.state !== 'new' && requestCard}
                                 {selected.reply && (
                                     <div className="emails-msg emails-msg-reply">
                                         <div className="emails-msg-head"><b>You</b><span>Reply</span></div>
@@ -118,12 +146,19 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                                     </div>
                                 )}
                                 {selected.state === 'new' && typingId !== selected.id && (
-                                    <div className="emails-actions">
-                                        <button className="emails-btn-agree" onClick={() => respond(selected, true)} onMouseEnter={() => playHoverSound()}>Agree <small>+{selected.agreeBonus} Rep now, +{selected.reward} if done, −{selected.penalty} if missed</small></button>
-                                        <button className="emails-btn-refuse" onClick={() => respond(selected, false)} onMouseEnter={() => playHoverSound()}>Refuse <small>{cult ? 'No penalty' : `−${selected.refusePenalty} Rep`}</small></button>
+                                    <div className="emails-decision">
+                                        {requestCard}
+                                        <div className="emails-stakes">
+                                            <span className="emails-stakes-group"><i>Agree</i><span className="emails-chip emails-chip-up"><Rep n={`+${selected.agreeBonus}`} /> now</span><span className="emails-chip emails-chip-up"><Rep n={`+${selected.reward}`} /> if done</span><span className="emails-chip emails-chip-down"><Rep n={`−${selected.penalty}`} /> if missed</span></span>
+                                            <span className="emails-stakes-group"><i>Refuse</i>{cult ? <span className="emails-chip">No penalty</span> : <span className="emails-chip emails-chip-down"><Rep n={`−${selected.refusePenalty}`} /></span>}</span>
+                                        </div>
+                                        <div className="emails-actions">
+                                            <button className="emails-btn-agree" onClick={() => respond(selected, true)} onMouseEnter={() => playHoverSound()}>Agree</button>
+                                            <button className="emails-btn-refuse" onClick={() => respond(selected, false)} onMouseEnter={() => playHoverSound()}>Refuse</button>
+                                        </div>
+                                        <div className="emails-note">Not answering in time counts as a refusal.</div>
                                     </div>
                                 )}
-                                {selected.state === 'new' && <div className="emails-note">No answer within {formatLeft(timeLeft(selected, now))} counts as a refusal.</div>}
                                 {selected.state === 'agreed' && (
                                     <div className="emails-progress">
                                         <div className="emails-progress-row"><span>{progressLabel(selected)}</span><span>{formatLeft(timeLeft(selected, now))} left</span></div>
