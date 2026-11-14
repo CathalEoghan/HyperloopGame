@@ -17,6 +17,8 @@
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
+//   refuseDelay      Turn down compensating the passengers of {n} delayed loops (the opposite of compensateDelay)
+//   payUpfront       Pay {n} (a sum of money) straight away; it comes out of the balance the moment the player agrees
 //   compensateDelay  Pay compensation to the passengers of {n} delayed loops (delays come up at random, so it can take a while)
 //   positiveEvents   Live through {n} positive events (random good events at the terminal; not something the player controls)
 //   negativeEvents   Live through {n} negative events (random bad events at the terminal; not something the player controls)
@@ -848,6 +850,59 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nFine. I will cover it myself, as usual, and say nothing. HR will be so proud of me.\n\nEyes open,\n{from}',
                 fulfilled: 'Dear {formal},\n\nThe gaps are covered. Now that is how you do a day\'s work. Some of my lot could learn from you. Thank you.\n\nEyes open,\n{from}',
                 failed: 'Dear {formal},\n\nThe shifts were not covered. I will not name names, but you know who I mean. And so does the rota.\n\nEyes open,\n{from}',
+            },
+        ],
+        refuseDelay: [
+            {
+                id: 'security-no-compensation',
+                subject: 'Delays',
+                ask: 'refuse to compensate a delayed loop',
+                body: "Dear {formal},\n\nPeople are fretting about delays now. A delay! In my day you waited, you sat there, and you thanked them for turning up at all. Nobody expected a payout for being a few minutes late.\n\nSo the next time a loop is delayed, could you refuse to compensate the passengers? Let them learn a bit of patience. I am told that is not the 'customer-focused' attitude. I do not care.\n\nEyes open,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. The next time a loop is delayed, I will refuse to compensate the passengers.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot refuse to compensate a delay. The passengers may deserve it.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nSoft. That is what it is. Fine, pay them off, and see how many more complaints it buys you.\n\nEyes open,\n{from}',
+                fulfilled: 'Dear {formal},\n\nNot a penny paid out, and the world did not end. Splendid. Do not tell HR I was pleased about it.\n\nEyes open,\n{from}',
+                failed: 'Dear {formal},\n\nNo delay was turned down in time. The passengers are probably still sulking about it, bless them.\n\nEyes open,\n{from}',
+            },
+        ],
+        build: [
+            {
+                id: 'security-food-court',
+                category: 'Food',
+                target: 3,
+                subject: 'Food, please',
+                body: "Dear {formal},\n\nThe one at home has me on a strict diet. Boiled this, steamed that, and now they want me on these weight loss injections. Why did I ever get married? Do not answer that.\n\nAnyway, I am no longer getting the good stuff at home, so I have been living off the little that is here. Could you build {n} Food developments? Give me some options. Proper food, with gravy, and none of that quinoa nonsense.\n\nEyes open,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will build {n} Food developments. I hope the diet survives it.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot build {n} Food developments right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nFine. Salad it is, then. Do not mention it to the one at home, they will only be smug.\n\nEyes open,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThree new places to eat! You have done a good deed. What they do not know will not hurt them. Thank you.\n\nEyes open,\n{from}',
+                failed: 'Dear {formal},\n\nNo new Food developments, so it is another sad lunch for me. I will be eating it at my desk, glaring.\n\nEyes open,\n{from}',
+            },
+        ],
+        negativeEvents: [
+            {
+                id: 'security-idle-recruits',
+                target: 3,
+                subject: 'Idle hands',
+                ask: 'live through 3 negative events',
+                body: "Dear {formal},\n\nThe new starts have nothing to do! They sit around my office all day with their feet up, scrolling on their phones. Workshy, every one of them. In my day you found something to do, or somebody found it for you.\n\nIf the terminal had some real problems, they would soon stop slouching. I am told it is unkind to wish trouble on people. Still, a few things going wrong might wake them up. Please do not tell HR.\n\nEyes open,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will see the terminal through {n} negative events.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot promise {n} negative events. They are hardly up to me.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nA shame. The feet stay on the desk, then. I will carry on looking disapproving.\n\nEyes open,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThree disasters, and the new starts finally moved. It is nice to see them useful. Not that I would say so to their faces.\n\nEyes open,\n{from}',
+                failed: 'Dear {formal},\n\nNot enough went wrong in time, so the feet are still on the desk. I never thought I would be disappointed by a quiet week.\n\nEyes open,\n{from}',
+            },
+        ],
+        payUpfront: [
+            {
+                id: 'security-renovations',
+                subject: 'Renovations',
+                body: "Dear {formal},\n\nThe security office needs renovating, and you know the drill. Somebody has to pay for it before the builders turn up, and it is not coming out of my pocket. I have the quotes. Do not ask to see them. HR already did.\n\nCould you pay {n} upfront? It will all be above board. Mostly.\n\nEyes open,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will pay {n} upfront for the renovations.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot pay {n} upfront right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNo money, no renovations. Fine. I will keep the old locks, then, and the old draughts.\n\nEyes open,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe payment has gone through, and the builders are in. Have no fear, I will be watching them. Closely. Thank you.\n\nEyes open,\n{from}',
+                failed: 'Dear {formal},\n\nThe payment never came, so the renovations are off. The draughts will have to be my security detail instead.\n\nEyes open,\n{from}',
             },
         ],
     },

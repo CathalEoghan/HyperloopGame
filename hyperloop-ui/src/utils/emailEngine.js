@@ -116,7 +116,7 @@ export const CHARACTERS = {
     },
     security: {
         id: 'security', gender: 'any', role: 'Head of Security', color: '#3b4a45',
-        affinity: ['build', 'connectCities', 'upgradeCity', 'schedule', 'rankUp', 'connectContinent', 'upgradeDevCategory', 'work'],
+        affinity: ['build', 'connectCities', 'upgradeCity', 'schedule', 'rankUp', 'connectContinent', 'upgradeDevCategory', 'work', 'refuseDelay', 'negativeEvents', 'payUpfront'],
         intros: [
             (ask) => `I cannot say much, the line may not be secure. But I need you to ${ask}. Ask no questions.`,
             (ask) => `Somebody is behind this, and I will find out who. In the meantime, ${ask}. It is all connected.`,
@@ -289,6 +289,8 @@ const METRICS = {
     connectTier3: (s) => s.tier3Cities || 0,
     // Delayed loops the player has paid compensation for
     compensateDelay: (s) => s.delaysCompensated || 0,
+    // Delayed loops the player has dismissed without paying
+    refuseDelay: (s) => s.delaysRefused || 0,
     // Positive events (the good ones) that have happened to the terminal
     positiveEvents: (s) => s.positiveEvents || 0,
     // Negative events (the bad ones) that have happened to the terminal
@@ -404,6 +406,20 @@ const GENERATORS = {
         if (!ctx.delaysPossible) return null
         const target = ctx.fixed ?? 1
         return { type: 'compensateDelay', target, extra: {}, subject: 'A delayed loop', ask: target === 1 ? 'compensate the passengers of a delayed loop' : `compensate the passengers of ${target} delayed loops`, hours: between(44, 48, rnd) }
+    },
+    // Delayed loops the player turns down compensating (the opposite of compensateDelay)
+    refuseDelay: (ctx, rnd) => {
+        if (!ctx.delaysPossible) return null
+        const target = ctx.fixed ?? 1
+        return { type: 'refuseDelay', target, extra: {}, subject: 'A delayed loop', ask: target === 1 ? 'refuse to compensate the passengers of a delayed loop' : `refuse to compensate the passengers of ${target} delayed loops`, hours: between(44, 48, rnd) }
+    },
+    // Paid the moment the player agrees (see agree() and respondToEmail), so it is only asked of a player who can afford it
+    payUpfront: (ctx, rnd) => {
+        const bal = ctx.snap.balance || 0
+        if (bal < 1000) return null
+        const target = niceRound(bal * (0.15 + rnd() * 0.15))
+        if (target <= 0 || target >= bal) return null
+        return { type: 'payUpfront', target, extra: {}, subject: 'Money up front', ask: `pay ${formatCash(target)} upfront`, hours: 24 }
     },
     // The good-news twin of negativeEvents: random good events, asked for while they can happen
     positiveEvents: (ctx, rnd) => {
@@ -560,7 +576,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             if (typeof t.ask === 'string' && t.ask.trim()) req = { ...req, ask: t.ask.trim() }
             const vars = {
                 name: nameForPlayer.split(' ')[0], formal, FORMAL: formal.toUpperCase(), title: PLAYER_TITLES.includes(playerTitle) ? playerTitle : '', fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
-                n: type === 'cash' || type === 'holdCash' ? formatCash(req.target) : formatCount(req.target), count: req.target,
+                n: type === 'cash' || type === 'holdCash' || type === 'payUpfront' ? formatCash(req.target) : formatCount(req.target), count: req.target,
                 category: req.extra.category || '', continent: req.extra.continent || '', time: within, hours, ask: req.ask,
             }
             const f = (x) => (typeof x === 'string' && x ? fillTemplate(x, vars) : null)
@@ -650,7 +666,7 @@ export function agree(email, snap, playerName, now = Date.now()) {
     if (inbox) started = { ...started, target: Math.max(1, Math.min(email.target, waiting)) }
     return {
         ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
-        baseline: metricOf(started, snap), progress: inbox && waiting === 0 ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
+        baseline: metricOf(started, snap), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
         repChange: email.agreeBonus,
     }
 }

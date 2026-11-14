@@ -757,7 +757,7 @@ function App() {
       timetable: readStoredList('hyperloop_timetable').length,
       cash: pm.totalCashEarned, balance: pm.balance, answered: achievements.counter('emailsAnswered'),
       waitingEmails: emailsRef.current.filter(e => e.state === 'new').length,
-      delaysCompensated: achievements.counter('delaysCompensated'),
+      delaysCompensated: achievements.counter('delaysCompensated'), delaysRefused: achievements.counter('delaysRefused'),
       negativeEvents: achievements.counter('negativeEvents'), positiveEvents: achievements.counter('positiveEvents'),
       repEarned: pm.lifetimeReputationEarned, reputation: pm.reputation,
       devLevels: devLevelsByCategory(pm),
@@ -878,6 +878,12 @@ function App() {
   const respondToEmail = (id, agree) => {
     const e = emailsRef.current.find(x => x.id === id)
     if (!e || e.state !== 'new') return
+    // Paying upfront takes the money the moment the player agrees
+    if (agree && e.type === 'payUpfront') {
+      if (progressionManager.balance < e.target) { playNotEnoughFundsSound(); return }
+      progressionManager.addCash(-e.target)
+      setBalance?.(progressionManager.balance)
+    }
     achievements.addCounter('emailsAnswered')
     const next = agree
       ? emailEngine.agree(e, emailSnapshot(), playerName())
@@ -2973,7 +2979,7 @@ function App() {
           economyManager={economyManager}
           balance={balance}
           onCompensate={(cost) => { if (progressionManager.balance < cost) return; unlockAchievement('sorry'); achievements.addCounter('delaysCompensated'); progressionManager.addCash(-cost); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: activeDelay?.kind === 'arrival' ? 'arrivalDelayCompensated' : 'delayCompensated', data: { delayedCity: activeDelay?.name } }; fireOfficialHyperLinkPost({ type: 'officialDelayCompensated', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
-          onDismiss={(repCost) => { unlockAchievement('toughLuck'); progressionManager.addReputation(-repCost); setReputation(shownReputation()); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: activeDelay?.kind === 'arrival' ? 'arrivalDelayNotCompensated' : 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
+          onDismiss={(repCost) => { unlockAchievement('toughLuck'); achievements.addCounter('delaysRefused'); progressionManager.addReputation(-repCost); setReputation(shownReputation()); localStorage.removeItem('hyperloop_pending_delay'); setActiveDelay(null); triggerSave(); hyperLinkTriggerRef.current = { type: activeDelay?.kind === 'arrival' ? 'arrivalDelayNotCompensated' : 'delayNotCompensated', data: { delayedCity: activeDelay?.name, terminalName } }; fireOfficialHyperLinkPost({ type: 'officialDelay', data: { delayedCity: activeDelay?.name, loopCode: delayLoopCode(activeDelay) } }); }}
         />
       )}
 
