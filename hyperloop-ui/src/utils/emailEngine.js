@@ -56,20 +56,6 @@ export const formatCash = (n) => {
 // Their pictures are optional files in assets/emailPictures/thumbs/<picture>.(jpg|png|webp) (see Emails.jsx); without one a coloured initial is shown.
 const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1)
 export const CHARACTERS = {
-    stakeholder: {
-        id: 'stakeholder', gender: 'm', role: 'Major Stakeholder', color: '#6b4f3a',
-        affinity: ['build', 'cash', 'connectCities', 'connectContinent', 'rankUp', 'upgradeCity'],
-        intros: [
-            (ask) => `I will be brief. I expect you to ${ask}.`,
-            (ask) => `I have a great deal invested in this terminal and I expect results. ${cap(ask)}.`,
-            (ask) => `Frankly, I am not impressed with the pace of things. ${cap(ask)}.`,
-        ],
-        deadline: (t) => `I want it done within ${t} of you agreeing.`,
-        outros: ['Do not make me ask twice.', 'I expect an answer today.', 'I trust I have made myself clear.'],
-        signoff: 'Regards,',
-        after: { fulfilled: 'Good work last time. Let us see if you can keep it up.', failed: 'Last time you let me down. Do not do it again.', refused: 'You turned me down last time. I remember these things.', ignored: 'You never even replied last time.' },
-        outcome: { fulfilled: 'Acceptable.', failed: 'This is unacceptable. I expected better.', refused: 'Noted. I am not happy about it.', ignored: 'No reply at all. Very professional.' },
-    },
     inspector: {
         id: 'inspector', picture: 'healthInspector', gender: 'f', role: 'Health & Safety Inspector', color: '#ff9edf',
         affinity: ['greet', 'farewell', 'rename', 'upgradeDev', 'schedule'],
@@ -85,7 +71,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Amazing!! You are a star!', failed: 'Oh dear, that did not happen in time! Never mind!', refused: 'No worries at all! Maybe next time!', ignored: 'I did not hear back, but that is totally OK!' },
     },
     complainer: {
-        id: 'complainer', gender: 'f', role: 'Frequent Traveller', color: '#a0306a',
+        id: 'complainer', gender: 'f', role: 'Dissatisfied Customer', color: '#a0306a',
         affinity: ['like', 'work', 'rep', 'shop', 'greet', 'farewell'],
         intros: [
             (ask) => `I have to say, this is not the first time I have had to write. Could you ${ask}?`,
@@ -99,7 +85,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Well. That is an improvement.', failed: 'Typical. Just typical.', refused: 'Of course. Of course you will not.', ignored: 'No reply. Typical.' },
     },
     fan: {
-        id: 'fan', gender: 'any', role: 'Biggest Fan', color: '#d4552f',
+        id: 'fan', gender: 'any', role: 'Obsessed Fan', color: '#d4552f',
         affinity: ['like', 'greet', 'farewell', 'shop', 'work', 'rename'],
         intros: [
             (ask) => `I CANNOT STOP THINKING ABOUT THIS TERMINAL!!! Please, please, PLEASE ${ask}!!!`,
@@ -113,7 +99,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'I AM SCREAMING!!! THANK YOU!!!', failed: 'It is fine!! I am fine!! I am so fine!!', refused: 'That is OK!! I still love you!!', ignored: 'No reply, but I will wait forever!!' },
     },
     assistant: {
-        id: 'assistant', gender: 'any', role: 'Your Assistant', color: '#4a7a9b',
+        id: 'assistant', gender: 'any', role: 'Personal Assistant', color: '#4a7a9b',
         affinity: ['schedule', 'upgradeCity', 'upgradeDev', 'work', 'rename', 'rep', 'cash'],
         intros: [
             (ask) => `Just a note from your desk: it would be helpful if you could ${ask}.`,
@@ -140,6 +126,48 @@ export const CHARACTERS = {
         after: { fulfilled: 'You came through last time. Either you are on our side, or you are very good.', failed: 'Last time it did not get done. Suspicious, is it not?', refused: 'You refused last time. I have noted that. I note everything.', ignored: 'No reply last time. Somebody got to you, did they not?' },
         outcome: { fulfilled: 'It is done. But who benefits? I will be watching.', failed: 'Too late. This is exactly what THEY wanted.', refused: 'Refused. Interesting. Very interesting.', ignored: 'Silence. That says more than words.' },
     },
+    marketing: {
+        id: 'marketing', gender: 'any', role: 'Head of Marketing', color: '#e0457b',
+        affinity: ['like', 'greet', 'farewell', 'rep', 'shop', 'rename', 'work'],
+        intros: [
+            (ask) => `Big news, and I want us to move the needle on this: let us ${ask}. Think of the buzz!`,
+            (ask) => `Circling back with a quick win for the brand. Can you ${ask}? It would really elevate us.`,
+            (ask) => `The vision is clear and the audience is ready. All we need is for you to ${ask}!`,
+        ],
+        deadline: (t) => `Let us land this within ${t} of you giving the green light.`,
+        outros: ['Let us make some noise!', 'This is going to be huge.', 'Synergy, people!'],
+        signoff: 'Onwards and upwards,',
+        after: { fulfilled: 'The last campaign absolutely smashed it, thank you!', failed: 'The last one did not land, but we will pivot!', refused: 'Last time you passed on our idea, but I am not giving up on the vision!', ignored: 'I did not hear back on the last one, but I am sure it is in the pipeline!' },
+        outcome: { fulfilled: 'Smashed it! That is going straight into the deck!', failed: 'We missed the window. Let us regroup and pivot!', refused: 'No problem, we will circle back to this!', ignored: 'No reply, so we will park it for now!' },
+    },
+    cfo: {
+        id: 'cfo', gender: 'any', role: 'Chief Financial Officer', color: '#4a6b4f',
+        affinity: ['cash', 'rep', 'work', 'shop', 'schedule', 'upgradeDev'],
+        intros: [
+            (ask) => `I have been through the figures. The numbers are clear: you should ${ask}.`,
+            (ask) => `Looking at the quarter, the sensible course is to ${ask}. The alternative does not add up.`,
+            (ask) => `I will keep this short, as time is money: ${ask}.`,
+        ],
+        deadline: (t) => `The window for this closes ${t} after you confirm.`,
+        outros: ['I will be reviewing the results.', 'Every figure counts.', 'Please keep the receipts.'],
+        signoff: 'Regards,',
+        after: { fulfilled: 'Last time the numbers came in as projected. Good.', failed: 'Last time the numbers fell short. I noted it.', refused: 'You declined last time. The ledger remembers.', ignored: 'My last request went unanswered. That is a variance I do not like.' },
+        outcome: { fulfilled: 'The figures are satisfactory.', failed: 'The target was missed. That will show in the accounts.', refused: 'Noted. I will adjust my forecast.', ignored: 'No reply. I have written it off.' },
+    },
+    lawyer: {
+        id: 'lawyer', gender: 'any', role: 'Head Lawyer', color: '#3a3f55',
+        affinity: ['rankUp', 'upgradeCity', 'upgradeCityLines', 'upgradeDev', 'schedule', 'connectCities'],
+        intros: [
+            (ask) => `For the avoidance of doubt, and to limit our liability, I advise that you ${ask}.`,
+            (ask) => `Without prejudice, it would be prudent to ${ask}. I would not like to see this escalate.`,
+            (ask) => `On the advice of counsel, which is me, you should ${ask}. Please treat this as formal notice.`,
+        ],
+        deadline: (t) => `Please complete this within ${t} of your written agreement.`,
+        outros: ['Nothing in this email constitutes a waiver of any right.', 'I reserve all rights.', 'Please retain this email for your records.'],
+        signoff: 'Yours faithfully,',
+        after: { fulfilled: 'Thank you for your cooperation last time. It has been recorded.', failed: 'Last time the obligation was not met. This has been recorded.', refused: 'You declined last time. That, too, has been recorded.', ignored: 'My last email received no response. That has been recorded.' },
+        outcome: { fulfilled: 'The obligation has been met. Thank you.', failed: 'The obligation was not met within the agreed period. This has been noted on file.', refused: 'Your refusal is noted. I advise you reconsider.', ignored: 'No response was received. This has been noted on file.' },
+    },
     journalist: {
         id: 'journalist', gender: 'f', role: 'Journalist', color: '#6a4fa0',
         affinity: ['rep', 'cash', 'connectContinent', 'like', 'rankUp', 'greet'],
@@ -155,7 +183,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Excellent. Is that how it always goes?', failed: 'It was not done. Why not? What happened?', refused: 'A no. Any reason you would like on the record?', ignored: 'No answer. Is that a comment in itself?' },
     },
     politician: {
-        id: 'politician', gender: 'm', role: 'Local Councillor', color: '#8a6d2f',
+        id: 'politician', gender: 'm', role: 'Local Politician', color: '#8a6d2f',
         affinity: ['build', 'connectCities', 'connectContinent', 'rankUp', 'cash'],
         intros: [
             (ask) => `I am sure you are doing your best, and it is lovely to see. Now, would you be a good fellow and ${ask}?`,
@@ -167,20 +195,6 @@ export const CHARACTERS = {
         signoff: 'With every confidence in myself,',
         after: { fulfilled: 'You managed it last time. Well done, I am sure it was a team effort.', failed: 'Never mind about last time. These things are difficult.', refused: 'You declined last time. Perhaps you did not quite grasp the benefit.', ignored: 'I did not hear back last time. I assume it got lost in the post.' },
         outcome: { fulfilled: 'Very good. I will mention you at the next meeting.', failed: 'Oh dear. I did rather expect that.', refused: 'Of course, you must do what you think is best.', ignored: 'No reply. How very busy you must be.' },
-    },
-    engineer: {
-        id: 'engineer', gender: 'any', role: 'Head Engineer', color: '#2f6f8f',
-        affinity: ['upgradeDev', 'upgradeCity', 'build', 'schedule'],
-        intros: [
-            (ask) => `Following a comprehensive optimisation analysis, the logical course of action is to ${ask}.`,
-            (ask) => `The empirical evidence is unambiguous: we should ${ask}. Anything else is statistically indefensible.`,
-            (ask) => `By my calculations, the most efficient allocation of resources necessitates that you ${ask}.`,
-        ],
-        deadline: (t) => `The optimal implementation window is ${t} subsequent to your affirmation.`,
-        outros: ['The conclusion is therefore self-evident.', 'I remain available for any methodological clarification.', 'Please advise accordingly.'],
-        signoff: 'Rigorously,',
-        after: { fulfilled: 'The previous intervention yielded satisfactory results.', failed: 'The previous intervention failed to materialise within the specified parameters.', refused: 'Your prior rejection was, regrettably, suboptimal.', ignored: 'My previous communication elicited no discernible response.' },
-        outcome: { fulfilled: 'The outcome is entirely satisfactory.', failed: 'The deadline was not met. The data is regrettably conclusive.', refused: 'A suboptimal decision, but your prerogative.', ignored: 'The absence of a response is, in itself, a data point.' },
     },
 }
 const CHARACTER_IDS = Object.keys(CHARACTERS)
@@ -423,8 +437,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
         if (!req) continue
         const sender = character ? { name: cast[character.id].name, role: character.role } : { name: `${pick(rnd() < 0.5 ? FIRST_NAMES_MALE : FIRST_NAMES_FEMALE, rnd)} ${pick(SURNAMES, rnd)}`, role: 'Member of the Public' }
         const amounts = amountsFor(ctx.snap.reputation)
-        // The Stakeholder gives less time
-        const hours = character?.id === 'stakeholder' ? Math.min(req.hours, 36) : req.hours
+        const hours = req.hours
         const within = hours >= 48 ? '2 days' : hours > 24 ? `${hours} hours` : 'a day'
         const nameForPlayer = addressee(playerName)
         let text, referredBack = false, subject = req.subject, texts = null

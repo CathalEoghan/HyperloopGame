@@ -2,7 +2,7 @@
 //
 // HOW IT WORKS
 // An email is for one request type (build, greet, ...) and comes from one sender: a recurring character
-// (stakeholder, inspector, complainer, fan, assistant, security, journalist, politician, engineer) or `public`
+// (inspector, assistant, security, marketing, journalist, fan, politician, complainer (the Dissatisfied Customer), cfo, lawyer) or `public`
 // (a random member of the public, with a random name). When the game sends that sender asking for that type of request, it picks
 // one of the emails you wrote for it, preferring ones you haven't seen yet in this save. If you haven't written any for a
 // sender and type, the game falls back on its built-in wording (utils/emailEngine.js).
@@ -60,19 +60,6 @@ export const ONLY_WRITTEN = false
 
 // The examples below are placeholders to show the layout. Replace them and add your own.
 export const EMAILS = {
-    stakeholder: {
-        build: [
-            {
-                id: 'example-stakeholder-build',
-                subject: 'New {category} development',
-                body: 'Dear {name},\n\nMy father opened a {category} business in this city in 1974 with one table and a borrowed till. I would like this terminal to have a {category} development I can point to and say "that is what we are about".\n\nBuild one. You have {time}.\n\nRegards,\n{fromFull}\n{role}',
-                agree: 'Dear {from},\n\nUnderstood. I will have it built within {time}.\n\n{fullName}',
-                refuse: 'Dear {from},\n\nI am sorry, I cannot take on a new {category} development right now.\n\n{fullName}',
-                fulfilled: 'Good. My father would have approved.',
-                failed: 'I am disappointed. That was important to me.',
-            },
-        ],
-    },
     inspector: {
         upgradeDevCategory: [
             {
