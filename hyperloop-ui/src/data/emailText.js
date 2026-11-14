@@ -347,6 +347,21 @@ export const EMAILS = {
             },
         ],
     },
+    assistant: {
+        schedule: [
+            {
+                id: 'assistant-tidy-timetable',
+                target: 2,
+                subject: 'So sorry to bother you',
+                body: "Dear {formal},\n\nI'm so sorry to bother you. I know how busy you are, and I would never normally dare. Please feel free to ignore this entirely. (Please don't ignore it entirely.)\n\nI was tidying the timetable, only because it needed tidying, and I noticed a few gaps. Would you perhaps, if it's not too much trouble, add {n} more {loop|loops}? I'm so sorry. I'll make tea.\n\nVery respectfully,\n{from}",
+                agree: 'Dear {from},\n\nThank you for letting me know. I will add the departures to the timetable.\n\nBest,\n{fullName}',
+                refuse: 'Dear {from},\n\nThanks, but I cannot add more departures at the moment.\n\nBest regards,\n{fullName}',
+                refused: "Dear {formal},\n\nOh. Of course. No, that's absolutely fine. I'm so sorry I asked. I'll just, um, put the kettle on.\n\nVery respectfully,\n{from}",
+                fulfilled: "Dear {formal},\n\nYou did it! I mean, of course you did. I never doubted you. Not that I would have dared to.\n\nThe timetable looks wonderful. I'm going to go and lie down.\n\nVery respectfully,\n{from}",
+                failed: "Dear {formal},\n\nPlease don't worry about the timetable. It's absolutely not a problem. I'll simply tell people it was always like that.\n\nI hope that's alright. Please don't be cross.\n\nVery respectfully,\n{from}",
+            },
+        ],
+    },
     public: {
     },
 }
