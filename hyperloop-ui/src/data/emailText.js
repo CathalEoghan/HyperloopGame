@@ -17,6 +17,8 @@
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
+//   holdCash         Keep at least {n} in the bank until the deadline (like holdRep; {n} is worked out from their balance)
+//   clearInbox       Answer the {n} emails waiting in the inbox
 //   holdRep          Keep Reputation above {n} until the deadline (a task to avoid, not do; {n} is worked out from their Reputation)
 //   rankUp           Take the terminal up a rank
 //   upgradeDev       Upgrade a development {n} times
@@ -553,6 +555,30 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nUnderstood, and thank you for being straightforward. I will raise it again when the time is better.\n\nKind regards,\n{from}',
                 fulfilled: 'Dear {formal},\n\nThank you. Our standing is noticeably stronger, and I am grateful for the effort.\n\nKind regards,\n{from}',
                 failed: 'Dear {formal},\n\nWe did not redeem ourselves here. I will not dwell on it.\n\nKind regards,\n{from}',
+            },
+        ],
+        holdCash: [
+            {
+                id: 'lawyer-cash-reserve',
+                subject: 'A cash reserve',
+                body: "Dear {formal},\n\nI will be direct: I would like the terminal to keep a cash reserve. Legal costs have a habit of arriving at the least convenient moment.\n\nCould you please keep at least {n} in the bank for the time being? You are welcome to spend whatever lies above it.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nThank you for being so clear. I will keep at least {n} in the bank.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate the caution, but I cannot commit to holding that much back.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood, and thank you for a straight answer. I only hope the money is well spent.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you. The reserve stayed in place, and I will sleep a little better for it.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe balance dropped below {n}. I will not press the point, but a reserve is only useful if it is there when needed.\n\nKind regards,\n{from}',
+            },
+        ],
+        clearInbox: [
+            {
+                id: 'lawyer-unanswered-correspondence',
+                subject: 'Unanswered correspondence',
+                body: "Dear {formal},\n\nI will be upfront: there {is|are} {n} {email|emails} waiting for an answer in your inbox, and unanswered correspondence has a way of becoming a problem.\n\nI would be grateful if you would reply to {it|them all}, whichever way you decide.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nThank you for raising it. I will answer my emails.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate the reminder, but I would rather deal with my inbox in my own time.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood, and thank you for being frank. I will leave you to it.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you. A clear inbox is a great comfort to me, and I am glad you took the time.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe emails were not answered in time. I will not dwell on it, but I did ask.\n\nKind regards,\n{from}',
             },
         ],
     },

@@ -755,7 +755,9 @@ function App() {
       tier3Cities: pm.purchasedCities.filter(c => c.tier === 3).length,
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
       timetable: readStoredList('hyperloop_timetable').length,
-      cash: pm.totalCashEarned, repEarned: pm.lifetimeReputationEarned, reputation: pm.reputation,
+      cash: pm.totalCashEarned, balance: pm.balance, answered: achievements.counter('emailsAnswered'),
+      waitingEmails: emailsRef.current.filter(e => e.state === 'new').length,
+      repEarned: pm.lifetimeReputationEarned, reputation: pm.reputation,
       devLevels: devLevelsByCategory(pm),
       rank: rankManager.rank, devUpgrades: sum(pm.developmentUpgradeLevels), cityUpgrades: sum(pm.cityLineLevels),
       shopOwned: readCosmetics().owned.length, work: achievements.counter('work'),
@@ -775,7 +777,7 @@ function App() {
       cheapest = Math.min(cheapest, item.cost)
     }))
     return {
-      snap, incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
+      snap, waitingEmails: emailsRef.current.filter(e => e.state === 'new').length, incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
       available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length },
       // Tier 3 cities still waiting to be connected
       tier3Available: pm.unlockedCities.filter(c => c.tier === 3).length,
@@ -861,6 +863,7 @@ function App() {
   const respondToEmail = (id, agree) => {
     const e = emailsRef.current.find(x => x.id === id)
     if (!e || e.state !== 'new') return
+    achievements.addCounter('emailsAnswered')
     const next = agree
       ? emailEngine.agree(e, emailSnapshot(), playerName())
       : emailEngine.refuse(e, playerName(), PrestigeManager.owns('cultOfCelebrity'))

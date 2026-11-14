@@ -158,7 +158,7 @@ export const CHARACTERS = {
     },
     lawyer: {
         id: 'lawyer', gender: 'm', role: 'Legal Executive', color: '#3a3f55',
-        affinity: ['rankUp', 'upgradeCity', 'upgradeDev', 'schedule', 'connectCities', 'connectTier3', 'holdRep', 'build'],
+        affinity: ['rankUp', 'upgradeCity', 'upgradeDev', 'schedule', 'connectCities', 'connectTier3', 'holdRep', 'holdCash', 'clearInbox', 'build'],
         intros: [
             (ask) => `I will be direct, as it saves us both time: I would like you to ${ask}.`,
             (ask) => `To be upfront about it, the sensible course here is to ${ask}. I would rather say so now than later.`,
@@ -287,6 +287,8 @@ const METRICS = {
     rep: (s) => s.repEarned || 0,
     connectContinent: (s, e) => s.continentCities?.[e.extra.continent] || 0,
     connectTier3: (s) => s.tier3Cities || 0,
+    // Emails the player has answered (agreed to or refused)
+    clearInbox: (s) => s.answered || 0,
     connectCities: (s) => s.cities || 0,
     rankUp: (s) => s.rank || 0,
     upgradeDev: (s) => s.devUpgrades || 0,
@@ -299,11 +301,15 @@ const METRICS = {
     like: (s) => s.likes || 0,
 }
 
+// The requests that are about keeping a number above a target until the deadline, and where that number comes from
+const HOLD_READS = { holdRep: (s) => s.reputation || 0, holdCash: (s) => s.balance || 0 }
+
 export const metricOf = (email, snap) => (METRICS[email.type] ? METRICS[email.type](snap, email) : 0)
 export const progressOf = (email, snap) => Math.max(email.progress || 0, metricOf(email, snap) - (email.baseline || 0))
 
 export const progressLabel = (email) => {
     if (email.type === 'holdRep') return `Keep Reputation above ${formatCount(email.target)}`
+    if (email.type === 'holdCash') return `Keep your balance above ${formatCash(email.target)}`
     const cash = email.type === 'cash'
     const have = Math.min(email.progress || 0, email.target)
     return cash ? `${formatCash(have)} of ${formatCash(email.target)}` : `${formatCount(Math.floor(have))} of ${formatCount(email.target)}`
@@ -378,6 +384,21 @@ const GENERATORS = {
         const target = niceRound(rep * 0.85)
         if (target >= rep) return null
         return { type: 'holdRep', target, extra: {}, subject: 'Our reputation', ask: `keep the terminal's Reputation above ${formatCount(target)}`, hours: between(24, 36, rnd) }
+    },
+    // Like holdRep, for the cash balance (spending on builds and upgrades is what could break it)
+    holdCash: (ctx, rnd) => {
+        const bal = ctx.snap.balance || 0
+        if (bal < 1000) return null
+        const target = niceRound(bal * 0.6)
+        if (target >= bal) return null
+        return { type: 'holdCash', target, extra: {}, subject: 'A cash reserve', ask: `keep at least ${formatCash(target)} in the bank`, hours: between(24, 36, rnd) }
+    },
+    // Answer the other emails that are waiting (ctx.waitingEmails counts those still unanswered when this one arrives)
+    clearInbox: (ctx, rnd) => {
+        const waiting = ctx.waitingEmails || 0
+        if (waiting < 1) return null
+        const target = Math.min(2, waiting)
+        return { type: 'clearInbox', target, extra: {}, subject: 'Your inbox', ask: target === 1 ? 'answer the email waiting in your inbox' : `answer the ${target} emails waiting in your inbox`, hours: between(24, 36, rnd) }
     },
     connectTier3: (ctx, rnd) => {
         const room = ctx.tier3Available || 0
@@ -508,7 +529,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             const t = authored.template
             const vars = {
                 name: nameForPlayer.split(' ')[0], formal, FORMAL: formal.toUpperCase(), title: PLAYER_TITLES.includes(playerTitle) ? playerTitle : '', fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
-                n: type === 'cash' ? formatCash(req.target) : formatCount(req.target), count: req.target,
+                n: type === 'cash' || type === 'holdCash' ? formatCash(req.target) : formatCount(req.target), count: req.target,
                 category: req.extra.category || '', continent: req.extra.continent || '', time: within, hours, ask: req.ask,
             }
             const f = (x) => (typeof x === 'string' && x ? fillTemplate(x, vars) : null)
@@ -573,10 +594,15 @@ export const OUTCOME_TEXT = {
 // `cult` is true with Cult of Celebrity: refusing costs nothing.
 export function agree(email, snap, playerName, now = Date.now()) {
     // "Different developments of a category" is counted against the levels they had at this moment
-    const started = email.type === 'upgradeDevCategory' ? { ...email, extra: { ...email.extra, baseLevels: { ...(snap.devLevels?.[email.extra.category] || {}) } } } : email
+    let started = email.type === 'upgradeDevCategory' ? { ...email, extra: { ...email.extra, baseLevels: { ...(snap.devLevels?.[email.extra.category] || {}) } } } : email
+    // "Answer the waiting emails" is counted against those still waiting now (this one is still unanswered in the snapshot); with none
+    // left to answer, the inbox is already clear
+    const inbox = email.type === 'clearInbox'
+    const waiting = inbox ? Math.max(0, (snap.waitingEmails || 0) - 1) : 0
+    if (inbox) started = { ...started, target: Math.max(1, Math.min(email.target, waiting)) }
     return {
         ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
-        baseline: metricOf(started, snap), progress: 0, reply: replyFor(email, true, playerName), read: true,
+        baseline: metricOf(started, snap), progress: inbox && waiting === 0 ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
         repChange: email.agreeBonus,
     }
 }
@@ -593,9 +619,9 @@ export function refuse(email, playerName, cult, now = Date.now(), ignored = fals
 // Checks one agreed email against the game. Returns the same email when nothing happened.
 export function updateAgreed(email, snap, now = Date.now()) {
     if (email.state !== 'agreed') return email
-    if (email.type === 'holdRep') {
-        // Fails the moment Reputation is below the target; succeeds when the deadline arrives with it still above
-        if ((snap.reputation || 0) < email.target) return { ...email, state: 'failed', resolvedAt: now, read: false, outcome: OUTCOME_TEXT.failed(email), repChange: -email.penalty }
+    if (HOLD_READS[email.type]) {
+        // Fails the moment the number is below the target; succeeds when the deadline arrives with it still above
+        if (HOLD_READS[email.type](snap) < email.target) return { ...email, state: 'failed', resolvedAt: now, read: false, outcome: OUTCOME_TEXT.failed(email), repChange: -email.penalty }
         if (now >= email.deadline) return { ...email, progress: email.target, state: 'fulfilled', resolvedAt: now, read: false, outcome: OUTCOME_TEXT.fulfilled(email), repChange: email.reward }
         const span = Math.max(1, email.deadline - (email.agreedAt || now))
         const shown = Math.max(0, Math.min(email.target, Math.round(email.target * ((now - (email.agreedAt || now)) / span))))
