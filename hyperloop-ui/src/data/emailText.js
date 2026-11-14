@@ -2,7 +2,7 @@
 //
 // HOW IT WORKS
 // An email is for one request type (build, greet, ...) and comes from one sender: a recurring character
-// (inspector, assistant, security, marketing, journalist, fan, politician, complainer (the Dissatisfied Customer), cfo, lawyer) or `public`
+// (inspector, assistant, security, marketing, journalist, fan, politician, passenger (the First-Class Passenger), complainer (the Dissatisfied Customer), cfo, lawyer) or `public`
 // (a random member of the public, with a random name). When the game sends that sender asking for that type of request, it picks
 // one of the emails you wrote for it, preferring ones you haven't seen yet in this save. If you haven't written any for a
 // sender and type, the game falls back on its built-in wording (utils/emailEngine.js).
@@ -17,6 +17,9 @@
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
+//   milestone        Reach a new milestone (a development or city count, a whole continent, a rank gift)
+//   claimRewards     Claim {n} rewards on the Progress page
+//   connectCountries Connect cities in {n} countries the terminal has no city in yet
 //   refuseDelay      Turn down compensating the passengers of {n} delayed loops (the opposite of compensateDelay)
 //   payUpfront       Pay {n} (a sum of money) straight away; it comes out of the balance the moment the player agrees
 //   compensateDelay  Pay compensation to the passengers of {n} delayed loops (delays come up at random, so it can take a while)
@@ -956,6 +959,274 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nOf course. A very sensible decision, I am sure. I will do it on my own, then, and tell everyone you were delighted to host me. It is very easy to stand beside a person, even when they are not there.\n\nWith every confidence in myself,\n{from}',
                 fulfilled: 'Dear {formal},\n\nFive farewells, and the cameras loved me. I mean us. I think my polling has already risen. I will be sure to thank you in my victory speech. I might even spell your name right.\n\nWith every confidence in myself,\n{from}',
                 failed: 'Dear {formal},\n\nThe farewells were not done in time, and I was left standing by the door with a smile and a pen. Quite embarrassing. I have told the papers it was a scheduling matter. Do not make me a liar.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
+        upgradeDevCategory: [
+            {
+                id: 'politician-private-room',
+                category: 'Food',
+                target: 1,
+                subject: 'Somewhere discreet to eat',
+                body: "Dear {formal},\n\nA man in my position must do a great deal of lunching. Business lunches, mostly. With a few generous supporters who prefer to remain nameless, and who also prefer not to be seen eating with me.\n\nCould you upgrade a Food development, and put a private room in it? Nothing grand. A door that closes, and a waiter who has learned to be deaf. I would be so grateful, and I always remember how grateful I am. Usually at the next planning meeting.\n\nWith every confidence in myself,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will upgrade a Food development. What is discussed in the room is not my business.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot upgrade a Food development right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNo private room, then. We will simply have to meet somewhere less comfortable, and somewhere much less private. Your terminal will be so terribly easy to mention in the wrong place.\n\nWith every confidence in myself,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe room is perfect. Thick walls, soft chairs, and not a single question. I held a very productive lunch there. I will not say with whom. You will not ask.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nThe Food development was not upgraded, so I had to eat in public like a common person. Someone took a photograph. I am sure it is nothing. It is always nothing.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
+        compensateDelay: [
+            {
+                id: 'politician-generous-friend',
+                subject: 'A word about the delays',
+                ask: 'compensate the passengers of a delayed loop, as a gift from the politician',
+                body: "Dear {formal},\n\nI have noticed that loops do occasionally run late. Terrible. And the poor passengers are so very cross, and have so much time to be cross in.\n\nWhen the next delay comes, could you compensate the passengers? And, if anyone should ask, let it be known that the money came from me. A donation, from a friend of the people. I will make it up to you in my own way. Of course, I will not actually be paying a penny. That is not what a good reputation is for.\n\nWith every confidence in myself,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. The next time a loop is delayed, I will compensate the passengers, and I will let them think it was your donation.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot compensate a delay and pretend it was your money.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nHow honest of you. Honesty is so rarely rewarded in my line of work, so I will not be rewarding it either. Let us see how well the passengers remember you.\n\nWith every confidence in myself,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe passengers were so very grateful, and they know exactly whom to thank. I heard someone call me a gentleman. I have asked for it in writing. Thank you, truly.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nNo delay was compensated in time, and I had a speech about my generosity all ready. A waste of a very good speech. I will use it on somebody else.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
+        negativeEvents: [
+            {
+                id: 'politician-scandal-cover',
+                target: 3,
+                ask: 'live through 3 negative events',
+                subject: 'A little noise',
+                body: "Dear {formal},\n\nThere has been a rather unfortunate story about me in the papers. A misunderstanding, naturally. A trifling thing, from years ago, or possibly last week.\n\nThe public has such a short memory, though, and a bigger story would push mine out of the headlines. If your terminal could have a few troubles, say {n} negative events, they would soon be talking about those instead. I would not dream of asking you to arrange it. I am merely saying it would be helpful. Very helpful.\n\nWith every confidence in myself,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will see the terminal through {n} negative events. I will not be arranging them.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot promise {n} negative events. They are hardly up to me.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nA pity. Then the story will run a little longer, and so, I fear, will other stories. I know a great many things about a great many terminals. Only joking, of course.\n\nWith every confidence in myself,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThree disasters, and the newspapers have forgotten me completely. What a relief. Not for you, I am sure, but for me. You have my sympathy, and my thanks. In that order.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nNot enough went wrong for you, I am afraid, and the papers are still talking about me. It is almost as if the world is against me. I will remember that your luck was so very good.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
+        connectCountries: [
+            {
+                id: 'politician-worldly-man',
+                target: 3,
+                subject: 'A man of the world',
+                body: "Dear {formal},\n\nI have always said that a modern leader must look outward. To far-off places, new friends, and the sort of photographs that make a man look worldly.\n\nCould you connect {n} new countries to the network? And when people ask, as I am sure they will, could you let it be known that it was my vision driving it? A forward-looking man, with a global outlook. It is all true, in a manner of speaking. I did once visit an airport.\n\nWith every confidence in myself,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will connect {n} new countries. I will not say whose vision it was.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot connect {n} new countries right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNo expansion, then. A shame. I shall have to be worldly some other way. Perhaps with a very large map. I will be sure to mention the terminal that held me back.\n\nWith every confidence in myself,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThree new countries! I have already given three interviews about my vision for the network. I was very moving. I am told some of it was even true. You must come to my next dinner, and bring the receipts.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nThe countries were not connected in time. I had told people I was cutting three ribbons, abroad. I have had to say the flights were cancelled. By you.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
+    },
+
+    passenger: {
+        upgradeDevCategory: [
+            {
+                id: 'passenger-refined-palate',
+                category: 'Food',
+                target: 1,
+                subject: 'On the subject of the table',
+                body: "Dear {formal},\n\nThere are places where one dines, and places where one merely eats, and I have been obliged to do the latter here. I mention it without rancour, much as one might mention the weather.\n\nI should be glad if you would upgrade a Food development. I think it would be noticed, and by the sort of person whose notice is worth having.\n\nYours, with reserve,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will upgrade a Food development.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid I cannot upgrade a Food development at present.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nQuite understood. Not every house aspires, and it would be unkind to expect it. I shall dine elsewhere, as I have always done.\n\nYours, with reserve,\n{from}',
+                fulfilled: 'Dear {formal},\n\nI have dined there, and I will say it was better than I had expected. That is not nothing, and I do not say it often.\n\nYours, with reserve,\n{from}',
+                failed: 'Dear {formal},\n\nThe table is as I found it. I make no complaint. One learns, in time, what a place intends to be.\n\nYours, with reserve,\n{from}',
+            },
+            {
+                id: 'passenger-shop-upgrade',
+                category: 'Shopping',
+                target: 1,
+                subject: 'The shops',
+                body: "Dear {formal},\n\nA shop is a kind of confession. One learns more of a place from what it sells, and how it is sold, than from anything it says of itself. The shops here confess a certain timidity.\n\nI should be glad if you would upgrade a Shopping development. A little confidence would not come amiss.\n\nYours, with reserve,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will upgrade a Shopping development.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid I cannot upgrade a Shopping development at present.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nQuite so. Timidity has its admirers, and I am sure the shops will find them. I shall do my buying elsewhere.\n\nYours, with reserve,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe shop has found its nerve, and I even bought something. Do not mention it to anyone. It was a very small purchase.\n\nYours, with reserve,\n{from}',
+                failed: 'Dear {formal},\n\nThe shops remain as they were, and I find I cannot summon a view on them. That, I suppose, is a view of a kind.\n\nYours, with reserve,\n{from}',
+            },
+        ],
+        build: [
+            {
+                id: 'passenger-three-shops',
+                category: 'Shopping',
+                target: 3,
+                subject: 'A place to spend an afternoon',
+                body: "Dear {formal},\n\nThere is nothing so dull as a street with one shop in it. A single shop is a necessity; three are an occasion, and a crowd of them is a society. And it is the society I come for, though I would not say so aloud.\n\nCould you build {n} Shopping developments? A person of leisure needs somewhere to go, and I should rather it were here than somewhere I must be introduced.\n\nYours, with reserve,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will build {n} Shopping developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid I cannot build {n} Shopping developments right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nQuite understood. A single shop it remains, then, and I shall make my afternoons elsewhere. I do not hold it against you. I merely note it.\n\nYours, with reserve,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThree new shops, and a street that now looks as though it has something to say for itself. I spent an entire afternoon there. I cannot remember when I last did that.\n\nYours, with reserve,\n{from}',
+                failed: 'Dear {formal},\n\nNo new shops were built in the time. The afternoon stayed empty, and I filled it as I always do, with my own company. It is a poor substitute, though a dependable one.\n\nYours, with reserve,\n{from}',
+            },
+            {
+                id: 'passenger-fresh-amusements',
+                category: 'Recreation',
+                subject: 'Fresh amusements',
+                body: "Dear {formal},\n\nOne requires diversion. I do not mean anything coarse, but something to occupy the hours between engagements, which are growing longer and, I am sorry to say, less engaging. The recreations here have the air of having been arranged long ago.\n\nCould you build a Recreation development? I am in want of fresh amusements, and I have not much hope of finding them elsewhere.\n\nYours, with reserve,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will build a Recreation development.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid I cannot build a Recreation development right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nQuite understood. The old amusements will have to do. I shall pretend to be diverted by them, and no one will be any the wiser.\n\nYours, with reserve,\n{from}',
+                fulfilled: 'Dear {formal},\n\nA new Recreation development. I have tried it, and I was diverted, which is more than I can say of most of my acquaintance. I shall return. That is the highest recommendation I give.\n\nYours, with reserve,\n{from}',
+                failed: 'Dear {formal},\n\nNo new Recreation development was built, and my hours remain unfilled. I shall find something. I always do, and it is never as good.\n\nYours, with reserve,\n{from}',
+            },
+        ],
+        connectCountries: [
+            {
+                id: 'passenger-ennui',
+                target: 1,
+                subject: 'A want of novelty',
+                body: "Dear {formal},\n\nI find that I have been in the same circle of places for a good while, and that the circle has begun to know me better than I know it. There is a kind of tedium that comes only to those who have seen everything twice.\n\nCould you connect a new country? Somewhere I have not yet formed an opinion of. I should like to be surprised, if that is still possible, and I am prepared to be disappointed.\n\nYours, with reserve,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will connect a new country.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid I cannot connect a new country at present.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nQuite understood. I shall remain where I am, and wait for the world to come to me. It generally does, in the end, though never in an interesting form.\n\nYours, with reserve,\n{from}',
+                fulfilled: 'Dear {formal},\n\nA new country, and one I had not thought of. I have already begun to form an opinion of it, and it is rather better than I expected. I am, for the moment, not bored.\n\nYours, with reserve,\n{from}',
+                failed: 'Dear {formal},\n\nNo new country was connected, and so I am where I was. I shall bear it. Ennui, one finds, is largely a matter of practice.\n\nYours, with reserve,\n{from}',
+            },
+        ],
+        upgradeCity: [
+            {
+                id: 'passenger-comfortable-journey',
+                target: 1,
+                ask: 'upgrade a city\'s line',
+                subject: 'The journey itself',
+                body: "Dear {formal},\n\nI have noticed that the journey, which ought to be the pleasure, is merely the price one pays for the arrival. The lines are serviceable. I was brought up to understand that serviceable is the lowest praise one can give a thing.\n\nCould you upgrade a city's line? I should like the journey to be a comfort, and not an interval.\n\nYours, with reserve,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will upgrade a city\'s line.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid I cannot upgrade a line at present.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nQuite so. I shall endure it, as one endures a long sermon, with a fixed expression and a distant mind.\n\nYours, with reserve,\n{from}',
+                fulfilled: 'Dear {formal},\n\nI have taken the line, and found it altered for the better. One could almost forget one was travelling. It is the highest compliment I know how to pay a railway.\n\nYours, with reserve,\n{from}',
+                failed: 'Dear {formal},\n\nThe line is as it was, and so is the journey. I looked out of the window the whole way and thought of nothing in particular, which, I admit, is a kind of rest.\n\nYours, with reserve,\n{from}',
+            },
+        ],
+        payUpfront: [
+            {
+                id: 'passenger-charity-chair',
+                subject: 'A small obligation',
+                body: "Dear {formal},\n\nI have the honour, if that is the word, to chair a charitable committee. We are concerned with those who have not been so fortunate as ourselves, a group that is, regrettably, very large and very patient. It does not do to speak of it often, but it does do to give.\n\nCould you make a donation of {n}? You will not be thanked at length, but it will be put to good use. I have seen to that.\n\nYours, with reserve,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will donate {n}.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid I cannot donate {n} at present.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nQuite understood. Everyone has their own obligations, and it is not for me to judge another\'s. The committee will manage, as it has always done, on rather less.\n\nYours, with reserve,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe donation has arrived, and I know whom it will help. They will never know your name, and I am sure you would prefer it so. Still, I shall remember it, which is no small thing.\n\nYours, with reserve,\n{from}',
+                failed: 'Dear {formal},\n\nThe donation did not come, and the committee must make do. I make no reproach. A good deed is the only kind that cannot be demanded.\n\nYours, with reserve,\n{from}',
+            },
+        ],
+        rename: [
+            {
+                id: 'passenger-names',
+                target: 1,
+                subject: 'What things are called',
+                body: "Dear {formal},\n\nI have noticed that the names of the buildings here lack inspiration. A name is the first thing one learns of a place, and the last thing one forgets, and these have been chosen by somebody in a hurry.\n\nCould you give a development a new name? Something with a little character. I should be glad to pass beneath it.\n\nYours, with reserve,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will give a development a new name.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid I cannot rename a development at present.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nQuite so. The names stay as they were, and so shall my opinion of them. I shall merely walk past a little faster.\n\nYours, with reserve,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe new name is a great improvement. It has some character, and it is almost memorable. I found myself saying it aloud, which I do not do for just anything.\n\nYours, with reserve,\n{from}',
+                failed: 'Dear {formal},\n\nThe name was not changed, and so the building remains as unremarkable as ever. I shall go on not remembering it.\n\nYours, with reserve,\n{from}',
+            },
+        ],
+    },
+
+    fan: {
+        work: [
+            {
+                id: 'fan-hardly-seen',
+                target: 120,
+                ask: 'spend a bit more time working at the terminal',
+                subject: 'We have hardly seen you',
+                body: "Dearest {formal},\n\nI have hardly seen you lately around the terminal! I noticed you were not at your desk on Tuesday, and again on Thursday, and I had to sit down for a while. I check the window every morning at ten to eight. Please do not worry about that.\n\nCould you spend a little more time working at the terminal? Just where the club can see you. We have made you a very small flag.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                agree: 'Dear {from},\n\nUnderstood. I will spend more time working at the terminal.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot spend more time at the terminal right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dearest {formal},\n\nThat is perfectly all right. I will keep checking the window, as I always do. It is not a problem. I have a flask.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                fulfilled: 'Dearest {formal},\n\nI saw you! Right there, by the desk, working. I took forty photographs. Do not worry, I only kept the good ones. The club is thrilled, and so is the flag.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                failed: 'Dearest {formal},\n\nYou were not seen, and I waited by the window all day. I am sure you were busy. I am sure that there is a reason. I have started a list of possible reasons.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+            },
+        ],
+        payUpfront: [
+            {
+                id: 'fan-clubroom',
+                subject: 'The clubroom',
+                body: "Dearest {formal},\n\nThe club has outgrown the airing cupboard. We now have seven members, four of whom are me under different names, and we cannot all fit in at once. We need a proper clubroom, with a door, and a wall for your photographs.\n\nCould you donate {n} to the {fullName} Fan Club? I would not ask anyone else. I have only ever wanted to ask you.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                agree: 'Dear {from},\n\nUnderstood. I will donate {n} to the fan club.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot donate {n} to the fan club right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dearest {formal},\n\nOf course. It is perfectly understandable. We will stay in the airing cupboard, and I will go on sitting on the bottom shelf. I have gotten used to the smell of towels.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                fulfilled: 'Dearest {formal},\n\nThe donation has arrived! We have a clubroom now, with a door, and a lock that only I have the key to. Your photographs are up on the walls. I hope you do not mind that there are so many.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                failed: 'Dearest {formal},\n\nThe donation did not arrive, and the club has taken it hard. We are still in the airing cupboard. Please do not worry, we have extended the wall of photographs to the ironing board.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+            },
+        ],
+        upgradeDevCategory: [
+            {
+                id: 'fan-day-trip',
+                category: 'Shopping',
+                target: 3,
+                subject: 'The day trip',
+                body: "Dearest {formal},\n\nThe club is going on a day trip, and the destination is your terminal! We have booked a coach. There will be forty-one of us, counting the ones I made. We plan to do a great deal of shopping, and every receipt will be kept, in a binder, in order.\n\nCould you upgrade {n} different Shopping developments before we arrive? We want everything to be as good as it can be. We want you to be proud of what we will be buying.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                agree: 'Dear {from},\n\nUnderstood. I will upgrade {n} different Shopping developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot upgrade {n} different Shopping developments right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dearest {formal},\n\nThat is quite all right. We will shop in the shops as they are. They will be a little less wonderful, but I am sure the receipts will still be perfect.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                fulfilled: 'Dearest {formal},\n\nThe shops are marvellous! We bought so much, and we got matching bags. I have kept one of yours, the one you touched. I mean the one you must have touched. It is in the binder.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                failed: 'Dearest {formal},\n\nThe shops were not upgraded in time, but we went anyway. We shopped bravely, with heavy hearts. The binder is thinner than I hoped.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+            },
+        ],
+        connectCountries: [
+            {
+                id: 'fan-international-trip',
+                target: 1,
+                subject: 'The international trip',
+                body: "Dearest {formal},\n\nThe club is going abroad! It is our first international trip, and we have nowhere to go. We would like you to decide. We would like it to be somewhere new and exciting, somewhere you have never been, so that we can be the first to follow you there.\n\nCould you connect a new country? We will pack as soon as you say. I have already packed, actually. It is only a small bag, by the door.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                agree: 'Dear {from},\n\nUnderstood. I will connect a new country.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot connect a new country right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dearest {formal},\n\nThat is perfectly fine. We will go to the usual place. We always go to the usual place, because it is where you were last seen. The small bag can stay by the door.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                fulfilled: 'Dearest {formal},\n\nA new country, and you chose it for us! We are all so excited. I have looked it up on a map, and I have put a pin in it. The pin is in a photograph of you, so the two are together.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                failed: 'Dearest {formal},\n\nNo new country was connected, and so the club is still at home, with the bags by the door. We have been looking at maps. We have been looking at maps for hours.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+            },
+        ],
+        rename: [
+            {
+                id: 'fan-creative-genius',
+                target: 1,
+                subject: 'A better name',
+                body: "Dearest {formal},\n\nThe names of some of the developments are, frankly, boring. We do not mean to be rude. They were not named by you, and that is obvious. Only your creative genius could think of something better, and the club would like to see what it comes up with.\n\nCould you give a development a new name? I have written down the names I would suggest, but they are not as good as yours. They are not as good as anything of yours.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                agree: 'Dear {from},\n\nUnderstood. I will give a development a new name.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot rename a development right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dearest {formal},\n\nThat is perfectly all right. We will go on calling it by its boring name, and think about what it might have been. I will keep my own list, in case you change your mind.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                fulfilled: 'Dearest {formal},\n\nThe new name is perfect! It could only have been you. The club read it aloud in unison. Twice. I have written it on my arm, in a pen that does not wash off.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                failed: 'Dearest {formal},\n\nThe name was not changed, and the club had to make do with the boring one. I have named it myself, in secret. Please do not look at the list.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+            },
+        ],
+        build: [
+            {
+                id: 'fan-monthly-meeting',
+                category: 'Enterprise',
+                target: 1,
+                subject: 'The monthly meeting',
+                body: "Dearest {formal},\n\nThe club meets on the first Tuesday of every month, and we have run out of things to say. We have discussed your haircut in 2019 four times, and your lunch order from last week on each of the other days.\n\nCould you launch a new business venture? Something for the club to talk about at the next meeting. I will take minutes. I always take minutes. I have kept every minute from every meeting, and each page has your name in the margin.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                agree: 'Dear {from},\n\nUnderstood. I will launch a new business venture.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot launch a new business venture right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dearest {formal},\n\nThat is perfectly all right. We will talk about the haircut again. We still have things to say about it. We have never really settled the matter of the fringe.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                fulfilled: 'Dearest {formal},\n\nA new business venture! The meeting ran for six hours, and nobody left, because I had locked the door. For their comfort. The minutes are in the binder, and they are glowing.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                failed: 'Dearest {formal},\n\nNo new business venture was launched, so the meeting was short and rather sad. We had the fringe again. I am afraid it did not end well.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+            },
+        ],
+        milestone: [
+            {
+                id: 'fan-celebrate',
+                subject: 'Something to celebrate',
+                body: "Dearest {formal},\n\nThe club needs a reason to celebrate. We have bought the balloons, and a cake with your face on it, and we have been keeping them in the fridge since March. The face is starting to sag. We need to use it quickly.\n\nCould you reach a new milestone? Any milestone will do, though a big one would be better. We will throw a party in your honour, and you do not even have to come. We will simply imagine you there.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                agree: 'Dear {from},\n\nUnderstood. I will reach a new milestone.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot promise a new milestone right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dearest {formal},\n\nThat is perfectly all right. The cake will have to wait. I will keep it somewhere cool, and keep looking at it. Your face is holding up quite well, in the circumstances.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                fulfilled: 'Dearest {formal},\n\nA new milestone! We have had the party. There were balloons, and a cake, and a chair left empty for you. It was a wonderful party. I sat in the chair a little, when no one was looking.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                failed: 'Dearest {formal},\n\nNo new milestone was reached, so the cake went uneaten. The face has gone quite soft now. We could not bring ourselves to cut it.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+            },
+        ],
+        claimRewards: [
+            {
+                id: 'fan-brilliant',
+                target: 5,
+                subject: 'Reflect on how brilliant you are',
+                body: "Dearest {formal},\n\nEvery so often, I think you should sit back and consider how brilliant you are. I do it daily. I have a whole notebook. It is only fair that you should do it too, and I know that you will agree once you have done it.\n\nCould you claim {n} rewards on the Progress page? It is all there, everything you have done, in a long, glorious list. We want you to look at it, and to feel what we feel. We have looked at it a great deal.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                agree: 'Dear {from},\n\nUnderstood. I will claim {n} rewards on the Progress page.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot claim {n} rewards on the Progress page right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dearest {formal},\n\nThat is perfectly all right. You must be modest. I understand modesty. I will go on reflecting on your behalf, in the meantime. I am more than happy to do it.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                fulfilled: 'Dearest {formal},\n\nYou looked at it all! I hope it was as lovely for you as it is for us. I knew you would feel it. We have drawn a card to mark the occasion, and it is a very big card, and it has a lot of glitter.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
+                failed: 'Dearest {formal},\n\nThe rewards were not claimed in time, so the Progress page sits there, unadmired. I will keep admiring it for you. I have seen it nine hundred times, and I am not tired.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
             },
         ],
     },

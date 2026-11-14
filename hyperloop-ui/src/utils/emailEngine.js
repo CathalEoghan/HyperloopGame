@@ -87,18 +87,18 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Well. That is an improvement.', failed: 'Typical. Just typical.', refused: 'Of course. Of course you will not.', ignored: 'No reply. Typical.' },
     },
     fan: {
-        id: 'fan', gender: 'any', role: 'Obsessed Fan', color: '#d4552f',
-        affinity: ['like', 'greet', 'farewell', 'shop', 'work', 'rename'],
+        id: 'fan', gender: 'any', role: 'Fan Club Chair', color: '#d4552f',
+        affinity: ['work', 'payUpfront', 'upgradeDevCategory', 'connectCountries', 'rename', 'build', 'milestone', 'claimRewards'],
         intros: [
-            (ask) => `I CANNOT STOP THINKING ABOUT THIS TERMINAL!!! Please, please, PLEASE ${ask}!!!`,
-            (ask) => `I have your timetable on my wall and I have named my goldfish after your first city. Could you ${ask}?? It would make my entire year!!`,
-            (ask) => `You do not know me but I have followed everything you have ever done (in a normal way!!). Would you ${ask}?!`,
+            (ask) => `I have been keeping a record of everything you do, in a normal way, and I think it is time you ${ask}.`,
+            (ask) => `The club voted on it, and it was unanimous. I was the only one voting. Could you ${ask}?`,
+            (ask) => `I do not want to alarm you, but I know you have been thinking about this. Would you ${ask}?`,
         ],
-        deadline: (t) => `I will be refreshing my inbox every few seconds for ${t}!!!`,
-        outros: ['I LOVE YOU (the terminal!!)', 'Please say yes, I am vibrating!!', 'I have made you a banner!!'],
-        signoff: 'Forever yours,',
-        after: { fulfilled: 'I screamed with joy last time and I will scream again!!', failed: 'I cried a little last time but I forgive you completely!!', refused: 'I was devastated when you said no, but I am BACK!!', ignored: 'I checked my inbox 400 times and nothing came, but I still believe!!' },
-        outcome: { fulfilled: 'I AM SCREAMING!!! THANK YOU!!!', failed: 'It is fine!! I am fine!! I am so fine!!', refused: 'That is OK!! I still love you!!', ignored: 'No reply, but I will wait forever!!' },
+        deadline: (t) => `I will be waiting by the inbox for ${t}. I have brought a flask.`,
+        outros: ['I am always nearby.', 'I have made you a banner.', 'I would never tell anyone you said yes.'],
+        signoff: 'Your biggest fan,',
+        after: { fulfilled: 'I have framed what you did last time. It is on the wall, beside the others.', failed: 'It did not happen last time. I am not upset. I have simply stopped sleeping.', refused: 'You said no last time. I read it eleven times, and the answer did not change.', ignored: 'I checked my inbox 400 times for you last time. The flask is empty now.' },
+        outcome: { fulfilled: 'I have told the club. We are all crying, in a happy way.', failed: 'It is fine. I am fine. I am so fine, and I am still here.', refused: 'That is perfectly all right. I will simply ask again, differently.', ignored: 'No reply, but I will wait. I am very good at waiting.' },
     },
     assistant: {
         id: 'assistant', gender: 'any', role: 'Personal Assistant', color: '#4a7a9b',
@@ -184,9 +184,23 @@ export const CHARACTERS = {
         after: { fulfilled: 'You delivered last time. Was that luck, or planning?', failed: 'Last time it did not happen. Care to explain why?', refused: 'You said no last time. Would you say that again?', ignored: 'I did not hear back last time. Were you busy, or avoiding me?' },
         outcome: { fulfilled: 'Excellent. Is that how it always goes?', failed: 'It was not done. Why not? What happened?', refused: 'A no. Any reason you would like on the record?', ignored: 'No answer. Is that a comment in itself?' },
     },
+    passenger: {
+        id: 'passenger', gender: 'f', role: 'First-Class Passenger', color: '#7a4a5e',
+        affinity: ['build', 'upgradeDevCategory', 'upgradeCity', 'connectCountries', 'payUpfront', 'rename'],
+        intros: [
+            (ask) => `I should be glad if you would ${ask}. I do not doubt that you can.`,
+            (ask) => `It seems to me that the place would be the better for it if you were to ${ask}.`,
+            (ask) => `I raise it without any feeling on the subject. You might ${ask}.`,
+        ],
+        deadline: (t) => `I should think ${t} would be ample.`,
+        outros: ['I leave it with you.', 'I expect it will be noticed.', 'I am, as ever, observing.'],
+        signoff: 'Yours, with reserve,',
+        after: { fulfilled: 'You managed what I asked last time. I noted it.', failed: 'What I asked last time was not done. I draw no conclusion from it, and I am sure it is perfectly clear.', refused: 'You declined me last time. I did not take it ill.', ignored: 'My last letter went unanswered. I assume it never reached you.' },
+        outcome: { fulfilled: 'That is done, and well enough.', failed: 'It was not done. I had rather expected as much.', refused: 'You decline. It is a reasonable thing to do, if one has no ambition.', ignored: 'No reply. I shall take it as an answer.' },
+    },
     politician: {
         id: 'politician', gender: 'm', role: 'Local Politician', color: '#8a6d2f',
-        affinity: ['build', 'connectCities', 'connectContinent', 'rankUp', 'cash', 'payUpfront', 'farewell'],
+        affinity: ['build', 'connectCities', 'connectContinent', 'rankUp', 'cash', 'payUpfront', 'farewell', 'upgradeDevCategory', 'compensateDelay', 'negativeEvents', 'connectCountries'],
         intros: [
             (ask) => `I am sure you are doing your best, and it is lovely to see. Now, would you be a good fellow and ${ask}?`,
             (ask) => `Let me put this in simple terms, as I know these things can be complicated. ${cap(ask)}.`,
@@ -287,6 +301,12 @@ const METRICS = {
     rep: (s) => s.repEarned || 0,
     connectContinent: (s, e) => s.continentCities?.[e.extra.continent] || 0,
     connectTier3: (s) => s.tier3Cities || 0,
+    // Milestones reached so far (development counts, city counts, continents, rank gifts)
+    milestone: (s) => s.milestones || 0,
+    // Rewards claimed on the Progress page
+    claimRewards: (s) => s.rewardsClaimed || 0,
+    // Different countries among the connected cities
+    connectCountries: (s) => s.countries || 0,
     // Delayed loops the player has paid compensation for
     compensateDelay: (s) => s.delaysCompensated || 0,
     // Delayed loops the player has dismissed without paying
@@ -376,6 +396,23 @@ const GENERATORS = {
         if (options.length === 0) return null
         const [continent] = pick(options, rnd)
         return { type: 'connectContinent', target: 1, extra: { continent }, subject: `Expanding into ${continent}`, ask: `connect a new city in ${continent}`, hours: between(36, 48, rnd) }
+    },
+    // Cities in countries the terminal is not connected to yet (ctx.newCountriesAvailable counts those countries)
+    connectCountries: (ctx, rnd) => {
+        const target = ctx.fixed ?? 3
+        if ((ctx.newCountriesAvailable || 0) < target) return null
+        return { type: 'connectCountries', target, extra: {}, subject: 'New countries', ask: target === 1 ? 'connect a new country' : `connect ${target} new countries`, hours: between(44, 48, rnd) }
+    },
+    // Needs a milestone within reach of the player (ctx.milestoneNear)
+    milestone: (ctx, rnd) => {
+        if (!ctx.milestoneNear) return null
+        return { type: 'milestone', target: 1, extra: {}, subject: 'A milestone', ask: 'reach a new milestone', hours: between(44, 48, rnd) }
+    },
+    // Needs that many rewards waiting on the Progress page (ctx.rewardsWaiting)
+    claimRewards: (ctx, rnd) => {
+        const target = ctx.fixed ?? 3
+        if ((ctx.rewardsWaiting || 0) < target) return null
+        return { type: 'claimRewards', target, extra: {}, subject: 'Progress rewards', ask: target === 1 ? 'claim a reward on the Progress page' : `claim ${target} rewards on the Progress page`, hours: between(36, 48, rnd) }
     },
     connectCities: (ctx, rnd) => {
         const room = ctx.available?.citiesTotal || 0

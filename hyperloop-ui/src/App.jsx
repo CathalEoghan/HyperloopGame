@@ -743,6 +743,27 @@ function App() {
     pm.purchasedDevelopments.forEach(d => { (out[d.category] ||= {})[d.name] = pm.getDevelopmentUpgradeLevel(d) })
     return out
   }
+  // Milestones reached so far (development counts, city counts, whole continents, rank gifts) and whether another is close
+  // (within two developments or cities), for the emails that ask the player to reach one
+  const milestoneState = (pm) => {
+    let claimed = {}
+    try { const saved = JSON.parse(localStorage.getItem('hyperloop_dev_milestones')); if (saved && typeof saved === 'object' && !Array.isArray(saved)) claimed = saved } catch { /* none saved yet */ }
+    let reached = 0, near = false
+    MILESTONE_CATEGORIES.forEach(category => {
+      const tiers = DEVELOPMENT_MILESTONES[category] || []
+      const built = builtCount(category, pm.purchasedDevelopments, pm.purchasedUpgrades)
+      reached += tiers.filter(t => t.count <= (Number(claimed[category]) || 0)).length
+      const next = tiers.find(t => t.count > built)
+      if (next && next.count - built <= 2) near = true
+    })
+    const cities = pm.purchasedCities.length
+    reached += CITY_MILESTONES.filter(t => t.count <= (Number(claimed.Cities) || 0)).length
+    const nextCity = CITY_MILESTONES.find(t => t.count > cities)
+    if (nextCity && nextCity.count - cities <= 2) near = true
+    reached += Object.keys(claimed).filter(k => k.startsWith('continent:')).length
+    reached += claimedMilestones.current.size
+    return { reached, near }
+  }
   // Every number a request can be measured by, read fresh from the game
   const emailSnapshot = () => {
     const pm = progressionManager
@@ -753,6 +774,9 @@ function App() {
       built: Object.fromEntries(MILESTONE_CATEGORIES.map(c => [c, builtCount(c, pm.purchasedDevelopments, pm.purchasedUpgrades)])),
       cities: pm.purchasedCities.length, continentCities,
       tier3Cities: pm.purchasedCities.filter(c => c.tier === 3).length,
+      countries: new Set(pm.purchasedCities.map(c => c.country).filter(Boolean)).size,
+      milestones: milestoneState(pm).reached,
+      rewardsClaimed: readStoredList('hyperloop_progress_rewards').length + readStoredList('hyperloop_prestige_upgrade_rewards').length,
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
       timetable: readStoredList('hyperloop_timetable').length,
       cash: pm.totalCashEarned, balance: pm.balance, answered: achievements.counter('emailsAnswered'),
@@ -789,8 +813,18 @@ function App() {
       positiveEventChance: rankManager.rank < EVENT_MIN_RANK ? 0 : (perkActive('crisisAvoidanceSpecialists') ? 1 : 0.5),
       incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
       available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length },
+      // A development or city milestone is within reach, and how many Progress rewards are waiting to be claimed
+      milestoneNear: milestoneState(pm).near,
+      rewardsWaiting: (() => {
+        const done = new Set(readStoredList('hyperloop_progress_rewards'))
+        return pm.purchasedCities.filter(c => !done.has('city:' + c.name)).length
+          + new Set(pm.purchasedCities.map(c => c.country).filter(c => c && !done.has('country:' + c))).size
+          + pm.purchasedDevelopments.filter(d => !done.has('dev:' + d.name)).length
+      })(),
       // Tier 3 cities still waiting to be connected
       tier3Available: pm.unlockedCities.filter(c => c.tier === 3).length,
+      // Countries the terminal has no city in yet, among the cities that can still be connected
+      newCountriesAvailable: new Set(pm.unlockedCities.map(c => c.country).filter(c => c && !pm.purchasedCities.some(p => p.country === c))).size,
       // How many developments of each category can still be built (they leave these lists once bought)
       buildableByCategory: [...pm.unlockedDevelopments, ...pm.unlockedUpgrades].reduce((o, d) => (MILESTONE_CATEGORIES.includes(d.category) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}),
       shopCheapest: cheapest === Infinity ? 0 : cheapest,
