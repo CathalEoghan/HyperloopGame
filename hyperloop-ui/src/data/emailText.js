@@ -413,6 +413,31 @@ export const EMAILS = {
                 failed: "Dear {formal},\n\nThe report is in and, um, it says very little about the desk. Please don't worry! I've written 'busy elsewhere', which I'm sure is true.\n\nI hope that was alright. I panicked.\n\nVery respectfully,\n{from}",
             },
         ],
+        rename: [
+            {
+                id: 'assistant-names',
+                target: 2,
+                subject: 'Names (sorry)',
+                body: "Dear {formal},\n\nI'm so sorry to ask. I've been trying to write the developments in your diary and I keep mixing them up. I've been calling them 'the big one' and 'the other one', which is very unprofessional of me.\n\nWould you perhaps give {n} of them a proper name? It would help me enormously. Please don't think I'm complaining. I'd never.\n\nVery respectfully,\n{from}",
+                agree: 'Dear {from},\n\nThanks for letting me know. I will give some developments new names to make things easier.\n\nBest,\n{fullName}',
+                refuse: 'Dear {from},\n\nThanks, but I cannot rename developments at the moment.\n\nBest regards,\n{fullName}',
+                refused: "Dear {formal},\n\nOf course! No, 'the big one' is a perfectly good name. I'm so sorry I brought it up.\n\nVery respectfully,\n{from}",
+                fulfilled: "Dear {formal},\n\nThe new names are wonderful! I can finally tell them apart. I nearly didn't cry. I mean, I did. A little. Please don't tell anyone.\n\nVery respectfully,\n{from}",
+                failed: "Dear {formal},\n\nI'm still calling them 'the big one' and 'the other one'. It's fine. Honestly, it's growing on me.\n\nI'm so sorry.\n\nVery respectfully,\n{from}",
+            },
+        ],
+        rep: [
+            {
+                id: 'assistant-overheard',
+                subject: 'Something I overheard',
+                body: "Dear {formal},\n\nI'm so sorry to mention this. I overheard some people by the coffee machine talking about the terminal's reputation. They weren't talking about you! Not specifically. I'd never let them.\n\nI just thought, very quietly, that a little more Reputation might, um, give them something else to talk about. Like the weather.\n\nVery respectfully,\n{from}",
+                agree: 'Dear {from},\n\nThanks for the heads up. I will work on improving our reputation.\n\nBest,\n{fullName}',
+                refuse: 'Dear {from},\n\nThanks, but I cannot promise to improve our reputation in this timeframe.\n\nBest regards,\n{fullName}',
+                refused: "Dear {formal},\n\nOf course! The weather is lovely anyway. I'll just keep, um, listening. Not that I listen. Sorry.\n\nVery respectfully,\n{from}",
+                fulfilled: "Dear {formal},\n\nThe people by the coffee machine have stopped talking about reputation. They're talking about the weather now. It's a miracle. Thank you.\n\nI'm going to go and sit down.\n\nVery respectfully,\n{from}",
+                failed: "Dear {formal},\n\nThey're still talking by the coffee machine. I pretended to be busy with the photocopier. I don't think it worked.\n\nI'm so sorry.\n\nVery respectfully,\n{from}",
+            },
+        ],
     },
     public: {
     },
