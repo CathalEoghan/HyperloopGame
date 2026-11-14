@@ -58,6 +58,8 @@ const AUX_KEYS = [
     'hyperloop_email_meta',
     // The recurring email characters: their names and how you last answered each. Kept across a retire (PRESTIGE_KEEP_KEYS)
     'hyperloop_email_cast',
+    // Which hand-written emails have been sent, so they aren't repeated until all have been (kept across a retire)
+    'hyperloop_email_used',
     'hyperloop_hyperlink_used_month_posts',
     'hyperloop_hyperlink_used_daily_posts',
     'hyperloop_pending_rankups',
@@ -233,6 +235,7 @@ const PRESTIGE_KEEP_KEYS = [
     'hyperloop_loop_counted',
     'hyperloop_hyperlink_liked',
     'hyperloop_email_cast',
+    'hyperloop_email_used',
     'hyperloop_lifetime_cash_earned',
     'hyperloop_lifetime_reputation_earned',
     'hyperloop_lifetime_created_at',
@@ -331,6 +334,7 @@ const AUX_SHAPES = {
     hyperloop_cosmetics: v => isObj(v) && listOfStrings(v.owned) && isObj(v.equipped) && Object.values(v.equipped).every(x => typeof x === 'string'),
     hyperloop_emails: listOf(e => isObj(e) && typeof e.id === 'string' && typeof e.type === 'string' && typeof e.state === 'string' && Number.isFinite(e.target) && Number.isFinite(e.createdAt) && isObj(e.sender) && typeof e.sender.name === 'string' && typeof e.body === 'string'),
     hyperloop_email_cast: v => isObj(v) && Object.values(v).every(c => isObj(c) && typeof c.name === 'string' && c.name.length <= 60),
+    hyperloop_email_used: v => Array.isArray(v) && v.length <= 400 && v.every(k => typeof k === 'string'),
     hyperloop_email_meta: v => isObj(v),
     hyperloop_cities_intro_seen: v => typeof v === 'boolean',
     hyperloop_development_intro_seen: v => typeof v === 'boolean',

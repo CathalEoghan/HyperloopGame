@@ -5,6 +5,7 @@
 // list in localStorage (EMAILS_KEY), feeds `snapshot()` numbers in once a second, and applies the Reputation changes.
 // Base amounts (before scaling): refuse -5, agree +5, fulfil +25, fail -25. `scaleFor` grows them with the terminal.
 import { DEVELOPMENT_MILESTONES } from '../data/developmentMilestones.js'
+import { EMAILS, ONLY_WRITTEN } from '../data/emailText.js'
 import { FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/hyperLinkData.js'
 
 export const EMAILS_KEY = 'hyperloop_emails'
@@ -209,6 +210,35 @@ const MEMORY_MS = 3 * 24 * HOUR
 export const noteOutcome = (cast, characterId, state, now = Date.now()) => (cast[characterId] ? { ...cast, [characterId]: { ...cast[characterId], last: state, lastAt: now } } : cast)
 export const forgetOutcome = (cast, characterId) => (cast[characterId] ? { ...cast, [characterId]: { ...cast[characterId], last: null, lastAt: 0 } } : cast)
 
+// ---- hand-written emails (data/emailText.js) ---------------------------------------------------------------------
+// {word} is swapped for a value; {one|many} picks by whether the number asked for is 1.
+export function fillTemplate(text, vars) {
+    if (typeof text !== 'string') return ''
+    return text
+        .replace(/\{([^{}|]+)\|([^{}]+)\}/g, (_, one, many) => (Number(vars.count) === 1 ? one : many))
+        .replace(/\{(\w+)\}/g, (m, key) => (key in vars ? String(vars[key]) : m))
+}
+const templateKey = (who, type, t, i) => `${who}.${type}.${t.id || i}`
+// One written email for this sender and request type, preferring ones not used yet; null if none were written
+export function pickAuthored(who, type, used = [], rnd = Math.random) {
+    const list = EMAILS[who]?.[type]
+    if (!Array.isArray(list) || list.length === 0) return null
+    const keys = list.map((t, i) => templateKey(who, type, t, i))
+    const fresh = list.map((_, i) => i).filter(i => !used.includes(keys[i]))
+    const i = pick(fresh.length > 0 ? fresh : list.map((_, j) => j), rnd)
+    return { template: list[i], key: keys[i], group: keys }
+}
+// Remember a written email as used; once every one for that sender and type has been, start the set over
+export function markUsed(used, key, group) {
+    const base = group && group.every(k => used.includes(k)) ? used.filter(k => !group.includes(k)) : used
+    return base.includes(key) ? base : [...base, key]
+}
+export const USED_KEY = 'hyperloop_email_used'
+export function readUsed() {
+    try { const l = JSON.parse(localStorage.getItem(USED_KEY)); return Array.isArray(l) ? l.filter(k => typeof k === 'string') : [] } catch { return [] }
+}
+export function writeUsed(list) { try { localStorage.setItem(USED_KEY, JSON.stringify(list.slice(-300))) } catch { /* storage full */ } }
+
 const addressee = (name) => (name && name.trim()) || 'Manager'
 const firstName = (sender) => sender.name.split(' ')[0]
 
@@ -340,21 +370,44 @@ const OUTROS = [
 export const EMAIL_TYPES = Object.keys(GENERATORS)
 
 // Make one email, or null if nothing fits. `types` lets a test force a type.
-export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', types = null, cast = null } = {}) {
+export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', types = null, cast = null, used = [] } = {}) {
     const order = [...(types || EMAIL_TYPES)].sort(() => rnd() - 0.5)
     for (const type of order) {
         const req = GENERATORS[type](ctx, rnd)
         if (!req) continue
-        // Mostly one of the recurring characters whose usual requests include this one
-        const people = cast ? CHARACTER_IDS.filter(id => CHARACTERS[id].affinity.includes(type) && cast[id]?.name) : []
-        const character = people.length > 0 && rnd() < 0.75 ? CHARACTERS[pick(people, rnd)] : null
+        // Mostly one of the recurring characters whose usual requests include this one, or who have an email written for it
+        const written = (id) => Array.isArray(EMAILS[id]?.[type]) && EMAILS[id][type].length > 0
+        let character
+        if (ONLY_WRITTEN) {
+            // Only what has been written: one of the characters (or the public) with an email for this request
+            const options = [...CHARACTER_IDS.filter(id => cast?.[id]?.name && written(id)), ...(written('public') ? ['public'] : [])]
+            if (options.length === 0) continue
+            const who = pick(options, rnd)
+            character = who === 'public' ? null : CHARACTERS[who]
+        } else {
+            const people = cast ? CHARACTER_IDS.filter(id => (CHARACTERS[id].affinity.includes(type) || written(id)) && cast[id]?.name) : []
+            character = people.length > 0 && rnd() < 0.75 ? CHARACTERS[pick(people, rnd)] : null
+        }
         const sender = character ? { name: cast[character.id].name, role: character.role } : { name: `${pick(rnd() < 0.5 ? FIRST_NAMES_MALE : FIRST_NAMES_FEMALE, rnd)} ${pick(SURNAMES, rnd)}`, role: 'Member of the Public' }
         const amounts = amountsFor(ctx.snap.reputation)
         // The Stakeholder gives less time
         const hours = character?.id === 'stakeholder' ? Math.min(req.hours, 36) : req.hours
         const within = hours >= 48 ? '2 days' : hours > 24 ? `${hours} hours` : 'a day'
-        let text, referredBack = false
-        if (character) {
+        const nameForPlayer = addressee(playerName)
+        const authored = pickAuthored(character?.id || 'public', type, used, rnd)
+        let text, referredBack = false, subject = req.subject, texts = null
+        if (authored) {
+            const t = authored.template
+            const vars = {
+                name: nameForPlayer.split(' ')[0], fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
+                n: type === 'cash' ? formatCash(req.target) : formatCount(req.target), count: req.target,
+                category: req.extra.category || '', continent: req.extra.continent || '', time: within, hours, ask: req.ask,
+            }
+            const f = (x) => (typeof x === 'string' && x ? fillTemplate(x, vars) : null)
+            subject = f(t.subject) || req.subject
+            text = f(t.body) || ''
+            texts = { agree: f(t.agree), refuse: f(t.refuse), fulfilled: f(t.fulfilled), failed: f(t.failed), refused: f(t.refused), ignored: f(t.ignored) }
+        } else if (character) {
             const last = now - (cast[character.id].lastAt || 0) <= MEMORY_MS ? cast[character.id].last : null
             const memory = last && character.after[last] ? `${character.after[last]}\n\n` : ''
             referredBack = memory !== ''
@@ -365,7 +418,8 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
         return {
             id: `em_${now}_${Math.floor(rnd() * 1e6)}`, referredBack,
             type: req.type, extra: req.extra, target: req.target, sender, character: character?.id || null,
-            subject: req.subject, body: `Dear ${addressee(playerName).split(' ')[0]},\n\n${text}`,
+            subject, body: authored ? text : `Dear ${nameForPlayer.split(' ')[0]},\n\n${text}`, texts,
+            templateKey: authored?.key || null, templateGroup: authored?.group || null,
             createdAt: now, state: 'new', read: false, hours,
             reward: amounts.fulfil, penalty: amounts.fail, agreeBonus: amounts.agree, refusePenalty: amounts.refuse,
             baseline: 0, progress: 0, deadline: null, agreedAt: null, resolvedAt: null, reply: null, outcome: null,
@@ -386,6 +440,8 @@ const REFUSE_REPLIES = [
 ]
 
 export function replyFor(email, agree, playerName, rnd = Math.random) {
+    const written = email.texts?.[agree ? 'agree' : 'refuse']
+    if (written) return written
     const n = addressee(playerName)
     return pick(agree ? AGREE_REPLIES : REFUSE_REPLIES, rnd)(n, email.sender)
 }
@@ -397,7 +453,7 @@ const DEFAULT_OUTCOME = {
     refused: 'A shame, but I understand.',
     ignored: 'I never heard back, so I will take that as a no.',
 }
-const outcomeLine = (state, e) => `${firstName(e.sender)} writes: "${(CHARACTERS[e.character]?.outcome || DEFAULT_OUTCOME)[state]}"`
+const outcomeLine = (state, e) => e.texts?.[state] || `${firstName(e.sender)} writes: "${(CHARACTERS[e.character]?.outcome || DEFAULT_OUTCOME)[state]}"`
 export const OUTCOME_TEXT = {
     fulfilled: (e) => outcomeLine('fulfilled', e),
     failed: (e) => outcomeLine('failed', e),
