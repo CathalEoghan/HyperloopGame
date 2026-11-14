@@ -309,6 +309,18 @@ export const EMAILS = {
                 failed: "Dear {formal},\n\nThe terminal's reputation has not improved. I have written it down as 'unchanged', which is the kindest word available.\n\nRegards,\n{from}",
             },
         ],
+        upgradeDev: [
+            {
+                id: 'cfo-return-on-investment',
+                subject: 'Return on Investment',
+                body: "Dear {formal},\n\nI have been reviewing our assets. A development that is never improved is, in my profession, called a liability.\n\nPlease upgrade a development and let us see what a little capital can do. I expect a modest but respectable return.\n\nRegards,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will see which upgrades are worthwhile.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI do not believe further capital spending is justified at this time.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNoted. Capital left idle earns nothing. I shall mention it at the next meeting, in a neutral tone.\n\nRegards,\n{from}',
+                fulfilled: "Dear {formal},\n\nThe upgrades are complete, and the return looks favourable. I shall describe it as 'prudent'.\n\nFrom me, that is a compliment.\n\nRegards,\n{from}",
+                failed: "Dear {formal},\n\nNo upgrades were made, and the capital remains idle. I have noted this in the margin, where I keep such things.\n\nRegards,\n{from}",
+            },
+        ],
     },
     public: {
     },
