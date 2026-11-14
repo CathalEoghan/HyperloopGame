@@ -87,6 +87,18 @@ export const EMAILS = {
                 failed: "Dear Manager,\n\nThis is extremely disappointing. Your restaurants are still below my health and safety standards. I sincerely hope my next inspection will net better results.\n\nYou have a lot of work to do.\n\nBest wishes,\n{from}",
                 fulfilled: "Dear Manager,\n\nExcellent - your restaurants passed with flying colours. Thank you for your compliance. The full report will be sent to your secretary.\n\nBest wishes,\n{from}",
             },
+            {
+                id: 'inspector-recreation',
+                category: 'Recreation',
+                target: 3,
+                subject: 'Recreation Area Concerns',
+                body: "Dear Manager,\n\nMy last health & safety report has been drafted - it's anything but PURRfect! Your recreational areas demand attention. As it stands, they fall short of several key health & safety standards.\n\nI expect them to comply fully with regulations on my next visit.\n\nBest wishes,\n{from}",
+                agree: "Dear {from},\n\nUnderstood, I'm on it.\n\nBest,\n{fullName}",
+                refuse: 'Dear {from},\n\nI will try, but I am unlikely to improve the conditions significantly.\n\nBest regards,\n{fullName}',
+                refused: "Dear Manager,\n\nI'm not convinced you're taking this seriously at all. Your report has been updated.\n\nBest wishes,\n{from}",
+                failed: 'Dear Manager,\n\nTut tut! I am so severely disappointed. Your recreational areas fall short completely of my regulations - for a second time in a row!\n\nThis report will be made public in the upcoming month.\n\nBest wishes,\n{from}',
+                fulfilled: 'Dear Manager,\n\nGood. I see these areas are now fully compliant.\n\nUntil my next visit, you cool kitten!🐱\n\nBest wishes,\n{from}',
+            },
         ],
         build: [
             {
