@@ -346,6 +346,32 @@ export const EMAILS = {
                 failed: "Dear {formal},\n\nThe terminal has not moved up a rank. I have described the slide as 'stable', which is what one calls a number that has stopped going up.\n\nRegards,\n{from}",
             },
         ],
+        connectCities: [
+            {
+                id: 'cfo-new-markets',
+                target: 2,
+                subject: 'New Markets',
+                body: "Dear {formal},\n\nOur network has a finite number of destinations, and every new one is a new market. I have yet to meet a market that did not, eventually, produce a profit.\n\nPlease connect {n} more cities to the network. I would call it expansion. The board would call it growth.\n\nRegards,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will connect the new cities.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot commit to expansion in this timeframe. New markets take time.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNoted. The network will stay as it is, and so will the market. I shall not pretend to be surprised.\n\nRegards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe new cities are connected. New markets, new passengers and, in time, new line items. The board will be pleased, though it will not say so.\n\nRegards,\n{from}',
+                failed: "Dear {formal},\n\nThe network has not grown. A market that is not entered belongs to someone else. I have recorded it under 'opportunities'.\n\nRegards,\n{from}",
+            },
+        ],
+        work: [
+            {
+                id: 'cfo-billable-hours',
+                target: 150,
+                subject: 'Billable Hours',
+                body: "Dear {formal},\n\nI have noticed that the terminal earns more when its manager is at the desk. I would like the numbers to confirm it.\n\nI would be grateful if you could put in some hands-on work. Consider it a low-cost investment with a reliable return.\n\nRegards,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will put in the time.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am afraid my time is better spent elsewhere in this timeframe.\n\nBest regards,\n{fullName}',
+                refused: "Dear {formal},\n\nVery well. I shall record your time as 'allocated elsewhere'. It is the kindest phrase I know.\n\nRegards,\n{from}",
+                fulfilled: 'Dear {formal},\n\nThe hours have been logged, and the terminal duly earned while you worked. I did say it would.\n\nRegards,\n{from}',
+                failed: 'Dear {formal},\n\nNo hours were logged. The terminal, I am sorry to report, earned nothing extra from your absence.\n\nRegards,\n{from}',
+            },
+        ],
     },
     assistant: {
         schedule: [
