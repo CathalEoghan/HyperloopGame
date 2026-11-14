@@ -4,6 +4,7 @@ import emailIcon from '../assets/misc/email.png'
 import bellIcon from '../assets/misc/bell.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import clockIcon from '../assets/misc/clock.png'
+import closeIcon from '../assets/misc/close.png'
 import BoostTooltip from './BoostTooltip.jsx'
 import { playHoverSound, playClickSound2, startTypingSound } from '../utils/sound.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
@@ -95,13 +96,19 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
     // Inbox: anything still open or not yet read. Resolved: the rest, like an archive.
     const inInbox = (e) => isOpen(e) || !e.read
     const [tab, setTab] = useState('inbox')
+    const [query, setQuery] = useState('')
+    const q = query.trim().toLowerCase()
     const [selectedId, setSelectedId] = useState(() => (sorted.find(e => !e.read) || sorted[0])?.id || null)
     const [typingId, setTypingId] = useState(null)
     const [now, setNow] = useState(() => Date.now())
     useEffect(() => { const id = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(id) }, [])
     const selected = emails.find(e => e.id === selectedId) || null
     // The email being read stays in the list it was opened from, even once reading it has moved it out of the Inbox
-    const shown = sorted.filter(e => (tab === 'inbox') === inInbox(e) || (e.id === selectedId && !(tab === 'resolved' && isOpen(e))))
+    // A search looks through every email, in both tabs, by subject or sender
+    const matches = (e) => e.subject.toLowerCase().includes(q) || e.sender.name.toLowerCase().includes(q)
+    const shown = q
+        ? sorted.filter(matches)
+        : sorted.filter(e => (tab === 'inbox') === inInbox(e) || (e.id === selectedId && !(tab === 'resolved' && isOpen(e))))
     const threadRef = useRef(null)
     const [muteTip, setMuteTip] = useState(null)
     useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = el.scrollHeight }, [selected?.state, selected?.reply, typingId])
@@ -142,18 +149,25 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                             aria-pressed={muted}
                         ><img src={bellIcon} alt="" draggable={false} /></button>
                     )}
-                    <button className="emails-close" onClick={() => { playClickSound2(); onClose() }} onMouseEnter={() => playHoverSound()} aria-label="Close">✕</button>
+                    <button className="emails-close emails-mute emails-mute-on" onClick={() => { playClickSound2(); onClose() }} onMouseEnter={() => playHoverSound()} aria-label="Close"><img src={closeIcon} alt="" draggable={false} /></button>
                     </span>
                 </div>
                 {muteTip && <BoostTooltip anchor={muteTip} lines={[muted ? 'New emails are muted. Click to turn the sound and bubble back on.' : 'New emails make a sound and show a bubble. Click to mute them.']} text />}
                 <div className="emails-body">
                     <div className="emails-list">
+                      <div className="emails-search">
+                        <svg viewBox="0 0 20 20" width="15" height="15" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5" fill="none" stroke="currentColor" strokeWidth="2" /><line x1="12.7" y1="12.7" x2="17.5" y2="17.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" /></svg>
+                        <input type="text" value={query} onChange={e => setQuery(e.target.value)} placeholder="Search by subject or sender" aria-label="Search emails" spellCheck={false}
+                            onKeyDown={e => { if (e.key === 'Escape' && query) { e.preventDefault(); e.stopPropagation(); setQuery('') } }} />
+                        {query && <button className="emails-search-clear" onClick={() => { playClickSound2(); setQuery('') }} aria-label="Clear search">✕</button>}
+                      </div>
                       <div className="emails-tabs" role="tablist">
                         <button role="tab" aria-selected={tab === 'inbox'} className={`emails-tab${tab === 'inbox' ? ' emails-tab-on' : ''}`} onClick={() => pickTab('inbox')} onMouseEnter={() => playHoverSound()}>Inbox{unreadCount > 0 && <span className="emails-tab-count">{unreadCount}</span>}</button>
                         <button role="tab" aria-selected={tab === 'resolved'} className={`emails-tab${tab === 'resolved' ? ' emails-tab-on' : ''}`} onClick={() => pickTab('resolved')} onMouseEnter={() => playHoverSound()}>Resolved{sorted.length - openCount > 0 && <span className="emails-tab-num">{sorted.length - openCount}</span>}</button>
                       </div>
                       <div className="emails-list-rows">
-                        {shown.length === 0 && <div className="emails-empty">{sorted.length === 0 ? 'No emails yet. People write when they need something from the Manager.' : tab === 'inbox' ? 'You are all caught up.' : 'Nothing resolved yet.'}</div>}
+                        {q && shown.length > 0 && <div className="emails-results">{shown.length} {shown.length === 1 ? 'result' : 'results'}</div>}
+                        {shown.length === 0 && <div className="emails-empty">{q ? `No emails match “${query.trim()}”.` : sorted.length === 0 ? 'No emails yet. People write when they need something from the Manager.' : tab === 'inbox' ? 'You are all caught up.' : 'Nothing resolved yet.'}</div>}
                         {shown.map(e => (
                             <button key={e.id} className={`emails-row${e.id === selectedId ? ' emails-row-active' : ''}${!e.read ? ' emails-row-unread' : ''}`}
                                 onClick={() => { playClickSound2(); setSelectedId(e.id) }} onMouseEnter={() => playHoverSound()}>

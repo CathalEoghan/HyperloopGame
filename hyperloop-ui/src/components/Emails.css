@@ -11,7 +11,7 @@
 .emails-tab { flex: 1; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 11px 8px; background: none; border: none; border-bottom: 3px solid transparent; font: inherit; font-size: 0.86rem; font-weight: 600; color: #5f6368; cursor: var(--cursor-pointer, pointer); }
 .emails-tab:hover { background: #f5f5f5; }
 .emails-tab-on { color: #202124; border-bottom-color: var(--ui-accent, #f5a623); }
-.emails-tab-count { background: var(--ui-accent, #d93025); color: var(--ui-accent-contrast, #fff); font-size: 0.68rem; font-weight: 800; padding: 1px 7px; border-radius: 10px; }
+.emails-tab-count { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #1a1a1a); font-size: 0.68rem; font-weight: 800; padding: 1px 7px; border-radius: 10px; }
 .emails-tab-num { color: #80868b; font-size: 0.72rem; font-weight: 600; }
 .emails-list-rows { flex: 1; overflow-y: auto; min-height: 0; }
 .emails-row { position: relative; display: flex; align-items: flex-start; gap: 12px; width: 100%; text-align: left; padding: 11px 16px 11px 14px; border: none; border-bottom: 1px solid #eee; background: #fff; color: inherit; cursor: var(--cursor-pointer, pointer); font: inherit; }
@@ -26,7 +26,7 @@
 .emails-row-preview { font-size: 0.76rem; color: #80868b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
 .emails-row-unread .emails-row-from, .emails-row-unread .emails-row-subject { font-weight: 800; color: #202124; }
 .emails-row-unread .emails-row-time { font-weight: 800; color: #202124; }
-.emails-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ui-accent, #1a73e8); flex-shrink: 0; margin-top: 6px; }
+.emails-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ui-accent, #f5a623); flex-shrink: 0; margin-top: 6px; }
 .emails-tag { font-size: 0.62rem; font-weight: 700; padding: 1px 7px; border-radius: 8px; background: #eceff1; color: #455a64; white-space: nowrap; flex-shrink: 0; }
 .emails-tag-new { background: #fce8b2; color: #7a5200; }
 .emails-tag-agreed { background: #fff0c2; color: #7a5a14; }
@@ -56,7 +56,7 @@
 .emails-caret { opacity: 0.6; }
 .emails-avatar { border-radius: 50%; object-fit: cover; flex-shrink: 0; }
 .emails-avatar-initial { display: inline-flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; }
-.emails-avatar-me { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #fff); font-size: 0.8rem; font-weight: 800; }
+.emails-avatar-me { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #1a1a1a); font-size: 0.8rem; font-weight: 800; }
 
 /* The request, drawn like an attached card */
 .emails-request { display: flex; flex-direction: column; gap: 2px; background: #fffaf0; border: 1px solid #e0e0e0; border-left: 5px solid var(--ui-accent, #f5a623); border-radius: 8px; padding: 9px 14px; }
@@ -107,3 +107,11 @@
     .emails-thread { padding: 14px 16px; }
     .emails-decision { margin: auto -16px -16px; padding: 12px 16px; }
 }
+
+.emails-search { display: flex; align-items: center; gap: 8px; margin: 10px 12px 4px; padding: 0 10px; height: 34px; background: #f1f3f4; border: 1px solid transparent; border-radius: 18px; color: #5f6368; flex-shrink: 0; }
+.emails-search:focus-within { background: #fff; border-color: var(--ui-accent, #f5a623); box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15); }
+.emails-search input { flex: 1; min-width: 0; border: none; outline: none; background: transparent; font: inherit; font-size: 0.84rem; color: #202124; }
+.emails-search input::placeholder { color: #80868b; }
+.emails-search-clear { background: none; border: none; color: #5f6368; font-size: 0.8rem; padding: 2px 4px; cursor: var(--cursor-pointer, pointer); }
+.emails-results { padding: 8px 16px 4px; font-size: 0.72rem; font-weight: 600; color: #5f6368; text-transform: uppercase; letter-spacing: 0.05em; }
+.emails-close.emails-mute img { width: 16px; height: 16px; }
