@@ -8,7 +8,7 @@ import closeIcon from '../assets/misc/close.png'
 import BoostTooltip from './BoostTooltip.jsx'
 import { playHoverSound, playClickSound2, startTypingSound } from '../utils/sound.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
-import { CHARACTERS, isOpen, progressLabel, timeLeft, formatLeft, readMeta, MAX_PER_DAY } from '../utils/emailEngine.js'
+import { CHARACTERS, isOpen, outcomeShown, progressLabel, timeLeft, formatLeft, readMeta, MAX_PER_DAY } from '../utils/emailEngine.js'
 
 // Optional pictures: assets/emailPictures/thumbs/<picture name>.(jpg|png|webp), small copies of the full-size ones in
 // assets/emailPictures. A character's picture name is `picture` in CHARACTERS (utils/emailEngine.js). Without one, a coloured initial.
@@ -208,8 +208,8 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                                         <div className="emails-note">Done in time: +{selected.reward} Reputation. Missed: −{selected.penalty}.</div>
                                     </div>
                                 )}
-                                {selected.outcome && typingId !== selected.id && (
-                                    <Message avatar={<Avatar email={selected} size={40} />} name={selected.sender.name} role={selected.sender.role} to="me" date={fullTime(selected.resolvedAt || selected.createdAt)}>
+                                {selected.outcome && typingId !== selected.id && outcomeShown(selected, now) && (
+                                    <Message avatar={<Avatar email={selected} size={40} />} name={selected.sender.name} role={selected.sender.role} to="me" date={fullTime(selected.outcomeAt || selected.resolvedAt || selected.createdAt)}>
                                         <div className="emails-text">{plainOutcome(selected.outcome)}</div>
                                         {Number.isFinite(selected.repChange) && selected.repChange !== 0 && <span className={`emails-chip ${selected.repChange > 0 ? 'emails-chip-up' : 'emails-chip-down'}`}><Rep n={sign(selected.repChange)} /> Reputation</span>}
                                     </Message>

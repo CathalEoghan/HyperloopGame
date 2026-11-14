@@ -814,6 +814,12 @@ function App() {
     let announced = false
     list = list.map(e => {
       let next = e
+      // A sender's reply to a finished request arrives a few minutes after it, and counts as a new email when it does
+      if (e.state !== 'new' && e.state !== 'agreed') {
+        next = emailEngine.deliverOutcome(e, now)
+        if (next !== e) { changed = true; announced = true }
+        return next
+      }
       if (e.state === 'new' && now - e.createdAt >= emailEngine.IGNORE_AFTER_MS) {
         next = emailEngine.refuse(e, playerName(), PrestigeManager.owns('cultOfCelebrity'), now, true)
         applyEmailRep(next.repChange)
@@ -826,7 +832,7 @@ function App() {
           if (next.state === 'fulfilled') achievements.addCounter('emailsFulfilled')
         }
       }
-      if (next !== e) { changed = true; if (next.state !== e.state) announced = true }
+      if (next !== e) { changed = true; if (next.state !== e.state && !next.read) announced = true }
       return next
     })
     // The schedule only runs while the game is open and the terminal has two cities. A tab in the background is slowed to about
