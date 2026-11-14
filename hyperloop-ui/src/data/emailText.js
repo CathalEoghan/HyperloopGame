@@ -137,6 +137,32 @@ export const EMAILS = {
                 failed: 'Dear Manager,\n\nYour recent health inspection report will follow shortly. I am rather disappointed in your lack of preparations for this visit, considering I sent you a quick action plan before of how best to tackle this concern.\n\nIf you have any questions do not hesitate to reach out. I hope my next visit will yield more promising results.\n\nBest wishes,\n{from}',
             },
         ],
+        rename: [
+            {
+                id: 'inspector-signage',
+                target: 2,
+                subject: 'Unclear Signage',
+                body: "Dear Manager,\n\nWhat a PURRfectly lovely morning! I do hope you're well.\n\nOn my last inspection I got a little lost. Several of your developments are not labelled clearly, and clear names make a terminal safer for everyone - especially if there's ever a cat-astrophe!😼\n\nPlease give {n} of them a proper name before my next visit. It's a small change, but a big step towards a safer terminal.\n\nBest wishes,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will see that our developments are named more clearly.\n\nBest,\n{fullName}',
+                refuse: 'Dear {from},\n\nI do not consider renaming a priority at present, and I cannot promise anything in this timeframe.\n\nBest regards,\n{fullName}',
+                refused: "Dear Manager,\n\nI see. I shall note in my report that visitors are expected to find their way by guesswork. I am not impressed.\n\nBest wishes,\n{from}",
+                fulfilled: 'Dear Manager,\n\nMuch better! I can now tell one development from the next, and I did not get lost once.\n\nKeep up the good work, you clever cat!🐱\n\nBest wishes,\n{from}',
+                failed: "Dear Manager,\n\nI got lost AGAIN. I have been walking in circles for quite some time.\n\nThis is a hazard, and it will be going in my report.\n\nBest wishes,\n{from}",
+            },
+        ],
+        schedule: [
+            {
+                id: 'inspector-timetable',
+                target: 2,
+                subject: 'A Fuller Timetable',
+                body: "Dear Manager,\n\nHello, hello! Did you know a cat can sleep for up to sixteen hours a day? I'm told it's a very healthy habit. I wish I could say the same for your timetable.\n\nOn my last visit I found it rather thin. Passengers who wait too long between departures get restless, and a restless passenger is a safety hazard! A fuller timetable keeps everyone moving.\n\nPlease add {n} more {loop|loops} to the timetable before my next inspection.\n\nBest wishes,\n{from}",
+                agree: 'Dear {from},\n\nThank you for the advice. I will add more departures to the timetable.\n\nBest,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot commit to timetable changes in this timeframe, but I will keep it in mind.\n\nBest regards,\n{fullName}',
+                refused: "Dear Manager,\n\nHmm. Idle passengers are a risk to everyone, themselves included. I shall be keeping a close eye on your timetable.\n\nBest wishes,\n{from}",
+                fulfilled: 'Dear Manager,\n\nWonderful - a much fuller timetable! Passengers can keep moving, and so can I.\n\nSee you at my next inspection!\n\nBest wishes,\n{from}',
+                failed: "Dear Manager,\n\nYour timetable is no fuller than before. I am disappointed. Waiting passengers are fidgety passengers, and fidgety passengers are a hazard.\n\nI shall be watching.\n\nBest wishes,\n{from}",
+            },
+        ],
     },
     complainer: {
         build: [
