@@ -166,6 +166,19 @@ export const EMAILS = {
                 failed: "Dear Manager,\n\nStill nothing. I waited and waited and there is still no way to get where I'm going.\n\nI've just posted five stars. Kidding. It was ONE. And it's a long review.\n\nBest,\n{from}",
             },
         ],
+        greet: [
+            {
+                id: 'complainer-no-welcome',
+                target: 3,
+                subject: 'Nobody even said HELLO',
+                body: "Dear Manager,\n\nI arrived at your terminal this morning and NOBODY said hello. I stood there for, like, a whole minute. Where is the customer service?!\n\nI'm not asking for a parade. Just {ask}. Is that really too much?\n\nYou have {time}.\n\nRegards.\n{from}",
+                agree: "Dear {from},\n\nThank you for your email, and I'm sorry you weren't made to feel welcome. Our greeters will be reminded to say hello to every passenger.\n\nAll the best,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks for your feedback. I'm afraid we can't guarantee a greeting for every arrival.\n\nBest regards,\n{fullName}",
+                refused: "Dear Manager,\n\nYou can't guarantee a HELLO?! It's one word! It's not even a long word!\n\nI'm writing this down. In pen.\n\n{from}",
+                fulfilled: "Dear Manager,\n\nSomeone said hello to me this morning. Fine. Good.\n\nBut they said it THREE times to the same person, and it was, like, really loud. Is that necessary? I was trying to enjoy my coffee.\n\nBest,\n{from}",
+                failed: "Dear Manager,\n\nNobody said hello again. I have put a note in your suggestions box.\n\nThe note says 'hello'.\n\nBest,\n{from}",
+            },
+        ],
     },
     public: {
         like: [
