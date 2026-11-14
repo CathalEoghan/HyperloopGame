@@ -141,7 +141,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Smashed it! That is going straight into the deck!', failed: 'We missed the window. Let us regroup and pivot!', refused: 'No problem, we will circle back to this!', ignored: 'No reply, so we will park it for now!' },
     },
     cfo: {
-        id: 'cfo', gender: 'any', role: 'Chief Financial Officer', color: '#4a6b4f',
+        id: 'cfo', gender: 'm', role: 'Chief Financial Officer', color: '#4a6b4f',
         affinity: ['cash', 'rep', 'work', 'shop', 'schedule', 'upgradeDev'],
         intros: [
             (ask) => `I have been through the figures. The numbers are clear: you should ${ask}.`,

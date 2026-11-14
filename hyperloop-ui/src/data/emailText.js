@@ -269,6 +269,20 @@ export const EMAILS = {
             },
         ],
     },
+    cfo: {
+        cash: [
+            {
+                id: 'cfo-quarterly-figures',
+                subject: 'Quarterly Figures',
+                body: "Dear Manager,\n\nI have reviewed the latest figures. They are, to put it politely, adequate.\n\nAdequate is not a word I like to see in a report. I would like the terminal to earn {n} before my next review. I trust that is not an unreasonable request.\n\nRegards,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will see that the terminal reaches that figure.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nThat figure is not realistic in the time given, and I would rather not promise what I cannot deliver.\n\nBest regards,\n{fullName}',
+                refused: "Dear Manager,\n\nNoted. I shall record the target as 'declined' in the quarterly report. Investors do read those.\n\nRegards,\n{from}",
+                fulfilled: 'Dear Manager,\n\nThe target has been met. I will record it as a satisfactory quarter.\n\nDo not take that as praise. It is merely accurate.\n\nRegards,\n{from}',
+                failed: 'Dear Manager,\n\nThe target was missed. I have adjusted the forecast accordingly, and not upwards.\n\nRegards,\n{from}',
+            },
+        ],
+    },
     public: {
     },
 }
