@@ -622,6 +622,9 @@ export function writeMeta(meta) { try { localStorage.setItem(EMAIL_META_KEY, JSO
 
 export const openCount = (emails) => emails.filter(isOpen).length
 
+// The most wait one check of the schedule may take off. A hidden tab is slowed by the browser to about one tick a minute, so the
+// check (every fifth tick) can be five minutes apart and should still count in full; a laptop that slept counts for only this much
+export const MAX_STEP_MS = 10 * MIN
 // One step of the schedule: a new day starts a fresh allowance with the first email 5-10 minutes away; otherwise `elapsed`
 // ms of play are taken off the wait. `due` is true when the next email may go out now.
 export function stepMeta(meta, elapsed, now = Date.now(), rnd = Math.random) {

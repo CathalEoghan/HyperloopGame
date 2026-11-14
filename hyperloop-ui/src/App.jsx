@@ -824,12 +824,12 @@ function App() {
       if (next !== e) { changed = true; if (next.state !== e.state) announced = true }
       return next
     })
-    // The schedule only runs while the game is open and the terminal has two cities; a long gap between ticks (a sleeping
-    // tab) counts for at most two minutes
+    // The schedule only runs while the game is open and the terminal has two cities. A tab in the background is slowed to about
+    // one tick a minute, which still counts in full; a longer gap (a sleeping laptop) counts for at most ten minutes
     const prev = emailLastTickRef.current
     emailLastTickRef.current = now
     if (progressionManager.purchasedCities.length >= 2) {
-      const step = emailEngine.stepMeta(emailEngine.readMeta(), prev ? Math.min(now - prev, 120000) : 0, now)
+      const step = emailEngine.stepMeta(emailEngine.readMeta(), prev ? Math.min(now - prev, emailEngine.MAX_STEP_MS) : 0, now)
       let meta = step.meta
       if (step.due) {
         if (emailEngine.openCount(list) >= emailEngine.MAX_OPEN) meta = emailEngine.retryLater(meta)
