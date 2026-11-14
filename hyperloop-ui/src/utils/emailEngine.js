@@ -172,7 +172,7 @@ export const CHARACTERS = {
     },
     journalist: {
         id: 'journalist', gender: 'f', role: 'Journalist', color: '#6a4fa0',
-        affinity: ['rep', 'cash', 'connectContinent', 'like', 'rankUp', 'greet', 'connectCities', 'upgradeDevCategory', 'negativeEvents', 'positiveEvents'],
+        affinity: ['rep', 'cash', 'connectContinent', 'like', 'rankUp', 'greet', 'connectCities', 'upgradeDevCategory', 'negativeEvents', 'positiveEvents', 'compensateDelay'],
         intros: [
             (ask) => `Quick question: would you be willing to ${ask}? And, if I may ask, why not sooner?`,
             (ask) => `I am putting a piece together. Could you ${ask}? What would that say about the terminal? Who else would notice?`,
@@ -287,6 +287,8 @@ const METRICS = {
     rep: (s) => s.repEarned || 0,
     connectContinent: (s, e) => s.continentCities?.[e.extra.continent] || 0,
     connectTier3: (s) => s.tier3Cities || 0,
+    // Delayed loops the player has paid compensation for
+    compensateDelay: (s) => s.delaysCompensated || 0,
     // Positive events (the good ones) that have happened to the terminal
     positiveEvents: (s) => s.positiveEvents || 0,
     // Negative events (the bad ones) that have happened to the terminal
@@ -395,6 +397,12 @@ const GENERATORS = {
         if (!((ctx.negativeEventChance || 0) >= 0.05)) return null
         const target = ctx.fixed ?? 2
         return { type: 'negativeEvents', target, extra: {}, subject: 'When things go wrong', ask: `experience ${target} negative ${plural(target, 'event', 'events')}`, hours: between(44, 48, rnd) }
+    },
+    // A delayed loop comes up at random while the game runs (and never with Bulletproof Planning), so the deadline is long
+    compensateDelay: (ctx, rnd) => {
+        if (!ctx.delaysPossible) return null
+        const target = ctx.fixed ?? 1
+        return { type: 'compensateDelay', target, extra: {}, subject: 'A delayed loop', ask: target === 1 ? 'compensate the passengers of a delayed loop' : `compensate the passengers of ${target} delayed loops`, hours: between(44, 48, rnd) }
     },
     // The good-news twin of negativeEvents: random good events, asked for while they can happen
     positiveEvents: (ctx, rnd) => {

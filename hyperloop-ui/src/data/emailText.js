@@ -17,6 +17,7 @@
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
+//   compensateDelay  Pay compensation to the passengers of {n} delayed loops (delays come up at random, so it can take a while)
 //   positiveEvents   Live through {n} positive events (random good events at the terminal; not something the player controls)
 //   negativeEvents   Live through {n} negative events (random bad events at the terminal; not something the player controls)
 //   holdCash         Keep at least {n} in the bank until the deadline (like holdRep; {n} is worked out from their balance)
@@ -766,6 +767,32 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nA no. Was it the distance, or something closer to home? Forget I said that, I have no right to ask.\n\nLooking forward to hearing from you,\n{from}',
                 fulfilled: 'Dear {formal},\n\n{continent} is on the map! Did you always dream of it? Please ignore that, I am getting carried away. Wonderful news.\n\nLooking forward to hearing from you,\n{from}',
                 failed: 'Dear {formal},\n\nNo new city in {continent} in time. Were you perhaps nervous about the trip? Sorry, I should not have asked.\n\nLooking forward to hearing from you,\n{from}',
+            },
+        ],
+        compensateDelay: [
+            {
+                id: 'journalist-late-loop',
+                subject: 'When a loop runs late',
+                body: "Dear {formal},\n\nI am writing about what happens when a loop runs late, and whether anyone looks after the passengers. Do you get embarrassed when it happens? Sorry, that is a very personal question. Please disregard it.\n\nWhat I can ask is whether, the next time a loop is delayed, you would compensate the passengers. People remember who looked after them. And is it true you have never once refused? No, no, forget I asked.\n\nLooking forward to hearing from you,\n{from}",
+                agree: 'Dear {from},\n\nThe next time a loop is delayed, I will compensate the passengers. And I will not be commenting on my feelings about it.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot promise to compensate a delay, and how I feel about them is my own business.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood. Is it the cost that worries you? Forget I asked, it is not my place.\n\nLooking forward to hearing from you,\n{from}',
+                fulfilled: 'Dear {formal},\n\nYou compensated the passengers. Was it your own idea, or did someone push you? Please ignore that. A lovely story, thank you.\n\nLooking forward to hearing from you,\n{from}',
+                failed: 'Dear {formal},\n\nNo delay was compensated in time. Did none run late, or did you decline? Do you simply not care? Oh dear, I did not mean that.\n\nLooking forward to hearing from you,\n{from}',
+            },
+        ],
+        greet: [
+            {
+                id: 'journalist-warm-welcome',
+                target: 5,
+                ask: 'greet 5 arriving loops',
+                subject: 'A warm welcome',
+                body: "Dear {formal},\n\nI find first impressions fascinating, so I have to ask: when you greet an arriving loop, do you rehearse what to say? In the mirror? Goodness, please ignore that.\n\nWhat I can ask is whether you could greet {n} arriving loops. I would love to write about the welcome the terminal is known for. And are you nervous when you meet new people? No, no, never mind.\n\nLooking forward to hearing from you,\n{from}",
+                agree: 'Dear {from},\n\nI will greet {n} arriving loops. And no, I will not be telling you about the mirror.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot greet {n} loops right now, and my rehearsals are my own business.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nA no. Is it shyness? Forget I asked, that was far too personal.\n\nLooking forward to hearing from you,\n{from}',
+                fulfilled: 'Dear {formal},\n\nFive warm welcomes! Did your hands tremble, even slightly? Sorry, ignore that. A wonderful story, thank you.\n\nLooking forward to hearing from you,\n{from}',
+                failed: 'Dear {formal},\n\nThe loops were not all greeted in time. Were you too nervous? Or too busy being nervous? I should not have said that.\n\nLooking forward to hearing from you,\n{from}',
             },
         ],
     },
