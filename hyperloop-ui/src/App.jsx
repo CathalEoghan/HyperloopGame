@@ -50,7 +50,7 @@ import { POSTS } from "./data/hyperLinkData.js"
 import { playPhoneNotificationSound, playNewEmailSound } from "./utils/sound.js"
 import { useAttentionAlerts } from "./utils/attentionAlerts.js"
 import { useEscapeToClose } from "./utils/useEscapeToClose.js"
-import { RankManager } from "Managers/RankManager/RankManager.js";
+import { RankManager, MAX_RANK } from "Managers/RankManager/RankManager.js";
 import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
@@ -779,6 +779,8 @@ function App() {
       // How many developments of each category can still be built (they leave these lists once bought)
       buildableByCategory: [...pm.unlockedDevelopments, ...pm.unlockedUpgrades].reduce((o, d) => (MILESTONE_CATEGORIES.includes(d.category) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}),
       shopCheapest: cheapest === Infinity ? 0 : cheapest,
+      // The XP (cash earned) still needed for the next rank; Infinity at the top rank
+      rankXpToNext: rankManager.rank >= MAX_RANK ? Infinity : rankManager.getCumulativeXP(rankManager.rank) - rankManager.xp,
       unrenamed: pm.purchasedDevelopments.filter(d => !pm.developmentNames?.[d.name]).length,
       devsWithUpgrade: pm.purchasedDevelopments.filter(d => d.revenue).length,
       // How many finished developments of each category can still be upgraded (not at the top level yet)

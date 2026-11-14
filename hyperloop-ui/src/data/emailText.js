@@ -321,6 +321,31 @@ export const EMAILS = {
                 failed: "Dear {formal},\n\nNo upgrades were made, and the capital remains idle. I have noted this in the margin, where I keep such things.\n\nRegards,\n{from}",
             },
         ],
+        schedule: [
+            {
+                id: 'cfo-revenue-events',
+                target: 2,
+                subject: 'Revenue Events',
+                body: "Dear {formal},\n\nI have been reviewing the timetable. Every departure is, in my terms, a revenue event, and there are fewer of them than I would like.\n\nPlease add {n} more {loop|loops} to the timetable. Our costs do not change with the timetable, but our income does.\n\nRegards,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will add the departures to the timetable.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot commit to further timetable changes in this timeframe.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNoted. The timetable will remain as it is, and so will the revenue it produces.\n\nRegards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe new departures are in the timetable. More revenue events, as I like to call them. I have revised the forecast upwards, for once.\n\nRegards,\n{from}',
+                failed: 'Dear {formal},\n\nThe timetable is unchanged, and so is the forecast. I had hoped to revise it upwards.\n\nRegards,\n{from}',
+            },
+        ],
+        rankUp: [
+            {
+                id: 'cfo-investor-confidence',
+                subject: 'Investor Confidence',
+                body: "Dear {formal},\n\nInvestors like numbers that only go up, and rank is the easiest of them to put in a presentation.\n\nI would be grateful if you could take the terminal up a rank. It makes the slide look so much better.\n\nRegards,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will see to it that the terminal moves up a rank.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot promise a promotion in this timeframe. Rank is earned, not scheduled.\n\nBest regards,\n{fullName}',
+                refused: "Dear {formal},\n\nVery well. The slide will have to remain as it is. I shall describe it as 'stable'.\n\nRegards,\n{from}",
+                fulfilled: 'Dear {formal},\n\nThe terminal has moved up a rank. The slide looks much better, and the investors nodded twice. I counted.\n\nRegards,\n{from}',
+                failed: "Dear {formal},\n\nThe terminal has not moved up a rank. I have described the slide as 'stable', which is what one calls a number that has stopped going up.\n\nRegards,\n{from}",
+            },
+        ],
     },
     public: {
     },

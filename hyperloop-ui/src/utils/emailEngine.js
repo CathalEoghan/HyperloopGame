@@ -365,7 +365,13 @@ const GENERATORS = {
         const target = ctx.fixed ?? Math.min(room, between(1, 3, rnd))
         return { type: 'connectCities', target, extra: {}, subject: 'Network growth', ask: `connect ${target} new ${plural(target, 'city', 'cities')} to the network`, hours: between(36, 48, rnd) }
     },
-    rankUp: () => {
+    rankUp: (ctx) => {
+        // Only while there is a rank left to reach, and only if the cash it takes is within about two days of the current income
+        // (ctx.rankXpToNext is Infinity at the top rank; left out by older callers, which keeps the old behaviour)
+        if (ctx.rankXpToNext !== undefined) {
+            if (!(ctx.rankXpToNext > 0) || !Number.isFinite(ctx.rankXpToNext)) return null
+            if (!(ctx.incomePerHour > 0) || ctx.rankXpToNext > ctx.incomePerHour * 48) return null
+        }
         return { type: 'rankUp', target: 1, extra: {}, subject: 'Moving up', ask: 'take the terminal up a rank', hours: 48 }
     },
     upgradeDev: (ctx, rnd) => {
