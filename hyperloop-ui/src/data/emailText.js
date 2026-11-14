@@ -18,6 +18,7 @@
 //   connectCities    Connect {n} new cities
 //   rankUp           Take the terminal up a rank
 //   upgradeDev       Upgrade a development {n} times
+//   upgradeDevCategory  Upgrade {n} different developments of one category {category} (set `category`, e.g. 'Food')
 //   upgradeCity      Upgrade a city's line {n} times
 //   shop             Buy something from the Shop
 //   work             Click Work {n} times
@@ -36,7 +37,7 @@
 //     refused:   'What the sender says after a Refuse.',
 //     ignored:   'What the sender says when the player never answered.',
 //     target: 200,                 // optional: fix the number asked for ({n}) instead of letting the game choose (it is ignored if it would be impossible, e.g. more cities than exist)
-//     category: 'Infrastructure',  // optional, build emails only: the development category it is about (it is only sent once that category is unlocked)
+//     category: 'Infrastructure',  // optional, build and upgradeDevCategory emails: the development category it is about (it is only sent once that category is unlocked)
 //     id: 'optional-short-name',   // keep the same id if you reorder emails, so "already seen" is remembered correctly
 //   }
 //
@@ -73,6 +74,18 @@ export const EMAILS = {
         ],
     },
     inspector: {
+        upgradeDevCategory: [
+            {
+                id: 'inspector-restaurants',
+                category: 'Food',
+                target: 3,
+                subject: 'Restaurant Health Standards',
+                body: "Dear Manager,\n\nWhat a lovely day for working inside - or outside!\n\nSpeaking of work, I'd really like to see some more work put into your restaurants. So many of them fell below my standards on my last health inspection💔\n\nFix these within the time limit - you can do it! A positive mindset will go a long way!\n\nBest wishes,\n{from}",
+                refused: "Dear Manager,\n\nNo. You must. You will fail my next health inspection if you don't.\n\nYour lack of compliance is noted here. Good luck.\n\nBest wishes,\n{from}",
+                failed: "Dear Manager,\n\nThis is extremely disappointing. Your restaurants are still below my health and safety standards. I sincerely hope my next inspection will net better results.\n\nYou have a lot of work to do.\n\nBest wishes,\n{from}",
+                fulfilled: "Dear Manager,\n\nExcellent - your restaurants passed with flying colours. Thank you for your compliance. The full report will be sent to your secretary.\n\nBest wishes,\n{from}",
+            },
+        ],
         build: [
             {
                 id: 'inspector-infrastructure-safety',
@@ -81,7 +94,7 @@ export const EMAILS = {
                 body: "Dear Manager,\n\nWhat's your favourite day of the week? I can't decide between Monday or Tuesday - going to work is such a privilege!\n\nSpeaking of work, it looks like your infrastructure could use some. On my recent visit I noticed some outdated architecture and structural issues😿\n\nThis is so disappointing - I know we can do better than this! Let's aim to make some improvements in this area for my next visit!\n\nBest wishes,\n{from}",
                 refused: "Dear Manager,\n\nI'm so sorry - what? This is not optional. I have no choice here but to mark your compliance down in my report - hopefully my next visit can lift your score higher.\n\nThis seems less likely though.\n\nBest wishes,\n{from}",
                 fulfilled: "Dear Manager,\n\nHow wonderful! Those structural issues have cleared, mostly. Good job! We are such an amazing team! I tried to attach a celebration GIF but couldn't find the link, drat!😿❤️\n\nUntil my next visit!\n\nBest wishes,\n{from}",
-                failed: "Dear Manager,\n\nThe recent health & safety report is being drafted, but I must warn you in advance, it is not looking good for your terminal. My recent request to review those concerns regarding infrastructure were seemingly ignored - this contributed quite a lot to your poor overall performance.\n\nI earnestly hope my next request will be more fruitful.\n\nBest wishes,\n{from}",
+                failed: "Dear Manager,\n\nThe recent health & safety report is being drafted, but I must warn you in advance, it is not looking good for your terminal. My recent request to review those concerns regarding infrastructure was seemingly ignored - this contributed quite a lot to your poor overall performance.\n\nI earnestly hope my next request will be more fruitful.\n\nBest wishes,\n{from}",
             },
         ],
         work: [

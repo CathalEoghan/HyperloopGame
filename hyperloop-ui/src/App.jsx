@@ -736,6 +736,12 @@ function App() {
     setReputation(shownReputation())
     triggerSave()
   }
+  // { Food: { 'Pizza Place': 2, ... }, ... }: the upgrade level of every finished development, by category
+  const devLevelsByCategory = (pm) => {
+    const out = {}
+    pm.purchasedDevelopments.forEach(d => { (out[d.category] ||= {})[d.name] = pm.getDevelopmentUpgradeLevel(d) })
+    return out
+  }
   // Every number a request can be measured by, read fresh from the game
   const emailSnapshot = () => {
     const pm = progressionManager
@@ -748,6 +754,7 @@ function App() {
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
       timetable: readStoredList('hyperloop_timetable').length,
       cash: pm.totalCashEarned, repEarned: pm.lifetimeReputationEarned, reputation: pm.reputation,
+      devLevels: devLevelsByCategory(pm),
       rank: rankManager.rank, devUpgrades: sum(pm.developmentUpgradeLevels), cityUpgrades: sum(pm.cityLineLevels),
       shopOwned: readCosmetics().owned.length, work: achievements.counter('work'),
       likes: readStoredList('hyperloop_hyperlink_liked').length, renames: Object.keys(pm.developmentNames || {}).length,
@@ -771,6 +778,8 @@ function App() {
       shopCheapest: cheapest === Infinity ? 0 : cheapest,
       unrenamed: pm.purchasedDevelopments.filter(d => !pm.developmentNames?.[d.name]).length,
       devsWithUpgrade: pm.purchasedDevelopments.filter(d => d.revenue).length,
+      // How many finished developments of each category can still be upgraded (not at the top level yet)
+      upgradableByCategory: pm.purchasedDevelopments.reduce((o, d) => (pm.getDevelopmentUpgradeCostInfo(d) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}),
     }
   }
   // How the player treated a character's request is remembered, and mentioned in their next email

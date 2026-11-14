@@ -71,7 +71,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Acceptable.', failed: 'This is unacceptable. I expected better.', refused: 'Noted. I am not happy about it.', ignored: 'No reply at all. Very professional.' },
     },
     inspector: {
-        id: 'inspector', gender: 'f', role: 'Health Inspector', color: '#2f8f6b',
+        id: 'inspector', gender: 'f', role: 'Health & Safety Inspector', color: '#2f8f6b',
         affinity: ['greet', 'farewell', 'rename', 'upgradeDev', 'schedule'],
         intros: [
             (ask) => `Hello hello! I hope your day is going brilliantly! Could you ${ask}? Pretty please!`,
@@ -255,6 +255,8 @@ const METRICS = {
     connectCities: (s) => s.cities || 0,
     rankUp: (s) => s.rank || 0,
     upgradeDev: (s) => s.devUpgrades || 0,
+    // How many different developments of one category have been upgraded since the player agreed
+    upgradeDevCategory: (s, e) => Object.entries(s.devLevels?.[e.extra.category] || {}).filter(([name, level]) => level > (e.extra.baseLevels?.[name] || 0)).length,
     upgradeCity: (s) => s.cityUpgrades || 0,
     shop: (s) => s.shopOwned || 0,
     work: (s) => s.work || 0,
@@ -331,6 +333,15 @@ const GENERATORS = {
         if ((ctx.devsWithUpgrade || 0) < 1) return null
         const target = ctx.fixed ?? between(1, 2, rnd)
         return { type: 'upgradeDev', target, extra: {}, subject: 'Development upgrades', ask: `upgrade a development ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 48, rnd) }
+    },
+    upgradeDevCategory: (ctx, rnd) => {
+        const room = ctx.upgradableByCategory || {}
+        const options = Object.keys(room).filter(c => room[c] >= 1)
+        const category = ctx.fixedCategory && room[ctx.fixedCategory] >= 1 ? ctx.fixedCategory : (ctx.fixedCategory ? null : pick(options, rnd))
+        if (!category) return null
+        if (ctx.fixed && ctx.fixed > room[category]) return null
+        const target = ctx.fixed ?? Math.min(room[category], between(1, 3, rnd))
+        return { type: 'upgradeDevCategory', target, extra: { category }, subject: `${category} upgrades`, ask: `upgrade ${target} different ${category} ${plural(target, 'development', 'developments')}`, hours: between(24, 48, rnd) }
     },
     upgradeCity: (ctx, rnd) => {
         if ((ctx.snap.cities || 0) < 2) return null
@@ -471,9 +482,11 @@ export const OUTCOME_TEXT = {
 // ---- state changes (each returns a new email; the caller applies the Reputation) -----------------------------------------
 // `cult` is true with Cult of Celebrity: refusing costs nothing.
 export function agree(email, snap, playerName, now = Date.now()) {
+    // "Different developments of a category" is counted against the levels they had at this moment
+    const started = email.type === 'upgradeDevCategory' ? { ...email, extra: { ...email.extra, baseLevels: { ...(snap.devLevels?.[email.extra.category] || {}) } } } : email
     return {
-        ...email, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
-        baseline: metricOf(email, snap), progress: 0, reply: replyFor(email, true, playerName), read: true,
+        ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
+        baseline: metricOf(started, snap), progress: 0, reply: replyFor(email, true, playerName), read: true,
         repChange: email.agreeBonus,
     }
 }
