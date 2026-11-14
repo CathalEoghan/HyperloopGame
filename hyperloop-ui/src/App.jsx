@@ -822,12 +822,11 @@ function App() {
       }
       if (e.state === 'new' && now - e.createdAt >= emailEngine.IGNORE_AFTER_MS) {
         next = emailEngine.refuse(e, playerName(), PrestigeManager.owns('cultOfCelebrity'), now, true)
-        applyEmailRep(next.repChange)
+        // (the Reputation it carries is paid when the reply is opened, see readEmail)
         noteEmailOutcome(next)
       } else if (e.state === 'agreed') {
         next = emailEngine.updateAgreed(e, snap, now)
         if (next.state !== 'agreed') {
-          applyEmailRep(next.repChange)
           noteEmailOutcome(next)
           if (next.state === 'fulfilled') achievements.addCounter('emailsFulfilled')
         }
@@ -873,11 +872,18 @@ function App() {
     const next = agree
       ? emailEngine.agree(e, emailSnapshot(), playerName())
       : emailEngine.refuse(e, playerName(), PrestigeManager.owns('cultOfCelebrity'))
-    applyEmailRep(next.repChange)
+    // Agreeing pays its small bonus now; refusing costs Reputation when the sender's reply is opened
+    if (agree) applyEmailRep(next.repChange)
     if (!agree) { noteEmailOutcome(next); unlockAchievement('stopAsking') }
     setEmails(emailsRef.current.map(x => x.id === id ? next : x))
   }
-  const readEmail = (id) => setEmails(emailsRef.current.map(x => x.id === id && !x.read ? { ...x, read: true } : x))
+  // Opening a sender's reply is when the Reputation it carries (a reward, a penalty) actually comes in
+  const readEmail = (id) => {
+    const e = emailsRef.current.find(x => x.id === id)
+    if (!e || e.read) return
+    if (e.repPending) applyEmailRep(e.repChange)
+    setEmails(emailsRef.current.map(x => x.id === id ? { ...x, read: true, repPending: false } : x))
+  }
   const unreadEmails = emails.filter(e => !e.read).length
   const secretCityTriggered = useRef(false);
   // Claims are remembered by the upgrade's name. Saves from before Early Retirement and Founders' Hall swapped ranks

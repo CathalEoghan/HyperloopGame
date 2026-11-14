@@ -594,7 +594,8 @@ export const OUTCOME_TEXT = {
 
 // ---- the sender's reply takes a while ---------------------------------------------------------------------------
 // When a request is answered, finished or missed, the sender's reply to it arrives 5-10 minutes later, like a real inbox. Until then
-// the email is marked read (no badge); when the time comes the reply appears and the email is unread again.
+// the email is marked read (no badge); when the time comes the reply appears and the email is unread again. The Reputation it
+// carries (`repPending`) is only paid when the player opens that reply.
 export const REPLY_MIN_MS = 5 * MIN
 export const REPLY_MAX_MS = 10 * MIN
 export const replyDelay = (now, rnd = Math.random) => ({ outcomeAt: now + REPLY_MIN_MS + Math.floor(rnd() * (REPLY_MAX_MS - REPLY_MIN_MS)), outcomeNotified: false })
@@ -627,7 +628,7 @@ export function refuse(email, playerName, cult, now = Date.now(), ignored = fals
     const change = cult ? 0 : -email.refusePenalty
     return {
         ...email, state: ignored ? 'ignored' : 'refused', resolvedAt: now,
-        reply: ignored ? null : replyFor(email, false, playerName), read: true, ...replyDelay(now),
+        reply: ignored ? null : replyFor(email, false, playerName), read: true, ...replyDelay(now), repPending: change !== 0,
         outcome: OUTCOME_TEXT[ignored ? 'ignored' : 'refused'](email), repChange: change,
     }
 }
@@ -637,18 +638,18 @@ export function updateAgreed(email, snap, now = Date.now()) {
     if (email.state !== 'agreed') return email
     if (HOLD_READS[email.type]) {
         // Fails the moment the number is below the target; succeeds when the deadline arrives with it still above
-        if (HOLD_READS[email.type](snap) < email.target) return { ...email, state: 'failed', resolvedAt: now, read: true, ...replyDelay(now), outcome: OUTCOME_TEXT.failed(email), repChange: -email.penalty }
-        if (now >= email.deadline) return { ...email, progress: email.target, state: 'fulfilled', resolvedAt: now, read: true, ...replyDelay(now), outcome: OUTCOME_TEXT.fulfilled(email), repChange: email.reward }
+        if (HOLD_READS[email.type](snap) < email.target) return { ...email, state: 'failed', resolvedAt: now, read: true, ...replyDelay(now), repPending: true, outcome: OUTCOME_TEXT.failed(email), repChange: -email.penalty }
+        if (now >= email.deadline) return { ...email, progress: email.target, state: 'fulfilled', resolvedAt: now, read: true, ...replyDelay(now), repPending: true, outcome: OUTCOME_TEXT.fulfilled(email), repChange: email.reward }
         const span = Math.max(1, email.deadline - (email.agreedAt || now))
         const shown = Math.max(0, Math.min(email.target, Math.round(email.target * ((now - (email.agreedAt || now)) / span))))
         return shown === (email.progress || 0) ? email : { ...email, progress: shown }
     }
     const progress = progressOf(email, snap)
     if (progress >= email.target) {
-        return { ...email, progress: email.target, state: 'fulfilled', resolvedAt: now, read: true, ...replyDelay(now), outcome: OUTCOME_TEXT.fulfilled(email), repChange: email.reward }
+        return { ...email, progress: email.target, state: 'fulfilled', resolvedAt: now, read: true, ...replyDelay(now), repPending: true, outcome: OUTCOME_TEXT.fulfilled(email), repChange: email.reward }
     }
     if (now >= email.deadline) {
-        return { ...email, progress, state: 'failed', resolvedAt: now, read: true, ...replyDelay(now), outcome: OUTCOME_TEXT.failed(email), repChange: -email.penalty }
+        return { ...email, progress, state: 'failed', resolvedAt: now, read: true, ...replyDelay(now), repPending: true, outcome: OUTCOME_TEXT.failed(email), repChange: -email.penalty }
     }
     return progress === (email.progress || 0) ? email : { ...email, progress }
 }
