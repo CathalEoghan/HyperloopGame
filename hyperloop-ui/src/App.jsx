@@ -752,6 +752,7 @@ function App() {
     return {
       built: Object.fromEntries(MILESTONE_CATEGORIES.map(c => [c, builtCount(c, pm.purchasedDevelopments, pm.purchasedUpgrades)])),
       cities: pm.purchasedCities.length, continentCities,
+      tier3Cities: pm.purchasedCities.filter(c => c.tier === 3).length,
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
       timetable: readStoredList('hyperloop_timetable').length,
       cash: pm.totalCashEarned, repEarned: pm.lifetimeReputationEarned, reputation: pm.reputation,
@@ -776,6 +777,8 @@ function App() {
     return {
       snap, incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
       available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length },
+      // Tier 3 cities still waiting to be connected
+      tier3Available: pm.unlockedCities.filter(c => c.tier === 3).length,
       // How many developments of each category can still be built (they leave these lists once bought)
       buildableByCategory: [...pm.unlockedDevelopments, ...pm.unlockedUpgrades].reduce((o, d) => (MILESTONE_CATEGORIES.includes(d.category) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}),
       shopCheapest: cheapest === Infinity ? 0 : cheapest,

@@ -16,6 +16,7 @@
 //   rep              Earn {n} Reputation
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
+//   connectTier3     Connect {n} new Tier 3 cities (the top tier)
 //   rankUp           Take the terminal up a rank
 //   upgradeDev       Upgrade a development {n} times
 //   upgradeDevCategory  Upgrade {n} different developments of one category {category} (set `category`, e.g. 'Food')
@@ -473,6 +474,35 @@ export const EMAILS = {
                 refused: "Dear {formal},\n\nOf course! I'll tell them you're 'thinking about it'. I'll say it very quickly, and then leave. Sorry.\n\nVery respectfully,\n{from}",
                 fulfilled: "Dear {formal},\n\n{continent}! You really did it! I told them, and one of them said 'wow'. Out loud. To me.\n\nI'm going to need a moment. Thank you.\n\nVery respectfully,\n{from}",
                 failed: "Dear {formal},\n\nI had to tell them that {continent} isn't happening yet. They were very nice about it, which was worse.\n\nI think I'm going to hide in the stationery cupboard for a bit. Sorry.\n\nVery respectfully,\n{from}",
+            },
+        ],
+    },
+    lawyer: {
+        connectTier3: [
+            {
+                id: 'lawyer-tier-three',
+                target: 1,
+                subject: 'A Tier 3 city',
+                body: "Dear {formal},\n\nI will be direct, as it saves us both time. The terminal would be in a much stronger position with a Tier 3 city on the network, and I would like you to connect one.\n\nI appreciate that it is a significant step, and I would not ask if I did not think it was worthwhile.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nThank you for being so clear. I will connect a Tier 3 city.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate you being direct, but I cannot take on a Tier 3 city right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood, and thank you for being clear with me. It is your decision to make. I will raise it again when the time is better.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThat is excellent. A Tier 3 city is a real asset, and I am grateful you made the time.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nI see the Tier 3 city has not been connected. I will not dwell on it, but I would like you to know that it was a missed opportunity.\n\nKind regards,\n{from}',
+            },
+        ],
+        build: [
+            {
+                id: 'lawyer-service-developments',
+                category: 'Service',
+                target: 2,
+                subject: 'Service developments',
+                body: "Dear {formal},\n\nI will get straight to the point. The terminal needs more service developments, and I would like you to build two.\n\nPeople rely on these services far more than they tend to notice, and I would rather we get ahead of that than be asked about it afterwards.\n\nThank you for hearing me out.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nThank you for being so straightforward. I will build two Service developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate you raising it, but I cannot build more Service developments at the moment.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood, and thank you for a clear answer. I would only ask that you reconsider before it becomes pressing.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you. The new service developments are exactly what I had in mind, and I appreciate how quickly you moved.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe service developments were not built in time. I will not make a fuss, but I did say it was worth doing.\n\nKind regards,\n{from}',
             },
         ],
     },

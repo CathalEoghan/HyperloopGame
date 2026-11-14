@@ -157,18 +157,18 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'The figures are satisfactory.', failed: 'The target was missed. That will show in the accounts.', refused: 'Noted. I will adjust my forecast.', ignored: 'No reply. I have written it off.' },
     },
     lawyer: {
-        id: 'lawyer', gender: 'any', role: 'Head Lawyer', color: '#3a3f55',
-        affinity: ['rankUp', 'upgradeCity', 'upgradeCityLines', 'upgradeDev', 'schedule', 'connectCities'],
+        id: 'lawyer', gender: 'm', role: 'Legal Executive', color: '#3a3f55',
+        affinity: ['rankUp', 'upgradeCity', 'upgradeDev', 'schedule', 'connectCities', 'connectTier3', 'build'],
         intros: [
-            (ask) => `For the avoidance of doubt, and to limit our liability, I advise that you ${ask}.`,
-            (ask) => `Without prejudice, it would be prudent to ${ask}. I would not like to see this escalate.`,
-            (ask) => `On the advice of counsel, which is me, you should ${ask}. Please treat this as formal notice.`,
+            (ask) => `I will be direct, as it saves us both time: I would like you to ${ask}.`,
+            (ask) => `To be upfront about it, the sensible course here is to ${ask}. I would rather say so now than later.`,
+            (ask) => `I will get straight to the point. Please ${ask}. I would be grateful.`,
         ],
-        deadline: (t) => `Please complete this within ${t} of your written agreement.`,
-        outros: ['Nothing in this email constitutes a waiver of any right.', 'I reserve all rights.', 'Please retain this email for your records.'],
-        signoff: 'Yours faithfully,',
-        after: { fulfilled: 'Thank you for your cooperation last time. It has been recorded.', failed: 'Last time the obligation was not met. This has been recorded.', refused: 'You declined last time. That, too, has been recorded.', ignored: 'My last email received no response. That has been recorded.' },
-        outcome: { fulfilled: 'The obligation has been met. Thank you.', failed: 'The obligation was not met within the agreed period. This has been noted on file.', refused: 'Your refusal is noted. I advise you reconsider.', ignored: 'No response was received. This has been noted on file.' },
+        deadline: (t) => `I would need this done within ${t} of your agreeing.`,
+        outros: ['Thank you for your time, as always.', 'I appreciate you hearing me out.', 'Please do tell me if there is any difficulty.'],
+        signoff: 'Kind regards,',
+        after: { fulfilled: 'Thank you for sorting it out last time. I noticed, and I am grateful.', failed: 'Last time it did not get done. I will not dwell on it, but I did make a note.', refused: 'You declined last time, which is entirely your right. I am asking again, politely.', ignored: 'I did not hear back last time. No harm done, but I would appreciate a reply.' },
+        outcome: { fulfilled: 'That is done. Thank you.', failed: 'That did not get done in time. I have noted it.', refused: 'Understood, and thank you for being clear.', ignored: 'No reply, so I will take it as a no.' },
     },
     journalist: {
         id: 'journalist', gender: 'f', role: 'Journalist', color: '#6a4fa0',
@@ -286,6 +286,7 @@ const METRICS = {
     cash: (s) => s.cash || 0,
     rep: (s) => s.repEarned || 0,
     connectContinent: (s, e) => s.continentCities?.[e.extra.continent] || 0,
+    connectTier3: (s) => s.tier3Cities || 0,
     connectCities: (s) => s.cities || 0,
     rankUp: (s) => s.rank || 0,
     upgradeDev: (s) => s.devUpgrades || 0,
@@ -366,6 +367,14 @@ const GENERATORS = {
         if (ctx.fixed && ctx.fixed > room) return null
         const target = ctx.fixed ?? Math.min(room, between(1, 3, rnd))
         return { type: 'connectCities', target, extra: {}, subject: 'Network growth', ask: `connect ${target} new ${plural(target, 'city', 'cities')} to the network`, hours: between(36, 48, rnd) }
+    },
+    // Connect a city of the top tier (Tier 3); only while that many are still waiting to be connected
+    connectTier3: (ctx, rnd) => {
+        const room = ctx.tier3Available || 0
+        if (room < 1) return null
+        if (ctx.fixed && ctx.fixed > room) return null
+        const target = ctx.fixed ?? 1
+        return { type: 'connectTier3', target, extra: {}, subject: 'A Tier 3 city', ask: target === 1 ? 'connect a new Tier 3 city to the network' : `connect ${target} new Tier 3 cities to the network`, hours: between(36, 48, rnd) }
     },
     rankUp: (ctx) => {
         // Only while there is a rank left to reach, and only if the cash it takes is within about two days of the current income
