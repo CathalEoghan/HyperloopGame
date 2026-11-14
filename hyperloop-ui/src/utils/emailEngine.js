@@ -71,7 +71,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Amazing!! You are a star!', failed: 'Oh dear, that did not happen in time! Never mind!', refused: 'No worries at all! Maybe next time!', ignored: 'I did not hear back, but that is totally OK!' },
     },
     complainer: {
-        id: 'complainer', gender: 'f', role: 'Dissatisfied Customer', color: '#a0306a',
+        id: 'complainer', picture: 'dissatisfiedCustomer', gender: 'f', role: 'Dissatisfied Customer', color: '#a0306a',
         affinity: ['like', 'work', 'rep', 'shop', 'greet', 'farewell'],
         intros: [
             (ask) => `I have to say, this is not the first time I have had to write. Could you ${ask}?`,
