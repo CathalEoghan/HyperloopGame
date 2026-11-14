@@ -115,7 +115,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Done and noted. Thank you.', failed: 'Not completed in time. I have noted it.', refused: 'Understood. I have removed it from your list.', ignored: 'No reply, so I have closed it.' },
     },
     security: {
-        id: 'security', gender: 'm', role: 'Head of Security', color: '#3b4a45',
+        id: 'security', gender: 'any', role: 'Head of Security', color: '#3b4a45',
         affinity: ['build', 'connectCities', 'upgradeCity', 'schedule', 'rankUp', 'connectContinent', 'upgradeDevCategory', 'work'],
         intros: [
             (ask) => `I cannot say much, the line may not be secure. But I need you to ${ask}. Ask no questions.`,
