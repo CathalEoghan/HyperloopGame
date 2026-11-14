@@ -5,7 +5,7 @@ import bellIcon from '../assets/misc/bell.png'
 import reputationIcon from '../assets/misc/reputation.png'
 import clockIcon from '../assets/misc/clock.png'
 import BoostTooltip from './BoostTooltip.jsx'
-import { playHoverSound, playClickSound2 } from '../utils/sound.js'
+import { playHoverSound, playClickSound2, startTypingSound } from '../utils/sound.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { CHARACTERS, isOpen, progressLabel, timeLeft, formatLeft, readMeta, MAX_PER_DAY } from '../utils/emailEngine.js'
 
@@ -54,12 +54,13 @@ function Typed({ text, animate, onDone }) {
     useEffect(() => {
         if (!animate) return
         const start = Date.now()
+        const stopSound = startTypingSound()
         const id = setInterval(() => {
             const shown = Math.min(text.length, Math.floor((Date.now() - start) / 14))
             setN(shown)
-            if (shown >= text.length) { clearInterval(id); doneRef.current?.() }
+            if (shown >= text.length) { clearInterval(id); stopSound(); doneRef.current?.() }
         }, 30)
-        return () => clearInterval(id)
+        return () => { clearInterval(id); stopSound(true) }
     }, [animate, text])
     return <>{text.slice(0, n)}{n < text.length && <span className="emails-caret">|</span>}</>
 }

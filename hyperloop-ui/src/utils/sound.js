@@ -22,6 +22,7 @@ import notEnoughFundsSound from '../assets/sounds/notEnoughFunds.wav'
 import departureBoardSound from '../assets/sounds/departureBoard.mp3'
 import phoneNotificationSound from '../assets/sounds/phoneNotification.mp3'
 import newEmailSound from '../assets/sounds/newEmail.mp3'
+import keyboardSound from '../assets/sounds/keyboard.mp3'
 import splitFlapLong from '../assets/sounds/splitFlapLong.wav'
 import splitFlapShort from '../assets/sounds/splitFlapShort.wav'
 import bigMomentSound from '../assets/sounds/bigMoment.mp3'
@@ -62,6 +63,7 @@ export const SOUND_CATEGORIES = [
     { key: 'hover', label: 'Hover Sound Effect' },
     { key: 'hyperlink', label: 'Hyper-Link Notification' },
     { key: 'newEmail', label: 'New Email Notification' },
+    { key: 'emailTyping', label: 'Email Reply Typing' },
     { key: 'departureBoard', label: 'Departure Board Flaps' },
     { key: 'event', label: 'Event Notification' },
     { key: 'dailyBonus', label: 'Daily Bonus Notification' },
@@ -320,6 +322,31 @@ export function playSplitFlapShort() {
 }
 export function playPhoneNotificationSound() { play(phoneNotificationSound, 'hyperlink') }
 export function playNewEmailSound() { play(newEmailSound, 'newEmail') }
+// Keyboard clicking for the length of a typed reply: the clip loops until the caller stops it. Returns a stop function (or a
+// no-op when nothing plays). `stop()` fades out quickly so it ends with the text; `stop(true)` cuts at once (leaving the screen).
+export function startTypingSound() {
+    if (!canPlay() || !entered) return () => {}
+    const volume = categoryMultiplier('emailTyping')
+    if (volume <= 0) return () => {}
+    const audio = new Audio(keyboardSound)
+    audio.loop = true
+    audio.volume = volume
+    // A little variation so every reply doesn't sound like the same recording
+    audio.playbackRate = 0.96 + Math.random() * 0.08
+    audio.play().catch(() => {})
+    let stopped = false
+    return (immediately = false) => {
+        if (stopped) return
+        stopped = true
+        if (immediately) { audio.pause(); return }
+        const start = performance.now(), FADE_MS = 120
+        const fade = setInterval(() => {
+            const t = (performance.now() - start) / FADE_MS
+            if (t >= 1) { clearInterval(fade); audio.pause(); return }
+            audio.volume = Math.max(0, volume * (1 - t))
+        }, 20)
+    }
+}
 export function playDepartureBoardSound() {
     if (!canPlay() || !entered) return null
     const volume = categoryMultiplier('departureBoard')
