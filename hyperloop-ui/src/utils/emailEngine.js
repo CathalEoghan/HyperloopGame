@@ -186,7 +186,7 @@ export const CHARACTERS = {
     },
     politician: {
         id: 'politician', gender: 'm', role: 'Local Politician', color: '#8a6d2f',
-        affinity: ['build', 'connectCities', 'connectContinent', 'rankUp', 'cash'],
+        affinity: ['build', 'connectCities', 'connectContinent', 'rankUp', 'cash', 'payUpfront', 'farewell'],
         intros: [
             (ask) => `I am sure you are doing your best, and it is lovely to see. Now, would you be a good fellow and ${ask}?`,
             (ask) => `Let me put this in simple terms, as I know these things can be complicated. ${cap(ask)}.`,

@@ -932,6 +932,32 @@ export const EMAILS = {
                 failed: 'Dear {formal},\n\nThe target was not reached. Never mind. These things are so hard, and so rarely worth the trouble. I will find the money elsewhere. I always do.\n\nWith every confidence in myself,\n{from}',
             },
         ],
+        payUpfront: [
+            {
+                id: 'politician-generous-donation',
+                subject: 'A small gesture',
+                body: "Dear {formal},\n\nIt is a very busy time for me, and a very exciting one. A campaign does not run itself, and sadly neither does goodwill. I do so hate to bring up money, so I will only mention it very briefly.\n\nCould you make a donation of {n}? It would go to the cause. Which cause, precisely, is a question I would rather we both avoided. In return, I will remember who stood by me when it mattered. I have a very long memory, particularly where licences and permits are concerned.\n\nYou need not put it in writing. Just pay it. I will take care of the paperwork. Eventually.\n\nWith every confidence in myself,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will donate {n}. I would like it noted that this is a donation and nothing else.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot donate {n}. I am not comfortable with it.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nHow very principled. Do not worry, I will not take it personally. I only hope the permits office does not either. Things get lost in that building, you know. All the time.\n\nWith every confidence in myself,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you. So generous, and so discreet. I will make sure nobody ever knows. Not that there would be anything to know. A pleasure doing business. Politics, I mean.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nNo donation, I see. A shame. I will have to find the money from a less appreciative source. Do not trouble yourself. I shall remember this, though.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
+        farewell: [
+            {
+                id: 'politician-campaign-trail',
+                target: 5,
+                ask: 'farewell 5 departing loops, with the politician at your side',
+                subject: 'Meeting the voters',
+                body: "Dear {formal},\n\nElection season is upon us, and I could not think of a better place to meet the people than your terminal. So many people, and all of them with a vote. Or, at least, a cousin with one.\n\nI would love to join you in seeing the travellers off. A handshake, a smile, and a mention of my name. Could you say farewell to {n} departing loops, with me beside you? You do the waving, and I will do the talking. The press will be there, and I would hate for them to get the wrong impression of whose idea it was.\n\nWith every confidence in myself,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. We will see {n} departing loops off together. I would ask that you keep the speeches short.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot say farewell to {n} loops with you right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nOf course. A very sensible decision, I am sure. I will do it on my own, then, and tell everyone you were delighted to host me. It is very easy to stand beside a person, even when they are not there.\n\nWith every confidence in myself,\n{from}',
+                fulfilled: 'Dear {formal},\n\nFive farewells, and the cameras loved me. I mean us. I think my polling has already risen. I will be sure to thank you in my victory speech. I might even spell your name right.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nThe farewells were not done in time, and I was left standing by the door with a smile and a pen. Quite embarrassing. I have told the papers it was a scheduling matter. Do not make me a liar.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
     },
 
     public: {
