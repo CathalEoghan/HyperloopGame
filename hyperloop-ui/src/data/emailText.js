@@ -543,6 +543,18 @@ export const EMAILS = {
                 failed: 'Dear {formal},\n\nOur Reputation fell below {n}. I will not lecture you, but it is exactly what I hoped to avoid.\n\nKind regards,\n{from}',
             },
         ],
+        rep: [
+            {
+                id: 'lawyer-building-our-standing',
+                subject: 'Building our standing',
+                body: "Dear {formal},\n\nI will be direct: our standing with the public could be stronger, and I would like you to do something about it. Please earn {n} Reputation for the terminal.\n\nGood standing is worth far more than it costs, and I would rather we had it before we needed it.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nThank you for being so clear. I will earn the Reputation.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate you raising it, but I cannot take that on at the moment.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood, and thank you for being straightforward. I will raise it again when the time is better.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you. Our standing is noticeably stronger, and I am grateful for the effort.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe Reputation was not earned in time. I will not dwell on it, but it would have served us well.\n\nKind regards,\n{from}',
+            },
+        ],
     },
     public: {
     },
