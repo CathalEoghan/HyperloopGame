@@ -243,6 +243,31 @@ export const EMAILS = {
                 failed: "Dear Manager,\n\nStill exactly the same. I've decided to bring my own decorations.\n\nThey're plastic flowers. You're welcome.\n\nBest,\n{from}",
             },
         ],
+        rename: [
+            {
+                id: 'complainer-boring-names',
+                target: 2,
+                subject: 'Who NAMES these things??',
+                body: "Dear Manager,\n\nI have been walking around your terminal and some of the names are, like, SO boring. I could have come up with better in my sleep. Does nobody here have any imagination?!\n\nGive {n} of them a new name. Something with some flair! Is that really so hard?\n\nRegards.\n{from}",
+                agree: "Dear {from},\n\nThank you for your email. Creative names are a great idea, and I'll see what I can come up with.\n\nAll the best,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks for your feedback. We're happy with the names we have and have no plans to change them.\n\nBest regards,\n{fullName}",
+                refused: "Dear Manager,\n\nHAPPY with them?! Fine. Keep your boring names.\n\nI'll just call everything whatever I like. Out loud. Very loudly.\n\n{from}",
+                fulfilled: "Dear Manager,\n\nI've seen the new names. They're... fine. A bit try-hard, honestly. But better than before, I suppose.\n\nDon't let it go to your head.\n\nBest,\n{from}",
+                failed: "Dear Manager,\n\nStill boring. So I've started giving them my own names. 'Food Place'. 'Shop Place'. 'The Other Shop Place'.\n\nYou're welcome.\n\nBest,\n{from}",
+            },
+        ],
+        rep: [
+            {
+                id: 'complainer-reputation',
+                subject: 'Your REPUTATION',
+                body: "Dear Manager,\n\nI told all my friends about my experience at your terminal and apparently your reputation is, like, not good. One of them actually laughed. In my face!\n\nDo something about it. I'm sure you can find a way to make people like this place more.\n\nRegards.\n{from}",
+                agree: "Dear {from},\n\nThank you for your email. We're always working to improve the terminal's reputation, and I'll make it a priority.\n\nAll the best,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks for your feedback. I'm afraid I can't promise any change to our reputation in that timeframe.\n\nBest regards,\n{fullName}",
+                refused: "Dear Manager,\n\nSo you just don't care what people think? Wow.\n\nFine. I'll keep telling everyone the truth. Starting with everyone I know.\n\n{from}",
+                fulfilled: "Dear Manager,\n\nI've heard people are saying nicer things about this place. That's, like, great, I suppose.\n\nIt's a bit disappointing, actually. I had a whole speech prepared.\n\nBest,\n{from}",
+                failed: "Dear Manager,\n\nNobody I know wants to visit your terminal now. I told them everything. One of them said she'd rather walk.\n\nI hope you're proud of yourself.\n\nBest,\n{from}",
+            },
+        ],
     },
     public: {
     },
