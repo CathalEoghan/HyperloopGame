@@ -115,3 +115,7 @@
 .emails-search-clear { background: none; border: none; color: #5f6368; font-size: 0.8rem; padding: 2px 4px; cursor: var(--cursor-pointer, pointer); }
 .emails-results { padding: 8px 16px 4px; font-size: 0.72rem; font-weight: 600; color: #5f6368; text-transform: uppercase; letter-spacing: 0.05em; }
 .emails-close.emails-mute img { width: 16px; height: 16px; }
+/* The bell and the close button fill with the accent colour under the pointer, so it is obvious which one will be clicked */
+.emails-close.emails-mute { transition: background 0.12s ease, box-shadow 0.12s ease; }
+.emails-close.emails-mute:hover, .emails-close.emails-mute:focus-visible { background: var(--ui-accent, #f5a623); box-shadow: 0 0 0 2px #fff; outline: none; }
+.emails-close.emails-mute-off:hover img, .emails-close.emails-mute-off:focus-visible img { opacity: 1; }
