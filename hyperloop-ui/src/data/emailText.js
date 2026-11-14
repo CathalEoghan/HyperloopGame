@@ -179,6 +179,19 @@ export const EMAILS = {
                 failed: "Dear Manager,\n\nNobody said hello again. I have put a note in your suggestions box.\n\nThe note says 'hello'.\n\nBest,\n{from}",
             },
         ],
+        like: [
+            {
+                id: 'complainer-no-likes',
+                target: 3,
+                subject: 'My post has ZERO likes',
+                body: "Dear Manager,\n\nI posted about my experience at your terminal on Hyper-Link, and it has, like, ZERO likes. Zero! Do people not care about customer feedback?!\n\nI would like to see you take an interest in what people are saying. It's the least you can do.\n\nYou have {time}.\n\nRegards.\n{from}",
+                agree: "Dear {from},\n\nThank you for your email. Your feedback matters to us, and I'll make sure to spend some time on Hyper-Link.\n\nAll the best,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks for your feedback. I'm afraid I can't promise to like anything on request.\n\nBest regards,\n{fullName}",
+                refused: "Dear Manager,\n\nSo you're ignoring my post AND my email? That's, like, two ways of ignoring me!\n\nI'm going to post about THIS too.\n\n{from}",
+                fulfilled: "Dear Manager,\n\nI see you've been liking things on Hyper-Link. Good. But did you really have to like the one with the cat? I don't see how that helps ME.\n\nBest,\n{from}",
+                failed: "Dear Manager,\n\nMy post now has one like. It's from my mum.\n\nI hope you're proud of yourself.\n\nBest,\n{from}",
+            },
+        ],
     },
     public: {
         like: [
