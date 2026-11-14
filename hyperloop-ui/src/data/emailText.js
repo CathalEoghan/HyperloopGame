@@ -582,6 +582,21 @@ export const EMAILS = {
             },
         ],
     },
+    marketing: {
+        greet: [
+            {
+                id: 'marketing-first-impressions',
+                target: 3,
+                subject: 'First impressions!',
+                body: "Dear {formal},\n\nBig news, and I want us to move the needle on this: our passengers' first impression of the terminal is our brand, and right now we are leaving it to chance!\n\nCould you greet the arriving passengers {n} times? A warm welcome is the best advertising there is, and it costs us nothing. Think of the buzz!\n\nOnwards and upwards,\n{from}",
+                agree: 'Dear {from},\n\nLove the energy! I will greet the passengers {n} times.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nThanks for the enthusiasm, but I cannot make time for greetings right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNo problem at all, we will circle back to this! I still think a friendly welcome could be huge for us.\n\nOnwards and upwards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nSmashed it! Those greetings are going straight into the deck. Our passengers will be telling everyone!\n\nOnwards and upwards,\n{from}',
+                failed: 'Dear {formal},\n\nThe greetings did not happen in time, but let us not worry! We will pivot and try again soon.\n\nOnwards and upwards,\n{from}',
+            },
+        ],
+    },
     public: {
     },
 }
