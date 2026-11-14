@@ -438,6 +438,43 @@ export const EMAILS = {
                 failed: "Dear {formal},\n\nThey're still talking by the coffee machine. I pretended to be busy with the photocopier. I don't think it worked.\n\nI'm so sorry.\n\nVery respectfully,\n{from}",
             },
         ],
+        cash: [
+            {
+                id: 'assistant-finance',
+                subject: 'The figures (sorry)',
+                body: "Dear {formal},\n\nI'm so sorry to bother you. The finance department keeps sending me very polite emails about the figures, which is somehow worse than rude ones.\n\nI wondered, if it's not too much trouble, whether the terminal might earn {n}? It would make my inbox a lot quieter. I'm so sorry. I'll leave you to it.\n\nVery respectfully,\n{from}",
+                agree: "Dear {from},\n\nThanks for letting me know. I'll see that the terminal earns that.\n\nBest,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks, but I cannot promise those figures in this timeframe.\n\nBest regards,\n{fullName}",
+                refused: "Dear {formal},\n\nOf course! No, that's fine. I'll tell finance you're 'considering it'. I'll say it very confidently. Sorry.\n\nVery respectfully,\n{from}",
+                fulfilled: "Dear {formal},\n\nFinance sent me a thank-you. A thank-you! I've never had one. I've put it in a frame. Please don't tell them.\n\nVery respectfully,\n{from}",
+                failed: "Dear {formal},\n\nFinance has sent me another very polite email. I've decided not to open it. It's been sitting there since this morning. I think it knows.\n\nVery respectfully,\n{from}",
+            },
+        ],
+        upgradeCity: [
+            {
+                id: 'assistant-tired-lines',
+                target: 2,
+                subject: 'The lines (sorry)',
+                body: "Dear {formal},\n\nI was looking at the map of the lines and, um, some of them look a little tired. Not that it's your fault! Lines get tired. I know the feeling.\n\nWould you perhaps upgrade a city's line {n} times? Only if it's not too much trouble. I'll stand over there, out of the way.\n\nVery respectfully,\n{from}",
+                agree: "Dear {from},\n\nThanks. I'll look at upgrading some lines.\n\nBest,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks, but I cannot upgrade any lines at the moment.\n\nBest regards,\n{fullName}",
+                refused: "Dear {formal},\n\nOf course! The lines are, um, resting. It's a very good word for it. I'm so sorry.\n\nVery respectfully,\n{from}",
+                fulfilled: "Dear {formal},\n\nThe lines look wonderful. Much less tired. I feel less tired too, just looking at them. Thank you.\n\nVery respectfully,\n{from}",
+                failed: "Dear {formal},\n\nThe lines are still tired. It's fine. We all are. I've put a little note on the map. It says 'sorry'.\n\nVery respectfully,\n{from}",
+            },
+        ],
+        connectContinent: [
+            {
+                id: 'assistant-new-continent',
+                subject: 'Somewhere new (sorry)',
+                body: "Dear {formal},\n\nI'm so sorry to ask, but a few people have asked me whether the terminal will ever reach {continent}. I said I'd check with you. I haven't. I was too nervous to knock, so I'm asking by email, which feels safer.\n\nWould you perhaps consider connecting a new city in {continent}? Only if it fits with your plans. You must have so many plans.\n\nVery respectfully,\n{from}",
+                agree: "Dear {from},\n\nThanks for asking. I will connect a new city in {continent}.\n\nBest,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks, but we are not expanding into {continent} right now.\n\nBest regards,\n{fullName}",
+                refused: "Dear {formal},\n\nOf course! I'll tell them you're 'thinking about it'. I'll say it very quickly, and then leave. Sorry.\n\nVery respectfully,\n{from}",
+                fulfilled: "Dear {formal},\n\n{continent}! You really did it! I told them, and one of them said 'wow'. Out loud. To me.\n\nI'm going to need a moment. Thank you.\n\nVery respectfully,\n{from}",
+                failed: "Dear {formal},\n\nI had to tell them that {continent} isn't happening yet. They were very nice about it, which was worse.\n\nI think I'm going to hide in the stationery cupboard for a bit. Sorry.\n\nVery respectfully,\n{from}",
+            },
+        ],
     },
     public: {
     },
