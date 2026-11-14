@@ -33,6 +33,7 @@
 //   {
 //     subject: 'What shows in the inbox list',
 //     body: 'The whole email, from "Dear {formal}," to the signature. Use \n for a new line.',
+//     ask: 'Optional. Words the request shown under the email your way (it still means the same task), e.g. "buy something new to freshen up the terminal".',
 //     // Optional. Leave any out and the game writes a plain one for you:
 //     agree:     'Your reply when the player presses Agree (it is signed by the player, so end it with {fullName}).',
 //     refuse:    'Your reply when the player presses Refuse.',
@@ -594,6 +595,45 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nNo problem at all, we will circle back to this! I still think a friendly welcome could be huge for us.\n\nOnwards and upwards,\n{from}',
                 fulfilled: 'Dear {formal},\n\nSmashed it! Those greetings are going straight into the deck. Our passengers will be telling everyone!\n\nOnwards and upwards,\n{from}',
                 failed: 'Dear {formal},\n\nThe greetings did not happen in time, but let us not worry! We will pivot and try again soon.\n\nOnwards and upwards,\n{from}',
+            },
+        ],
+        like: [
+            {
+                id: 'marketing-engagement',
+                target: 5,
+                subject: 'Engagement is everything',
+                body: "Dear {formal},\n\nCircling back with a quick win for the brand: our Hyper-Link presence is live, and the audience is ready to engage!\n\nCould you like {n} Hyper-Link posts? Nothing says we are listening like a bit of love in the feed. It would really elevate us.\n\nOnwards and upwards,\n{from}",
+                agree: 'Dear {from},\n\nHappy to help! I will like {n} Hyper-Link posts.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nThanks for the idea, but I cannot spend time on Hyper-Link right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNo problem, we will circle back to this! The feed will still be there when you are ready.\n\nOnwards and upwards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nSmashed it! The engagement numbers are looking great, and the feed is buzzing. Thank you!\n\nOnwards and upwards,\n{from}',
+                failed: 'Dear {formal},\n\nThe feed did not get its likes in time, but let us not dwell on it! We will pivot.\n\nOnwards and upwards,\n{from}',
+            },
+        ],
+        shop: [
+            {
+                id: 'marketing-design-overhaul',
+                subject: 'Time for a design overhaul!',
+                ask: 'buy something new to freshen up the terminal',
+                body: "Dear {formal},\n\nBig news: the terminal needs a design overhaul! The brand is only as strong as it feels, and right now everything feels a little, shall we say, classic.\n\nCould you pick up something new to freshen things up? A new sound, a new look, anything with a bit more personality. Spend a little, and let us see the difference. Think of the buzz!\n\nOnwards and upwards,\n{from}",
+                agree: 'Dear {from},\n\nLove it! I will pick up something to freshen things up.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nThanks for the idea, but I would rather keep things as they are for now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNo problem, we will circle back to this! Classic never goes out of style, right?\n\nOnwards and upwards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nSmashed it! The new look is exactly what the brand needed. It already feels so much fresher!\n\nOnwards and upwards,\n{from}',
+                failed: 'Dear {formal},\n\nThe overhaul did not happen in time, but let us not worry! We will pivot and try again soon.\n\nOnwards and upwards,\n{from}',
+            },
+        ],
+        rename: [
+            {
+                id: 'marketing-rebrand',
+                target: 2,
+                subject: 'A fresh new look',
+                body: "Dear {formal},\n\nBig news: it is time for a refresh! Names are the heart of any brand, and a few of our developments are overdue for something with a bit more personality.\n\nCould you rename {n} developments? Something memorable, something people will talk about. Think of the buzz!\n\nOnwards and upwards,\n{from}",
+                agree: 'Dear {from},\n\nLove a refresh! I will rename {n} developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nThanks for the idea, but I would rather leave the names as they are.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNo problem, we will circle back to this! The old names still have their charm.\n\nOnwards and upwards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nSmashed it! Those new names are fantastic, and the whole terminal feels fresh. Thank you!\n\nOnwards and upwards,\n{from}',
+                failed: 'Dear {formal},\n\nThe rebrand did not land in time, but let us not worry! We will regroup and pivot.\n\nOnwards and upwards,\n{from}',
             },
         ],
     },

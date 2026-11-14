@@ -527,6 +527,8 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
         let text, referredBack = false, subject = req.subject, texts = null
         if (authored) {
             const t = authored.template
+            // A written email may word the request shown under it differently (`ask` in data/emailText.js)
+            if (typeof t.ask === 'string' && t.ask.trim()) req = { ...req, ask: t.ask.trim() }
             const vars = {
                 name: nameForPlayer.split(' ')[0], formal, FORMAL: formal.toUpperCase(), title: PLAYER_TITLES.includes(playerTitle) ? playerTitle : '', fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
                 n: type === 'cash' || type === 'holdCash' ? formatCash(req.target) : formatCount(req.target), count: req.target,
