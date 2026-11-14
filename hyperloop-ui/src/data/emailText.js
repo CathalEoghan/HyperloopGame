@@ -374,6 +374,19 @@ export const EMAILS = {
                 failed: "Dear {formal},\n\nPeople are still saying not much has happened on the company side. I told them you have plans. They asked what plans. I said I wasn't sure.\n\nPlease don't be cross. I'll try to sound more confident next time.\n\nVery respectfully,\n{from}",
             },
         ],
+        work: [
+            {
+                id: 'assistant-diary',
+                target: 100,
+                subject: 'Your diary (sorry)',
+                body: "Dear {formal},\n\nI'm so sorry to bother you again. I was going through your diary and noticed there's quite a lot of, um, free time in it. Not that I'm saying you're not busy! You're obviously extremely busy doing very important things. I wouldn't dare suggest otherwise.\n\nI just thought that, if you happened to have a spare moment, some hands-on work at the desk might look good in the report. Only if you want to. I'll put it in your diary in pencil.\n\nVery respectfully,\n{from}",
+                agree: 'Dear {from},\n\nThanks for noticing. I will put some time in at the desk.\n\nBest,\n{fullName}',
+                refuse: 'Dear {from},\n\nI have other priorities in this timeframe, so I will have to pass.\n\nBest regards,\n{fullName}',
+                refused: "Dear {formal},\n\nOf course! Absolutely! You're very busy. I'll rub out the pencil. And I'll never mention it again. Sorry.\n\nVery respectfully,\n{from}",
+                fulfilled: "Dear {formal},\n\nI saw the report and it says you've been working! I'm so proud. I mean, not that I'm in any position to be proud of you. Sorry.\n\nI've put it in your diary in pen.\n\nVery respectfully,\n{from}",
+                failed: "Dear {formal},\n\nThe report is in and, um, it says very little about the desk. Please don't worry! I've written 'busy elsewhere', which I'm sure is true.\n\nI hope that was alright. I panicked.\n\nVery respectfully,\n{from}",
+            },
+        ],
     },
     public: {
     },
