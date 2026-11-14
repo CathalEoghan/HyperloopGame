@@ -20,6 +20,7 @@
 //   scheduleNight    Schedule {n} loops to leave at night (8pm to 2am)
 //   scheduleMorning  Schedule {n} loops to leave in the morning (6am to 10am)
 //   connectCountryCity  Connect a city in a country the email names (set `countries`, e.g. ['Italy']; `onlyIfNone: true` keeps it for a network with no city there yet)
+//   upgradeSpecific  Upgrade one development the game picks from those the player owns; its name is {development}
 //   newContinent     Connect a city in a continent the terminal has no city in yet
 //   milestone        Reach a new milestone (a development or city count, a whole continent, a rank gift)
 //   claimRewards     Claim {n} rewards on the Progress page
@@ -1460,6 +1461,31 @@ export const EMAILS = {
                 fulfilled: 'Dear {formal},\n\nThank you! I am already on my way, and I could not be happier. My partner suspects nothing. If it goes well, you will be the first to hear. Thank you so much for helping.\n\nKind regards,\n{from}',
                 failed: 'Dear {formal},\n\nFrance was not connected in time, but thank you for considering it. I will think of another way, and I hope the question is still waiting for me. Thank you for reading.\n\nKind regards,\n{from}',
             },
+            {
+                id: 'public-australia',
+                role: 'Terminal Worker',
+                countries: ['Australia'],
+                onlyIfNone: true,
+                subject: 'What passengers keep asking',
+                body: "Dear {formal},\n\nI work at the information desk here, and I wanted to tell you about something I hear almost every day. Passengers keep asking me when there will be a loop to Australia. They ask at the desk, in the queues, and on their way past. I have to tell them that there is not one yet, and I can see how disappointed they are.\n\nWould you consider connecting a city in Australia? I think a lot of people would use it, and it would be a joy to finally give them a different answer. Thank you for listening.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will connect a new city in Australia.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot connect a city in Australia right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nI understand, and thank you for thinking about it. I will keep telling passengers that it is something we are looking at. They are very kind about it.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you so much! I got to tell the first passenger this morning, and they were thrilled. They asked me to say thank you, so I am. It really is a joy to have a better answer.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe city in Australia was not connected in time, but thank you for considering it. I will keep giving passengers the same answer, and I am sure they will wait.\n\nKind regards,\n{from}',
+            },
+            {
+                id: 'public-ashes',
+                countries: ['Egypt'],
+                onlyIfNone: true,
+                subject: 'A last journey',
+                body: "Dear {formal},\n\nI hope you will forgive a more personal message. My grandmother passed away earlier this year. She was the kindest person I have ever known, and she loved learning about Egyptian history. She read every book she could find, and she kept pictures of the pyramids on her wall. She always said that she would go one day, but she never managed to.\n\nShe asked me to scatter her ashes in Egypt, so that she could finally be there. I would like to take her, and I would like to do it on a loop.\n\nWould you be able to connect a city in Egypt? It would mean more to me than I can say. Thank you for reading this.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will connect a new city in Egypt.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot connect a city in Egypt right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nI understand, and thank you for reading my message and for your kindness. I will find another way to take her. She would have wanted me to go, whatever it took.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you. I am writing this from Egypt, and she is here with me now. I read her favourite book aloud, by the river, and I think she heard it. I cannot thank you enough for making it possible.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nEgypt was not connected in time, but thank you for thinking of her. I will keep her safe a little longer, and I will take her there one day. Thank you for your kindness.\n\nKind regards,\n{from}',
+            },
         ],
         scheduleMorning: [
             {
@@ -1472,6 +1498,44 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nThat is perfectly fine, and thank you for replying. I will keep planning around the ones that there are. I am sure I will manage.\n\nKind regards,\n{from}',
                 fulfilled: 'Dear {formal},\n\nThank you! I took one of the new morning loops yesterday, and I was at my meeting with time to spare for the first time in months. I have already told my colleagues about it.\n\nKind regards,\n{from}',
                 failed: 'Dear {formal},\n\nThe morning loops were not scheduled in time, but thank you for considering it. I will keep planning my days around the existing ones, and try not to complain.\n\nKind regards,\n{from}',
+            },
+        ],
+        rep: [
+            {
+                id: 'public-fiance',
+                subject: 'Convincing my fiancé',
+                body: "Dear {formal},\n\nI am trying to persuade my fiancé to travel by loop instead of by plane, and it has not been easy. They are nervous about trying something new, and they keep asking whether the loops are really as good as I say. I have been telling them how well run the terminal is, but they would like to see some proof.\n\nWould you be able to earn {n} Reputation for the terminal? I think it would help them to trust it, and to take that first trip with me. Thank you for taking the time to read this.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will earn {n} Reputation for the terminal.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot earn {n} Reputation right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for replying. I will keep trying to persuade them in my own way. I am sure they will come round in time.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! I showed my fiancé how well the terminal is regarded, and they agreed to try it. We took our first loop together last weekend, and they loved it. They are even talking about the next one.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe Reputation did not come in time, but thank you for considering it. I will keep trying to persuade my fiancé. I am sure that the terminal will win them over, in the end.\n\nKind regards,\n{from}',
+            },
+        ],
+        payUpfront: [
+            {
+                id: 'public-father',
+                role: 'Terminal Worker',
+                subject: 'A difficult letter',
+                body: "Dear {formal},\n\nI am so sorry to write to you like this. I work here, and I have never asked anyone for anything. My father is ill, and his treatment is expensive, much more than we can manage. I have tried everything else, and I am only turning to you because I do not know where else to go.\n\nWould you be able to help with a payment of {n}? It would go directly towards his care. I would never have asked if there were another way. Whatever you decide, thank you for reading this, and for being kind enough to listen.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will pay {n} towards your father\'s care.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am so sorry, I cannot pay {n} right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nI understand, and thank you for reading it. Please do not worry about it. I will find another way, and I am grateful that you listened. It meant a great deal to be heard.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nI do not have the words. Thank you. My father has started his treatment, and the whole family is so very grateful. I will never forget your kindness, and I will do my very best for this terminal for as long as I work here.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe payment was not made in time, but thank you for considering it, and for being kind. I will keep trying to find another way. Please do not think badly of yourself. I understand.\n\nKind regards,\n{from}',
+            },
+        ],
+        upgradeSpecific: [
+            {
+                id: 'public-my-department',
+                role: 'Terminal Worker',
+                subject: 'Where I work',
+                body: "Dear {formal},\n\nI work at the {development}, and I am very proud of it. We are a small team, and we love what we do. The trouble is that we would like to open something new, and there is no money to pay for it. The owners say there is nothing spare this year.\n\nWould you be able to upgrade the {development}? It would bring in more income, and I think it would be enough to get the new project started. Thank you for hearing me out. I know that you have a great many places to look after.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will upgrade the {development}.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot upgrade the {development} right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for considering it. We will keep trying to find the money elsewhere. I will keep doing my best at the {development}.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! The {development} looks wonderful, and we have already put in a plan for the new project. The whole team is delighted. We cannot wait to show you.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe {development} was not upgraded in time, but thank you for thinking about it. We will keep working hard, and I am sure we will find a way.\n\nKind regards,\n{from}',
             },
         ],
     },

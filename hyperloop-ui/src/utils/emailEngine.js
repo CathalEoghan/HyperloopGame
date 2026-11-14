@@ -329,6 +329,8 @@ const METRICS = {
     rankUp: (s) => s.rank || 0,
     upgradeDev: (s) => s.devUpgrades || 0,
     // How many different developments of one category have been upgraded since the player agreed
+    // The level of the one development a written email names (picked by the game from those that can be upgraded)
+    upgradeSpecific: (s, e) => s.devLevels?.[e.extra.category]?.[e.extra.development] || 0,
     upgradeDevCategory: (s, e) => Object.entries(s.devLevels?.[e.extra.category] || {}).filter(([name, level]) => level > (e.extra.baseLevels?.[name] || 0)).length,
     upgradeCity: (s) => s.cityUpgrades || 0,
     shop: (s) => s.shopOwned || 0,
@@ -537,6 +539,13 @@ const GENERATORS = {
         const target = ctx.fixed ?? between(1, 2, rnd)
         return { type: 'upgradeDev', target, extra: {}, subject: 'Development upgrades', ask: `upgrade a development ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 48, rnd) }
     },
+    // One development the player owns that can still be upgraded, named in the email as {development}
+    upgradeSpecific: (ctx, rnd) => {
+        const options = ctx.upgradableDevs || []
+        if (options.length === 0) return null
+        const dev = pick(options, rnd)
+        return { type: 'upgradeSpecific', target: 1, extra: { development: dev.name, category: dev.category }, subject: 'A development upgrade', ask: `upgrade the ${dev.name}`, hours: between(36, 48, rnd) }
+    },
     upgradeDevCategory: (ctx, rnd) => {
         const room = ctx.upgradableByCategory || {}
         const options = Object.keys(room).filter(c => room[c] >= 1)
@@ -654,7 +663,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             const vars = {
                 name: nameForPlayer.split(' ')[0], formal, FORMAL: formal.toUpperCase(), title: PLAYER_TITLES.includes(playerTitle) ? playerTitle : '', fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
                 n: type === 'cash' || type === 'holdCash' || type === 'payUpfront' ? formatCash(req.target) : formatCount(req.target), count: req.target,
-                category: req.extra.category || '', continent: req.extra.continent || '', time: within, hours, ask: req.ask,
+                category: req.extra.category || '', development: req.extra.development || '', continent: req.extra.continent || '', time: within, hours, ask: req.ask,
             }
             const f = (x) => (typeof x === 'string' && x ? fillTemplate(x, vars) : null)
             subject = f(t.subject) || req.subject

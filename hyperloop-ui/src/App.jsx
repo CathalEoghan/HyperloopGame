@@ -837,6 +837,7 @@ function App() {
       unrenamed: pm.purchasedDevelopments.filter(d => !pm.developmentNames?.[d.name]).length,
       devsWithUpgrade: pm.purchasedDevelopments.filter(d => d.revenue).length,
       // How many finished developments of each category can still be upgraded (not at the top level yet)
+      upgradableDevs: pm.purchasedDevelopments.filter(d => pm.getDevelopmentUpgradeCostInfo(d)).map(d => ({ name: d.name, category: d.category })),
       upgradableByCategory: pm.purchasedDevelopments.reduce((o, d) => (pm.getDevelopmentUpgradeCostInfo(d) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}),
     }
   }
