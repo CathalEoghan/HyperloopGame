@@ -384,22 +384,36 @@ const OUTROS = [
 
 export const EMAIL_TYPES = Object.keys(GENERATORS)
 
+// A day's mix: at least this many recurring characters and at least this many members of the public (3 emails a day:
+// two characters and one member of the public). `today` lists who has already written today ('public' or a character id).
+export const MIN_CHARACTERS_PER_DAY = 2
+export const MIN_PUBLIC_PER_DAY = 1
+export function wantsPublic(today = [], rnd = Math.random) {
+    const publics = today.filter(who => who === 'public').length
+    const needPublic = Math.max(0, MIN_PUBLIC_PER_DAY - publics)
+    const needCharacters = Math.max(0, MIN_CHARACTERS_PER_DAY - (today.length - publics))
+    if (needPublic > 0 && needCharacters === 0) return true
+    if (needCharacters > 0 && needPublic === 0) return false
+    if (needPublic > 0 && needCharacters > 0) return rnd() < needPublic / (needPublic + needCharacters)
+    return rnd() < 0.25
+}
+
 // Make one email, or null if nothing fits. `types` lets a test force a type.
-export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', types = null, cast = null, used = [] } = {}) {
+export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', types = null, cast = null, used = [], today = [] } = {}) {
     const order = [...(types || EMAIL_TYPES)].sort(() => rnd() - 0.5)
+    const wantPublic = wantsPublic(today, rnd)
     for (const type of order) {
-        // Mostly one of the recurring characters whose usual requests include this one, or who have an email written for it
+        // Who sends it. A character can write at most once a day, and a day always has at least MIN_CHARACTERS_PER_DAY
+        // characters and MIN_PUBLIC_PER_DAY member of the public (decided above, from who has already written today).
         const written = (id) => Array.isArray(EMAILS[id]?.[type]) && EMAILS[id][type].length > 0
-        let character
-        if (ONLY_WRITTEN) {
-            // Only what has been written: one of the characters (or the public) with an email for this request
-            const options = [...CHARACTER_IDS.filter(id => cast?.[id]?.name && written(id)), ...(written('public') ? ['public'] : [])]
-            if (options.length === 0) continue
-            const who = pick(options, rnd)
-            character = who === 'public' ? null : CHARACTERS[who]
+        let character = null
+        if (wantPublic) {
+            if (ONLY_WRITTEN && !written('public')) continue
         } else {
-            const people = cast ? CHARACTER_IDS.filter(id => (CHARACTERS[id].affinity.includes(type) || written(id)) && cast[id]?.name) : []
-            character = people.length > 0 && rnd() < 0.75 ? CHARACTERS[pick(people, rnd)] : null
+            const people = CHARACTER_IDS.filter(id => cast?.[id]?.name && !today.includes(id)
+                && (ONLY_WRITTEN ? written(id) : (CHARACTERS[id].affinity.includes(type) || written(id))))
+            if (people.length === 0) continue
+            character = CHARACTERS[pick(people, rnd)]
         }
         // A written email may fix how many times the player is asked to do something ("target" in data/emailText.js)
         const authored = pickAuthored(character?.id || 'public', type, used, rnd)
@@ -545,9 +559,9 @@ export function writeEmails(list) {
 export function readMeta() {
     try {
         const m = JSON.parse(localStorage.getItem(EMAIL_META_KEY))
-        if (m && typeof m === 'object' && !Array.isArray(m)) return { day: typeof m.day === 'string' ? m.day : '', sent: Number(m.sent) || 0, wait: Number.isFinite(m.wait) ? m.wait : 0 }
+        if (m && typeof m === 'object' && !Array.isArray(m)) return { day: typeof m.day === 'string' ? m.day : '', sent: Number(m.sent) || 0, wait: Number.isFinite(m.wait) ? m.wait : 0, senders: Array.isArray(m.senders) ? m.senders.filter(x => typeof x === 'string') : [] }
     } catch { /* none yet */ }
-    return { day: '', sent: 0, wait: 0 }
+    return { day: '', sent: 0, wait: 0, senders: [] }
 }
 export function writeMeta(meta) { try { localStorage.setItem(EMAIL_META_KEY, JSON.stringify(meta)) } catch { /* storage full */ } }
 
@@ -558,12 +572,12 @@ export const openCount = (emails) => emails.filter(isOpen).length
 export function stepMeta(meta, elapsed, now = Date.now(), rnd = Math.random) {
     const today = new Date(now).toDateString()
     let m = meta
-    if (m.day !== today) m = { day: today, sent: 0, wait: between(5 * 60, 10 * 60, rnd) * 1000 }
+    if (m.day !== today) m = { day: today, sent: 0, senders: [], wait: between(5 * 60, 10 * 60, rnd) * 1000 }
     else if (m.sent < MAX_PER_DAY) m = { ...m, wait: Math.max(0, m.wait - Math.max(0, elapsed)) }
     return { meta: m, due: m.sent < MAX_PER_DAY && m.wait <= 0 }
 }
 // An email went out: the next one is 10-15 minutes of play away (none left today after the third)
-export const afterArrival = (meta, rnd = Math.random) => ({ ...meta, sent: meta.sent + 1, wait: between(10 * 60, 15 * 60, rnd) * 1000 })
+export const afterArrival = (meta, who = 'public', rnd = Math.random) => ({ ...meta, sent: meta.sent + 1, senders: [...(meta.senders || []), who], wait: between(10 * 60, 15 * 60, rnd) * 1000 })
 // Nothing was possible to ask for (or three are already open): look again in 5 minutes
 export const retryLater = (meta) => ({ ...meta, wait: 5 * MIN })
 

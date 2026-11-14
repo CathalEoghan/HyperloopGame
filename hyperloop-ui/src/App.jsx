@@ -831,13 +831,13 @@ function App() {
         else {
           const cast = emailEngine.ensureCast(emailEngine.readCast())
           emailEngine.writeCast(cast)
-          const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), cast, used: emailEngine.readUsed() })
+          const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), cast, used: emailEngine.readUsed(), today: meta.senders || [] })
           if (email) {
             // Having mentioned how they were last treated, the character doesn't say it again
             if (email.referredBack) emailEngine.writeCast(emailEngine.forgetOutcome(cast, email.character))
             if (email.templateKey) emailEngine.writeUsed(emailEngine.markUsed(emailEngine.readUsed(), email.templateKey, email.templateGroup))
             list = [...list, email]
-            meta = emailEngine.afterArrival(meta)
+            meta = emailEngine.afterArrival(meta, email.character || 'public')
             changed = true
             announced = true
           } else meta = emailEngine.retryLater(meta)
