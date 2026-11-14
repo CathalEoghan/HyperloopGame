@@ -23,6 +23,7 @@ import { AUTO_WORK_SETTING_KEY, autoWorkEnabled } from 'Managers/PrestigeManager
 import { PERK_TOGGLE_KEYS, perkSwitchedOn } from 'Managers/PrestigeManager/perkToggles.js'
 import { AUTO_CLAIM_RANKUPS_KEY, autoClaimRankUpsEnabled } from '../utils/autoClaimRankUps.js'
 import { VIDEO_MESSAGE_POPUPS_KEY, videoMessagePopupsEnabled } from '../utils/videoMessagePopups.js'
+import { PLAYER_TITLE_KEY, PLAYER_TITLES } from '../utils/emailEngine.js'
 import './SettingsPage.css'
 
 // Shown next to "Saved" wherever a Settings save button flips to its confirmed state, in place of a plain tick
@@ -113,6 +114,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     // The name emails use to address and sign for the player
     const [playerNameInput, setPlayerNameInput] = useState(() => localStorage.getItem('hyperloop_player_name') || '')
     const [playerNameSaved, setPlayerNameSaved] = useState(false)
+    const [playerTitle, setPlayerTitle] = useState(() => { try { const t = localStorage.getItem(PLAYER_TITLE_KEY); return PLAYER_TITLES.includes(t) ? t : '' } catch { return '' } })
+    const handlePlayerTitle = (title) => {
+        setPlayerTitle(title)
+        try { if (title) localStorage.setItem(PLAYER_TITLE_KEY, title); else localStorage.removeItem(PLAYER_TITLE_KEY) } catch { /* storage full */ }
+    }
     const [confirmDelete, setConfirmDelete] = useState(false)
     const [importError, setImportError] = useState(null)
     const [showCredits, setShowCredits] = useState(false)
@@ -483,6 +489,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); handlePlayerNameSave(); }}>
                             {playerNameSaved ? <>{savedCheckEl}Saved</> : 'Save'}
                         </button>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Preferred Title</span>
+                        <span className="settings-label-desc">How emails address you: with a title they write "Dear Dr. Smith", using the last word of your name. With none they use your first name. It applies to emails that arrive from now on.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={playerTitle === ''} onClick={() => handlePlayerTitle('')}>None</OptionBtn>
+                        {PLAYER_TITLES.map(t => <OptionBtn key={t} active={playerTitle === t} onClick={() => handlePlayerTitle(t)}>{t}</OptionBtn>)}
                     </div>
                 </div>
                 {PrestigeManager.owns('videoMessage') && (

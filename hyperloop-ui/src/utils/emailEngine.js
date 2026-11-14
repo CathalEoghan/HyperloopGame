@@ -11,6 +11,8 @@ import { FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/hyperLin
 export const EMAILS_KEY = 'hyperloop_emails'
 export const EMAIL_META_KEY = 'hyperloop_email_meta'
 export const PLAYER_NAME_KEY = 'hyperloop_player_name'
+export const PLAYER_TITLE_KEY = 'hyperloop_player_title'
+export const PLAYER_TITLES = ['Mr.', 'Mrs.', 'Miss', 'Master', 'Mx.', 'Dr.']
 // The recurring senders: their names (chosen once, kept for good) and how the player last answered each
 export const CAST_KEY = 'hyperloop_email_cast'
 
@@ -265,6 +267,13 @@ export function readUsed() {
 export function writeUsed(list) { try { localStorage.setItem(USED_KEY, JSON.stringify(list.slice(-300))) } catch { /* storage full */ } }
 
 const addressee = (name) => (name && name.trim()) || 'Manager'
+// How a sender greets the player: "Dr. Smith" with a title, the first name without one, and "Manager" only as a last resort
+// (no name set at all)
+export function formalAddress(name, title = '') {
+    const n = (name || '').trim().replace(/\s+/g, ' ')
+    if (!n) return 'Manager'
+    return PLAYER_TITLES.includes(title) ? `${title} ${n.split(' ').pop()}` : n.split(' ')[0]
+}
 const firstName = (sender) => sender.name.split(' ')[0]
 
 // What each request measures. `metric` reads one number out of the snapshot; progress is how far it has risen since the
@@ -429,7 +438,7 @@ export function wantsPublic(today = [], rnd = Math.random) {
 }
 
 // Make one email, or null if nothing fits. `types` lets a test force a type.
-export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', types = null, cast = null, used = [], today = [] } = {}) {
+export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', playerTitle = '', types = null, cast = null, used = [], today = [] } = {}) {
     const order = [...(types || EMAIL_TYPES)].sort(() => rnd() - 0.5)
     const wantPublic = wantsPublic(today, rnd)
     for (const type of order) {
@@ -466,11 +475,12 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
         const hours = req.hours
         const within = hours >= 48 ? '2 days' : hours > 24 ? `${hours} hours` : 'a day'
         const nameForPlayer = addressee(playerName)
+        const formal = formalAddress(playerName, playerTitle)
         let text, referredBack = false, subject = req.subject, texts = null
         if (authored) {
             const t = authored.template
             const vars = {
-                name: nameForPlayer.split(' ')[0], fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
+                name: nameForPlayer.split(' ')[0], formal, FORMAL: formal.toUpperCase(), title: PLAYER_TITLES.includes(playerTitle) ? playerTitle : '', fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
                 n: type === 'cash' ? formatCash(req.target) : formatCount(req.target), count: req.target,
                 category: req.extra.category || '', continent: req.extra.continent || '', time: within, hours, ask: req.ask,
             }
@@ -489,7 +499,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
         return {
             id: `em_${now}_${Math.floor(rnd() * 1e6)}`, referredBack,
             type: req.type, extra: req.extra, target: req.target, sender, character: character?.id || null,
-            subject, body: authored ? text : `Dear ${nameForPlayer.split(' ')[0]},\n\n${text}`, texts,
+            subject, body: authored ? text : `Dear ${formal},\n\n${text}`, texts,
             templateKey: authored?.key || null, templateGroup: authored?.group || null,
             ask: req.ask, createdAt: now, state: 'new', read: false, hours,
             reward: amounts.fulfil, penalty: amounts.fail, agreeBonus: amounts.agree, refusePenalty: amounts.refuse,

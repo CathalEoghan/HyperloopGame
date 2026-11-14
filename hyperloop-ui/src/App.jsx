@@ -730,6 +730,7 @@ function App() {
   useEffect(() => { emailsOpenRef.current = emailsOpen }, [emailsOpen])
   const setEmails = (list) => { const kept = emailEngine.writeEmails(list); emailsRef.current = kept; setEmailsState(kept) }
   const playerName = () => { try { return localStorage.getItem(emailEngine.PLAYER_NAME_KEY) || '' } catch { return '' } }
+  const playerTitle = () => { try { const t = localStorage.getItem(emailEngine.PLAYER_TITLE_KEY); return emailEngine.PLAYER_TITLES.includes(t) ? t : '' } catch { return '' } }
   const applyEmailRep = (change) => {
     if (!change) return
     progressionManager.addReputation(change)
@@ -833,7 +834,7 @@ function App() {
         else {
           const cast = emailEngine.ensureCast(emailEngine.readCast())
           emailEngine.writeCast(cast)
-          const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), cast, used: emailEngine.readUsed(), today: meta.senders || [] })
+          const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), playerTitle: playerTitle(), cast, used: emailEngine.readUsed(), today: meta.senders || [] })
           if (email) {
             // Having mentioned how they were last treated, the character doesn't say it again
             if (email.referredBack) emailEngine.writeCast(emailEngine.forgetOutcome(cast, email.character))

@@ -186,6 +186,8 @@ const SETTINGS_KEYS = [
     'hyperloop_shop_last_category',
     // The name emails address the player by
     'hyperloop_player_name',
+    // The title (Mr., Dr., ...) emails put before the player's last name
+    'hyperloop_player_title',
 ]
 
 export function clearSettings() {
