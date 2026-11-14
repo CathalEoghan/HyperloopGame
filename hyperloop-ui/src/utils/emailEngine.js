@@ -116,7 +116,7 @@ export const CHARACTERS = {
     },
     security: {
         id: 'security', gender: 'm', role: 'Head of Security', color: '#3b4a45',
-        affinity: ['build', 'connectCities', 'upgradeCity', 'schedule', 'rankUp', 'connectContinent'],
+        affinity: ['build', 'connectCities', 'upgradeCity', 'schedule', 'rankUp', 'connectContinent', 'upgradeDevCategory', 'work'],
         intros: [
             (ask) => `I cannot say much, the line may not be secure. But I need you to ${ask}. Ask no questions.`,
             (ask) => `Somebody is behind this, and I will find out who. In the meantime, ${ask}. It is all connected.`,
@@ -314,6 +314,7 @@ export const metricOf = (email, snap) => (METRICS[email.type] ? METRICS[email.ty
 export const progressOf = (email, snap) => Math.max(email.progress || 0, metricOf(email, snap) - (email.baseline || 0))
 
 export const progressLabel = (email) => {
+    if (email.askCustom) return ''
     if (email.type === 'holdRep') return `Keep Reputation above ${formatCount(email.target)}`
     if (email.type === 'holdCash') return `Keep your balance above ${formatCash(email.target)}`
     const cash = email.type === 'cash'
@@ -579,6 +580,8 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             type: req.type, extra: req.extra, target: req.target, sender, character: character?.id || null,
             subject, body: authored ? text : `Dear ${formal},\n\n${text}`, texts,
             templateKey: authored?.key || null, templateGroup: authored?.group || null,
+            // A written email that words its own request keeps the numbers out of sight, so the progress count is hidden too
+            askCustom: !!(authored && typeof authored.template.ask === 'string' && authored.template.ask.trim()),
             ask: req.ask, createdAt: now, state: 'new', read: false, hours,
             reward: amounts.fulfil, penalty: amounts.fail, agreeBonus: amounts.agree, refusePenalty: amounts.refuse,
             baseline: 0, progress: 0, deadline: null, agreedAt: null, resolvedAt: null, reply: null, outcome: null,
