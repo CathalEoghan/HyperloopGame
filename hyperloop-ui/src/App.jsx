@@ -757,7 +757,7 @@ function App() {
       timetable: readStoredList('hyperloop_timetable').length,
       cash: pm.totalCashEarned, balance: pm.balance, answered: achievements.counter('emailsAnswered'),
       waitingEmails: emailsRef.current.filter(e => e.state === 'new').length,
-      negativeEvents: achievements.counter('negativeEvents'),
+      negativeEvents: achievements.counter('negativeEvents'), positiveEvents: achievements.counter('positiveEvents'),
       repEarned: pm.lifetimeReputationEarned, reputation: pm.reputation,
       devLevels: devLevelsByCategory(pm),
       rank: rankManager.rank, devUpgrades: sum(pm.developmentUpgradeLevels), cityUpgrades: sum(pm.cityLineLevels),
@@ -782,6 +782,8 @@ function App() {
       // Roughly the chance that any one random event is a negative one that is not held back (events start at EVENT_MIN_RANK)
       negativeEventChance: (perkActive('crisisAvoidanceSpecialists') || rankManager.rank < EVENT_MIN_RANK) ? 0
         : (1 - Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'))) * 0.5 * (1 - economyManager.getNegativeEventReduction()),
+      // Good events happen from EVENT_MIN_RANK on (and are the only kind with Crisis Avoidance)
+      positiveEventChance: rankManager.rank < EVENT_MIN_RANK ? 0 : (perkActive('crisisAvoidanceSpecialists') ? 1 : 0.5),
       incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
       available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length },
       // Tier 3 cities still waiting to be connected
@@ -1445,6 +1447,7 @@ function App() {
     const myGeneration = ++eventGenerationRef.current;
     // Counted for the emails that ask the player to live through some bad events
     if (rawEvent.type === 'negative') achievements.addCounter('negativeEvents');
+    if (rawEvent.type === 'positive') achievements.addCounter('positiveEvents');
     const pizza = PrestigeManager.owns('pizzaParties') && rawEvent.type === 'positive';
     const scaledEvent = (pizza && rawEvent.effect)
       ? { ...rawEvent, effect: { ...rawEvent.effect, multiplier: 1 + (rawEvent.effect.multiplier - 1) * PRESTIGE_VALUES.pizzaParties } }

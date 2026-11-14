@@ -17,6 +17,7 @@
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
+//   positiveEvents   Live through {n} positive events (random good events at the terminal; not something the player controls)
 //   negativeEvents   Live through {n} negative events (random bad events at the terminal; not something the player controls)
 //   holdCash         Keep at least {n} in the bank until the deadline (like holdRep; {n} is worked out from their balance)
 //   clearInbox       Answer the {n} emails waiting in the inbox
@@ -740,6 +741,31 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nUnderstood. Perhaps it was too much to ask. Were you afraid it might go badly? Forget I said that.\n\nLooking forward to hearing from you,\n{from}',
                 fulfilled: 'Dear {formal},\n\nYou came through two bad events. How are you holding up? Are you sleeping? Sorry, not my place. A wonderful story, thank you.\n\nLooking forward to hearing from you,\n{from}',
                 failed: 'Dear {formal},\n\nTwo bad days did not come. Lucky, or is there something you are not telling me? Please forget I asked.\n\nLooking forward to hearing from you,\n{from}',
+            },
+        ],
+        positiveEvents: [
+            {
+                id: 'journalist-good-days',
+                target: 2,
+                subject: 'Good news travels',
+                body: "Dear {formal},\n\nI am putting together a lighter piece on good days at the terminal, and I would love to hear about yours. If {n} positive events were to come your way, how would you celebrate? With your partner? Boy or girl? Sorry. Pretend I did not just ask that.\n\nWhat I can ask is whether you would tell me when it happens. People love a success story, and I would love to write one.\n\nLooking forward to hearing from you,\n{from}",
+                agree: 'Dear {from},\n\nIf {n} positive events come along, I will tell you about them. How I celebrate is my own business.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI would rather not promise good news for a story, and my celebrations are private.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood. Perhaps it was too much to ask. Is there nobody to celebrate with? Forget I said that.\n\nLooking forward to hearing from you,\n{from}',
+                fulfilled: 'Dear {formal},\n\nTwo good days at last! How did you celebrate? Was anyone special there? Sorry, that is none of my business. A lovely story, thank you.\n\nLooking forward to hearing from you,\n{from}',
+                failed: 'Dear {formal},\n\nThe good news did not arrive in time. Not even a little? Is that a sign of something? Please forget I asked.\n\nLooking forward to hearing from you,\n{from}',
+            },
+        ],
+        connectContinent: [
+            {
+                id: 'journalist-new-horizon',
+                subject: 'A new horizon',
+                body: "Dear {formal},\n\nI hear the terminal has its eye on {continent}. Is it true you have always wanted to go there? Alone, or with someone? Goodness, I did not mean to pry. Please disregard that.\n\nThe real question is whether you could connect a new city in {continent}. A first step onto a new continent is the kind of story I live for. And is it true you chose it over somewhere closer to home? No, no, forget I said that.\n\nLooking forward to hearing from you,\n{from}",
+                agree: 'Dear {from},\n\nI will connect a new city in {continent}. Who I would take with me is my own business.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot connect a city in {continent} right now, and my travel plans are private.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nA no. Was it the distance, or something closer to home? Forget I said that, I have no right to ask.\n\nLooking forward to hearing from you,\n{from}',
+                fulfilled: 'Dear {formal},\n\n{continent} is on the map! Did you always dream of it? Please ignore that, I am getting carried away. Wonderful news.\n\nLooking forward to hearing from you,\n{from}',
+                failed: 'Dear {formal},\n\nNo new city in {continent} in time. Were you perhaps nervous about the trip? Sorry, I should not have asked.\n\nLooking forward to hearing from you,\n{from}',
             },
         ],
     },
