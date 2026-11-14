@@ -297,6 +297,18 @@ export const EMAILS = {
                 failed: 'Dear {formal},\n\nNo purchase was made. The line in the books remains empty, and I dislike an empty line.\n\nRegards,\n{from}',
             },
         ],
+        rep: [
+            {
+                id: 'cfo-intangible-asset',
+                subject: 'An Intangible Asset',
+                body: "Dear {formal},\n\nReputation is, technically, an intangible asset. I cannot put it on the balance sheet, which is a shame, because it is the one asset everyone insists on discussing.\n\nI would be grateful if you could build some up. Investors do not like surprises, but they do like a good name.\n\nRegards,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will work on the terminal\'s reputation.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot commit to improving something so intangible in this timeframe.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nVery well. I shall continue to leave it off the balance sheet. It will not be missed, until it is.\n\nRegards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe terminal\'s standing has improved. I cannot measure it precisely, but I notice that people have stopped asking me about it.\n\nThat is the best result I could ask for.\n\nRegards,\n{from}',
+                failed: "Dear {formal},\n\nThe terminal's reputation has not improved. I have written it down as 'unchanged', which is the kindest word available.\n\nRegards,\n{from}",
+            },
+        ],
     },
     public: {
     },
