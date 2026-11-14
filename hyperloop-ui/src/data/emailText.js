@@ -145,6 +145,22 @@ export const EMAILS = {
             },
         ],
     },
+    complainer: {
+        build: [
+            {
+                id: 'complainer-restaurants',
+                category: 'Food',
+                target: 3,
+                subject: 'Not enough restaurants!!',
+                body: "Dear Manager,\n\nThis is, like, unacceptable. I have been travelling through this terminal a few times and am just stunned at how little food restaurants there are.\n\nI was told to speak to the manager and that's exactly what I'm doing! I'm so close to leaving a negative review for this place online.\n\nRegards.\n{from}",
+                agree: "Dear {from},\n\nThank you for your email. We take all customer concerns very seriously. I'm happy to share that several new food developments are on their way to the terminal!\n\nAll the best,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks for your email. There are currently no plans to develop any more restaurants within the terminal.\n\nBest regards,\n{fullName}",
+                refused: "MANAGER.\n\nAre you serious?! This is like, so UNACCEPTABLE. WHAT THE HELL?\n\nOkay. Trying to calm down. Do you have a supervisor?\n\n{from}",
+                fulfilled: "Dear Manager,\n\nI've noticed some more restaurants around. Good. But I just wanted to pass on that some of the staff working there have pretty bad attitudes.\n\nOne girl told me the customer isn't automatically always in the right? I want her fired.\n\nBest,\n{from}",
+                failed: "Dear Manager,\n\nEnjoy reading my most recent negative review.\n\nBest,\n{from}",
+            },
+        ],
+    },
     public: {
         like: [
             {

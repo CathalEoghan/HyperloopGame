@@ -301,7 +301,10 @@ const GENERATORS = {
         // A written email may name the category it is about (`category` in data/emailText.js); if it isn't unlocked yet, skip it
         if (ctx.fixedCategory && !cats.includes(ctx.fixedCategory)) return null
         const category = ctx.fixedCategory || pick(cats, rnd)
-        return { type: 'build', target: 1, extra: { category }, subject: `New ${category} development`, ask: `build ${/^[AEIOU]/i.test(category) ? 'an' : 'a'} ${category} development at the terminal`, hours: between(36, 48, rnd) }
+        // A written email may ask for more than one (`target` in data/emailText.js)
+        const target = ctx.fixed && ctx.fixed > 1 ? ctx.fixed : 1
+        const ask = target > 1 ? `build ${target} ${category} developments at the terminal` : `build ${/^[AEIOU]/i.test(category) ? 'an' : 'a'} ${category} development at the terminal`
+        return { type: 'build', target, extra: { category }, subject: `New ${category} development`, ask, hours: between(36, 48, rnd) }
     },
     greet: (ctx, rnd) => {
         const target = ctx.fixed ?? between(2, 5, rnd)
