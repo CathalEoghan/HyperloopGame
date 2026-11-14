@@ -99,6 +99,18 @@ export const EMAILS = {
                 failed: 'Dear Manager,\n\nTut tut! I am so severely disappointed. Your recreational areas fall short completely of my regulations - for a second time in a row!\n\nThis report will be made public in the upcoming month.\n\nBest wishes,\n{from}',
                 fulfilled: 'Dear Manager,\n\nGood. I see these areas are now fully compliant.\n\nUntil my next visit, you cool kitten!🐱\n\nBest wishes,\n{from}',
             },
+            {
+                id: 'inspector-shopping',
+                category: 'Shopping',
+                target: 3,
+                subject: 'Shopping Area Standards',
+                body: "Dear Manager,\n\nGood day to you! I was looking at your shops and, honestly, I was feline a little let down. 🐱 A few of them need some serious TLC before they meet our standards.\n\nPlease give three of them a proper makeover before my next visit. A clean shop is a happy shop, and happy shops are PURRfectly profitable!\n\nBest wishes,\n{from}",
+                agree: 'Dear {from},\n\nThank you for the feedback. I will see that three of our shops are improved.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate the suggestion, but I cannot commit to renovating the shops at the moment.\n\nBest regards,\n{fullName}',
+                refused: "Dear Manager,\n\nOh, what a shame! I was so hopeful. I have made a note on the report, and I'll be keeping a close eye on those shops.\n\nBest wishes,\n{from}",
+                failed: "Dear Manager,\n\nOh dear, those shops are still not up to scratch. I did so want to give you a glowing report. I'm afraid I must mark this one down.\n\nBest wishes,\n{from}",
+                fulfilled: 'Dear Manager,\n\nMarvellous! Those shops are positively gleaming. Thank you for taking my advice so seriously. 🐱\n\nUntil my next visit!\n\nBest wishes,\n{from}',
+            },
         ],
         build: [
             {
