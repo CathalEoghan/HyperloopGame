@@ -13,8 +13,10 @@ export const PLAYER_NAME_KEY = 'hyperloop_player_name'
 // The recurring senders: their names (chosen once, kept for good) and how the player last answered each
 export const CAST_KEY = 'hyperloop_email_cast'
 
-export const MAX_PER_DAY = 2
-export const MIN_GAP_MS = 20 * 60000
+// Like daily quests: up to 3 a day, reset at midnight (the player's own clock). The first comes 5-10 minutes into the day's play,
+// the second and third 10-15 minutes after the one before. These timers only run while the game is open.
+export const MAX_PER_DAY = 3
+const MIN = 60000
 export const MAX_OPEN = 3
 // A request nobody answers counts as a refusal after this long
 export const IGNORE_AFTER_MS = 24 * 3600000
@@ -459,36 +461,31 @@ export function writeEmails(list) {
     try { localStorage.setItem(EMAILS_KEY, JSON.stringify(kept)) } catch { /* storage full */ }
     return kept
 }
+// Where today's schedule is: which day, how many have been sent, and how long (ms of play) until the next one
 export function readMeta() {
     try {
         const m = JSON.parse(localStorage.getItem(EMAIL_META_KEY))
-        if (m && typeof m === 'object' && !Array.isArray(m)) return { nextAt: Number(m.nextAt) || 0, lastAt: Number(m.lastAt) || 0, day: typeof m.day === 'string' ? m.day : '', sentToday: Number(m.sentToday) || 0 }
+        if (m && typeof m === 'object' && !Array.isArray(m)) return { day: typeof m.day === 'string' ? m.day : '', sent: Number(m.sent) || 0, wait: Number.isFinite(m.wait) ? m.wait : 0 }
     } catch { /* none yet */ }
-    return { nextAt: 0, lastAt: 0, day: '', sentToday: 0 }
+    return { day: '', sent: 0, wait: 0 }
 }
 export function writeMeta(meta) { try { localStorage.setItem(EMAIL_META_KEY, JSON.stringify(meta)) } catch { /* storage full */ } }
 
-// Can a new email go out now? (Arrival is also gated by the game: entered, onboarded, at least two cities.)
-export function mayArrive(emails, meta, now = Date.now()) {
-    if (now < meta.nextAt) return false
-    if (emails.filter(isOpen).length >= MAX_OPEN) return false
-    if (now - meta.lastAt < MIN_GAP_MS) return false
+export const openCount = (emails) => emails.filter(isOpen).length
+
+// One step of the schedule: a new day starts a fresh allowance with the first email 5-10 minutes away; otherwise `elapsed`
+// ms of play are taken off the wait. `due` is true when the next email may go out now.
+export function stepMeta(meta, elapsed, now = Date.now(), rnd = Math.random) {
     const today = new Date(now).toDateString()
-    if (meta.day === today && meta.sentToday >= MAX_PER_DAY) return false
-    return true
+    let m = meta
+    if (m.day !== today) m = { day: today, sent: 0, wait: between(5 * 60, 10 * 60, rnd) * 1000 }
+    else if (m.sent < MAX_PER_DAY) m = { ...m, wait: Math.max(0, m.wait - Math.max(0, elapsed)) }
+    return { meta: m, due: m.sent < MAX_PER_DAY && m.wait <= 0 }
 }
-export function afterArrival(meta, now = Date.now(), rnd = Math.random) {
-    const today = new Date(now).toDateString()
-    return { lastAt: now, day: today, sentToday: meta.day === today ? meta.sentToday + 1 : 1, nextAt: now + between(5, 14, rnd) * HOUR }
-}
-// A request found nothing possible: look again in half an hour
-export const retryLater = (meta, now = Date.now()) => ({ ...meta, nextAt: now + 30 * 60000 })
-// The game was just opened: whatever came due while it was closed waits a few minutes (emails never arrive while away)
-export function onOpen(meta, now = Date.now(), rnd = Math.random) {
-    const first = meta.nextAt === 0
-    const wait = first ? between(10, 30, rnd) * 60000 : between(2, 6, rnd) * 60000
-    return { ...meta, nextAt: first ? now + wait : Math.max(meta.nextAt, now + wait) }
-}
+// An email went out: the next one is 10-15 minutes of play away (none left today after the third)
+export const afterArrival = (meta, rnd = Math.random) => ({ ...meta, sent: meta.sent + 1, wait: between(10 * 60, 15 * 60, rnd) * 1000 })
+// Nothing was possible to ask for (or three are already open): look again in 5 minutes
+export const retryLater = (meta) => ({ ...meta, wait: 5 * MIN })
 
 // Used by tests and the milestone list: the categories a build request may name
 export const BUILD_CATEGORIES = Object.keys(DEVELOPMENT_MILESTONES)

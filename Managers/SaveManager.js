@@ -331,7 +331,7 @@ const AUX_SHAPES = {
     hyperloop_cosmetics: v => isObj(v) && listOfStrings(v.owned) && isObj(v.equipped) && Object.values(v.equipped).every(x => typeof x === 'string'),
     hyperloop_emails: listOf(e => isObj(e) && typeof e.id === 'string' && typeof e.type === 'string' && typeof e.state === 'string' && Number.isFinite(e.target) && Number.isFinite(e.createdAt) && isObj(e.sender) && typeof e.sender.name === 'string' && typeof e.body === 'string'),
     hyperloop_email_cast: v => isObj(v) && Object.values(v).every(c => isObj(c) && typeof c.name === 'string' && c.name.length <= 60),
-    hyperloop_email_meta: v => isObj(v) && Number.isFinite(v.nextAt) && Number.isFinite(v.lastAt),
+    hyperloop_email_meta: v => isObj(v),
     hyperloop_cities_intro_seen: v => typeof v === 'boolean',
     hyperloop_development_intro_seen: v => typeof v === 'boolean',
     hyperloop_progress_intro_seen: v => typeof v === 'boolean',

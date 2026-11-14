@@ -810,24 +810,34 @@ function App() {
       if (next !== e) { changed = true; if (next.state !== e.state) announced = true }
       return next
     })
-    let meta = emailEngine.readMeta()
-    if (progressionManager.purchasedCities.length >= 2 && emailEngine.mayArrive(list, meta, now)) {
-      const cast = emailEngine.ensureCast(emailEngine.readCast())
-      emailEngine.writeCast(cast)
-      const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), cast })
-      if (email) {
-        list = [...list, email]
-        meta = emailEngine.afterArrival(meta, now)
-        changed = true
-        announced = true
-      } else meta = emailEngine.retryLater(meta, now)
+    // The schedule only runs while the game is open and the terminal has two cities; a long gap between ticks (a sleeping
+    // tab) counts for at most two minutes
+    const prev = emailLastTickRef.current
+    emailLastTickRef.current = now
+    if (progressionManager.purchasedCities.length >= 2) {
+      const step = emailEngine.stepMeta(emailEngine.readMeta(), prev ? Math.min(now - prev, 120000) : 0, now)
+      let meta = step.meta
+      if (step.due) {
+        if (emailEngine.openCount(list) >= emailEngine.MAX_OPEN) meta = emailEngine.retryLater(meta)
+        else {
+          const cast = emailEngine.ensureCast(emailEngine.readCast())
+          emailEngine.writeCast(cast)
+          const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), cast })
+          if (email) {
+            list = [...list, email]
+            meta = emailEngine.afterArrival(meta)
+            changed = true
+            announced = true
+          } else meta = emailEngine.retryLater(meta)
+        }
+      }
       emailEngine.writeMeta(meta)
     }
     if (changed) { setEmails(list); if (announced) announceEmail() }
   }
   const emailTickRef = useRef(null)
+  const emailLastTickRef = useRef(0)
   emailTickRef.current = emailTick
-  useEffect(() => { emailEngine.writeMeta(emailEngine.onOpen(emailEngine.readMeta())) }, [])
   const respondToEmail = (id, agree) => {
     const e = emailsRef.current.find(x => x.id === id)
     if (!e || e.state !== 'new') return
