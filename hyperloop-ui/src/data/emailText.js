@@ -17,6 +17,8 @@
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
+//   scheduleNight    Schedule {n} loops to leave at night (8pm to 2am)
+//   newContinent     Connect a city in a continent the terminal has no city in yet
 //   milestone        Reach a new milestone (a development or city count, a whole continent, a rank gift)
 //   claimRewards     Claim {n} rewards on the Progress page
 //   connectCountries Connect cities in {n} countries the terminal has no city in yet
@@ -41,6 +43,7 @@
 //   {
 //     subject: 'What shows in the inbox list',
 //     body: 'The whole email, from "Dear {formal}," to the signature. Use \n for a new line.',
+//     role: 'Optional, for the public only. Their title under the signature instead of Member of the Public, e.g. Terminal Worker.',
 //     ask: 'Optional. Words the request shown under the email your way (it still means the same task), e.g. "buy something new to freshen up the terminal".',
 //     // Optional. Leave any out and the game writes a plain one for you:
 //     agree:     'Your reply when the player presses Agree (it is signed by the player, so end it with {fullName}).',
@@ -1232,5 +1235,121 @@ export const EMAILS = {
     },
 
     public: {
+        connectCities: [
+            {
+                id: 'public-wedding',
+                target: 5,
+                subject: 'Planning our wedding',
+                body: "Dear {formal},\n\nI hope you do not mind me writing. I am getting married next year, and we are planning to have the guests come from all over. My side of the family is quite spread out, and a few of them have always found it hard to get anywhere.\n\nWould you be able to connect {n} more cities? It would give us a lot more choice for where our guests travel from, and it would make the day so much easier for everyone. I would be so grateful.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will connect {n} new cities.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot connect {n} new cities right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is no trouble at all, and thank you for letting me know. We will manage with the cities we have. I appreciate you reading my message.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you so much! {n} more cities, and now almost everybody can come. I have shown the whole family. It really does mean a lot, and I wanted you to know.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe cities were not connected in time, but thank you for thinking about it. We have been working around it, and I am sure it will be a lovely day all the same.\n\nKind regards,\n{from}',
+            },
+        ],
+        build: [
+            {
+                id: 'public-love-shopping',
+                category: 'Shopping',
+                target: 2,
+                subject: 'More to look at',
+                body: "Dear {formal},\n\nI just wanted to say how much I enjoy visiting your terminal. I love shopping, and I always make a point of looking in every shop before my loop leaves. The only thing is that I have seen them all by now!\n\nWould you be able to build a couple more Shopping developments? A few more choices would make my visits even nicer. Thank you for reading, and for everything you do.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nCertainly. I will build {n} Shopping developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot build {n} Shopping developments right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for replying. I will carry on enjoying the shops that are there. I hope you do not mind that I asked.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! The new shops are wonderful, and I spent a lovely afternoon looking around them. I have already told my friends, and I will certainly be back.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe new shops did not appear in time, but thank you for considering it. I will keep an eye out, and enjoy what is here in the meantime.\n\nKind regards,\n{from}',
+            },
+            {
+                id: 'public-worker-venture',
+                role: 'Terminal Worker',
+                category: 'Enterprise',
+                target: 2,
+                subject: 'A thought from the inside',
+                body: "Dear {formal},\n\nI work here, and I wanted to write to you directly, if that is all right. I love my job, and I am proud of the place. But lately, I have felt that the company has been standing still. It is growing, but only a little, and there is a feeling that nobody is trying anything new.\n\nWould you consider launching {n} more business ventures? I think it would give everyone something to get excited about, and some new places to grow. Thank you for listening. I know you are very busy.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will launch {n} new business ventures.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot launch {n} new business ventures right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nI understand, and thank you for thinking about it. These things take time, and I am sure you have your reasons. I will keep doing my best here in the meantime.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you so much! {n} new business ventures, and the mood in the office has changed overnight. People are talking about it in the corridors. It feels like we have started moving again.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe new ventures did not get started in time, but thank you for considering it. I will keep working, and I am sure there will be another chance.\n\nKind regards,\n{from}',
+            },
+            {
+                id: 'public-outdated-building',
+                category: 'Infrastructure',
+                target: 3,
+                subject: 'The building',
+                body: "Dear {formal},\n\nI travel through your terminal quite often, and I am very fond of it. I do not want to sound critical, but the building is starting to feel a little outdated. The signs, the corridors and the facilities have not changed in a long while.\n\nWould you be able to build {n} Infrastructure developments? A few improvements would make it feel fresh again, and I think a lot of people would notice. Thank you for hearing me out.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will build {n} Infrastructure developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot build {n} Infrastructure developments right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is perfectly fine, and thank you for answering. I understand that these things are not simple. I will carry on enjoying the terminal as it is.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! The building feels so much better already. The new additions are lovely, and everyone is commenting on how fresh it looks. I am very glad that I wrote.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe improvements were not finished in time, but thank you for considering it. The terminal is still one of my favourite places, whatever the state of the corridors.\n\nKind regards,\n{from}',
+            },
+            {
+                id: 'public-foodie',
+                category: 'Food',
+                target: 3,
+                subject: 'A hungry traveller',
+                body: "Dear {formal},\n\nI am a bit of a foodie, and I try to eat my way through every place that I visit. Your terminal is lovely, but I have worked my way through all of the places to eat, and I am running out of things to try.\n\nWould you be able to build {n} more Food developments? I would love some new flavours to look forward to. Thank you for reading, and I hope you do not mind me asking.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will build {n} Food developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot build {n} Food developments right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for the reply. I will go back to my old favourites. They are still very good.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! I have already tried all three of the new places, and I cannot decide which I loved best. I have made notes, and I will be back to try them again.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe new Food developments were not built in time, but thank you for considering it. I will keep eating my old favourites, and I am sure I will not mind it too much.\n\nKind regards,\n{from}',
+            },
+        ],
+        connectCountries: [
+            {
+                id: 'public-birthday-trip',
+                target: 2,
+                subject: 'A birthday surprise',
+                body: "Dear {formal},\n\nI am planning a surprise for my best friend, who has a birthday coming up, and I would like to take them on a trip somewhere they have never been. The trouble is that I would like to give them a few places to choose from, and the terminal does not go to many that are new.\n\nWould it be possible to connect {n} new countries? That way, there would be a range of new options to explore. They would be so surprised, and I would be so pleased. Thank you for reading this.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will connect {n} new countries.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot connect {n} new countries right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is fine, and thank you for letting me know. I will think of something else for the surprise. It was very kind of you to read my message.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! {n} new countries, and a whole map of choices for the trip. They have no idea, and I cannot wait to see their face. You have made it possible.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe countries were not connected in time, but thank you for thinking about it. I have found a smaller surprise instead, which I hope will do.\n\nKind regards,\n{from}',
+            },
+        ],
+        scheduleNight: [
+            {
+                id: 'public-night-loops',
+                target: 3,
+                subject: 'The night loops',
+                body: "Dear {formal},\n\nI hope this is not an odd request. I live nearby, and I have always loved watching the loops come and go at night. There is something peaceful about it, with the lights and the quiet. But there are so few leaving after dark.\n\nWould you be able to schedule {n} more loops to leave between 8pm and 2am? It would make my evenings, and I think it would be nice for anyone travelling late, too. Thank you for taking the time.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will schedule {n} loops to leave at night.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot schedule {n} night loops right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for replying. I will carry on watching the ones that are there. It is still a lovely sight.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! I watched the new night loops leaving last evening, and it was as beautiful as I had hoped. It was the perfect way to end the day.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe night loops were not scheduled in time, but thank you for considering it. I will be back by the window tonight regardless.\n\nKind regards,\n{from}',
+            },
+        ],
+        newContinent: [
+            {
+                id: 'public-new-continent',
+                subject: 'Somewhere new',
+                body: "Dear {formal},\n\nI have been using your terminal for a good while, and I love how much it has grown. I just wondered whether there might be a plan to expand into a new continent. I have always been curious about the parts of the world that it does not reach, and I would so like to see them.\n\nWould you consider connecting a city in a continent that is new to the network? I think many others would like it as well. Thank you for reading this.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will connect a city in a new continent.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot connect a new continent right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is perfectly all right, and thank you for the reply. I will keep dreaming of it, and keep an eye on the map. I am sure it will happen one day.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! A new continent, and I have already looked it all up. I cannot wait to go. I really appreciate you listening, and I wanted you to know what it means.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe new continent was not connected in time, but thank you for considering it. I will wait patiently, and perhaps ask again another day.\n\nKind regards,\n{from}',
+            },
+        ],
+        upgradeDevCategory: [
+            {
+                id: 'public-better-shops',
+                category: 'Shopping',
+                target: 3,
+                subject: 'The shops',
+                body: "Dear {formal},\n\nI enjoy your terminal very much, and I use its shops all the time. I do think, though, that they could be a little better. Some of them are looking a bit tired, and a refresh would make a real difference.\n\nWould you be able to upgrade {n} different Shopping developments? I am sure it would make the whole place more inviting. Thank you for your time, and for all that you do.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will upgrade {n} different Shopping developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot upgrade {n} different Shopping developments right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is perfectly fine, and thank you for answering. I will carry on using the shops as they are. They are still a pleasure.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! The shops look wonderful, and it was lovely to see them so improved. I could tell a lot of people had noticed. I am very happy that I wrote.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe shops were not upgraded in time, but thank you for considering it. I will keep shopping here all the same, as I always have.\n\nKind regards,\n{from}',
+            },
+        ],
     },
 }

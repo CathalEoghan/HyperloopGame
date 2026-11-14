@@ -776,6 +776,8 @@ function App() {
       tier3Cities: pm.purchasedCities.filter(c => c.tier === 3).length,
       countries: new Set(pm.purchasedCities.map(c => c.country).filter(Boolean)).size,
       milestones: milestoneState(pm).reached,
+      continentsConnected: Object.keys(continentCities).length,
+      nightLoops: readStoredList('hyperloop_timetable').filter(e => Number.isFinite(e?.minuteOfDay) && (e.minuteOfDay >= 20 * 60 || e.minuteOfDay < 2 * 60)).length,
       rewardsClaimed: readStoredList('hyperloop_progress_rewards').length + readStoredList('hyperloop_prestige_upgrade_rewards').length,
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
       timetable: readStoredList('hyperloop_timetable').length,

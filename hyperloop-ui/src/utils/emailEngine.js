@@ -301,6 +301,10 @@ const METRICS = {
     rep: (s) => s.repEarned || 0,
     connectContinent: (s, e) => s.continentCities?.[e.extra.continent] || 0,
     connectTier3: (s) => s.tier3Cities || 0,
+    // Timetable departures that leave at night (8pm to 2am)
+    scheduleNight: (s) => s.nightLoops || 0,
+    // Continents with at least one connected city
+    newContinent: (s) => s.continentsConnected || 0,
     // Milestones reached so far (development counts, city counts, continents, rank gifts)
     milestone: (s) => s.milestones || 0,
     // Rewards claimed on the Progress page
@@ -413,6 +417,18 @@ const GENERATORS = {
         const target = ctx.fixed ?? 3
         if ((ctx.rewardsWaiting || 0) < target) return null
         return { type: 'claimRewards', target, extra: {}, subject: 'Progress rewards', ask: target === 1 ? 'claim a reward on the Progress page' : `claim ${target} rewards on the Progress page`, hours: between(36, 48, rnd) }
+    },
+    // Departures leaving between 8pm and 2am; needs at least that many cities to put in the timetable
+    scheduleNight: (ctx, rnd) => {
+        const target = ctx.fixed ?? 3
+        if ((ctx.snap.cities || 0) < Math.max(2, target)) return null
+        return { type: 'scheduleNight', target, extra: {}, subject: 'Night loops', ask: `schedule ${target} ${plural(target, 'loop', 'loops')} to leave at night, between 8pm and 2am`, hours: between(36, 48, rnd) }
+    },
+    // A continent the terminal has no city in yet, with a city still waiting to be connected there
+    newContinent: (ctx, rnd) => {
+        const options = Object.entries(ctx.available?.continents || {}).filter(([c, n]) => n > 0 && !(ctx.snap.continentCities?.[c] > 0))
+        if (options.length === 0) return null
+        return { type: 'newContinent', target: 1, extra: {}, subject: 'A new continent', ask: 'connect a city in a new continent', hours: between(44, 48, rnd) }
     },
     connectCities: (ctx, rnd) => {
         const room = ctx.available?.citiesTotal || 0
@@ -600,7 +616,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             }
         }
         if (!req) continue
-        const sender = character ? { name: cast[character.id].name, role: character.role } : { name: `${pick(rnd() < 0.5 ? FIRST_NAMES_MALE : FIRST_NAMES_FEMALE, rnd)} ${pick(SURNAMES, rnd)}`, role: 'Member of the Public' }
+        let sender = character ? { name: cast[character.id].name, role: character.role } : { name: `${pick(rnd() < 0.5 ? FIRST_NAMES_MALE : FIRST_NAMES_FEMALE, rnd)} ${pick(SURNAMES, rnd)}`, role: 'Member of the Public' }
         const amounts = amountsFor(ctx.snap.reputation)
         const hours = req.hours
         const within = hours >= 48 ? '2 days' : hours > 24 ? `${hours} hours` : 'a day'
@@ -611,6 +627,8 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             const t = authored.template
             // A written email may word the request shown under it differently (`ask` in data/emailText.js)
             if (typeof t.ask === 'string' && t.ask.trim()) req = { ...req, ask: t.ask.trim() }
+            // A member of the public may have a title of their own (`role` in data/emailText.js), e.g. a terminal worker
+            if (!character && typeof t.role === 'string' && t.role.trim()) sender = { ...sender, role: t.role.trim() }
             const vars = {
                 name: nameForPlayer.split(' ')[0], formal, FORMAL: formal.toUpperCase(), title: PLAYER_TITLES.includes(playerTitle) ? playerTitle : '', fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
                 n: type === 'cash' || type === 'holdCash' || type === 'payUpfront' ? formatCash(req.target) : formatCount(req.target), count: req.target,
