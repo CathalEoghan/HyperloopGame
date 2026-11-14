@@ -130,7 +130,7 @@ export const CHARACTERS = {
     },
     marketing: {
         id: 'marketing', gender: 'any', role: 'Head of Marketing', color: '#e0457b',
-        affinity: ['like', 'greet', 'farewell', 'rep', 'shop', 'rename', 'work'],
+        affinity: ['like', 'greet', 'farewell', 'rep', 'shop', 'rename', 'work', 'connectTier3'],
         intros: [
             (ask) => `Big news, and I want us to move the needle on this: let us ${ask}. Think of the buzz!`,
             (ask) => `Circling back with a quick win for the brand. Can you ${ask}? It would really elevate us.`,

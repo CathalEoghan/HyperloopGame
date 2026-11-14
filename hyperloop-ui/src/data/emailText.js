@@ -674,6 +674,19 @@ export const EMAILS = {
                 failed: 'Dear {formal},\n\nThe work did not get done in time, but let us not worry! We will pivot and try again soon.\n\nOnwards and upwards,\n{from}',
             },
         ],
+        connectTier3: [
+            {
+                id: 'marketing-big-name-city',
+                target: 1,
+                subject: 'A headline destination',
+                body: "Dear {formal},\n\nBig news, and I want us to move the needle on this: nothing gets people talking like a big-name destination, and a Tier 3 city is exactly that!\n\nCould you connect a new Tier 3 city to the network? It would be a headline for our brand, and I already have the launch ideas ready. Think of the buzz!\n\nOnwards and upwards,\n{from}",
+                agree: 'Dear {from},\n\nNow that is a headline! I will connect a Tier 3 city.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nLove the ambition, but I cannot take on a Tier 3 city right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nNo problem, we will circle back to this! A destination like that will still be big news when the time is right.\n\nOnwards and upwards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nSmashed it! A new Tier 3 city is going straight on the front of the deck. Everyone will be talking about it!\n\nOnwards and upwards,\n{from}',
+                failed: 'Dear {formal},\n\nThe new city did not connect in time, but let us not worry! We will pivot and make it happen soon.\n\nOnwards and upwards,\n{from}',
+            },
+        ],
     },
     public: {
     },
