@@ -137,13 +137,6 @@ export const EMAILS = {
                 failed: 'Dear Manager,\n\nYour recent health inspection report will follow shortly. I am rather disappointed in your lack of preparations for this visit, considering I sent you a quick action plan before of how best to tackle this concern.\n\nIf you have any questions do not hesitate to reach out. I hope my next visit will yield more promising results.\n\nBest wishes,\n{from}',
             },
         ],
-        greet: [
-            {
-                id: 'example-inspector-greet',
-                subject: 'A friendly hello',
-                body: 'Dear {name},\n\nI was having the loveliest morning and I got to thinking how far a little kindness goes! Could you {ask}? Pretty please, with a cherry on top!\n\nYou have {time}.\n\nWarmest wishes,\n{from}',
-            },
-        ],
     },
     complainer: {
         build: [
