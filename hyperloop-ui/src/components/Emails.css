@@ -37,7 +37,7 @@
 .emails-progress-row { display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 700; }
 .emails-bar { height: 10px; background: #eadfce; border-radius: 6px; overflow: hidden; }
 .emails-bar > div { height: 100%; background: var(--ui-accent, #f5a623); transition: width 0.4s; }
-.emails-outcome { padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; background: #eee5d6; }
+.emails-outcome { white-space: pre-wrap; padding: 10px 14px; border-radius: 10px; font-size: 0.85rem; background: #eee5d6; }
 .emails-outcome-fulfilled { background: #dff0df; color: #1f5a22; }
 .emails-outcome-failed { background: #f6d8d4; color: #8c2a1f; }
 .emails-empty { padding: 24px; color: #7a6a57; font-size: 0.85rem; }
@@ -53,3 +53,8 @@
 .emails-mute-off { background: rgba(255, 255, 255, 0.12); }
 .emails-mute-off img { filter: grayscale(1); opacity: 0.6; }
 .emails-mute-off::after { content: ''; position: absolute; left: 50%; top: 50%; width: 22px; height: 2px; border-radius: 1px; background: #fff; transform: translate(-50%, -50%) rotate(-45deg); }
+.emails-request { display: flex; flex-direction: column; gap: 2px; background: #fff7e6; border: 1px solid var(--ui-accent, #f5a623); border-left-width: 5px; border-radius: 10px; padding: 8px 14px; }
+.emails-request-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #8a6d2f; }
+.emails-request-text { font-weight: 800; font-size: 0.95rem; }
+.emails-request-time { font-size: 0.76rem; color: #7a6a57; }
+.emails-outcome b { display: block; margin-top: 8px; }

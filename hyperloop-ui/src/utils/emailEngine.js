@@ -286,27 +286,27 @@ const GENERATORS = {
         return { type: 'build', target: 1, extra: { category }, subject: `New ${category} development`, ask: `build a ${category} development at the terminal`, hours: between(36, 48, rnd) }
     },
     greet: (ctx, rnd) => {
-        const target = between(2, 5, rnd)
+        const target = ctx.fixed ?? between(2, 5, rnd)
         return { type: 'greet', target, extra: {}, subject: 'Welcoming our passengers', ask: `greet the passengers arriving at the terminal ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 36, rnd) }
     },
     farewell: (ctx, rnd) => {
-        const target = between(2, 5, rnd)
+        const target = ctx.fixed ?? between(2, 5, rnd)
         return { type: 'farewell', target, extra: {}, subject: 'Seeing passengers off', ask: `say farewell to departing passengers ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 36, rnd) }
     },
     schedule: (ctx, rnd) => {
         if ((ctx.snap.cities || 0) < 2) return null
-        const target = between(1, 3, rnd)
+        const target = ctx.fixed ?? between(1, 3, rnd)
         return { type: 'schedule', target, extra: {}, subject: 'Timetable additions', ask: `schedule ${target} more ${plural(target, 'loop', 'loops')} in the timetable`, hours: between(24, 48, rnd) }
     },
     cash: (ctx, rnd) => {
         const perHour = ctx.incomePerHour || 0
         if (perHour <= 0) return null
-        const target = niceRound(perHour * between(3, 8, rnd))
+        const target = ctx.fixed ?? niceRound(perHour * between(3, 8, rnd))
         return { type: 'cash', target, extra: {}, subject: 'Quarterly figures', ask: `earn ${formatCash(target)} for the terminal`, hours: between(24, 48, rnd) }
     },
     rep: (ctx, rnd) => {
         const f = scaleFor(ctx.snap.reputation)
-        const target = niceRound(Math.max(10, Math.round(15 * f)))
+        const target = ctx.fixed ?? niceRound(Math.max(10, Math.round(15 * f)))
         return { type: 'rep', target, extra: {}, subject: 'Our public image', ask: `earn ${formatCount(target)} Reputation for the terminal`, hours: between(24, 48, rnd) }
     },
     connectContinent: (ctx, rnd) => {
@@ -318,7 +318,8 @@ const GENERATORS = {
     connectCities: (ctx, rnd) => {
         const room = ctx.available?.citiesTotal || 0
         if (room < 1) return null
-        const target = Math.min(room, between(1, 3, rnd))
+        if (ctx.fixed && ctx.fixed > room) return null
+        const target = ctx.fixed ?? Math.min(room, between(1, 3, rnd))
         return { type: 'connectCities', target, extra: {}, subject: 'Network growth', ask: `connect ${target} new ${plural(target, 'city', 'cities')} to the network`, hours: between(36, 48, rnd) }
     },
     rankUp: () => {
@@ -326,12 +327,12 @@ const GENERATORS = {
     },
     upgradeDev: (ctx, rnd) => {
         if ((ctx.devsWithUpgrade || 0) < 1) return null
-        const target = between(1, 2, rnd)
+        const target = ctx.fixed ?? between(1, 2, rnd)
         return { type: 'upgradeDev', target, extra: {}, subject: 'Development upgrades', ask: `upgrade a development ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 48, rnd) }
     },
     upgradeCity: (ctx, rnd) => {
         if ((ctx.snap.cities || 0) < 2) return null
-        const target = between(1, 2, rnd)
+        const target = ctx.fixed ?? between(1, 2, rnd)
         return { type: 'upgradeCity', target, extra: {}, subject: 'Line upgrades', ask: `upgrade a city's line ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 48, rnd) }
     },
     shop: (ctx, rnd) => {
@@ -339,16 +340,17 @@ const GENERATORS = {
         return { type: 'shop', target: 1, extra: {}, subject: 'A little something for the office', ask: 'buy something from the Shop', hours: between(24, 48, rnd) }
     },
     work: (ctx, rnd) => {
-        const target = between(4, 12, rnd) * 25
+        const target = ctx.fixed ?? between(4, 12, rnd) * 25
         return { type: 'work', target, extra: {}, subject: 'Rolling up our sleeves', ask: `click Work ${target} times`, hours: between(24, 36, rnd) }
     },
     rename: (ctx, rnd) => {
         if ((ctx.unrenamed || 0) < 1) return null
-        const target = Math.min(ctx.unrenamed, between(1, 2, rnd))
+        if (ctx.fixed && ctx.fixed > ctx.unrenamed) return null
+        const target = ctx.fixed ?? Math.min(ctx.unrenamed, between(1, 2, rnd))
         return { type: 'rename', target, extra: {}, subject: 'A fresh look', ask: `give ${target} ${plural(target, 'development', 'developments')} a new name`, hours: between(24, 48, rnd) }
     },
     like: (ctx, rnd) => {
-        const target = between(3, 8, rnd)
+        const target = ctx.fixed ?? between(3, 8, rnd)
         return { type: 'like', target, extra: {}, subject: 'Engaging online', ask: `like ${target} Hyper-Link ${plural(target, 'post', 'posts')}`, hours: between(24, 36, rnd) }
     },
 }
@@ -373,8 +375,6 @@ export const EMAIL_TYPES = Object.keys(GENERATORS)
 export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', types = null, cast = null, used = [] } = {}) {
     const order = [...(types || EMAIL_TYPES)].sort(() => rnd() - 0.5)
     for (const type of order) {
-        const req = GENERATORS[type](ctx, rnd)
-        if (!req) continue
         // Mostly one of the recurring characters whose usual requests include this one, or who have an email written for it
         const written = (id) => Array.isArray(EMAILS[id]?.[type]) && EMAILS[id][type].length > 0
         let character
@@ -388,13 +388,17 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             const people = cast ? CHARACTER_IDS.filter(id => (CHARACTERS[id].affinity.includes(type) || written(id)) && cast[id]?.name) : []
             character = people.length > 0 && rnd() < 0.75 ? CHARACTERS[pick(people, rnd)] : null
         }
+        // A written email may fix how many times the player is asked to do something ("target" in data/emailText.js)
+        const authored = pickAuthored(character?.id || 'public', type, used, rnd)
+        const fixed = Number.isFinite(authored?.template.target) && authored.template.target > 0 ? Math.floor(authored.template.target) : null
+        const req = GENERATORS[type]({ ...ctx, fixed }, rnd)
+        if (!req) continue
         const sender = character ? { name: cast[character.id].name, role: character.role } : { name: `${pick(rnd() < 0.5 ? FIRST_NAMES_MALE : FIRST_NAMES_FEMALE, rnd)} ${pick(SURNAMES, rnd)}`, role: 'Member of the Public' }
         const amounts = amountsFor(ctx.snap.reputation)
         // The Stakeholder gives less time
         const hours = character?.id === 'stakeholder' ? Math.min(req.hours, 36) : req.hours
         const within = hours >= 48 ? '2 days' : hours > 24 ? `${hours} hours` : 'a day'
         const nameForPlayer = addressee(playerName)
-        const authored = pickAuthored(character?.id || 'public', type, used, rnd)
         let text, referredBack = false, subject = req.subject, texts = null
         if (authored) {
             const t = authored.template
@@ -420,7 +424,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             type: req.type, extra: req.extra, target: req.target, sender, character: character?.id || null,
             subject, body: authored ? text : `Dear ${nameForPlayer.split(' ')[0]},\n\n${text}`, texts,
             templateKey: authored?.key || null, templateGroup: authored?.group || null,
-            createdAt: now, state: 'new', read: false, hours,
+            ask: req.ask, createdAt: now, state: 'new', read: false, hours,
             reward: amounts.fulfil, penalty: amounts.fail, agreeBonus: amounts.agree, refusePenalty: amounts.refuse,
             baseline: 0, progress: 0, deadline: null, agreedAt: null, resolvedAt: null, reply: null, outcome: null,
         }

@@ -35,6 +35,7 @@
 //     failed:    'What the sender says when the deadline is missed.',
 //     refused:   'What the sender says after a Refuse.',
 //     ignored:   'What the sender says when the player never answered.',
+//     target: 200,                 // optional: fix the number asked for ({n}) instead of letting the game choose (it is ignored if it would be impossible, e.g. more cities than exist)
 //     id: 'optional-short-name',   // keep the same id if you reorder emails, so "already seen" is remembered correctly
 //   }
 //
@@ -71,6 +72,17 @@ export const EMAILS = {
         ],
     },
     inspector: {
+        work: [
+            {
+                id: 'inspector-health-concerns',
+                target: 200,
+                subject: 'Health Concerns',
+                body: 'Dear Manager,\n\nSo so sorry to interrupt your managerial duties! However, following a recent inspection, your terminal is a little below our standards😿\n\nOur next inspection is in {time}. I really hope for a more positive experience next time! You certainly have your work cut out for you.❤️\n\nBest wishes,\n{from}',
+                refused: 'Dear Manager,\n\nYour lack of preparation for my next visit is noted.\n\nBest wishes,\n{from}',
+                fulfilled: "Dear Manager,\n\nI have noticed your work recently. Very good! I knew you had it in you! Here's to TEAMWORK!❤️❤️\n\nBest wishes,\n{from}",
+                failed: 'Dear Manager,\n\nYour recent health inspection report will follow shortly. I am rather disappointed in your lack of preparations for this visit, considering I sent you a quick action plan before of how best to tackle this concern.\n\nIf you have any questions do not hesitate to reach out. I hope my next visit will yield more promising results.\n\nBest wishes,\n{from}',
+            },
+        ],
         greet: [
             {
                 id: 'example-inspector-greet',

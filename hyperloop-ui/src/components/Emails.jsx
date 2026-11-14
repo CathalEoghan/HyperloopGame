@@ -100,6 +100,13 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                                     <div className="emails-subject">{selected.subject}</div>
                                     <div className="emails-text">{selected.body}</div>
                                 </div>
+                                {selected.ask && (
+                                    <div className="emails-request">
+                                        <span className="emails-request-label">The request</span>
+                                        <span className="emails-request-text">{selected.ask.charAt(0).toUpperCase() + selected.ask.slice(1)}</span>
+                                        <span className="emails-request-time">{selected.state === 'new' ? `${selected.hours} hours to do it once you agree` : `Done by ${new Date(selected.deadline).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })}`}</span>
+                                    </div>
+                                )}
                                 {selected.reply && (
                                     <div className="emails-msg emails-msg-reply">
                                         <div className="emails-msg-head"><b>You</b><span>Reply</span></div>
