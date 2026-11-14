@@ -188,7 +188,7 @@ export const EMAILS = {
                 agree: "Dear {from},\n\nThank you for your email. Your feedback matters to us, and I'll make sure to spend some time on Hyper-Link.\n\nAll the best,\n{fullName}",
                 refuse: "Dear {from},\n\nThanks for your feedback. I'm afraid I can't promise to like anything on request.\n\nBest regards,\n{fullName}",
                 refused: "Dear Manager,\n\nSo you're ignoring my post AND my email? That's, like, two ways of ignoring me!\n\nI'm going to post about THIS too.\n\n{from}",
-                fulfilled: "Dear Manager,\n\nI see you've been liking things on Hyper-Link. Good. But did you really have to like the one with the cat? I don't see how that helps ME.\n\nBest,\n{from}",
+                fulfilled: "Dear Manager,\n\nI see you've been liking things on Hyper-Link. Good. But the fact I had to ask you to do it is horrible. Do better.\n\nBest,\n{from}",
                 failed: "Dear Manager,\n\nMy post now has one like. It's from my mum.\n\nI hope you're proud of yourself.\n\nBest,\n{from}",
             },
         ],
