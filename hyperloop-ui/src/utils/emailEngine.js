@@ -242,6 +242,17 @@ export function pickAuthored(who, type, used = [], rnd = Math.random) {
     const i = pick(fresh.length > 0 ? fresh : list.map((_, j) => j), rnd)
     return { template: list[i], key: keys[i], group: keys }
 }
+// Every written email for this sender and type in the order to try them: unused ones first, each group shuffled. The game takes the
+// first one that can actually be asked for right now (asking for Food when every Food development is built, say, is skipped)
+export function authoredOptions(who, type, used = [], rnd = Math.random) {
+    const list = EMAILS[who]?.[type]
+    if (!Array.isArray(list) || list.length === 0) return []
+    const keys = list.map((t, i) => templateKey(who, type, t, i))
+    const shuffle = (a) => a.map(x => [rnd(), x]).sort((x, y) => x[0] - y[0]).map(x => x[1])
+    const idx = list.map((_, i) => i)
+    return [...shuffle(idx.filter(i => !used.includes(keys[i]))), ...shuffle(idx.filter(i => used.includes(keys[i])))]
+        .map(i => ({ template: list[i], key: keys[i], group: keys }))
+}
 // Remember a written email as used; once every one for that sender and type has been, start the set over
 export function markUsed(used, key, group) {
     const base = group && group.every(k => used.includes(k)) ? used.filter(k => !group.includes(k)) : used
@@ -296,13 +307,15 @@ const plural = (n, one, many) => (n === 1 ? one : many)
 //   unrenamed, devsWithUpgrade, rankUpsPossible }
 const GENERATORS = {
     build: (ctx, rnd) => {
-        const cats = ctx.available?.categories || []
-        if (cats.length === 0) return null
-        // A written email may name the category it is about (`category` in data/emailText.js); if it isn't unlocked yet, skip it
-        if (ctx.fixedCategory && !cats.includes(ctx.fixedCategory)) return null
-        const category = ctx.fixedCategory || pick(cats, rnd)
+        // How many of each category can still be built right now; ctx.available.categories is the older, simpler version of this
+        const room = ctx.buildableByCategory || Object.fromEntries((ctx.available?.categories || []).map(c => [c, 1]))
         // A written email may ask for more than one (`target` in data/emailText.js)
         const target = ctx.fixed && ctx.fixed > 1 ? ctx.fixed : 1
+        const options = Object.keys(room).filter(c => room[c] >= target)
+        // A written email may name the category it is about (`category` in data/emailText.js); skip it unless that many can still be built
+        if (ctx.fixedCategory && !options.includes(ctx.fixedCategory)) return null
+        const category = ctx.fixedCategory || pick(options, rnd)
+        if (!category) return null
         const ask = target > 1 ? `build ${target} ${category} developments at the terminal` : `build ${/^[AEIOU]/i.test(category) ? 'an' : 'a'} ${category} development at the terminal`
         return { type: 'build', target, extra: { category }, subject: `New ${category} development`, ask, hours: between(36, 48, rnd) }
     },
@@ -432,11 +445,21 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             if (people.length === 0) continue
             character = CHARACTERS[pick(people, rnd)]
         }
-        // A written email may fix how many times the player is asked to do something ("target" in data/emailText.js)
-        const authored = pickAuthored(character?.id || 'public', type, used, rnd)
-        const fixed = Number.isFinite(authored?.template.target) && authored.template.target > 0 ? Math.floor(authored.template.target) : null
-        const fixedCategory = typeof authored?.template.category === 'string' ? authored.template.category : null
-        const req = GENERATORS[type]({ ...ctx, fixed, fixedCategory }, rnd)
+        // A written email may fix how many times the player is asked to do something ("target" in data/emailText.js) or which
+        // category it is about. Try the written emails one by one and use the first that is possible right now.
+        const options = authoredOptions(character?.id || 'public', type, used, rnd)
+        let authored = null, req = null
+        if (options.length === 0) {
+            req = GENERATORS[type]({ ...ctx, fixed: null, fixedCategory: null }, rnd)
+        } else {
+            for (const option of options) {
+                const t = option.template
+                const fixed = Number.isFinite(t.target) && t.target > 0 ? Math.floor(t.target) : null
+                const fixedCategory = typeof t.category === 'string' ? t.category : null
+                req = GENERATORS[type]({ ...ctx, fixed, fixedCategory }, rnd)
+                if (req) { authored = option; break }
+            }
+        }
         if (!req) continue
         const sender = character ? { name: cast[character.id].name, role: character.role } : { name: `${pick(rnd() < 0.5 ? FIRST_NAMES_MALE : FIRST_NAMES_FEMALE, rnd)} ${pick(SURNAMES, rnd)}`, role: 'Member of the Public' }
         const amounts = amountsFor(ctx.snap.reputation)

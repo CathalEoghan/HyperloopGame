@@ -775,6 +775,8 @@ function App() {
     return {
       snap, incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
       available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length },
+      // How many developments of each category can still be built (they leave these lists once bought)
+      buildableByCategory: [...pm.unlockedDevelopments, ...pm.unlockedUpgrades].reduce((o, d) => (MILESTONE_CATEGORIES.includes(d.category) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}),
       shopCheapest: cheapest === Infinity ? 0 : cheapest,
       unrenamed: pm.purchasedDevelopments.filter(d => !pm.developmentNames?.[d.name]).length,
       devsWithUpgrade: pm.purchasedDevelopments.filter(d => d.revenue).length,
