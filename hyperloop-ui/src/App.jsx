@@ -777,6 +777,8 @@ function App() {
       countries: new Set(pm.purchasedCities.map(c => c.country).filter(Boolean)).size,
       milestones: milestoneState(pm).reached,
       continentsConnected: Object.keys(continentCities).length,
+      countryCities: pm.purchasedCities.reduce((o, c) => (c.country ? { ...o, [c.country]: (o[c.country] || 0) + 1 } : o), {}),
+      morningLoops: readStoredList('hyperloop_timetable').filter(e => Number.isFinite(e?.minuteOfDay) && e.minuteOfDay >= 6 * 60 && e.minuteOfDay < 10 * 60).length,
       nightLoops: readStoredList('hyperloop_timetable').filter(e => Number.isFinite(e?.minuteOfDay) && (e.minuteOfDay >= 20 * 60 || e.minuteOfDay < 2 * 60)).length,
       rewardsClaimed: readStoredList('hyperloop_progress_rewards').length + readStoredList('hyperloop_prestige_upgrade_rewards').length,
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
@@ -814,7 +816,7 @@ function App() {
       // Good events happen from EVENT_MIN_RANK on (and are the only kind with Crisis Avoidance)
       positiveEventChance: rankManager.rank < EVENT_MIN_RANK ? 0 : (perkActive('crisisAvoidanceSpecialists') ? 1 : 0.5),
       incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
-      available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length },
+      available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length, countries: pm.unlockedCities.reduce((o, c) => (c.country ? { ...o, [c.country]: (o[c.country] || 0) + 1 } : o), {}) },
       // A development or city milestone is within reach, and how many Progress rewards are waiting to be claimed
       milestoneNear: milestoneState(pm).near,
       rewardsWaiting: (() => {

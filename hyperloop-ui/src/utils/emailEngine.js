@@ -303,6 +303,10 @@ const METRICS = {
     connectTier3: (s) => s.tier3Cities || 0,
     // Timetable departures that leave at night (8pm to 2am)
     scheduleNight: (s) => s.nightLoops || 0,
+    // Cities connected in the countries a written email names (`countries` in data/emailText.js)
+    connectCountryCity: (s, e) => (e.extra.countries || []).reduce((n, c) => n + (s.countryCities?.[c] || 0), 0),
+    // Timetable departures that leave in the morning (6am to 10am)
+    scheduleMorning: (s) => s.morningLoops || 0,
     // Continents with at least one connected city
     newContinent: (s) => s.continentsConnected || 0,
     // Milestones reached so far (development counts, city counts, continents, rank gifts)
@@ -429,6 +433,23 @@ const GENERATORS = {
         const options = Object.entries(ctx.available?.continents || {}).filter(([c, n]) => n > 0 && !(ctx.snap.continentCities?.[c] > 0))
         if (options.length === 0) return null
         return { type: 'newContinent', target: 1, extra: {}, subject: 'A new continent', ask: 'connect a city in a new continent', hours: between(44, 48, rnd) }
+    },
+    // A city in one of the countries a written email names (`countries`); `onlyIfNone` keeps it for a terminal with no city in any of them yet
+    connectCountryCity: (ctx, rnd) => {
+        const list = ctx.fixedCountries
+        if (!Array.isArray(list) || list.length === 0) return null
+        const open = list.filter((c) => (ctx.available?.countries?.[c] || 0) > 0)
+        if (open.length === 0) return null
+        if (ctx.fixedNone && list.some((c) => (ctx.snap.countryCities?.[c] || 0) > 0)) return null
+        const named = list.map((c) => (c === 'United States of America' ? 'the United States' : c))
+        const where = named.length > 1 ? `${named.slice(0, -1).join(', ')} or ${named[named.length - 1]}` : named[0]
+        return { type: 'connectCountryCity', target: 1, extra: { countries: list }, subject: 'A new city abroad', ask: `connect a new city in ${where}`, hours: between(44, 48, rnd) }
+    },
+    // Departures leaving between 6am and 10am
+    scheduleMorning: (ctx, rnd) => {
+        const target = ctx.fixed ?? 3
+        if ((ctx.snap.cities || 0) < Math.max(2, target)) return null
+        return { type: 'scheduleMorning', target, extra: {}, subject: 'Morning loops', ask: `schedule ${target} ${plural(target, 'loop', 'loops')} to leave in the morning, between 6am and 10am`, hours: between(36, 48, rnd) }
     },
     connectCities: (ctx, rnd) => {
         const room = ctx.available?.citiesTotal || 0
@@ -611,7 +632,8 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
                 const t = option.template
                 const fixed = Number.isFinite(t.target) && t.target > 0 ? Math.floor(t.target) : null
                 const fixedCategory = typeof t.category === 'string' ? t.category : null
-                req = GENERATORS[type]({ ...ctx, fixed, fixedCategory }, rnd)
+                const fixedCountries = Array.isArray(t.countries) && t.countries.length ? t.countries : null
+                req = GENERATORS[type]({ ...ctx, fixed, fixedCategory, fixedCountries, fixedNone: t.onlyIfNone === true }, rnd)
                 if (req) { authored = option; break }
             }
         }
