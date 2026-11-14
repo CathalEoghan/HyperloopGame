@@ -53,7 +53,7 @@ export const formatCash = (n) => {
 // ---- recurring characters ---------------------------------------------------------------------------------------
 // Each has a voice (how requests are worded, how replies and results are answered) and the kinds of request they tend to
 // send. `last` (how the player treated their previous request) is remembered in the cast and mentioned in the next email.
-// Their pictures are optional files in assets/email-avatars/<id>.(jpg|png|webp); without one a coloured initial is shown.
+// Their pictures are optional files in assets/emailPictures/thumbs/<picture>.(jpg|png|webp) (see Emails.jsx); without one a coloured initial is shown.
 const cap = (t) => t.charAt(0).toUpperCase() + t.slice(1)
 export const CHARACTERS = {
     stakeholder: {
@@ -71,7 +71,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Acceptable.', failed: 'This is unacceptable. I expected better.', refused: 'Noted. I am not happy about it.', ignored: 'No reply at all. Very professional.' },
     },
     inspector: {
-        id: 'inspector', gender: 'f', role: 'Health & Safety Inspector', color: '#ff9edf',
+        id: 'inspector', picture: 'healthInspector', gender: 'f', role: 'Health & Safety Inspector', color: '#ff9edf',
         affinity: ['greet', 'farewell', 'rename', 'upgradeDev', 'schedule'],
         intros: [
             (ask) => `Hello hello! I hope your day is going brilliantly! Could you ${ask}? Pretty please!`,

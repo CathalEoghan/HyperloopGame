@@ -7,12 +7,14 @@ import { playHoverSound, playClickSound2 } from '../utils/sound.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { CHARACTERS, isOpen, progressLabel, timeLeft, formatLeft } from '../utils/emailEngine.js'
 
-// Optional pictures: assets/email-avatars/<character id>.(jpg|png|webp). Without one, a coloured initial.
-const AVATARS = Object.fromEntries(Object.entries(import.meta.glob('../assets/email-avatars/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }))
+// Optional pictures: assets/emailPictures/thumbs/<picture name>.(jpg|png|webp), small copies of the full-size ones in
+// assets/emailPictures. A character's picture name is `picture` in CHARACTERS (utils/emailEngine.js). Without one, a coloured initial.
+const AVATARS = Object.fromEntries(Object.entries(import.meta.glob('../assets/emailPictures/thumbs/*.{jpg,jpeg,png,webp}', { eager: true, import: 'default' }))
     .map(([path, url]) => [path.split('/').pop().replace(/\.[^.]+$/, ''), url]))
 function Avatar({ email, size = 34 }) {
-    const picture = email.character ? AVATARS[email.character] : null
-    const color = CHARACTERS[email.character]?.color || '#8a7a66'
+    const character = CHARACTERS[email.character]
+    const picture = character ? AVATARS[character.picture || character.id] : null
+    const color = character?.color || '#8a7a66'
     return picture
         ? <img src={picture} alt="" className="emails-avatar" style={{ width: size, height: size }} />
         : <span className="emails-avatar emails-avatar-initial" style={{ width: size, height: size, background: color, fontSize: size * 0.45 }}>{email.sender.name.charAt(0)}</span>
