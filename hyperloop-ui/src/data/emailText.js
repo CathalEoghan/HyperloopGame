@@ -906,6 +906,34 @@ export const EMAILS = {
             },
         ],
     },
+    politician: {
+        build: [
+            {
+                id: 'politician-ribbon-cutting',
+                category: 'Recreation',
+                subject: 'A little something for the community',
+                body: "Dear {formal},\n\nWhat a marvellous job you are doing. I say it to everyone I meet, and I meet a great many people, many of them very generous ones.\n\nNow, the community has been asking, quite insistently, for somewhere to enjoy themselves. A new Recreation development would be just the thing. Could you build one? I would be happy to cut the ribbon. It is no trouble at all, and I would hardly mention it afterwards, apart from in every speech I give.\n\nA friend of mine knows some excellent builders, by the way. Purely a coincidence. There is no need to write it down.\n\nWith every confidence in myself,\n{from}",
+                agree: 'Dear {from},\n\nI will build a Recreation development. As for your friend and the builders, I will keep that between us.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot build a Recreation development right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nOf course, of course. I understand completely. These things so often come down to who one knows, and it seems we do not know each other quite well enough yet. I will keep your answer in mind.\n\nWith every confidence in myself,\n{from}',
+                fulfilled: 'Dear {formal},\n\nMarvellous. The ribbon has never looked so well cut. I shall be sure to tell people it was my idea. I trust that is all right? I will take your silence as a yes.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nNo new Recreation development, I see. A pity. I had already told a few people, and the photographer. I have asked them to forget it. It is amazing what one can arrange.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
+        cash: [
+            {
+                id: 'politician-community-fund',
+                subject: 'The Community Fund',
+                body: "Dear {formal},\n\nI hope you do not mind me writing. I have been thinking about how a successful terminal, such as yours, might give something back. Not that you would have to. It would simply be noticed. By the right people.\n\nIf you could earn {n}, I think it would speak very well of you. A rising tide lifts all boats, as they say, and I am very good at knowing whose boat is whose. Between us, a fund exists for the community. I am the only one who keeps an eye on it, so it will be in safe hands.\n\nNo need to reply to the last bit. Just the earning.\n\nWith every confidence in myself,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will earn {n}. The fund is your concern.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot earn {n} right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nAh. Well. I would not dream of pressing. I only mention that the planning office does remember who was helpful, and who was not. Not that I have any say in that. Entirely coincidental.\n\nWith every confidence in myself,\n{from}',
+                fulfilled: 'Dear {formal},\n\n{n}! Splendid. The community will be so grateful, and so, in my own small way, shall I. I will be in touch about how it was spent. Or I will not. Time will tell.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nThe target was not reached. Never mind. These things are so hard, and so rarely worth the trouble. I will find the money elsewhere. I always do.\n\nWith every confidence in myself,\n{from}',
+            },
+        ],
+    },
+
     public: {
     },
 }
