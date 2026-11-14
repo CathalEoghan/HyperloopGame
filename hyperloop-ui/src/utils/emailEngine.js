@@ -71,7 +71,7 @@ export const CHARACTERS = {
         outcome: { fulfilled: 'Acceptable.', failed: 'This is unacceptable. I expected better.', refused: 'Noted. I am not happy about it.', ignored: 'No reply at all. Very professional.' },
     },
     inspector: {
-        id: 'inspector', gender: 'f', role: 'Health & Safety Inspector', color: '#2f8f6b',
+        id: 'inspector', gender: 'f', role: 'Health & Safety Inspector', color: '#ff9edf',
         affinity: ['greet', 'farewell', 'rename', 'upgradeDev', 'schedule'],
         intros: [
             (ask) => `Hello hello! I hope your day is going brilliantly! Could you ${ask}? Pretty please!`,
