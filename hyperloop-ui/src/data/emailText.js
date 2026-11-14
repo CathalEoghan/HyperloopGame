@@ -205,6 +205,18 @@ export const EMAILS = {
                 failed: "Dear Manager,\n\nSame chair. Same spot. Still doing nothing. I've started timing you again. It's up to twenty minutes now - a new record.\n\nThis is going in my review.\n\nBest,\n{from}",
             },
         ],
+        shop: [
+            {
+                id: 'complainer-decor',
+                subject: 'Ever heard of DECOR?',
+                body: "Dear Manager,\n\nI have been through this terminal so many times and it looks EXACTLY the same every time. Same colours. Same everything. It is, like, so boring I could cry.\n\nMy cousin says her terminal gets a whole new look all the time. Treat the place to something nice. It's not that hard.\n\nRegards.\n{from}",
+                agree: "Dear {from},\n\nThank you for your email. We're always looking at ways to refresh the terminal, and I'll see what I can do.\n\nAll the best,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks for your feedback. We're happy with how the terminal looks at the moment and have no plans to change it.\n\nBest regards,\n{fullName}",
+                refused: "Dear Manager,\n\nHAPPY with it?! HAPPY?! It looks like a dentist's waiting room.\n\nI'm telling my cousin. She has opinions about this sort of thing.\n\n{from}",
+                fulfilled: "Dear Manager,\n\nOkay, I noticed something new. It's... fine. But it's a different colour now and I liked the old one better.\n\nCan you change it back?\n\nBest,\n{from}",
+                failed: "Dear Manager,\n\nStill exactly the same. I've decided to bring my own decorations.\n\nThey're plastic flowers. You're welcome.\n\nBest,\n{from}",
+            },
+        ],
     },
     public: {
         like: [
