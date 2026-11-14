@@ -197,7 +197,7 @@ export const EMAILS = {
                 id: 'complainer-lazy-staff',
                 target: 150,
                 subject: 'Do you EVER work?!',
-                body: "Dear Manager,\n\nI was told to speak to the manager, so I went looking for you. And what were you doing? NOTHING. Just sitting there. For ten whole minutes. I timed it.\n\nIs this a terminal or a waiting room?! Get to work. Properly.\n\nYou have {time}.\n\nRegards.\n{from}",
+                body: "Dear Manager,\n\nI was told to speak to the manager, so I went looking for you. And what were you doing? NOTHING. Just sitting there. For ten whole minutes. I timed it.\n\nIs this a terminal or a waiting room?! Get to work. Now.\n\nRegards.\n{from}",
                 agree: "Dear {from},\n\nThank you for bringing this to my attention, and I apologise. I'll get straight back to work.\n\nAll the best,\n{fullName}",
                 refuse: "Dear {from},\n\nThanks for your feedback. I work very hard, and I can't make any promises about what you saw.\n\nBest regards,\n{fullName}",
                 refused: "Dear Manager,\n\nSo you're saying I'm LYING?! I have, like, photos. Okay I don't have photos. But I have a very good memory.\n\nI know what I saw. You. Doing nothing.\n\n{from}",
