@@ -158,7 +158,7 @@ export const CHARACTERS = {
     },
     lawyer: {
         id: 'lawyer', gender: 'm', role: 'Legal Executive', color: '#3a3f55',
-        affinity: ['rankUp', 'upgradeCity', 'upgradeDev', 'schedule', 'connectCities', 'connectTier3', 'build'],
+        affinity: ['rankUp', 'upgradeCity', 'upgradeDev', 'schedule', 'connectCities', 'connectTier3', 'holdRep', 'build'],
         intros: [
             (ask) => `I will be direct, as it saves us both time: I would like you to ${ask}.`,
             (ask) => `To be upfront about it, the sensible course here is to ${ask}. I would rather say so now than later.`,
@@ -303,6 +303,7 @@ export const metricOf = (email, snap) => (METRICS[email.type] ? METRICS[email.ty
 export const progressOf = (email, snap) => Math.max(email.progress || 0, metricOf(email, snap) - (email.baseline || 0))
 
 export const progressLabel = (email) => {
+    if (email.type === 'holdRep') return `Keep Reputation above ${formatCount(email.target)}`
     const cash = email.type === 'cash'
     const have = Math.min(email.progress || 0, email.target)
     return cash ? `${formatCash(have)} of ${formatCash(email.target)}` : `${formatCount(Math.floor(have))} of ${formatCount(email.target)}`
@@ -369,6 +370,15 @@ const GENERATORS = {
         return { type: 'connectCities', target, extra: {}, subject: 'Network growth', ask: `connect ${target} new ${plural(target, 'city', 'cities')} to the network`, hours: between(36, 48, rnd) }
     },
     // Connect a city of the top tier (Tier 3); only while that many are still waiting to be connected
+    // Not a task to do but one to avoid: Reputation must stay above the target until the deadline. Only asked while the player has
+    // a little to spare (the target is about 85% of their Reputation now), so it can always be kept
+    holdRep: (ctx, rnd) => {
+        const rep = ctx.snap.reputation || 0
+        if (rep < 100) return null
+        const target = niceRound(rep * 0.85)
+        if (target >= rep) return null
+        return { type: 'holdRep', target, extra: {}, subject: 'Our reputation', ask: `keep the terminal's Reputation above ${formatCount(target)}`, hours: between(24, 36, rnd) }
+    },
     connectTier3: (ctx, rnd) => {
         const room = ctx.tier3Available || 0
         if (room < 1) return null
@@ -583,6 +593,14 @@ export function refuse(email, playerName, cult, now = Date.now(), ignored = fals
 // Checks one agreed email against the game. Returns the same email when nothing happened.
 export function updateAgreed(email, snap, now = Date.now()) {
     if (email.state !== 'agreed') return email
+    if (email.type === 'holdRep') {
+        // Fails the moment Reputation is below the target; succeeds when the deadline arrives with it still above
+        if ((snap.reputation || 0) < email.target) return { ...email, state: 'failed', resolvedAt: now, read: false, outcome: OUTCOME_TEXT.failed(email), repChange: -email.penalty }
+        if (now >= email.deadline) return { ...email, progress: email.target, state: 'fulfilled', resolvedAt: now, read: false, outcome: OUTCOME_TEXT.fulfilled(email), repChange: email.reward }
+        const span = Math.max(1, email.deadline - (email.agreedAt || now))
+        const shown = Math.max(0, Math.min(email.target, Math.round(email.target * ((now - (email.agreedAt || now)) / span))))
+        return shown === (email.progress || 0) ? email : { ...email, progress: shown }
+    }
     const progress = progressOf(email, snap)
     if (progress >= email.target) {
         return { ...email, progress: email.target, state: 'fulfilled', resolvedAt: now, read: false, outcome: OUTCOME_TEXT.fulfilled(email), repChange: email.reward }

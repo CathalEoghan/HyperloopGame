@@ -17,6 +17,7 @@
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
+//   holdRep          Keep Reputation above {n} until the deadline (a task to avoid, not do; {n} is worked out from their Reputation)
 //   rankUp           Take the terminal up a rank
 //   upgradeDev       Upgrade a development {n} times
 //   upgradeDevCategory  Upgrade {n} different developments of one category {category} (set `category`, e.g. 'Food')
@@ -528,6 +529,18 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nUnderstood, and thank you for a straight answer. I will raise it again when the timing is better.\n\nKind regards,\n{from}',
                 fulfilled: 'Dear {formal},\n\nCongratulations on the new rank. I am pleased, and I think it will serve us well.\n\nKind regards,\n{from}',
                 failed: 'Dear {formal},\n\nThe terminal has not moved up a rank. I will not press the matter, but it was an opportunity worth taking.\n\nKind regards,\n{from}',
+            },
+        ],
+        holdRep: [
+            {
+                id: 'lawyer-reputation-floor',
+                subject: 'Our reputation',
+                body: "Dear {formal},\n\nI will be upfront about my concern: reputation is far easier to lose than to rebuild, and the terminal's is worth protecting.\n\nI would like you to keep it above {n} for the time being. Nothing needs doing beyond avoiding anything that would bring it down.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nThank you for being so clear. I will keep our Reputation above {n}.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate the concern, but I cannot promise to keep our Reputation above {n}.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood, and thank you for being honest. I would only ask that you take care with it regardless.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you. Our reputation held, and I am grateful for the care you took with it.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nOur Reputation fell below {n}. I will not lecture you, but it is exactly what I hoped to avoid.\n\nKind regards,\n{from}',
             },
         ],
     },
