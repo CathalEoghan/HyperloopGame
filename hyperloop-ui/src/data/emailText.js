@@ -17,6 +17,7 @@
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
+//   negativeEvents   Live through {n} negative events (random bad events at the terminal; not something the player controls)
 //   holdCash         Keep at least {n} in the bank until the deadline (like holdRep; {n} is worked out from their balance)
 //   clearInbox       Answer the {n} emails waiting in the inbox
 //   holdRep          Keep Reputation above {n} until the deadline (a task to avoid, not do; {n} is worked out from their Reputation)
@@ -699,6 +700,46 @@ export const EMAILS = {
                 refused: 'Dear {formal},\n\nA no. Might I ask what is behind it? Actually, never mind, that is not my business at all.\n\nLooking forward to hearing from you,\n{from}',
                 fulfilled: 'Dear {formal},\n\nYou did it! How does it feel? Did you celebrate? Please ignore that, I am getting ahead of myself.\n\nLooking forward to hearing from you,\n{from}',
                 failed: 'Dear {formal},\n\nThe figure was not reached. Was it the numbers, or something more personal? Forget the second part, I should not have asked.\n\nLooking forward to hearing from you,\n{from}',
+            },
+        ],
+        connectCities: [
+            {
+                id: 'journalist-expansion',
+                target: 3,
+                subject: 'Expansion plans?',
+                body: "Dear {formal},\n\nI hear the terminal is growing, which makes me wonder: is it true you cannot sleep until the map looks complete? Oh dear, that came out wrong. Please strike it from the record.\n\nPurely professionally, could you connect {n} new cities to the network? A story like that needs a bigger map, and I would love to tell it. Is it also true that you have already chosen them? No, no, never mind.\n\nLooking forward to hearing from you,\n{from}",
+                agree: 'Dear {from},\n\nI will connect {n} new cities. And I am not telling you whether I have chosen them yet.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot take on {n} new cities right now, and my sleeping habits are my own business.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nA no, then. Is the map really so complete? Forget I asked, I have no right to.\n\nLooking forward to hearing from you,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThree new cities! Was it a long-held dream, or a sudden whim? Please pretend I did not ask. Wonderful news.\n\nLooking forward to hearing from you,\n{from}',
+                failed: 'Dear {formal},\n\nThe cities were not connected in time. Was something holding you back? Or someone? I should not have said that.\n\nLooking forward to hearing from you,\n{from}',
+            },
+        ],
+        upgradeDevCategory: [
+            {
+                id: 'journalist-service-desk',
+                target: 1,
+                category: 'Service',
+                subject: 'Behind the service desk',
+                body: "Dear {formal},\n\nA little bird tells me the Service side of the terminal looks a bit tired. Who was the little bird? I cannot say. Was it you? Forgive me, that was unfair, please disregard it.\n\nWhat I can ask is whether you could upgrade a Service development. I would like to write that someone is looking after the people who look after everyone else. And do you actually use the services yourself? No, never mind, that is none of my business.\n\nLooking forward to hearing from you,\n{from}",
+                agree: 'Dear {from},\n\nI will upgrade a Service development. And whether I use the services myself is my own business.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot upgrade a Service development right now, and I will not be naming any little birds.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood. Is it the cost, or the principle? Forget I asked, it is not my place.\n\nLooking forward to hearing from you,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThe Service side has been upgraded. Is that guilt I hear, or pride? Please ignore that. A lovely story, thank you.\n\nLooking forward to hearing from you,\n{from}',
+                failed: 'Dear {formal},\n\nThe Service development was not upgraded in time. Were you perhaps too busy? Or too embarrassed? I should not have asked.\n\nLooking forward to hearing from you,\n{from}',
+            },
+        ],
+        negativeEvents: [
+            {
+                id: 'journalist-bad-days',
+                target: 2,
+                subject: 'When things go wrong',
+                body: "Dear {formal},\n\nI am writing about how terminals cope when things go wrong, and I would love to hear how you handle it. Is it true that you go quiet and stare out of the window? Sorry, that is far too personal. Please ignore it.\n\nIf you were to live through {n} negative events at the terminal, would you be willing to tell me how it went? Honest stories are the best ones. And do your hands shake, at all? No, no, forget I said that.\n\nLooking forward to hearing from you,\n{from}",
+                agree: 'Dear {from},\n\nVery well. If {n} negative events come along, I will tell you how it went. My hands are not your concern.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI would rather not promise to live through bad events for a story, and my window-staring is my own business.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nUnderstood. Perhaps it was too much to ask. Were you afraid it might go badly? Forget I said that.\n\nLooking forward to hearing from you,\n{from}',
+                fulfilled: 'Dear {formal},\n\nYou came through two bad events. How are you holding up? Are you sleeping? Sorry, not my place. A wonderful story, thank you.\n\nLooking forward to hearing from you,\n{from}',
+                failed: 'Dear {formal},\n\nTwo bad days did not come. Lucky, or is there something you are not telling me? Please forget I asked.\n\nLooking forward to hearing from you,\n{from}',
             },
         ],
     },

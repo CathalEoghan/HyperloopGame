@@ -172,7 +172,7 @@ export const CHARACTERS = {
     },
     journalist: {
         id: 'journalist', gender: 'f', role: 'Journalist', color: '#6a4fa0',
-        affinity: ['rep', 'cash', 'connectContinent', 'like', 'rankUp', 'greet'],
+        affinity: ['rep', 'cash', 'connectContinent', 'like', 'rankUp', 'greet', 'connectCities', 'upgradeDevCategory', 'negativeEvents'],
         intros: [
             (ask) => `Quick question: would you be willing to ${ask}? And, if I may ask, why not sooner?`,
             (ask) => `I am putting a piece together. Could you ${ask}? What would that say about the terminal? Who else would notice?`,
@@ -287,6 +287,8 @@ const METRICS = {
     rep: (s) => s.repEarned || 0,
     connectContinent: (s, e) => s.continentCities?.[e.extra.continent] || 0,
     connectTier3: (s) => s.tier3Cities || 0,
+    // Negative events (the bad ones) that have happened to the terminal
+    negativeEvents: (s) => s.negativeEvents || 0,
     // Emails the player has answered (agreed to or refused)
     clearInbox: (s) => s.answered || 0,
     connectCities: (s) => s.cities || 0,
@@ -385,6 +387,13 @@ const GENERATORS = {
         if (target >= rep) return null
         return { type: 'holdRep', target, extra: {}, subject: 'Our reputation', ask: `keep the terminal's Reputation above ${formatCount(target)}`, hours: between(24, 36, rnd) }
     },
+    // Not something the player does, but something they live through: bad events happen at random every few minutes, so it is only
+    // asked while they can still happen (not switched off by a perk or held back by upgrades) and the deadline is long
+    negativeEvents: (ctx, rnd) => {
+        if (!((ctx.negativeEventChance || 0) >= 0.05)) return null
+        const target = ctx.fixed ?? 2
+        return { type: 'negativeEvents', target, extra: {}, subject: 'When things go wrong', ask: `experience ${target} negative ${plural(target, 'event', 'events')}`, hours: between(44, 48, rnd) }
+    },
     // Like holdRep, for the cash balance (spending on builds and upgrades is what could break it)
     holdCash: (ctx, rnd) => {
         const bal = ctx.snap.balance || 0
@@ -428,7 +437,7 @@ const GENERATORS = {
         if (!category) return null
         if (ctx.fixed && ctx.fixed > room[category]) return null
         const target = ctx.fixed ?? Math.min(room[category], between(1, 3, rnd))
-        return { type: 'upgradeDevCategory', target, extra: { category }, subject: `${category} upgrades`, ask: `upgrade ${target} different ${category} ${plural(target, 'development', 'developments')}`, hours: between(24, 48, rnd) }
+        return { type: 'upgradeDevCategory', target, extra: { category }, subject: `${category} upgrades`, ask: target === 1 ? `upgrade ${/^[AEIOU]/i.test(category) ? 'an' : 'a'} ${category} development` : `upgrade ${target} different ${category} developments`, hours: between(24, 48, rnd) }
     },
     upgradeCity: (ctx, rnd) => {
         if ((ctx.snap.cities || 0) < 2) return null
