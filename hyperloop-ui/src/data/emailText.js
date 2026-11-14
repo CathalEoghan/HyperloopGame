@@ -98,6 +98,18 @@ export const EMAILS = {
                 failed: "Dear Manager,\n\nOh dear, those shops are still not up to scratch. I did so want to give you a glowing report. I'm afraid I must mark this one down.\n\nBest wishes,\n{from}",
                 fulfilled: 'Dear Manager,\n\nMarvellous! Those shops are positively gleaming. Thank you for taking my advice so seriously. 🐱\n\nUntil my next visit!\n\nBest wishes,\n{from}',
             },
+            {
+                id: 'inspector-service',
+                category: 'Service',
+                target: 3,
+                subject: 'Service Area Standards',
+                body: "Dear Manager,\n\nHello, hello! I do hope your day is going swimmingly. Mine would be even better with a nice cup of tea and a tidy terminal! ☕\n\nNow, on to business. I took a good look at your service areas on my last inspection and, I'm sorry to say, a few of them are not quite up to scratch. Service is the heart of any terminal, and standards simply must be paw-sitively consistent.\n\nPlease give three of them some proper attention before my next visit. I know you can pull it off!\n\nBest wishes,\n{from}",
+                agree: 'Dear {from},\n\nThank you for letting me know. I will make sure three of our service areas are improved.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI appreciate the advice, but I am unable to take on these improvements at the moment.\n\nBest regards,\n{fullName}',
+                refused: 'Dear Manager,\n\nOh dear. I did so hope you would say yes. I have noted it in the report, and I will be keeping an eye on those service areas.\n\nBest wishes,\n{from}',
+                failed: "Dear Manager,\n\nI'm afraid those service areas are still not up to my standards. I really wanted to give you a glowing report, but I must mark this one down.\n\nBest wishes,\n{from}",
+                fulfilled: 'Dear Manager,\n\nWonderful! Your service areas are now a credit to the terminal. Thank you for taking my advice so seriously. 🐱\n\nUntil my next visit!\n\nBest wishes,\n{from}',
+            },
         ],
         build: [
             {
