@@ -52,6 +52,8 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
     const threadRef = useRef(null)
     const [muteTip, setMuteTip] = useState(null)
     useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = el.scrollHeight }, [selected?.state, selected?.reply])
+    // Opening an email starts at its top; the thread only drops to the bottom when a reply or result is added to it
+    useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = 0 }, [selectedId])
     useEffect(() => { if (selected && !selected.read) onRead(selected.id) }, [selected, onRead])
     const unreadOthers = sorted.filter(e => !e.read).length
 
@@ -110,7 +112,7 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                                 {selected.reply && (
                                     <div className="emails-msg emails-msg-reply">
                                         <div className="emails-msg-head"><b>You</b><span>Reply</span></div>
-                                        <div className="emails-text"><Typed text={selected.reply} animate={typingId === selected.id} onDone={() => setTypingId(null)} /></div>
+                                        <div className="emails-text"><Typed key={selected.id} text={selected.reply} animate={typingId === selected.id} onDone={() => setTypingId(null)} /></div>
                                     </div>
                                 )}
                                 {selected.state === 'new' && typingId !== selected.id && (

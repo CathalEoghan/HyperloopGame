@@ -282,8 +282,10 @@ const GENERATORS = {
     build: (ctx, rnd) => {
         const cats = ctx.available?.categories || []
         if (cats.length === 0) return null
-        const category = pick(cats, rnd)
-        return { type: 'build', target: 1, extra: { category }, subject: `New ${category} development`, ask: `build a ${category} development at the terminal`, hours: between(36, 48, rnd) }
+        // A written email may name the category it is about (`category` in data/emailText.js); if it isn't unlocked yet, skip it
+        if (ctx.fixedCategory && !cats.includes(ctx.fixedCategory)) return null
+        const category = ctx.fixedCategory || pick(cats, rnd)
+        return { type: 'build', target: 1, extra: { category }, subject: `New ${category} development`, ask: `build ${/^[AEIOU]/i.test(category) ? 'an' : 'a'} ${category} development at the terminal`, hours: between(36, 48, rnd) }
     },
     greet: (ctx, rnd) => {
         const target = ctx.fixed ?? between(2, 5, rnd)
@@ -391,7 +393,8 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
         // A written email may fix how many times the player is asked to do something ("target" in data/emailText.js)
         const authored = pickAuthored(character?.id || 'public', type, used, rnd)
         const fixed = Number.isFinite(authored?.template.target) && authored.template.target > 0 ? Math.floor(authored.template.target) : null
-        const req = GENERATORS[type]({ ...ctx, fixed }, rnd)
+        const fixedCategory = typeof authored?.template.category === 'string' ? authored.template.category : null
+        const req = GENERATORS[type]({ ...ctx, fixed, fixedCategory }, rnd)
         if (!req) continue
         const sender = character ? { name: cast[character.id].name, role: character.role } : { name: `${pick(rnd() < 0.5 ? FIRST_NAMES_MALE : FIRST_NAMES_FEMALE, rnd)} ${pick(SURNAMES, rnd)}`, role: 'Member of the Public' }
         const amounts = amountsFor(ctx.snap.reputation)
