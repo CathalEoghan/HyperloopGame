@@ -204,7 +204,10 @@ export function ensureCast(cast, rnd = Math.random) {
     })
     return next
 }
-export const noteOutcome = (cast, characterId, state) => (cast[characterId] ? { ...cast, [characterId]: { ...cast[characterId], last: state } } : cast)
+// A character only refers back to their previous request once, and only if it was settled recently (so "last time" is true)
+const MEMORY_MS = 3 * 24 * HOUR
+export const noteOutcome = (cast, characterId, state, now = Date.now()) => (cast[characterId] ? { ...cast, [characterId]: { ...cast[characterId], last: state, lastAt: now } } : cast)
+export const forgetOutcome = (cast, characterId) => (cast[characterId] ? { ...cast, [characterId]: { ...cast[characterId], last: null, lastAt: 0 } } : cast)
 
 const addressee = (name) => (name && name.trim()) || 'Manager'
 const firstName = (sender) => sender.name.split(' ')[0]
@@ -350,16 +353,17 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
         // The Stakeholder gives less time
         const hours = character?.id === 'stakeholder' ? Math.min(req.hours, 36) : req.hours
         const within = hours >= 48 ? '2 days' : hours > 24 ? `${hours} hours` : 'a day'
-        let text
+        let text, referredBack = false
         if (character) {
-            const last = cast[character.id].last
+            const last = now - (cast[character.id].lastAt || 0) <= MEMORY_MS ? cast[character.id].last : null
             const memory = last && character.after[last] ? `${character.after[last]}\n\n` : ''
+            referredBack = memory !== ''
             text = `${memory}${pick(character.intros, rnd)(req.ask)}\n\n${character.deadline(within)}\n${pick(character.outros, rnd)}\n\n${character.signoff}\n${sender.name}\n${sender.role}`
         } else {
             text = `${pick(INTROS, rnd)(req.ask)}\n\nI need this done within ${within} of you agreeing.\n${pick(OUTROS, rnd)}\n\nKind regards,\n${sender.name}\n${sender.role}`
         }
         return {
-            id: `em_${now}_${Math.floor(rnd() * 1e6)}`,
+            id: `em_${now}_${Math.floor(rnd() * 1e6)}`, referredBack,
             type: req.type, extra: req.extra, target: req.target, sender, character: character?.id || null,
             subject: req.subject, body: `Dear ${addressee(playerName).split(' ')[0]},\n\n${text}`,
             createdAt: now, state: 'new', read: false, hours,

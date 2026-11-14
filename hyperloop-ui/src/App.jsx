@@ -824,6 +824,8 @@ function App() {
           emailEngine.writeCast(cast)
           const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), cast })
           if (email) {
+            // Having mentioned how they were last treated, the character doesn't say it again
+            if (email.referredBack) emailEngine.writeCast(emailEngine.forgetOutcome(cast, email.character))
             list = [...list, email]
             meta = emailEngine.afterArrival(meta)
             changed = true
