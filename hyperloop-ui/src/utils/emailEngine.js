@@ -488,7 +488,10 @@ export function wantsPublic(today = [], rnd = Math.random) {
 // Make one email, or null if nothing fits. `types` lets a test force a type.
 export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', playerTitle = '', types = null, cast = null, used = [], today = [] } = {}) {
     const order = [...(types || EMAIL_TYPES)].sort(() => rnd() - 0.5)
-    const wantPublic = wantsPublic(today, rnd)
+    // With only written emails in use and none written for the public yet, nobody from the public is asked for (otherwise a day's
+    // "public" slot would never be filled and would hold up the characters)
+    const publicWritten = !ONLY_WRITTEN || Object.values(EMAILS.public || {}).some(l => Array.isArray(l) && l.length > 0)
+    const wantPublic = publicWritten && wantsPublic(today, rnd)
     for (const type of order) {
         // Who sends it. A character can write at most once a day, and a day always has at least MIN_CHARACTERS_PER_DAY
         // characters and MIN_PUBLIC_PER_DAY member of the public (decided above, from who has already written today).

@@ -62,9 +62,9 @@
 // KEEP IT SAFE: like the Hyper-Link posts, an email must not claim the terminal has facilities it might not have, or describe
 // things that happen live (delays, crowds, weather).
 //
-// While you are still writing, you can make the game send ONLY the emails written here (nothing from the built-in wording).
-// Set this to true once you want that; requests with no email written for them are then never sent.
-export const ONLY_WRITTEN = false
+// The game sends ONLY the emails written here (nothing from the built-in wording). A sender or request with no email written
+// for it is never sent. Set this to false to let the game fill the gaps with its built-in wording.
+export const ONLY_WRITTEN = true
 
 // The examples below are placeholders to show the layout. Replace them and add your own.
 export const EMAILS = {
