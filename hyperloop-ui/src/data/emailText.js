@@ -796,6 +796,21 @@ export const EMAILS = {
             },
         ],
     },
+    security: {
+        upgradeCity: [
+            {
+                id: 'security-loose-lines',
+                target: 2,
+                subject: 'Tighten up the lines',
+                body: "Dear {formal},\n\nI will keep this short, because apparently I am no longer allowed to say what I think in writing. HR had a word with me again. Something about my 'tone'.\n\nRight. The lines out to the other cities are the way in and the way out, and I do not like how loose they are. Could you upgrade a city's line {n} times? These days everyone wants a conversation about everything. I do not want a conversation. I want a stronger line.\n\nNobody listens to the old guard anymore, but I have seen what happens when you leave the back door open.\n\nEyes open,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will upgrade a city\'s line {n} times.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI cannot take on line upgrades right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nFine. Do not come crying to me when somebody walks straight through. And before anyone asks, I never wrote this.\n\nEyes open,\n{from}',
+                fulfilled: 'Dear {formal},\n\nGood. About time somebody listened. I would put it in the HR file as a success, but they do not read my emails. Or maybe they do. Thank you.\n\nEyes open,\n{from}',
+                failed: 'Dear {formal},\n\nThe lines are as loose as ever. Typical. I would say more, but I have been asked to be more positive in writing, so: better luck next time.\n\nEyes open,\n{from}',
+            },
+        ],
+    },
     public: {
     },
 }
