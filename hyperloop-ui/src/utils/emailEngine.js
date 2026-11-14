@@ -325,8 +325,10 @@ const GENERATORS = {
         if (ctx.fixedCategory && !options.includes(ctx.fixedCategory)) return null
         const category = ctx.fixedCategory || pick(options, rnd)
         if (!category) return null
-        const ask = target > 1 ? `build ${target} ${category} developments at the terminal` : `build ${/^[AEIOU]/i.test(category) ? 'an' : 'a'} ${category} development at the terminal`
-        return { type: 'build', target, extra: { category }, subject: `New ${category} development`, ask, hours: between(36, 48, rnd) }
+        // The Enterprise category is called a business venture in the game's own words
+        const noun = category === 'Enterprise' ? 'business venture' : `${category} development`
+        const ask = target > 1 ? `build ${target} ${noun}s at the terminal` : `build ${/^[AEIOU]/i.test(noun) ? 'an' : 'a'} ${noun} at the terminal`
+        return { type: 'build', target, extra: { category }, subject: `New ${noun}`, ask, hours: between(36, 48, rnd) }
     },
     greet: (ctx, rnd) => {
         const target = ctx.fixed ?? between(2, 5, rnd)

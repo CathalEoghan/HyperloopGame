@@ -361,6 +361,19 @@ export const EMAILS = {
                 failed: "Dear {formal},\n\nPlease don't worry about the timetable. It's absolutely not a problem. I'll simply tell people it was always like that.\n\nI hope that's alright. Please don't be cross.\n\nVery respectfully,\n{from}",
             },
         ],
+        build: [
+            {
+                id: 'assistant-enterprise',
+                category: 'Enterprise',
+                subject: 'A small suggestion (sorry)',
+                body: "Dear {formal},\n\nI hope this finds you well. I'm so sorry to mention it, but a few people have been saying that not much has happened on the company side of things recently. Not me! I would never say that. I wouldn't dare.\n\nI just thought, very quietly, that a new business venture might, um, quiet them down. If you wanted. Only if you wanted. Sorry.\n\nVery respectfully,\n{from}",
+                agree: 'Dear {from},\n\nGood idea. I will look into starting a new business venture.\n\nBest,\n{fullName}',
+                refuse: 'Dear {from},\n\nThanks for the suggestion, but we will not be starting a new business venture right now.\n\nBest regards,\n{fullName}',
+                refused: "Dear {formal},\n\nOf course! Absolutely. I'll tell them you have big plans. Very big. Please don't ask me what they are.\n\nI'm so sorry.\n\nVery respectfully,\n{from}",
+                fulfilled: "Dear {formal},\n\nThe new venture is wonderful. Everyone who was complaining has gone very quiet. Not that I was ever one of them. I wasn't.\n\nI'll be at my desk. Being very quiet too.\n\nVery respectfully,\n{from}",
+                failed: "Dear {formal},\n\nPeople are still saying not much has happened on the company side. I told them you have plans. They asked what plans. I said I wasn't sure.\n\nPlease don't be cross. I'll try to sound more confident next time.\n\nVery respectfully,\n{from}",
+            },
+        ],
     },
     public: {
     },
