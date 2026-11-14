@@ -219,12 +219,5 @@ export const EMAILS = {
         ],
     },
     public: {
-        like: [
-            {
-                id: 'example-public-like',
-                subject: 'Please like our post',
-                body: 'Dear {name},\n\nMy daughter and I made a little video about our train journey last week and we would be thrilled if you could like {n} {post|posts} on Hyper-Link. It does not have to be ours, but it would be nice!\n\nThank you,\n{fromFull}',
-            },
-        ],
     },
 }
