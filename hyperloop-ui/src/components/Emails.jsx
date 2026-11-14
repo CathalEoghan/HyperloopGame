@@ -26,8 +26,15 @@ const MailIcon = ({ size = 34 }) => <img src={emailIcon} alt="" width={size} hei
 
 const Rep = ({ n }) => <span className="emails-rep"><img src={reputationIcon} alt="" />{n}</span>
 
-// How long ago an email arrived, in the few words a mail list uses
-const ago = (ms) => { const m = Math.floor(ms / 60000); return m < 1 ? 'just now' : m < 60 ? `${m}m ago` : m < 1440 ? `${Math.floor(m / 60)}h ago` : `${Math.floor(m / 1440)}d ago` }
+// Dates the way a mail client shows them: the time for today, the day and month otherwise
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+const pad = (n) => String(n).padStart(2, '0')
+const shortTime = (ts, now) => { const d = new Date(ts), n = new Date(now); return d.toDateString() === n.toDateString() ? `${pad(d.getHours())}:${pad(d.getMinutes())}` : `${d.getDate()} ${MONTHS[d.getMonth()]}` }
+const fullTime = (ts) => { const d = new Date(ts); return `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}, ${pad(d.getHours())}:${pad(d.getMinutes())}` }
+// The first words of the body without "Dear ...,", for the grey preview in the list
+const snippet = (body) => body.replace(/^Dear [^\n]*\n+/, '').replace(/\s+/g, ' ').trim().slice(0, 80)
+// A sender's built-in reply is stored as `Name writes: "..."`; in a thread it is just the message
+const plainOutcome = (text) => text.replace(/^[^:\n]{1,40} writes: "([\s\S]*)"$/, '$1')
 
 // Under the list: how many of today's emails have come and when the next may
 function TodayFooter({ now }) {
@@ -65,21 +72,44 @@ function Typed({ text, animate, onDone }) {
     return <>{text.slice(0, n)}{n < text.length && <span className="emails-caret">|</span>}</>
 }
 
+// One message in a thread, like a mail client: avatar, who it is from and to, when, then the text
+function Message({ avatar, name, role, to, date, children, reply = false }) {
+    return (
+        <div className={`emails-msg${reply ? ' emails-msg-reply' : ''}`}>
+            <div className="emails-msg-head">
+                {avatar}
+                <span className="emails-msg-who">
+                    <span className="emails-msg-name"><b>{name}</b>{role && <span className="emails-msg-role">&lt;{role}&gt;</span>}</span>
+                    <span className="emails-msg-to">to {to}</span>
+                </span>
+                <span className="emails-msg-date">{date}</span>
+            </div>
+            <div className="emails-msg-body">{children}</div>
+        </div>
+    )
+}
+
 export default function EmailsModal({ emails, onRespond, onRead, onClose, cult = false, muted = false, onToggleMute }) {
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const sorted = [...emails].sort((a, b) => b.createdAt - a.createdAt)
+    // Inbox: anything still open or not yet read. Resolved: the rest, like an archive.
+    const inInbox = (e) => isOpen(e) || !e.read
+    const [tab, setTab] = useState('inbox')
     const [selectedId, setSelectedId] = useState(() => (sorted.find(e => !e.read) || sorted[0])?.id || null)
     const [typingId, setTypingId] = useState(null)
     const [now, setNow] = useState(() => Date.now())
     useEffect(() => { const id = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(id) }, [])
     const selected = emails.find(e => e.id === selectedId) || null
+    // The email being read stays in the list it was opened from, even once reading it has moved it out of the Inbox
+    const shown = sorted.filter(e => (tab === 'inbox') === inInbox(e) || (e.id === selectedId && !(tab === 'resolved' && isOpen(e))))
     const threadRef = useRef(null)
     const [muteTip, setMuteTip] = useState(null)
-    useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = el.scrollHeight }, [selected?.state, selected?.reply])
+    useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = el.scrollHeight }, [selected?.state, selected?.reply, typingId])
     // Opening an email starts at its top; the thread only drops to the bottom when a reply or result is added to it
     useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = 0 }, [selectedId])
     useEffect(() => { if (selected && !selected.read) onRead(selected.id) }, [selected, onRead])
-    const unreadOthers = sorted.filter(e => !e.read).length
+    const unreadCount = sorted.filter(e => !e.read).length
+    const openCount = sorted.filter(inInbox).length
 
     const requestCard = selected?.ask ? (
         <div className="emails-request">
@@ -87,17 +117,20 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
             <span className="emails-request-text">{selected.ask.charAt(0).toUpperCase() + selected.ask.slice(1)}</span>
             {selected.state === 'new'
                 ? <span className="emails-request-time"><img src={clockIcon} alt="" />Answer within <b>{formatLeft(timeLeft(selected, now))}</b> · then <b>{selected.hours} hours</b> to do it</span>
-                : <span className="emails-request-time"><img src={clockIcon} alt="" />Done by {new Date(selected.deadline).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })}</span>}
+                : selected.deadline ? <span className="emails-request-time"><img src={clockIcon} alt="" />Done by {new Date(selected.deadline).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })}</span> : null}
         </div>
     ) : null
 
     const respond = (e, agree) => { playClickSound2(); setTypingId(e.id); onRespond(e.id, agree) }
+    const pickTab = (t) => { playClickSound2(); setTab(t); const first = sorted.find(e => (t === 'inbox') === inInbox(e)); if (first) setSelectedId(first.id) }
+    const senderFirst = selected ? selected.sender.name.split(' ')[0] : ''
+    const replyAt = selected ? (selected.state === 'refused' ? selected.resolvedAt : selected.agreedAt || selected.createdAt) : 0
 
     return (
         <div className="hyperlink-overlay emails-overlay" onClick={() => { playClickSound2(); onClose() }}>
             <div className="emails-window" onClick={ev => ev.stopPropagation()} role="dialog" aria-label="Emails">
                 <div className="emails-head">
-                    <span className="emails-title"><MailIcon size={20} /> Inbox{unreadOthers > 0 ? ` (${unreadOthers})` : ''}</span>
+                    <span className="emails-title"><MailIcon size={22} /> Mail</span>
                     <span className="emails-head-actions">
                     {onToggleMute && (
                         <button
@@ -115,16 +148,22 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                 {muteTip && <BoostTooltip anchor={muteTip} lines={[muted ? 'New emails are muted. Click to turn the sound and bubble back on.' : 'New emails make a sound and show a bubble. Click to mute them.']} text />}
                 <div className="emails-body">
                     <div className="emails-list">
+                      <div className="emails-tabs" role="tablist">
+                        <button role="tab" aria-selected={tab === 'inbox'} className={`emails-tab${tab === 'inbox' ? ' emails-tab-on' : ''}`} onClick={() => pickTab('inbox')} onMouseEnter={() => playHoverSound()}>Inbox{unreadCount > 0 && <span className="emails-tab-count">{unreadCount}</span>}</button>
+                        <button role="tab" aria-selected={tab === 'resolved'} className={`emails-tab${tab === 'resolved' ? ' emails-tab-on' : ''}`} onClick={() => pickTab('resolved')} onMouseEnter={() => playHoverSound()}>Resolved{sorted.length - openCount > 0 && <span className="emails-tab-num">{sorted.length - openCount}</span>}</button>
+                      </div>
                       <div className="emails-list-rows">
-                        {sorted.length === 0 && <div className="emails-empty">No emails yet. People write when they need something from the Manager.</div>}
-                        {sorted.map(e => (
+                        {shown.length === 0 && <div className="emails-empty">{sorted.length === 0 ? 'No emails yet. People write when they need something from the Manager.' : tab === 'inbox' ? 'You are all caught up.' : 'Nothing resolved yet.'}</div>}
+                        {shown.map(e => (
                             <button key={e.id} className={`emails-row${e.id === selectedId ? ' emails-row-active' : ''}${!e.read ? ' emails-row-unread' : ''}`}
                                 onClick={() => { playClickSound2(); setSelectedId(e.id) }} onMouseEnter={() => playHoverSound()}>
-                                <Avatar email={e} size={34} />
+                                <Avatar email={e} size={36} />
                                 <span className="emails-row-main">
-                                    <span className="emails-row-top"><span className="emails-row-from">{!e.read && <i className="emails-dot" />}{e.sender.name}</span><span className={`emails-tag emails-tag-${e.state}${e.state === 'agreed' && timeLeft(e, now) < 3600000 ? ' emails-tag-urgent' : ''}`}>{e.state === 'agreed' ? `${formatLeft(timeLeft(e, now))} left` : STATE_TEXT[e.state]}</span></span>
-                                    <span className="emails-row-subject">{e.subject}<i> · {ago(now - e.createdAt)}</i></span>
+                                    <span className="emails-row-top"><span className="emails-row-from">{e.sender.name}</span><span className="emails-row-time">{shortTime(e.createdAt, now)}</span></span>
+                                    <span className="emails-row-subject">{e.subject}</span>
+                                    <span className="emails-row-preview"><span className={`emails-tag emails-tag-${e.state}${e.state === 'agreed' && timeLeft(e, now) < 3600000 ? ' emails-tag-urgent' : ''}`}>{e.state === 'agreed' ? `${formatLeft(timeLeft(e, now))} left` : STATE_TEXT[e.state]}</span>{snippet(e.body)}</span>
                                 </span>
+                                {!e.read && <i className="emails-dot" />}
                             </button>
                         ))}
                       </div>
@@ -134,17 +173,32 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                         {!selected && <div className="emails-empty">Select an email to read it.</div>}
                         {selected && (
                             <>
-                                <div className="emails-msg">
-                                    <div className="emails-msg-head"><span className="emails-from"><Avatar email={selected} size={40} /><span><b>{selected.sender.name}</b><br /><span>{selected.sender.role}</span></span></span></div>
-                                    <div className="emails-subject">{selected.subject}</div>
-                                    <div className="emails-text">{selected.body}</div>
+                                <div className="emails-subject-row">
+                                    <h2 className="emails-subject">{selected.subject}</h2>
+                                    <span className="emails-label">Inbox</span>
+                                    <span className={`emails-label emails-label-${selected.state}`}>{STATE_TEXT[selected.state]}</span>
                                 </div>
-                                {selected.state !== 'new' && requestCard}
+                                <Message avatar={<Avatar email={selected} size={40} />} name={selected.sender.name} role={selected.sender.role} to="me" date={fullTime(selected.createdAt)}>
+                                    <div className="emails-text">{selected.body}</div>
+                                    {selected.state !== 'new' && requestCard}
+                                </Message>
                                 {selected.reply && (
-                                    <div className="emails-msg emails-msg-reply">
-                                        <div className="emails-msg-head"><b>You</b><span>Reply</span></div>
+                                    <Message reply avatar={<span className="emails-avatar emails-avatar-me">Me</span>} name="Me" to={senderFirst} date={fullTime(replyAt)}>
                                         <div className="emails-text"><Typed key={selected.id} text={selected.reply} animate={typingId === selected.id} onDone={() => setTypingId(null)} /></div>
+                                    </Message>
+                                )}
+                                {selected.state === 'agreed' && (
+                                    <div className="emails-progress">
+                                        <div className="emails-progress-row"><span>{progressLabel(selected)}</span><span>{formatLeft(timeLeft(selected, now))} left</span></div>
+                                        <div className="emails-bar"><div style={{ width: `${Math.min(100, ((selected.progress || 0) / selected.target) * 100)}%` }} /></div>
+                                        <div className="emails-note">Done in time: +{selected.reward} Reputation. Missed: −{selected.penalty}.</div>
                                     </div>
+                                )}
+                                {selected.outcome && typingId !== selected.id && (
+                                    <Message avatar={<Avatar email={selected} size={40} />} name={selected.sender.name} role={selected.sender.role} to="me" date={fullTime(selected.resolvedAt || selected.createdAt)}>
+                                        <div className="emails-text">{plainOutcome(selected.outcome)}</div>
+                                        {Number.isFinite(selected.repChange) && selected.repChange !== 0 && <span className={`emails-chip ${selected.repChange > 0 ? 'emails-chip-up' : 'emails-chip-down'}`}><Rep n={sign(selected.repChange)} /> Reputation</span>}
+                                    </Message>
                                 )}
                                 {selected.state === 'new' && typingId !== selected.id && (
                                     <div className="emails-decision">
@@ -160,20 +214,6 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                                         <div className="emails-note">Not answering in time counts as a refusal.</div>
                                     </div>
                                 )}
-                                {selected.state === 'agreed' && (
-                                    <div className="emails-progress">
-                                        <div className="emails-progress-row"><span>{progressLabel(selected)}</span><span>{formatLeft(timeLeft(selected, now))} left</span></div>
-                                        <div className="emails-bar"><div style={{ width: `${Math.min(100, ((selected.progress || 0) / selected.target) * 100)}%` }} /></div>
-                                        <div className="emails-note">Done in time: +{selected.reward} Reputation. Missed: −{selected.penalty}.</div>
-                                    </div>
-                                )}
-                                {selected.outcome && (
-                                    <div className={`emails-outcome emails-outcome-${selected.state}`}>
-                                        {selected.outcome}
-                                        {Number.isFinite(selected.repChange) && selected.repChange !== 0 && <b> {sign(selected.repChange)} Reputation</b>}
-                                    </div>
-                                )}
-                                {isOpen(selected) ? null : <div className="emails-note">{selected.state === 'fulfilled' ? 'Request fulfilled.' : ''}</div>}
                             </>
                         )}
                     </div>
