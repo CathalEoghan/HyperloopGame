@@ -285,6 +285,18 @@ export const EMAILS = {
                 failed: 'Dear {formal},\n\nThe target was missed. I have adjusted the forecast accordingly, and not upwards.\n\nRegards,\n{from}',
             },
         ],
+        shop: [
+            {
+                id: 'cfo-justified-expense',
+                subject: 'A Justified Expense',
+                body: "Dear {formal},\n\nI have been going through the books and could not help noticing how little we spend on ourselves.\n\nA modest purchase from the Shop would show confidence in our own product. I would call it an expense. The accountants would call it a justified expense.\n\nRegards,\n{from}",
+                agree: 'Dear {from},\n\nUnderstood. I will make a purchase from the Shop.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI do not believe now is the right time for that expense. Let us revisit it later.\n\nBest regards,\n{fullName}',
+                refused: "Dear {formal},\n\nI see. I shall log it as a missed opportunity, which is an accounting term for 'a mistake'.\n\nRegards,\n{from}",
+                fulfilled: 'Dear {formal},\n\nThe receipt has been filed. An excellent expense, now that I see it.\n\nI am almost tempted to approve another. Almost.\n\nRegards,\n{from}',
+                failed: 'Dear {formal},\n\nNo purchase was made. The line in the books remains empty, and I dislike an empty line.\n\nRegards,\n{from}',
+            },
+        ],
     },
     public: {
     },
