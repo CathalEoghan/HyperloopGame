@@ -160,6 +160,19 @@ export const EMAILS = {
                 failed: "Dear Manager,\n\nEnjoy reading my most recent negative review.\n\nBest,\n{from}",
             },
         ],
+        connectCities: [
+            {
+                id: 'complainer-connections',
+                target: 2,
+                subject: 'Is this ALL you have??',
+                body: "Dear Manager,\n\nSo I'm, like, standing at the board looking at where I can go and it's the SAME cities as last time?! I have been to every single one of them. Twice. Is that really all this terminal has to offer?!\n\nI want somewhere new. Connect {n} more cities and I might not tell everyone I know how boring it is here.\n\nYou have {time}.\n\nRegards.\n{from}",
+                agree: "Dear {from},\n\nThank you for getting in touch, and I'm sorry for the inconvenience. We are working on connecting more cities to the terminal and will have them running soon.\n\nAll the best,\n{fullName}",
+                refuse: "Dear {from},\n\nThanks for your feedback. Unfortunately we can't promise any new connections in that timeframe.\n\nBest regards,\n{fullName}",
+                refused: "Dear Manager,\n\nUm, excuse me?? You can't promise ANYTHING? I'm literally a paying customer here!\n\nI'm telling everyone. Every. Single. Person. I'm not even joking.\n\n{from}",
+                fulfilled: "Dear Manager,\n\nOkay. I saw the new connections on the board. That's, like, fine, I guess.\n\nBut why is the board so BRIGHT? I got a headache reading it. Can someone look into that?\n\nBest,\n{from}",
+                failed: "Dear Manager,\n\nStill nothing. I waited and waited and there is still no way to get where I'm going.\n\nI've just posted five stars. Kidding. It was ONE. And it's a long review.\n\nBest,\n{from}",
+            },
+        ],
     },
     public: {
         like: [
