@@ -20,7 +20,8 @@
 //   scheduleNight    Schedule {n} new loops to leave at night (8pm to 2am); moving a loop that was already on the timetable doesn't count
 //   scheduleMorning  Schedule {n} new loops to leave in the morning (6am to 10am); moving a loop that was already on the timetable doesn't count
 //   connectCountryCity  Connect a city in a country the email names (set `countries`, e.g. ['Italy']; `onlyIfNone: true` keeps it for a network with no city there yet)
-//   upgradeSpecific  Upgrade one development the game picks from those the player owns; its name is {development}
+//   upgradeSpecific  Upgrade one development the game picks from those the player owns. {development} is its name with "the" in front
+//                    ("the Bakery"), or the player's own name for it without ("Crumbs"); {Development} is the same with a capital ("The Bakery")
 //   newContinent     Connect a city in a continent the terminal has no city in yet
 //   milestone        Reach a new milestone (a development or city count, a whole continent, a rank gift)
 //   claimRewards     Claim {n} rewards on the Progress page
@@ -33,7 +34,7 @@
 //   holdCash         Keep at least {n} in the bank until the deadline (like holdRep; {n} is worked out from their balance)
 //   clearInbox       Answer the {n} emails waiting in the inbox
 //   holdRep          Keep Reputation above {n} until the deadline (a task to avoid, not do; {n} is worked out from their Reputation)
-//   rankUp           Take the terminal up a rank
+//   rankUp           Take the terminal up a rank (or {n} ranks, with `target`)
 //   upgradeDev       Upgrade a development {n} times
 //   upgradeDevCategory  Upgrade {n} different developments of one category {category} (set `category`, e.g. 'Food')
 //   upgradeCity      Upgrade a city's line {n} times
@@ -1338,6 +1339,29 @@ export const EMAILS = {
                 fulfilled: 'Dear {formal},\n\nThank you! I arrived early on purpose this week, just to try them. The time flew by, and I did not even notice my loop was boarding. I have told my fellow travellers, too.\n\nKind regards,\n{from}',
                 failed: 'Dear {formal},\n\nThe new Recreation developments were not built in time, but thank you for considering it. I will keep bringing a book, and I am sure it will be fine.\n\nKind regards,\n{from}',
             },
+            {
+                id: 'public-bored-kids',
+                category: 'Recreation',
+                subject: 'Travelling with the children',
+                body: "Dear {formal},\n\nWe travel through your terminal a great deal as a family. My children love the loops themselves, but the waiting is another matter. There is so little for them to do that they are bored within minutes, and then so am I.\n\nWould you be able to build a Recreation development? Something to keep them busy before we leave would make our trips so much easier. Thank you for reading this, and for thinking of the families.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will build a Recreation development.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot build a Recreation development right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for the reply. We will keep bringing the colouring books. They do help, a little.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! The children did not want to leave when our loop was called. That has never happened before. I think you have made our family trips for years to come.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe new Recreation development was not built in time, but thank you for considering it. We will make do, as we always have.\n\nKind regards,\n{from}',
+            },
+            {
+                id: 'public-something-new',
+                category: 'Shopping',
+                target: 3,
+                subject: 'Something new to try',
+                body: "Dear {formal},\n\nI travel through here every week, and I always leave a little time to look around the shops. The trouble is that I have started to know them all by heart. I find myself walking past without going in, because I already know what is there.\n\nWould you be able to build {n} new Shopping developments? I would love something new to try on my next journey. Thank you for taking the time to read this.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will build {n} Shopping developments.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot build {n} Shopping developments right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is perfectly fine, and thank you for the reply. I will keep looking around the ones that are there. There may be something I have missed.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! I spent my whole wait in the new shops, and I nearly missed my loop. I came away with a few things I had never seen before. It made the journey.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe new shops were not built in time, but thank you for considering it. I will keep an eye out on my next trip.\n\nKind regards,\n{from}',
+            },
         ],
         connectCountries: [
             {
@@ -1486,6 +1510,30 @@ export const EMAILS = {
                 fulfilled: 'Dear {formal},\n\nThank you. I am writing this from Egypt, and she is here with me now. I read her favourite book aloud, by the river, and I think she heard it. I cannot thank you enough for making it possible.\n\nKind regards,\n{from}',
                 failed: 'Dear {formal},\n\nEgypt was not connected in time, but thank you for thinking of her. I will keep her safe a little longer, and I will take her there one day. Thank you for your kindness.\n\nKind regards,\n{from}',
             },
+            {
+                id: 'public-brazil',
+                countries: ['Brazil'],
+                onlyIfNone: true,
+                subject: 'Copacabana, one day',
+                body: "Dear {formal},\n\nI have always wanted to see Copacabana Beach. The trouble is that I am terrified of flying, and ships are no better. Loops, though, I do not mind at all. They are the one way I can travel without worrying the whole way.\n\nWould you be able to connect a city in Brazil? It does not have to be Rio. If I can get to Brazil, I can take a train from there. Thank you for reading this. It would mean the world to me.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will connect a new city in Brazil.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot connect a city in Brazil right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for the reply. I will keep the beach in my mind for now, and hope for another day.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! I have booked my loop and my train, and I will be on Copacabana Beach by the end of the week. I never thought I would get to see it. Thank you so much.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nBrazil was not connected in time, but thank you for considering it. The beach will still be there, and so will I.\n\nKind regards,\n{from}',
+            },
+            {
+                id: 'public-uk-ireland',
+                countries: ['England', 'Scotland', 'Wales', 'Ireland'],
+                ask: 'connect a new city in the UK or Ireland',
+                subject: 'A trip with friends',
+                body: "Dear {formal},\n\nA group of friends and I are planning a trip, and we have our hearts set on the UK or Ireland. Some of us want to see Big Ben, and the rest want to walk the rolling green hills of Ireland. We are not fussy about where we start. Once we are there, we will move around.\n\nWould you be able to connect a new city somewhere in the UK or Ireland? Any of them would do. Thank you for reading this.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will connect a new city in the UK or Ireland.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot connect a city in the UK or Ireland right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for replying. We will think of somewhere else to go. There is a lot of world to choose from.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! We are on our way, and the arguments about Big Ben or the hills have already started. We will try to do both. Thank you for making it so easy.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe new city was not connected in time, but thank you for considering it. We will keep planning, and go when we can.\n\nKind regards,\n{from}',
+            },
         ],
         scheduleMorning: [
             {
@@ -1530,12 +1578,38 @@ export const EMAILS = {
                 id: 'public-my-department',
                 role: 'Terminal Worker',
                 subject: 'Where I work',
-                body: "Dear {formal},\n\nI work at the {development}, and I am very proud of it. We are a small team, and we love what we do. The trouble is that we would like to open something new, and there is no money to pay for it. The owners say there is nothing spare this year.\n\nWould you be able to upgrade the {development}? It would bring in more income, and I think it would be enough to get the new project started. Thank you for hearing me out. I know that you have a great many places to look after.\n\nKind regards,\n{from}",
-                agree: 'Dear {from},\n\nOf course. I will upgrade the {development}.\n\nBest regards,\n{fullName}',
-                refuse: 'Dear {from},\n\nI am sorry, I cannot upgrade the {development} right now.\n\nBest regards,\n{fullName}',
-                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for considering it. We will keep trying to find the money elsewhere. I will keep doing my best at the {development}.\n\nKind regards,\n{from}',
-                fulfilled: 'Dear {formal},\n\nThank you! The {development} looks wonderful, and we have already put in a plan for the new project. The whole team is delighted. We cannot wait to show you.\n\nKind regards,\n{from}',
-                failed: 'Dear {formal},\n\nThe {development} was not upgraded in time, but thank you for thinking about it. We will keep working hard, and I am sure we will find a way.\n\nKind regards,\n{from}',
+                body: "Dear {formal},\n\nI work at {development}, and I am very proud of it. We are a small team, and we love what we do. The trouble is that we would like to open something new, and there is no money to pay for it. The owners say there is nothing spare this year.\n\nWould you be able to upgrade {development}? It would bring in more income, and I think it would be enough to get the new project started. Thank you for hearing me out. I know that you have a great many places to look after.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will upgrade {development}.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot upgrade {development} right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for considering it. We will keep trying to find the money elsewhere. I will keep doing my best at {development}.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! {Development} looks wonderful, and we have already put in a plan for the new project. The whole team is delighted. We cannot wait to show you.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\n{Development} was not upgraded in time, but thank you for thinking about it. We will keep working hard, and I am sure we will find a way.\n\nKind regards,\n{from}',
+            },
+            {
+                id: 'public-favourite-restaurant',
+                role: 'Terminal Worker',
+                category: 'Food',
+                subject: 'My usual place',
+                body: "Dear {formal},\n\nI work here, and after every shift I go to {development} for something to eat. It has been my favourite place for a long time. Lately, though, it has been slipping. The food is not quite what it was, and the place is starting to look a little tired.\n\nWould you be able to upgrade {development}? I would hate to lose my favourite part of the day. Thank you for reading this.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will upgrade {development}.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot upgrade {development} right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nThat is quite all right, and thank you for replying. I will keep going there all the same. Old habits, and all that.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! {Development} is back to its best, and better. My meal after work was the best I have had in months. I have told everyone on my shift.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\n{Development} was not upgraded in time, but thank you for considering it. I will keep going, and keep hoping it picks up.\n\nKind regards,\n{from}',
+            },
+        ],
+        rankUp: [
+            {
+                id: 'public-staff-leaving',
+                role: 'Terminal Worker',
+                target: 3,
+                subject: 'Before people leave',
+                body: "Dear {formal},\n\nI hope you will not mind me raising this. A lot of the staff have been talking, and more than a few are thinking about leaving. Nobody is unhappy with the work itself. It is more that the terminal has felt as though it is standing still, and people want to be part of something that is going somewhere.\n\nWould you be able to take the terminal up {n} ranks? I think it would show everyone that there is a future here, and I think most of them would stay. Thank you for listening.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will take the terminal up {n} ranks.\n\nBest regards,\n{fullName}',
+                refuse: 'Dear {from},\n\nI am sorry, I cannot promise {n} ranks right now.\n\nBest regards,\n{fullName}',
+                refused: 'Dear {formal},\n\nI understand, and thank you for considering it. I will do my best to keep spirits up in the meantime. I hope people give it a little longer.\n\nKind regards,\n{from}',
+                fulfilled: 'Dear {formal},\n\nThank you! The whole staff room has noticed. People are talking about the future again, rather than about leaving. A few who had handed in their notice have asked to take it back.\n\nKind regards,\n{from}',
+                failed: 'Dear {formal},\n\nThe terminal did not climb quite far enough in time, and a couple of people have gone. Thank you for trying, though. The rest of us are still here, and still hopeful.\n\nKind regards,\n{from}',
             },
         ],
     },

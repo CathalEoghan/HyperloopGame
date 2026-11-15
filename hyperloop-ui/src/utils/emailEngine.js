@@ -314,7 +314,8 @@ const METRICS = {
     // Builds and connections count what is new since agreeing (extra.base..., see agree()), so removing a development or
     // disconnecting a city that was already there doesn't set the player back, and removing and rebuilding the same one
     // doesn't count twice. Requests agreed before this existed have no base lists and keep counting the totals.
-    build: (s, e) => (e.extra.baseBuilt ? (s.builtNames?.[e.extra.category] || []).filter(n => !e.extra.baseBuilt.includes(n)).length : (s.built?.[e.extra.category] || 0)),
+    // (a development removed earlier this run and built again isn't new either)
+    build: (s, e) => (e.extra.baseBuilt ? (s.builtNames?.[e.extra.category] || []).filter(n => !e.extra.baseBuilt.includes(n) && !(s.removedDevs || []).includes(n)).length : (s.built?.[e.extra.category] || 0)),
     greet: (s) => s.greetings || 0,
     farewell: (s) => s.farewells || 0,
     // The schedule requests count NEW loops: timetable entries for cities that weren't on it when the player agreed (extra.baseNames).
@@ -473,6 +474,8 @@ const GENERATORS = {
         const open = list.filter((c) => (ctx.available?.countries?.[c] || 0) > 0)
         if (open.length === 0) return null
         if (ctx.fixedNone && list.some((c) => (ctx.snap.countryCities?.[c] || 0) > 0)) return null
+        // Never asked of a terminal whose home city is in one of those countries
+        if (ctx.snap.homeCountry && list.includes(ctx.snap.homeCountry)) return null
         const named = list.map((c) => (c === 'United States of America' ? 'the United States' : c))
         const where = named.length > 1 ? `${named.slice(0, -1).join(', ')} or ${named[named.length - 1]}` : named[0]
         return { type: 'connectCountryCity', target: 1, extra: { countries: list }, subject: 'A new city abroad', ask: `connect a new city in ${where}`, hours: between(44, 48, rnd) }
@@ -556,13 +559,16 @@ const GENERATORS = {
         return { type: 'connectTier3', target, extra: {}, subject: 'A Tier 3 city', ask: target === 1 ? 'connect a new Tier 3 city to the network' : `connect ${target} new Tier 3 cities to the network`, hours: between(36, 48, rnd) }
     },
     rankUp: (ctx) => {
-        // Only while there is a rank left to reach, and only if the cash it takes is within about two days of the current income
-        // (ctx.rankXpToNext is Infinity at the top rank; left out by older callers, which keeps the old behaviour)
+        // A written email may ask for more than one rank (`target`). Only while those ranks are left to reach, and only if the cash
+        // they take is within about two days of the current income (ctx.rankXpToNext is Infinity at the top rank; left out by
+        // older callers, which keeps the old behaviour)
+        const target = ctx.fixed && ctx.fixed > 1 ? ctx.fixed : 1
         if (ctx.rankXpToNext !== undefined) {
-            if (!(ctx.rankXpToNext > 0) || !Number.isFinite(ctx.rankXpToNext)) return null
-            if (!(ctx.incomePerHour > 0) || ctx.rankXpToNext > ctx.incomePerHour * 48) return null
+            const need = target === 1 ? ctx.rankXpToNext : ctx.rankXpToRanks?.[target - 1]
+            if (!(need > 0) || !Number.isFinite(need)) return null
+            if (!(ctx.incomePerHour > 0) || need > ctx.incomePerHour * 48) return null
         }
-        return { type: 'rankUp', target: 1, extra: {}, subject: 'Moving up', ask: 'take the terminal up a rank', hours: 48 }
+        return { type: 'rankUp', target, extra: {}, subject: 'Moving up', ask: target === 1 ? 'take the terminal up a rank' : `take the terminal up ${target} ranks`, hours: 48 }
     },
     upgradeDev: (ctx, rnd) => {
         if ((ctx.devsWithUpgrade || 0) < 1) return null
@@ -571,10 +577,14 @@ const GENERATORS = {
     },
     // One development the player owns that can still be upgraded, named in the email as {development}
     upgradeSpecific: (ctx, rnd) => {
-        const options = ctx.upgradableDevs || []
+        // A written email may say which category it is (`category`), e.g. a Food development
+        const options = (ctx.upgradableDevs || []).filter(d => !ctx.fixedCategory || d.category === ctx.fixedCategory)
         if (options.length === 0) return null
         const dev = pick(options, rnd)
-        return { type: 'upgradeSpecific', target: 1, extra: { development: dev.name, category: dev.category }, subject: 'A development upgrade', ask: `upgrade the ${dev.name}`, hours: between(36, 48, rnd) }
+        // What the email calls it: the player's own name for it as it is ("Crumbs"), or its own name with "the" ("the Bakery").
+        // The request itself follows the development by its own name, so renaming it afterwards changes nothing.
+        const label = dev.customName || `the ${dev.name}`
+        return { type: 'upgradeSpecific', target: 1, extra: { development: dev.name, category: dev.category, label }, subject: 'A development upgrade', ask: `upgrade ${label}`, hours: between(36, 48, rnd) }
     },
     upgradeDevCategory: (ctx, rnd) => {
         const room = ctx.upgradableByCategory || {}
@@ -732,7 +742,7 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             const vars = {
                 name: nameForPlayer.split(' ')[0], formal, FORMAL: formal.toUpperCase(), title: PLAYER_TITLES.includes(playerTitle) ? playerTitle : '', fullName: nameForPlayer, from: sender.name.split(' ')[0], fromFull: sender.name, role: sender.role,
                 n: type === 'cash' || type === 'holdCash' || type === 'payUpfront' ? formatCash(req.target) : formatCount(req.target), count: req.target,
-                category: req.extra.category || '', development: req.extra.development || '', continent: req.extra.continent || '', time: within, hours, ask: req.ask,
+                category: req.extra.category || '', development: req.extra.label || (req.extra.development ? `the ${req.extra.development}` : ''), Development: cap(req.extra.label || (req.extra.development ? `the ${req.extra.development}` : '')), continent: req.extra.continent || '', time: within, hours, ask: req.ask,
             }
             const f = (x) => (typeof x === 'string' && x ? fillTemplate(x, vars) : null)
             subject = f(t.subject) || req.subject

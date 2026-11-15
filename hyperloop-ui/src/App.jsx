@@ -784,6 +784,8 @@ function App() {
       rewardsClaimed: readStoredList('hyperloop_progress_rewards').length + readStoredList('hyperloop_prestige_upgrade_rewards').length,
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
       timetable: readStoredList('hyperloop_timetable').length,
+      // Developments removed this run (rebuilding one isn't new), and the country of the home terminal
+      removedDevs: readStoredList('hyperloop_removed_developments'), homeCountry: pm.purchasedCities[0]?.country || null,
       // What is built and connected, by name, and every upgrade level: the requests count what is new since the player agreed,
       // so removing a development or disconnecting a city that was already there doesn't count against them
       builtNames: Object.fromEntries(MILESTONE_CATEGORIES.map(c => [c, [...pm.purchasedDevelopments, ...pm.purchasedUpgrades].filter(d => d.category === c).map(d => d.name)])),
@@ -840,16 +842,20 @@ function App() {
       // Countries the terminal has no city in yet, among the cities that can still be connected
       newCountriesAvailable: new Set(pm.unlockedCities.map(c => c.country).filter(c => c && !pm.purchasedCities.some(p => p.country === c))).size,
       // How many developments of each category can still be built (they leave these lists once bought)
-      buildableByCategory: [...pm.unlockedDevelopments, ...pm.unlockedUpgrades].reduce((o, d) => (MILESTONE_CATEGORIES.includes(d.category) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}),
+      // (not counting ones removed earlier this run, which wouldn't be new)
+      buildableByCategory: (() => { const removed = new Set(readStoredList('hyperloop_removed_developments')); return [...pm.unlockedDevelopments, ...pm.unlockedUpgrades].reduce((o, d) => (MILESTONE_CATEGORIES.includes(d.category) && !removed.has(d.name) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}) })(),
       shopCheapest: cheapest === Infinity ? 0 : cheapest,
       // The XP (cash earned) still needed for the next rank; Infinity at the top rank
       rankXpToNext: rankManager.rank >= MAX_RANK ? Infinity : rankManager.getCumulativeXP(rankManager.rank) - rankManager.xp,
+      // The XP still needed to go up 1, 2 and 3 ranks (Infinity past the top rank)
+      rankXpToRanks: [1, 2, 3].map(n => rankManager.rank + n > MAX_RANK ? Infinity : rankManager.getCumulativeXP(rankManager.rank + n - 1) - rankManager.xp),
       unrenamed: pm.purchasedDevelopments.filter(d => !pm.developmentNames?.[d.name]).length,
       // Any built development can be renamed (again), and every rename counts
       renamable: pm.purchasedDevelopments.length,
       devsWithUpgrade: pm.purchasedDevelopments.filter(d => d.revenue).length,
       // How many finished developments of each category can still be upgraded (not at the top level yet)
-      upgradableDevs: pm.purchasedDevelopments.filter(d => pm.getDevelopmentUpgradeCostInfo(d)).map(d => ({ name: d.name, category: d.category })),
+      // (with the player's own name for it, when it has one, for the emails that name it)
+      upgradableDevs: pm.purchasedDevelopments.filter(d => pm.getDevelopmentUpgradeCostInfo(d)).map(d => ({ name: d.name, category: d.category, customName: pm.hasCustomDevelopmentName(d) ? pm.getDevelopmentName(d) : null })),
       upgradableByCategory: pm.purchasedDevelopments.reduce((o, d) => (pm.getDevelopmentUpgradeCostInfo(d) ? { ...o, [d.category]: (o[d.category] || 0) + 1 } : o), {}),
     }
   }
@@ -2729,6 +2735,8 @@ function App() {
             if (development.name === 'Petting Zoo' && progressionManager.purchasedCities[0]?.name === 'New York' && isOwned(cosmetics, 'generalTheme', 'duck')) {
               unlockAchievement('sinceTheDucksLeft')
             }
+            // Remembered for the emails: building it again later isn't a new development
+            try { const removed = readStoredList('hyperloop_removed_developments'); if (!removed.includes(development.name)) localStorage.setItem('hyperloop_removed_developments', JSON.stringify([...removed, development.name])) } catch { /* storage full */ }
             // development is the category (e.g. "Pharmacy"); a removed development's custom name may already be gone, so it isn't used
             const removedData = { development: development.name }
             hyperLinkTriggerRef.current = { type: 'development_removed', data: removedData }

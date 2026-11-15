@@ -70,6 +70,8 @@ const AUX_KEYS = [
     'hyperloop_granted_cities',
     // The cities that have had their Opening Party this run (each gets one, see App.jsx)
     'hyperloop_opening_party_cities',
+    // Developments removed this run: building one of them again isn't a new development for the emails that ask for one
+    'hyperloop_removed_developments',
     // Kept with the save so a backup can't re-offer today's daily bonus, and an uncollected
     // reward travels with the balance it belongs to (bug #67).
     'hyperloop_last_login',
