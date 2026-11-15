@@ -21,7 +21,6 @@ export const CAST_KEY = 'hyperloop_email_cast'
 // the second and third 10-15 minutes after the one before. These timers only run while the game is open.
 export const MAX_PER_DAY = 3
 const MIN = 60000
-export const MAX_OPEN = 3
 // A request nobody answers counts as a refusal after this long
 export const IGNORE_AFTER_MS = 24 * 3600000
 const HOUR = 3600000
@@ -865,7 +864,7 @@ export function stepMeta(meta, elapsed, now = Date.now(), rnd = Math.random) {
 }
 // An email went out: the next one is 10-15 minutes of play away (none left today after the third)
 export const afterArrival = (meta, who = 'public', rnd = Math.random) => ({ ...meta, sent: meta.sent + 1, senders: [...(meta.senders || []), who], wait: between(10 * 60, 15 * 60, rnd) * 1000 })
-// Nothing was possible to ask for (or three are already open): look again in 5 minutes
+// Nothing was possible to ask for: look again in 5 minutes
 export const retryLater = (meta) => ({ ...meta, wait: 5 * MIN })
 
 // Used by tests and the milestone list: the categories a build request may name
