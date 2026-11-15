@@ -27,6 +27,17 @@
     animation: ticker-scroll 60s linear infinite;
 }
 
+.ticker-star {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin: 0 1.4em;
+    vertical-align: -0.05em;
+    background-color: currentColor;
+    -webkit-mask: var(--ticker-star) center / contain no-repeat;
+    mask: var(--ticker-star) center / contain no-repeat;
+}
+
 @keyframes ticker-scroll {
     from { transform: translateX(100vw); }
     to   { transform: translateX(-100%); }

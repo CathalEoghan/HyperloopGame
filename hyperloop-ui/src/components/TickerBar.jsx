@@ -4,6 +4,7 @@ import { arrivalsKey, departuresKey, readSchedule, entryTimestamp, shiftDays, ti
 import { readTimetable } from '../utils/timetable.js'
 import { loopCode } from '../utils/loopCodes.js'
 import { specialDayWishes } from '../utils/hyperLinkEngine.js'
+import tickerStar from '../assets/misc/tickerStar.png'
 
 function TickerBar({ terminalName, purchasedCities }) {
     const [messages, setMessages] = useState([])
@@ -101,8 +102,9 @@ function TickerBar({ terminalName, purchasedCities }) {
 
     return (
         <div className="ticker-bar">
-            <div className="ticker-inner" style={{ animationDuration: `${scrollSeconds}s` }}>
-                {text}
+            {/* The star between messages is tickerStar.png, drawn in the ticker's own text colour (it follows the theme) */}
+            <div className="ticker-inner" style={{ animationDuration: `${scrollSeconds}s`, '--ticker-star': `url(${tickerStar})` }}>
+                {displayMessages.map((m, i) => <span key={i}>{m}<span className="ticker-star" aria-hidden="true" /></span>)}
             </div>
         </div>
     )
