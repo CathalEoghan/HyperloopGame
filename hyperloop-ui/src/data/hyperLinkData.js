@@ -1184,7 +1184,7 @@ export const POSTS = {
         'been sat on a plane for 11 hours before this and cant even go to a gym to move my legs 😭',
         'i booked a loop here AND a car for after, turns out theres no car rental. thanks for nothing',
         'no one told me i would have to bring my dog to a terminal with no kennel. hes judging me',
-        'five loops, one terminal and ZERO services. i have never felt so unsupported 😤',
+        'ZERO services. really?',
     ],
 
     manyFood: [
