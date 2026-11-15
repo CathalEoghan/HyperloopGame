@@ -784,10 +784,16 @@ function App() {
       rewardsClaimed: readStoredList('hyperloop_progress_rewards').length + readStoredList('hyperloop_prestige_upgrade_rewards').length,
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
       timetable: readStoredList('hyperloop_timetable').length,
+      // What is built and connected, by name, and every upgrade level: the requests count what is new since the player agreed,
+      // so removing a development or disconnecting a city that was already there doesn't count against them
+      builtNames: Object.fromEntries(MILESTONE_CATEGORIES.map(c => [c, [...pm.purchasedDevelopments, ...pm.purchasedUpgrades].filter(d => d.category === c).map(d => d.name)])),
+      cityList: pm.purchasedCities.map(c => ({ name: c.name, country: c.country, continent: c.continent, tier: c.tier })),
+      devUpgradeLevels: { ...(pm.developmentUpgradeLevels || {}) }, cityLevels: { ...(pm.cityLineLevels || {}) },
       // Which cities are on the timetable and when they leave, and how many connected cities (not the home city) aren't on it yet
       timetableEntries: readStoredList('hyperloop_timetable').filter(e => typeof e?.name === 'string').map(e => ({ name: e.name, minuteOfDay: e.minuteOfDay })),
       unscheduled: (() => { const on = new Set(readStoredList('hyperloop_timetable').map(e => e?.name)); return pm.purchasedCities.slice(1).filter(c => !on.has(c.name)).length })(),
-      cash: pm.totalCashEarned, balance: pm.balance, answered: achievements.counter('emailsAnswered'),
+      // Earned income and lump sums alike (Progress rewards, cash events, the daily bonus)
+      cash: pm.totalCashEarned + (pm.bonusCashEarned || 0), balance: pm.balance, answered: achievements.counter('emailsAnswered'),
       waitingEmails: emailsRef.current.filter(e => e.state === 'new').length,
       delaysCompensated: achievements.counter('delaysCompensated'), delaysRefused: achievements.counter('delaysRefused'),
       negativeEvents: achievements.counter('negativeEvents'), positiveEvents: achievements.counter('positiveEvents'),

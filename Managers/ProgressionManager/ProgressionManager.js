@@ -108,6 +108,9 @@ export class ProgressionManager {
         this.balance = STARTING_BALANCE;
         this.reputation = 50;
         this.totalCashEarned = 0;
+        // Cash handed over this run rather than earned (see addBonusCash): kept apart so it never counts as XP, but the email
+        // requests to earn cash count it
+        this.bonusCashEarned = 0;
         this.rankManager = rankManager;
         this.developmentsUnderConstruction = [];
         this.developmentUpgradeLevels = {};
@@ -174,7 +177,7 @@ export class ProgressionManager {
     // the balance only, so it can't count towards XP (a single payout used to skip several ranks), the Prestige cash points or
     // the cash-earned totals. Same as the Sign-On Bonus, which also goes straight into the balance.
     addBonusCash(amount) {
-        if (Number.isFinite(amount) && amount > 0) this.balance += amount;
+        if (Number.isFinite(amount) && amount > 0) { this.balance += amount; this.bonusCashEarned += amount; }
     }
 
     addCash(amount) {

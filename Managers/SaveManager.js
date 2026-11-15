@@ -522,6 +522,8 @@ export function buildSave(progressionManager, rankManager, terminalName, farewel
         balance: progressionManager.balance,
         reputation: progressionManager.reputation,
         totalCashEarned: progressionManager.totalCashEarned,
+        // Lump sums handed over this run (Progress rewards, cash events, the daily bonus): not XP, but they count for emails
+        bonusCashEarned: progressionManager.bonusCashEarned ?? 0,
         // Government Grants' XP head start, kept apart from the cash earned (see RankManager.bonusXp)
         bonusXp: rankManager.bonusXp,
         rank: rankManager.rank,
@@ -600,6 +602,7 @@ export function loadGame(progressionManager, rankManager) {
             if (totalCashEarned >= grantXp) { totalCashEarned -= grantXp; bonusXp = grantXp }
         }
         progressionManager.totalCashEarned = totalCashEarned
+        progressionManager.bonusCashEarned = Number.isFinite(save.bonusCashEarned) && save.bonusCashEarned > 0 ? save.bonusCashEarned : 0
         // Kept to the game's own range: a rank of 0 or above the top rank (only possible in an edited save) is put back
         // inside it, so the XP bar and rank checks have a real rank to work from
         rankManager.rank = Math.min(MAX_RANK, Math.max(1, Math.floor(save.rank ?? 1)))

@@ -38,7 +38,7 @@
 //   upgradeDevCategory  Upgrade {n} different developments of one category {category} (set `category`, e.g. 'Food')
 //   upgradeCity      Upgrade a city's line {n} times
 //   shop             Buy something from the Shop
-//   work             Click Work {n} times
+//   work             Click Work {n} times by hand (the player's own presses; Best P.A. Ever's auto-clicks don't count)
 //   rename           Rename {n} developments
 //   like             Like {n} Hyper-Link posts
 //
@@ -851,7 +851,7 @@ export const EMAILS = {
             {
                 id: 'security-short-staffed',
                 target: 150,
-                ask: 'work overtime a bit',
+                ask: 'work overtime a bit, pressing Work yourself',
                 subject: 'Short-staffed',
                 body: "Dear {formal},\n\nHalf my team are off 'sick' this week. Sick! In my day you came in with a broken leg and a smile. Between us, I think a few of them are just workshy.\n\nSomebody has to cover the gaps, so could you step in and work some overtime? Nothing heroic, just a bit. I am sure some of them are genuinely unwell. Most of them.\n\nEyes open,\n{from}",
                 agree: 'Dear {from},\n\nUnderstood. I will step in and work some overtime.\n\nBest regards,\n{fullName}',
@@ -1134,7 +1134,7 @@ export const EMAILS = {
             {
                 id: 'fan-hardly-seen',
                 target: 120,
-                ask: 'spend a bit more time working at the terminal',
+                ask: 'spend a bit more time working at the terminal, pressing Work yourself',
                 subject: 'We have hardly seen you',
                 body: "Dearest {formal},\n\nI have hardly seen you lately around the terminal! I noticed you were not at your desk on Tuesday, and again on Thursday, and I had to sit down for a while. I check the window every morning at ten to eight. Please do not worry about that.\n\nCould you spend a little more time working at the terminal? Just where the club can see you. We have made you a very small flag.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
                 agree: 'Dear {from},\n\nUnderstood. I will spend more time working at the terminal.\n\nBest regards,\n{fullName}',

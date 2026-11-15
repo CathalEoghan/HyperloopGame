@@ -302,10 +302,19 @@ export const SCHEDULE_TYPES = ['schedule', 'scheduleNight', 'scheduleMorning']
 // How many new loops could be put on the timetable: cities connected but not on it yet, plus cities that can still be connected
 const scheduleRoom = (ctx) => (Number.isFinite(ctx.snap.unscheduled) ? ctx.snap.unscheduled : Math.max(0, (ctx.snap.cities || 0) - 1 - (ctx.snap.timetable || 0))) + (ctx.available?.citiesTotal || 0)
 
+// The connected cities that weren't connected when the player agreed
+const newCities = (s, e) => (s.cityList || []).filter(c => !e.extra.baseCities.includes(c.name))
+// Upgrade levels gained since agreeing, summed over every development (or city line); one that has gone counts nothing
+const levelsGained = (now, base) => Object.entries(now || {}).reduce((n, [name, level]) => n + Math.max(0, (Number(level) || 0) - (Number(base?.[name]) || 0)), 0)
+const CITY_TYPES = ['connectCities', 'connectContinent', 'connectTier3', 'connectCountryCity']
+
 // What each request measures. `metric` reads one number out of the snapshot; progress is how far it has risen since the
 // player agreed. `label` is the short line shown beside the progress bar.
 const METRICS = {
-    build: (s, e) => s.built?.[e.extra.category] || 0,
+    // Builds and connections count what is new since agreeing (extra.base..., see agree()), so removing a development or
+    // disconnecting a city that was already there doesn't set the player back, and removing and rebuilding the same one
+    // doesn't count twice. Requests agreed before this existed have no base lists and keep counting the totals.
+    build: (s, e) => (e.extra.baseBuilt ? (s.builtNames?.[e.extra.category] || []).filter(n => !e.extra.baseBuilt.includes(n)).length : (s.built?.[e.extra.category] || 0)),
     greet: (s) => s.greetings || 0,
     farewell: (s) => s.farewells || 0,
     // The schedule requests count NEW loops: timetable entries for cities that weren't on it when the player agreed (extra.baseNames).
@@ -314,22 +323,22 @@ const METRICS = {
     schedule: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).length : (s.timetable || 0)),
     cash: (s) => s.cash || 0,
     rep: (s) => s.repEarned || 0,
-    connectContinent: (s, e) => s.continentCities?.[e.extra.continent] || 0,
-    connectTier3: (s) => s.tier3Cities || 0,
+    connectContinent: (s, e) => (e.extra.baseCities ? newCities(s, e).filter(c => c.continent === e.extra.continent).length : (s.continentCities?.[e.extra.continent] || 0)),
+    connectTier3: (s, e) => (e.extra.baseCities ? newCities(s, e).filter(c => c.tier === 3).length : (s.tier3Cities || 0)),
     // Timetable departures that leave at night (8pm to 2am)
     scheduleNight: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).filter(t => atNight(t.minuteOfDay)).length : (s.nightLoops || 0)),
     // Cities connected in the countries a written email names (`countries` in data/emailText.js)
-    connectCountryCity: (s, e) => (e.extra.countries || []).reduce((n, c) => n + (s.countryCities?.[c] || 0), 0),
+    connectCountryCity: (s, e) => (e.extra.baseCities ? newCities(s, e).filter(c => (e.extra.countries || []).includes(c.country)).length : (e.extra.countries || []).reduce((n, c) => n + (s.countryCities?.[c] || 0), 0)),
     // Timetable departures that leave in the morning (6am to 10am)
     scheduleMorning: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).filter(t => inMorning(t.minuteOfDay)).length : (s.morningLoops || 0)),
     // Continents with at least one connected city
-    newContinent: (s) => s.continentsConnected || 0,
+    newContinent: (s, e) => (e.extra.baseContinents ? new Set((s.cityList || []).map(c => c.continent).filter(c => c && !e.extra.baseContinents.includes(c))).size : (s.continentsConnected || 0)),
     // Milestones reached so far (development counts, city counts, continents, rank gifts)
     milestone: (s) => s.milestones || 0,
     // Rewards claimed on the Progress page
     claimRewards: (s) => s.rewardsClaimed || 0,
     // Different countries among the connected cities
-    connectCountries: (s) => s.countries || 0,
+    connectCountries: (s, e) => (e.extra.baseCountries ? new Set((s.cityList || []).map(c => c.country).filter(c => c && !e.extra.baseCountries.includes(c))).size : (s.countries || 0)),
     // Delayed loops the player has paid compensation for
     compensateDelay: (s) => s.delaysCompensated || 0,
     // Delayed loops the player has dismissed without paying
@@ -340,14 +349,16 @@ const METRICS = {
     negativeEvents: (s) => s.negativeEvents || 0,
     // Emails the player has answered (agreed to or refused)
     clearInbox: (s) => s.answered || 0,
-    connectCities: (s) => s.cities || 0,
+    connectCities: (s, e) => (e.extra.baseCities ? newCities(s, e).length : (s.cities || 0)),
     rankUp: (s) => s.rank || 0,
-    upgradeDev: (s) => s.devUpgrades || 0,
+    // Levels gained since agreeing, per development and per city line (a removed development or disconnected city loses its
+    // levels, which no longer counts against the player)
+    upgradeDev: (s, e) => (e.extra.baseDevUpgrades ? levelsGained(s.devUpgradeLevels, e.extra.baseDevUpgrades) : (s.devUpgrades || 0)),
     // How many different developments of one category have been upgraded since the player agreed
     // The level of the one development a written email names (picked by the game from those that can be upgraded)
     upgradeSpecific: (s, e) => s.devLevels?.[e.extra.category]?.[e.extra.development] || 0,
     upgradeDevCategory: (s, e) => Object.entries(s.devLevels?.[e.extra.category] || {}).filter(([name, level]) => level > (e.extra.baseLevels?.[name] || 0)).length,
-    upgradeCity: (s) => s.cityUpgrades || 0,
+    upgradeCity: (s, e) => (e.extra.baseCityLevels ? levelsGained(s.cityLevels, e.extra.baseCityLevels) : (s.cityUpgrades || 0)),
     shop: (s) => s.shopOwned || 0,
     work: (s) => s.work || 0,
     // Renames since agreeing (a counter, so renaming a development that already has a custom name counts too). Emails agreed
@@ -411,7 +422,8 @@ const GENERATORS = {
     cash: (ctx, rnd) => {
         const perHour = ctx.incomePerHour || 0
         if (perHour <= 0) return null
-        const target = ctx.fixed ?? niceRound(perHour * between(3, 8, rnd))
+        // Lump sums count too (Progress rewards, cash events, the daily bonus), so the sum asked for is 8-20 hours of income
+        const target = ctx.fixed ?? niceRound(perHour * between(8, 20, rnd))
         return { type: 'cash', target, extra: {}, subject: 'Quarterly figures', ask: `earn ${formatCash(target)} for the terminal`, hours: between(24, 48, rnd) }
     },
     rep: (ctx, rnd) => {
@@ -584,7 +596,7 @@ const GENERATORS = {
     },
     work: (ctx, rnd) => {
         const target = ctx.fixed ?? between(4, 12, rnd) * 25
-        return { type: 'work', target, extra: {}, subject: 'Rolling up our sleeves', ask: `click Work ${target} times`, hours: between(24, 36, rnd) }
+        return { type: 'work', target, extra: {}, subject: 'Rolling up our sleeves', ask: `click Work ${target} times yourself`, hours: between(24, 36, rnd) }
     },
     rename: (ctx, rnd) => {
         const room = ctx.renamable ?? ctx.unrenamed ?? 0
@@ -772,6 +784,17 @@ export function agree(email, snap, playerName, now = Date.now()) {
     if (SCHEDULE_TYPES.includes(email.type)) started = { ...started, extra: { ...started.extra, baseNames: (snap.timetableEntries || []).map(t => t.name) } }
     // Renames are counted from now on with the rename counter (see METRICS), also for a request that arrived before it existed
     if (email.type === 'rename') started = { ...started, extra: { ...started.extra, countsRenames: true } }
+    // Builds, connections and upgrades are counted from what the player has now (see METRICS), when the game says what that is
+    const base = {}
+    if (email.type === 'build' && snap.builtNames) base.baseBuilt = [...(snap.builtNames[email.extra.category] || [])]
+    if (snap.cityList) {
+        if (CITY_TYPES.includes(email.type)) base.baseCities = snap.cityList.map(c => c.name)
+        if (email.type === 'connectCountries') base.baseCountries = [...new Set(snap.cityList.map(c => c.country).filter(Boolean))]
+        if (email.type === 'newContinent') base.baseContinents = [...new Set(snap.cityList.map(c => c.continent).filter(Boolean))]
+    }
+    if (email.type === 'upgradeDev' && snap.devUpgradeLevels) base.baseDevUpgrades = { ...snap.devUpgradeLevels }
+    if (email.type === 'upgradeCity' && snap.cityLevels) base.baseCityLevels = { ...snap.cityLevels }
+    if (Object.keys(base).length) started = { ...started, extra: { ...started.extra, ...base } }
     return {
         ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
         baseline: metricOf(started, snap), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
