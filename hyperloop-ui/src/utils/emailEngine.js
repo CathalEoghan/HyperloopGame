@@ -7,6 +7,7 @@
 import { DEVELOPMENT_MILESTONES } from '../data/developmentMilestones.js'
 import { EMAILS, ONLY_WRITTEN } from '../data/emailText.js'
 import { FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/hyperLinkData.js'
+import { BIG_NUMBER_TIERS, scaleToTier } from './bigNumbers.js'
 
 export const EMAILS_KEY = 'hyperloop_emails'
 export const EMAIL_META_KEY = 'hyperloop_email_meta'
@@ -45,11 +46,15 @@ const niceRound = (n) => {
     return Math.max(mag, Math.round(n / mag) * mag)
 }
 export const formatCount = (n) => Number(n).toLocaleString('en-GB')
+// Money in the words the top bar uses: £8,200, then £1.5 million, £2 billion, £3.4 trillion ... (bigNumbers.js), with one
+// decimal place at most and none when it is a round number. A size with no name is written in scientific notation.
 export const formatCash = (n) => {
-    if (n >= 1e9) return `£${(n / 1e9).toFixed(n % 1e9 === 0 ? 0 : 1)}B`
-    if (n >= 1e6) return `£${(n / 1e6).toFixed(n % 1e6 === 0 ? 0 : 1)}M`
-    if (n >= 1e3) return `£${(n / 1e3).toFixed(n % 1e3 === 0 ? 0 : 1)}K`
-    return `£${formatCount(n)}`
+    const v = Number(n) || 0
+    if (v < 1e6) return `£${formatCount(Math.round(v))}`
+    const { tier, scaled } = scaleToTier(v, 1)
+    const name = BIG_NUMBER_TIERS[tier]?.[0]
+    if (!name) return `£${v.toExponential(1)}`
+    return `£${Number(scaled.toFixed(1)).toLocaleString('en-GB', { maximumFractionDigits: 1 })} ${name}`
 }
 
 // ---- recurring characters ---------------------------------------------------------------------------------------
@@ -346,7 +351,9 @@ const METRICS = {
     upgradeCity: (s) => s.cityUpgrades || 0,
     shop: (s) => s.shopOwned || 0,
     work: (s) => s.work || 0,
-    rename: (s) => s.renames || 0,
+    // Renames since agreeing (a counter, so renaming a development that already has a custom name counts too). Emails agreed
+    // before the counter existed have no countsRenames and keep counting custom names as they did.
+    rename: (s, e) => (e.extra?.countsRenames ? (s.renamesDone || 0) : (s.renames || 0)),
     like: (s) => s.likes || 0,
 }
 
@@ -581,10 +588,10 @@ const GENERATORS = {
         return { type: 'work', target, extra: {}, subject: 'Rolling up our sleeves', ask: `click Work ${target} times`, hours: between(24, 36, rnd) }
     },
     rename: (ctx, rnd) => {
-        if ((ctx.unrenamed || 0) < 1) return null
-        if (ctx.fixed && ctx.fixed > ctx.unrenamed) return null
-        const target = ctx.fixed ?? Math.min(ctx.unrenamed, between(1, 2, rnd))
-        return { type: 'rename', target, extra: {}, subject: 'A fresh look', ask: `give ${target} ${plural(target, 'development', 'developments')} a new name`, hours: between(24, 48, rnd) }
+        const room = ctx.renamable ?? ctx.unrenamed ?? 0
+        if (room < 1) return null
+        const target = ctx.fixed ?? between(1, 2, rnd)
+        return { type: 'rename', target, extra: { countsRenames: true }, subject: 'A fresh look', ask: `give ${target} ${plural(target, 'development', 'developments')} a new name`, hours: between(24, 48, rnd) }
     },
     like: (ctx, rnd) => {
         const target = ctx.fixed ?? between(3, 8, rnd)
@@ -764,6 +771,8 @@ export function agree(email, snap, playerName, now = Date.now()) {
     if (inbox) started = { ...started, target: Math.max(1, Math.min(email.target, waiting)) }
     // The schedule requests count loops for cities that aren't on the timetable now (see METRICS)
     if (SCHEDULE_TYPES.includes(email.type)) started = { ...started, extra: { ...started.extra, baseNames: (snap.timetableEntries || []).map(t => t.name) } }
+    // Renames are counted from now on with the rename counter (see METRICS), also for a request that arrived before it existed
+    if (email.type === 'rename') started = { ...started, extra: { ...started.extra, countsRenames: true } }
     return {
         ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
         baseline: metricOf(started, snap), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,

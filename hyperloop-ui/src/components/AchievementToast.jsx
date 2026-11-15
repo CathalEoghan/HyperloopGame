@@ -23,7 +23,8 @@ function AchievementToast({ queue, onShift }) {
                 ? <img className="achievement-toast-logo" src={logo} alt="" />
                 : <img className="achievement-toast-icon" src={trophyIcon} alt="" />}
             <div className="achievement-toast-text">
-                <span className="achievement-toast-label">Achievement unlocked</span>
+                {/* Other announcements use the same toast: `label: null` leaves the small heading off (an email request fulfilled) */}
+                {current.label !== null && <span className="achievement-toast-label">{current.label ?? 'Achievement unlocked'}</span>}
                 <span className="achievement-toast-title">{current.title}</span>
                 {current.subtitle && <span className="achievement-toast-sub">{current.subtitle}</span>}
             </div>

@@ -794,7 +794,7 @@ function App() {
       devLevels: devLevelsByCategory(pm),
       rank: rankManager.rank, devUpgrades: sum(pm.developmentUpgradeLevels), cityUpgrades: sum(pm.cityLineLevels),
       shopOwned: readCosmetics().owned.length, work: achievements.counter('work'),
-      likes: readStoredList('hyperloop_hyperlink_liked').length, renames: Object.keys(pm.developmentNames || {}).length,
+      likes: readStoredList('hyperloop_hyperlink_liked').length, renames: Object.keys(pm.developmentNames || {}).length, renamesDone: achievements.counter('devRenames'),
     }
   }
   // What a new request may ask for right now: only things the player can actually do
@@ -838,6 +838,8 @@ function App() {
       // The XP (cash earned) still needed for the next rank; Infinity at the top rank
       rankXpToNext: rankManager.rank >= MAX_RANK ? Infinity : rankManager.getCumulativeXP(rankManager.rank) - rankManager.xp,
       unrenamed: pm.purchasedDevelopments.filter(d => !pm.developmentNames?.[d.name]).length,
+      // Any built development can be renamed (again), and every rename counts
+      renamable: pm.purchasedDevelopments.length,
       devsWithUpgrade: pm.purchasedDevelopments.filter(d => d.revenue).length,
       // How many finished developments of each category can still be upgraded (not at the top level yet)
       upgradableDevs: pm.purchasedDevelopments.filter(d => pm.getDevelopmentUpgradeCostInfo(d)).map(d => ({ name: d.name, category: d.category })),
@@ -857,9 +859,10 @@ function App() {
     setEmailBubble(true)
     setTimeout(() => setEmailBubble(false), 3000)
   }
-  // Called every few seconds from the game tick, once the player is in the game
+  // Called every tick (about once a second) from the game tick, once the player is in the game
   const emailTick = () => {
     const now = Date.now()
+    const fulfilledToasts = []
     const snap = emailSnapshot()
     let list = emailsRef.current
     let changed = false
@@ -880,7 +883,11 @@ function App() {
         next = emailEngine.updateAgreed(e, snap, now)
         if (next.state !== 'agreed') {
           noteEmailOutcome(next)
-          if (next.state === 'fulfilled') achievements.addCounter('emailsFulfilled')
+          if (next.state === 'fulfilled') {
+            achievements.addCounter('emailsFulfilled')
+            // Announced at once, like an achievement; the sender's reply follows a few minutes later
+            fulfilledToasts.push({ key: `email-${next.id}`, id: 'atYourService', label: null, title: 'Request fulfilled!', subtitle: 'A response should arrive shortly' })
+          }
         }
       }
       if (next !== e) { changed = true; if (next.state !== e.state && !next.read) announced = true }
@@ -913,6 +920,7 @@ function App() {
       emailEngine.writeMeta(meta)
     }
     if (changed) { setEmails(list); if (announced) announceEmail() }
+    if (fulfilledToasts.length) setAchievementQueue(prev => [...prev, ...fulfilledToasts])
   }
   const emailTickRef = useRef(null)
   const emailLastTickRef = useRef(0)
@@ -1498,9 +1506,6 @@ function App() {
     // This event's own generation number, so its expiry setTimeout below can tell later whether it is still
     // the current event by the time it fires (Opening Party can replace an event before its timer runs out).
     const myGeneration = ++eventGenerationRef.current;
-    // Counted for the emails that ask the player to live through some bad events
-    if (rawEvent.type === 'negative') achievements.addCounter('negativeEvents');
-    if (rawEvent.type === 'positive') achievements.addCounter('positiveEvents');
     const pizza = PrestigeManager.owns('pizzaParties') && rawEvent.type === 'positive';
     const scaledEvent = (pizza && rawEvent.effect)
       ? { ...rawEvent, effect: { ...rawEvent.effect, multiplier: 1 + (rawEvent.effect.multiplier - 1) * PRESTIGE_VALUES.pizzaParties } }
@@ -1888,7 +1893,8 @@ function App() {
       }
 
       // Emails: new requests, and progress on the ones the player agreed to
-      if (tickCount.current % 5 === 0 && !blockedRef.current && !onboarding) emailTickRef.current?.();
+      // Every tick (about once a second), so a fulfilled request is announced as soon as it happens
+      if (!blockedRef.current && !onboarding) emailTickRef.current?.();
 
       // Hyper-Link post generation every 1-3 minutes, from the first connected city on (it used to wait for a second city,
       // which left a one-city network with only the official account's posts)
@@ -2700,6 +2706,8 @@ function App() {
           onSave={triggerSave}
           onRename={(development) => {
             unlockAchievement('underNewManagement')
+            // Every rename to a new name counts for the emails that ask for one (putting the original name back doesn't)
+            if (progressionManager.hasCustomDevelopmentName(development)) achievements.addCounter('devRenames')
             // development is the original category (e.g. "Pharmacy"); developmentName is the player's new name
             const renamedData = { development: development.name, developmentName: progressionManager.hasCustomDevelopmentName(development) ? progressionManager.getDevelopmentName(development) : undefined }
             hyperLinkTriggerRef.current = { type: 'development_renamed', data: renamedData }

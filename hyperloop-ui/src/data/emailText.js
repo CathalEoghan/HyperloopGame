@@ -12,7 +12,7 @@
 //   greet            Greet the passengers {n} times
 //   farewell         Say farewell {n} times
 //   schedule         Add {n} new loops to the timetable (cities that weren't on it when the player agreed)
-//   cash             Earn {n} (a sum of money, already formatted, e.g. £32M)
+//   cash             Earn {n} (a sum of money, already formatted, e.g. £32 million)
 //   rep              Earn {n} Reputation
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
@@ -67,7 +67,7 @@
 //   {name}       the player's first name (or "Manager" if they haven't set one)
 //   {fullName}   the player's full name
 //   {from}       the sender's first name        {fromFull}  their full name        {role}  their job, e.g. Health Inspector
-//   {n}          the number asked for (for cash it is a sum of money, e.g. £32M)
+//   {n}          the number asked for (for cash it is a sum of money, e.g. £32 million)
 //   {category}   the development category (Food, Shopping, ...)      {continent}   the continent
 //   {time}       how long the player gets, e.g. "a day" or "36 hours"       {hours}  the same as a number
 //   {ask}        the game's own one-line version of the request, e.g. "greet the passengers 4 times"
