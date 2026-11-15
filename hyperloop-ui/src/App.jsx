@@ -47,7 +47,7 @@ import { pickDelayReason } from "./data/delayReasons.js"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
 import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
 import { POSTS } from "./data/hyperLinkData.js"
-import { playPhoneNotificationSound, playNewEmailSound, playNotEnoughFundsSound } from "./utils/sound.js"
+import { playPhoneNotificationSound, playNewEmailSound, playNotEnoughFundsSound, playRequestDoneSound } from "./utils/sound.js"
 import { useAttentionAlerts } from "./utils/attentionAlerts.js"
 import { useEscapeToClose } from "./utils/useEscapeToClose.js"
 import { RankManager, MAX_RANK } from "Managers/RankManager/RankManager.js";
@@ -886,7 +886,7 @@ function App() {
           if (next.state === 'fulfilled') {
             achievements.addCounter('emailsFulfilled')
             // Announced at once, like an achievement; the sender's reply follows a few minutes later
-            fulfilledToasts.push({ key: `email-${next.id}`, id: 'atYourService', label: null, title: 'Request fulfilled!', subtitle: 'A response should arrive shortly' })
+            fulfilledToasts.push({ key: `email-${next.id}`, id: 'atYourService', label: null, sound: playRequestDoneSound, title: 'Request fulfilled!', subtitle: 'A response should arrive shortly' })
           }
         }
       }

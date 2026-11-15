@@ -11,7 +11,9 @@ function AchievementToast({ queue, onShift }) {
     const current = queue[0]
     useEffect(() => {
         if (!current) return
-        playSpecialChime()   // once per toast; the unlock itself makes no sound, so the two never play together
+        // Once per toast; the unlock itself makes no sound, so the two never play together. Another announcement may bring its own (`sound`)
+        if (typeof current.sound === 'function') current.sound()
+        else playSpecialChime()
         const timer = setTimeout(onShift, SHOW_MS)
         return () => clearTimeout(timer)
     }, [current?.key])
