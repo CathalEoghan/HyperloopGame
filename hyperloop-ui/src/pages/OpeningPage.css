@@ -132,6 +132,15 @@
     letter-spacing: 0.5px;
 }
 
+.opening-btn-arrow {
+    width: 0.9em;
+    height: 0.9em;
+    margin-left: 6px;
+    vertical-align: -0.1em;
+    /* The icon is black: shown white, like the button's text */
+    filter: brightness(0) invert(1);
+}
+
 .opening-btn:hover:not(:disabled) {
     background: color-mix(in srgb, var(--ui-accent, #f5a623) 85%, black);
     transform: translateY(-1px);

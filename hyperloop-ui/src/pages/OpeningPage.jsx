@@ -7,6 +7,7 @@ import { allCities } from '../../../CityManager/CityRegistry'
 import CityPickerModal from '../components/CityPickerModal.jsx'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import officialLogo from '../assets/misc/officialLogo.png'
+import rightArrow from '../assets/misc/rightArrow.png'
 import './OpeningPage.css'
 import { flagSrc } from '../utils/flagSrc.js'
 import { PLAYER_NAME_KEY, PLAYER_TITLE_KEY, PLAYER_TITLES } from '../utils/emailEngine.js'
@@ -102,7 +103,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                         onClick={handleConfirm}
                         disabled={!localName.trim()}
                     >
-                        Continue →
+                        Continue <img className="opening-btn-arrow" src={rightArrow} alt="" />
                     </button>
                 </div>
             </div>
@@ -145,7 +146,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                     </div>
                     <p className="opening-hint">Your name and title can be changed at any time in Settings.</p>
                     <button className="opening-btn" onClick={confirmPlayer} disabled={!playerName.trim()}>
-                        Launch terminal →
+                        Launch terminal <img className="opening-btn-arrow" src={rightArrow} alt="" />
                     </button>
                 </div>
             </div>
