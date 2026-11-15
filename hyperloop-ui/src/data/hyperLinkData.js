@@ -106,7 +106,7 @@ export const FIRST_NAMES_FEMALE = [
     'Gabriela', 'Catalina', 'Daniela', 'Renata', 'Summer', 'Mora', 'Akari', 'Clio', 'Desiree', 'Aurelia',
     'Sara', 'Nour', 'Rania', 'Moira', 'Amelie', 'Asha', 'Sherry', 'Kira', 'Cathy', 'Mallorie',
     'Nina', 'Vera', 'Lena', 'Chelsea', 'Joyce', 'Shel', 'Sylvie', 'Bethan', 'Amie', 'Dorothy', 'Dinah',
-    'Tabitha', 'Serena', 'Jackie', 'Vicki', 'Vicky', 'Viv', 'Vivian', 'Bethany', 'Beth',
+    'Tabitha', 'Serena', 'Jackie', 'Vicki', 'Vicky', 'Viv', 'Vivian', 'Bethany', 'Beth', 'Bernice', 'Shanice', 'Luna',
     'Alison', 'Ally', 'Allison', 'Alejandra', 'Josephine', 'Agatha', 'Zosia', 'Giselle', 'Gisele', 'Megs',
     'Jacqueline', 'Emilia', 'Samira', 'Rochelle', 'Charlene', 'Betsy', 'Anita', 'Chantal', 'Chantelle',
     'Dominique', 'Quinta', 'Leanne', 'Leanna', 'Lex', 'Marianne', 'Ang', 'Deb', 'Shandi',

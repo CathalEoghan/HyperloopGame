@@ -428,7 +428,9 @@ function buildEligibleCategories(gameState) {
         ...purchasedUpgrades.map(upg => UPGRADE_KEY_MAP[upg.name]),
         ...Object.entries(PRESTIGE_POST_MAP).filter(([id]) => PrestigeManager.owns(id)).map(([, key]) => key),
     ])].filter(key => key && POSTS[key]?.length && (!OWNED_POST_WINDOWS[key] || OWNED_POST_WINDOWS[key](new Date())))
-    ownedKeys.forEach(key => add(key, OWNED_POSTS_WEIGHT / ownedKeys.length, {}, true))
+    // Which development each post list is about, so a post can use the player's own name for it (see withOwnName)
+    const devForKey = Object.fromEntries(purchasedDevelopments.filter(dev => DEV_KEY_MAP[dev.name]).map(dev => [DEV_KEY_MAP[dev.name], dev.name]))
+    ownedKeys.forEach(key => add(key, OWNED_POSTS_WEIGHT / ownedKeys.length, devForKey[key] ? { ownedDev: devForKey[key] } : {}, true))
 
     return cats
 }
@@ -519,6 +521,17 @@ function generateUser(gender, usedPfps, pfpLastUsed = {}) {
 // is used up for the day it simply drops out of the draw.
 const isOncePerDay = category => category.startsWith('specialDay_') || category.startsWith('homeCity_')
 
+// A renamed development is sometimes called by the player's own name in posts about it: "at the bakery" becomes "at Crumbs".
+// Only "the <development>" is swapped (so the sentence still reads right), and only about half the time, so people still call
+// it the bakery now and then. The name keeps its own capitals, like {developmentName}.
+export const OWN_NAME_CHANCE = 0.5
+export function withOwnName(text, devName, developmentNames, rnd = Math.random) {
+    const own = devName && developmentNames?.[devName]
+    if (!own || rnd() >= OWN_NAME_CHANCE) return text
+    const words = devName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').split(/\s+/).join('\\s+')
+    return text.replace(new RegExp(`\\bthe\\s+${words}\\b`, 'gi'), () => own)
+}
+
 export function generateHyperLinkPost(gameState) {
     const { terminalName, usedPostIds, usedMonthPostIds = [], usedDailyPostIds = [], usedPfps, trigger, templateLastUsed = {}, pfpLastUsed = {}, firedDevPostIds = [] } = gameState
 
@@ -597,7 +610,7 @@ export function generateHyperLinkPost(gameState) {
 
     return {
         id: `post_${Date.now()}_${Math.random()}`,
-        text: substituteText(cleanText, selected.data, gameState),
+        text: withOwnName(substituteText(cleanText, selected.data, gameState), selected.data?.ownedDev, gameState.developmentNames),
         displayName,
         handle,
         isOfficial: false,
