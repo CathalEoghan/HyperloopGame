@@ -142,6 +142,43 @@
     cursor: not-allowed;
 }
 
+/* Step 3 - what to call the player */
+.opening-welcome-small {
+    font-size: 2.2rem;
+}
+
+.opening-title-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.opening-title-btn {
+    min-width: 64px;
+    padding: 9px 14px;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #444;
+    background: #fafafa;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    cursor: var(--cursor-pointer, pointer);
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+
+.opening-title-btn:hover {
+    border-color: var(--ui-accent, #f5a623);
+}
+
+.opening-title-btn.active {
+    background: var(--ui-accent, #f5a623);
+    border-color: var(--ui-accent, #f5a623);
+    color: white;
+}
+
 /* City cards */
 .starter-city-row {
     display: flex;

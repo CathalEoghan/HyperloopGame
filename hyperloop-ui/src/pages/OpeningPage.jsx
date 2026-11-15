@@ -9,6 +9,7 @@ import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import officialLogo from '../assets/misc/officialLogo.png'
 import './OpeningPage.css'
 import { flagSrc } from '../utils/flagSrc.js'
+import { PLAYER_NAME_KEY, PLAYER_TITLE_KEY, PLAYER_TITLES } from '../utils/emailEngine.js'
 
 // runStart: set after a prestige. The terminal name carries over, and the new run continues from the same home
 // city the retiring run had - "home" can be any city, not just one of the six usual starters, if Personal
@@ -27,6 +28,11 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
     // Personal Favours: besides the six usual starters, any city in the world can be the new home city
     const canPickAny = !!runStart && PrestigeManager.owns('personalFavours')
     const [pickerOpen, setPickerOpen] = useState(false)
+    // A brand-new game asks what to call the player after the home city is picked (the emails greet them by it).
+    // A retired run already knows, so it goes straight from the city to building the terminal.
+    const [pendingCity, setPendingCity] = useState(null)
+    const [playerName, setPlayerName] = useState(() => { try { return localStorage.getItem(PLAYER_NAME_KEY) || '' } catch { return '' } })
+    const [playerTitle, setPlayerTitle] = useState(() => { try { const t = localStorage.getItem(PLAYER_TITLE_KEY); return PLAYER_TITLES.includes(t) ? t : '' } catch { return '' } })
 
     // runStart is only truthy the moment this screen is reached because a run was just retired - celebrate it once.
     useEffect(() => {
@@ -41,6 +47,22 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
         playConstructionSound()
         constructionManager.startTutorialConstruction(city)
         setPickedCity(city)
+    }
+
+    const chooseCity = (city) => {
+        if (runStart) { startCity(city); return }
+        playClickSound2()
+        setPendingCity(city)
+    }
+
+    const confirmPlayer = () => {
+        const name = playerName.trim().replace(/\s+/g, ' ')
+        if (!name || !pendingCity) return
+        try {
+            localStorage.setItem(PLAYER_NAME_KEY, name)
+            if (playerTitle) localStorage.setItem(PLAYER_TITLE_KEY, playerTitle); else localStorage.removeItem(PLAYER_TITLE_KEY)
+        } catch { /* storage full */ }
+        startCity(pendingCity)
     }
 
     const handleConfirm = () => {
@@ -87,6 +109,49 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
         )
     }
 
+    if (pendingCity) {
+        return (
+            <div className="opening-background">
+                <div className="opening-card">
+                    <div className="opening-logo"><img src={officialLogo} alt="Hyperloop Empire" /></div>
+                    <h1 className="opening-welcome opening-welcome-small">What should we call you?</h1>
+                    <div className="opening-divider" />
+                    <div className="opening-title-row" role="group" aria-label="Title">
+                        {PLAYER_TITLES.map(t => (
+                            <button
+                                key={t}
+                                type="button"
+                                className={`opening-title-btn${playerTitle === t ? ' active' : ''}`}
+                                aria-pressed={playerTitle === t}
+                                onMouseEnter={() => playHoverSound()}
+                                // Pressing the chosen title again clears it: a title is optional
+                                onClick={() => { playClickSound2(); setPlayerTitle(playerTitle === t ? '' : t) }}
+                            >
+                                {t}
+                            </button>
+                        ))}
+                    </div>
+                    <div className="opening-input-row">
+                        <input
+                            className="opening-input"
+                            value={playerName}
+                            onChange={(e) => setPlayerName(e.target.value)}
+                            onKeyDown={(e) => e.key === "Enter" && confirmPlayer()}
+                            placeholder="Your name"
+                            aria-label="Your name"
+                            maxLength={32}
+                            autoFocus
+                        />
+                    </div>
+                    <p className="opening-hint">Your name and title can be changed at any time in Settings.</p>
+                    <button className="opening-btn" onClick={confirmPlayer} disabled={!playerName.trim()}>
+                        Launch terminal →
+                    </button>
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className="opening-background">
             <div className="opening-city-step">
@@ -114,8 +179,8 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
     tabIndex={0}
     aria-label={`Choose ${city.name}, ${city.country}`}
     onMouseEnter={() => playHoverSound()}
-    onClick={() => startCity(city)}
-    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); startCity(city) } }}
+    onClick={() => chooseCity(city)}
+    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); chooseCity(city) } }}
                         >
                            <img
     className="starter-city-image"
