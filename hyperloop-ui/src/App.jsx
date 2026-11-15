@@ -1971,6 +1971,7 @@ function App() {
           purchasedUpgrades: progressionManager.purchasedUpgrades,
           // The player's own names for developments, which posts about one sometimes use
           developmentNames: progressionManager.developmentNames,
+          playerName: playerName(), playerTitle: playerTitle(),
           activeEvent: activeEventRef.current,
           rankSet: rankManager.rank,
           reputation: progressionManager.reputation,

@@ -276,7 +276,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 onClick={() => { playClickSound2(); setSelectedCity(city) }}
                 onMouseEnter={() => playHoverSound()}
             >
-                <div className={`city-image-wrapper${isMaxed ? ' city-image-wrapper-maxed' : ''}`}>
+                <div className={`city-image-wrapper${isMaxed ? ' city-image-wrapper-maxed' : ''}${offTimetable ? ' city-image-wrapper-off' : ''}`}>
                     <img
                         className={isUnderConstruction ? "unavailable" : "city-image"}
                         src={cityThumbnails[city.name] || cityImages[city.name]}

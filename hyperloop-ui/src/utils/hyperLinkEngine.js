@@ -532,6 +532,25 @@ export function withOwnName(text, devName, developmentNames, rnd = Math.random) 
     return text.replace(new RegExp(`\\bthe\\s+${words}\\b`, 'gi'), () => own)
 }
 
+// Now and then a post calls the manager by the player's own name instead: "the manager is so nice" becomes "Dr. McGlone is
+// so nice" (or "Cathal McGlone" with no title), and "thanks manager" becomes "thanks Dr. McGlone" (or "thanks Cathal").
+// Left alone: someone's own manager ("dont tell my manager"), and "manager" used to describe something ("the manager
+// send-off", "VIP manager treatment"). Needs a name set; the title is one of the Settings ones or none.
+export const MANAGER_NAME_CHANCE = 0.4
+// Lower-case only: a shouted "BEST MANAGER EVER" or a #ThankYouManager hashtag stays as it is
+const MANAGER_AS_WORD = /(\b[Mm]y\s+)?\b(?:([Tt]he|[Tt]his)\s+)?manager\b(?!\s+(?:farewell|send-off|treatment|selfie|videos?))/g
+export function withManagerName(text, playerName, playerTitle = '', rnd = Math.random) {
+    const name = (playerName || '').trim().replace(/\s+/g, ' ')
+    if (!name || rnd() >= MANAGER_NAME_CHANCE) return text
+    const parts = name.split(' ')
+    const titled = playerTitle ? `${playerTitle} ${parts[parts.length - 1]}` : null
+    return text.replace(MANAGER_AS_WORD, (match, mine, article) => {
+        if (mine) return match
+        // "the manager" talks about them, so the full name; a bare "manager" talks to them, so the first name
+        return titled || (article ? name : parts[0])
+    })
+}
+
 export function generateHyperLinkPost(gameState) {
     const { terminalName, usedPostIds, usedMonthPostIds = [], usedDailyPostIds = [], usedPfps, trigger, templateLastUsed = {}, pfpLastUsed = {}, firedDevPostIds = [] } = gameState
 
@@ -610,7 +629,7 @@ export function generateHyperLinkPost(gameState) {
 
     return {
         id: `post_${Date.now()}_${Math.random()}`,
-        text: withOwnName(substituteText(cleanText, selected.data, gameState), selected.data?.ownedDev, gameState.developmentNames),
+        text: withManagerName(withOwnName(substituteText(cleanText, selected.data, gameState), selected.data?.ownedDev, gameState.developmentNames), gameState.playerName, gameState.playerTitle),
         displayName,
         handle,
         isOfficial: false,
