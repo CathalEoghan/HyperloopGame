@@ -846,6 +846,7 @@ developmentMilestone.mp3 - Sound by SoundReality via Pixabay (Pixabay Content Li
 newEmail.mp3 - Sound by Universfield (Pixabay Content License)
 keyboard.mp3 - Sound by DRAGON_STUDIO (Pixabay Content License)
 requestDone.mp3 - Sound by Universfield (Pixabay Content License)
+requestFailed.mp3 - Sound by Universfield (Pixabay Content License)
 
 ACHIEVEMENT LOGOS
 
@@ -1044,6 +1045,7 @@ recreationCategory.png - <a href="https://www.flaticon.com/free-icons/pub" title
 infrastructureCategory.png - <a href="https://www.flaticon.com/free-icons/obra" title="obra icons">Obra icons created by Magnific - Flaticon</a>
 globe.png - <a href="https://www.flaticon.com/free-icons/earth" title="earth icons">Earth icons created by Magnific - Flaticon</a>
 email.png - <a href="https://www.flaticon.com/free-icons/email" title="email icons">Email icons created by Magnific - Flaticon</a>
+emailFail.png - <a href="https://www.flaticon.com/free-icons/failed" title="failed icons">Failed icons created by Futuer - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
