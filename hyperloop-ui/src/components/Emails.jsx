@@ -46,7 +46,7 @@ function TodayFooter({ now }) {
     return (
         <div className="emails-today">
             <b>Today: {Math.min(sent, MAX_PER_DAY)} of {MAX_PER_DAY} emails</b>
-            <span>{sent >= MAX_PER_DAY ? 'That is everyone for today. More arrive tomorrow.' : meta.day === today ? `Next one in about ${waitMin} min of play.` : 'The first one arrives a few minutes into play.'}</span>
+            <span>{sent >= MAX_PER_DAY ? 'That is everyone for today. More arrive tomorrow.' : meta.day !== today ? 'The first one arrives a few minutes into play.' : meta.idle ? 'Nobody has anything to ask right now. More may arrive later, or tomorrow.' : `Next one in about ${waitMin} min of play.`}</span>
         </div>
     )
 }

@@ -921,7 +921,7 @@ function App() {
         // No limit on how many can be open at once: only MAX_PER_DAY a day (stepMeta)
         const cast = emailEngine.ensureCast(emailEngine.readCast())
         emailEngine.writeCast(cast)
-        const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), playerTitle: playerTitle(), cast, used: emailEngine.readUsed(), today: meta.senders || [] })
+        const email = emailEngine.generateEmail(emailContext(snap), { now, playerName: playerName(), playerTitle: playerTitle(), cast, used: emailEngine.readUsed(), today: meta.senders || [], open: list.filter(emailEngine.isOpen).map(e => e.templateKey).filter(Boolean) })
         if (email) {
           // Having mentioned how they were last treated, the character doesn't say it again
           if (email.referredBack) emailEngine.writeCast(emailEngine.forgetOutcome(cast, email.character))

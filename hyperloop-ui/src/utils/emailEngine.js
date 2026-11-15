@@ -661,10 +661,13 @@ const templateCtx = (ctx, t) => ({
 // How the next written email is chosen: every written email that can be done right now is a candidate, from a sender who hasn't
 // written today (a character at most once a day, and the public count as one sender, so at most one of them a day). One that has
 // been sent before isn't picked again until every candidate has been sent; then the list starts over. Picked at random.
-export function pickWritten(ctx, { rnd = Math.random, cast = null, used = [], today = [], types = null } = {}) {
+// `open`: the written emails still in the inbox (waiting for an answer, or in progress), which are never sent a second time
+// alongside themselves.
+// Returns null when there is nothing to send right now: either nothing can be asked for at all, or the only emails not sent
+// yet are from people who have already written today (they wait for tomorrow, rather than the list starting over early).
+export function pickWritten(ctx, { rnd = Math.random, cast = null, used = [], today = [], types = null, open = [] } = {}) {
     const candidates = []
     for (const who of ['public', ...CHARACTER_IDS]) {
-        if (today.includes(who)) continue
         if (who !== 'public' && !cast?.[who]?.name) continue
         for (const [type, list] of Object.entries(EMAILS[who] || {})) {
             if (!GENERATORS[type] || !Array.isArray(list) || (types && !types.includes(type))) continue
@@ -675,15 +678,19 @@ export function pickWritten(ctx, { rnd = Math.random, cast = null, used = [], to
             })
         }
     }
-    if (candidates.length === 0) return null
-    const fresh = candidates.filter(c => !used.includes(c.option.key))
-    return { ...pick(fresh.length ? fresh : candidates, rnd), restart: fresh.length === 0 }
+    const allowed = candidates.filter(c => !today.includes(c.who) && !open.includes(c.option.key))
+    const fresh = allowed.filter(c => !used.includes(c.option.key))
+    if (fresh.length) return { ...pick(fresh, rnd), restart: false }
+    // Someone who has already written today still has emails that haven't been sent: wait for those
+    if (candidates.some(c => !used.includes(c.option.key))) return null
+    // Every email that can be done has been sent: the list starts again
+    return allowed.length ? { ...pick(allowed, rnd), restart: true } : null
 }
 
 // Make one email, or null if nothing fits. `types` lets a test force a type.
-export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', playerTitle = '', types = null, cast = null, used = [], today = [] } = {}) {
+export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', playerTitle = '', types = null, cast = null, used = [], today = [], open = [] } = {}) {
     // Only written emails: drawn at random from every written email that can be done right now (see pickWritten)
-    const chosen = ONLY_WRITTEN ? pickWritten(ctx, { rnd, cast, used, today, types }) : null
+    const chosen = ONLY_WRITTEN ? pickWritten(ctx, { rnd, cast, used, today, types, open }) : null
     if (ONLY_WRITTEN && !chosen) return null
     const order = chosen ? [chosen.type] : [...(types || EMAIL_TYPES)].sort(() => rnd() - 0.5)
     // The rest is for when built-in emails are in use too (ONLY_WRITTEN off): a day's mix of characters and the public
@@ -916,7 +923,7 @@ export function writeEmails(list) {
 export function readMeta() {
     try {
         const m = JSON.parse(localStorage.getItem(EMAIL_META_KEY))
-        if (m && typeof m === 'object' && !Array.isArray(m)) return { day: typeof m.day === 'string' ? m.day : '', sent: Number(m.sent) || 0, wait: Number.isFinite(m.wait) ? m.wait : 0, senders: Array.isArray(m.senders) ? m.senders.filter(x => typeof x === 'string') : [] }
+        if (m && typeof m === 'object' && !Array.isArray(m)) return { day: typeof m.day === 'string' ? m.day : '', sent: Number(m.sent) || 0, wait: Number.isFinite(m.wait) ? m.wait : 0, senders: Array.isArray(m.senders) ? m.senders.filter(x => typeof x === 'string') : [], idle: m.idle === true }
     } catch { /* none yet */ }
     return { day: '', sent: 0, wait: 0, senders: [] }
 }
@@ -937,9 +944,10 @@ export function stepMeta(meta, elapsed, now = Date.now(), rnd = Math.random) {
     return { meta: m, due: m.sent < MAX_PER_DAY && m.wait <= 0 }
 }
 // An email went out: the next one is 10-15 minutes of play away (none left today after the third)
-export const afterArrival = (meta, who = 'public', rnd = Math.random) => ({ ...meta, sent: meta.sent + 1, senders: [...(meta.senders || []), who], wait: between(10 * 60, 15 * 60, rnd) * 1000 })
-// Nothing was possible to ask for: look again in 5 minutes
-export const retryLater = (meta) => ({ ...meta, wait: 5 * MIN })
+export const afterArrival = (meta, who = 'public', rnd = Math.random) => ({ ...meta, sent: meta.sent + 1, senders: [...(meta.senders || []), who], wait: between(10 * 60, 15 * 60, rnd) * 1000, idle: false })
+// Nobody had anything to ask for: look again in 5 minutes (things change as the terminal grows). `idle` tells the inbox
+// footer not to promise an email in 5 minutes that may not come.
+export const retryLater = (meta) => ({ ...meta, wait: 5 * MIN, idle: true })
 
 // Used by tests and the milestone list: the categories a build request may name
 export const BUILD_CATEGORIES = Object.keys(DEVELOPMENT_MILESTONES)
