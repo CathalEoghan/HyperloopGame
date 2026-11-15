@@ -31,6 +31,7 @@ const PRESTIGE_IMAGES = import.meta.glob('../assets/prestige-upgrades-thumb/*.jp
 const PRESTIGE_IMAGES_BY_NAME = Object.fromEntries(Object.entries(PRESTIGE_IMAGES).map(([path, src]) => [path.split('/').pop().replace('.jpg', '').toLowerCase(), src]))
 const prestigeImageFor = u => PRESTIGE_IMAGES_BY_NAME[u.name.replace(/[^A-Za-z0-9]/g, '').toLowerCase()]
 import { flagSrc } from '../utils/flagSrc.js'
+import { readStoredList } from '../utils/storedList.js'
 import { distanceMiles } from '../utils/loops.js'
 import { formatDistance, convertDistance, getDistanceUnit } from '../utils/units.js'
 import AbbreviatedNumber from '../components/AbbreviatedNumber.jsx'
@@ -148,18 +149,18 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
     }
 
     const [claimed, setClaimed] = useState(() => new Set(
-        JSON.parse(localStorage.getItem('hyperloop_progress_rewards') || '[]')
+        readStoredList('hyperloop_progress_rewards')
     ))
     const claimedRef = React.useRef(new Set(
-        JSON.parse(localStorage.getItem('hyperloop_progress_rewards') || '[]')
+        readStoredList('hyperloop_progress_rewards')
     ))
     // Prestige-upgrade claims live in their own key, kept through a prestige rather than reset by one (see
     // SaveManager's PRESTIGE_KEEP_KEYS) - the upgrades themselves never go away, so neither should the claim.
     const [claimedPrestige, setClaimedPrestige] = useState(() => new Set(
-        JSON.parse(localStorage.getItem('hyperloop_prestige_upgrade_rewards') || '[]')
+        readStoredList('hyperloop_prestige_upgrade_rewards')
     ))
     const claimedPrestigeRef = React.useRef(new Set(
-        JSON.parse(localStorage.getItem('hyperloop_prestige_upgrade_rewards') || '[]')
+        readStoredList('hyperloop_prestige_upgrade_rewards')
     ))
     const [prestige] = useState(() => new PrestigeManager())
     const [floats, setFloats] = useState([])

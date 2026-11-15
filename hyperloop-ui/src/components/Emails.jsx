@@ -128,7 +128,8 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
         </div>
     ) : null
 
-    const respond = (e, agree) => { playClickSound2(); setTypingId(e.id); onRespond(e.id, agree) }
+    // The reply only starts typing when the answer went through (agreeing to pay upfront without the money does nothing)
+    const respond = (e, agree) => { playClickSound2(); if (onRespond(e.id, agree) !== false) setTypingId(e.id) }
     const pickTab = (t) => { playClickSound2(); setTab(t); const first = sorted.find(e => (t === 'inbox') === inInbox(e)); if (first) setSelectedId(first.id) }
     const senderFirst = selected ? selected.sender.name.split(' ')[0] : ''
     const replyAt = selected ? (selected.state === 'refused' ? selected.resolvedAt : selected.agreedAt || selected.createdAt) : 0

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from 'react-dom'
 import './DepartureBoard.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
-import { playSplitFlapLong, playSplitFlapShort, playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
+import { playSplitFlapLong, playSplitFlapShort, stopSplitFlapShort, playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
 import { minutesUntilDeparture, departureTimestamp } from '../utils/time.js'
 import ScheduleModal from '../components/ScheduleModal.jsx'
 import { ensureDepartures, departuresForDay, readTimetable, unscheduledCities, automateTimetable, clearTimetable } from '../utils/timetable.js'
@@ -111,6 +111,8 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
     const prevStatusRef = useRef({})
     const hasPlayedLongRef = useRef(false)
     const longFlapRef = useRef(null)
+    // Once the player has switched tab or day, the board is already open: from then on only the short clack plays
+    const switchedRef = useRef(false)
     const lagMapRef = useRef({})
     const [boardInitialized, setBoardInitialized] = useState(false)
     // The Schedule loop screen, how many connected cities are on the departure timetable, and the last Automate result
@@ -133,6 +135,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
 
     const chooseTab = (next) => {
         if (next === tab) return
+        switchedRef.current = true
         playClickSound2()
         // Nothing to flip to: a board with no rows (e.g. only one city connected) just shows its empty message
         const nextHasRows = (next === 'arrivals' ? arrivals : schedule).length > 0
@@ -158,13 +161,17 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
         setLagMap(newMap)
     }, [rowKeysSignature])
 
+    // The long flap plays once, when the list being shown first has rows. It used to follow both lists, so a board with no
+    // departures still played it for the arrivals on the other tab, or when Today/Tomorrow brought some in
+    const shownRowCount = (tab === 'arrivals' ? arrivals : schedule).length
     useEffect(() => {
-        if (rowCount > 0 && !hasPlayedLongRef.current) {
+        if (shownRowCount > 0 && !hasPlayedLongRef.current) {
             hasPlayedLongRef.current = true
+            if (switchedRef.current) { setBoardInitialized(true); return }
             if (splitFlapEnabled()) longFlapRef.current = playSplitFlapLong()
             setTimeout(() => setBoardInitialized(true), 6500)
         }
-    }, [rowCount])
+    }, [shownRowCount])
 
     // Closing the board stops the long flap sound, so opening it again can't layer a second one over it (bug #135)
     useEffect(() => () => {
@@ -172,6 +179,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
         if (audio) { audio.pause(); audio.currentTime = 0 }
         longFlapRef.current = null
         hasPlayedLongRef.current = false
+        stopSplitFlapShort()
     }, [])
 
     // The shown day's lists, for the cities still connected, in time order. Tomorrow's departures come from the
@@ -192,9 +200,13 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
 
     const chooseDay = (next) => {
         if (next === dayRef.current) return
+        switchedRef.current = true
         playClickSound2()
         dayRef.current = next
         setDay(next)
+        // The rows' last statuses were for the other day: forget them, so the next tick doesn't take the new day for a change
+        // and clack a second time (or clack at all when nothing is shown)
+        prevStatusRef.current = {}
         const { deps, arrs } = readLists()
         if ((tabRef.current === 'arrivals' ? arrs : deps).length > 0 && splitFlapEnabled()) playSplitFlapShort()
         setSchedule(deps)

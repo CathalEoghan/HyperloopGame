@@ -47,7 +47,7 @@ import { pickDelayReason } from "./data/delayReasons.js"
 import { generateHyperLinkPost, generateOfficialEventPost, UPGRADE_KEY_MAP } from "./utils/hyperLinkEngine.js"
 import { CAMEO_PFP_ID } from "./assets/hyperLinkAssets.js"
 import { POSTS } from "./data/hyperLinkData.js"
-import { playPhoneNotificationSound, playNewEmailSound } from "./utils/sound.js"
+import { playPhoneNotificationSound, playNewEmailSound, playNotEnoughFundsSound } from "./utils/sound.js"
 import { useAttentionAlerts } from "./utils/attentionAlerts.js"
 import { useEscapeToClose } from "./utils/useEscapeToClose.js"
 import { RankManager, MAX_RANK } from "Managers/RankManager/RankManager.js";
@@ -783,6 +783,9 @@ function App() {
       rewardsClaimed: readStoredList('hyperloop_progress_rewards').length + readStoredList('hyperloop_prestige_upgrade_rewards').length,
       farewells: farewellsRef.current, greetings: pm.greetingsGiven || 0,
       timetable: readStoredList('hyperloop_timetable').length,
+      // Which cities are on the timetable and when they leave, and how many connected cities (not the home city) aren't on it yet
+      timetableEntries: readStoredList('hyperloop_timetable').filter(e => typeof e?.name === 'string').map(e => ({ name: e.name, minuteOfDay: e.minuteOfDay })),
+      unscheduled: (() => { const on = new Set(readStoredList('hyperloop_timetable').map(e => e?.name)); return pm.purchasedCities.slice(1).filter(c => !on.has(c.name)).length })(),
       cash: pm.totalCashEarned, balance: pm.balance, answered: achievements.counter('emailsAnswered'),
       waitingEmails: emailsRef.current.filter(e => e.state === 'new').length,
       delaysCompensated: achievements.counter('delaysCompensated'), delaysRefused: achievements.counter('delaysRefused'),
@@ -914,12 +917,13 @@ function App() {
   const emailTickRef = useRef(null)
   const emailLastTickRef = useRef(0)
   emailTickRef.current = emailTick
+  // Returns false when nothing was answered (so the inbox keeps the Agree and Refuse buttons)
   const respondToEmail = (id, agree) => {
     const e = emailsRef.current.find(x => x.id === id)
-    if (!e || e.state !== 'new') return
+    if (!e || e.state !== 'new') return false
     // Paying upfront takes the money the moment the player agrees
     if (agree && e.type === 'payUpfront') {
-      if (progressionManager.balance < e.target) { playNotEnoughFundsSound(); return }
+      if (progressionManager.balance < e.target) { playNotEnoughFundsSound(); return false }
       progressionManager.addCash(-e.target)
       setBalance?.(progressionManager.balance)
     }
@@ -931,6 +935,7 @@ function App() {
     if (agree) applyEmailRep(next.repChange)
     if (!agree) { noteEmailOutcome(next); unlockAchievement('stopAsking') }
     setEmails(emailsRef.current.map(x => x.id === id ? next : x))
+    return true
   }
   // Opening a sender's reply is when the Reputation it carries (a reward, a penalty) actually comes in
   const readEmail = (id) => {

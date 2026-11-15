@@ -320,6 +320,12 @@ export function playSplitFlapShort() {
     shortFlapAudio.currentTime = 0
     shortFlapAudio.play().catch(() => {})
 }
+// Closing the Terminal Board cuts a clack that is still playing, so it doesn't carry on over the game
+export function stopSplitFlapShort() {
+    if (!shortFlapAudio) return
+    shortFlapAudio.pause()
+    shortFlapAudio.currentTime = 0
+}
 export function playPhoneNotificationSound() { play(phoneNotificationSound, 'hyperlink') }
 export function playNewEmailSound() { play(newEmailSound, 'newEmail') }
 // Keyboard clicking for the length of a typed reply: the clip loops until the caller stops it. Returns a stop function (or a

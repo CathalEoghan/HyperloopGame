@@ -454,6 +454,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 )}
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
+                        <span className="settings-label-title">Preferred Title</span>
+                        <span className="settings-label-desc">How emails address you: with a title they write "Dear Dr. Smith", using the last word of your name. With none they use your first name. It applies to emails that arrive from now on.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={playerTitle === ''} onClick={() => handlePlayerTitle('')}>None</OptionBtn>
+                        {PLAYER_TITLES.map(t => <OptionBtn key={t} active={playerTitle === t} onClick={() => handlePlayerTitle(t)}>{t}</OptionBtn>)}
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
                         <span className="settings-label-title">Terminal Name</span>
                         <span className="settings-label-desc">The name displayed in the top banner.</span>
                     </div>
@@ -471,6 +481,18 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         </button>
                     </div>
                 </div>
+                {PrestigeManager.owns('videoMessage') && (
+                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                        <div className="settings-label">
+                            <span className="settings-label-title">Video Message Pop-Ups</span>
+                            <span className="settings-label-desc">Video Message keeps sending every farewell and welcome for you. Off hides the "Sending your video message" pop-up each time, with no popups and no sound.</span>
+                        </div>
+                        <div className="settings-options">
+                            <OptionBtn active={videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(true)}>On</OptionBtn>
+                            <OptionBtn active={!videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(false)}>Off</OptionBtn>
+                        </div>
+                    </div>
+                )}
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Your Name</span>
@@ -491,28 +513,6 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         </button>
                     </div>
                 </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
-                        <span className="settings-label-title">Preferred Title</span>
-                        <span className="settings-label-desc">How emails address you: with a title they write "Dear Dr. Smith", using the last word of your name. With none they use your first name. It applies to emails that arrive from now on.</span>
-                    </div>
-                    <div className="settings-options">
-                        <OptionBtn active={playerTitle === ''} onClick={() => handlePlayerTitle('')}>None</OptionBtn>
-                        {PLAYER_TITLES.map(t => <OptionBtn key={t} active={playerTitle === t} onClick={() => handlePlayerTitle(t)}>{t}</OptionBtn>)}
-                    </div>
-                </div>
-                {PrestigeManager.owns('videoMessage') && (
-                    <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                        <div className="settings-label">
-                            <span className="settings-label-title">Video Message Pop-Ups</span>
-                            <span className="settings-label-desc">Video Message keeps sending every farewell and welcome for you. Off hides the "Sending your video message" pop-up each time, with no popups and no sound.</span>
-                        </div>
-                        <div className="settings-options">
-                            <OptionBtn active={videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(true)}>On</OptionBtn>
-                            <OptionBtn active={!videoMessagePopups} onClick={() => handleVideoMessagePopupsToggle(false)}>Off</OptionBtn>
-                        </div>
-                    </div>
-                )}
             </div>
 
             <div className="settings-section">
@@ -600,17 +600,17 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <h2 className="settings-section-title"><SectionIcon src={infoIcon} />Info</h2>
                 <div className="settings-row">
                     <div className="settings-label">
-                        <span className="settings-label-title">Game Guide</span>
-                        <span className="settings-label-desc">Learn how to play Hyperloop Empire.</span>
-                    </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowGuide(true); }}>Guide</button>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
                         <span className="settings-label-title">Credits</span>
                         <span className="settings-label-desc">Photo and sound attribution.</span>
                     </div>
                     <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowCredits(true); }}>Credits</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Game Guide</span>
+                        <span className="settings-label-desc">Learn how to play Hyperloop Empire.</span>
+                    </div>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowGuide(true); }}>Guide</button>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">

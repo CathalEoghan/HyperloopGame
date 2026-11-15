@@ -11,14 +11,14 @@
 //   build            Build a development of one category          {category}
 //   greet            Greet the passengers {n} times
 //   farewell         Say farewell {n} times
-//   schedule         Add {n} loops to the timetable
+//   schedule         Add {n} new loops to the timetable (cities that weren't on it when the player agreed)
 //   cash             Earn {n} (a sum of money, already formatted, e.g. £32M)
 //   rep              Earn {n} Reputation
 //   connectContinent Connect a new city in {continent}
 //   connectCities    Connect {n} new cities
 //   connectTier3     Connect {n} new Tier 3 cities (the top tier)
-//   scheduleNight    Schedule {n} loops to leave at night (8pm to 2am)
-//   scheduleMorning  Schedule {n} loops to leave in the morning (6am to 10am)
+//   scheduleNight    Schedule {n} new loops to leave at night (8pm to 2am); moving a loop that was already on the timetable doesn't count
+//   scheduleMorning  Schedule {n} new loops to leave in the morning (6am to 10am); moving a loop that was already on the timetable doesn't count
 //   connectCountryCity  Connect a city in a country the email names (set `countries`, e.g. ['Italy']; `onlyIfNone: true` keeps it for a network with no city there yet)
 //   upgradeSpecific  Upgrade one development the game picks from those the player owns; its name is {development}
 //   newContinent     Connect a city in a continent the terminal has no city in yet
@@ -177,7 +177,7 @@ export const EMAILS = {
                 id: 'inspector-timetable',
                 target: 2,
                 subject: 'A Fuller Timetable',
-                body: "Dear {formal},\n\nHello, hello! Did you know a cat can sleep for up to sixteen hours a day? I'm told it's a very healthy habit. I wish I could say the same for your timetable.\n\nOn my last visit I found it rather thin. Passengers who wait too long between departures get restless, and a restless passenger is a safety hazard! A fuller timetable keeps everyone moving.\n\nPlease add {n} more {loop|loops} to the timetable before my next inspection.\n\nBest wishes,\n{from}",
+                body: "Dear {formal},\n\nHello, hello! Did you know a cat can sleep for up to sixteen hours a day? I'm told it's a very healthy habit. I wish I could say the same for your timetable.\n\nOn my last visit I found it rather thin. Passengers who wait too long between departures get restless, and a restless passenger is a safety hazard! A fuller timetable keeps everyone moving.\n\nPlease add {n} new {loop|loops} to the timetable before my next inspection.\n\nBest wishes,\n{from}",
                 agree: 'Dear {from},\n\nThank you for the advice. I will add more departures to the timetable.\n\nBest,\n{fullName}',
                 refuse: 'Dear {from},\n\nI cannot commit to timetable changes in this timeframe, but I will keep it in mind.\n\nBest regards,\n{fullName}',
                 refused: "Dear {formal},\n\nHmm. Idle passengers are a risk to everyone, themselves included. I shall be keeping a close eye on your timetable.\n\nBest wishes,\n{from}",
@@ -345,7 +345,7 @@ export const EMAILS = {
                 id: 'cfo-revenue-events',
                 target: 2,
                 subject: 'Revenue Events',
-                body: "Dear {formal},\n\nI have been reviewing the timetable. Every departure is, in my terms, a revenue event, and there are fewer of them than I would like.\n\nPlease add {n} more {loop|loops} to the timetable. Our costs do not change with the timetable, but our income does.\n\nRegards,\n{from}",
+                body: "Dear {formal},\n\nI have been reviewing the timetable. Every departure is, in my terms, a revenue event, and there are fewer of them than I would like.\n\nPlease add {n} new {loop|loops} to the timetable. Our costs do not change with the timetable, but our income does.\n\nRegards,\n{from}",
                 agree: 'Dear {from},\n\nUnderstood. I will add the departures to the timetable.\n\nBest regards,\n{fullName}',
                 refuse: 'Dear {from},\n\nI cannot commit to further timetable changes in this timeframe.\n\nBest regards,\n{fullName}',
                 refused: 'Dear {formal},\n\nNoted. The timetable will remain as it is, and so will the revenue it produces.\n\nRegards,\n{from}',
@@ -398,7 +398,7 @@ export const EMAILS = {
                 id: 'assistant-tidy-timetable',
                 target: 2,
                 subject: 'So sorry to bother you',
-                body: "Dear {formal},\n\nI'm so sorry to bother you. I know how busy you are, and I would never normally dare. Please feel free to ignore this entirely. (Please don't ignore it entirely.)\n\nI was tidying the timetable, only because it needed tidying, and I noticed a few gaps. Would you perhaps, if it's not too much trouble, add {n} more {loop|loops}? I'm so sorry. I'll make tea.\n\nVery respectfully,\n{from}",
+                body: "Dear {formal},\n\nI'm so sorry to bother you. I know how busy you are, and I would never normally dare. Please feel free to ignore this entirely. (Please don't ignore it entirely.)\n\nI was tidying the timetable, only because it needed tidying, and I noticed a few gaps. Would you perhaps, if it's not too much trouble, add {n} new {loop|loops}? I'm so sorry. I'll make tea.\n\nVery respectfully,\n{from}",
                 agree: 'Dear {from},\n\nThank you for letting me know. I will add the departures to the timetable.\n\nBest,\n{fullName}',
                 refuse: 'Dear {from},\n\nThanks, but I cannot add more departures at the moment.\n\nBest regards,\n{fullName}',
                 refused: "Dear {formal},\n\nOh. Of course. No, that's absolutely fine. I'm so sorry I asked. I'll just, um, put the kettle on.\n\nVery respectfully,\n{from}",
@@ -1357,8 +1357,8 @@ export const EMAILS = {
                 id: 'public-night-loops',
                 target: 3,
                 subject: 'The night loops',
-                body: "Dear {formal},\n\nI hope this is not an odd request. I live nearby, and I have always loved watching the loops come and go at night. There is something peaceful about it, with the lights and the quiet. But there are so few leaving after dark.\n\nWould you be able to schedule {n} more loops to leave between 8pm and 2am? It would make my evenings, and I think it would be nice for anyone travelling late, too. Thank you for taking the time.\n\nKind regards,\n{from}",
-                agree: 'Dear {from},\n\nOf course. I will schedule {n} loops to leave at night.\n\nBest regards,\n{fullName}',
+                body: "Dear {formal},\n\nI hope this is not an odd request. I live nearby, and I have always loved watching the loops come and go at night. There is something peaceful about it, with the lights and the quiet. But there are so few leaving after dark.\n\nWould you be able to schedule {n} new loops to leave between 8pm and 2am? It would make my evenings, and I think it would be nice for anyone travelling late, too. Thank you for taking the time.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will schedule {n} new loops to leave at night.\n\nBest regards,\n{fullName}',
                 refuse: 'Dear {from},\n\nI am sorry, I cannot schedule {n} night loops right now.\n\nBest regards,\n{fullName}',
                 refused: 'Dear {formal},\n\nThat is quite all right, and thank you for replying. I will carry on watching the ones that are there. It is still a lovely sight.\n\nKind regards,\n{from}',
                 fulfilled: 'Dear {formal},\n\nThank you! I watched the new night loops leaving last evening, and it was as beautiful as I had hoped. It was the perfect way to end the day.\n\nKind regards,\n{from}',
@@ -1492,8 +1492,8 @@ export const EMAILS = {
                 id: 'public-commute',
                 target: 3,
                 subject: 'The morning commute',
-                body: "Dear {formal},\n\nI travel for business a great deal, and I rely on the loops to get me to meetings on time. The mornings are the hardest part of my week, as there are never quite enough loops leaving early. I often have to plan my whole day around the few that there are.\n\nWould you be able to schedule {n} more loops to leave in the morning, between 6am and 10am? It would make such a difference to my commute, and I am sure plenty of others would use them too. Thank you for taking the time.\n\nKind regards,\n{from}",
-                agree: 'Dear {from},\n\nOf course. I will schedule {n} loops to leave in the morning.\n\nBest regards,\n{fullName}',
+                body: "Dear {formal},\n\nI travel for business a great deal, and I rely on the loops to get me to meetings on time. The mornings are the hardest part of my week, as there are never quite enough loops leaving early. I often have to plan my whole day around the few that there are.\n\nWould you be able to schedule {n} new loops to leave in the morning, between 6am and 10am? It would make such a difference to my commute, and I am sure plenty of others would use them too. Thank you for taking the time.\n\nKind regards,\n{from}",
+                agree: 'Dear {from},\n\nOf course. I will schedule {n} new loops to leave in the morning.\n\nBest regards,\n{fullName}',
                 refuse: 'Dear {from},\n\nI am sorry, I cannot schedule {n} morning loops right now.\n\nBest regards,\n{fullName}',
                 refused: 'Dear {formal},\n\nThat is perfectly fine, and thank you for replying. I will keep planning around the ones that there are. I am sure I will manage.\n\nKind regards,\n{from}',
                 fulfilled: 'Dear {formal},\n\nThank you! I took one of the new morning loops yesterday, and I was at my meeting with time to spare for the first time in months. I have already told my colleagues about it.\n\nKind regards,\n{from}',

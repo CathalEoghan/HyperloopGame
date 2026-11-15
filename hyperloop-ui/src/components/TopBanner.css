@@ -419,7 +419,8 @@ font-size: 1rem;
 .EmailsButtonWrap { position: relative; display: flex; align-items: center; align-self: center; flex-shrink: 0; margin: 0 16px 0 -8px; }
 .EmailsButtonWrap .EmailsButton { margin: 0; position: relative; }
 .EmailsBadge { position: absolute; top: -6px; right: -4px; min-width: 22px; height: 22px; padding: 0 5px; box-sizing: border-box; border-radius: 11px; background: #e74c3c; color: #fff; font-size: 0.75rem; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid #fff; }
-.EmailsBubble { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #111; color: #fff; font-size: 0.8rem; font-weight: 700; padding: 5px 12px; border-radius: 12px; white-space: nowrap; z-index: 5; pointer-events: none; }
+/* Above the XP bar under the banner (z-index 10), which used to cover the lower half of it */
+.EmailsBubble { position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #111; color: #fff; font-size: 0.8rem; font-weight: 700; padding: 5px 12px; border-radius: 12px; white-space: nowrap; z-index: 20; pointer-events: none; }
 @media (max-width: 1200px) { .EmailsButtonWrap { margin: 0 8px 0 -4px; } .EmailsBadge { top: -5px; right: -3px; } }
 
 /* On a very narrow window there is no room for three labelled buttons: Shop and Emails keep their icons and lose the text (they keep their aria-labels) */

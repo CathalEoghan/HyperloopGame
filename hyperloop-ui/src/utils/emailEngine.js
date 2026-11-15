@@ -290,23 +290,34 @@ export function formalAddress(name, title = '') {
 }
 const firstName = (sender) => sender.name.split(' ')[0]
 
+// The timetable windows the schedule requests ask for (minutes of the day, the player's own clock)
+const atNight = (m) => Number.isFinite(m) && (m >= 20 * 60 || m < 2 * 60)
+const inMorning = (m) => Number.isFinite(m) && m >= 6 * 60 && m < 10 * 60
+const newTimetableEntries = (s, e) => (s.timetableEntries || []).filter(t => !e.extra.baseNames.includes(t.name))
+export const SCHEDULE_TYPES = ['schedule', 'scheduleNight', 'scheduleMorning']
+// How many new loops could be put on the timetable: cities connected but not on it yet, plus cities that can still be connected
+const scheduleRoom = (ctx) => (Number.isFinite(ctx.snap.unscheduled) ? ctx.snap.unscheduled : Math.max(0, (ctx.snap.cities || 0) - 1 - (ctx.snap.timetable || 0))) + (ctx.available?.citiesTotal || 0)
+
 // What each request measures. `metric` reads one number out of the snapshot; progress is how far it has risen since the
 // player agreed. `label` is the short line shown beside the progress bar.
 const METRICS = {
     build: (s, e) => s.built?.[e.extra.category] || 0,
     greet: (s) => s.greetings || 0,
     farewell: (s) => s.farewells || 0,
-    schedule: (s) => s.timetable || 0,
+    // The schedule requests count NEW loops: timetable entries for cities that weren't on it when the player agreed (extra.baseNames).
+    // Moving a loop that was already there, into the window or within it, doesn't count. Emails agreed before this existed
+    // have no baseNames and keep counting the whole timetable as they did.
+    schedule: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).length : (s.timetable || 0)),
     cash: (s) => s.cash || 0,
     rep: (s) => s.repEarned || 0,
     connectContinent: (s, e) => s.continentCities?.[e.extra.continent] || 0,
     connectTier3: (s) => s.tier3Cities || 0,
     // Timetable departures that leave at night (8pm to 2am)
-    scheduleNight: (s) => s.nightLoops || 0,
+    scheduleNight: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).filter(t => atNight(t.minuteOfDay)).length : (s.nightLoops || 0)),
     // Cities connected in the countries a written email names (`countries` in data/emailText.js)
     connectCountryCity: (s, e) => (e.extra.countries || []).reduce((n, c) => n + (s.countryCities?.[c] || 0), 0),
     // Timetable departures that leave in the morning (6am to 10am)
-    scheduleMorning: (s) => s.morningLoops || 0,
+    scheduleMorning: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).filter(t => inMorning(t.minuteOfDay)).length : (s.morningLoops || 0)),
     // Continents with at least one connected city
     newContinent: (s) => s.continentsConnected || 0,
     // Milestones reached so far (development counts, city counts, continents, rank gifts)
@@ -388,7 +399,8 @@ const GENERATORS = {
     schedule: (ctx, rnd) => {
         if ((ctx.snap.cities || 0) < 2) return null
         const target = ctx.fixed ?? between(1, 3, rnd)
-        return { type: 'schedule', target, extra: {}, subject: 'Timetable additions', ask: `schedule ${target} more ${plural(target, 'loop', 'loops')} in the timetable`, hours: between(24, 48, rnd) }
+        if (scheduleRoom(ctx) < target) return null
+        return { type: 'schedule', target, extra: {}, subject: 'Timetable additions', ask: `schedule ${target} new ${plural(target, 'loop', 'loops')} in the timetable`, hours: between(24, 48, rnd) }
     },
     cash: (ctx, rnd) => {
         const perHour = ctx.incomePerHour || 0
@@ -427,8 +439,8 @@ const GENERATORS = {
     // Departures leaving between 8pm and 2am; needs at least that many cities to put in the timetable
     scheduleNight: (ctx, rnd) => {
         const target = ctx.fixed ?? 3
-        if ((ctx.snap.cities || 0) < Math.max(2, target)) return null
-        return { type: 'scheduleNight', target, extra: {}, subject: 'Night loops', ask: `schedule ${target} ${plural(target, 'loop', 'loops')} to leave at night, between 8pm and 2am`, hours: between(36, 48, rnd) }
+        if ((ctx.snap.cities || 0) < 2 || scheduleRoom(ctx) < target) return null
+        return { type: 'scheduleNight', target, extra: {}, subject: 'Night loops', ask: `schedule ${target} new ${plural(target, 'loop', 'loops')} to leave at night, between 8pm and 2am`, hours: between(36, 48, rnd) }
     },
     // A continent the terminal has no city in yet, with a city still waiting to be connected there
     newContinent: (ctx, rnd) => {
@@ -450,8 +462,8 @@ const GENERATORS = {
     // Departures leaving between 6am and 10am
     scheduleMorning: (ctx, rnd) => {
         const target = ctx.fixed ?? 3
-        if ((ctx.snap.cities || 0) < Math.max(2, target)) return null
-        return { type: 'scheduleMorning', target, extra: {}, subject: 'Morning loops', ask: `schedule ${target} ${plural(target, 'loop', 'loops')} to leave in the morning, between 6am and 10am`, hours: between(36, 48, rnd) }
+        if ((ctx.snap.cities || 0) < 2 || scheduleRoom(ctx) < target) return null
+        return { type: 'scheduleMorning', target, extra: {}, subject: 'Morning loops', ask: `schedule ${target} new ${plural(target, 'loop', 'loops')} to leave in the morning, between 6am and 10am`, hours: between(36, 48, rnd) }
     },
     connectCities: (ctx, rnd) => {
         const room = ctx.available?.citiesTotal || 0
@@ -750,6 +762,8 @@ export function agree(email, snap, playerName, now = Date.now()) {
     const inbox = email.type === 'clearInbox'
     const waiting = inbox ? Math.max(0, (snap.waitingEmails || 0) - 1) : 0
     if (inbox) started = { ...started, target: Math.max(1, Math.min(email.target, waiting)) }
+    // The schedule requests count loops for cities that aren't on the timetable now (see METRICS)
+    if (SCHEDULE_TYPES.includes(email.type)) started = { ...started, extra: { ...started.extra, baseNames: (snap.timetableEntries || []).map(t => t.name) } }
     return {
         ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
         baseline: metricOf(started, snap), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
@@ -810,7 +824,8 @@ export function readEmails() {
 }
 export function writeEmails(list) {
     const open = list.filter(isOpen)
-    const done = list.filter(e => !isOpen(e)).slice(-KEEP_RESOLVED)
+    // A finished email whose reply hasn't been opened yet still carries Reputation (repPending), so it is kept however old it is
+    const done = [...list.filter(e => !isOpen(e) && e.repPending), ...list.filter(e => !isOpen(e) && !e.repPending).slice(-KEEP_RESOLVED)]
     const kept = list.filter(e => open.includes(e) || done.includes(e))
     try { localStorage.setItem(EMAILS_KEY, JSON.stringify(kept)) } catch { /* storage full */ }
     return kept
