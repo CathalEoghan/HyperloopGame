@@ -48,8 +48,8 @@ function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
                 <p className="credits-heading"><img src={officialLogo} alt="Hyperloop Empire" className="credits-heading-logo" /> CREDITS</p>
                 <div className="credits-body">
                     <p className="credits-section">Game Design &amp; Development</p>
-                    <p className="credits-line">Cathal Eoghan, the sole developer</p>
-                    <p className="credits-line">Built with React, Three.js and a lot of Monster energy drinks.</p>
+                    <p className="credits-line">Cathal Eoghan, the developer</p>
+                    <p className="credits-line">Built with React, Three.js, Claude Sonnet & Opus (for most of the code) and a lot of Monster energy drinks.</p>
 
                     <p className="credits-section">City &amp; Development Photography</p>
                     <p className="credits-line">Most city and development photos are sourced from Pexels, which doesn't require attribution - but thank you to every photographer whose work appears here regardless.</p>

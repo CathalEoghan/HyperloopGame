@@ -2640,6 +2640,7 @@ export const POSTS = {
         'Christ the Redeemer at sunrise tomorrow. alarm set for stupid o\'clock',
         'bought a pair of flip flops the second i landed. when in Rio 🩴',
         'fresh coconut on the beach is the only drink i need 🥥',
+        'ahh RIO!!!!',
         'football on the sand at sunset. everyone here is so good at it ⚽',
         'the Selarón Steps are even more colourful in person 🎨',
         'Maracanã tour tomorrow. a lifelong dream for a football fan like me ⚽ #rio',
