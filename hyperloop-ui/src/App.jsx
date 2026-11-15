@@ -919,7 +919,8 @@ function App() {
         if (email) {
           // Having mentioned how they were last treated, the character doesn't say it again
           if (email.referredBack) emailEngine.writeCast(emailEngine.forgetOutcome(cast, email.character))
-          if (email.templateKey) emailEngine.writeUsed(emailEngine.markUsed(emailEngine.readUsed(), email.templateKey, email.templateGroup))
+          // Remembered as sent; when every email that could be done had been sent, the list starts again from this one
+          if (email.templateKey) emailEngine.writeUsed(email.usedRestart ? [email.templateKey] : emailEngine.markUsed(emailEngine.readUsed(), email.templateKey, email.templateGroup))
           list = [...list, email]
           meta = emailEngine.afterArrival(meta, email.character || 'public')
           changed = true

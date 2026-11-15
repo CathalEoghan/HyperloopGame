@@ -640,40 +640,79 @@ export function wantsPublic(today = [], rnd = Math.random) {
     return rnd() < 0.25
 }
 
+// The settings a written email gives its request (`target`, `category`, `countries`, `onlyIfNone` in data/emailText.js)
+const templateCtx = (ctx, t) => ({
+    ...ctx,
+    fixed: Number.isFinite(t.target) && t.target > 0 ? Math.floor(t.target) : null,
+    fixedCategory: typeof t.category === 'string' ? t.category : null,
+    fixedCountries: Array.isArray(t.countries) && t.countries.length ? t.countries : null,
+    fixedNone: t.onlyIfNone === true,
+})
+// How the next written email is chosen: every written email that can be done right now is a candidate, from a sender who hasn't
+// written today (a character at most once a day, and the public count as one sender, so at most one of them a day). One that has
+// been sent before isn't picked again until every candidate has been sent; then the list starts over. Picked at random.
+export function pickWritten(ctx, { rnd = Math.random, cast = null, used = [], today = [], types = null } = {}) {
+    const candidates = []
+    for (const who of ['public', ...CHARACTER_IDS]) {
+        if (today.includes(who)) continue
+        if (who !== 'public' && !cast?.[who]?.name) continue
+        for (const [type, list] of Object.entries(EMAILS[who] || {})) {
+            if (!GENERATORS[type] || !Array.isArray(list) || (types && !types.includes(type))) continue
+            const keys = list.map((t, i) => templateKey(who, type, t, i))
+            list.forEach((t, i) => {
+                const req = GENERATORS[type](templateCtx(ctx, t), rnd)
+                if (req) candidates.push({ who, type, req, option: { template: t, key: keys[i], group: keys } })
+            })
+        }
+    }
+    if (candidates.length === 0) return null
+    const fresh = candidates.filter(c => !used.includes(c.option.key))
+    return { ...pick(fresh.length ? fresh : candidates, rnd), restart: fresh.length === 0 }
+}
+
 // Make one email, or null if nothing fits. `types` lets a test force a type.
 export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), playerName = '', playerTitle = '', types = null, cast = null, used = [], today = [] } = {}) {
-    const order = [...(types || EMAIL_TYPES)].sort(() => rnd() - 0.5)
-    // With only written emails in use and none written for the public yet, nobody from the public is asked for (otherwise a day's
-    // "public" slot would never be filled and would hold up the characters)
+    // Only written emails: drawn at random from every written email that can be done right now (see pickWritten)
+    const chosen = ONLY_WRITTEN ? pickWritten(ctx, { rnd, cast, used, today, types }) : null
+    if (ONLY_WRITTEN && !chosen) return null
+    const order = chosen ? [chosen.type] : [...(types || EMAIL_TYPES)].sort(() => rnd() - 0.5)
+    // The rest is for when built-in emails are in use too (ONLY_WRITTEN off): a day's mix of characters and the public
     const publicWritten = !ONLY_WRITTEN || Object.values(EMAILS.public || {}).some(l => Array.isArray(l) && l.length > 0)
     const wantPublic = publicWritten && wantsPublic(today, rnd)
     for (const type of order) {
         // Who sends it. A character can write at most once a day, and a day always has at least MIN_CHARACTERS_PER_DAY
         // characters and MIN_PUBLIC_PER_DAY member of the public (decided above, from who has already written today).
-        const written = (id) => Array.isArray(EMAILS[id]?.[type]) && EMAILS[id][type].length > 0
-        let character = null
-        if (wantPublic) {
-            if (ONLY_WRITTEN && !written('public')) continue
+        let character = null, authored = null, req = null
+        if (chosen) {
+            character = chosen.who === 'public' ? null : CHARACTERS[chosen.who]
+            authored = chosen.option
+            req = chosen.req
         } else {
-            const people = CHARACTER_IDS.filter(id => cast?.[id]?.name && !today.includes(id)
-                && (ONLY_WRITTEN ? written(id) : (CHARACTERS[id].affinity.includes(type) || written(id))))
-            if (people.length === 0) continue
-            character = CHARACTERS[pick(people, rnd)]
-        }
-        // A written email may fix how many times the player is asked to do something ("target" in data/emailText.js) or which
-        // category it is about. Try the written emails one by one and use the first that is possible right now.
-        const options = authoredOptions(character?.id || 'public', type, used, rnd)
-        let authored = null, req = null
-        if (options.length === 0) {
-            req = GENERATORS[type]({ ...ctx, fixed: null, fixedCategory: null }, rnd)
-        } else {
-            for (const option of options) {
-                const t = option.template
-                const fixed = Number.isFinite(t.target) && t.target > 0 ? Math.floor(t.target) : null
-                const fixedCategory = typeof t.category === 'string' ? t.category : null
-                const fixedCountries = Array.isArray(t.countries) && t.countries.length ? t.countries : null
-                req = GENERATORS[type]({ ...ctx, fixed, fixedCategory, fixedCountries, fixedNone: t.onlyIfNone === true }, rnd)
-                if (req) { authored = option; break }
+            const written = (id) => Array.isArray(EMAILS[id]?.[type]) && EMAILS[id][type].length > 0
+            character = null
+            if (wantPublic) {
+                if (ONLY_WRITTEN && !written('public')) continue
+            } else {
+                const people = CHARACTER_IDS.filter(id => cast?.[id]?.name && !today.includes(id)
+                    && (ONLY_WRITTEN ? written(id) : (CHARACTERS[id].affinity.includes(type) || written(id))))
+                if (people.length === 0) continue
+                character = CHARACTERS[pick(people, rnd)]
+            }
+            // A written email may fix how many times the player is asked to do something ("target" in data/emailText.js) or which
+            // category it is about. Try the written emails one by one and use the first that is possible right now.
+            const options = authoredOptions(character?.id || 'public', type, used, rnd)
+            authored = null; req = null
+            if (options.length === 0) {
+                req = GENERATORS[type]({ ...ctx, fixed: null, fixedCategory: null }, rnd)
+            } else {
+                for (const option of options) {
+                    const t = option.template
+                    const fixed = Number.isFinite(t.target) && t.target > 0 ? Math.floor(t.target) : null
+                    const fixedCategory = typeof t.category === 'string' ? t.category : null
+                    const fixedCountries = Array.isArray(t.countries) && t.countries.length ? t.countries : null
+                    req = GENERATORS[type]({ ...ctx, fixed, fixedCategory, fixedCountries, fixedNone: t.onlyIfNone === true }, rnd)
+                    if (req) { authored = option; break }
+                }
             }
         }
         if (!req) continue
@@ -711,7 +750,9 @@ export function generateEmail(ctx, { rnd = Math.random, now = Date.now(), player
             id: `em_${now}_${Math.floor(rnd() * 1e6)}`, referredBack,
             type: req.type, extra: req.extra, target: req.target, sender, character: character?.id || null,
             subject, body: authored ? text : `Dear ${formal},\n\n${text}`, texts,
-            templateKey: authored?.key || null, templateGroup: authored?.group || null,
+            templateKey: authored?.key || null, templateGroup: chosen ? null : (authored?.group || null),
+            // Every written email that could be done had been sent: the used list starts again from this one
+            usedRestart: !!chosen?.restart,
             // A written email that words its own request keeps the numbers out of sight, so the progress count is hidden too
             askCustom: !!(authored && typeof authored.template.ask === 'string' && authored.template.ask.trim()),
             ask: req.ask, createdAt: now, state: 'new', read: false, hours,
