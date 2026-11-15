@@ -1157,7 +1157,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
     return (
         <div className={`home-page${disabled ? ' home-page-disabled' : ''}`} style={{ pointerEvents: disabled ? 'none' : 'auto', display: active ? undefined : 'none' }}>
             <div className="globe-top-info">
-                <p className="globe-hint">Drag to rotate · Scroll to zoom</p>
+                <p className="globe-hint">Drag to rotate and scroll to zoom</p>
                 <p className="globe-cities">{purchasedCitiesCount} {purchasedCitiesCount === 1 ? 'city' : 'cities'} connected</p>
             </div>
             <div className="globe-right-controls" ref={rightControlsRef}>
