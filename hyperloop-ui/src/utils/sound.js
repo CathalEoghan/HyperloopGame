@@ -23,6 +23,7 @@ import departureBoardSound from '../assets/sounds/departureBoard.mp3'
 import phoneNotificationSound from '../assets/sounds/phoneNotification.mp3'
 import newEmailSound from '../assets/sounds/newEmail.mp3'
 import requestDoneSound from '../assets/sounds/requestDone.mp3'
+import requestFailedSound from '../assets/sounds/requestFailed.mp3'
 import keyboardSound from '../assets/sounds/keyboard.mp3'
 import splitFlapLong from '../assets/sounds/splitFlapLong.wav'
 import splitFlapShort from '../assets/sounds/splitFlapShort.wav'
@@ -65,6 +66,7 @@ export const SOUND_CATEGORIES = [
     { key: 'hyperlink', label: 'Hyper-Link Notification' },
     { key: 'newEmail', label: 'New Email Notification' },
     { key: 'requestDone', label: 'Request Fulfilled Notification' },
+    { key: 'requestFailed', label: 'Request Failed Notification' },
     { key: 'emailTyping', label: 'Email Reply Typing' },
     { key: 'departureBoard', label: 'Departure Board Flaps' },
     { key: 'event', label: 'Event Notification' },
@@ -332,6 +334,8 @@ export function playPhoneNotificationSound() { play(phoneNotificationSound, 'hyp
 export function playNewEmailSound() { play(newEmailSound, 'newEmail') }
 // The "Request fulfilled!" toast (an email request done), in place of the achievement chime
 export function playRequestDoneSound() { play(requestDoneSound, 'requestDone') }
+// The "Request failed!" toast (an email request missed)
+export function playRequestFailedSound() { play(requestFailedSound, 'requestFailed') }
 // Keyboard clicking for the length of a typed reply: the clip loops until the caller stops it. Returns a stop function (or a
 // no-op when nothing plays). `stop()` fades out quickly so it ends with the text; `stop(true)` cuts at once (leaving the screen).
 export function startTypingSound() {

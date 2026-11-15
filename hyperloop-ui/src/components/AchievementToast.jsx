@@ -18,7 +18,8 @@ function AchievementToast({ queue, onShift }) {
         return () => clearTimeout(timer)
     }, [current?.key])
     if (!current) return null
-    const logo = current.id ? achievementLogo(current.id) : null
+    // An announcement may bring its own picture (`icon`); an achievement shows its logo
+    const logo = current.icon || (current.id ? achievementLogo(current.id) : null)
     return (
         <div className="achievement-toast" key={current.key} role="status" aria-live="polite">
             {logo
