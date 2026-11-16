@@ -3,7 +3,7 @@ import developmentImages from '../data/developmentImages.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import { EFFECT_DESCRIPTIONS } from '../utils/effectDescriptions.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
-import { cloudinaryResize } from '../utils/cloudinaryImage.js'
+import { cloudinaryResize, fallbackTo } from '../utils/cloudinaryImage.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playClickSound2, playDevelopmentUnlockedSound, playHoverSound } from '../utils/sound.js'
 import './UpgradeRevealModal.css'
@@ -35,6 +35,7 @@ function UpgradeRevealModal({ upgrade, onContinue, waiting = 0, onContinueAll, o
                 <img
                     className="upgrade-reveal-image"
                     src={developmentRevealThumbnails[upgrade.name] || cloudinaryResize(developmentImages[upgrade.name], 600) || developmentThumbnails[upgrade.name]}
+                    onError={fallbackTo(developmentThumbnails[upgrade.name])}
                     alt={upgrade.name}
                 />
                 <p className="upgrade-reveal-category">{upgrade.category}</p>

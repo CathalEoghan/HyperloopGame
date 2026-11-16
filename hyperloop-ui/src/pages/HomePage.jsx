@@ -26,6 +26,7 @@ import IncomeRow from '../components/IncomeRow.jsx'
 import BoostTooltip from '../components/BoostTooltip.jsx'
 import { readTimetable } from '../utils/timetable.js'
 import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
+import { fallbackTo, thumbnailOf } from '../utils/cloudinaryImage.js'
 
 // Departures are drawn in the game's gold, arrivals in blue
 // Every route is white; the ones being pointed at (on the globe or in the list) light up: gold for a departure, blue for an arrival
@@ -1383,6 +1384,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                         <img
                             // Falls back to the thumbnail for a city that hasn't made it to the Cloudinary host yet.
                             src={cityImages[selectedGlobeCity.name] || cityThumbnails[selectedGlobeCity.name]}
+                            onError={fallbackTo(cityThumbnails[selectedGlobeCity.name])}
                             alt={selectedGlobeCity.name}
                             onClick={(e) => { e.stopPropagation(); setEnlargedImage(cityImages[selectedGlobeCity.name] || cityThumbnails[selectedGlobeCity.name]) }}
                             style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', marginTop: '8px', cursor: 'zoom-in' }}
@@ -1438,7 +1440,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             )}
             {enlargedImage && (
                 <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
-                    <img src={enlargedImage} alt="enlarged" style={{ maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', border: '3px solid black' }} />
+                    <img src={enlargedImage} alt="enlarged" onError={fallbackTo(thumbnailOf(enlargedImage, cityImages, cityThumbnails))} style={{ maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', border: '3px solid black' }} />
                 </div>
             )}
             {selectedUnlockedCity && !purchasedCities.some(c => c.name === selectedUnlockedCity.name) && (

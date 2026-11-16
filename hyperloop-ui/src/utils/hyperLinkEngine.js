@@ -543,7 +543,8 @@ export function withManagerName(text, playerName, playerTitle = '', rnd = Math.r
     const name = (playerName || '').trim().replace(/\s+/g, ' ')
     if (!name || rnd() >= MANAGER_NAME_CHANCE) return text
     const parts = name.split(' ')
-    const titled = playerTitle ? `${playerTitle} ${parts[parts.length - 1]}` : null
+    // (a title needs a surname to go with: with one name only, it's just that name)
+    const titled = playerTitle && parts.length > 1 ? `${playerTitle} ${parts[parts.length - 1]}` : null
     return text.replace(MANAGER_AS_WORD, (match, mine, article) => {
         if (mine) return match
         // "the manager" talks about them, so the full name; a bare "manager" talks to them, so the first name

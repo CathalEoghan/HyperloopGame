@@ -32,6 +32,7 @@ import { CITY_MILESTONES, CONTINENT_MILESTONES, readClaimedMilestones } from '..
 import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHoverSound, playNotEnoughFundsSound, playBigMomentSound } from '../utils/sound.js'
 import { formatTime, formatDate } from '../utils/time.js';
 import { flagSrc } from '../utils/flagSrc.js'
+import { fallbackTo, thumbnailOf } from '../utils/cloudinaryImage.js'
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
 // Antarctica only joins the filter once the secret Antarctic Peninsula has been unlocked, so it doesn't give the finale away
@@ -397,7 +398,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
             )}
             {enlargedImage && (
                     <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
-                        <img src={enlargedImage} alt="enlarged" style={{ maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', border: '3px solid black' }} />
+                        <img src={enlargedImage} alt="enlarged" onError={fallbackTo(thumbnailOf(enlargedImage, cityImages, cityThumbnails))} style={{ maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', border: '3px solid black' }} />
                     </div>
                 )}
 
@@ -559,6 +560,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         // Falls back to the (lower-res, but locally bundled) thumbnail for a city that hasn't
                                         // made it to the Cloudinary host yet, instead of a broken image (bug #91 follow-up).
                                         src={cityImages[selectedCity.name] || cityThumbnails[selectedCity.name]}
+                                        onError={fallbackTo(cityThumbnails[selectedCity.name])}
                                         alt={selectedCity.name}
                                         onClick={(e) => { e.stopPropagation(); setEnlargedImage(cityImages[selectedCity.name] || cityThumbnails[selectedCity.name]) }}
                                         style={{ width: '160px', height: '160px', borderRadius: '10px', border: '3px solid black', objectFit: 'cover', cursor: 'zoom-in' }}

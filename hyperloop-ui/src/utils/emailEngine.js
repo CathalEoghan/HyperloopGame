@@ -286,11 +286,13 @@ export function writeUsed(list) { try { localStorage.setItem(USED_KEY, JSON.stri
 
 const addressee = (name) => (name && name.trim()) || 'Manager'
 // How a sender greets the player: "Dr. Smith" with a title, the first name without one, and "Manager" only as a last resort
-// (no name set at all)
+// (no name set at all). A title goes before a surname, so with only one name given ("Cathal") it is just that name: "Mr. Cathal"
+// read like a mistake.
 export function formalAddress(name, title = '') {
     const n = (name || '').trim().replace(/\s+/g, ' ')
     if (!n) return 'Manager'
-    return PLAYER_TITLES.includes(title) ? `${title} ${n.split(' ').pop()}` : n.split(' ')[0]
+    const parts = n.split(' ')
+    return PLAYER_TITLES.includes(title) && parts.length > 1 ? `${title} ${parts[parts.length - 1]}` : parts[0]
 }
 const firstName = (sender) => sender.name.split(' ')[0]
 
@@ -348,8 +350,11 @@ const METRICS = {
     positiveEvents: (s) => s.positiveEvents || 0,
     // Negative events (the bad ones) that have happened to the terminal
     negativeEvents: (s) => s.negativeEvents || 0,
-    // Emails the player has answered (agreed to or refused)
-    clearInbox: (s) => s.answered || 0,
+    // The emails that were waiting when this one arrived, answered since (agreed to or refused, before or after agreeing to
+    // this one; one left to go unanswered doesn't count). Older requests count every email answered after agreeing.
+    clearInbox: (s, e) => (Array.isArray(e.extra.waitingIds)
+        ? e.extra.waitingIds.filter(id => !(s.waitingIds || []).includes(id) && !(s.ignoredIds || []).includes(id)).length
+        : (s.answered || 0)),
     connectCities: (s, e) => (e.extra.baseCities ? newCities(s, e).length : (s.cities || 0)),
     rankUp: (s) => s.rank || 0,
     // Levels gained since agreeing, per development and per city line (a removed development or disconnected city loses its
@@ -544,12 +549,13 @@ const GENERATORS = {
         if (target >= bal) return null
         return { type: 'holdCash', target, extra: {}, subject: 'A cash reserve', ask: `keep at least ${formatCash(target)} in the bank`, hours: between(24, 36, rnd) }
     },
-    // Answer the other emails that are waiting (ctx.waitingEmails counts those still unanswered when this one arrives)
+    // Answer the other emails waiting in the inbox: exactly the ones waiting when this one arrives (ctx.waitingIds), so the
+    // number always matches what the player can see, and answering them first still counts
     clearInbox: (ctx, rnd) => {
-        const waiting = ctx.waitingEmails || 0
-        if (waiting < 1) return null
-        const target = Math.min(2, waiting)
-        return { type: 'clearInbox', target, extra: {}, subject: 'Your inbox', ask: target === 1 ? 'answer the email waiting in your inbox' : `answer the ${target} emails waiting in your inbox`, hours: between(24, 36, rnd) }
+        const ids = Array.isArray(ctx.waitingIds) ? ctx.waitingIds : []
+        if (ids.length < 1) return null
+        const target = ids.length
+        return { type: 'clearInbox', target, extra: { waitingIds: [...ids] }, subject: 'Your inbox', ask: target === 1 ? 'answer the other email waiting in your inbox' : `answer the other ${target} emails waiting in your inbox`, hours: between(24, 36, rnd) }
     },
     connectTier3: (ctx, rnd) => {
         const room = ctx.tier3Available || 0
@@ -835,7 +841,8 @@ export function agree(email, snap, playerName, now = Date.now()) {
     let started = email.type === 'upgradeDevCategory' ? { ...email, extra: { ...email.extra, baseLevels: { ...(snap.devLevels?.[email.extra.category] || {}) } } } : email
     // "Answer the waiting emails" is counted against those still waiting now (this one is still unanswered in the snapshot); with none
     // left to answer, the inbox is already clear
-    const inbox = email.type === 'clearInbox'
+    // (one from before the request named the emails it means is counted the old way: against those still waiting now)
+    const inbox = email.type === 'clearInbox' && !Array.isArray(email.extra?.waitingIds)
     const waiting = inbox ? Math.max(0, (snap.waitingEmails || 0) - 1) : 0
     if (inbox) started = { ...started, target: Math.max(1, Math.min(email.target, waiting)) }
     // The schedule requests count loops for cities that aren't on the timetable now (see METRICS)
@@ -855,7 +862,7 @@ export function agree(email, snap, playerName, now = Date.now()) {
     if (Object.keys(base).length) started = { ...started, extra: { ...started.extra, ...base } }
     return {
         ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
-        baseline: metricOf(started, snap), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
+        baseline: email.type === 'clearInbox' && Array.isArray(email.extra?.waitingIds) ? 0 : metricOf(started, snap), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
         repChange: email.agreeBonus,
     }
 }

@@ -259,7 +259,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
                     <div className="HomeCity">
                         <img src={pinIcon} alt="pin" style={{ width: '10px', height: '10px', border: 'none', borderRadius: '0', opacity: 0.6 }} />
                         <img src={flagSrc(countryFlags[homeCity.country])} alt={homeCity.country} style={{ width: '16px', height: '11px', objectFit: 'cover', borderRadius: '1px' }} />
-                        <span>{homeCity.name}, {homeCity.country}</span>
+                        <span className="HomeCityText">{homeCity.name}<span className="HomeCityCountry">, {homeCity.country}</span></span>
                     </div>
                 )}
             </div>

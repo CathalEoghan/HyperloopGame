@@ -455,7 +455,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Preferred Title</span>
-                        <span className="settings-label-desc">How emails address you: with a title they write "Dear Dr. Smith", using the last word of your name. With none they use your first name. It applies to emails that arrive from now on.</span>
+                        <span className="settings-label-desc">How emails address you: with a title they write "Dear Dr. Smith", using the last word of your name (a one-word name is used on its own). With none they use your first name. It applies to emails that arrive from now on.</span>
                     </div>
                     <div className="settings-options">
                         <OptionBtn active={playerTitle === ''} onClick={() => handlePlayerTitle('')}>None</OptionBtn>

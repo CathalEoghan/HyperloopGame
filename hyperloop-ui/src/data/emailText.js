@@ -32,7 +32,7 @@
 //   positiveEvents   Live through {n} positive events (random good events at the terminal; not something the player controls)
 //   negativeEvents   Live through {n} negative events (random bad events at the terminal; not something the player controls)
 //   holdCash         Keep at least {n} in the bank until the deadline (like holdRep; {n} is worked out from their balance)
-//   clearInbox       Answer the {n} emails waiting in the inbox
+//   clearInbox       Answer the {n} other emails waiting in the inbox (the ones there when it arrives)
 //   holdRep          Keep Reputation above {n} until the deadline (a task to avoid, not do; {n} is worked out from their Reputation)
 //   rankUp           Take the terminal up a rank (or {n} ranks, with `target`)
 //   upgradeDev       Upgrade a development {n} times
@@ -589,7 +589,7 @@ export const EMAILS = {
             {
                 id: 'lawyer-unanswered-correspondence',
                 subject: 'Unanswered correspondence',
-                body: "Dear {formal},\n\nI will be upfront: there {is|are} {n} {email|emails} waiting for an answer in your inbox, and unanswered correspondence has a way of becoming a problem.\n\nI would be grateful if you would reply to {it|them all}, whichever way you decide.\n\nKind regards,\n{from}",
+                body: "Dear {formal},\n\nI will be upfront: besides this one, there {is|are} {n} {email|emails} waiting for an answer in your inbox, and unanswered correspondence has a way of becoming a problem.\n\nI would be grateful if you would reply to {it|them all}, whichever way you decide.\n\nKind regards,\n{from}",
                 agree: 'Dear {from},\n\nThank you for raising it. I will answer my emails.\n\nBest regards,\n{fullName}',
                 refuse: 'Dear {from},\n\nI appreciate the reminder, but I would rather deal with my inbox in my own time.\n\nBest regards,\n{fullName}',
                 refused: 'Dear {formal},\n\nUnderstood, and thank you for being frank. I will leave you to it.\n\nKind regards,\n{from}',

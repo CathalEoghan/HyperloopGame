@@ -3,7 +3,7 @@ import developmentImages from '../data/developmentImages.js'
 import { playClickSound2, playDevelopmentUnlockedSound, playHoverSound } from '../utils/sound.js'
 import developmentThumbnails from '../data/developmentThumbnails.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
-import { cloudinaryResize } from '../utils/cloudinaryImage.js'
+import { cloudinaryResize, fallbackTo } from '../utils/cloudinaryImage.js'
 import './DevelopmentRevealModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 
@@ -24,6 +24,7 @@ function DevelopmentRevealModal({ development, onContinue, waiting = 0, onClaimA
                 <img
                     className="dev-reveal-image"
                     src={developmentRevealThumbnails[development.name] || cloudinaryResize(developmentImages[development.name], 600) || developmentThumbnails[development.name]}
+                    onError={fallbackTo(developmentThumbnails[development.name])}
                     alt={development.name}
                 />
                 <p className="dev-reveal-category">{development.category}</p>

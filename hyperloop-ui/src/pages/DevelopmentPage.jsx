@@ -28,6 +28,7 @@ import fireworksIcon from '../assets/misc/fireworks.png'
 import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.js'
 import { DEVELOPMENT_MILESTONES, readClaimedMilestones, builtCount } from '../data/developmentMilestones.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
+import { fallbackTo, thumbnailOf } from '../utils/cloudinaryImage.js'
 
 // Experimental Technology doubles in price every claim, so its cost climbs into the billions and beyond: costs from a
 // billion up are shown as "1.28 billion" etc. instead of a row of digits that overflows the button. Everything
@@ -313,7 +314,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
 
                 {enlargedImage && (
                     <div className="modal-overlay" style={{ zIndex: 200 }} onClick={() => setEnlargedImage(null)}>
-                        <img src={enlargedImage} alt="enlarged" style={{ maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', border: '3px solid black' }} />
+                        <img src={enlargedImage} alt="enlarged" onError={fallbackTo(thumbnailOf(enlargedImage, developmentImages, developmentThumbnails))} style={{ maxWidth: '90vw', maxHeight: '90vh', width: 'auto', height: 'auto', objectFit: 'contain', borderRadius: '12px', border: '3px solid black' }} />
                     </div>
                 )}
 
@@ -452,6 +453,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     {/* Falls back to the (lower-res, but locally bundled) thumbnail for a development that
                                         hasn't made it to the Cloudinary host yet, instead of a broken image. */}
                                     <img className="modal-city-image" src={developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]} alt={selectedDevelopment.name}
+                                        onError={fallbackTo(developmentThumbnails[selectedDevelopment.name])}
                                         onClick={(e) => { e.stopPropagation(); setEnlargedImage(developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]) }}
                                         style={{ cursor: 'zoom-in' }} />
                                     {(() => {
@@ -508,6 +510,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     {/* Falls back to the (lower-res, but locally bundled) thumbnail for a development that
                                         hasn't made it to the Cloudinary host yet, instead of a broken image. */}
                                     <img className="modal-city-image" src={developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]} alt={selectedDevelopment.name}
+                                        onError={fallbackTo(developmentThumbnails[selectedDevelopment.name])}
                                         onClick={(e) => { e.stopPropagation(); setEnlargedImage(developmentImages[selectedDevelopment.name] || developmentThumbnails[selectedDevelopment.name]) }}
                                         style={{ cursor: 'zoom-in' }} />
                                     <h3>{nameOf(selectedDevelopment)}</h3>

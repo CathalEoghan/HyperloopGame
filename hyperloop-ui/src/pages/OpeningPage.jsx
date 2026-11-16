@@ -138,7 +138,7 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                             value={playerName}
                             onChange={(e) => setPlayerName(e.target.value)}
                             onKeyDown={(e) => e.key === "Enter" && confirmPlayer()}
-                            placeholder="Your name"
+                            placeholder="Your full name"
                             aria-label="Your name"
                             maxLength={32}
                             autoFocus

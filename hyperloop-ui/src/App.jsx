@@ -797,6 +797,8 @@ function App() {
       // Earned income and lump sums alike (Progress rewards, cash events, the daily bonus)
       cash: pm.totalCashEarned + (pm.bonusCashEarned || 0), balance: pm.balance, answered: achievements.counter('emailsAnswered'),
       waitingEmails: emailsRef.current.filter(e => e.state === 'new').length,
+      // Which emails are still waiting for an answer, and which went unanswered, for the request to answer the inbox
+      waitingIds: emailsRef.current.filter(e => e.state === 'new').map(e => e.id), ignoredIds: emailsRef.current.filter(e => e.state === 'ignored').map(e => e.id),
       delaysCompensated: achievements.counter('delaysCompensated'), delaysRefused: achievements.counter('delaysRefused'),
       negativeEvents: achievements.counter('negativeEvents'), positiveEvents: achievements.counter('positiveEvents'),
       repEarned: pm.lifetimeReputationEarned, reputation: pm.reputation,
@@ -819,7 +821,7 @@ function App() {
       cheapest = Math.min(cheapest, item.cost)
     }))
     return {
-      snap, waitingEmails: emailsRef.current.filter(e => e.state === 'new').length,
+      snap, waitingEmails: emailsRef.current.filter(e => e.state === 'new').length, waitingIds: emailsRef.current.filter(e => e.state === 'new').map(e => e.id),
       // Roughly the chance that any one random event is a negative one that is not held back (events start at EVENT_MIN_RANK)
       negativeEventChance: (perkActive('crisisAvoidanceSpecialists') || rankManager.rank < EVENT_MIN_RANK) ? 0
         : (1 - Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'))) * 0.5 * (1 - economyManager.getNegativeEventReduction()),
@@ -2380,6 +2382,8 @@ function App() {
     // The Achievements panel and the Hyper-Link phone sit above the event popup, so an event fired while either was
     // open ran its course hidden (and Escape closed the hidden event instead of the panel or phone)
     || achievementsOpen || hyperLinkOpen
+    // The inbox too: an event fired while it was open ran its course behind it
+    || emailsOpen
   const popupOpen = otherPopupOpen || (showEventModal && !!activeEvent)
   // Mirrored into a ref so the tick's event-firing checks (a stale closure set up once by startTick, same
   // reason every other thing it reads is a ref) see this render's up-to-date value instead of whatever
@@ -3078,7 +3082,8 @@ function App() {
         />
       )}
 
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && !autoClaimOn && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && (
+      {/* Rank-ups and milestones wait while the Shop, the inbox or the Terminal Board is open, instead of popping up over them */}
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && pendingRankUps > 0 && !autoClaimOn && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityChoices && !showCityPicker && !showShop && !emailsOpen && !showDepartureBoard && (
         <RankUpModal key={rankSet} rank={rankSet} waiting={pendingRankUps} onClaimAll={claimAllRankUps} onEnableAuto={() => { try { localStorage.setItem(AUTO_CLAIM_RANKUPS_KEY, 'true') } catch { /* storage blocked: this one still claims */ } claimAllRankUps(true) }} choose={progressionManager.getUnlockableCities(allCities).length > 0} onClaim={() => {
          // A second click before the first city's reveal appears would unlock another city and skip the first reveal (bug #122)
          if (claimedCityRef.current) return;
@@ -3210,7 +3215,7 @@ function App() {
         <ClaimedCitiesModal cities={claimAllCities} onClose={() => { setClaimAllCities(null); if (paBonusPending.current) { queuePassengerBonus(paBonusPending.current); paBonusPending.current = null } }} />
       )}
 
-      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && pendingRankUps === 0 && (
+      {!dailyLoginData && !showOfflineModal && milestoneQueue.length > 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && pendingRankUps === 0 && !showShop && !emailsOpen && !showDepartureBoard && (
         <MilestoneModal
           milestone={milestoneQueue[0]}
           onContinue={() => {
@@ -3224,7 +3229,7 @@ function App() {
 
       {/* A development milestone (Reputation for the first, 5th, 10th... of a category) waits for everything else on screen,
           including a rank milestone still waiting, and lands before the secret-city finale */}
-      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && devMilestoneQueue.length > 0 && milestoneQueue.length === 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && pendingRankUps === 0 && !cityChoices && !showCityPicker && (
+      {!dailyLoginData && !showOfflineModal && !activeDelay && !activeDeparture && devMilestoneQueue.length > 0 && milestoneQueue.length === 0 && devRevealQueue.length === 0 && revealedUpgradeQueue.length === 0 && !claimedCity && !claimAllCities && !claimAllDevs && !paBonus && !cityClaimPending && pendingRankUps === 0 && !cityChoices && !showCityPicker && !showShop && !emailsOpen && !showDepartureBoard && (
         <DevelopmentMilestoneModal
           key={devMilestoneQueue[0].category + devMilestoneQueue[0].count}
           milestone={devMilestoneQueue[0]}

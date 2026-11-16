@@ -19,3 +19,19 @@ export function cloudinaryResize(url, width) {
     }
     return url.replace('/upload/', `/upload/w_${width},c_limit,f_auto,q_auto/`)
 }
+// The big photos live on Cloudinary. If one can't be loaded (a network that blocks it, an outage, the monthly allowance used
+// up), the image swaps itself for the small copy bundled with the game, once, instead of showing a broken picture.
+// Use as onError={fallbackTo(thumbnail)}.
+export function fallbackTo(src) {
+    return (e) => {
+        const img = e.currentTarget
+        if (!src || img.dataset.fellBack) return
+        img.dataset.fellBack = '1'
+        img.src = src
+    }
+}
+// The bundled small copy of a big photo, found from the photo's own address (for the enlarged view, which only keeps that)
+export function thumbnailOf(url, images, thumbnails) {
+    const name = Object.keys(images).find(n => images[n] === url)
+    return name ? thumbnails[name] : null
+}
