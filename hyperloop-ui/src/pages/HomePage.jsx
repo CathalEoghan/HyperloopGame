@@ -1539,8 +1539,8 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                         {hoveredCity.isPurchased
                             ? hoveredCity.city.fact
                             : hoveredCity.isUnlocked
-                                ? <em>Connect this city to reveal its secret!</em>
-                                : <em>Unlock this city to reveal its secret!</em>
+                                ? <em>Connect this city to reveal its fact!</em>
+                                : <em>Unlock this city to reveal its fact!</em>
                         }
                     </p>
                 </div>
