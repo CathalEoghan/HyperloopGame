@@ -131,7 +131,12 @@
     color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     border: 1px solid var(--ui-accent-readable, var(--ui-accent, #f5a623));
     border-radius: 6px;
-    padding: 6px 14px;
+    /* Same text size and side padding as the Connections / Active Loops buttons beside it; the row stretches it to the
+       same height, and the eye icon (taller than a line of text) no longer pushes it taller than them */
+    padding: 0 12px;
+    display: inline-flex;
+    align-items: center;
+    box-sizing: border-box;
     font-family: 'Inter', sans-serif;
     font-size: 0.75rem;
     cursor: var(--cursor-pointer, pointer);
@@ -145,8 +150,8 @@
     display: inline-block;
     width: 1.5em;
     height: 1.5em;
+    flex-shrink: 0;
     margin-right: 6px;
-    vertical-align: -0.4em;
     background-color: currentColor;
     -webkit-mask: var(--eye-icon) center / contain no-repeat;
     mask: var(--eye-icon) center / contain no-repeat;
@@ -201,7 +206,7 @@
 
 .globe-controls-row {
     display: flex;
-    align-items: center;
+    align-items: stretch;
     gap: 8px;
     flex-shrink: 0;
     max-width: 100%;
