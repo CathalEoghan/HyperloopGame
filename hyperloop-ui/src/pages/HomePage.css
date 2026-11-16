@@ -31,10 +31,10 @@
 
 .globe-cities {
     color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
-    font-family: 'Courier New', monospace;
+    font-family: 'Inter', sans-serif;
     font-size: 0.75rem;
     margin: 1px 0 0;
-    letter-spacing: 1px;
+    letter-spacing: 0.2px;
 }
 
 /* Globe fills remaining space */
@@ -132,10 +132,10 @@
     border: 1px solid var(--ui-accent-readable, var(--ui-accent, #f5a623));
     border-radius: 6px;
     padding: 6px 14px;
-    font-family: 'Courier New', monospace;
+    font-family: 'Inter', sans-serif;
     font-size: 0.75rem;
     cursor: var(--cursor-pointer, pointer);
-    letter-spacing: 1px;
+    letter-spacing: 0.2px;
     pointer-events: all;
     transition: background 0.2s, transform 0.1s;
 }
@@ -220,9 +220,9 @@
     background: transparent;
     color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
     border: none;
-    font-family: 'Courier New', monospace;
+    font-family: 'Inter', sans-serif;
     font-size: 0.75rem;
-    letter-spacing: 1px;
+    letter-spacing: 0.2px;
     padding: 6px 12px;
     cursor: var(--cursor-pointer, pointer);
     display: inline-flex;

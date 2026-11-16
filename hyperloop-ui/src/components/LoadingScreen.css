@@ -99,6 +99,7 @@
    adds to the content height - the scroll-to-fit fix for short viewports (bug #185) stays intact. */
 .loading-version-tag {
     position: absolute;
+    font-family: 'Inter', sans-serif;
     bottom: 10px;
     right: 14px;
     font-size: 12px;

@@ -207,12 +207,22 @@ const EXPORTED_SETTING_KEYS = [
     'hyperloop_perk_government_grants',
 ]
 
+// What the player is called (the emails and Hyper-Link use it): exported too, so a save moved to another browser keeps
+// it. A brand-new game asks for it, but an imported save skips that screen, so without this it would quietly become "Manager".
+const PLAYER_NAME_KEY = 'hyperloop_player_name'
+const PLAYER_TITLE_KEY = 'hyperloop_player_title'
+const PLAYER_TITLES = ['Mr.', 'Mrs.', 'Miss', 'Master', 'Mx.', 'Dr.']
+
 function bundleSettings() {
     const state = {}
     EXPORTED_SETTING_KEYS.forEach(key => {
         const val = localStorage.getItem(key)
         if (val === 'true' || val === 'false') state[key] = val
     })
+    const name = localStorage.getItem(PLAYER_NAME_KEY)
+    if (name && name.trim()) state[PLAYER_NAME_KEY] = name.trim().slice(0, 32)
+    const title = localStorage.getItem(PLAYER_TITLE_KEY)
+    if (PLAYER_TITLES.includes(title)) state[PLAYER_TITLE_KEY] = title
     return state
 }
 
@@ -223,6 +233,15 @@ function restoreSettings(state) {
         if (state[key] !== 'true' && state[key] !== 'false') return
         try { localStorage.setItem(key, state[key]) } catch { /* skip this setting */ }
     })
+    // The name and title come as a pair: a file with a name sets both (no title in it means none), so the title of
+    // whoever played here before isn't left in front of the imported name. A file without a name leaves both alone.
+    const name = typeof state[PLAYER_NAME_KEY] === 'string' ? state[PLAYER_NAME_KEY].trim().replace(/\s+/g, ' ').slice(0, 32) : ''
+    if (!name) return
+    try {
+        localStorage.setItem(PLAYER_NAME_KEY, name)
+        if (PLAYER_TITLES.includes(state[PLAYER_TITLE_KEY])) localStorage.setItem(PLAYER_TITLE_KEY, state[PLAYER_TITLE_KEY])
+        else localStorage.removeItem(PLAYER_TITLE_KEY)
+    } catch { /* storage full */ }
 }
 
 // What a prestige keeps. Everything else about the run is cleared. The two date stamps stay so that the
