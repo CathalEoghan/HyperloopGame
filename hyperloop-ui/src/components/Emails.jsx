@@ -95,6 +95,15 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
     const sorted = [...emails].sort((a, b) => b.createdAt - a.createdAt)
     // Inbox: anything still open or not yet read. Resolved: the rest, like an archive.
     const inInbox = (e) => isOpen(e) || !e.read
+    // Nothing leaves the Inbox while the window is open: an email that was in it (or arrived in it) during this visit stays
+    // there once it has been read and finished with, faded a little, and moves to Resolved the next time the inbox opens.
+    // Before, reading a finished email's reply made it vanish from under the cursor as soon as another one was clicked.
+    const [keptInInbox, setKeptInInbox] = useState(() => new Set(emails.filter(inInbox).map(e => e.id)))
+    // (one arriving, or a reply coming in, while the window is open joins it straight away - updated during render, so it never
+    // shows for a frame in the wrong list)
+    const joining = emails.filter(e => inInbox(e) && !keptInInbox.has(e.id))
+    if (joining.length) setKeptInInbox(new Set([...keptInInbox, ...joining.map(e => e.id)]))
+    const inInboxNow = (e) => inInbox(e) || keptInInbox.has(e.id)
     const [tab, setTab] = useState('inbox')
     const [query, setQuery] = useState('')
     const q = query.trim().toLowerCase()
@@ -108,7 +117,7 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
     const matches = (e) => e.subject.toLowerCase().includes(q) || e.sender.name.toLowerCase().includes(q)
     const shown = q
         ? sorted.filter(matches)
-        : sorted.filter(e => (tab === 'inbox') === inInbox(e) || (e.id === selectedId && !(tab === 'resolved' && isOpen(e))))
+        : sorted.filter(e => (tab === 'inbox') === inInboxNow(e) || (e.id === selectedId && !(tab === 'resolved' && isOpen(e))))
     const threadRef = useRef(null)
     const [muteTip, setMuteTip] = useState(null)
     useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = el.scrollHeight }, [selected?.state, selected?.reply, typingId])
@@ -116,7 +125,7 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
     useEffect(() => { const el = threadRef.current; if (el) el.scrollTop = 0 }, [selectedId])
     useEffect(() => { if (selected && !selected.read) onRead(selected.id) }, [selected, onRead])
     const unreadCount = sorted.filter(e => !e.read).length
-    const openCount = sorted.filter(inInbox).length
+    const openCount = sorted.filter(inInboxNow).length
 
     const requestCard = selected?.ask ? (
         <div className="emails-request">
@@ -130,7 +139,7 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
 
     // The reply only starts typing when the answer went through (agreeing to pay upfront without the money does nothing)
     const respond = (e, agree) => { playClickSound2(); if (onRespond(e.id, agree) !== false) setTypingId(e.id) }
-    const pickTab = (t) => { playClickSound2(); setTab(t); const first = sorted.find(e => (t === 'inbox') === inInbox(e)); if (first) setSelectedId(first.id) }
+    const pickTab = (t) => { playClickSound2(); setTab(t); const first = sorted.find(e => (t === 'inbox') === inInboxNow(e)); if (first) setSelectedId(first.id) }
     const senderFirst = selected ? selected.sender.name.split(' ')[0] : ''
     const replyAt = selected ? (selected.state === 'refused' ? selected.resolvedAt : selected.agreedAt || selected.createdAt) : 0
 
@@ -170,7 +179,7 @@ export default function EmailsModal({ emails, onRespond, onRead, onClose, cult =
                         {q && shown.length > 0 && <div className="emails-results">{shown.length} {shown.length === 1 ? 'result' : 'results'}</div>}
                         {shown.length === 0 && <div className="emails-empty">{q ? `No emails match “${query.trim()}”.` : sorted.length === 0 ? 'No emails yet. People write when they need something from the Manager.' : tab === 'inbox' ? 'You are all caught up.' : 'Nothing resolved yet.'}</div>}
                         {shown.map(e => (
-                            <button key={e.id} className={`emails-row${e.id === selectedId ? ' emails-row-active' : ''}${!e.read ? ' emails-row-unread' : ''}`}
+                            <button key={e.id} className={`emails-row${e.id === selectedId ? ' emails-row-active' : ''}${!e.read ? ' emails-row-unread' : ''}${tab === 'inbox' && !q && !inInbox(e) ? ' emails-row-done' : ''}`}
                                 onClick={() => { playClickSound2(); setSelectedId(e.id) }} onMouseEnter={() => playHoverSound()}>
                                 <Avatar email={e} size={36} />
                                 <span className="emails-row-main">

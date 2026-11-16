@@ -26,6 +26,8 @@
 .emails-row-preview { font-size: 0.76rem; color: #80868b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; gap: 6px; }
 .emails-row-unread .emails-row-from, .emails-row-unread .emails-row-subject { font-weight: 800; color: #202124; }
 .emails-row-unread .emails-row-time { font-weight: 800; color: #202124; }
+/* Finished with this visit (it moves to Resolved next time the inbox opens): faded, but back to full while it's being read */
+.emails-row-done:not(.emails-row-active) > * { opacity: 0.55; }
 .emails-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--ui-accent, #f5a623); flex-shrink: 0; margin-top: 6px; }
 .emails-tag { font-size: 0.62rem; font-weight: 700; padding: 1px 7px; border-radius: 8px; background: #eceff1; color: #455a64; white-space: nowrap; flex-shrink: 0; }
 .emails-tag-new { background: #fce8b2; color: #7a5200; }
