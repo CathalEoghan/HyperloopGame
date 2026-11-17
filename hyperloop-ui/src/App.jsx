@@ -837,12 +837,12 @@ function App() {
     return {
       snap, waitingEmails: emailsRef.current.filter(e => e.state === 'new').length, waitingIds: emailsRef.current.filter(e => e.state === 'new').map(e => e.id),
       // Roughly the chance that any one random event is a negative one that is not held back (events start at EVENT_MIN_RANK)
-      negativeEventChance: (perkActive('crisisAvoidanceSpecialists') || rankManager.rank < EVENT_MIN_RANK) ? 0
+      negativeEventChance: (perkActive('crisisAvoidanceSpecialists') || rankManager.rank < EVENT_MIN_RANK || !hasScheduledLoop()) ? 0
         : (1 - Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'))) * 0.5 * (1 - economyManager.getNegativeEventReduction()),
       // Delayed loops come up at random (never with Bulletproof Planning)
       delaysPossible: !PrestigeManager.owns('bulletproofPlanning'),
       // Good events happen from EVENT_MIN_RANK on (and are the only kind with Crisis Avoidance)
-      positiveEventChance: rankManager.rank < EVENT_MIN_RANK ? 0 : (perkActive('crisisAvoidanceSpecialists') ? 1 : 0.5),
+      positiveEventChance: (rankManager.rank < EVENT_MIN_RANK || !hasScheduledLoop()) ? 0 : (perkActive('crisisAvoidanceSpecialists') ? 1 : 0.5),
       // The terminal's usual income: the next day's earnings averaged, with no event running (an income event can multiply it
       // six times for a few minutes, and the evening rush is a third above the day's average), for the cash and rank requests
       incomePerHour: usualIncomePerHour(),
@@ -1485,11 +1485,17 @@ function App() {
     ? loopCode(delay.name, delay.kind === 'arrival' ? 'arrival' : 'departure', progressionManager.purchasedCities, terminalNameRef.current, delay.loopNumber)
     : ''
 
+  // Random events and Hyper-Link posts only start once a connected city has a scheduled departure: with nothing leaving,
+  // nothing is happening at the terminal for passengers to post about or for an event to hit
+  const hasScheduledLoop = () => {
+    const connected = new Set(progressionManager.purchasedCities.slice(1).map(c => c.name))
+    return readTimetable().some(e => connected.has(e.name))
+  }
   const fireOfficialHyperLinkPost = (trigger) => {
     // No updates at all for the phone until a city is connected, or before the player has actually entered
     // (construction can finish, and purchasedCities go non-empty, while they're still on the "click
     // anywhere to enter" screen).
-    if (progressionManager.purchasedCities.length === 0 || !hasEnteredRef.current) return
+    if (progressionManager.purchasedCities.length === 0 || !hasEnteredRef.current || !hasScheduledLoop()) return
     const post = generateOfficialEventPost({
       terminalName: terminalNameRef.current,
       homeCity: progressionManager.purchasedCities[0],
@@ -1939,7 +1945,7 @@ function App() {
       // Hyper-Link post generation every 1-3 minutes, from the first connected city on (it used to wait for a second city,
       // which left a one-city network with only the official account's posts)
       const postDue = tickCount.current >= nextPostTick.current || (hyperLinkTriggerRef.hasDue && tickCount.current >= dueRetryTick.current)
-      if (postDue && tickCount.current > 0 && progressionManager.purchasedCities.length > 0) {
+      if (postDue && tickCount.current > 0 && progressionManager.purchasedCities.length > 0 && hasScheduledLoop()) {
         // Clean up posts older than 2 days
         const twoDaysAgo = Date.now() - 172800000
         const storedFeed = readStoredList('hyperloop_hyperlink_feed')
@@ -2256,7 +2262,7 @@ function App() {
       // otherPopupOpenRef also gates firing, not just the modal's render (see its declaration) - the roll and
       // the 5-minute guarantee both just keep re-checking every tick, so holding off here only delays the event
       // until the blocking popup clears, it never skips one.
-      if (hasEnteredRef.current && (Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000 && !otherPopupOpenRef.current) {
+      if (hasEnteredRef.current && hasScheduledLoop() && (Math.random() < 0.002 || forceEvent) && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000 && !otherPopupOpenRef.current) {
         const noNegatives = perkActive('crisisAvoidanceSpecialists');
         const positiveOnly = noNegatives || Math.random() < Math.min(1, economyManager.getUpgradeSum('positiveEventBoost'));
         const event = getRandomEvent(positiveOnly);
@@ -2270,7 +2276,7 @@ function App() {
       // Free Wi-Fi (Vientiane): liking a Hyper-Link post has a small chance of triggering a positive event of
       // its own, independent of the regular random-interval roll above - queued by onLikeReward below and
       // picked up here on the next tick, so it still goes through the same rank/cooldown/active-event guards.
-      if (likeEventPendingRef.current && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000 && !otherPopupOpenRef.current) {
+      if (likeEventPendingRef.current && hasScheduledLoop() && !activeEventRef.current && rankSetRef.current >= EVENT_MIN_RANK && Date.now() > lastModalClearedAt.current && Date.now() - gameStartTime.current > 60000 && !otherPopupOpenRef.current) {
         likeEventPendingRef.current = false;
         lastEventTime.current = Date.now();
         fireEvent(getRandomEvent(true));
@@ -3332,6 +3338,8 @@ function App() {
           muted={hyperLinkMuted}
           onToggleMute={toggleHyperLinkMute}
           initialUnread={hyperLinkOpenUnread}
+          // With no loop scheduled nothing is posted, and the phone says what to do about it
+          needsLoop={hyperLinkOpen && !hasScheduledLoop()}
           // So the like itself shows the Reputation it's about to pay, instead of only the heart animation
           // with the gain landing silently (see onLikeReward below).
           repPerLike={PrestigeManager.owns('cultOfCelebrity') ? 1 : 0}

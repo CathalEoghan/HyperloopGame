@@ -26,7 +26,7 @@ const TIPS = [
     "Reach Rank 50 and buy Early Retirement (50 Reputation) to be able to retire: your run resets, but Prestige Points, upgrades and achievements carry forward.",
     "Retiring pays 1 Prestige Point for every 50 ranks you reached, plus 1 for every £500M of cash earned that run.",
     "Farewell windows open 5 minutes before each departure - extend them with upgrades to give yourself more time.",
-    "Check Hyper-Link, the phone icon on the home screen, to see what passengers are saying about your terminal.",
+    "Check Hyper-Link, the phone icon on the home screen, to see what passengers are saying about your terminal. Posts and random events only start once you have a loop scheduled for departure.",
     "Check the Progress page often! Newly connected cities and countries glow gold and reward you with cash or reputation.",
     "Check the credits modal in Settings for asset accreditations and a surprise!",
     "Check out the shop for cool cosmetics! Choose from a wide selection of themes, cursors, and even custom audio.",

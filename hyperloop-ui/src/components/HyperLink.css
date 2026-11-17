@@ -283,6 +283,17 @@
     pointer-events: none;
 }
 
+.hyperlink-tip {
+    margin: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(245, 166, 35, 0.14);
+    border: 1px solid rgba(245, 166, 35, 0.4);
+    color: #3a3a3a;
+    font-size: 0.82rem;
+    line-height: 1.35;
+}
+
 .hyperlink-empty {
     padding: 48px 24px;
     text-align: center;

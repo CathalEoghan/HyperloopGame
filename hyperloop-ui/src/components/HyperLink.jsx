@@ -53,7 +53,7 @@ function formatPostText(text) {
     )
 }
 
-function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = false, onToggleMute, initialUnread = 0, repPerLike = 0 }) {
+function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = false, onToggleMute, initialUnread = 0, repPerLike = 0, needsLoop = false }) {
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const now = new Date()
     const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -163,8 +163,11 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                         </button>
                     )}
                     <div className="hyperlink-feed" ref={feedRef} onScroll={e => setAtTop(e.currentTarget.scrollTop < 48)}>
+                        {needsLoop && (
+                            <div className="hyperlink-tip"><strong>Tip:</strong> Schedule at least one loop for departure on the Terminal Board. Passengers only start posting once something is leaving.</div>
+                        )}
                         {feed.length === 0 ? (
-                            <div className="hyperlink-empty">No posts yet. Check back soon!</div>
+                            <div className="hyperlink-empty">{needsLoop ? 'Nothing to post about yet.' : 'No posts yet. Check back soon!'}</div>
                         ) : (
                             [...feed].reverse().map(post => {
                                 const ageMs = Date.now() - post.timestamp
