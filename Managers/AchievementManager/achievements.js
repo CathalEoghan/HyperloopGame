@@ -206,7 +206,7 @@ export const ACHIEVEMENTS = [
     { id: 'vanityFare', group: 'Combinations', name: 'Vanity Fare', description: 'Have both Personal Styling Retinue launched and the Global Ticket Cuts prestige upgrade unlocked at any one time.', check: developedWithPrestige('Personal Styling Retinue', 'globalTicketCuts') },
     { id: 'newHeights', group: 'Combinations', name: 'New Heights', description: 'Have both Observation Deck developed and Kathmandu connected at any one time.', check: developedAndConnected('Observation Deck', 'Kathmandu') },
     { id: 'moreThanACeiling', group: 'Combinations', name: 'More Than a Ceiling', description: 'Have both Palatial Interior Renovations developed and Boston connected at any one time.', check: developedAndConnected('Palatial Interior Renovations', 'Boston') },
-    { id: 'betterCallFall', group: 'Combinations', name: 'Better Call Fall!', description: 'Have both Autumn Getaway Packages and Customer Service Centre developed at any one time.', check: developed('Autumn Getaway Packages', 'Customer Service Centre') },
+    { id: 'betterCallFall', group: 'Combinations', name: 'Better Call Fall!', description: 'Have both Autumn Getaway Packages launched and the Legal Loopholes Prestige upgrade unlocked at any one time.', check: developedWithPrestige('Autumn Getaway Packages', 'legalLoopholes') },
     // No check: an event achievement, unlocked in App.jsx's onRemove at the moment Petting Zoo is removed -
     // a plain state check can't tell "removed" from "never built" once the development is gone.
     { id: 'sinceTheDucksLeft', group: 'Combinations', name: 'Since the Ducks Left', description: 'With New York as your home city, remove the Petting Zoo development while having the Duck theme purchased.' },

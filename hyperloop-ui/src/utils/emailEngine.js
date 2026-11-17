@@ -25,6 +25,8 @@ const MIN = 60000
 export const IGNORE_AFTER_MS = 24 * 3600000
 const HOUR = 3600000
 const KEEP_RESOLVED = 25
+// A finished request (done, missed, declined or never answered) leaves the Inbox this long after it finished, so old ones don't pile up
+export const CLEAR_AFTER_MS = 24 * 3600000
 
 export const BASE = { refuse: 5, agree: 5, fulfil: 25, fail: 25 }
 
@@ -965,10 +967,16 @@ export function formatLeft(ms) {
 // ---- storage ---------------------------------------------------------------------------------------------------
 const validEmail = (e) => e && typeof e === 'object' && typeof e.id === 'string' && typeof e.type === 'string' && typeof e.state === 'string'
     && Number.isFinite(e.target) && Number.isFinite(e.createdAt) && e.sender && typeof e.sender.name === 'string' && typeof e.body === 'string'
+// The list without the finished emails that have been there for CLEAR_AFTER_MS (one whose reply hasn't been opened yet still
+// carries Reputation, so it stays until it is). Returns the same list when nothing is old enough.
+export function dropOld(list, now = Date.now()) {
+    const old = (e) => !isOpen(e) && !e.repPending && now - (e.resolvedAt || e.createdAt || now) >= CLEAR_AFTER_MS
+    return list.some(old) ? list.filter(e => !old(e)) : list
+}
 export function readEmails() {
     try {
         const list = JSON.parse(localStorage.getItem(EMAILS_KEY))
-        return Array.isArray(list) ? list.filter(validEmail) : []
+        return Array.isArray(list) ? dropOld(list.filter(validEmail)) : []
     } catch { return [] }
 }
 export function writeEmails(list) {

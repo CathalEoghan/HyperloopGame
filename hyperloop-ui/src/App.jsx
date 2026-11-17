@@ -959,6 +959,8 @@ function App() {
       }
       emailEngine.writeMeta(meta)
     }
+    // Finished emails leave the Inbox a day after they finish - never while it is open, so nothing vanishes from under the player
+    if (!emailsOpenRef.current) { const fresh = emailEngine.dropOld(list, now); if (fresh !== list) { list = fresh; changed = true } }
     if (changed) { setEmails(list); if (announced) announceEmail() }
     if (fulfilledToasts.length) setAchievementQueue(prev => [...prev, ...fulfilledToasts])
   }
