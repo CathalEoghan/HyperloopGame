@@ -1182,7 +1182,7 @@ export const POSTS = {
         'got a headache and theres no pharmacy. i am going to be so dramatic about this',
         'if i fall over is there at least a health clinic? asking for a friend (me)',
         'been sat on a plane for 11 hours before this and cant even go to a gym to move my legs 😭',
-        'i booked a loop here AND a car for after, turns out theres no car rental. thanks for nothing',
+        'was planning to grab a rental car after my loop. turns out theres no car rental here. thanks for nothing',
         'no one told me i would have to bring my dog to a terminal with no kennel. hes judging me',
         'ZERO services. really?',
     ],

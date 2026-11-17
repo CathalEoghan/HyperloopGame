@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { formatClock } from '../utils/units.js'
 import './Emails.css'
 import emailIcon from '../assets/misc/email.png'
 import bellIcon from '../assets/misc/bell.png'
@@ -29,9 +30,8 @@ const Rep = ({ n }) => <span className="emails-rep"><img src={reputationIcon} al
 
 // Dates the way a mail client shows them: the time for today, the day and month otherwise
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-const pad = (n) => String(n).padStart(2, '0')
-const shortTime = (ts, now) => { const d = new Date(ts), n = new Date(now); return d.toDateString() === n.toDateString() ? `${pad(d.getHours())}:${pad(d.getMinutes())}` : `${d.getDate()} ${MONTHS[d.getMonth()]}` }
-const fullTime = (ts) => { const d = new Date(ts); return `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}, ${pad(d.getHours())}:${pad(d.getMinutes())}` }
+const shortTime = (ts, now) => { const d = new Date(ts), n = new Date(now); return d.toDateString() === n.toDateString() ? formatClock(d) : `${d.getDate()} ${MONTHS[d.getMonth()]}` }
+const fullTime = (ts) => { const d = new Date(ts); return `${['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()]}, ${d.getDate()} ${MONTHS[d.getMonth()]}, ${formatClock(d)}` }
 // The first words of the body without "Dear ...,", for the grey preview in the list
 const snippet = (body) => body.replace(/^Dear [^\n]*\n+/, '').replace(/\s+/g, ' ').trim().slice(0, 80)
 // A sender's built-in reply is stored as `Name writes: "..."`; in a thread it is just the message

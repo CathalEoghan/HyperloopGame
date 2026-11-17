@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { getDistanceUnit, setDistanceUnit } from '../utils/units.js'
+import { getDistanceUnit, setDistanceUnit, getTimeFormat, setTimeFormat } from '../utils/units.js'
 import { fullscreenSupported, isFullscreen, setFullscreen, onFullscreenChange } from '../utils/display.js'
 import { playHoverSound, playClickSound2, playSaveConfirmSound, SOUND_CATEGORIES, getCategoryVolume, setCategoryVolume, isCategoryMuted, setCategoryMuted } from '../utils/sound.js'
 import CreditsModal from '../components/CreditsModal.jsx'
@@ -99,6 +99,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const [soundMutes, setSoundMutes] = useState(() => Object.fromEntries(SOUND_CATEGORIES.map(c => [c.key, isCategoryMuted(c.key)])))
     const [eventTint, setEventTint] = useState(localStorage.getItem('hyperloop_event_tint') !== 'false')
     const [distanceUnit, setDistanceUnitState] = useState(getDistanceUnit())
+    const [timeFormat, setTimeFormatState] = useState(getTimeFormat())
     const [fullscreen, setFullscreenState] = useState(isFullscreen())
     useEffect(() => onFullscreenChange(setFullscreenState), [])
     const [splitFlap, setSplitFlap] = useState(localStorage.getItem('splitFlap') !== 'false')
@@ -211,6 +212,11 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const handleDistanceUnit = (unit) => {
         setDistanceUnitState(unit)
         setDistanceUnit(unit)
+    }
+
+    const handleTimeFormat = (format) => {
+        setTimeFormatState(format)
+        setTimeFormat(format)
     }
 
     const handleNameSave = () => {
@@ -525,6 +531,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <div className="settings-options">
                         <OptionBtn active={distanceUnit === 'mi'} onClick={() => handleDistanceUnit('mi')}>Miles</OptionBtn>
                         <OptionBtn active={distanceUnit === 'km'} onClick={() => handleDistanceUnit('km')}>Kilometres</OptionBtn>
+                    </div>
+                </div>
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Time</span>
+                        <span className="settings-label-desc">Show the clock in the top bar, your emails and Hyper-Link as 12-hour (2:46 pm) or 24-hour (14:46).</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={timeFormat === '12h'} onClick={() => handleTimeFormat('12h')}>12-hour</OptionBtn>
+                        <OptionBtn active={timeFormat === '24h'} onClick={() => handleTimeFormat('24h')}>24-hour</OptionBtn>
                     </div>
                 </div>
             </div>

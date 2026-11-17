@@ -182,6 +182,7 @@ const SETTINGS_KEYS = [
     'globeShowOwned',
     'globeLoopsPanelOpen',
     'distanceUnit',
+    'timeFormat',
     'splitFlap',
     'hyperloop_notifications',
     'terminalBoardTab',

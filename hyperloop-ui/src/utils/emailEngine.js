@@ -17,7 +17,7 @@ export const PLAYER_TITLES = ['Mr.', 'Mrs.', 'Miss', 'Master', 'Mx.', 'Dr.']
 // The recurring senders: their names (chosen once, kept for good) and how the player last answered each
 export const CAST_KEY = 'hyperloop_email_cast'
 
-// Like daily quests: up to 3 a day, reset at midnight (the player's own clock). The first comes 5-10 minutes into the day's play,
+// Like daily quests: up to 3 a day, reset at midnight (the player's own clock). The first comes 5 minutes into the day's play,
 // the second and third 10-15 minutes after the one before. These timers only run while the game is open.
 export const MAX_PER_DAY = 3
 const MIN = 60000
@@ -1002,12 +1002,12 @@ export const openCount = (emails) => emails.filter(isOpen).length
 // The most wait one check of the schedule may take off. A hidden tab is slowed by the browser to about one tick a minute, so the
 // check (every fifth tick) can be five minutes apart and should still count in full; a laptop that slept counts for only this much
 export const MAX_STEP_MS = 10 * MIN
-// One step of the schedule: a new day starts a fresh allowance with the first email 5-10 minutes away; otherwise `elapsed`
+// One step of the schedule: a new day starts a fresh allowance with the first email 5 minutes away; otherwise `elapsed`
 // ms of play are taken off the wait. `due` is true when the next email may go out now.
-export function stepMeta(meta, elapsed, now = Date.now(), rnd = Math.random) {
+export function stepMeta(meta, elapsed, now = Date.now()) {
     const today = new Date(now).toDateString()
     let m = meta
-    if (m.day !== today) m = { day: today, sent: 0, senders: [], wait: between(5 * 60, 10 * 60, rnd) * 1000 }
+    if (m.day !== today) m = { day: today, sent: 0, senders: [], wait: 5 * MIN }
     else if (m.sent < MAX_PER_DAY) m = { ...m, wait: Math.max(0, m.wait - Math.max(0, elapsed)) }
     return { meta: m, due: m.sent < MAX_PER_DAY && m.wait <= 0 }
 }

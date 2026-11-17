@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { formatClock } from '../utils/units.js'
 import departureBoardImg from '../assets/misc/DepartureBoard.jpg'
 import './TopBanner.css'
 import clockIcon from '../assets/misc/clock.png'
@@ -291,7 +292,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
             <div className="work-divider" />
             <div className="rightSideDetails">
                 <div className="time">
-                    <img src={clockIcon} alt="time" /> {new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    <img src={clockIcon} alt="time" /> {formatClock()}
                 </div>
                 <div className="rank">
                     <img src={starIcon} alt="rank" /> Rank {rank}

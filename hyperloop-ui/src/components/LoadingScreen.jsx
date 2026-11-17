@@ -23,18 +23,8 @@ import workClickSound from '../assets/sounds/workClickSound.mp3'
 import hoverSound from '../assets/sounds/hoverSound.mp3'
 import reputationWorkBonus from '../assets/sounds/reputationBonusWork.mp3'
 import bottomNavbarHover from '../assets/sounds/bottomNavbarHover.mp3'
-import openingAudio from '../assets/sounds/openingAudio.mp3'
-import kittyOpening from '../assets/opening-intros/kitty.mp3'
-import fairyOpening from '../assets/opening-intros/fairy.mp3'
-import poltergeistOpening from '../assets/opening-intros/poltergeist.mp3'
-import pirateOpening from '../assets/opening-intros/pirate.mp3'
-import princessOpening from '../assets/opening-intros/princess.mp3'
-import jazzOpening from '../assets/opening-intros/jazz.mp3'
-import playroomOpening from '../assets/opening-intros/playtime.mp3'
-import starlightOpening from '../assets/opening-intros/starlight.mp3'
-import duckOpening from '../assets/opening-intros/duck.mp3'
-import { playOpeningAudio, setEntered } from '../utils/sound.js'
-import { preloadImages } from '../utils/imageCache.js'
+import { playOpeningAudio, warmOpeningAudio, setEntered } from '../utils/sound.js'
+import { preloadImages, preloadInBackground } from '../utils/imageCache.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import developmentRevealThumbnails from '../data/developmentRevealThumbnails.js'
 import officialLogo from '../assets/misc/officialLogo.png'
@@ -51,10 +41,6 @@ const SOUNDS = [
     click_sound_2, click_sound_3, rankUpSound, leavingSound,
     farewellAcceptSound, constructionSound,
     workClickSound, hoverSound, reputationWorkBonus, bottomNavbarHover,
-    // All the Opening audio options, not just the equipped one, so whichever one plays on Enter is already warm
-    // regardless of what's equipped (this component doesn't know the equipped choice - playOpeningAudio() does).
-    openingAudio, kittyOpening, fairyOpening, poltergeistOpening, pirateOpening, princessOpening, jazzOpening,
-    playroomOpening, starlightOpening, duckOpening,
 ]
 
 const TIPS = [
@@ -118,29 +104,36 @@ function LoadingScreen({ onComplete, globeReady = true }) {
                 ? [earthDay8k, earthNight8k]
                 : [earthDay2k, earthNight2k]
 
-               const imageSrcs = [
+        // Only what the first screen needs blocks "Ready": the globe textures and the small UI icons. Everything
+        // else (thumbnails, profile pictures, shop photos, sounds) loads quietly in the background once the game
+        // is on screen, so a slow or filtered network (a school PC, say) no longer holds the player here.
+        const imageSrcs = [
+            ...globeTextures,
+            cashIcon, clockIcon, reputationIcon, starIcon, departureBoardImg,
+        ]
+        // Skipped entirely on a data-saver or slow connection: those images then load when first shown instead.
+        const conn = navigator.connection
+        const slowConnection = !!conn && (conn.saveData || /^(slow-2g|2g|3g)$/.test(conn.effectiveType || ''))
+        const backgroundImageSrcs = [
             ...Object.values(cityThumbnails),
             ...Object.values(developmentThumbnails),
-            ...Object.values(developmentRevealThumbnails),
-            ...globeTextures,
             ...MALE_PFPS,
             ...FEMALE_PFPS,
-            cashIcon, clockIcon, reputationIcon, starIcon, departureBoardImg,
-            // Every Shop theme's preview photo, not just the equipped one - same reasoning as the Opening
-            // audio options below: whichever theme gets equipped or browsed to shouldn't be the one thing
-            // that wasn't warm yet. THEME_PICS_BOARD doubles as the "TERMINAL BOARD" banner background for
-            // whatever General theme is equipped (see applyCosmetics in utils/cosmetics.js), so this also
-            // covers that, not just the Shop's own previews.
+            // Every Shop theme's preview photo, not just the equipped one. THEME_PICS_BOARD doubles as the
+            // "TERMINAL BOARD" banner background for whatever General theme is equipped (see applyCosmetics in
+            // utils/cosmetics.js), so this also covers that, not just the Shop's own previews.
             ...Object.values(THEME_PICS),
             ...Object.values(THEME_PICS_BOARD),
+            ...Object.values(developmentRevealThumbnails),
         ]
         const total = imageSrcs.length
 
-        SOUNDS.forEach(src => {
-            const audio = new Audio(src)
-            audio.preload = 'auto'
-        })
-
+        const startBackground = () => {
+            preloadInBackground(backgroundImageSrcs, 4)
+            // The Opening audio options (the largest sounds, only the equipped one plays) are no longer warmed here.
+            SOUNDS.forEach(src => { const audio = new Audio(src); audio.preload = 'auto' })
+        }
+        warmOpeningAudio()
         const startTime = Date.now()
         let cancelled = false
 
@@ -173,14 +166,11 @@ function LoadingScreen({ onComplete, globeReady = true }) {
             // Capped below 100 until the globe (tracked separately) is also done, so the bar doesn't sit at a
             // false 100% while still waiting on it.
             setProgress(Math.min(pct * 100, globeReadyRef.current ? 100 : 99))
-            const count = `(${loaded.toLocaleString()}/${total.toLocaleString()})`
-            if (pct < 0.20)      setStatusText(`Loading city thumbnails... ${count}`)
-            else if (pct < 0.40) setStatusText(`Loading developments... ${count}`)
-            else if (pct < 0.60) setStatusText(`Loading countries... ${count}`)
-            else if (pct < 1)    setStatusText(`Loading globe textures... ${count}`)
+            setStatusText(`Loading globe textures... (${loaded}/${total})`)
         }).then(() => {
             if (cancelled) return
             imagesDoneRef.current = true
+            if (!slowConnection) startBackground()
             // A near-instant load (everything already cached from last time) would otherwise skip straight past
             // the status text - hold for a small minimum so it reads as "finished", not as the screen glitching.
             const elapsed = Date.now() - startTime
@@ -195,6 +185,7 @@ function LoadingScreen({ onComplete, globeReady = true }) {
         const safetyTimer = setTimeout(() => {
             imagesDoneRef.current = true
             globeReadyRef.current = true
+            if (!slowConnection) startBackground()
             markReady()
         }, SAFETY_TIMEOUT_MS)
 

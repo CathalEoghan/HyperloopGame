@@ -1,4 +1,5 @@
 import { POSTS, FIRST_NAMES_MALE, FIRST_NAMES_FEMALE, SURNAMES } from '../data/hyperLinkData.js'
+import { formatClock } from './units.js'
 import { MALE_PFPS, FEMALE_PFPS } from '../assets/hyperLinkAssets.js'
 import { minutesUntilDeparture } from './time.js'
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
@@ -488,7 +489,7 @@ function substituteText(text, data, gameState) {
         // {terminalName}) is inserted with a function so a '$' in a chosen name can't be read as a pattern.
         // A development that was never renamed has no name of its own, so it reads as "the pharmacy".
         .replace(/\{developmentName\}/g, () => data.developmentName || (data.development ? 'the ' + inPost(data.development) : 'the development'))
-        .replace(/\{currentTime\}/g, now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+        .replace(/\{currentTime\}/g, formatClock(now))
         .replace(/\{cityCount\}/g, purchasedCities.length)
 }
 

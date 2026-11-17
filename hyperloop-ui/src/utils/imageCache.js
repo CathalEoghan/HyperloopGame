@@ -30,3 +30,12 @@ export function preloadImages(srcs, onProgress) {
         onProgress?.(loaded, total)
     })))
 }
+// Downloads a long list a few at a time, after the screen that matters is already showing, so a slow network
+// isn't hit with every request at once and the game's own requests aren't stuck behind them.
+export function preloadInBackground(srcs, concurrency = 4) {
+    let next = 0
+    const worker = async () => {
+        while (next < srcs.length) await preloadImage(srcs[next++])
+    }
+    return Promise.all(Array.from({ length: Math.min(concurrency, srcs.length) }, worker))
+}

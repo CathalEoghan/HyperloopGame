@@ -296,6 +296,12 @@ export function playBottomNavbarHoverSound()    { play(bottomNavbarHover, 'hover
 // The sound that plays the two times you "arrive": clicking through the loading screen, and finishing
 // construction on your first city. Whichever one is equipped in the Shop's Opening audios (the classic chime
 // by default).
+// Starts fetching only the equipped Opening audio, so it is ready on Enter without downloading every option.
+export function warmOpeningAudio() {
+    const item = getEquippedItem('openingAudio')
+    const audio = new Audio(item?.src ?? openingAudio)
+    audio.preload = 'auto'
+}
 export function playOpeningAudio() {
     const item = getEquippedItem('openingAudio')
     play(item?.src ?? openingAudio, 'opening')

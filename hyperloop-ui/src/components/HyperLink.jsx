@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { formatClock } from '../utils/units.js'
 import './HyperLink.css'
 import phoneIcon from '../assets/misc/phone.png'
 import { playHoverSound, playClickSound2 } from '../utils/sound.js'
@@ -56,7 +57,7 @@ function formatPostText(text) {
 function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = false, onToggleMute, initialUnread = 0, repPerLike = 0, needsLoop = false }) {
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const now = new Date()
-    const timeStr = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    const timeStr = formatClock(now)
     const [likedPosts, setLikedPosts] = useState(() => {
         try { return new Set(JSON.parse(localStorage.getItem('hyperloop_hyperlink_liked') || '[]')) }
         catch { return new Set() }
