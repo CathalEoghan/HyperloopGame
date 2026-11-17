@@ -52,7 +52,7 @@ import requestFailedIcon from './assets/misc/requestFailed.png'
 import { useAttentionAlerts } from "./utils/attentionAlerts.js"
 import { useEscapeToClose } from "./utils/useEscapeToClose.js"
 import { RankManager, MAX_RANK } from "Managers/RankManager/RankManager.js";
-import { ProgressionManager } from "Managers/ProgressionManager/ProgressionManager.js";
+import { ProgressionManager, MAX_DEV_LEVEL, MAX_LINE_LEVEL } from "Managers/ProgressionManager/ProgressionManager.js";
 import { EconomyManager } from "Managers/EconomyManager/EconomyManager.js"
 import { TimeManager } from "Managers/TimeManager/TimeManager.js";
 import { ConstructionManager } from "Managers/ConstructionManager/ConstructionManager.js";
@@ -806,7 +806,21 @@ function App() {
       rank: rankManager.rank, devUpgrades: sum(pm.developmentUpgradeLevels), cityUpgrades: sum(pm.cityLineLevels),
       shopOwned: readCosmetics().owned.length, work: achievements.counter('work'),
       likes: readStoredList('hyperloop_hyperlink_liked').length, renames: Object.keys(pm.developmentNames || {}).length, renamesDone: achievements.counter('devRenames'),
+      // The level a new development or city line opens at (Colour Theory hands over Level 1 for free), so building or
+      // connecting something new isn't counted as upgrading it
+      devStartLevel: PrestigeManager.owns('colourTheory') ? 1 : 0, cityStartLevel: PrestigeManager.owns('colourTheory') ? 1 : 0,
     }
+  }
+  // What the terminal earns in an hour, on average over the next day and with no event running. Falls back to the income
+  // right now (with any event switched off) if the day can't be worked out.
+  const usualIncomePerHour = () => {
+    try {
+      const day = offlineIncomeFor(Date.now(), 24 * 3600, lifetimeCreatedAt) / 24
+      if (Number.isFinite(day) && day > 0) return day
+    } catch { /* fall back below */ }
+    const saved = economyManager.activeEvent
+    economyManager.activeEvent = null
+    try { return economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600 } finally { economyManager.activeEvent = saved }
   }
   // What a new request may ask for right now: only things the player can actually do
   const emailContext = (snap) => {
@@ -829,7 +843,15 @@ function App() {
       delaysPossible: !PrestigeManager.owns('bulletproofPlanning'),
       // Good events happen from EVENT_MIN_RANK on (and are the only kind with Crisis Avoidance)
       positiveEventChance: rankManager.rank < EVENT_MIN_RANK ? 0 : (perkActive('crisisAvoidanceSpecialists') ? 1 : 0.5),
-      incomePerHour: economyManager.calculateDailyIncome(null, lifetimeCreatedAt) * 3600,
+      // The terminal's usual income: the next day's earnings averaged, with no event running (an income event can multiply it
+      // six times for a few minutes, and the evening rush is a third above the day's average), for the cash and rank requests
+      incomePerHour: usualIncomePerHour(),
+      // How many loops arrive and leave a day (one per connected city, one per timetabled loop), for greetings and farewells
+      arrivalsPerDay: Math.max(0, pm.purchasedCities.length - 1),
+      departuresPerDay: (() => { const connected = new Set(pm.purchasedCities.slice(1).map(c => c.name)); return readTimetable().filter(e => connected.has(e.name)).length })(),
+      // Upgrade levels still to be bought: on the developments that earn money, and on the lines that can be upgraded
+      devLevelsLeft: pm.purchasedDevelopments.filter(d => d.revenue).reduce((n, d) => n + Math.max(0, MAX_DEV_LEVEL - pm.getDevelopmentUpgradeLevel(d)), 0),
+      cityLevelsLeft: pm.purchasedCities.filter(c => pm.getCityLineUpgradeCostInfo(c)).reduce((n, c) => n + Math.max(0, MAX_LINE_LEVEL - pm.getCityLineLevel(c)), 0),
       available: { categories: [...cats], continents, citiesTotal: pm.unlockedCities.length, countries: pm.unlockedCities.reduce((o, c) => (c.country ? { ...o, [c.country]: (o[c.country] || 0) + 1 } : o), {}) },
       // A development or city milestone is within reach, and how many Progress rewards are waiting to be claimed
       milestoneNear: milestoneState(pm).near,

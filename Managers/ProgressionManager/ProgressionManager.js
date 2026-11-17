@@ -38,7 +38,7 @@ const UPGRADE_CASH_PCTS = [0, 0.15, 0.35, 0.50, 3.00, 4.80, 7.68, 12.29, 19.66, 
 const UPGRADE_REP_COSTS = [0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50];
 const UPGRADE_BOOST_PCTS = [0, 15, 35, 50, 50, 50, 50, 50, 50, 50, 50];
 const UPGRADE_TOTAL_PCTS = [0, 15, 50, 100, 150, 200, 250, 300, 350, 400, 450];
-const MAX_DEV_LEVEL = UPGRADE_CASH_PCTS.length - 1; // 10
+export const MAX_DEV_LEVEL = UPGRADE_CASH_PCTS.length - 1; // 10
 
 // A connected city's own late-game sink: "upgrading the line" to it, 10 levels, priced off what it cost to
 // connect in the first place (so a Tier 3 city's line is a much bigger sink than a Tier 1 city's). Cost grows

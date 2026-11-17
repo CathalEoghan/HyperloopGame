@@ -306,8 +306,10 @@ const scheduleRoom = (ctx) => (Number.isFinite(ctx.snap.unscheduled) ? ctx.snap.
 
 // The connected cities that weren't connected when the player agreed
 const newCities = (s, e) => (s.cityList || []).filter(c => !e.extra.baseCities.includes(c.name))
-// Upgrade levels gained since agreeing, summed over every development (or city line); one that has gone counts nothing
-const levelsGained = (now, base) => Object.entries(now || {}).reduce((n, [name, level]) => n + Math.max(0, (Number(level) || 0) - (Number(base?.[name]) || 0)), 0)
+// Upgrade levels gained since agreeing, summed over every development (or city line); one that has gone counts nothing.
+// One built or connected since agreeing is counted from the level it opened at (`start`: 1 with Colour Theory, which hands
+// that level over for free), so building something new isn't an upgrade.
+const levelsGained = (now, base, start = 0) => Object.entries(now || {}).reduce((n, [name, level]) => n + Math.max(0, (Number(level) || 0) - (base && name in base ? (Number(base[name]) || 0) : start)), 0)
 const CITY_TYPES = ['connectCities', 'connectContinent', 'connectTier3', 'connectCountryCity']
 
 // What each request measures. `metric` reads one number out of the snapshot; progress is how far it has risen since the
@@ -359,12 +361,12 @@ const METRICS = {
     rankUp: (s) => s.rank || 0,
     // Levels gained since agreeing, per development and per city line (a removed development or disconnected city loses its
     // levels, which no longer counts against the player)
-    upgradeDev: (s, e) => (e.extra.baseDevUpgrades ? levelsGained(s.devUpgradeLevels, e.extra.baseDevUpgrades) : (s.devUpgrades || 0)),
+    upgradeDev: (s, e) => (e.extra.baseDevUpgrades ? levelsGained(s.devUpgradeLevels, e.extra.baseDevUpgrades, s.devStartLevel || 0) : (s.devUpgrades || 0)),
     // How many different developments of one category have been upgraded since the player agreed
     // The level of the one development a written email names (picked by the game from those that can be upgraded)
     upgradeSpecific: (s, e) => s.devLevels?.[e.extra.category]?.[e.extra.development] || 0,
-    upgradeDevCategory: (s, e) => Object.entries(s.devLevels?.[e.extra.category] || {}).filter(([name, level]) => level > (e.extra.baseLevels?.[name] || 0)).length,
-    upgradeCity: (s, e) => (e.extra.baseCityLevels ? levelsGained(s.cityLevels, e.extra.baseCityLevels) : (s.cityUpgrades || 0)),
+    upgradeDevCategory: (s, e) => Object.entries(s.devLevels?.[e.extra.category] || {}).filter(([name, level]) => level > (e.extra.baseLevels && name in e.extra.baseLevels ? (e.extra.baseLevels[name] || 0) : (s.devStartLevel || 0))).length,
+    upgradeCity: (s, e) => (e.extra.baseCityLevels ? levelsGained(s.cityLevels, e.extra.baseCityLevels, s.cityStartLevel || 0) : (s.cityUpgrades || 0)),
     shop: (s) => s.shopOwned || 0,
     work: (s) => s.work || 0,
     // Renames since agreeing (a counter, so renaming a development that already has a custom name counts too). Emails agreed
@@ -376,7 +378,35 @@ const METRICS = {
 // The requests that are about keeping a number above a target until the deadline, and where that number comes from
 const HOLD_READS = { holdRep: (s) => s.reputation || 0, holdCash: (s) => s.balance || 0 }
 
-export const metricOf = (email, snap) => (METRICS[email.type] ? METRICS[email.type](snap, email) : 0)
+// The requests that count new things (cities, countries, continents, developments, loops) also remember each one they have
+// counted (extra.seen, kept by updateAgreed), so one that is disconnected, removed or taken off the timetable again still
+// counts: "connect 2 new cities" is done by connecting two, even if one is disconnected in between. The same one coming back
+// isn't counted twice. Each returns what is new right now, as names, or null for a request agreed before the base lists existed.
+const NEW_ITEMS = {
+    build: (s, e) => (e.extra.baseBuilt ? (s.builtNames?.[e.extra.category] || []).filter(n => !e.extra.baseBuilt.includes(n) && !(s.removedDevs || []).includes(n)) : null),
+    connectCities: (s, e) => (e.extra.baseCities ? newCities(s, e).map(c => c.name) : null),
+    connectContinent: (s, e) => (e.extra.baseCities ? newCities(s, e).filter(c => c.continent === e.extra.continent).map(c => c.name) : null),
+    connectTier3: (s, e) => (e.extra.baseCities ? newCities(s, e).filter(c => c.tier === 3).map(c => c.name) : null),
+    connectCountryCity: (s, e) => (e.extra.baseCities ? newCities(s, e).filter(c => (e.extra.countries || []).includes(c.country)).map(c => c.name) : null),
+    connectCountries: (s, e) => (e.extra.baseCountries ? [...new Set((s.cityList || []).map(c => c.country).filter(c => c && !e.extra.baseCountries.includes(c)))] : null),
+    newContinent: (s, e) => (e.extra.baseContinents ? [...new Set((s.cityList || []).map(c => c.continent).filter(c => c && !e.extra.baseContinents.includes(c)))] : null),
+    schedule: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).map(t => t.name) : null),
+    scheduleNight: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).filter(t => atNight(t.minuteOfDay)).map(t => t.name) : null),
+    scheduleMorning: (s, e) => (e.extra?.baseNames ? newTimetableEntries(s, e).filter(t => inMorning(t.minuteOfDay)).map(t => t.name) : null),
+}
+// What is new right now plus what was counted before (null: not one of these requests, or an older one)
+const seenItems = (email, snap) => {
+    const now = NEW_ITEMS[email.type]?.(snap, email)
+    if (!now) return null
+    const seen = Array.isArray(email.extra?.seen) ? email.extra.seen : []
+    return [...seen, ...now.filter(n => !seen.includes(n))]
+}
+
+export const metricOf = (email, snap) => {
+    const items = seenItems(email, snap)
+    if (items) return items.length
+    return METRICS[email.type] ? METRICS[email.type](snap, email) : 0
+}
 export const progressOf = (email, snap) => Math.max(email.progress || 0, metricOf(email, snap) - (email.baseline || 0))
 
 export const progressLabel = (email) => {
@@ -389,6 +419,16 @@ export const progressLabel = (email) => {
 }
 
 const plural = (n, one, many) => (n === 1 ? one : many)
+
+// Greetings and farewells can only be given in the few minutes a loop is in, so they are only asked for while there are plenty of
+// them: at least LOOPS_PER_ASK a day for each one asked for (24 a day for 3, 40 for 5), so an hour or two of play over the
+// deadline sees enough of them. Left out by older callers, which keeps the old behaviour.
+export const LOOPS_PER_ASK = 8
+const enoughLoops = (perDay, target) => perDay === undefined || perDay >= target * LOOPS_PER_ASK
+// A loop can only be delayed while it is 1-2 hours from leaving, so with only a few loops a day a delay may never come up
+// before the deadline. Asked for from this many departures a day (left out by older callers: the old behaviour).
+export const DELAY_MIN_LOOPS = 12
+const enoughForDelays = (ctx) => ctx.departuresPerDay === undefined || ctx.departuresPerDay >= DELAY_MIN_LOOPS
 
 // ---- request generators ------------------------------------------------------------------------------------------
 // Each returns null when the request could not be done right now (so the player is never asked for the impossible), or
@@ -413,10 +453,12 @@ const GENERATORS = {
     },
     greet: (ctx, rnd) => {
         const target = ctx.fixed ?? between(2, 5, rnd)
+        if (!enoughLoops(ctx.arrivalsPerDay, target)) return null
         return { type: 'greet', target, extra: {}, subject: 'Welcoming our passengers', ask: `greet the passengers arriving at the terminal ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 36, rnd) }
     },
     farewell: (ctx, rnd) => {
         const target = ctx.fixed ?? between(2, 5, rnd)
+        if (!enoughLoops(ctx.departuresPerDay, target)) return null
         return { type: 'farewell', target, extra: {}, subject: 'Seeing passengers off', ask: `say farewell to departing passengers ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 36, rnd) }
     },
     schedule: (ctx, rnd) => {
@@ -517,13 +559,13 @@ const GENERATORS = {
     },
     // A delayed loop comes up at random while the game runs (and never with Bulletproof Planning), so the deadline is long
     compensateDelay: (ctx, rnd) => {
-        if (!ctx.delaysPossible) return null
+        if (!ctx.delaysPossible || !enoughForDelays(ctx)) return null
         const target = ctx.fixed ?? 1
         return { type: 'compensateDelay', target, extra: {}, subject: 'A delayed loop', ask: target === 1 ? 'compensate the passengers of a delayed loop' : `compensate the passengers of ${target} delayed loops`, hours: between(44, 48, rnd) }
     },
     // Delayed loops the player turns down compensating (the opposite of compensateDelay)
     refuseDelay: (ctx, rnd) => {
-        if (!ctx.delaysPossible) return null
+        if (!ctx.delaysPossible || !enoughForDelays(ctx)) return null
         const target = ctx.fixed ?? 1
         return { type: 'refuseDelay', target, extra: {}, subject: 'A delayed loop', ask: target === 1 ? 'refuse to compensate the passengers of a delayed loop' : `refuse to compensate the passengers of ${target} delayed loops`, hours: between(44, 48, rnd) }
     },
@@ -567,18 +609,21 @@ const GENERATORS = {
     rankUp: (ctx) => {
         // A written email may ask for more than one rank (`target`). Only while those ranks are left to reach, and only if the cash
         // they take is within about two days of the current income (ctx.rankXpToNext is Infinity at the top rank; left out by
-        // older callers, which keeps the old behaviour)
+        // older callers, which keeps the old behaviour). incomePerHour is the terminal's usual income (see App.jsx emailContext)
         const target = ctx.fixed && ctx.fixed > 1 ? ctx.fixed : 1
         if (ctx.rankXpToNext !== undefined) {
             const need = target === 1 ? ctx.rankXpToNext : ctx.rankXpToRanks?.[target - 1]
             if (!(need > 0) || !Number.isFinite(need)) return null
-            if (!(ctx.incomePerHour > 0) || need > ctx.incomePerHour * 48) return null
+            // Within a day of income: the deadline is 2 days, and nobody earns every hour of both (offline pay only lands on Collect)
+            if (!(ctx.incomePerHour > 0) || need > ctx.incomePerHour * 24) return null
         }
         return { type: 'rankUp', target, extra: {}, subject: 'Moving up', ask: target === 1 ? 'take the terminal up a rank' : `take the terminal up ${target} ranks`, hours: 48 }
     },
     upgradeDev: (ctx, rnd) => {
-        if ((ctx.devsWithUpgrade || 0) < 1) return null
-        const target = ctx.fixed ?? between(1, 2, rnd)
+        // Levels still to be bought across the developments (each goes up to 10); older callers give only how many earn money
+        const room = ctx.devLevelsLeft ?? ctx.devsWithUpgrade ?? 0
+        if (room < 1 || (ctx.fixed && ctx.fixed > room)) return null
+        const target = ctx.fixed ?? Math.min(room, between(1, 2, rnd))
         return { type: 'upgradeDev', target, extra: {}, subject: 'Development upgrades', ask: `upgrade a development ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 48, rnd) }
     },
     // One development the player owns that can still be upgraded, named in the email as {development}
@@ -603,7 +648,10 @@ const GENERATORS = {
     },
     upgradeCity: (ctx, rnd) => {
         if ((ctx.snap.cities || 0) < 2) return null
-        const target = ctx.fixed ?? between(1, 2, rnd)
+        // Levels still to be bought on the lines that can be upgraded (not the home city's, each up to 10), when the game says
+        const room = ctx.cityLevelsLeft ?? Infinity
+        if (room < 1 || (ctx.fixed && ctx.fixed > room)) return null
+        const target = ctx.fixed ?? Math.min(room, between(1, 2, rnd))
         return { type: 'upgradeCity', target, extra: {}, subject: 'Line upgrades', ask: `upgrade a city's line ${target} ${plural(target, 'time', 'times')}`, hours: between(24, 48, rnd) }
     },
     shop: (ctx, rnd) => {
@@ -862,7 +910,8 @@ export function agree(email, snap, playerName, now = Date.now()) {
     if (Object.keys(base).length) started = { ...started, extra: { ...started.extra, ...base } }
     return {
         ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
-        baseline: email.type === 'clearInbox' && Array.isArray(email.extra?.waitingIds) ? 0 : metricOf(started, snap), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
+        // (the Reputation for agreeing is paid just after this, and isn't part of an "earn N Reputation" request)
+        baseline: email.type === 'clearInbox' && Array.isArray(email.extra?.waitingIds) ? 0 : metricOf(started, snap) + (email.type === 'rep' ? (Number(email.agreeBonus) || 0) : 0), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
         repChange: email.agreeBonus,
     }
 }
@@ -887,6 +936,10 @@ export function updateAgreed(email, snap, now = Date.now()) {
         const shown = Math.max(0, Math.min(email.target, Math.round(email.target * ((now - (email.agreedAt || now)) / span))))
         return shown === (email.progress || 0) ? email : { ...email, progress: shown }
     }
+    // Remembers each new thing counted, so it still counts if it goes again (see NEW_ITEMS)
+    const items = seenItems(email, snap)
+    const before = email
+    if (items && items.length > (email.extra?.seen?.length || 0)) email = { ...email, extra: { ...email.extra, seen: items } }
     const progress = progressOf(email, snap)
     if (progress >= email.target) {
         return { ...email, progress: email.target, state: 'fulfilled', resolvedAt: now, read: true, ...replyDelay(now), repPending: true, outcome: OUTCOME_TEXT.fulfilled(email), repChange: email.reward }
@@ -894,7 +947,7 @@ export function updateAgreed(email, snap, now = Date.now()) {
     if (now >= email.deadline) {
         return { ...email, progress, state: 'failed', resolvedAt: now, read: true, ...replyDelay(now), repPending: true, outcome: OUTCOME_TEXT.failed(email), repChange: -email.penalty }
     }
-    return progress === (email.progress || 0) ? email : { ...email, progress }
+    return progress === (email.progress || 0) && email === before ? email : { ...email, progress }
 }
 
 export const isOpen = (e) => e.state === 'new' || e.state === 'agreed'
