@@ -352,9 +352,9 @@ const METRICS = {
     positiveEvents: (s) => s.positiveEvents || 0,
     // Negative events (the bad ones) that have happened to the terminal
     negativeEvents: (s) => s.negativeEvents || 0,
-    // The emails that were waiting when this one arrived, answered since (agreed to or refused, before or after agreeing to
-    // this one; one left to go unanswered doesn't count). Older requests count every email answered after agreeing.
-    clearInbox: (s, e) => (Array.isArray(e.extra.waitingIds)
+    // Emails answered (agreed to or refused) since agreeing to this one, whichever they are, so new arrivals count too; one left
+    // to go unanswered doesn't. Requests from before that named the emails they meant count those (waitingIds).
+    clearInbox: (s, e) => (e.extra.countsAnswers ? (s.answered || 0) : Array.isArray(e.extra.waitingIds)
         ? e.extra.waitingIds.filter(id => !(s.waitingIds || []).includes(id) && !(s.ignoredIds || []).includes(id)).length
         : (s.answered || 0)),
     connectCities: (s, e) => (e.extra.baseCities ? newCities(s, e).length : (s.cities || 0)),
@@ -591,13 +591,13 @@ const GENERATORS = {
         if (target >= bal) return null
         return { type: 'holdCash', target, extra: {}, subject: 'A cash reserve', ask: `keep at least ${formatCash(target)} in the bank`, hours: between(24, 36, rnd) }
     },
-    // Answer the other emails waiting in the inbox: exactly the ones waiting when this one arrives (ctx.waitingIds), so the
-    // number always matches what the player can see, and answering them first still counts
+    // Answer a few emails: as many as are waiting when this one arrives (at most 5), but any emails count, new ones included,
+    // so the goal never looks odd when more arrive
     clearInbox: (ctx, rnd) => {
         const ids = Array.isArray(ctx.waitingIds) ? ctx.waitingIds : []
         if (ids.length < 1) return null
-        const target = ids.length
-        return { type: 'clearInbox', target, extra: { waitingIds: [...ids] }, subject: 'Your inbox', ask: target === 1 ? 'answer the other email waiting in your inbox' : `answer the other ${target} emails waiting in your inbox`, hours: between(24, 36, rnd) }
+        const target = Math.min(ids.length, 5)
+        return { type: 'clearInbox', target, extra: { countsAnswers: true }, subject: 'Your inbox', ask: target === 1 ? 'reply to one of the unanswered emails in your inbox' : `reply to at least ${target} of the unanswered emails in your inbox`, hours: between(24, 36, rnd) }
     },
     connectTier3: (ctx, rnd) => {
         const room = ctx.tier3Available || 0
@@ -890,7 +890,7 @@ export function agree(email, snap, playerName, now = Date.now()) {
     // "Answer the waiting emails" is counted against those still waiting now (this one is still unanswered in the snapshot); with none
     // left to answer, the inbox is already clear
     // (one from before the request named the emails it means is counted the old way: against those still waiting now)
-    const inbox = email.type === 'clearInbox' && !Array.isArray(email.extra?.waitingIds)
+    const inbox = email.type === 'clearInbox' && !email.extra?.countsAnswers && !Array.isArray(email.extra?.waitingIds)
     const waiting = inbox ? Math.max(0, (snap.waitingEmails || 0) - 1) : 0
     if (inbox) started = { ...started, target: Math.max(1, Math.min(email.target, waiting)) }
     // The schedule requests count loops for cities that aren't on the timetable now (see METRICS)
@@ -911,7 +911,7 @@ export function agree(email, snap, playerName, now = Date.now()) {
     return {
         ...started, state: 'agreed', agreedAt: now, deadline: now + email.hours * HOUR,
         // (the Reputation for agreeing is paid just after this, and isn't part of an "earn N Reputation" request)
-        baseline: email.type === 'clearInbox' && Array.isArray(email.extra?.waitingIds) ? 0 : metricOf(started, snap) + (email.type === 'rep' ? (Number(email.agreeBonus) || 0) : 0), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
+        baseline: email.type === 'clearInbox' && !email.extra?.countsAnswers && Array.isArray(email.extra?.waitingIds) ? 0 : metricOf(started, snap) + (email.type === 'rep' ? (Number(email.agreeBonus) || 0) : 0), progress: (inbox && waiting === 0) || email.type === 'payUpfront' ? started.target : 0, reply: replyFor(email, true, playerName), read: true,
         repChange: email.agreeBonus,
     }
 }
