@@ -1,7 +1,8 @@
 .home-page {
     position: relative;
     width: 100%;
-    height: calc(100vh - 160px);
+    /* Fills what is between the top bars (117px) and the fixed news ticker and bottom nav (102px): the globe is centred in this box, so it must not run on underneath them */
+    height: calc(100vh - 219px);
     background: #0a0a1a;
     overflow: hidden;
     display: flex;
