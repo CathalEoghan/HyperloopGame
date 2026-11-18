@@ -354,6 +354,11 @@ import { Bristol } from './Bristol.js'
 import { SanAntonio } from './SanAntonio.js'
 import { Minneapolis } from './Minneapolis.js'
 import { Antalya } from './Antalya.js'
+import { Pune } from './Pune.js'
+import { Sendai } from './Sendai.js'
+import { Daejeon } from './Daejeon.js'
+import { Phuket } from './Phuket.js'
+import { Santorini } from './Santorini.js'
 
 
 export const allCities = [
@@ -712,7 +717,11 @@ export const allCities = [
     Antalya,
     Minneapolis,
     SanAntonio,
-
+    Pune,
+    Sendai,
+    Daejeon,
+    Phuket,
+    Santorini,
 
 
 

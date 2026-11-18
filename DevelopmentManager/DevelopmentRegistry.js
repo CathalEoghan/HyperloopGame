@@ -193,7 +193,11 @@ import { hairSalon } from './HairSalon.js'
 import { barberShop } from './BarberShop.js'
 import { bikeRental } from './BikeRental.js'
 import { laundryRoom } from './LaundryRoom.js'
-
+import { thaiRestaurant } from './ThaiRestaurant.js'
+import { koreanRestaurant } from './KoreanRestaurant.js'
+import { miniGolf } from './MiniGolf.js'
+import { tennisCourts } from './TennisCourts.js'
+import { nerdShop } from './NerdShop.js'
 
 
 export const allDevelopments = [
@@ -391,6 +395,11 @@ export const allDevelopments = [
     hairSalon,
     barberShop,
     bikeRental,
+    thaiRestaurant,
+    koreanRestaurant,
+    miniGolf,
+    tennisCourts,
+    nerdShop,
 
 
 ]

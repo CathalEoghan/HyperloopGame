@@ -353,7 +353,12 @@ const cityCoordinates = {
 "Bristol":     { lat: 51.4552, lng: -2.5966 },
 "Leeds": { lat: 53.7964, lng: -1.5478},
 "Minneapolis": { lat: 44.9799, lng: -93.2638},
-"Antalya": { lat: 36.9081, lng: 30.6955}
+"Antalya": { lat: 36.9081, lng: 30.6955},
+"Pune": { lat: 18.5204, lng: 73.8567 },
+"Sendai": { lat: 38.2682, lng: 140.8694 },
+"Daejeon": { lat: 36.3504, lng: 127.3845 },
+"Phuket": { lat: 7.8804, lng: 98.3923 },
+"Santorini": { lat: 36.3932, lng: 25.4615 }
 
 
 

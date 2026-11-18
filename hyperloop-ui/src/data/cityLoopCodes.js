@@ -361,6 +361,11 @@ const cityLoopCodes = {
   'Zagreb': 'ZAG',
   'Zhengzhou': 'ZHE',
   'Zurich': 'ZUR',
+  'Pune': 'PNQ',
+  'Sendai': 'SDJ',
+  'Daejeon': 'DJN',
+  'Phuket': 'HKT',
+  'Santorini': 'JTR',
 }
 
 export default cityLoopCodes

@@ -353,6 +353,11 @@ import SanAntonio from '../assets/cities-thumb/SanAntonio.jpg'
 import Minneapolis from '../assets/cities-thumb/Minneapolis.jpg'
 import Bristol from '../assets/cities-thumb/Bristol.jpg'
 import Antalya from '../assets/cities-thumb/Antalya.jpg'
+import Pune from '../assets/cities-thumb/Pune.jpg'
+import Sendai from '../assets/cities-thumb/Sendai.jpg'
+import Daejeon from '../assets/cities-thumb/Daejeon.jpg'
+import Phuket from '../assets/cities-thumb/Phuket.jpg'
+import Santorini from '../assets/cities-thumb/Santorini.jpg'
 
 
 
@@ -666,6 +671,11 @@ const cityImages = {
     Samarkand: Samarkand,
     Lusaka: Lusaka,
     Poznań: Poznań,
+    Pune: Pune,
+    Sendai: Sendai,
+    Daejeon: Daejeon,
+    Phuket: Phuket,
+    Santorini: Santorini,
     Ankara: Ankara,
     Macau: Macau,
     Brazzaville: Brazzaville,

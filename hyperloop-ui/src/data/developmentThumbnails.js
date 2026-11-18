@@ -359,6 +359,11 @@ import ExpandedFamilyRooms from '../assets/developments-thumb/ExpandedFamilyRoom
 import FreeWifi from '../assets/developments-thumb/FreeWifi.jpg'
 import ImprovedAccessibilityServices from '../assets/developments-thumb/ImprovedAccessibilityServices.jpg'
 import VIPPods from '../assets/developments-thumb/VIPPods.jpg'
+import ThaiRestaurant from '../assets/developments-thumb/ThaiRestaurant.jpg'
+import KoreanRestaurant from '../assets/developments-thumb/KoreanRestaurant.jpg'
+import MiniGolf from '../assets/developments-thumb/MiniGolf.jpg'
+import TennisCourts from '../assets/developments-thumb/TennisCourts.jpg'
+import NerdShop from '../assets/developments-thumb/NerdShop.jpg'
 
 
 const developmentImages = {
@@ -665,6 +670,11 @@ const developmentImages = {
     "Rainforest Conservation Projects": RainforestConservationProjects,
     "Ice Bar": IceBar,
     "Squid Shack": SquidShack,
+    "Thai Restaurant": ThaiRestaurant,
+    "Korean Restaurant": KoreanRestaurant,
+    "Mini Golf": MiniGolf,
+    "Tennis Courts": TennisCourts,
+    "Nerd Shop": NerdShop,
     "Arrivals Hall Renovation": ArrivalsHallRenovation,
     "International Development Schemes": InternationalDevelopmentSchemes,
     "September Ticket Deals": SeptemberTicketDeals,
