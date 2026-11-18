@@ -737,6 +737,8 @@ function App() {
     progressionManager.addReputation(change)
     setReputation(shownReputation())
     triggerSave()
+    // Only a gain is heard; a penalty stays quiet
+    if (change > 0) playReputationWorkBonusSound()
   }
   // { Food: { 'Pizza Place': 2, ... }, ... }: the upgrade level of every finished development, by category
   const devLevelsByCategory = (pm) => {

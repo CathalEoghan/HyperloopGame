@@ -1057,6 +1057,12 @@ globe.png - <a href="https://www.flaticon.com/free-icons/earth" title="earth ico
 email.png - <a href="https://www.flaticon.com/free-icons/email" title="email icons">Email icons created by Magnific - Flaticon</a>
 emailFail.png - <a href="https://www.flaticon.com/free-icons/failed" title="failed icons">Failed icons created by Futuer - Flaticon</a>
 tickerStar.png - <a href="https://www.flaticon.com/free-icons/shine" title="shine icons">Shine icons created by Grand Iconic - Flaticon</a>
+dragHand.png - <a href="https://www.flaticon.com/free-icons/drag" title="drag icons">Drag icons created by Pixel perfect - Flaticon</a>
+selectHand.png - <a href="https://www.flaticon.com/free-icons/finger" title="finger icons">Finger icons created by Pixel perfect - Flaticon</a>
+hoverHand.png - <a href="https://www.flaticon.com/free-icons/hand" title="hand icons">Hand icons created by Pixel perfect - Flaticon</a>
+cursor.png - <a href="https://www.flaticon.com/free-icons/cursor" title="cursor icons">Cursor icons created by Pixel perfect - Flaticon</a>
+pointerQuestion.png - <a href="https://www.flaticon.com/free-icons/click" title="click icons">Click icons created by Pixel perfect - Flaticon</a>
+fullHand.png - <a href="https://www.flaticon.com/free-icons/hand" title="hand icons">Hand icons created by Pixel perfect - Flaticon</a>
 
 WORK CLICK SOUNDS
 poltergeist1.mp3, poltergeist2.mp3, poltergeist3.mp3 - Universfield (Pixabay Content License)
