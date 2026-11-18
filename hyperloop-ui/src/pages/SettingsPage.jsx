@@ -5,7 +5,7 @@ import { playHoverSound, playClickSound2, playSaveConfirmSound, SOUND_CATEGORIES
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
 import legalIcon from '../assets/misc/legal.png'
-import { GLOBE_QUALITY_KEY, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
+import { GLOBE_QUALITY_KEY, GLOBE_CLOUDS_KEY, getGlobeClouds, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
 import { VERSION_LOG } from '../utils/versionLog.js'
 import { notificationsEnabled, enableNotifications, disableNotifications } from '../utils/attentionAlerts.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
@@ -92,6 +92,10 @@ function LegalModal({ onClose }) {
 function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteSave, onExportSave, onImportSave, onManualSave, onReputationBonus, onSurprise, topOffset = 113 }) {
     const [logOpen, setLogOpen] = useState(false)
     const [globeQuality, setGlobeQuality] = useState(savedGlobeQuality() || 'auto')
+    const [globeClouds, setGlobeClouds] = useState(getGlobeClouds())
+    const [settingsQuery, setSettingsQuery] = useState('')
+    const pageRef = useRef(null)
+    const searchEmptyRef = useRef(null)
     const [globeNightMode, setGlobeNightMode] = useState(localStorage.getItem('globeNightMode') !== 'false')
     const [soundEnabled, setSoundEnabled] = useState(localStorage.getItem('soundEnabled') !== 'false')
     const [soundVolOpen, setSoundVolOpen] = useState(false)
@@ -139,6 +143,35 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         // revisit Home, so nothing else would notice this change - this is what tells it to swap textures.
         window.dispatchEvent(new Event('globeQualityChange'))
     }
+
+    const handleCloudsChange = (enabled) => {
+        setGlobeClouds(enabled)
+        try { localStorage.setItem(GLOBE_CLOUDS_KEY, String(enabled)) } catch { /* storage blocked, ignore */ }
+        // The globe stays mounted for the whole session, so it is told directly (same as night mode)
+        window.dispatchEvent(new Event('globeCloudsChange'))
+    }
+
+    // Search: hides every row (and any section left with none) that doesn't match, so nothing has to be listed twice.
+    // Runs after every render, so rows that appear later (a perk switch, say) are filtered too.
+    useEffect(() => {
+        const root = pageRef.current
+        if (!root) return
+        const q = settingsQuery.trim().toLowerCase()
+        let anyShown = false
+        root.querySelectorAll('.settings-section').forEach(section => {
+            const titleMatch = (section.querySelector('.settings-section-title')?.textContent || '').toLowerCase().includes(q)
+            let shown = 0
+            section.querySelectorAll('.settings-row').forEach(row => {
+                const show = !q || titleMatch || row.textContent.toLowerCase().includes(q)
+                row.style.display = show ? '' : 'none'
+                if (show) shown++
+            })
+            const showSection = !q || shown > 0
+            section.style.display = showSection ? '' : 'none'
+            if (showSection) anyShown = true
+        })
+        if (searchEmptyRef.current) searchEmptyRef.current.style.display = q && !anyShown ? '' : 'none'
+    })
 
     const handleNightModeChange = (enabled) => {
         setGlobeNightMode(enabled)
@@ -266,7 +299,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         }
     }
     return (
-        <div className="settings-page" style={{ height: `calc(100vh - ${topOffset + 141}px)`, overflowY: "auto" }}>
+        <div className="settings-page" ref={pageRef} style={{ height: `calc(100vh - ${topOffset + 141}px)`, overflowY: "auto" }}>
             {showCredits && <CreditsModal onClose={() => setShowCredits(false)} onReputationBonus={onReputationBonus} onSurprise={onSurprise} />}
             {showGuide && <GuideModal onClose={() => setShowGuide(false)} />}
             {showLegal && <LegalModal onClose={() => setShowLegal(false)} />}
@@ -278,6 +311,19 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </svg>
                 Settings
             </h1>
+
+            <div className="settings-search">
+                <input
+                    type="search"
+                    className="settings-search-input"
+                    placeholder="Search settings..."
+                    aria-label="Search settings"
+                    value={settingsQuery}
+                    onChange={e => setSettingsQuery(e.target.value)}
+                    onKeyDown={e => { if (e.key === 'Escape') setSettingsQuery('') }}
+                />
+                <div className="settings-search-empty" ref={searchEmptyRef} style={{ display: 'none' }}>No settings match "{settingsQuery.trim()}".</div>
+            </div>
 
             <div className="settings-section">
                 <h2 className="settings-section-title"><SectionIcon src={bellIcon} />Alerts</h2>
@@ -374,6 +420,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                     <div className="settings-options">
                         <OptionBtn active={eventTint} onClick={() => handleEventTintToggle(true)}>On</OptionBtn>
                         <OptionBtn active={!eventTint} onClick={() => handleEventTintToggle(false)}>Off</OptionBtn>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Globe Clouds</span>
+                        <span className="settings-label-desc">Show a soft layer of slowly drifting clouds over the globe. The pattern is drawn by the game, not live weather. Off by default on weaker devices.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={globeClouds} onClick={() => handleCloudsChange(true)}>On</OptionBtn>
+                        <OptionBtn active={!globeClouds} onClick={() => handleCloudsChange(false)}>Off</OptionBtn>
                     </div>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>

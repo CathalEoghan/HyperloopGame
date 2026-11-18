@@ -389,3 +389,30 @@
     accent-color: var(--ui-accent, #f5a623);
     cursor: var(--cursor-pointer, pointer);
 }
+
+.settings-search {
+    margin: -8px 0 20px;
+}
+
+.settings-search-input {
+    width: 100%;
+    max-width: 420px;
+    box-sizing: border-box;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    border: 2px solid #e8d8c8;
+    border-radius: 8px;
+    background: rgb(245, 238, 230);
+    color: #222;
+}
+
+.settings-search-input:focus {
+    outline: none;
+    border-color: var(--ui-accent, #f5a623);
+}
+
+.settings-search-empty {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: #888;
+}

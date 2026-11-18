@@ -51,3 +51,14 @@ export function savedGlobeQuality() {
 export function getGlobeQuality() {
     return savedGlobeQuality() || autoGlobeQuality()
 }
+
+// Settings -> Globe Clouds. Without a saved choice it is on, except for the light 2K setting that weak devices get.
+export const GLOBE_CLOUDS_KEY = 'globeClouds'
+export function getGlobeClouds() {
+    try {
+        const saved = localStorage.getItem(GLOBE_CLOUDS_KEY)
+        if (saved === 'true') return true
+        if (saved === 'false') return false
+    } catch { /* storage unavailable */ }
+    return getGlobeQuality() !== '2k'
+}

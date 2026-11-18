@@ -177,6 +177,7 @@ const SETTINGS_KEYS = [
     'hyperloop_auto_claim_rankups',
     'hyperloop_video_message_popups',
     'globeNightMode',
+    'globeClouds',
     'globeQuality',
     'globeView',
     'globeShowOwned',
