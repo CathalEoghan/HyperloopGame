@@ -255,7 +255,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                             ) : (
                                 <>
                                     {shortfall(reputation, item.cost) != null && (
-                                        <span className="shop-need-more"><strong>{Math.floor(reputation)}</strong> / {item.cost}</span>
+                                        <span className="shop-need-more">Need <strong>{shortfall(reputation, item.cost)}</strong> more</span>
                                     )}
                                     <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} onClick={() => handleBuy(item, shakeKey)}>
                                         <img src={reputationIcon} alt="" /> {item.cost}
@@ -358,7 +358,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                     ) : (
                                                         <>
                                                             {need != null && (
-                                                                <span className="shop-need-more"><strong>{Math.floor(reputation)}</strong> / {price}</span>
+                                                                <span className="shop-need-more">Need <strong>{need}</strong> more</span>
                                                             )}
                                                             <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} onClick={() => handleBundleBuy(bundle)}>
                                                                 {originalPrice > price && <span className="shop-bundle-original-price">{originalPrice}</span>}
