@@ -441,16 +441,6 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
-                        <span className="settings-label-title">Live Clouds</span>
-                        <span className="settings-label-desc">Show the real cloud cover, from a satellite picture updated every three hours, instead of a generated pattern. Needs an internet connection to the cloud map site; if it can't be reached the generated clouds stay. Only applies while Globe Clouds is On.</span>
-                    </div>
-                    <div className="settings-options">
-                        <OptionBtn active={globeLiveClouds} onClick={() => handleLiveCloudsChange(true)}>On</OptionBtn>
-                        <OptionBtn active={!globeLiveClouds} onClick={() => handleLiveCloudsChange(false)}>Off</OptionBtn>
-                    </div>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
                         <span className="settings-label-title">Globe Night Mode</span>
                         <span className="settings-label-desc">Show day/night shading on the globe. Disable for a consistently bright globe.</span>
                     </div>
@@ -473,6 +463,16 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
+                        <span className="settings-label-title">Live Clouds</span>
+                        <span className="settings-label-desc">Show the real cloud cover, from a satellite picture updated every three hours, instead of a generated pattern. Needs an internet connection to the cloud map site; if it can't be reached the generated clouds stay. Only applies while Globe Clouds is On.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={globeLiveClouds} onClick={() => handleLiveCloudsChange(true)}>On</OptionBtn>
+                        <OptionBtn active={!globeLiveClouds} onClick={() => handleLiveCloudsChange(false)}>Off</OptionBtn>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
                         <span className="settings-label-title">Split-Flap Animation</span>
                         <span className="settings-label-desc">Animated flip tiles and mechanical sound on the Terminal Board.</span>
                     </div>
@@ -480,6 +480,105 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <OptionBtn active={splitFlap} onClick={() => handleSplitFlapToggle(true)}>On</OptionBtn>
                         <OptionBtn active={!splitFlap} onClick={() => handleSplitFlapToggle(false)}>Off</OptionBtn>
                     </div>
+                </div>
+            </div>
+
+            <div className="settings-section">
+                <h2 className="settings-section-title"><SectionIcon src={infoIcon} />Info</h2>
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Credits</span>
+                        <span className="settings-label-desc">Photo and sound attribution.</span>
+                    </div>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowCredits(true); }}>Credits</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Game Guide</span>
+                        <span className="settings-label-desc">Learn how to play Hyperloop Empire.</span>
+                    </div>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowGuide(true); }}>Guide</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Legal & Privacy</span>
+                        <span className="settings-label-desc">Data storage, content licencing and disclaimer.</span>
+                    </div>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowLegal(true); }}>View</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Report a Bug</span>
+                        <span className="settings-label-desc">Found something broken? Let us know.</span>
+                    </div>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); window.open('https://github.com/CathalEoghan/HyperloopGame/issues/new', '_blank', 'noopener,noreferrer'); }}>Report</button>
+                </div>
+            </div>
+
+            <div className="settings-section">
+                <h2 className="settings-section-title"><SectionIcon src={saveSectionIcon} />Save Data</h2>
+                <div className="settings-row">
+                    <div className="settings-label">
+                        <span className="settings-label-title">Delete Save</span>
+                        <span className="settings-label-desc">Permanently delete your save and start a new game. This cannot be undone.</span>
+                    </div>
+                    {confirmDelete ? (
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                            <button
+                                className="settings-save-btn"
+                                onMouseEnter={() => { playHoverSound(); setConfirmDeleteHover(true) }}
+                                onMouseLeave={() => setConfirmDeleteHover(false)}
+                                style={{ background: confirmDeleteHover ? '#a93226' : '#c0392b' }}
+                                onClick={() => { playClickSound2(); onDeleteSave(); }}
+                            >
+                                Confirm Delete
+                            </button>
+                            <button
+                                className="settings-save-btn"
+                                onMouseEnter={() => { playHoverSound(); setCancelHover(true) }}
+                                onMouseLeave={() => setCancelHover(false)}
+                                style={{ background: cancelHover ? '#666' : '#888' }}
+                                onClick={() => { playClickSound2(); setConfirmDelete(false); }}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            className="settings-save-btn"
+                            onMouseEnter={() => { playHoverSound(); setDeleteHover(true) }}
+                            onMouseLeave={() => setDeleteHover(false)}
+                            style={{ background: deleteHover ? '#a93226' : '#c0392b' }}
+                            onClick={() => { playClickSound2(); setConfirmDelete(true); }}
+                        >
+                            Delete
+                        </button>
+                    )}
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Export Save</span>
+                        <span className="settings-label-desc">Download your save as a JSON file to back it up or move to another device.</span>
+                    </div>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onExportSave(); }}>Export</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Import Save</span>
+                        <span className="settings-label-desc">Load a previously exported save file. This will overwrite your current save.</span>
+                        {importError && <span className="settings-label-desc" style={{ color: '#c0392b' }}>{importError}</span>}
+                    </div>
+                    <input type="file" accept=".json" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImport} />
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); fileInputRef.current.click(); }}>Import</button>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Last Saved</span>
+                        <span className="settings-label-desc">{formatLastSaved()}</span>
+                    </div>
+                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playSaveConfirmSound(); handleManualSave(); }}>
+                        {manualSaved ? <>{savedCheckEl}Saved</> : 'Save now'}
+                    </button>
                 </div>
             </div>
 
@@ -615,105 +714,6 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                         <OptionBtn active={timeFormat === '12h'} onClick={() => handleTimeFormat('12h')}>12-hour</OptionBtn>
                         <OptionBtn active={timeFormat === '24h'} onClick={() => handleTimeFormat('24h')}>24-hour</OptionBtn>
                     </div>
-                </div>
-            </div>
-
-            <div className="settings-section">
-                <h2 className="settings-section-title"><SectionIcon src={saveSectionIcon} />Save Data</h2>
-                <div className="settings-row">
-                    <div className="settings-label">
-                        <span className="settings-label-title">Last Saved</span>
-                        <span className="settings-label-desc">{formatLastSaved()}</span>
-                    </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playSaveConfirmSound(); handleManualSave(); }}>
-                        {manualSaved ? <>{savedCheckEl}Saved</> : 'Save now'}
-                    </button>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
-                        <span className="settings-label-title">Export Save</span>
-                        <span className="settings-label-desc">Download your save as a JSON file to back it up or move to another device.</span>
-                    </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onExportSave(); }}>Export</button>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
-                        <span className="settings-label-title">Import Save</span>
-                        <span className="settings-label-desc">Load a previously exported save file. This will overwrite your current save.</span>
-                        {importError && <span className="settings-label-desc" style={{ color: '#c0392b' }}>{importError}</span>}
-                    </div>
-                    <input type="file" accept=".json" ref={fileInputRef} style={{ display: 'none' }} onChange={handleImport} />
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); fileInputRef.current.click(); }}>Import</button>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
-                        <span className="settings-label-title">Delete Save</span>
-                        <span className="settings-label-desc">Permanently delete your save and start a new game. This cannot be undone.</span>
-                    </div>
-                    {confirmDelete ? (
-                        <div style={{ display: 'flex', gap: '8px' }}>
-                            <button
-                                className="settings-save-btn"
-                                onMouseEnter={() => { playHoverSound(); setConfirmDeleteHover(true) }}
-                                onMouseLeave={() => setConfirmDeleteHover(false)}
-                                style={{ background: confirmDeleteHover ? '#a93226' : '#c0392b' }}
-                                onClick={() => { playClickSound2(); onDeleteSave(); }}
-                            >
-                                Confirm Delete
-                            </button>
-                            <button
-                                className="settings-save-btn"
-                                onMouseEnter={() => { playHoverSound(); setCancelHover(true) }}
-                                onMouseLeave={() => setCancelHover(false)}
-                                style={{ background: cancelHover ? '#666' : '#888' }}
-                                onClick={() => { playClickSound2(); setConfirmDelete(false); }}
-                            >
-                                Cancel
-                            </button>
-                        </div>
-                    ) : (
-                        <button
-                            className="settings-save-btn"
-                            onMouseEnter={() => { playHoverSound(); setDeleteHover(true) }}
-                            onMouseLeave={() => setDeleteHover(false)}
-                            style={{ background: deleteHover ? '#a93226' : '#c0392b' }}
-                            onClick={() => { playClickSound2(); setConfirmDelete(true); }}
-                        >
-                            Delete
-                        </button>
-                    )}
-                </div>
-            </div>
-
-            <div className="settings-section">
-                <h2 className="settings-section-title"><SectionIcon src={infoIcon} />Info</h2>
-                <div className="settings-row">
-                    <div className="settings-label">
-                        <span className="settings-label-title">Credits</span>
-                        <span className="settings-label-desc">Photo and sound attribution.</span>
-                    </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowCredits(true); }}>Credits</button>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
-                        <span className="settings-label-title">Game Guide</span>
-                        <span className="settings-label-desc">Learn how to play Hyperloop Empire.</span>
-                    </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowGuide(true); }}>Guide</button>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
-                        <span className="settings-label-title">Legal & Privacy</span>
-                        <span className="settings-label-desc">Data storage, content licencing and disclaimer.</span>
-                    </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowLegal(true); }}>View</button>
-                </div>
-                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
-                    <div className="settings-label">
-                        <span className="settings-label-title">Report a Bug</span>
-                        <span className="settings-label-desc">Found something broken? Let us know.</span>
-                    </div>
-                    <button className="settings-save-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); window.open('https://github.com/CathalEoghan/HyperloopGame/issues/new', '_blank', 'noopener,noreferrer'); }}>Report</button>
                 </div>
             </div>
 
