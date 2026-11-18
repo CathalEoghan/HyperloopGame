@@ -15,7 +15,7 @@ function RepBonusModal({ title, message, amount, buttonLabel = 'Cool!', onClose 
         <div className="rb-overlay">
             <div className="rb-modal" role="dialog" aria-label={title}>
                 <p className="rb-header">{title}</p>
-                <div className="rb-divider">━━━━━━━━━━━━━━━━━━━━</div>
+                <div className="rb-divider" aria-hidden="true" />
                 <p className="rb-message">{message}</p>
                 <p className="rb-earned">
                     You've earned <img src={reputationIcon} alt="" className="rb-rep-icon" /><strong>{amount}</strong> Reputation!

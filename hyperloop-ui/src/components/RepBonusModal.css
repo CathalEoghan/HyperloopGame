@@ -33,11 +33,10 @@
 }
 
 .rb-divider {
-    color: var(--board-accent-readable, var(--board-accent, #f5a623));
+    height: 0;
+    border-top: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
     opacity: 0.4;
     margin: 0 0 20px;
-    font-size: 0.9rem;
-    letter-spacing: 2px;
 }
 
 .rb-message {

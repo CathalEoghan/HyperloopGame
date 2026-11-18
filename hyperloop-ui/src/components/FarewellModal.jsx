@@ -85,7 +85,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
         <div className="farewell-overlay">
             <div className="farewell-modal" data-vip={departure.vip ? 'true' : undefined}>
                 <p className="farewell-attention">{departure.vip ? (isArrival ? 'VIP ARRIVAL' : 'VIP PASSENGER') : (isArrival ? 'NOW ARRIVED' : 'ATTENTION')}</p>
-                <div className="farewell-divider">━━━━━━━━━━━━━━━━━━━━</div>
+                <div className="farewell-divider" aria-hidden="true" />
                 <div className="farewell-destination">
                     {flagCode && (
                         <img

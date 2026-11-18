@@ -32,7 +32,7 @@ function VideoMessageToast({ entry, onDone }) {
         <div className="farewell-overlay">
             <div className="farewell-modal" data-vip={entry.vip ? 'true' : undefined}>
                 <p className="farewell-attention">{entry.vip ? (isArrival ? 'VIP ARRIVAL' : 'VIP PASSENGER') : (isArrival ? 'NOW ARRIVED' : 'ATTENTION')}</p>
-                <div className="farewell-divider">━━━━━━━━━━━━━━━━━━━━</div>
+                <div className="farewell-divider" aria-hidden="true" />
                 <div className="farewell-destination">
                     {flagCode && (
                         <img
