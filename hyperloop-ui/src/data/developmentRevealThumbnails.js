@@ -358,6 +358,11 @@ import RideShareKiosks from '../assets/developments-reveal/RideShareKiosks.jpg'
 import SocialMediaManagers from '../assets/developments-reveal/SocialMediaManagers.jpg'
 import Supermarket from '../assets/developments-reveal/Supermarket.jpg'
 import VIPPods from '../assets/developments-reveal/VIPPods.jpg'
+import ThaiRestaurant from '../assets/developments-reveal/ThaiRestaurant.jpg'
+import KoreanRestaurant from '../assets/developments-reveal/KoreanRestaurant.jpg'
+import MiniGolf from '../assets/developments-reveal/MiniGolf.jpg'
+import TennisCourts from '../assets/developments-reveal/TennisCourts.jpg'
+import NerdShop from '../assets/developments-reveal/NerdShop.jpg'
 
 
 const developmentRevealImages = {
@@ -721,6 +726,11 @@ const developmentRevealImages = {
     "Social Media Managers": SocialMediaManagers,
     "Supermarket": Supermarket,
     "VIP Pods": VIPPods,
+    "Thai Restaurant": ThaiRestaurant,
+    "Korean Restaurant": KoreanRestaurant,
+    "Mini Golf": MiniGolf,
+    "Tennis Courts": TennisCourts,
+    "Nerd Shop": NerdShop,
 }
 
 export default developmentRevealImages

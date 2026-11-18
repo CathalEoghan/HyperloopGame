@@ -356,11 +356,11 @@ const cityImages = {
     "Vientiane": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Vientiane.jpg",
     "Xi'an": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Xian.jpg",
     "Yokohama": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Yokohama.jpg",
-
-
-
-
-
+    "Pune": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Pune.jpg",
+    "Sendai": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Sendai.jpg",
+    "Daejeon": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Daejeon.jpg",
+    "Phuket": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Phuket.jpg",
+    "Santorini": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Santorini.jpg",
 
 }
 

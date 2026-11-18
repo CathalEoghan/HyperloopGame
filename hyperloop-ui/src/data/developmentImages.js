@@ -361,14 +361,11 @@ const developmentImages = {
     "Social Media Managers": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SocialMediaManagers.jpg",
     "Supermarket": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Supermarket.jpg",
     "VIP Pods": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/VIPPods.jpg",
-
-
-
-
-
-
-
-
+    "Thai Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ThaiRestaurant.jpg",
+    "Korean Restaurant": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/KoreanRestaurant.jpg",
+    "Mini Golf": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/MiniGolf.jpg",
+    "Tennis Courts": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TennisCourts.jpg",
+    "Nerd Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NerdShop.jpg",
 
 }
 
