@@ -128,7 +128,7 @@
 
 /* "Claim all (N)": on a section's header whenever any reward is waiting in it, even folded (it replaced the old "N to claim" badge) */
 .progress-claim-all {
-    font-family: 'Courier New', monospace;
+    font-family: 'Inter', sans-serif;
     font-size: 0.75rem;
     font-weight: bold;
     color: #222;
