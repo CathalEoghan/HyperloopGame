@@ -74,6 +74,7 @@ function CreditsModal({ onClose, onReputationBonus, onSurprise }) {
 
                     <p className="credits-section">Globe Imagery</p>
                     <p className="credits-line">NASA Visible Earth (public domain)</p>
+                    <p className="credits-line">Live clouds: <a className="credits-link" href="https://github.com/matteason/live-cloud-maps" target="_blank" rel="noopener noreferrer">Live cloud maps</a> by Matt Eason (CC0). Contains modified EUMETSAT data.</p>
 
                     <p className="credits-section">Fonts &amp; Open Source</p>
                     <p className="credits-line">Inter typeface - SIL Open Font License 1.1</p>

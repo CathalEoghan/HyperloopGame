@@ -5,7 +5,7 @@ import { playHoverSound, playClickSound2, playSaveConfirmSound, SOUND_CATEGORIES
 import CreditsModal from '../components/CreditsModal.jsx'
 import GuideModal from '../components/GuideModal.jsx'
 import legalIcon from '../assets/misc/legal.png'
-import { GLOBE_QUALITY_KEY, GLOBE_CLOUDS_KEY, getGlobeClouds, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
+import { GLOBE_QUALITY_KEY, GLOBE_CLOUDS_KEY, getGlobeClouds, GLOBE_LIVE_CLOUDS_KEY, getGlobeLiveClouds, savedGlobeQuality, autoGlobeQuality } from '../utils/globeQuality.js'
 import { VERSION_LOG } from '../utils/versionLog.js'
 import { notificationsEnabled, enableNotifications, disableNotifications } from '../utils/attentionAlerts.js'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
@@ -93,6 +93,7 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
     const [logOpen, setLogOpen] = useState(false)
     const [globeQuality, setGlobeQuality] = useState(savedGlobeQuality() || 'auto')
     const [globeClouds, setGlobeClouds] = useState(getGlobeClouds())
+    const [globeLiveClouds, setGlobeLiveClouds] = useState(getGlobeLiveClouds())
     const [settingsQuery, setSettingsQuery] = useState('')
     const pageRef = useRef(null)
     const searchEmptyRef = useRef(null)
@@ -148,6 +149,12 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
         setGlobeClouds(enabled)
         try { localStorage.setItem(GLOBE_CLOUDS_KEY, String(enabled)) } catch { /* storage blocked, ignore */ }
         // The globe stays mounted for the whole session, so it is told directly (same as night mode)
+        window.dispatchEvent(new Event('globeCloudsChange'))
+    }
+
+    const handleLiveCloudsChange = (enabled) => {
+        setGlobeLiveClouds(enabled)
+        try { localStorage.setItem(GLOBE_LIVE_CLOUDS_KEY, String(enabled)) } catch { /* storage blocked, ignore */ }
         window.dispatchEvent(new Event('globeCloudsChange'))
     }
 
@@ -425,11 +432,21 @@ function SettingsPage({ terminalName, onTerminalNameChange, lastSaved, onDeleteS
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
                     <div className="settings-label">
                         <span className="settings-label-title">Globe Clouds</span>
-                        <span className="settings-label-desc">Show a soft layer of slowly drifting clouds over the globe. The pattern is drawn by the game, not live weather. Off by default on weaker devices.</span>
+                        <span className="settings-label-desc">Show a soft layer of slowly drifting clouds over the globe. They fade out as you zoom in. Off by default on weaker devices.</span>
                     </div>
                     <div className="settings-options">
                         <OptionBtn active={globeClouds} onClick={() => handleCloudsChange(true)}>On</OptionBtn>
                         <OptionBtn active={!globeClouds} onClick={() => handleCloudsChange(false)}>Off</OptionBtn>
+                    </div>
+                </div>
+                <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>
+                    <div className="settings-label">
+                        <span className="settings-label-title">Live Clouds</span>
+                        <span className="settings-label-desc">Show the real cloud cover, from a satellite picture updated every three hours, instead of a generated pattern. Needs an internet connection to the cloud map site; if it can't be reached the generated clouds stay. Only applies while Globe Clouds is On.</span>
+                    </div>
+                    <div className="settings-options">
+                        <OptionBtn active={globeLiveClouds} onClick={() => handleLiveCloudsChange(true)}>On</OptionBtn>
+                        <OptionBtn active={!globeLiveClouds} onClick={() => handleLiveCloudsChange(false)}>Off</OptionBtn>
                     </div>
                 </div>
                 <div className="settings-row" style={{ borderTop: '1px solid #e8d8c8' }}>

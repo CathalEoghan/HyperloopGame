@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import * as THREE from 'three'
-import { getGlobeQuality, getGlobeClouds } from '../utils/globeQuality.js'
-import { makeCloudCanvas } from '../utils/cloudTexture.js'
+import { getGlobeQuality, getGlobeClouds, getGlobeLiveClouds } from '../utils/globeQuality.js'
+import { makeCloudCanvas, loadLiveCloudCanvas, LIVE_CLOUD_REFRESH_MS } from '../utils/cloudTexture.js'
 import cityCoordinates from '../data/cityCoordinates.js'
 import countryFlags from '../data/countryFlags.js'
 import cityImages from '../data/cityImages.js'
@@ -580,6 +580,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 cloudTexture: { value: null },
                 sunDirection: globeMaterial.uniforms.sunDirection,
                 nightMode: globeMaterial.uniforms.nightMode,
+                fade: { value: 1.0 },
             },
             vertexShader: `
                 varying vec2 vUv;
@@ -594,12 +595,13 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                 uniform sampler2D cloudTexture;
                 uniform vec3 sunDirection;
                 uniform float nightMode;
+                uniform float fade;
                 varying vec2 vUv;
                 varying vec3 vWorldNormal;
                 void main() {
                     float cover = texture2D(cloudTexture, vUv).a;
                     float lit = nightMode > 0.5 ? smoothstep(-0.15, 0.4, dot(vWorldNormal, sunDirection)) : 1.0;
-                    gl_FragColor = vec4(vec3(mix(0.16, 1.0, lit)), cover * 0.55);
+                    gl_FragColor = vec4(vec3(mix(0.16, 1.0, lit)), cover * 0.55 * fade);
                 }
             `,
             transparent: true,
@@ -610,20 +612,42 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
         cloudMesh.renderOrder = 1
         scene.add(cloudMesh)
         let cloudTexture = null
+        let cloudSource = null   // 'generated' or 'live': which picture the texture holds now
+        let liveToken = 0
+        const setCloudCanvas = (canvas, source) => {
+            const next = new THREE.CanvasTexture(canvas)
+            next.wrapS = THREE.RepeatWrapping
+            cloudMaterial.uniforms.cloudTexture.value = next
+            cloudTexture?.dispose()
+            cloudTexture = next
+            cloudSource = source
+        }
+        // Real cloud cover when Settings -> Live Clouds is on; the generated layer is shown first and stays whenever
+        // the live picture can't be had (blocked network, outage), so there's always something to see.
+        const tryLiveClouds = () => {
+            const token = ++liveToken
+            loadLiveCloudCanvas(getGlobeQuality() === '2k' ? 1024 : 2048).then(canvas => {
+                if (disposedClouds || token !== liveToken || !getGlobeClouds() || !getGlobeLiveClouds()) return
+                setCloudCanvas(canvas, 'live')
+            }).catch(() => { /* keep what is showing */ })
+        }
         const applyClouds = () => {
             if (disposedClouds) return
-            if (!getGlobeClouds()) { cloudMesh.visible = false; return }
-            if (!cloudTexture) {
-                cloudTexture = new THREE.CanvasTexture(makeCloudCanvas(getGlobeQuality() === '2k' ? 512 : 1024, getGlobeQuality() === '2k' ? 256 : 512))
-                cloudTexture.wrapS = THREE.RepeatWrapping
-                cloudMaterial.uniforms.cloudTexture.value = cloudTexture
-            }
+            if (!getGlobeClouds()) { cloudMesh.visible = false; liveToken++; return }
+            if (!cloudTexture) setCloudCanvas(makeCloudCanvas(getGlobeQuality() === '2k' ? 512 : 1024, getGlobeQuality() === '2k' ? 256 : 512), 'generated')
             cloudMesh.visible = true
+            if (getGlobeLiveClouds()) tryLiveClouds()
+            else {
+                liveToken++
+                if (cloudSource === 'live') setCloudCanvas(makeCloudCanvas(getGlobeQuality() === '2k' ? 512 : 1024, getGlobeQuality() === '2k' ? 256 : 512), 'generated')
+            }
         }
         let disposedClouds = false
         cloudsApplyRef.current = applyClouds
         // After the first frames, so building the globe isn't held up by drawing them
         const cloudStartTimer = setTimeout(applyClouds, 400)
+        // The picture changes every three hours, so a long session picks up the new one
+        const cloudRefreshTimer = setInterval(() => { if (cloudMesh.visible && getGlobeLiveClouds()) tryLiveClouds() }, LIVE_CLOUD_REFRESH_MS)
 
         const sunInterval = setInterval(() => {
             globeMaterial.uniforms.sunDirection.value.copy(getSunWorldPosition().normalize())
@@ -1034,7 +1058,13 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             // the globe from scratch on every visit.
             if (!activeRef.current) return
             easeCamera()
-            if (cloudMesh.visible) cloudMesh.rotation.y = performance.now() / 1000 * 0.004
+            if (cloudMesh.visible) {
+                cloudMesh.rotation.y = performance.now() / 1000 * 0.004
+                // Fully faded out once zoomed in close (the camera sits 1.25 from the centre at the closest), so the
+                // cities and routes underneath are never veiled; full strength from 2.2 outwards
+                cloudMaterial.uniforms.fade.value = THREE.MathUtils.smoothstep(camera.position.length(), 1.55, 2.2)
+                if (cloudMaterial.uniforms.fade.value < 0.01) cloudMaterial.uniforms.fade.value = 0
+            }
             camPos.copy(camera.position).normalize()
             const loopsView = globeViewRef.current === 'loops'
             const loopCities = loopCityNamesRef.current
@@ -1106,6 +1136,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             cancelAnimationFrame(animFrameId)
             clearInterval(sunInterval)
             clearTimeout(cloudStartTimer)
+            clearInterval(cloudRefreshTimer)
             disposedClouds = true
             cloudsApplyRef.current = null
             cloudTexture?.dispose()

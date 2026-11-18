@@ -50,3 +50,51 @@ export function makeCloudCanvas(width = 1024, height = 512, seed = 7) {
     ctx.putImageData(image, 0, 0)
     return canvas
 }
+
+// The real cloud cover, from the free "live cloud maps" project (CC0; built from EUMETSAT satellite data and
+// refreshed every three hours). Resolves to a canvas in the same form as makeCloudCanvas (white, with the cloud
+// cover in alpha), or rejects when the picture can't be loaded or doesn't look like a cloud map - a blocked
+// network, an outage, a changed address - so the caller can keep the generated layer instead.
+const LIVE_CLOUD_BASE = 'https://clouds.matteason.co.uk/images'
+const THREE_HOURS = 3 * 60 * 60 * 1000
+
+export function liveCloudUrl(width = 2048) {
+    // A new address every three hours, so a copy cached by the browser can't outlive the next update
+    return `${LIVE_CLOUD_BASE}/${width}x${width / 2}/clouds.jpg?v=${Math.floor(Date.now() / THREE_HOURS)}`
+}
+
+export const LIVE_CLOUD_REFRESH_MS = THREE_HOURS
+
+export function loadLiveCloudCanvas(width = 2048, timeoutMs = 15000) {
+    return new Promise((resolve, reject) => {
+        const img = new Image()
+        img.crossOrigin = 'anonymous'
+        const timer = setTimeout(() => { img.src = ''; reject(new Error('timeout')) }, timeoutMs)
+        img.onerror = () => { clearTimeout(timer); reject(new Error('load failed')) }
+        img.onload = () => {
+            clearTimeout(timer)
+            try {
+                const canvas = document.createElement('canvas')
+                canvas.width = img.naturalWidth
+                canvas.height = img.naturalHeight
+                const ctx = canvas.getContext('2d', { willReadFrequently: true })
+                ctx.drawImage(img, 0, 0)
+                const data = ctx.getImageData(0, 0, canvas.width, canvas.height)
+                const px = data.data
+                let sum = 0
+                for (let i = 0; i < px.length; i += 4) {
+                    const lum = px[i]   // greyscale: red, green and blue are the same
+                    sum += lum
+                    px[i] = px[i + 1] = px[i + 2] = 255
+                    px[i + 3] = lum
+                }
+                const mean = sum / (px.length / 4) / 255
+                // Real cloud cover is neither almost nothing nor almost everything
+                if (!(mean > 0.05 && mean < 0.8)) { reject(new Error('unexpected image')); return }
+                ctx.putImageData(data, 0, 0)
+                resolve(canvas)
+            } catch (e) { reject(e) }   // e.g. a canvas the browser refuses to read
+        }
+        img.src = liveCloudUrl(width)
+    })
+}

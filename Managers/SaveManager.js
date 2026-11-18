@@ -178,6 +178,7 @@ const SETTINGS_KEYS = [
     'hyperloop_video_message_popups',
     'globeNightMode',
     'globeClouds',
+    'globeLiveClouds',
     'globeQuality',
     'globeView',
     'globeShowOwned',

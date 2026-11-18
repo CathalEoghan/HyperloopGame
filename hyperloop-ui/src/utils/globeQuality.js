@@ -62,3 +62,19 @@ export function getGlobeClouds() {
     } catch { /* storage unavailable */ }
     return getGlobeQuality() !== '2k'
 }
+
+// Settings -> Live Clouds: use the real, three-hourly cloud picture instead of the generated one. On unless the
+// player turned it off, except on the light 2K setting or a data-saver / slow connection, where it stays off.
+export const GLOBE_LIVE_CLOUDS_KEY = 'globeLiveClouds'
+export function getGlobeLiveClouds() {
+    try {
+        const saved = localStorage.getItem(GLOBE_LIVE_CLOUDS_KEY)
+        if (saved === 'true') return true
+        if (saved === 'false') return false
+    } catch { /* storage unavailable */ }
+    try {
+        const conn = navigator.connection
+        if (conn && (conn.saveData || /^(slow-2g|2g|3g)$/.test(conn.effectiveType || ''))) return false
+    } catch { /* ignore */ }
+    return getGlobeQuality() !== '2k'
+}
