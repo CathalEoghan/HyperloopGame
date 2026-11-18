@@ -73,3 +73,99 @@
 .modal h2.rankup-heading {
     font-weight: bold;
 }
+
+/* The rank number: counts up, with two expanding rings and one light sweep behind it */
+.rankup-stage {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 150px;
+    margin: 4px 0 8px;
+    overflow: hidden;
+    border-radius: 10px;
+}
+
+.rankup-stage::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -60%;
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+    transform: skewX(-18deg);
+    animation: rankup-sweep 1.1s ease-out 0.15s forwards;
+    pointer-events: none;
+}
+
+.rankup-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 90px;
+    height: 90px;
+    margin: -45px 0 0 -45px;
+    border: 4px solid var(--ui-accent, #f5a623);
+    border-radius: 50%;
+    opacity: 0;
+    animation: rankup-ring 1.2s ease-out forwards;
+    pointer-events: none;
+}
+
+.rankup-ring-late {
+    animation-delay: 0.3s;
+}
+
+.rankup-rank-label {
+    font-size: 0.8rem;
+    font-weight: bold;
+    letter-spacing: 0.35em;
+    color: #888;
+    margin-bottom: 2px;
+}
+
+.rankup-number {
+    position: relative;
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--ui-accent, #f5a623);
+    text-shadow: 0 3px 0 rgba(0, 0, 0, 0.18);
+    font-variant-numeric: tabular-nums;
+}
+
+.rankup-number-done {
+    animation: rankup-pop 0.4s ease-out;
+}
+
+.rankup-confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+@keyframes rankup-ring {
+    0%   { transform: scale(0.4); opacity: 0.9; }
+    100% { transform: scale(4.2); opacity: 0; }
+}
+
+@keyframes rankup-sweep {
+    from { left: -60%; }
+    to   { left: 130%; }
+}
+
+@keyframes rankup-pop {
+    0%   { transform: scale(1); }
+    45%  { transform: scale(1.22); }
+    100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .rankup-stage::after, .rankup-ring, .rankup-number-done { animation: none; }
+    .rankup-stage::after { display: none; }
+}
