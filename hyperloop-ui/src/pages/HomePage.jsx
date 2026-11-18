@@ -1059,7 +1059,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
             if (!activeRef.current) return
             easeCamera()
             if (cloudMesh.visible) {
-                cloudMesh.rotation.y = performance.now() / 1000 * 0.0012
+                cloudMesh.rotation.y = performance.now() / 1000 * 0.0004
                 // Fully faded out once zoomed in close (the camera sits 1.25 from the centre at the closest), so the
                 // cities and routes underneath are never veiled; full strength from 2.2 outwards
                 cloudMaterial.uniforms.fade.value = THREE.MathUtils.smoothstep(camera.position.length(), 1.55, 2.2)
