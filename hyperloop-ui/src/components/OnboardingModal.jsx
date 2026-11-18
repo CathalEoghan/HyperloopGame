@@ -1,5 +1,5 @@
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
-import officialLogo from '../assets/misc/officialLogo.png'
+import hyperloopLogo from '../assets/misc/hyperloop.png'
 import portfolioIcon from '../assets/misc/portfolio.png'
 import growthIcon from '../assets/misc/growth.png'
 import planetEarthIcon from '../assets/misc/planet-earth.png'
@@ -13,7 +13,7 @@ function OnboardingModal({ onDismiss }) {
     return (
         <div className="modal-overlay">
             <div className="modal onboarding-modal">
-                <div className="onboarding-logo"><img src={officialLogo} alt="Hyperloop Empire" /></div>
+                <div className="onboarding-logo"><img src={hyperloopLogo} alt="Hyperloop Empire" /></div>
                 <h2 className="onboarding-title">Welcome!</h2>
                 <p className="onboarding-intro">
                     You're now the manager of the world's first <strong>hyperloop terminal</strong>.
