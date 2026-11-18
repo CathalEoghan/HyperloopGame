@@ -38,6 +38,27 @@ const DEV_KEY_MAP = {
     'Candy Store': 'candyStore',
     'Bookstore': 'bookstore',
     'Bowling Alley': 'bowlingAlley',
+    'Mini Golf': 'miniGolf',
+    'Nerd Shop': 'nerdShop',
+    'Observation Deck': 'observationDeck',
+    'Tea House': 'teaHouse',
+    'Tennis Courts': 'tennisCourts',
+    'Oyster Shack': 'oysterShack',
+    'Pancake House': 'pancakeHouse',
+    'Chocolatier': 'chocolatier',
+    'Taco Restaurant': 'tacoRestaurant',
+    'Fashion Chain': 'fashionChain',
+    'Train Museum': 'trainMuseum',
+    'Spice Market': 'spiceMarket',
+    'Snow Globe Store': 'snowGlobeStore',
+    'Wine Bar': 'wineBar',
+    'Business Hotel': 'businessHotel',
+    'Sushi Restaurant': 'sushiRestaurant',
+    'Ramen Bar': 'ramenBar',
+    'Curry House': 'curryHouse',
+    'Thai Restaurant': 'thaiRestaurant',
+    'Korean Restaurant': 'koreanRestaurant',
+    'Craft Beer Bar': 'craftBeerBar',
     'Luxury Hotel': 'luxuryHotel',
     'Gaming Arcade': 'gamingArcade',
     'Surf Shop': 'surfShop',
@@ -103,6 +124,11 @@ const DEV_KEY_MAP = {
 }
 
 export const UPGRADE_KEY_MAP = {
+    'Free Wi-Fi': 'freeWifi',
+    'Lost & Found Office': 'lostAndFound',
+    'Social Media Managers': 'socialMediaManagers',
+    'Passenger Appreciation Initiatives': 'passengerAppreciation',
+    'VIP Pods': 'vipPods',
     'Anniversary Sales': 'anniversarySales',
     'Prayer Room': 'prayerRoom',
     'Personal Styling Retinue': 'personalStylingRetinue',
@@ -524,22 +550,28 @@ const isOncePerDay = category => category.startsWith('specialDay_') || category.
 
 // A renamed development is sometimes called by the player's own name in posts about it: "at the bakery" becomes "at Crumbs".
 // Only "the <development>" is swapped (so the sentence still reads right), and only about half the time, so people still call
-// it the bakery now and then. The name keeps its own capitals, like {developmentName}.
+// it the bakery now and then. The name keeps its own capitals, like {developmentName}. Hashtags are handled below.
 export const OWN_NAME_CHANCE = 0.5
 export function withOwnName(text, devName, developmentNames, rnd = Math.random) {
     const own = devName && developmentNames?.[devName]
-    if (!own || rnd() >= OWN_NAME_CHANCE) return text
+    if (!own) return text
+    // A hashtag of the development's own name (#teahouse) always becomes the player's name for it (#Crumbs), since a
+    // hashtag has no sentence to read wrong. Spaces and punctuation drop out, as in any hashtag, and other hashtags stay.
+    const tag = devName.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '')
+    const ownTag = own.replace(/[^\p{L}\p{N}]/gu, '')
+    if (tag && ownTag) text = text.replace(new RegExp(`#${tag}(?![\\p{L}\\p{N}])`, 'giu'), () => `#${ownTag}`)
+    if (rnd() >= OWN_NAME_CHANCE) return text
     const words = devName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').split(/\s+/).join('\\s+')
     return text.replace(new RegExp(`\\bthe\\s+${words}\\b`, 'gi'), () => own)
 }
 
 // Now and then a post calls the manager by the player's own name instead: "the manager is so nice" becomes "Dr. McGlone is
 // so nice" (or "Cathal McGlone" with no title), and "thanks manager" becomes "thanks Dr. McGlone" (or "thanks Cathal").
-// Left alone: someone's own manager ("dont tell my manager"), and "manager" used to describe something ("the manager
+// Left alone: someone's own manager ("dont tell my manager"), a "social media manager", and "manager" used to describe something ("the manager
 // send-off", "VIP manager treatment"). Needs a name set; the title is one of the Settings ones or none.
 export const MANAGER_NAME_CHANCE = 0.4
 // Lower-case only: a shouted "BEST MANAGER EVER" or a #ThankYouManager hashtag stays as it is
-const MANAGER_AS_WORD = /(\b[Mm]y\s+)?\b(?:([Tt]he|[Tt]his)\s+)?manager\b(?!\s+(?:farewell|send-off|treatment|selfie|videos?))/g
+const MANAGER_AS_WORD = /(\b[Mm]y\s+)?\b(?:([Tt]he|[Tt]his)\s+)?(?<![Mm]edia\s)manager\b(?!\s+(?:farewell|send-off|treatment|selfie|videos?))/g
 export function withManagerName(text, playerName, playerTitle = '', rnd = Math.random) {
     const name = (playerName || '').trim().replace(/\s+/g, ' ')
     if (!name || rnd() >= MANAGER_NAME_CHANCE) return text

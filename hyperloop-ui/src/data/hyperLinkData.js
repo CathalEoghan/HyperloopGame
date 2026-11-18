@@ -1437,6 +1437,162 @@ export const POSTS = {
         'how the hell do you get the bowling ball to stay on the lane??'
     ],
 
+    miniGolf: [
+        'How many holes can i fit in before this loop #minigolf',
+        'Wait they have mini golf here?? My loop can wait sorry⛳️',
+        'Nothing mini about this golf when im on the course ❤️'
+    ],
+
+    nerdShop: [
+        'Totally nerding out at the new nerdy nerd shop 🤓',
+        'Manga, comics AND anime figures???? #nerdshop',
+        'Spent all my travel money on comic books #SorryNotSorry'
+    ],
+
+    observationDeck: [
+        'Of course the day i buy a ticket to the observation deck its cloudy ☁️',
+        'Wow you can not see my house from the deck #surprisesurprise',
+        'Do people actually like the new observation deck? Its just… clouds and hills and little buildings #boring'
+    ],
+
+    teaHouse: [
+        'Whats everyones fave tea?? at the tea house and struggling to pick lol',
+        'Green tea please 🍵 #teahouse',
+        'Oolong or chamomile? Vote below'
+    ],
+
+    tennisCourts: [
+        'Anyone up for a game of tennis? 🎾',
+        'Nearly whacked that tennis ball into the stratosphere lol',
+        'Is it appropriate to wear anything but white on the tennis court 🤔'
+    ],
+
+    oysterShack: [
+        'ew an oyster shack. are there pearls inside or what',
+        'Anyone tried the new oysters at the oyster shack? What did you think #oystershack',
+        'Proposal idea: hide a ring in an oyster. Just let them know before they eat it so they dont choke. But does that ruin the surprise. Hmm'
+    ],
+
+    pancakeHouse: [
+        'Pancakes for dinner is a valid life choice 🥞',
+        'Maple syrup or chocolate sauce?? the pancake house menu is making me choose and i hate it',
+        'Ordered a short stack, was handed a skyscraper. no regrets #pancakehouse'
+    ],
+
+    chocolatier: [
+        'Just walked into the chocolatier and now my travel budget is choking for life 🍫',
+        'Dark, milk or white? someone help me pick quickly lmao',
+        'The free sample at the chocolatier was a trap. I now own four boxes #worthit'
+    ],
+
+    tacoRestaurant: [
+        'Is it Taco Tuesday or is every day Taco Tuesday 🌮',
+        'Hard shell or soft shell?? i need to know where everyone stands x',
+        'Ordered \'just a couple\' tacos. Currently surrounded by empty wrappers loll #tacorestaurant'
+    ],
+
+    freeWifi: [
+        'Thank god for the free wifi!! No data needed 👌',
+        'Is the free wifi free',
+        'You cheapskates using the free wifi lol'
+    ],
+
+    lostAndFound: [
+        'I work at the lost & found - if you lose something dont panic! We probably have it here - no harm in checking!',
+        'thank god for the lost & found they managed to find my contact lens idek how lol',
+        'The irony in me getting lost and not being able to find the lost & found office'
+    ],
+
+    socialMediaManagers: [
+        'Glad to see Hyper-Link expanded for ppl in less populated areas!! These social media managers r working overtime',
+        'How do i sign up to be a social media manager for hyperlink?? acc sounds so fun',
+        'My friend is a social media manager for hyper link he says its literally the best job ever'
+    ],
+
+    passengerAppreciation: [
+        'Whats this about giveaways?? how do i enter one?',
+        'So let me get this straight - the terminal is now doing ticket giveaways for new locations? Is that right? Someone correct me in the comments if I’m wrong.',
+        'How do they define loyalty to the loop lol someone help me out'
+    ],
+
+    vipPods: [
+        'Move over riff raff !! The new vip pods are calling',
+        'The new VIP pods are staggering. Too bad im poor 🤣',
+        'Maybe one day I’ll be able to afford one of the beautiful new #vippods 🤤'
+    ],
+
+    fashionChain: [
+        'If you like fast fashion, annoying girly pop, and queues of hordes of obnoxious karens, work at the new fashion chain! #HandingInMyNotice',
+        'Sisters went into the fashion chain 2 hours ago anyone seen them lol',
+        'The scarves at the fashion chain r pretty neat 🧣'
+    ],
+
+    trainMuseum: [
+        'Choo choo! The train museum is EPIC!',
+        'Train museum my god could they have built anything more boring 😴',
+        'Train museum so random but i love it 😂🚂'
+    ],
+
+    spiceMarket: [
+        'The smell of spices…! Could spend my trip here instead 🌶️',
+        'Bought a bag of black pepper at the spice market… u just never know…',
+        'My grandmother is at the spice market shes literally getting her life lmao'
+    ],
+
+    snowGlobeStore: [
+        'Did they know i collect snow globes?? Feel like this store was built specially for me',
+        'Snow place like the snow globe store!!',
+        'What are snow globes made of?? Glass and pure magic ✨??'
+    ],
+
+    wineBar: [
+        'How many bottles is too much 🍾',
+        'Wine and cheese with the girls 🍷 #winebar',
+        'Anyone know what the house wine is at the wine bar ? 🍷'
+    ],
+
+    businessHotel: [
+        'Shoes off and laptop switched off #businesshotel',
+        'The business hotel is great for business travel - special co working spaces and a lightning fast internet connection. Beds comfy too! ⭐️⭐️⭐️⭐️⭐️',
+        'Think i left my briefcase by accident at the business hotel🤣 im hopeless'
+    ],
+
+    sushiRestaurant: [
+        'So mesmerised by this sushi train guys 🍣',
+        'Wasabi or no wasabi?? asking for a friend (me, i\'m the friend) #sushirestaurant',
+        'Ordered a few pieces. The plate tower is now taller than me lol'
+    ],
+
+    ramenBar: [
+        'MY GOD on my first trip with the situationship and while i was slurping ramen a bit dropped in the soup and it went everywhere 😭😭',
+        'Soft egg or hard egg?? at the ramen bar 🍜',
+        'This ramen is more spice than anything genuinely cant feel my tongue'
+    ],
+
+    curryHouse: [
+        'Mild, medium or hot?? curry house is testing me 🌶️',
+        'Naan for the table and then I ate all of it myself lol',
+        'Sweat. Tears. Second helping. #curryhouse'
+    ],
+
+    thaiRestaurant: [
+        'Ordered the thai green curry \'thai hot\' RIP my tongue 🥵',
+        'Pad thai or green curry the thai restaurant menu is too good #thairestaurant',
+        'Why does the coconut milk make everything better!! 🥥'
+    ],
+
+    koreanRestaurant: [
+        'Cooking my own meat at the table and feeling like a chef #likeaboss🥩🔥',
+        'the banchan refill is free and yeah im on my fifth one lol',
+        'Smells like korean bbq all day, no regrets ! #koreanrestaurant'
+    ],
+
+    craftBeerBar: [
+        'How are there 40 beers on the menu 😭😭 i just want a beer🍺',
+        'Ordered the beer flight, ranking them like it\'s a competition hehe',
+        'Hoppy, sour or stout?? the craft beer bar has me overthinking everything today #craftbeerbar'
+    ],
+
     luxuryHotel: [
         'feeling pampered and plucked at this gorgeous hotel. would definitely come back',
         'Just ordered a pizza to my room! Chefs came up and everything lol.',
