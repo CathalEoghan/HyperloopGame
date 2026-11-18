@@ -34,11 +34,10 @@
 }
 
 .delay-divider {
-    color: #e74c3c;
+    height: 0;
+    border-top: 2px solid #e74c3c;
     opacity: 0.4;
     margin: 0 0 20px;
-    font-size: 0.9rem;
-    letter-spacing: 2px;
 }
 
 .delay-message {

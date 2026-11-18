@@ -34,7 +34,7 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
         <div className="delay-overlay">
             <div className="delay-modal">
                 <p className="delay-header">LOOP DELAYED</p>
-                <div className="delay-divider">━━━━━━━━━━━━━━━━━━━━</div>
+                <div className="delay-divider" aria-hidden="true" />
                 <p className="delay-message">
                     {delay.kind === 'arrival'
                         ? <>The <strong>{delay.originalTime}</strong> loop from <strong>{delay.name}</strong> is running late due to {delay.reason || 'unforeseen circumstances'}.</>
