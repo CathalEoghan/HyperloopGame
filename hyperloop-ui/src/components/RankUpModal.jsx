@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import './RankUpModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
@@ -11,6 +12,9 @@ export const CLAIM_ALL_FROM = 3
 // which shows the cities and ignores Escape itself, so nothing is picked or paid for by it. (Never "Claim all".)
 function RankUpModal({ rank = 0, onClaim, choose = false, waiting = 0, onClaimAll, onEnableAuto }) {
   useEscapeToClose(() => { playClickSound2(); onClaim() })
+  // Automatic claiming is a lasting setting, so the button asks once more: the first click turns it into "Confirm Auto-Claim?"
+  // and only a second click turns it on. Moving focus anywhere else (another button, the empty modal) puts it back.
+  const [confirmingAuto, setConfirmingAuto] = useState(false)
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -42,11 +46,17 @@ function RankUpModal({ rank = 0, onClaim, choose = false, waiting = 0, onClaimAl
         {onEnableAuto && (
           <>
             <button
-              className="rankup-auto-btn"
+              className={`rankup-auto-btn${confirmingAuto ? ' rankup-auto-btn-confirm' : ''}`}
               onMouseEnter={() => playHoverSound()}
-              onClick={() => { playClickSound2(); onEnableAuto(); }}
+              onBlur={() => setConfirmingAuto(false)}
+              onClick={() => {
+                playClickSound2()
+                if (!confirmingAuto) { setConfirmingAuto(true); return }
+                setConfirmingAuto(false)
+                onEnableAuto()
+              }}
             >
-              Enable automatic random selection
+              {confirmingAuto ? 'Confirm Auto-Claim?' : 'Enable automatic random selection'}
             </button>
             <p className="rankup-auto-note">Claims every rank-up with a random city. Turn it off any time in Settings.</p>
           </>

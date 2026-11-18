@@ -57,6 +57,12 @@
     padding: 6px 12px;
 }
 
+.modal .rankup-auto-btn-confirm {
+    background: var(--ui-accent, #f5a623);
+    color: #fff;
+    border-color: var(--ui-accent, #f5a623);
+}
+
 .rankup-auto-note {
     margin: 6px 0 0;
     font-size: 0.7rem;
