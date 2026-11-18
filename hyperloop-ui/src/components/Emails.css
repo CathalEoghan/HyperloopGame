@@ -61,8 +61,8 @@
 .emails-avatar-me { width: 40px; height: 40px; display: inline-flex; align-items: center; justify-content: center; background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #1a1a1a); font-size: 0.8rem; font-weight: 800; }
 
 /* The request, drawn like an attached card */
-.emails-request { display: flex; flex-direction: column; gap: 2px; background: #fffaf0; border: 1px solid #e0e0e0; border-left: 5px solid var(--ui-accent, #f5a623); border-radius: 8px; padding: 9px 14px; }
-.emails-request-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #8a6d2f; }
+.emails-request { display: flex; flex-direction: column; gap: 2px; background: #f3f3f3; border: 1px solid #e0e0e0; border-left: 5px solid var(--ui-accent, #f5a623); border-radius: 8px; padding: 9px 14px; }
+.emails-request-label { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #6b6b6b; }
 .emails-request-text { font-weight: 700; font-size: 0.95rem; }
 .emails-request-time { font-size: 0.76rem; color: #5f6368; display: flex; align-items: center; gap: 6px; }
 .emails-request-time img { width: 14px; height: 14px; opacity: 0.75; }
