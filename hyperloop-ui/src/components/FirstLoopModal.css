@@ -33,9 +33,9 @@
     margin: 0;
     font-size: 0.82rem;
     line-height: 1.4;
-    color: #5a3a00;
-    background: color-mix(in srgb, var(--ui-accent, #f5a623) 25%, white);
-    border: 1px solid var(--ui-accent, #f5a623);
+    color: #3a3a3a;
+    background: #f3f3f3;
+    border: 1px solid #dcdcdc;
     border-radius: 8px;
     padding: 8px 12px;
 }
@@ -58,4 +58,3 @@
 .firstloop-btn:hover { background: #333; color: #fff; transform: translateY(-2px); }
 .firstloop-btn-primary { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); }
 .firstloop-btn-primary:hover { background: #333; }
-.firstloop-btn-quiet { border-color: #999; color: #666; }

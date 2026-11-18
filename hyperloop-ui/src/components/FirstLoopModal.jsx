@@ -76,7 +76,7 @@ export default function FirstLoopModal({ purchasedCities, reputation = 0, progre
                                     </span>
                                 </span>
                             </button>
-                            <button className="firstloop-btn firstloop-btn-quiet" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>Later</button>
+                            <button className="firstloop-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>Later</button>
                         </div>
                     </>
                 )}
