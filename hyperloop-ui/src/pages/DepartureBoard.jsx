@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from "react"
 import { createPortal } from 'react-dom'
+import BoostTooltip from '../components/BoostTooltip.jsx'
 import './DepartureBoard.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playSplitFlapLong, playSplitFlapShort, stopSplitFlapShort, playBoardClickSound as playClickSound2, playBoardHoverSound as playHoverSound, playAutomatedScheduleSound, playNotEnoughFundsSound } from '../utils/sound.js'
@@ -236,6 +237,8 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
 
     // The real Reputation, not the prop, which can be a second old (bug #170) - matches the convention the rest of
     // the game uses for every other spend.
+    // The hover tip on the Automate Schedule button (why it can't be used, or what it costs): the game's own tooltip, not the browser's
+    const [automateTip, setAutomateTip] = useState(null)
     const canAffordAutomate = () => !progressionManager || progressionManager.reputation >= AUTOMATE_SCHEDULE_REP_COST
 
     const automate = () => {
@@ -461,8 +464,10 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                                 <button
                                     className="board-action"
                                     aria-disabled={automateDisabled}
-                                    title={automateTitle}
-                                    onMouseEnter={() => { if (!automateDisabled) playHoverSound() }}
+                                    onMouseEnter={(e) => { setAutomateTip(e.currentTarget); if (!automateDisabled) playHoverSound() }}
+                                    onMouseLeave={() => setAutomateTip(null)}
+                                    onFocus={(e) => setAutomateTip(e.currentTarget)}
+                                    onBlur={() => setAutomateTip(null)}
                                     onClick={automate}
                                 >
                                     <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
@@ -472,6 +477,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                                         </span>
                                     </span>
                                 </button>
+                                {automateTip && <BoostTooltip anchor={automateTip} lines={[automateTitle]} text />}
                                 {scheduledCount > 0 && (confirmClear ? (
                                     <>
                                         <button
