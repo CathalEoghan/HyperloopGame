@@ -1215,7 +1215,7 @@ export const EMAILS = {
             {
                 id: 'fan-celebrate',
                 subject: 'Something to celebrate',
-                body: "Dearest {formal},\n\nThe club needs a reason to celebrate. We have bought the balloons, and a cake with your face on it, and we have been keeping them in the fridge since March. The face is starting to sag. We need to use it quickly.\n\nCould you reach a new milestone? Any milestone will do, though a big one would be better. We will throw a party in your honour, and you do not even have to come. We will simply imagine you there.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
+                body: "Dearest {formal},\n\nThe club needs a reason to celebrate. We have bought the balloons, and a cake with your face on it, and we have been keeping them in the fridge since last month. The face is starting to sag. We need to use it quickly.\n\nCould you reach a new milestone? Any milestone will do, though a big one would be better. We will throw a party in your honour, and you do not even have to come. We will simply imagine you there.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club",
                 agree: 'Dear {from},\n\nUnderstood. I will reach a new milestone.\n\nBest regards,\n{fullName}',
                 refuse: 'Dear {from},\n\nI cannot promise a new milestone right now.\n\nBest regards,\n{fullName}',
                 refused: 'Dearest {formal},\n\nThat is perfectly all right. The cake will have to wait. I will keep it somewhere cool, and keep looking at it. Your face is holding up quite well, in the circumstances.\n\nYour biggest fan,\n{from}\nChair, {fullName} Fan Club',
