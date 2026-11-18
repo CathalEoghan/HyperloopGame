@@ -399,6 +399,7 @@
     max-width: 420px;
     box-sizing: border-box;
     padding: 10px 14px;
+    font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
     border: 2px solid #e8d8c8;
     border-radius: 8px;
