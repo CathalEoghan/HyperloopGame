@@ -361,9 +361,15 @@ Phuket.jpg - Photo by Pimon Kumsri via Pexels
 Daejeon.jpg - Photo by Paul Evans via Wikimedia Commons (Public Domain License, link: https://commons.wikimedia.org/wiki/File:Daejeon_Skyline.JPG)
 Sendai.jpg - Photo by Nryate via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International, link: https://commons.wikimedia.org/wiki/File:SendaiCity_Skylines_from_Mukaiyama2018.jpg)
 Dresden.jpg - Photo by Levent Simsek via Pexels
-
-
-
+Salvador.jpg - Photo by LEONARDO DOURADO via Pexels
+Jaipur.jpg - Photo by Ansh Yati via Pexels
+DaNang.jpg - Photo by Kirandeep Singh Walia via Pexels
+Arusha.jpg - Photo by Alex Levis via Pexels
+Mendoza.jpg - Photo by Nano Erdozain via Pexels
+Ahmedabad.jpg - Photo by Shlok via Pexels
+Hilo.jpg - Photo by Prayitno via Wikimedia Commons (Creative Commons Attribution 2.0 Generic License, link: https://commons.wikimedia.org/wiki/File:HILO,_Big_Island_Hawaii.jpg)
+SiemReap.jpg - Photo by K via Pexels
+Brighton.jpg - Photo by Expect Best via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -731,6 +737,16 @@ MiniGolf.jpg - Photo by Anna Tarazevich via Pexels
 KoreanRestaurant.jpg - Photo by Sher Lyn . via Pexels
 ThaiRestaurant.jpg - Photo by Augustinus Martinus Noppé via Pexels
 TennisCourts.jpg - Photo by Artem Podrez via Pexels
+ThriftStore.jpg - Photo by cottonbro studio via Pexels
+WineShop.jpg - Photo by Carl-Emil Jørgensen via Pexels
+IndoorSoccer.jpg - Photo by Jean-Daniel Francoeur via Pexels
+SafariHotel.jpg - Photo by Keegan Checks via Pexels
+Planetarium.jpg - Photo by meomupmofilm via Pexels
+NailSalon.jpg - Photo by Leeloo The First via Pexels
+PhoneRepair.jpg - Photo by Tima Miroshnichenko via Pexels
+Optician.jpg - Photo by https://kaboompics.com/ via Pexels
+DryCleaner.jpg - Photo by Simon Law via Wikimedia Commons (Creative Commons Attribution-Share Alike 2.0 Generic License, link: https://commons.wikimedia.org/wiki/File:Dry_clean_rack.jpg)
+MassageParlour.jpg - Photo by Jonathan Borba via Pexels
 
 PRESTIGE UPGRADES
 CultOfCelebrity.jpg - Photo by Pavel Danilyuk via Pexels
@@ -770,7 +786,6 @@ FestiveFreak.jpg - Photo by Vlada Karpovich via Pexels
 SkeletonStaff.jpg - Photo by Edge Training via Pexels
 ColourTheory.jpg - Photo by Antoni Shkraba via Pexels
 DeliveryDrones.jpg - Photo by Deybson Mallony via Pexels
-
 
 
 
