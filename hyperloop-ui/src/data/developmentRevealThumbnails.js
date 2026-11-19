@@ -363,6 +363,16 @@ import KoreanRestaurant from '../assets/developments-reveal/KoreanRestaurant.jpg
 import MiniGolf from '../assets/developments-reveal/MiniGolf.jpg'
 import TennisCourts from '../assets/developments-reveal/TennisCourts.jpg'
 import NerdShop from '../assets/developments-reveal/NerdShop.jpg'
+import SafariHotel from '../assets/developments-reveal/SafariHotel.jpg'
+import WineShop from '../assets/developments-reveal/WineShop.jpg'
+import Planetarium from '../assets/developments-reveal/Planetarium.jpg'
+import IndoorSoccer from '../assets/developments-reveal/IndoorSoccer.jpg'
+import MassageParlour from '../assets/developments-reveal/MassageParlour.jpg'
+import ThriftStore from '../assets/developments-reveal/ThriftStore.jpg'
+import Optician from '../assets/developments-reveal/Optician.jpg'
+import NailSalon from '../assets/developments-reveal/NailSalon.jpg'
+import PhoneRepair from '../assets/developments-reveal/PhoneRepair.jpg'
+import DryCleaner from '../assets/developments-reveal/DryCleaner.jpg'
 
 
 const developmentRevealImages = {
@@ -731,6 +741,16 @@ const developmentRevealImages = {
     "Mini Golf": MiniGolf,
     "Tennis Courts": TennisCourts,
     "Nerd Shop": NerdShop,
+    "Safari Hotel": SafariHotel,
+    "Wine Shop": WineShop,
+    "Planetarium": Planetarium,
+    "Indoor Soccer": IndoorSoccer,
+    "Massage Parlour": MassageParlour,
+    "Thrift Store": ThriftStore,
+    "Optician": Optician,
+    "Nail Salon": NailSalon,
+    "Phone Repair": PhoneRepair,
+    "Dry Cleaner": DryCleaner,
 }
 
 export default developmentRevealImages

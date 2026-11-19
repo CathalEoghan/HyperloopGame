@@ -366,6 +366,16 @@ const developmentImages = {
     "Mini Golf": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/MiniGolf.jpg",
     "Tennis Courts": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TennisCourts.jpg",
     "Nerd Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NerdShop.jpg",
+    "Safari Hotel": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SafariHotel.jpg",
+    "Wine Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/WineShop.jpg",
+    "Planetarium": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Planetarium.jpg",
+    "Indoor Soccer": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/IndoorSoccer.jpg",
+    "Massage Parlour": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/MassageParlour.jpg",
+    "Thrift Store": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ThriftStore.jpg",
+    "Optician": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Optician.jpg",
+    "Nail Salon": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NailSalon.jpg",
+    "Phone Repair": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PhoneRepair.jpg",
+    "Dry Cleaner": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/DryCleaner.jpg",
 
 }
 

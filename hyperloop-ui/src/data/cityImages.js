@@ -361,6 +361,16 @@ const cityImages = {
     "Daejeon": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Daejeon.jpg",
     "Phuket": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Phuket.jpg",
     "Santorini": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Santorini.jpg",
+    "Arusha": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Arusha.jpg",
+    "Mendoza": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Mendoza.jpg",
+    "Hilo": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Hilo.jpg",
+    "Salvador": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Salvador.jpg",
+    "Siem Reap": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SiemReap.jpg",
+    "Brighton": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Brighton.jpg",
+    "Dresden": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Dresden.jpg",
+    "Da Nang": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/DaNang.jpg",
+    "Jaipur": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Jaipur.jpg",
+    "Ahmedabad": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ahmedabad.jpg",
 
 }
 
