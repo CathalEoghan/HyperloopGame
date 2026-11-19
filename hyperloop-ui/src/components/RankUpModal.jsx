@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import './RankUpModal.css'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { playClickSound2, playHoverSound } from '../utils/sound.js'
@@ -6,6 +6,8 @@ import { playClickSound2, playHoverSound } from '../utils/sound.js'
 // choose: Lobbying Suavity lets the player pick the city, so the button says so.
 // waiting: how many rank-ups are waiting. From 3 up, "Claim all" takes a random city for every one of them at once.
 export const CLAIM_ALL_FROM = 3
+// How long "Confirm Auto-Claim?" waits before a click on it counts
+const CONFIRM_DELAY_MS = 400
 
 // Escape does what the main button does - moves on to choosing the city - rather than closing the popup: this is the only
 // way to claim the rank-up, so it can't simply be dismissed. A stray Escape is harmless: it only opens the city choice,
@@ -15,6 +17,8 @@ function RankUpModal({ rank = 0, onClaim, choose = false, waiting = 0, onClaimAl
   // Automatic claiming is a lasting setting, so the button asks once more: the first click turns it into "Confirm Auto-Claim?"
   // and only a second click turns it on. Moving focus anywhere else (another button, the empty modal) puts it back.
   const [confirmingAuto, setConfirmingAuto] = useState(false)
+  // A quick double-click is one action, not a confirmation: a second click within CONFIRM_DELAY_MS of the first is ignored
+  const askedAt = useRef(0)
   return (
     <div className="modal-overlay">
       <div className="modal">
@@ -50,8 +54,9 @@ function RankUpModal({ rank = 0, onClaim, choose = false, waiting = 0, onClaimAl
               onMouseEnter={() => playHoverSound()}
               onBlur={() => setConfirmingAuto(false)}
               onClick={() => {
+                if (confirmingAuto && Date.now() - askedAt.current < CONFIRM_DELAY_MS) return
                 playClickSound2()
-                if (!confirmingAuto) { setConfirmingAuto(true); return }
+                if (!confirmingAuto) { askedAt.current = Date.now(); setConfirmingAuto(true); return }
                 setConfirmingAuto(false)
                 onEnableAuto()
               }}
