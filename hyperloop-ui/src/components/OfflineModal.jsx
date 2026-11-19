@@ -18,7 +18,6 @@ function formatDuration(seconds) {
 
 function OfflineModal({ offlineSeconds, offlineIncome, arrived = 0, departed = 0, passengers = 0, onCollect, reputation, onSpendRep, capHours = 48, bonusFactor = 2 }) {
     const [doubled, setDoubled] = useState(false)
-    const [doubleHovered, setDoubleHovered] = useState(false)
     const canDouble = reputation >= 20 && !doubled
     const displayIncome = doubled ? Math.floor(offlineIncome * bonusFactor) : Math.floor(offlineIncome)
     const bonusWord = bonusFactor >= 4 ? 'Quadruple' : bonusFactor >= 3 ? 'Triple' : 'Double'
@@ -38,75 +37,97 @@ function OfflineModal({ offlineSeconds, offlineIncome, arrived = 0, departed = 0
     const countedSeconds = Math.min(offlineSeconds, Number.isFinite(capHours) ? capHours * 3600 : Infinity)
     const averagePerHour = countedSeconds > 0 ? offlineIncome / (countedSeconds / 3600) : 0
 
+    // The figure counts up when the modal opens, and again from the old figure when it's doubled
+    const shownIncome = useCountUp(displayIncome)
+    // Only mention the cap when it actually cut the payout short
+    const wasCapped = Number.isFinite(capHours) && offlineSeconds > capHours * 3600
+    const repIcon = <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', borderRadius: 0, verticalAlign: 'middle', position: 'relative', top: '-1px', margin: '0 3px 0 2px' }} />
+
     return (
         <div className="modal-overlay">
             <div className="modal offline-modal">
-                <img src={helloIcon} alt="hello" className="offline-icon" style={{ width: '64px', height: '64px', objectFit: 'contain', border: 'none', borderRadius: '0' }} />
+                {/* Sizes are inline: a bare ".modal img" rule on the Cities page outranks a class here */}
+                <img src={helloIcon} alt="hello" className="offline-icon" style={{ width: '64px', height: '64px', objectFit: 'contain', border: 'none', borderRadius: 0 }} />
                 <h2 className="offline-title">Welcome back!</h2>
                 <p className="offline-subtitle">
                     You were away for <strong>{formatDuration(offlineSeconds)}</strong>
                 </p>
-                {(arrived > 0 || departed > 0) && (
-                    <p className="offline-traffic">
-                        While you were away, {arrived} {arrived === 1 ? 'loop' : 'loops'} arrived, {departed} {departed === 1 ? 'loop' : 'loops'} departed
-                        {passengers > 0 && <>, and around <strong>{passengers.toLocaleString('en-GB')}</strong> passengers commuted through your terminal</>}.
-                    </p>
+                {(arrived > 0 || departed > 0 || passengers > 0) && (
+                    <div className="offline-stats">
+                        <div className="offline-stat"><strong>{arrived.toLocaleString('en-GB')}</strong><span>{arrived === 1 ? 'arrival' : 'arrivals'}</span></div>
+                        <div className="offline-stat"><strong>{departed.toLocaleString('en-GB')}</strong><span>{departed === 1 ? 'departure' : 'departures'}</span></div>
+                        {passengers > 0 && <div className="offline-stat"><strong>{passengers.toLocaleString('en-GB')}</strong><span>passengers</span></div>}
+                    </div>
                 )}
                 <div className="offline-earnings-box">
                     <span className="offline-earnings-label">Offline earnings</span>
                     <span className="offline-earnings-amount">
-                        <AbbreviatedNumber value={displayIncome} icon={cashIcon} iconAlt="£" iconSize={22} iconStyle={{ objectFit: 'contain', marginTop: '3px' }} exact={false} />
+                        <AbbreviatedNumber value={shownIncome} icon={cashIcon} iconAlt="£" iconSize={24} iconStyle={{ objectFit: 'contain' }} exact={false} />
                     </span>
                     {/* What the figure is made of, so a multiplier reads as a breakdown rather than as part of the number */}
                     <span className="offline-earnings-breakdown">
                         {averagePerHour > 0 && <>Averaging <AbbreviatedNumber value={averagePerHour} suffix="/hr" exact={false} /></>}
-                        {doubled && <> × {bonusFactor} {bonusWord} earnings</>}
+                        {doubled && <> × {bonusFactor}</>}
                     </span>
-                    <span className="offline-earnings-note">{Number.isFinite(capHours) ? `Capped at ${capHours} hours` : 'No cap on offline earnings'}</span>
+                    {wasCapped && (
+                        <span className="offline-earnings-note">Capped at {capHours} hours of your {formatDuration(offlineSeconds)} away</span>
+                    )}
                 </div>
-                {!doubled && (
+                <div className="offline-actions">
+                    {/* Collect is the normal way on, so it's the filled button; doubling is the optional extra */}
                     <button
-                        style={{
-                            marginTop: '12px',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
-                            background: doubleHovered && canDouble ? 'var(--ui-accent, #f5a623)' : 'white',
-                            color: doubleHovered && canDouble ? 'white' : canDouble ? 'black' : '#aaa',
-                            border: `2px solid ${canDouble ? 'black' : '#ccc'}`,
-                            borderRadius: '8px', padding: '8px 16px',
-                            cursor: canDouble ? 'var(--cursor-pointer, pointer)' : 'not-allowed',
-                            fontFamily: 'Inter, sans-serif', fontWeight: 'bold', fontSize: '0.85rem',
-                            opacity: canDouble ? 1 : 0.5,
-                            transition: 'background 0.15s, color 0.15s',
-                        }}
-                        onMouseEnter={() => { setDoubleHovered(true); if (canDouble) playHoverSound() }}
-                        onMouseLeave={() => setDoubleHovered(false)}
-                        onClick={() => {
-    if (!canDouble) { playNotEnoughFundsSound(); return }
-    playClickSound2()
-    onSpendRep(20)
-    setDoubled(true)
-}}
+                        className="offline-collect-btn"
+                        onMouseEnter={() => playHoverSound()}
+                        onClick={() => { playClickSound2(); onCollect(displayIncome) }}
                     >
-                        {/* The trophy icon sits flush to the top of its own canvas (no built-in headroom like text's ascender space),
-                            is inline with the text (the label is one span), where verticalAlign: middle leaves it a little low, hence the 1px lift. */}
-                        {canDouble ? (
-                            <span>{bonusWord} it for <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '-1px', margin: '0 3px' }} />20 (<AbbreviatedNumber value={Math.floor(offlineIncome * bonusFactor)} exact={false} />)</span>
-                        ) : (
-                            <span>{bonusWord} it: needs <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', verticalAlign: 'middle', position: 'relative', top: '-1px', margin: '0 3px' }} />20 (you have {reputation})</span>
-                        )}
+                        Collect & Continue
                     </button>
-                )}
-                <button
-                    className="closeButton"
-                    style={{ marginTop: '12px' }}
-                    onMouseEnter={() => playHoverSound()}
-                    onClick={() => { playClickSound2(); onCollect(displayIncome) }}
-                >
-                    Collect & Continue
-                </button>
+                    {!doubled && (
+                        <button
+                            className={`offline-double-btn${canDouble ? '' : ' offline-double-btn-locked'}`}
+                            onMouseEnter={() => { if (canDouble) playHoverSound() }}
+                            onClick={() => {
+                                if (!canDouble) { playNotEnoughFundsSound(); return }
+                                playClickSound2()
+                                onSpendRep(20)
+                                setDoubled(true)
+                            }}
+                        >
+                            {/* The reward first, then what it costs, so the figure can't be read as the price */}
+                            {canDouble ? (
+                                <span>{bonusWord} to <AbbreviatedNumber value={Math.floor(offlineIncome * bonusFactor)} exact={false} /> · {repIcon}20</span>
+                            ) : (
+                                <span>{bonusWord} it: needs {repIcon}20 (you have {reputation})</span>
+                            )}
+                        </button>
+                    )}
+                </div>
             </div>
         </div>
     )
+}
+
+// Eases a shown number from where it was to the new value over about a second
+function useCountUp(target, duration = 900) {
+    const [shown, setShown] = useState(0)
+    const fromRef = useRef(0)
+    const shownRef = useRef(0)
+    useEffect(() => {
+        fromRef.current = shownRef.current
+        const start = performance.now()
+        let frame
+        const step = (now) => {
+            const t = Math.min(1, (now - start) / duration)
+            const eased = 1 - Math.pow(1 - t, 3)
+            const v = Math.round(fromRef.current + (target - fromRef.current) * eased)
+            shownRef.current = v
+            setShown(v)
+            if (t < 1) frame = requestAnimationFrame(step)
+        }
+        frame = requestAnimationFrame(step)
+        return () => cancelAnimationFrame(frame)
+    }, [target, duration])
+    return shown
 }
 
 export default OfflineModal

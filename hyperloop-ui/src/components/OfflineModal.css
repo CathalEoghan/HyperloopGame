@@ -4,7 +4,6 @@
 }
 
 .offline-icon {
-    font-size: 2.5rem;
     margin-bottom: 8px;
 }
 
@@ -18,14 +17,16 @@
 .offline-subtitle {
     color: #666;
     font-size: 0.9rem;
-    margin: 0 0 20px;
+    margin: 0 0 16px;
     font-family: 'Inter', sans-serif;
 }
 
 .offline-earnings-box {
+    width: 100%;
+    box-sizing: border-box;
     background: #f8f8f8;
     border-radius: 12px;
-    padding: 16px 24px;
+    padding: 14px 24px 12px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -41,16 +42,18 @@
 }
 
 .offline-earnings-amount {
-    font-size: 1.8rem;
     font-weight: bold;
     color: var(--ui-accent, #f5a623);
     /* the icon and the figure stay on one line (a long figure used to wrap, leaving the icon floating beside two lines) */
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: 6px;
     white-space: nowrap;
-    font-family: 'Courier New', monospace;
+    font-family: 'Inter', sans-serif;
+    font-size: 2.1rem;
+    letter-spacing: -0.5px;
+    /* fixed-width digits, so the count-up doesn't jiggle */
     font-variant-numeric: tabular-nums;
 }
 
@@ -71,10 +74,96 @@
     display: inline-flex;
 }
 
-.offline-traffic {
-    color: #666;
-    font-size: 0.85rem;
-    line-height: 1.4;
-    margin: -8px 0 16px;
+/* What happened while away: three figures in a row instead of a sentence */
+.offline-stats {
+    display: flex;
+    width: 100%;
+    box-sizing: border-box;
+    justify-content: center;
+    gap: 8px;
+    margin: 0 0 14px;
     font-family: 'Inter', sans-serif;
 }
+.offline-stat {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 11px 8px 10px;
+    background: #efefef;
+    border: 1.5px solid #e2e2e2;
+    border-radius: 10px;
+}
+.offline-stat strong {
+    font-size: 1.1rem;
+    line-height: 1.1;
+    color: #222;
+}
+.offline-stat span {
+    font-size: 0.7rem;
+    line-height: 1.2;
+    color: #666;
+    white-space: nowrap;
+}
+
+/* Collect (filled, primary) over Double (outlined, optional), the same width. Scoped under .modal because other
+   modals' CSS has a global ".modal button" rule that would otherwise win */
+.offline-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    width: 100%;
+    margin: 14px 0 0;
+}
+.modal .offline-collect-btn {
+    background: var(--ui-accent, #f5a623);
+    color: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: 1rem;
+    letter-spacing: 0.3px;
+    cursor: var(--cursor-pointer, pointer);
+    transition: filter 0.15s, transform 0.1s;
+}
+.modal .offline-collect-btn:hover {
+    filter: brightness(1.06);
+    transform: translateY(-1px);
+}
+.modal .offline-double-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    color: black;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px 16px;
+    font-family: 'Inter', sans-serif;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: var(--cursor-pointer, pointer);
+    transition: background 0.15s, color 0.15s;
+}
+.modal .offline-double-btn:hover {
+    background: var(--ui-accent, #f5a623);
+    color: white;
+}
+.offline-double-btn .abbrev-number {
+    display: inline-flex;
+}
+.modal .offline-double-btn-locked,
+.modal .offline-double-btn-locked:hover {
+    background: white;
+    color: #aaa;
+    border-color: #ccc;
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+
