@@ -358,6 +358,16 @@ import Sendai from '../assets/cities-thumb/Sendai.jpg'
 import Daejeon from '../assets/cities-thumb/Daejeon.jpg'
 import Phuket from '../assets/cities-thumb/Phuket.jpg'
 import Santorini from '../assets/cities-thumb/Santorini.jpg'
+import Arusha from '../assets/cities-thumb/Arusha.jpg'
+import Mendoza from '../assets/cities-thumb/Mendoza.jpg'
+import Hilo from '../assets/cities-thumb/Hilo.jpg'
+import Salvador from '../assets/cities-thumb/Salvador.jpg'
+import SiemReap from '../assets/cities-thumb/SiemReap.jpg'
+import Brighton from '../assets/cities-thumb/Brighton.jpg'
+import Dresden from '../assets/cities-thumb/Dresden.jpg'
+import DaNang from '../assets/cities-thumb/DaNang.jpg'
+import Jaipur from '../assets/cities-thumb/Jaipur.jpg'
+import Ahmedabad from '../assets/cities-thumb/Ahmedabad.jpg'
 
 
 
@@ -676,6 +686,16 @@ const cityImages = {
     Daejeon: Daejeon,
     Phuket: Phuket,
     Santorini: Santorini,
+    Arusha: Arusha,
+    Mendoza: Mendoza,
+    Hilo: Hilo,
+    Salvador: Salvador,
+    "Siem Reap": SiemReap,
+    Brighton: Brighton,
+    Dresden: Dresden,
+    "Da Nang": DaNang,
+    Jaipur: Jaipur,
+    Ahmedabad: Ahmedabad,
     Ankara: Ankara,
     Macau: Macau,
     Brazzaville: Brazzaville,

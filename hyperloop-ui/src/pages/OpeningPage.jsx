@@ -16,6 +16,20 @@ import { PLAYER_NAME_KEY, PLAYER_TITLE_KEY, PLAYER_TITLES } from '../utils/email
 // city the retiring run had - "home" can be any city, not just one of the six usual starters, if Personal
 // Favours picked it last time. A "Change home terminal" button lets the player pick a different one of the six
 // instead, and Personal Favours owners can still pick any city in the world.
+// A quiet text button back to the previous step: what was typed or picked there is kept
+function BackButton({ onClick }) {
+    return (
+        <button
+            type="button"
+            className="opening-back-btn"
+            onMouseEnter={() => playHoverSound()}
+            onClick={() => { playClickSound2(); onClick() }}
+        >
+            <img className="opening-back-arrow" src={rightArrow} alt="" /> Back
+        </button>
+    )
+}
+
 function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runStart = null }) {
     const [step, setStep] = useState(runStart ? 2 : 1)
     const [localName, setLocalName] = useState(runStart?.terminalName || "")
@@ -145,9 +159,13 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                         />
                     </div>
                     <p className="opening-hint">Your name and title can be changed at any time in Settings.</p>
-                    <button className="opening-btn" onClick={confirmPlayer} disabled={!playerName.trim()}>
-                        Launch terminal <img className="opening-btn-arrow" src={rightArrow} alt="" />
-                    </button>
+                    <div className="opening-actions">
+                        {/* The home city isn't kept until Launch terminal, so it can still be changed */}
+                        <BackButton onClick={() => setPendingCity(null)} />
+                        <button className="opening-btn" onClick={confirmPlayer} disabled={!playerName.trim()}>
+                            Launch terminal <img className="opening-btn-arrow" src={rightArrow} alt="" />
+                        </button>
+                    </div>
                 </div>
             </div>
         )
@@ -222,6 +240,12 @@ function OpeningPage({ constructionManager, setPickedCity, setTerminalName, runS
                         </div>
                     )
                 })()}
+                {/* A brand-new game can go back to rename the terminal; a retired run starts on this step */}
+                {!runStart && (
+                    <div className="opening-corner-back">
+                        <BackButton onClick={() => setStep(1)} />
+                    </div>
+                )}
             </div>
             {pickerOpen && (
                 <CityPickerModal

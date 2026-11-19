@@ -366,6 +366,16 @@ const cityLoopCodes = {
   'Daejeon': 'DJN',
   'Phuket': 'HKT',
   'Santorini': 'JTR',
+  'Arusha': 'ARK',
+  'Mendoza': 'MDZ',
+  'Hilo': 'ITO',
+  'Salvador': 'SSA',
+  'Siem Reap': 'REP',
+  'Brighton': 'BTN',
+  'Dresden': 'DRS',
+  'Da Nang': 'DAD',
+  'Jaipur': 'JAI',
+  'Ahmedabad': 'AMD',
 }
 
 export default cityLoopCodes

@@ -189,6 +189,11 @@ const SETTINGS_KEYS = [
     'hyperloop_notifications',
     'terminalBoardTab',
     'hyperloop_shop_last_category',
+    // The Cities and Development pages' sort order and filter tab
+    'citiesContinent',
+    'citiesSort',
+    'developmentsCategory',
+    'developmentsSort',
     // The name emails address the player by
     'hyperloop_player_name',
     // The title (Mr., Dr., ...) emails put before the player's last name

@@ -359,6 +359,16 @@ import { Sendai } from './Sendai.js'
 import { Daejeon } from './Daejeon.js'
 import { Phuket } from './Phuket.js'
 import { Santorini } from './Santorini.js'
+import { Arusha } from './Arusha.js'
+import { Mendoza } from './Mendoza.js'
+import { Hilo } from './Hilo.js'
+import { Salvador } from './Salvador.js'
+import { SiemReap } from './SiemReap.js'
+import { Brighton } from './Brighton.js'
+import { Dresden } from './Dresden.js'
+import { DaNang } from './DaNang.js'
+import { Jaipur } from './Jaipur.js'
+import { Ahmedabad } from './Ahmedabad.js'
 
 
 export const allCities = [
@@ -722,6 +732,16 @@ export const allCities = [
     Daejeon,
     Phuket,
     Santorini,
+    Arusha,
+    Mendoza,
+    Hilo,
+    Salvador,
+    SiemReap,
+    Brighton,
+    Dresden,
+    DaNang,
+    Jaipur,
+    Ahmedabad,
 
 
 

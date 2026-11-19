@@ -151,6 +151,61 @@
     cursor: not-allowed;
 }
 
+/* Back to the previous step: an outlined button beside the main one - clearly a button, but Continue stays the
+   obvious way on */
+.opening-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 14px;
+    margin-top: 4px;
+}
+.opening-back-btn {
+    background: white;
+    border: 2px solid #d6cfc8;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    color: #3a2e24;
+    cursor: var(--cursor-pointer, pointer);
+    transition: border-color 0.15s, color 0.15s, transform 0.1s;
+}
+.opening-back-btn:hover {
+    border-color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent, #f5a623);
+    transform: translateY(-1px);
+}
+.opening-back-arrow {
+    width: 0.85em;
+    height: 0.85em;
+    margin-right: 6px;
+    vertical-align: -0.1em;
+    transform: scaleX(-1);
+}
+/* On the city step it sits in the top-left corner, since the six cards push anything under them off the screen */
+.opening-corner-back {
+    position: fixed;
+    top: 24px;
+    left: 28px;
+    z-index: 2;
+}
+.opening-corner-back .opening-back-btn {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.55);
+    color: white;
+}
+.opening-corner-back .opening-back-btn:hover {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent, #f5a623);
+}
+.opening-corner-back .opening-back-arrow {
+    filter: brightness(0) invert(1);
+}
+
 /* Step 3 - what to call the player */
 .opening-welcome-small {
     font-size: 2.2rem;

@@ -198,6 +198,16 @@ import { koreanRestaurant } from './KoreanRestaurant.js'
 import { miniGolf } from './MiniGolf.js'
 import { tennisCourts } from './TennisCourts.js'
 import { nerdShop } from './NerdShop.js'
+import { safariHotel } from './SafariHotel.js'
+import { wineShop } from './WineShop.js'
+import { planetarium } from './Planetarium.js'
+import { indoorSoccer } from './IndoorSoccer.js'
+import { massageParlour } from './MassageParlour.js'
+import { thriftStore } from './ThriftStore.js'
+import { optician } from './Optician.js'
+import { nailSalon } from './NailSalon.js'
+import { phoneRepair } from './PhoneRepair.js'
+import { dryCleaner } from './DryCleaner.js'
 
 
 export const allDevelopments = [
@@ -400,6 +410,16 @@ export const allDevelopments = [
     miniGolf,
     tennisCourts,
     nerdShop,
+    safariHotel,
+    wineShop,
+    planetarium,
+    indoorSoccer,
+    massageParlour,
+    thriftStore,
+    optician,
+    nailSalon,
+    phoneRepair,
+    dryCleaner,
 
 
 ]

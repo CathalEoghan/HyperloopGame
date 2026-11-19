@@ -358,7 +358,17 @@ const cityCoordinates = {
 "Sendai": { lat: 38.2682, lng: 140.8694 },
 "Daejeon": { lat: 36.3504, lng: 127.3845 },
 "Phuket": { lat: 7.8804, lng: 98.3923 },
-"Santorini": { lat: 36.3932, lng: 25.4615 }
+"Santorini": { lat: 36.3932, lng: 25.4615 },
+"Arusha": { lat: -3.3869, lng: 36.683 },
+"Mendoza": { lat: -32.8895, lng: -68.8458 },
+"Hilo": { lat: 19.7074, lng: -155.0885 },
+"Salvador": { lat: -12.9777, lng: -38.5016 },
+"Siem Reap": { lat: 13.3633, lng: 103.8564 },
+"Brighton": { lat: 50.8225, lng: -0.1372 },
+"Dresden": { lat: 51.0504, lng: 13.7373 },
+"Da Nang": { lat: 16.0544, lng: 108.2022 },
+"Jaipur": { lat: 26.9124, lng: 75.7873 },
+"Ahmedabad": { lat: 23.0225, lng: 72.5714 }
 
 
 
