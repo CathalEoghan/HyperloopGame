@@ -41,7 +41,7 @@
 }
 
 .delay-message {
-    color: #ccc;
+    color: #e6e6e6;
     font-size: 0.95rem;
     line-height: 1.8;
     margin: 0 0 12px;
@@ -63,7 +63,7 @@
 }
 
 .delay-subtext {
-    color: #888;
+    color: #a8a8a8;
     font-size: 0.85rem;
     margin: 0 0 28px;
     font-style: italic;
@@ -80,6 +80,8 @@
     border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
     color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-family: 'Courier New', Courier, monospace;
+    /* Courier New is very thin; bold labels keep it readable on the black card */
+    font-weight: bold;
     font-size: 1rem;
     letter-spacing: 1px;
     padding: 14px 24px;
@@ -95,9 +97,11 @@
 
 .delay-btn-dismiss {
     background: none;
-    border: 1px solid #555;
-    color: #666;
+    /* Quieter than Issue compensation, but still readable */
+    border: 1px solid #7a7a7a;
+    color: #b4b4b4;
     font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
     font-size: 0.85rem;
     padding: 10px 24px;
     cursor: var(--cursor-pointer, pointer);
@@ -106,8 +110,18 @@
 }
 
 .delay-btn-dismiss:hover {
-    background: #1a1a1a;
-    color: #aaa;
+    background: #1c1c1c;
+    border-color: #b4b4b4;
+    color: #e6e6e6;
+}
+
+/* Issue compensation when the balance can't cover it: grey and still readable, with no hover fill */
+.delay-btn-compensate.delay-btn-locked,
+.delay-btn-compensate.delay-btn-locked:hover {
+    background: none;
+    border-color: #5a5a5a;
+    color: #8f8f8f;
+    cursor: not-allowed;
 }
 
 /* The small "-25% reduced cost" line an upgrade earns under a button's label. It takes the button's own colour (so it stays
@@ -115,5 +129,5 @@
 .delay-btn-compensate,
 .delay-btn-dismiss { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; }
 .delay-btn-note { font-size: 0.72rem; letter-spacing: 0.5px; opacity: 0.75; }
-/* The Refuse button is dim grey on purpose, so its note needs its own lift to stay readable */
-.delay-btn-dismiss .delay-btn-note { opacity: 1; color: #8c8c8c; }
+/* The Refuse button is grey on purpose, so its note needs its own lift to stay readable */
+.delay-btn-dismiss .delay-btn-note { opacity: 1; color: #a0a0a0; }

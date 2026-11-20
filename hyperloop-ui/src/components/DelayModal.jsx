@@ -47,9 +47,10 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
                     Passengers are angry and some are demanding compensation.
                 </p>
                 <div className="delay-buttons">
-                    <button className="delay-btn-compensate"
-                        onMouseEnter={() => playHoverSound()}
-                        style={{ opacity: canAffordCompensation ? 1 : 0.5 }}
+                    {/* Can't afford it: a greyed button that says why, rather than the accent button at half opacity, whose
+                        hover fill showed through as a muddy brown */}
+                    <button className={`delay-btn-compensate${canAffordCompensation ? '' : ' delay-btn-locked'}`}
+                        onMouseEnter={() => { if (canAffordCompensation) playHoverSound() }}
                         onClick={() => {
                             if (!canAffordCompensation) { playNotEnoughFundsSound(); return; }
                             playClickSound2();
@@ -58,7 +59,8 @@ function DelayModal({ delay, onCompensate, onDismiss, economyManager, balance })
                         <span className="delay-btn-label" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '2px' }}>
                             Issue compensation (<AbbreviatedNumber value={adjustedCompensation} icon={cashIcon} iconAlt="£" iconSize={14} />)
                         </span>
-                        {compensationCutPct > 0 && <span className="delay-btn-note">-{compensationCutPct}% reduced cost</span>}
+                        {!canAffordCompensation && <span className="delay-btn-note">Not enough cash</span>}
+                        {canAffordCompensation && compensationCutPct > 0 && <span className="delay-btn-note">-{compensationCutPct}% reduced cost</span>}
                     </button>
                     <button className="delay-btn-dismiss"
                         onMouseEnter={() => playHoverSound()}
