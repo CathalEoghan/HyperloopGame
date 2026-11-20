@@ -368,7 +368,17 @@ const cityCoordinates = {
 "Dresden": { lat: 51.0504, lng: 13.7373 },
 "Da Nang": { lat: 16.0544, lng: 108.2022 },
 "Jaipur": { lat: 26.9124, lng: 75.7873 },
-"Ahmedabad": { lat: 23.0225, lng: 72.5714 }
+"Ahmedabad": { lat: 23.0225, lng: 72.5714 },
+"Mykonos": { lat: 37.4467, lng: 25.3289 },
+"Leipzig": { lat: 51.3397, lng: 12.3731 },
+"Lijiang": { lat: 26.8721, lng: 100.2299 },
+"Edmonton": { lat: 53.5461, lng: -113.4938 },
+"Newcastle": { lat: 54.9783, lng: -1.6178 },
+"Odesa": { lat: 46.4825, lng: 30.7233 },
+"Kazan": { lat: 55.7961, lng: 49.1064 },
+"Incheon": { lat: 37.4563, lng: 126.7052 },
+"Rennes": { lat: 48.1173, lng: -1.6778 },
+"Lviv": { lat: 49.8397, lng: 24.0297 }
 
 
 

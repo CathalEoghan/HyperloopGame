@@ -374,6 +374,16 @@ import Optician from '../assets/developments-thumb/Optician.jpg'
 import NailSalon from '../assets/developments-thumb/NailSalon.jpg'
 import PhoneRepair from '../assets/developments-thumb/PhoneRepair.jpg'
 import DryCleaner from '../assets/developments-thumb/DryCleaner.jpg'
+import PartyShop from '../assets/developments-thumb/PartyShop.jpg'
+import StationeryShop from '../assets/developments-thumb/StationeryShop.jpg'
+import SilkEmbroideryShop from '../assets/developments-thumb/SilkEmbroideryShop.jpg'
+import TrampolinePark from '../assets/developments-thumb/TrampolinePark.jpg'
+import ChildrensSoftPlay from '../assets/developments-thumb/ChildrensSoftPlay.jpg'
+import TattooParlour from '../assets/developments-thumb/TattooParlour.jpg'
+import DoughnutShop from '../assets/developments-thumb/DoughnutShop.jpg'
+import FriedChickenShop from '../assets/developments-thumb/FriedChickenShop.jpg'
+import Creperie from '../assets/developments-thumb/Creperie.jpg'
+import CoffeeRoastery from '../assets/developments-thumb/CoffeeRoastery.jpg'
 
 
 const developmentImages = {
@@ -695,6 +705,16 @@ const developmentImages = {
     "Nail Salon": NailSalon,
     "Phone Repair": PhoneRepair,
     "Dry Cleaner": DryCleaner,
+    "Party Shop": PartyShop,
+    "Stationery Shop": StationeryShop,
+    "Silk & Embroidery Shop": SilkEmbroideryShop,
+    "Trampoline Park": TrampolinePark,
+    "Children's Soft Play": ChildrensSoftPlay,
+    "Tattoo Parlour": TattooParlour,
+    "Doughnut Shop": DoughnutShop,
+    "Fried Chicken Shop": FriedChickenShop,
+    "Crêperie": Creperie,
+    "Coffee Roastery": CoffeeRoastery,
     "Arrivals Hall Renovation": ArrivalsHallRenovation,
     "International Development Schemes": InternationalDevelopmentSchemes,
     "September Ticket Deals": SeptemberTicketDeals,

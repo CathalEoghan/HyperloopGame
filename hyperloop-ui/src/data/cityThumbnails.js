@@ -368,6 +368,16 @@ import Dresden from '../assets/cities-thumb/Dresden.jpg'
 import DaNang from '../assets/cities-thumb/DaNang.jpg'
 import Jaipur from '../assets/cities-thumb/Jaipur.jpg'
 import Ahmedabad from '../assets/cities-thumb/Ahmedabad.jpg'
+import Mykonos from '../assets/cities-thumb/Mykonos.jpg'
+import Leipzig from '../assets/cities-thumb/Leipzig.jpg'
+import Lijiang from '../assets/cities-thumb/Lijiang.jpg'
+import Edmonton from '../assets/cities-thumb/Edmonton.jpg'
+import Newcastle from '../assets/cities-thumb/Newcastle.jpg'
+import Odesa from '../assets/cities-thumb/Odesa.jpg'
+import Kazan from '../assets/cities-thumb/Kazan.jpg'
+import Incheon from '../assets/cities-thumb/Incheon.jpg'
+import Rennes from '../assets/cities-thumb/Rennes.jpg'
+import Lviv from '../assets/cities-thumb/Lviv.jpg'
 
 
 
@@ -696,6 +706,16 @@ const cityImages = {
     "Da Nang": DaNang,
     Jaipur: Jaipur,
     Ahmedabad: Ahmedabad,
+    Mykonos: Mykonos,
+    Leipzig: Leipzig,
+    Lijiang: Lijiang,
+    Edmonton: Edmonton,
+    Newcastle: Newcastle,
+    Odesa: Odesa,
+    Kazan: Kazan,
+    Incheon: Incheon,
+    Rennes: Rennes,
+    Lviv: Lviv,
     Ankara: Ankara,
     Macau: Macau,
     Brazzaville: Brazzaville,

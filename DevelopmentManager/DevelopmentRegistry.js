@@ -208,6 +208,16 @@ import { optician } from './Optician.js'
 import { nailSalon } from './NailSalon.js'
 import { phoneRepair } from './PhoneRepair.js'
 import { dryCleaner } from './DryCleaner.js'
+import { partyShop } from './PartyShop.js'
+import { stationeryShop } from './StationeryShop.js'
+import { silkEmbroideryShop } from './SilkEmbroideryShop.js'
+import { trampolinePark } from './TrampolinePark.js'
+import { childrensSoftPlay } from './ChildrensSoftPlay.js'
+import { tattooParlour } from './TattooParlour.js'
+import { doughnutShop } from './DoughnutShop.js'
+import { friedChickenShop } from './FriedChickenShop.js'
+import { creperie } from './Creperie.js'
+import { coffeeRoastery } from './CoffeeRoastery.js'
 
 
 export const allDevelopments = [
@@ -420,6 +430,16 @@ export const allDevelopments = [
     nailSalon,
     phoneRepair,
     dryCleaner,
+    partyShop,
+    stationeryShop,
+    silkEmbroideryShop,
+    trampolinePark,
+    childrensSoftPlay,
+    tattooParlour,
+    doughnutShop,
+    friedChickenShop,
+    creperie,
+    coffeeRoastery,
 
 
 ]

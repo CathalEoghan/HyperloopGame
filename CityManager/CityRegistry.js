@@ -369,6 +369,16 @@ import { Dresden } from './Dresden.js'
 import { DaNang } from './DaNang.js'
 import { Jaipur } from './Jaipur.js'
 import { Ahmedabad } from './Ahmedabad.js'
+import { Mykonos } from './Mykonos.js'
+import { Leipzig } from './Leipzig.js'
+import { Lijiang } from './Lijiang.js'
+import { Edmonton } from './Edmonton.js'
+import { Newcastle } from './Newcastle.js'
+import { Odesa } from './Odesa.js'
+import { Kazan } from './Kazan.js'
+import { Incheon } from './Incheon.js'
+import { Rennes } from './Rennes.js'
+import { Lviv } from './Lviv.js'
 
 
 export const allCities = [
@@ -742,6 +752,16 @@ export const allCities = [
     DaNang,
     Jaipur,
     Ahmedabad,
+    Mykonos,
+    Leipzig,
+    Lijiang,
+    Edmonton,
+    Newcastle,
+    Odesa,
+    Kazan,
+    Incheon,
+    Rennes,
+    Lviv,
 
 
 

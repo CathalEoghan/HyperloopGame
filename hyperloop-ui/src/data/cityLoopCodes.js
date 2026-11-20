@@ -376,6 +376,16 @@ const cityLoopCodes = {
   'Da Nang': 'DAD',
   'Jaipur': 'JAI',
   'Ahmedabad': 'AMD',
+  'Mykonos': 'JMK',
+  'Leipzig': 'LEJ',
+  'Lijiang': 'LJG',
+  'Edmonton': 'YEG',
+  'Newcastle': 'NCL',
+  'Odesa': 'ODS',
+  'Kazan': 'KZN',
+  'Incheon': 'ICN',
+  'Rennes': 'RNS',
+  'Lviv': 'LWO',
 }
 
 export default cityLoopCodes
