@@ -656,7 +656,7 @@ export const POSTS = {
         'whats that song its like september something #stumped',
         'Hmm starting to wonder why i brought a coat always forget september is still kinda warm lol',
         'might try and squeeze in one last trip while the sun is still around',
-        'September is the best time to travel... a little cooler... and no BRAT children on the plane #blissful',
+        'September is the best time to travel... a little cooler... and no BRAT children on the loop #blissful',
         'Hope everyones having a blessed september 🍃',
     ],
 
@@ -984,7 +984,7 @@ export const POSTS = {
     // While a Celebrity Sighting's marked departure is still to come. Never names the city or the gate.
     celebrityDepartureRumour: [
         'Is it true there\'s a secret celebrity travelling out of {terminalName} today??',
-        'wait a minute... heard someone famous is flying out of {terminalName} later 👀',
+        'wait a minute... heard someone famous is leaving from {terminalName} later 👀',
         'my cousin works at {terminalName} and says there\'s a VIP on one of the departures today 🤫',
         'anyone know which loop the celebrity is leaving on?? asking for a friend',
         'not saying i\'m camping by the departure board but... 👀 #celebritywatch',
@@ -1057,7 +1057,7 @@ export const POSTS = {
         'no i do not have anything to declare!',
         'Can someone explain what customs is 😂',
         'Do I have to declare my travel pillow?',
-        'Finally touched down in {homeCity}! Time to find the exit and grab a coffee ☕',
+        'Finally arrived in {homeCity}! Time to find the exit and grab a coffee ☕',
         'That trip from {city} felt like an eternity... so glad to finally be here 😴',
         'standing at the baggage carousel praying my suitcase is the first one out 🤞',
         'just stepped off the loop from {city}. {homeCity}, please be good to me! 🙏',
@@ -2325,7 +2325,7 @@ export const POSTS = {
         'Travelling with us today? We\'d love to hear your feedback 💬',
         'Safe travels to all our passengers today 🌟',
         'Thank you for choosing {terminalName} — we\'re glad you\'re here 🙏',
-        'We hope your journey with us today is a smooth one ✈️',
+        'We hope your journey with us today is a smooth one 🚄',
         'A warm welcome to all passengers travelling through {terminalName} today 👋',
         'Reminder: all lost property should be handed in at the information desk near Gate 1 🎒',
         'We\'re committed to making every journey through {terminalName} a great one 💛',
@@ -2345,7 +2345,7 @@ export const POSTS = {
         'Every journey starts here. We\'re honoured to be part of yours ❤️',
         'Please dispose of liquids and recyclables in the designated bins provided ♻️',
         'A quick reminder that security cameras operate 24/7 throughout {terminalName} 📹',
-        'The {terminalName} team wishes you a wonderful trip wherever you\'re headed ✈️',
+        'The {terminalName} team wishes you a wonderful trip wherever you\'re headed 🚄',
         'Reminder: please have your travel documents ready before boarding 📋',
         'Reminder: we have a zero-tolerance policy on abuse of staff.',
         'Attention passengers: please keep your belongings with you at all times 🧳',
@@ -2448,7 +2448,7 @@ export const POSTS = {
         ],
         tourism_surge: [
             'Welcome to all visitors travelling through {terminalName} for the {occasion} this week! We\'re delighted to have you 🌍',
-            'Huge numbers travelling through {terminalName} today — welcome to everyone in town for the {occasion}! ✈️',
+            'Huge numbers travelling through {terminalName} today — welcome to everyone in town for the {occasion}! 🚄',
             'The energy at {terminalName} is electric today! Sending a warm welcome to everyone here for the {occasion} 🎉',
             'So many new faces at {terminalName}! If you\'re arriving for the {occasion}, we hope you have an unforgettable time 🥳',
             '{terminalName} is buzzing! It\'s amazing to see so many travelers coming together for the {occasion} 🗺️',
@@ -2794,7 +2794,7 @@ export const POSTS = {
         'taking the cable car up Sugarloaf Mountain at sunset 🚡',
         'feijoada for lunch. i will need a nap afterwards 😴',
         'Christ the Redeemer at sunrise tomorrow. alarm set for stupid o\'clock',
-        'bought a pair of flip flops the second i landed. when in Rio 🩴',
+        'bought a pair of flip flops the second i arrived. when in Rio 🩴',
         'fresh coconut on the beach is the only drink i need 🥥',
         'ahh RIO!!!!',
         'football on the sand at sunset. everyone here is so good at it ⚽',
@@ -2835,7 +2835,7 @@ export const POSTS = {
         'dreading the "so when are you getting married" questions at the Thanksgiving table lol',
         'turkey, stuffing, mashed potatoes... thinking about it all loop long 🦃',
         'happy Thanksgiving to everyone travelling this week, and to everyone working it! 🧡',
-        'just landed for Thanksgiving! cant wait to see everyone 🍂',
+        'just arrived for Thanksgiving! cant wait to see everyone 🍂',
     ],
     // Black Friday to Cyber Monday. Nothing here assumes the terminal has a shop, or how busy anywhere is.
     specialDay_blackFriday: [
@@ -2861,7 +2861,7 @@ export const POSTS = {
     specialDay_lunarNewYear: [
         'Happy Lunar New Year!! 🧧🏮',
         'red envelopes at the ready. travelling home for Lunar New Year 🧧',
-        'travelling for Lunar New Year, the biggest trip of the year for so many people ✈️',
+        'travelling for Lunar New Year, the biggest trip of the year for so many people 🚄',
         'cant wait for the reunion dinner. dumplings for days 🥟',
         'Xin nian kuai le to everyone celebrating! 🎉',
         'wearing red for luck today. happy Lunar New Year to everyone travelling! 🧧',

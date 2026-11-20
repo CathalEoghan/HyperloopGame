@@ -1019,7 +1019,7 @@ export const EMAILS = {
                 refuse: 'Dear {from},\n\nI cannot connect {n} new countries right now.\n\nBest regards,\n{fullName}',
                 refused: 'Dear {formal},\n\nNo expansion, then. A shame. I shall have to be worldly some other way. Perhaps with a very large map. I will be sure to mention the terminal that held me back.\n\nWith every confidence in myself,\n{from}',
                 fulfilled: 'Dear {formal},\n\nThree new countries! I have already given three interviews about my vision for the network. I was very moving. I am told some of it was even true. You must come to my next dinner, and bring the receipts.\n\nWith every confidence in myself,\n{from}',
-                failed: 'Dear {formal},\n\nThe countries were not connected in time. I had told people I was cutting three ribbons, abroad. I have had to say the flights were cancelled. By you.\n\nWith every confidence in myself,\n{from}',
+                failed: 'Dear {formal},\n\nThe countries were not connected in time. I had told people I was cutting three ribbons, abroad. I have had to say the trips were cancelled. By you.\n\nWith every confidence in myself,\n{from}',
             },
         ],
     },

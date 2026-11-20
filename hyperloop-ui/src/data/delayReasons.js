@@ -2,7 +2,7 @@
 // conditions outside, so they are true wherever it is. Arrivals are another terminal's loops, so theirs are about the journey.
 export const DEPARTURE_DELAY_REASONS = [
     'a routine safety inspection',
-    'a late change of cabin crew',
+    'a late change of pod crew',
     'a short wait for a free track slot',
     'a final systems check',
     'a late-running connecting service',
