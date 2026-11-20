@@ -40,7 +40,7 @@
 }
 
 .rb-message {
-    color: #ccc;
+    color: #e6e6e6;
     font-size: 0.95rem;
     line-height: 1.8;
     margin: 0 0 16px;
@@ -65,6 +65,8 @@
     border: 2px solid var(--board-accent-readable, var(--board-accent, #f5a623));
     color: var(--board-accent-readable, var(--board-accent, #f5a623));
     font-family: 'Courier New', Courier, monospace;
+    /* Courier New is very thin; a bold label keeps it readable on the black card */
+    font-weight: bold;
     font-size: 1rem;
     letter-spacing: 1px;
     padding: 14px 48px;
