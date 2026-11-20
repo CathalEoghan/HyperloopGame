@@ -25,7 +25,8 @@ function BackButton({ onClick }) {
             onMouseEnter={() => playHoverSound()}
             onClick={() => { playClickSound2(); onClick() }}
         >
-            <img className="opening-back-arrow" src={rightArrow} alt="" /> Back
+            {/* The arrow is the image used as a mask over the text colour, so it turns the accent colour on hover with the word */}
+            <span className="opening-back-arrow" style={{ WebkitMaskImage: `url(${rightArrow})`, maskImage: `url(${rightArrow})` }} aria-hidden="true" /> Back
         </button>
     )
 }

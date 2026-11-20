@@ -179,11 +179,19 @@
     transform: translateY(-1px);
 }
 .opening-back-arrow {
+    display: inline-block;
     width: 0.85em;
     height: 0.85em;
     margin-right: 6px;
     vertical-align: -0.1em;
     transform: scaleX(-1);
+    background-color: currentColor;
+    -webkit-mask-size: contain;
+    mask-size: contain;
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
 }
 /* On the city step it sits in the top-left corner, since the six cards push anything under them off the screen */
 .opening-corner-back {
@@ -201,9 +209,6 @@
     background: rgba(255, 255, 255, 0.14);
     border-color: var(--ui-accent, #f5a623);
     color: var(--ui-accent, #f5a623);
-}
-.opening-corner-back .opening-back-arrow {
-    filter: brightness(0) invert(1);
 }
 
 /* Step 3 - what to call the player */
