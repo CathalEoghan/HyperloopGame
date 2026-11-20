@@ -103,7 +103,7 @@ function FarewellModal({ departure, onFarewell, onMiss, economyManager }) {
                             : <>The loop from <strong>{departure.name}</strong> has arrived at Gate <strong>{departure.gate}</strong>. Passengers are making their way through the terminal.</>)
                     : departure.vip
                         ? (gateClosed
-                            ? <>A VIP is on board the flight to <strong>{departure.name}</strong>, and Gate <strong>{departure.gate}</strong> has just closed. There is still time to give them a very special farewell.</>
+                            ? <>A VIP is on board the loop to <strong>{departure.name}</strong>, and Gate <strong>{departure.gate}</strong> has just closed. There is still time to give them a very special farewell.</>
                             : <>A VIP is about to depart for <strong>{departure.name}</strong> from Gate <strong>{departure.gate}</strong>. Don't let them leave without a very special farewell.</>)
                         : gateClosed
                             ? <>Gate <strong>{departure.gate}</strong> is now closed for <strong>{departure.name}</strong>. There is still time to give passengers a personal farewell.</>
