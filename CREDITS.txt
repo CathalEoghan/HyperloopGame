@@ -370,6 +370,16 @@ Ahmedabad.jpg - Photo by Shlok via Pexels
 Hilo.jpg - Photo by Prayitno via Wikimedia Commons (Creative Commons Attribution 2.0 Generic License, link: https://commons.wikimedia.org/wiki/File:HILO,_Big_Island_Hawaii.jpg)
 SiemReap.jpg - Photo by K via Pexels
 Brighton.jpg - Photo by Expect Best via Pexels
+Incheon.jpg - Photo by 근형 김 via Pexels
+Leipzig.jpg - Photo by Nermin Jad via Pexels
+Mykonos.jpg - Photo by Diego F. Parra via Pexels
+Lijiang.jpg - Photo by David Tran via Pexels
+Rennes.jpg - Photo by Thanh Ly via Pexels
+Newcastle.jpg - Photo by Dan Wright via Pexels
+Kazan.jpg - Photo by Dmitry Sidorov difoto via Pexels
+Odesa.jpg - Photo by Konstantin Brizhnichenko via Wikimedia Commons (Creative Commons Attribution-Share Alike 4.0 International License, link: https://commons.wikimedia.org/wiki/File:%D0%91%D1%83%D0%B4%D0%B8%D0%BD%D0%BE%D0%BA_%D1%82%D0%B5%D0%B0%D1%82%D1%80%D1%83_%D0%BE%D0%BF%D0%B5%D1%80%D0%B8_%D1%82%D0%B0_%D0%B1%D0%B0%D0%BB%D0%B5%D1%82%D1%83_DJI_0023_(cropped).jpg)
+Lviv.jpg - Photo by Sergei Gussev via Pexels
+Edmonton.jpg - Photo by Alexander Aubin via Pexels
 
 DEVELOPMENTS IMAGES
 CupcakeStore.jpg - Photo by Tom Fisk via Pexels
@@ -747,6 +757,16 @@ PhoneRepair.jpg - Photo by Tima Miroshnichenko via Pexels
 Optician.jpg - Photo by https://kaboompics.com/ via Pexels
 DryCleaner.jpg - Photo by Simon Law via Wikimedia Commons (Creative Commons Attribution-Share Alike 2.0 Generic License, link: https://commons.wikimedia.org/wiki/File:Dry_clean_rack.jpg)
 MassageParlour.jpg - Photo by Jonathan Borba via Pexels
+TattooParlour.jpg - Photo by Antoni Shkraba via Pexels
+Creperie.jpg - Photo by Nadin Sh via Pexels
+ChildrensSoftPlay.jpg - Photo by Nothing Ahead via Pexels
+DoughnutShop.jpg - Photo by Nati via Pexels
+SilkEmbroideryShop.jpg - Photo by Alsyed Alsadny via Pexels
+TrampolinePark.jpg - Photo by Senior Master Sgt. David Lipp via Wikimedia Commons (Creative Commons Attribution-Share Alike, link: https://commons.wikimedia.org/wiki/File:119th_Wing_Airman_promotes_mentoring_youth_150416-Z-WA217-038.jpg)
+CoffeeRoastery.jpg - Photo by Hussein Haidar Salman
+PartyShop.jpg - Photo by Juan Chamo via Pexels
+StationeryShop.jpg - Photo by Natalia S via Pexels
+FriedChickenShop.jpg - Photo by Eric Moura via Pexels
 
 PRESTIGE UPGRADES
 CultOfCelebrity.jpg - Photo by Pavel Danilyuk via Pexels

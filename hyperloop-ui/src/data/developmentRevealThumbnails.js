@@ -373,6 +373,16 @@ import Optician from '../assets/developments-reveal/Optician.jpg'
 import NailSalon from '../assets/developments-reveal/NailSalon.jpg'
 import PhoneRepair from '../assets/developments-reveal/PhoneRepair.jpg'
 import DryCleaner from '../assets/developments-reveal/DryCleaner.jpg'
+import PartyShop from '../assets/developments-reveal/PartyShop.jpg'
+import StationeryShop from '../assets/developments-reveal/StationeryShop.jpg'
+import SilkEmbroideryShop from '../assets/developments-reveal/SilkEmbroideryShop.jpg'
+import TrampolinePark from '../assets/developments-reveal/TrampolinePark.jpg'
+import ChildrensSoftPlay from '../assets/developments-reveal/ChildrensSoftPlay.jpg'
+import TattooParlour from '../assets/developments-reveal/TattooParlour.jpg'
+import DoughnutShop from '../assets/developments-reveal/DoughnutShop.jpg'
+import FriedChickenShop from '../assets/developments-reveal/FriedChickenShop.jpg'
+import Creperie from '../assets/developments-reveal/Creperie.jpg'
+import CoffeeRoastery from '../assets/developments-reveal/CoffeeRoastery.jpg'
 
 
 const developmentRevealImages = {
@@ -751,6 +761,16 @@ const developmentRevealImages = {
     "Nail Salon": NailSalon,
     "Phone Repair": PhoneRepair,
     "Dry Cleaner": DryCleaner,
+    "Party Shop": PartyShop,
+    "Stationery Shop": StationeryShop,
+    "Silk & Embroidery Shop": SilkEmbroideryShop,
+    "Trampoline Park": TrampolinePark,
+    "Children's Soft Play": ChildrensSoftPlay,
+    "Tattoo Parlour": TattooParlour,
+    "Doughnut Shop": DoughnutShop,
+    "Fried Chicken Shop": FriedChickenShop,
+    "Crêperie": Creperie,
+    "Coffee Roastery": CoffeeRoastery,
 }
 
 export default developmentRevealImages

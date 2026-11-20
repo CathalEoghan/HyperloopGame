@@ -376,6 +376,16 @@ const developmentImages = {
     "Nail Salon": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/NailSalon.jpg",
     "Phone Repair": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PhoneRepair.jpg",
     "Dry Cleaner": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/DryCleaner.jpg",
+    "Party Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/PartyShop.jpg",
+    "Stationery Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/StationeryShop.jpg",
+    "Silk & Embroidery Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/SilkEmbroideryShop.jpg",
+    "Trampoline Park": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TrampolinePark.jpg",
+    "Children's Soft Play": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/ChildrensSoftPlay.jpg",
+    "Tattoo Parlour": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/TattooParlour.jpg",
+    "Doughnut Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/DoughnutShop.jpg",
+    "Fried Chicken Shop": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/FriedChickenShop.jpg",
+    "Crêperie": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Creperie.jpg",
+    "Coffee Roastery": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/CoffeeRoastery.jpg",
 
 }
 

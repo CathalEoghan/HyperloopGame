@@ -371,6 +371,16 @@ const cityImages = {
     "Da Nang": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/DaNang.jpg",
     "Jaipur": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Jaipur.jpg",
     "Ahmedabad": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Ahmedabad.jpg",
+    "Mykonos": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Mykonos.jpg",
+    "Leipzig": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Leipzig.jpg",
+    "Lijiang": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Lijiang.jpg",
+    "Edmonton": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Edmonton.jpg",
+    "Newcastle": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Newcastle.jpg",
+    "Odesa": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Odesa.jpg",
+    "Kazan": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Kazan.jpg",
+    "Incheon": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Incheon.jpg",
+    "Rennes": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Rennes.jpg",
+    "Lviv": "https://res.cloudinary.com/s25xbw85/image/upload/f_auto,q_auto/Lviv.jpg",
 
 }
 
