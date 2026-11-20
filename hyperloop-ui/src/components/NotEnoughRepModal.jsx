@@ -15,7 +15,7 @@ function NotEnoughRepModal({ onClose }) {
             <div className="modal-overlay" style={{ zIndex: 310 }} onClick={onClose}>
             <div className="modal" onClick={e => e.stopPropagation()} style={{ textAlign: 'center' }}>
                 <img src={reputationIcon} alt="reputation" style={{ width: '48px', height: '48px', margin: '0 auto 12px', display: 'block' }} />
-                <h3 style={{ margin: '0 0 12px', fontFamily: 'var(--font-display)' }}>Not enough Reputation!</h3>
+                <h3 style={{ margin: '0 0 12px', fontFamily: 'Inter, sans-serif' }}>Not enough Reputation!</h3>
                 <p style={{ fontSize: '0.88rem', color: '#555', lineHeight: 1.6, margin: '0 0 16px' }}>
                     You need more Reputation to do this. Here's how to earn it:
                 </p>
