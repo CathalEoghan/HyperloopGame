@@ -41,7 +41,8 @@
     margin-top: 12px;
 }
 
-.modal button:hover {
+/* (Not on a faded button that can't be used yet - aria-disabled: see .bulk-buy-btn:hover in CitiesPage.css) */
+.modal button:hover:where(:not([aria-disabled="true"])) {
     background-color: var(--ui-accent, #f5a623);
     color: var(--ui-accent-contrast, #222222);
 }

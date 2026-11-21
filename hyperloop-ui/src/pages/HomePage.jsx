@@ -1514,7 +1514,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                 {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
                             {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
-                                <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
+                                <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => playHoverSound()} onClick={() => {
                                     if (!canAfford || !onUpgradeCityLine?.(selectedGlobeCity)) { playNotEnoughFundsSound(); return }
                                     info.nextLevel === 10 ? playBigMomentSound() : playFarewellAcceptSound()
                                     setShowLineUpgradeModal(false)
@@ -1562,7 +1562,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                     if (skipCost <= 0) return null
                                     const canSkip = constructionManager.progressionManager.reputation >= skipCost
                                     return (
-                                        <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} onClick={() => {
+                                        <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} aria-disabled={!canSkip} onClick={() => {
                                             if (!constructionManager.skipConstruction(uc)) { playNotEnoughFundsSound(); return }
                                             playClickSound2(); playFarewellAcceptSound(); onConnectCity?.(); setSelectedUnlockedCity(null)
                                         }}>
@@ -1589,6 +1589,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                             <button
                                                 className="constructionButton"
                                                 style={!canAfford ? { opacity: 0.5 } : {}}
+                                                aria-disabled={!canAfford}
                                                 onMouseEnter={() => playHoverSound()}
                                                 onClick={() => {
                                                     playClickSound2()

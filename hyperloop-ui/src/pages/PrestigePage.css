@@ -638,7 +638,8 @@
     cursor: var(--cursor-pointer, pointer);
 }
 
-.prestige-retire-btn:hover { filter: brightness(1.1); }
+/* Not while the run can't be retired yet (aria-disabled): it stays as it is */
+.prestige-retire-btn:hover:where(:not([aria-disabled="true"])) { filter: brightness(1.1); }
 
 .prestige-retire-btn.prestige-buy-btn-disabled {
     background: transparent;

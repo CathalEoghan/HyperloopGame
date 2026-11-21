@@ -100,7 +100,8 @@
     line-height: 1.4;
 }
 
-.closeButton:hover {
+/* (Not on a faded button that can't be used yet - aria-disabled: see .bulk-buy-btn:hover in CitiesPage.css) */
+.closeButton:hover:where(:not([aria-disabled="true"])) {
     background: var(--ui-accent, #f5a623) !important;
     color: white !important;
 }

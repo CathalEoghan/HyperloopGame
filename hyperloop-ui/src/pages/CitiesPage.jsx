@@ -415,7 +415,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         if (skipCost <= 0) return null
                                         const canSkip = constructionManager.progressionManager.reputation >= skipCost
                                         return (
-                                            <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} onClick={() => {
+                                            <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} aria-disabled={!canSkip} onClick={() => {
                                                 // The real Reputation, not the figure on screen, which can be a second old (bug #170)
                                                 if (!constructionManager.skipConstruction(selectedCity)) { playNotEnoughFundsSound(); return }
                                                 playClickSound2(); playFarewellAcceptSound(); onSave(); closeModal()
@@ -581,6 +581,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                     className="constructionButton"
                                                     onMouseEnter={() => playHoverSound()}
                                                     style={{ borderColor: '#c0392b', color: '#c0392b', opacity: canAfford ? 1 : 0.5 }}
+                                                    aria-disabled={!canAfford}
                                                     onClick={() => {
                                                         // Checked again against the real balance and Reputation: the figures on screen can be a second old (bug #170)
                                                         const pm = constructionManager.progressionManager
@@ -649,7 +650,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
-                                    <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} onMouseEnter={() => playHoverSound()} onClick={() => {
+                                    <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => playHoverSound()} onClick={() => {
                                         if (!canAfford || !onUpgradeCityLine(selectedCity)) { playNotEnoughFundsSound(); return; }
                                         info.nextLevel === 10 ? playBigMomentSound() : playFarewellAcceptSound();
                                         setShowLineUpgradeModal(false);
@@ -742,6 +743,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <span className="section-label-pill">Cities available to connect</span>
                                 <span className="city-count-badge">{filteredAvailable.length}</span>
                                 <button className="bulk-buy-btn" style={{ opacity: connectAllPlan.toBuy.length > 0 ? 1 : 0.5, position: 'relative' }}
+                                    aria-disabled={connectAllPlan.toBuy.length === 0}
                                     onMouseEnter={(e) => { playHoverSound(); setShowBulkBuyTip(e.currentTarget) }}
                                     onMouseLeave={() => setShowBulkBuyTip(null)}
                                     onClick={connectAllAffordable}>

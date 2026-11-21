@@ -257,7 +257,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                     {shortfall(reputation, item.cost) != null && (
                                         <span className="shop-need-more">Need <strong>{shortfall(reputation, item.cost)}</strong> more</span>
                                     )}
-                                    <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} onClick={() => handleBuy(item, shakeKey)}>
+                                    <button className={`shop-btn shop-btn-buy${reputation < item.cost ? ' shop-btn-poor' : ''}`} aria-disabled={reputation < item.cost} onClick={() => handleBuy(item, shakeKey)}>
                                         <img src={reputationIcon} alt="" /> {item.cost}
                                     </button>
                                 </>
@@ -360,7 +360,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
                                                             {need != null && (
                                                                 <span className="shop-need-more">Need <strong>{need}</strong> more</span>
                                                             )}
-                                                            <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} onClick={() => handleBundleBuy(bundle)}>
+                                                            <button className={`shop-btn shop-btn-buy${reputation < price ? ' shop-btn-poor' : ''}`} aria-disabled={reputation < price} onClick={() => handleBundleBuy(bundle)}>
                                                                 {originalPrice > price && <span className="shop-bundle-original-price">{originalPrice}</span>}
                                                                 <img src={reputationIcon} alt="" /> {price}
                                                                 {originalPrice > price && <span className="shop-bundle-discount-tag">-20%</span>}

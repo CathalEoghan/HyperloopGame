@@ -146,7 +146,7 @@ const cityCoordinates = {
     "New Orleans":      { lat: 29.9511,  lng: -90.0715 },
     "New York":         { lat: 40.7128,  lng: -74.0060 },
     "Nice":             { lat: 43.7102,  lng:   7.2620 },
-    "Nicosia":          { lat: 35.1856,  lng:  33.3823 },
+    "Nicosia":          { lat: 35.155,   lng:  33.36 },   // south of the Green Line, on the Republic of Cyprus side
     "Nuremberg":        { lat: 49.4521,  lng:  11.0767 },
     "Orlando":          { lat: 28.5383,  lng: -81.3792 },
     "Osaka":            { lat: 34.6937,  lng: 135.5023 },

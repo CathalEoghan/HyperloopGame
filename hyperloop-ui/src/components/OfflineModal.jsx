@@ -16,7 +16,7 @@ function formatDuration(seconds) {
     return 'a moment'
 }
 
-function OfflineModal({ offlineSeconds, offlineIncome, arrived = 0, departed = 0, passengers = 0, onCollect, reputation, onSpendRep, capHours = 48, bonusFactor = 2 }) {
+function OfflineModal({ offlineSeconds, awaySeconds, offlineIncome, arrived = 0, departed = 0, passengers = 0, onCollect, reputation, onSpendRep, capHours = 48, bonusFactor = 2 }) {
     const [doubled, setDoubled] = useState(false)
     const canDouble = reputation >= 20 && !doubled
     const displayIncome = doubled ? Math.floor(offlineIncome * bonusFactor) : Math.floor(offlineIncome)
@@ -31,16 +31,17 @@ function OfflineModal({ offlineSeconds, offlineIncome, arrived = 0, departed = 0
         return () => window.removeEventListener('keydown', onKey)
     }, [])
 
+    // offlineSeconds is the time that's paid for, which stops at the offline cap; awaySeconds is how long the player
+    // was really gone (older saved payouts don't have it, and then the paid-for time is all there is)
+    const away = Math.max(awaySeconds || 0, offlineSeconds)
     // The payout is stepped through the absence hour by hour (it varies with the time of day, the timetable and so
-    // on), so what can honestly be shown is the average it came to over the time that counted: the whole absence, or
-    // the cap if it was longer
-    const countedSeconds = Math.min(offlineSeconds, Number.isFinite(capHours) ? capHours * 3600 : Infinity)
-    const averagePerHour = countedSeconds > 0 ? offlineIncome / (countedSeconds / 3600) : 0
+    // on), so what can honestly be shown is the average it came to over the time that counted
+    const averagePerHour = offlineSeconds > 0 ? offlineIncome / (offlineSeconds / 3600) : 0
 
     // The figure counts up when the modal opens, and again from the old figure when it's doubled
     const shownIncome = useCountUp(displayIncome)
-    // Only mention the cap when it actually cut the payout short
-    const wasCapped = Number.isFinite(capHours) && offlineSeconds > capHours * 3600
+    // Only mention the cap when it actually cut the payout short (by more than a minute, so rounding never shows it)
+    const wasCapped = away - offlineSeconds >= 60
     const repIcon = <img src={reputationIcon} alt="Reputation" style={{ width: '14px', height: '14px', border: 'none', borderRadius: 0, verticalAlign: 'middle', position: 'relative', top: '-1px', margin: '0 3px 0 2px' }} />
 
     return (
@@ -50,7 +51,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, arrived = 0, departed = 0
                 <img src={helloIcon} alt="hello" className="offline-icon" style={{ width: '64px', height: '64px', objectFit: 'contain', border: 'none', borderRadius: 0 }} />
                 <h2 className="offline-title">Welcome back!</h2>
                 <p className="offline-subtitle">
-                    You were away for <strong>{formatDuration(offlineSeconds)}</strong>
+                    You were away for <strong>{formatDuration(away)}</strong>
                 </p>
                 {(arrived > 0 || departed > 0 || passengers > 0) && (
                     <div className="offline-stats">
@@ -70,7 +71,7 @@ function OfflineModal({ offlineSeconds, offlineIncome, arrived = 0, departed = 0
                         {doubled && <> × {bonusFactor}</>}
                     </span>
                     {wasCapped && (
-                        <span className="offline-earnings-note">Capped at {capHours} hours of your {formatDuration(offlineSeconds)} away</span>
+                        <span className="offline-earnings-note">Capped at {capHours} hours of your {formatDuration(away)} away</span>
                     )}
                 </div>
                 <div className="offline-actions">

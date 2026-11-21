@@ -405,7 +405,10 @@
     cursor: var(--cursor-pointer, pointer) !important;
     color: white !important;
 }
-.bulk-buy-btn:hover { filter: brightness(1.1); }
+/* Buttons that can't be used yet (nothing affordable, not enough cash or Reputation) carry aria-disabled="true": they are
+   shown faded and keep their resting look when hovered, rather than lighting up as if pressing them would work. The
+   :where() around the check adds nothing to the selector's weight, so every other button's hover wins or loses exactly as before. */
+.bulk-buy-btn:hover:where(:not([aria-disabled="true"])) { filter: brightness(1.1); }
 .bulk-buy-cost { display: inline-flex; align-items: center; gap: 2px; }
 
 /* Construction overlay */
@@ -491,7 +494,7 @@
     align-items: unset !important;
 }
 
-.modal .closeButton:hover {
+.modal .closeButton:hover:where(:not([aria-disabled="true"])) {
     background: #333 !important;
     color: white !important;
 }
@@ -555,7 +558,7 @@
     cursor: var(--cursor-pointer, pointer) !important;
 }
 
-.modal .constructionButton:hover {
+.modal .constructionButton:hover:where(:not([aria-disabled="true"])) {
     background: var(--ui-accent, #f5a623) !important;
     /* Whichever of near-black/near-white actually reads on top of the equipped theme's accent - some themes'
        accent is itself dark (Gingerbread's brown, for one), and a flat #333 there was close to unreadable. */

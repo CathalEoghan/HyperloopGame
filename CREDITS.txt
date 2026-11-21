@@ -785,7 +785,7 @@ AutomatedScheduling.jpg - Photo by Edge Training via Pexels
 ViralSuperstar.jpg - Photo by https://kaboompics.com/ via Pexels
 AdvancedEngineering.jpg - Photo by Jacob Yavin via Pexels
 BetterInterestRates.jpg - Photo by RDNE Stock Project via Pexels
-FastLearner.jpg - Photo by Polina Tankilevitch via Pexels
+QuickLearner.jpg - Photo by Polina Tankilevitch via Pexels
 CrisisAvoidanceSpecialists.jpg - Photo by Miff Ibra via Pexels
 GlobalTicketCuts.jpg - Photo by Luis Moya via Pexels
 LobbyingSuavity.jpg - Photo by Héctor Berganza via Pexels
@@ -995,7 +995,7 @@ beepBoop.jpg - <a href="https://www.flaticon.com/free-icons/robot" title="robot 
 theLapOfLuxury.jpg - <a href="https://www.flaticon.com/free-icons/luxury" title="luxury icons">Luxury icons created by Flat Icons - Flaticon</a>
 passengerConfusion.jpg - <a href="https://www.flaticon.com/free-icons/confused" title="confused icons">Confused icons created by kmg design - Flaticon</a>
 shoppingSpree.jpg - <a href="https://www.flaticon.com/free-icons/online-shop" title="online shop icons">Online shop icons created by HAJICON - Flaticon</a>
-candyGardenAnimals.jpg - <a href="https://www.flaticon.com/free-icons/pinata" title="piñata icons">Piñata icons created by Magnific - Flaticon</a>
+gardenCandyAnimals.png - <a href="https://www.flaticon.com/free-icons/pinata" title="piñata icons">Piñata icons created by Magnific - Flaticon</a>
 hawaiianPizza.jpg - <a href="https://www.flaticon.com/free-icons/hawaii" title="hawaii icons">Hawaii icons created by juicy_fish - Flaticon</a>
 maceToTheFace.jpg - <a href="https://www.flaticon.com/free-icons/weapon" title="weapon icons">Weapon icons created by Magnific - Flaticon</a>
 newHeights.jpg - <a href="https://www.flaticon.com/free-icons/mountain" title="mountain icons">Mountain icons created by Magnific - Flaticon</a>

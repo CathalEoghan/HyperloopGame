@@ -56,6 +56,7 @@ function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rero
                 {onReroll && (
                     <button
                         className="citychoice-reroll"
+                        aria-disabled={!canReroll}
                         onMouseEnter={() => playHoverSound()}
                         onClick={() => {
                             if (canReroll) { playClickSound2(); playDiceRollSound(); onReroll() }

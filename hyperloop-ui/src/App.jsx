@@ -346,6 +346,7 @@ function App() {
     if (!pending && !fresh) return null;
     const combined = {
       offlineSeconds: (pending?.offlineSeconds || 0) + (fresh?.offlineSeconds || 0),
+      awaySeconds: awaySecondsOf(pending) + awaySecondsOf(fresh),
       offlineIncome: (pending?.offlineIncome || 0) + (fresh?.offlineIncome || 0),
       ...mergeTraffic(pending, fresh),
     };
@@ -376,6 +377,12 @@ function App() {
   }
 
   // The loops and passengers that passed through while away, added up across the absences waiting to be collected
+  // How long the player was really away. offlineSeconds is only the part that's paid for (it stops at the offline cap),
+  // so the time away is kept beside it for the Welcome back screen. A payout saved before this was kept has only the
+  // paid-for time, which is then the best there is.
+  function awaySecondsOf(o) {
+    return o ? (o.awaySeconds ?? o.offlineSeconds ?? 0) : 0;
+  }
   function mergeTraffic(a, b) {
     return {
       arrived: (a?.arrived || 0) + (b?.arrived || 0),
@@ -400,7 +407,8 @@ function App() {
     localStorage.setItem('hyperloop_heartbeat_at', Date.now());
     localStorage.removeItem('hyperloop_accumulated_offline');
     if (!hiddenAt || onboardingPending()) return null;
-    const totalSeconds = Math.min((Date.now() - parseInt(hiddenAt)) / 1000, economyManager.calculateOfflineCap());
+    const awaySeconds = (Date.now() - parseInt(hiddenAt)) / 1000;
+    const totalSeconds = Math.min(awaySeconds, economyManager.calculateOfflineCap());
     if (totalSeconds < 60) return null;
     // Finish any builds that completed while the player was away, so they count towards
     // offline income instead of being treated as unbuilt for the whole absence (bug #85). A Tier 3 city that
@@ -423,7 +431,7 @@ function App() {
     // this point (it's declared ahead of offlineData's own useState, unlike createdAt below, which isn't).
     const offlineIncome = offlineIncomeFor(parseInt(hiddenAt), totalSeconds, lifetimeCreatedAt);
     if (offlineIncome < 1) return null;
-    return { offlineSeconds: totalSeconds, offlineIncome, ...offlineTrafficFor(parseInt(hiddenAt), totalSeconds) };
+    return { offlineSeconds: totalSeconds, awaySeconds, offlineIncome, ...offlineTrafficFor(parseInt(hiddenAt), totalSeconds) };
   }
 
   const [isLoading, setIsLoading] = useState(() => hasSave() && progressionManager.purchasedCities.length > 0);
@@ -1782,6 +1790,7 @@ function App() {
           try { pending = JSON.parse(localStorage.getItem('hyperloop_pending_offline')); } catch { pending = null; }
           const combined = {
             offlineSeconds: (pending?.offlineSeconds || 0) + offlineSeconds,
+            awaySeconds: awaySecondsOf(pending) + gap,
             offlineIncome: (pending?.offlineIncome || 0) + offlineIncome,
             ...mergeTraffic(pending, offlineTrafficFor(now2 - gap * 1000, offlineSeconds)),
           };
@@ -3061,6 +3070,7 @@ function App() {
       {!dailyLoginData && showOfflineModal && offlineData && (
         <OfflineModal
           offlineSeconds={offlineData.offlineSeconds}
+          awaySeconds={offlineData.awaySeconds}
           offlineIncome={offlineData.offlineIncome}
           arrived={offlineData.arrived}
           departed={offlineData.departed}

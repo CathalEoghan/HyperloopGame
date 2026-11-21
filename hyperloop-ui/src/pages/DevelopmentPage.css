@@ -240,7 +240,8 @@
     cursor: var(--cursor-pointer, pointer);
     color: white;
 }
-.bulk-buy-btn:hover { filter: brightness(1.1); }
+/* Not while it has nothing to build (aria-disabled): faded buttons keep their resting look - see .bulk-buy-btn:hover in CitiesPage.css */
+.bulk-buy-btn:hover:where(:not([aria-disabled="true"])) { filter: brightness(1.1); }
 .bulk-buy-cost { display: inline-flex; align-items: center; gap: 2px; }
 .bulk-buy-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 
@@ -449,7 +450,8 @@
   align-items: unset !important;
 }
 
-.modal .closeButton:hover {
+/* (Not on a faded button that can't be used yet - aria-disabled - which keeps its resting look: see .bulk-buy-btn:hover in CitiesPage.css) */
+.modal .closeButton:hover:where(:not([aria-disabled="true"])) {
   background-color: var(--ui-accent, #f5a623) !important;
   /* Same fix as the City "Connect" button's hover (see cosmetics.js) - a flat #333 went nearly invisible against
      a dark theme accent like Gingerbread's brown. This selector isn't scoped to this page in practice - with no
@@ -463,8 +465,8 @@
    beats that inline color (importance wins over specificity, inline or not), swapping it to the same
    hover-contrast color the rest of the button's text already gets. Not page-scoped for the same reason as
    .modal .closeButton:hover above - this one rule covers every ".rename-discount-tag" in the app too. */
-.modal .closeButton:hover .rename-discount-tag,
-.modal .constructionButton:hover .rename-discount-tag {
+.modal .closeButton:hover:where(:not([aria-disabled="true"])) .rename-discount-tag,
+.modal .constructionButton:hover:where(:not([aria-disabled="true"])) .rename-discount-tag {
   color: var(--ui-accent-contrast, #222222) !important;
 }
 
@@ -589,7 +591,7 @@
   color: #c0392b !important;
 }
 
-.modal .closeButton.danger:hover {
+.modal .closeButton.danger:hover:where(:not([aria-disabled="true"])) {
   background-color: #c0392b !important;
   color: #fff !important;
 }
