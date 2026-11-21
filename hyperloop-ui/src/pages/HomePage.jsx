@@ -1592,9 +1592,10 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                 aria-disabled={!canAfford}
                                                 onMouseEnter={() => playHoverSound()}
                                                 onClick={() => {
-                                                    playClickSound2()
-                                                    // The balance shown on screen refreshes once a second, so check the real one (bug #122)
+                                                    // The balance shown on screen refreshes once a second, so check the real one (bug #122).
+                                                    // Can't afford it: only the cannot-afford sound, not a click as well.
                                                     if (!canAfford || constructionManager.progressionManager.balance < cost) { playNotEnoughFundsSound(); return }
+                                                    playClickSound2()
                                                     constructionManager.startStationConstruction(selectedUnlockedCity)
                                                     if (constructionManager.progressionManager.citiesUnderConstruction.includes(selectedUnlockedCity)) {
                                                         playConstructionSound()

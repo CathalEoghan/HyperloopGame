@@ -143,7 +143,6 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         ]
         : []
     const connectAllAffordable = () => {
-        playClickSound2()
         const pm = constructionManager.progressionManager
         // Re-plan against the real balance at the moment of the click (bug #122: the displayed balance can be
         // up to a second stale), then connect each one - startStationConstruction re-checks affordability itself,
@@ -151,7 +150,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
         const plan = planBulkBuy(available, city => ({ cash: constructionManager.calculateTierConnectionCost(city) }), { cash: pm.balance })
         let connectedAny = false
         plan.toBuy.forEach(city => { if (constructionManager.startStationConstruction(city)) connectedAny = true })
-        if (connectedAny) { playConstructionSound(); onSave() } else playNotEnoughFundsSound()
+        // Nothing affordable: only the cannot-afford sound, not a click as well
+        if (connectedAny) { playClickSound2(); playConstructionSound(); onSave() } else playNotEnoughFundsSound()
     }
 
     // Each city's income is worked out once per render and reused. Sorting by income used to
@@ -442,11 +442,12 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         )
                                     })()}
                                     <button className="constructionButton" onMouseEnter={() => playHoverSound()} onClick={() => {
-                                        playClickSound2();
                                         const cost = constructionManager.calculateTierConnectionCost(selectedCity);
-                                        // The balance shown on screen refreshes once a second, so check the real one (bug #122)
+                                        // The balance shown on screen refreshes once a second, so check the real one (bug #122).
+                                        // Can't afford it: only the cannot-afford sound, not a click as well.
                                         if (constructionManager.progressionManager.balance < cost) { setShowNoFunds(true); playNotEnoughFundsSound(); closeModal(); }
                                         else {
+                                            playClickSound2();
                                             constructionManager.startStationConstruction(selectedCity);
                                             if (constructionManager.progressionManager.citiesUnderConstruction.includes(selectedCity)) { playConstructionSound(); onSave(); }
                                             closeModal();

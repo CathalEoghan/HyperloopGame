@@ -188,7 +188,6 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         return true
     }
     const developAll = (restrictToRevenue) => {
-        playClickSound2()
         // Re-plan against the real balance/reputation at the moment of the click (bug #122), then build each
         // one - buyPlannedItem re-checks affordability itself, so nothing is lost even if something else spent
         // cash in between.
@@ -196,7 +195,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
         const plan = planBulkBuy(pool, costOfDevelopment, { cash: progressionManager.balance, rep: progressionManager.reputation, discount: economyManager.getUpgradeSum('developmentDiscount') })
         let boughtAny = false
         plan.toBuy.forEach(item => { if (buyPlannedItem(item)) boughtAny = true })
-        if (boughtAny) { playConstructionSound(); onSave() } else playNotEnoughFundsSound()
+        // Nothing affordable: only the cannot-afford sound, not a click as well
+        if (boughtAny) { playClickSound2(); playConstructionSound(); onSave() } else playNotEnoughFundsSound()
     }
 
     const totalRevenue = useMemo(() =>
@@ -372,6 +372,9 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                     const tooPoor = progressionManager.reputation < getRenameRepCost()
                     const canConfirm = clean !== '' && !unchanged && !tooPoor
                     const confirm = () => {
+                        // Nothing to confirm (an empty box, or the name it already has): no sound at all, like Reset with
+                        // nothing to reset. The cannot-afford sound is kept for not having the Reputation.
+                        if (clean === '' || unchanged) return
                         if (!canConfirm || !progressionManager.renameDevelopment(dev, clean)) { playNotEnoughFundsSound(); return }
                         playFarewellAcceptSound()
                         onSave()
@@ -401,7 +404,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <div className="rename-counter">{isOriginal ? 'Original name' : `${renameText.length}/${DEV_NAME_MAX_LENGTH}`}</div>
                                 {tooPoor && <p style={{ color: '#c0392b', fontSize: '0.8rem', margin: '4px 0' }}>Not enough Reputation.</p>}
                                 <div className="modal-button-row">
-                                    <button className="closeButton" style={{ opacity: renameText === dev.name ? 0.5 : 1 }} aria-disabled={renameText === dev.name} onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setRenameText(dev.name) }}>Reset</button>
+                                    <button className="closeButton" style={{ opacity: renameText === dev.name ? 0.5 : 1 }} aria-disabled={renameText === dev.name} onMouseEnter={() => playHoverSound()} onClick={() => { if (renameText === dev.name) return; playClickSound2(); setRenameText(dev.name) }}>Reset</button>
                                     <button className="closeButton" style={{ opacity: canConfirm ? 1 : 0.5 }} aria-disabled={!canConfirm} onMouseEnter={() => playHoverSound()} onClick={confirm}>
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                             Confirm (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
@@ -485,7 +488,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                             const cost = economyManager.calculateBuildCost(selectedDevelopment)
                                             // The real balance, and only report a build that really started (bug #170)
                                             if (progressionManager.balance >= cost) constructionManager.startDevelopmentConstruction(selectedDevelopment, cost)
-                                            if (!progressionManager.developmentsUnderConstruction.includes(selectedDevelopment)) { playClickSound2(); playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
+                                            // Can't afford it: only the cannot-afford sound, not a click as well
+                                            if (!progressionManager.developmentsUnderConstruction.includes(selectedDevelopment)) { playNotEnoughFundsSound(); setShowNoFunds(true); setSelectedDevelopment(null) }
                                             else {
                                                 playClickSound2();
                                                 playConstructionSound();
