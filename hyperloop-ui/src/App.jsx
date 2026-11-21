@@ -2975,7 +2975,7 @@ function App() {
         <div role="alert" style={{
           position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
           background: '#7a1010', color: '#fff', maxWidth: '560px', textAlign: 'center',
-          fontFamily: 'Courier New, monospace', fontSize: '0.8rem', lineHeight: 1.4,
+          fontFamily: "'Inter', sans-serif", fontSize: '0.8rem', lineHeight: 1.4,
           padding: '6px 14px', borderRadius: '6px', zIndex: 200, pointerEvents: 'none',
         }}>
           <img src={warningIcon} alt="" style={{ width: '14px', height: '14px', verticalAlign: 'middle', marginRight: '4px', border: 'none' }} />
@@ -2986,7 +2986,7 @@ function App() {
         <div style={{
           position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
           background: '#222', color: 'var(--ui-accent, #f5a623)',
-          fontFamily: 'Courier New, monospace', fontSize: '0.75rem',
+          fontFamily: "'Inter', sans-serif", fontSize: '0.75rem',
           padding: '4px 12px', borderRadius: '6px',
           zIndex: 200, pointerEvents: 'none',
           display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px',

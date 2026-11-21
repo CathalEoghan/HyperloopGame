@@ -106,9 +106,9 @@
 .sched-loopno { display: inline-flex; align-items: center; gap: 4px; color: var(--board-accent, #f5a623); font-weight: 700; }
 .sched-loopno-prefix { letter-spacing: 1px; }
 
-/* A fixed two-column grid (Should arrive | Expected passengers, then Estimated income under the first), not a wrapping row:
+/* A fixed two-column grid, the first column wide enough for the longest "23h 45m trip, not counting delays" (Should arrive | Expected passengers, then Estimated income under the first), not a wrapping row:
    as a wrapping row the income block hopped up beside the others or dropped below them as the text changed length. */
-.sched-preview { display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: 8px 24px; align-content: start; font-size: 0.78rem; min-height: 94px; }   /* two full rows, so the form is the same height even if the income line has nothing to show */
+.sched-preview { display: grid; grid-template-columns: 264px minmax(0, 1fr); gap: 8px 24px; align-content: start; font-size: 0.78rem; min-height: 94px; }   /* two full rows, so the form is the same height even if the income line has nothing to show */
 .sched-preview > div { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .sched-preview b, .sched-preview em { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sched-preview span { color: #888; font-size: 0.68rem; letter-spacing: 1px; text-transform: uppercase; }
