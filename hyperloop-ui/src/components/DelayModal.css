@@ -121,7 +121,7 @@
     background: none;
     border-color: #5a5a5a;
     color: #8f8f8f;
-    cursor: not-allowed;
+    cursor: var(--cursor-default, default);
 }
 
 /* The small "-25% reduced cost" line an upgrade earns under a button's label. It takes the button's own colour (so it stays

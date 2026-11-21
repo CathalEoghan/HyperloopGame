@@ -36,7 +36,7 @@ function CityRevealModal({ city, onClose, onReroll, reputation, rerollCost = 15 
                                 playNotEnoughFundsSound()
                             }
                         }}
-                        style={{ opacity: canReroll ? 1 : 0.5, cursor: canReroll ? 'var(--cursor-pointer, pointer)' : 'not-allowed' }}
+                        style={{ opacity: canReroll ? 1 : 0.5, cursor: canReroll ? 'var(--cursor-pointer, pointer)' : 'var(--cursor-default, default)' }}
                     >
                                                 {rerollCost === 0
                             ? <span>Free re-roll</span>

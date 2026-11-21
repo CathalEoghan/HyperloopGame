@@ -29,6 +29,7 @@ import { developmentVerb, developmentVerbPast } from '../data/developmentVerbs.j
 import { DEVELOPMENT_MILESTONES, readClaimedMilestones, builtCount } from '../data/developmentMilestones.js'
 import { planBulkBuy } from '../utils/bulkBuy.js'
 import { fallbackTo, thumbnailOf } from '../utils/cloudinaryImage.js'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 // Experimental Technology doubles in price every claim, so its cost climbs into the billions and beyond: costs from a
 // billion up are shown as "1.28 billion" etc. instead of a row of digits that overflows the button. Everything
@@ -38,6 +39,7 @@ const fmtCash = (n) => formatCompact(n, 1e9)
 const CATEGORIES = ['All', 'Upgrades', 'Food', 'Shopping', 'Recreation', 'Service', 'Infrastructure', 'Enterprise']
 
 function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlockedUpgrades, developmentsUnderConstruction, constructionManager, reputation, purchasedCities, purchasedUpgrades, economyManager, onUpgrade, onSave, onRename, onRemove, topOffset = 113 }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     const [selectedDevelopment, setSelectedDevelopment] = useState(null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [activeCategory, setActiveCategory] = usePersistedChoice('developmentsCategory', CATEGORIES, 'All')
@@ -348,7 +350,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
-                                    <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => playHoverSound()} onClick={() => {
+                                    <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => { if (canAfford) playHoverSound() }} onClick={() => {
                                         if (!canAfford || !onUpgrade(selectedDevelopment, 1.0 - economyManager.getUpgradeSum('developmentUpgradeDiscount'))) { playNotEnoughFundsSound(); return; }
                                         info.nextLevel === 10 ? playBigMomentSound() : playFarewellAcceptSound();
                                         setShowUpgradeModal(false);
@@ -404,8 +406,8 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                 <div className="rename-counter">{isOriginal ? 'Original name' : `${renameText.length}/${DEV_NAME_MAX_LENGTH}`}</div>
                                 {tooPoor && <p style={{ color: '#c0392b', fontSize: '0.8rem', margin: '4px 0' }}>Not enough Reputation.</p>}
                                 <div className="modal-button-row">
-                                    <button className="closeButton" style={{ opacity: renameText === dev.name ? 0.5 : 1 }} aria-disabled={renameText === dev.name} onMouseEnter={() => playHoverSound()} onClick={() => { if (renameText === dev.name) return; playClickSound2(); setRenameText(dev.name) }}>Reset</button>
-                                    <button className="closeButton" style={{ opacity: canConfirm ? 1 : 0.5 }} aria-disabled={!canConfirm} onMouseEnter={() => playHoverSound()} onClick={confirm}>
+                                    <button className="closeButton" style={{ opacity: renameText === dev.name ? 0.5 : 1 }} aria-disabled={renameText === dev.name} onMouseEnter={() => { if (renameText !== dev.name) playHoverSound() }} onClick={() => { if (renameText === dev.name) return; playClickSound2(); setRenameText(dev.name) }}>Reset</button>
+                                    <button className="closeButton" style={{ opacity: canConfirm ? 1 : 0.5 }} aria-disabled={!canConfirm} onMouseEnter={() => { if (canConfirm) playHoverSound() }} onClick={confirm}>
                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                             Confirm (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
                                             {/* Legal Loopholes' half-price rename - already baked into getRenameRepCost() above, but flagged
@@ -437,7 +439,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         if (skipCost <= 0) return null
                                         const canSkip = progressionManager.reputation >= skipCost
                                         return (
-                                            <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} aria-disabled={!canSkip} onClick={() => {
+                                            <button className="constructionButton" onMouseEnter={() => { if (canSkip) playHoverSound() }} style={{ opacity: canSkip ? 1 : 0.5 }} aria-disabled={!canSkip} onClick={() => {
                                                 // The real Reputation, not the figure on screen, which can be a second old (bug #170)
                                                 if (!constructionManager.skipConstruction(selectedDevelopment)) { playNotEnoughFundsSound(); return }
                                                 playClickSound2(); playFarewellAcceptSound(); onSave(); closeModal()
@@ -473,7 +475,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                     )}
                                     {selectedDevelopment.effectType === 'earlyRetirement' ? (
                                         // Bought with Reputation, not cash, and not built: it is owned straight away
-                                        <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: reputation >= selectedDevelopment.effectValue ? 1 : 0.5 }} aria-disabled={reputation < selectedDevelopment.effectValue} onClick={() => {
+                                        <button className="constructionButton" onMouseEnter={() => { if (reputation >= selectedDevelopment.effectValue) playHoverSound() }} style={{ opacity: reputation >= selectedDevelopment.effectValue ? 1 : 0.5 }} aria-disabled={reputation < selectedDevelopment.effectValue} onClick={() => {
                                             if (!progressionManager.buyEarlyRetirement(selectedDevelopment)) { playNotEnoughFundsSound(); return }
                                             playClickSound2(); playFarewellAcceptSound();
                                             onSave();
@@ -634,7 +636,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                     </p>
                                                     <button
                                                         className="closeButton danger"
-                                                        onMouseEnter={() => playHoverSound()}
+                                                        onMouseEnter={() => { if (canAfford) playHoverSound() }}
                                                         style={{ opacity: canAfford ? 1 : 0.5 }}
                                                         aria-disabled={!canAfford}
                                                         onClick={() => {
@@ -740,7 +742,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 </div>
                                             )}
                                         </div>
-                                        <div title={isRenamed(development) ? `${nameOf(development)} (${development.name})` : undefined}>{nameOf(development)}</div>
+                                        <div onMouseEnter={e => { if (isRenamed(development)) tip.enter(e, `name-${development.name}`) }} onMouseLeave={tip.leave}>{nameOf(development)}{tip.show(`name-${development.name}`, `${nameOf(development)} (${development.name})`)}</div>
                                         <div className={`category${isRenamed(development) ? ' category-original' : ''}`}>{isRenamed(development) ? `${development.name} • ${development.category}` : development.category}</div>
                                     </button>
                                 )
@@ -755,7 +757,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                         <span className="bulk-buy-row">
                             <button className="bulk-buy-btn" style={{ opacity: developAllPlan.toBuy.length > 0 ? 1 : 0.5, position: 'relative' }}
                                 aria-disabled={developAllPlan.toBuy.length === 0}
-                                onMouseEnter={(e) => { playHoverSound(); setShowDevelopAllTip(e.currentTarget) }}
+                                onMouseEnter={(e) => { if (developAllPlan.toBuy.length !== 0) playHoverSound(); setShowDevelopAllTip(e.currentTarget) }}
                                 onMouseLeave={() => setShowDevelopAllTip(null)}
                                 onClick={() => developAll(false)}>
                                 Develop all affordable
@@ -778,7 +780,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                             </button>
                             <button className="bulk-buy-btn" style={{ opacity: developAllExcludingUpgradesPlan.toBuy.length > 0 ? 1 : 0.5, position: 'relative' }}
                                 aria-disabled={developAllExcludingUpgradesPlan.toBuy.length === 0}
-                                onMouseEnter={(e) => { playHoverSound(); setShowDevelopAllExclTip(e.currentTarget) }}
+                                onMouseEnter={(e) => { if (developAllExcludingUpgradesPlan.toBuy.length !== 0) playHoverSound(); setShowDevelopAllExclTip(e.currentTarget) }}
                                 onMouseLeave={() => setShowDevelopAllExclTip(null)}
                                 onClick={() => developAll(true)}>
                                 Develop all affordable, excluding upgrades

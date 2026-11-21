@@ -177,7 +177,7 @@ function PrestigePage({ rank = 1, hasEarlyRetirement = false, runStats = null, o
                 </div>
                 <div className="prestige-retire-actions">
                     {history.length > 0 && <button className="prestige-retire-btn prestige-retire-btn-quiet" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowRuns(true) }}>Past Runs ({history.length})</button>}
-                    <button className={`prestige-retire-btn ${canRetire ? '' : 'prestige-buy-btn-disabled'}`} aria-disabled={!canRetire} onMouseEnter={() => playHoverSound()}
+                    <button className={`prestige-retire-btn ${canRetire ? '' : 'prestige-buy-btn-disabled'}`} aria-disabled={!canRetire} onMouseEnter={() => { if (canRetire) playHoverSound() }}
                         onClick={() => { if (!canRetire) { playNotEnoughFundsSound(); return } playClickSound2(); setConfirming(true) }}>
                         Retire…
                     </button>

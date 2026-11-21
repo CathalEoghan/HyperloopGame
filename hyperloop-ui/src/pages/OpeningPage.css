@@ -148,7 +148,7 @@
 
 .opening-btn:disabled {
     opacity: 0.4;
-    cursor: not-allowed;
+    cursor: var(--cursor-default, default);
 }
 
 /* Back to the previous step: an outlined button beside the main one - clearly a button, but Continue stays the

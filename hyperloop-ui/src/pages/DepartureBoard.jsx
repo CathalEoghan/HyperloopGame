@@ -17,6 +17,7 @@ import boardIcon from '../assets/misc/board.png'
 import clockIcon from '../assets/misc/clock.png'
 import warningIcon from '../assets/misc/warning.png'
 import closeIcon from '../assets/misc/close.png'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 const TAB_KEY = 'terminalBoardTab'
 const DAYS = [['today', 'TODAY'], ['tomorrow', 'TOMORROW']]
@@ -89,6 +90,7 @@ const FlapText = React.memo(function FlapText({ text, maxDelay = 800 }) {
 })
 
 function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgrades, openScheduleOnMount = false, reputation = 0, progressionManager = null, onSave = () => {}, onAutomated = () => {}, onClose }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     // Escape leaves the board (the Schedule and the page intro, being opened later, close first)
     useEscapeToClose(() => { playClickSound2(); onClose?.() }, !!onClose)
     // How long an arrival stays lit as ARRIVED on the board — matches how long its greeting window actually
@@ -435,7 +437,7 @@ function DepartureBoard({ purchasedCities, homeCity, terminalName, purchasedUpgr
                                 className={`board-tab${tab === id ? ' board-tab-active' : ''}`}
                                 onMouseEnter={() => { if (tab !== id) playHoverSound() }}
                                 onClick={() => chooseTab(id)}
-                            >{label}{id === 'departures' && nothingScheduled && <span className="board-tab-dot" title="Nothing is scheduled for departure" />}</button>
+                            >{label}{id === 'departures' && nothingScheduled && <span className="board-tab-dot" onMouseEnter={e => tip.enter(e, 'dot')} onMouseLeave={tip.leave}>{tip.show('dot', 'Nothing is scheduled for departure')}</span>}</button>
                         ))}
                     </div>
                     <div className="board-tabs" role="group" aria-label="Day shown">

@@ -66,7 +66,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                             color: doubleHovered && canDouble ? 'white' : canDouble ? 'black' : '#aaa',
                             border: `2px solid ${canDouble ? 'black' : '#ccc'}`,
                             borderRadius: '8px', padding: '8px 16px',
-                            cursor: canDouble ? 'var(--cursor-pointer, pointer)' : 'not-allowed',
+                            cursor: canDouble ? 'var(--cursor-pointer, pointer)' : 'var(--cursor-default, default)',
                             fontFamily: 'Inter, sans-serif', fontWeight: 'bold', fontSize: '0.85rem',
                             opacity: canDouble ? 1 : 0.5,
                             transition: 'background 0.15s, color 0.15s',

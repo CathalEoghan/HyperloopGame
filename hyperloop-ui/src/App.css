@@ -19,6 +19,9 @@ html, body { cursor: var(--cursor-default); }
    their own cursor, which would beat the one inherited from the page). A class that sets its own cursor still wins. */
 :where(button, select, summary, a[href], [role="button"], input[type="button"], input[type="submit"], input[type="checkbox"], input[type="radio"], input[type="range"]) { cursor: var(--cursor-pointer); }
 :where(button:disabled, select:disabled, input:disabled) { cursor: var(--cursor-default); }
+/* A faded button that can't be used yet (aria-disabled: not enough cash or Reputation, nothing to buy) gets the plain arrow
+   too, like a disabled one, whatever cursor its own class asks for - it can still be clicked, for the cannot-afford sound. */
+:root :is(button, [role="button"])[aria-disabled="true"] { cursor: var(--cursor-default) !important; }
 
 /* Nothing in the game scrolls sideways. If something ever pokes out (the sliding ticker text, a floating "+£"),
    it must not make the page grow a horizontal scrollbar: that bar is amber now, and it squeezes the bottom bar upwards. */

@@ -33,6 +33,7 @@ import { playClickSound2, playConstructionSound, playFarewellAcceptSound, playHo
 import { formatTime, formatDate } from '../utils/time.js';
 import { flagSrc } from '../utils/flagSrc.js'
 import { fallbackTo, thumbnailOf } from '../utils/cloudinaryImage.js'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 const CONTINENTS = ['All', 'Europe', 'Asia', 'Africa', 'North America', 'South America', 'Oceania']
 // Antarctica only joins the filter once the secret Antarctic Peninsula has been unlocked, so it doesn't give the finale away
@@ -49,6 +50,7 @@ const CONTINENT_COLOURS = {
 }
 
 function CitiesPage({ purchasedCities, constructionManager, unlockedCities, balance, reputation, economyManager, onDisconnect, onUpgradeCityLine, homeCity, onSave, preSelectedCity, onPreSelectedCityHandled, terminalName, topOffset = 113 }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     const [selectedCity, setSelectedCity] = useState(() => preSelectedCity || null)
     const [showNoFunds, setShowNoFunds] = useState(false)
     const [showLineUpgradeModal, setShowLineUpgradeModal] = useState(false)
@@ -300,7 +302,8 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                     )}
                     {!isUnderConstruction && !isAvailable && (
                         <div className={`city-income-strip${(offTimetable || isHome) ? ' city-income-strip-off' : ''}${offTimetable ? ' city-income-strip-warning' : ''}`}
-                            title={isHome ? 'Your home terminal: it earns no income of its own' : offTimetable ? 'Not on the timetable: it earns nothing until it has a scheduled departure' : undefined}>
+                            onMouseEnter={e => { if (isHome || offTimetable) tip.enter(e, `strip-${city.name}`) }} onMouseLeave={tip.leave}>
+                            {tip.show(`strip-${city.name}`, isHome ? 'Your home terminal: it earns no income of its own' : 'Not on the timetable: it earns nothing until it has a scheduled departure')}
                             {isHome
                                 ? 'HOME TERMINAL'
                                 : <><AbbreviatedNumber value={perHour(dailyIncome)} icon={cashIcon} iconAlt="£" iconSize={11} iconStyle={{ marginBottom: '1px' }} suffix="/hr" />{offTimetable ? ' · off timetable' : ''}</>}
@@ -309,9 +312,10 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                 </div>
                 <div>
                     {showFlag && (
-                        <img src={flagSrc(countryFlags[city.country])} alt={city.country} title={city.country}
+                        <img src={flagSrc(countryFlags[city.country])} alt={city.country} onMouseEnter={e => tip.enter(e, `flag-${city.name}`)} onMouseLeave={tip.leave}
                             style={{ width: '18px', height: 'auto', verticalAlign: 'middle', marginRight: '6px', border: 'none', borderRadius: '2px' }} />
                     )}
+                    {showFlag && tip.show(`flag-${city.name}`, city.country)}
                     {city.name}
                 </div>
                 <div className="tierAndPopulation">Tier {city.tier} | {city.population.toLocaleString('en-GB', { maximumFractionDigits: 0 })}</div>
@@ -415,7 +419,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                         if (skipCost <= 0) return null
                                         const canSkip = constructionManager.progressionManager.reputation >= skipCost
                                         return (
-                                            <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} aria-disabled={!canSkip} onClick={() => {
+                                            <button className="constructionButton" onMouseEnter={() => { if (canSkip) playHoverSound() }} style={{ opacity: canSkip ? 1 : 0.5 }} aria-disabled={!canSkip} onClick={() => {
                                                 // The real Reputation, not the figure on screen, which can be a second old (bug #170)
                                                 if (!constructionManager.skipConstruction(selectedCity)) { playNotEnoughFundsSound(); return }
                                                 playClickSound2(); playFarewellAcceptSound(); onSave(); closeModal()
@@ -580,7 +584,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                                 </p>
                                                 <button
                                                     className="constructionButton"
-                                                    onMouseEnter={() => playHoverSound()}
+                                                    onMouseEnter={() => { if (canAfford) playHoverSound() }}
                                                     style={{ borderColor: '#c0392b', color: '#c0392b', opacity: canAfford ? 1 : 0.5 }}
                                                     aria-disabled={!canAfford}
                                                     onClick={() => {
@@ -651,7 +655,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                     {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
-                                    <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => playHoverSound()} onClick={() => {
+                                    <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => { if (canAfford) playHoverSound() }} onClick={() => {
                                         if (!canAfford || !onUpgradeCityLine(selectedCity)) { playNotEnoughFundsSound(); return; }
                                         info.nextLevel === 10 ? playBigMomentSound() : playFarewellAcceptSound();
                                         setShowLineUpgradeModal(false);
@@ -745,7 +749,7 @@ function CitiesPage({ purchasedCities, constructionManager, unlockedCities, bala
                                 <span className="city-count-badge">{filteredAvailable.length}</span>
                                 <button className="bulk-buy-btn" style={{ opacity: connectAllPlan.toBuy.length > 0 ? 1 : 0.5, position: 'relative' }}
                                     aria-disabled={connectAllPlan.toBuy.length === 0}
-                                    onMouseEnter={(e) => { playHoverSound(); setShowBulkBuyTip(e.currentTarget) }}
+                                    onMouseEnter={(e) => { if (connectAllPlan.toBuy.length !== 0) playHoverSound(); setShowBulkBuyTip(e.currentTarget) }}
                                     onMouseLeave={() => setShowBulkBuyTip(null)}
                                     onClick={connectAllAffordable}>
                                     Connect all affordable

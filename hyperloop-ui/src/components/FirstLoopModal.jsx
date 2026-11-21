@@ -6,12 +6,14 @@ import { automateTimetable } from '../utils/timetable.js'
 import { AUTOMATE_SCHEDULE_REP_COST } from 'Managers/ProgressionManager/ProgressionManager.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 // Shown after the first city is connected: nothing runs until a departure is scheduled, so this points the player at
 // both ways of doing it. `onSchedule` opens the board on the Schedule loop screen; `onViewBoard` opens it as it is.
 // Automate here costs the same Reputation as the Departure Board's own button (see AUTOMATE_SCHEDULE_REP_COST) -
 // kept in step so a first-time player isn't taught a different price to the one they'll see from then on.
 export default function FirstLoopModal({ purchasedCities, reputation = 0, progressionManager = null, onSchedule, onViewBoard, onAutomated = () => {}, onSave = () => {}, onClose }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     // Escape is Close / Later: the prompt is only a reminder, and scheduling stays the player's choice
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const [result, setResult] = useState(null)
@@ -65,8 +67,8 @@ export default function FirstLoopModal({ purchasedCities, reputation = 0, progre
                                 className="firstloop-btn"
                                 style={{ opacity: tooPoor ? 0.5 : 1 }}
                                 aria-disabled={tooPoor}
-                                title={tooPoor ? `Costs ${AUTOMATE_SCHEDULE_REP_COST} Reputation - not enough` : `Costs ${AUTOMATE_SCHEDULE_REP_COST} Reputation`}
-                                onMouseEnter={() => { if (!tooPoor) playHoverSound() }}
+                                onMouseEnter={e => { if (!tooPoor) playHoverSound(); tip.enter(e, 'automate') }}
+                                onMouseLeave={tip.leave}
                                 onClick={automate}
                             >
                                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
@@ -75,6 +77,7 @@ export default function FirstLoopModal({ purchasedCities, reputation = 0, progre
                                         (<img src={reputationIcon} alt="rep" style={{ width: '11px', height: '11px', border: 'none', verticalAlign: 'middle' }} />{AUTOMATE_SCHEDULE_REP_COST})
                                     </span>
                                 </span>
+                                {tip.show('automate', `Costs ${AUTOMATE_SCHEDULE_REP_COST} Reputation${tooPoor ? ' - not enough' : ''}`)}
                             </button>
                             <button className="firstloop-btn" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }}>Later</button>
                         </div>

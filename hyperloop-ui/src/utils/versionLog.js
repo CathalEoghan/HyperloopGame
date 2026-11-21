@@ -3,7 +3,7 @@
 // read from here, so the two can never drift out of sync with each other.
 export const VERSION_LOG = [
     {
-        version: 'v.4.0',
+        version: 'v4.0',
         label: 'Economy & Shop Update',
         major: true,
         date: 'October 2026',
@@ -20,7 +20,7 @@ export const VERSION_LOG = [
     },
 
     {
-        version: 'v.3.0',
+        version: 'v3.0',
         label: 'Prestige & Achievements',
         major: true,
         date: 'October 2026',

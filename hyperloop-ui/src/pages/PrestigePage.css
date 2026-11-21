@@ -569,7 +569,7 @@
 .prestige-buy-btn-disabled {
     background: #3a3a3a;
     color: #bbbbbb;
-    cursor: not-allowed;
+    cursor: var(--cursor-default, default);
     box-shadow: none;
     font-size: 0.8rem;
 }
@@ -645,7 +645,7 @@
     background: transparent;
     color: var(--pt-muted);
     border-color: color-mix(in srgb, var(--ui-accent, #f5a623) 30%, transparent);
-    cursor: not-allowed;
+    cursor: var(--cursor-default, default);
 }
 
 .prestige-retire-btn-quiet {

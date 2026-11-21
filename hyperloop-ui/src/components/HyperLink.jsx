@@ -12,6 +12,7 @@ import heartIcon from '../assets/misc/heart.png'
 import commentIcon from '../assets/misc/comment.png'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { defaultPfp, MALE_PFPS, FEMALE_PFPS, officialPfp } from '../assets/hyperLinkAssets.js'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 export { MALE_PFPS, FEMALE_PFPS, defaultPfp, officialPfp } from '../assets/hyperLinkAssets.js'
 
 // A post stores only its picture's id ("male_12", "official", "default"); the image comes from the
@@ -55,6 +56,7 @@ function formatPostText(text) {
 }
 
 function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = false, onToggleMute, initialUnread = 0, repPerLike = 0, needsLoop = false }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const now = new Date()
     const timeStr = formatClock(now)
@@ -146,14 +148,14 @@ function HyperLinkModal({ feed, onClose, terminalName, onLikeReward, muted = fal
                             {onToggleMute && (
                                 <button
                                     className={`hyperlink-close hyperlink-mute${muted ? ' hyperlink-mute-off' : ' hyperlink-mute-on'}`}
-                                    onMouseEnter={() => playHoverSound()}
+                                    onMouseEnter={e => { playHoverSound(); tip.enter(e, 'mute') }}
+                                    onMouseLeave={tip.leave}
                                     onClick={() => { playClickSound2(); onToggleMute() }}
                                     aria-label={muted ? 'Unmute notifications' : 'Mute notifications'}
-                                    title={muted ? 'Notifications are muted. Click to turn them on' : 'Notifications are on. Click to mute them'}
                                     aria-pressed={muted}
-                                ><img src={bellIcon} alt="" draggable={false} /></button>
+                                ><img src={bellIcon} alt="" draggable={false} />{tip.show('mute', muted ? 'Notifications are muted. Click to turn them on' : 'Notifications are on. Click to mute them')}</button>
                             )}
-                            <button className="hyperlink-close" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); onClose() }} aria-label="Close" title="Close"><img className="hyperlink-close-icon" src={closeIcon} alt="" draggable={false} /></button>
+                            <button className="hyperlink-close" onMouseEnter={e => { playHoverSound(); tip.enter(e, 'close') }} onMouseLeave={tip.leave} onClick={() => { playClickSound2(); onClose() }} aria-label="Close">{tip.show('close', 'Close')}<img className="hyperlink-close-icon" src={closeIcon} alt="" draggable={false} /></button>
                         </div>
                     </div>
                     <div className="hyperlink-disclaimer">All scenarios and characters are completely fictional</div>

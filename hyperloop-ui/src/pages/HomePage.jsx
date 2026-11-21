@@ -28,6 +28,7 @@ import BoostTooltip from '../components/BoostTooltip.jsx'
 import { readTimetable } from '../utils/timetable.js'
 import { getArcColors, COSMETICS_EVENT } from '../utils/cosmetics.js'
 import { fallbackTo, thumbnailOf } from '../utils/cloudinaryImage.js'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 // Departures are drawn in the game's gold, arrivals in blue
 // Every route is white; the ones being pointed at (on the globe or in the list) light up: gold for a departure, blue for an arrival
@@ -216,6 +217,7 @@ function getSunWorldPosition() {
 }
 
 function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disabled, economyManager, balance, constructionManager, terminalName, onConnectCity, onSave, onUpgradeCityLine, active = true, onGlobeReady }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     const mountRef = useRef(null)
     // Chrome (and some other browsers) can drop the WebGL context entirely on certain GPU/compositor transitions -
     // toggling fullscreen being the one players actually hit - leaving the canvas permanently black with nothing
@@ -1354,7 +1356,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                     <span className="loop-arrow">→</span>
                                                     {toFlag && <img src={flagSrc(toFlag)} alt="" className="loop-flag" />}
                                                     <span className="loop-city">{loop.to}</span>
-                                                    <span className="loop-tag" title={loop.kind === 'arrival' ? 'Arrival' : 'Departure'}>{code}</span>
+                                                    <span className="loop-tag" onMouseEnter={e => tip.enter(e, `tag-${loop.id}`)} onMouseLeave={tip.leave}>{code}{tip.show(`tag-${loop.id}`, loop.kind === 'arrival' ? 'Arrival' : 'Departure')}</span>
                                                 </div>
                                                 <div className="loop-bar" style={{ '--p': progress / 100 }}><div className="loop-bar-fill" /><div className="loop-pod" /></div>
                                                 <div className="loop-eta">
@@ -1514,7 +1516,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                 {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
                             {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
-                                <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => playHoverSound()} onClick={() => {
+                                <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => { if (canAfford) playHoverSound() }} onClick={() => {
                                     if (!canAfford || !onUpgradeCityLine?.(selectedGlobeCity)) { playNotEnoughFundsSound(); return }
                                     info.nextLevel === 10 ? playBigMomentSound() : playFarewellAcceptSound()
                                     setShowLineUpgradeModal(false)
@@ -1562,7 +1564,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                     if (skipCost <= 0) return null
                                     const canSkip = constructionManager.progressionManager.reputation >= skipCost
                                     return (
-                                        <button className="constructionButton" onMouseEnter={() => playHoverSound()} style={{ opacity: canSkip ? 1 : 0.5 }} aria-disabled={!canSkip} onClick={() => {
+                                        <button className="constructionButton" onMouseEnter={() => { if (canSkip) playHoverSound() }} style={{ opacity: canSkip ? 1 : 0.5 }} aria-disabled={!canSkip} onClick={() => {
                                             if (!constructionManager.skipConstruction(uc)) { playNotEnoughFundsSound(); return }
                                             playClickSound2(); playFarewellAcceptSound(); onConnectCity?.(); setSelectedUnlockedCity(null)
                                         }}>
@@ -1590,7 +1592,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                                 className="constructionButton"
                                                 style={!canAfford ? { opacity: 0.5 } : {}}
                                                 aria-disabled={!canAfford}
-                                                onMouseEnter={() => playHoverSound()}
+                                                onMouseEnter={() => { if (canAfford) playHoverSound() }}
                                                 onClick={() => {
                                                     // The balance shown on screen refreshes once a second, so check the real one (bug #122).
                                                     // Can't afford it: only the cannot-afford sound, not a click as well.

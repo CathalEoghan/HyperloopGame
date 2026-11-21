@@ -10,6 +10,7 @@ import { getDeparturePool, loopCode } from '../utils/loopCodes.js'
 import { mechanicalLoopCode } from '../data/cityLoopCodes.js'
 import cashIcon from '../assets/misc/cash.png'
 import closeIcon from '../assets/misc/close.png'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i)
 const MINUTES = Array.from({ length: 12 }, (_, i) => i * 5)
@@ -121,6 +122,7 @@ function suggestSlot(timetable, name, nowMs = Date.now()) {
 // initialCity (optional): open straight onto that city - to add its departure, or to move it if it already has one. Used by
 // the city card; the Terminal Board opens the modal without it.
 export default function ScheduleModal({ purchasedCities, terminalName, onChange = () => {}, onClose, initialCity }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     useEscapeToClose(() => { playClickSound2(); onClose() })
     const home = purchasedCities[0]
     const [version, setVersion] = useState(0)
@@ -341,7 +343,7 @@ export default function ScheduleModal({ purchasedCities, terminalName, onChange 
                                     const isError = !!(error || problem || loopError)
                                     const text = error || problem || loopError || (tooSoonToday ? "That's too soon for today, so this loop starts tomorrow." : '') || notice
                                     const kind = isError ? 'sched-error' : (tooSoonToday ? 'sched-hint' : 'sched-notice')
-                                    return text ? <span className={`sched-msg ${kind}`} title={text}>{text}</span> : null
+                                    return text ? <span className={`sched-msg ${kind}`} onMouseEnter={e => tip.enterIfCut(e, 'msg')} onMouseLeave={tip.leave}>{text}{tip.show('msg', text)}</span> : null
                                 })()}
                             </div>
                         </div>

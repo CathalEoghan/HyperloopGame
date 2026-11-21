@@ -163,7 +163,7 @@
     color: #aaa;
     border-color: #ccc;
     opacity: 0.6;
-    cursor: not-allowed;
+    cursor: var(--cursor-default, default);
 }
 
 

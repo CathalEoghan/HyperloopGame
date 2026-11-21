@@ -57,12 +57,12 @@ function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rero
                     <button
                         className="citychoice-reroll"
                         aria-disabled={!canReroll}
-                        onMouseEnter={() => playHoverSound()}
+                        onMouseEnter={() => { if (canReroll) playHoverSound() }}
                         onClick={() => {
                             if (canReroll) { playClickSound2(); playDiceRollSound(); onReroll() }
                             else playNotEnoughFundsSound()
                         }}
-                        style={{ opacity: canReroll ? 1 : 0.5, cursor: canReroll ? 'var(--cursor-pointer, pointer)' : 'not-allowed' }}
+                        style={{ opacity: canReroll ? 1 : 0.5 }}
                     >
                         {rerollCost === 0
                             ? <span>Free re-roll</span>

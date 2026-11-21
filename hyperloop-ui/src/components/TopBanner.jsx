@@ -16,6 +16,7 @@ import { playClickSound2, playClickSound3, playWorkClickSound, playHoverSound } 
 import { formatCompact } from '../utils/formatCompact.js'
 import { BIG_NUMBER_TIERS, scaleToTier } from '../utils/bigNumbers.js'
 import { flagSrc } from '../utils/flagSrc.js'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 const WORK_PHRASES = [
     'Processed passenger', 'Attended meeting', 'Worked security', 'Shop inspection',
@@ -50,6 +51,7 @@ const formatWorkAmount = (value, tilde = false) => {
 }
 
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, autoWorkTick, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, onOpenShop, onOpenEmails, unreadEmails = 0, emailBubble = false, workDisabled = false }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     const [floats, setFloats] = useState([])
     // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
     const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
@@ -255,7 +257,8 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         <div className="TopBanner">
             <div className="TopBannerLeft">
             <div className="TerminalNameBlock">
-                <h1 className="TerminalName" title={terminalName}>{terminalName}</h1>
+                <h1 className="TerminalName" onMouseEnter={e => tip.enterIfCut(e, 'name')} onMouseLeave={tip.leave}>{terminalName}</h1>
+                {tip.show('name', terminalName)}
                 {homeCity && (
                     <div className="HomeCity">
                         <img src={pinIcon} alt="pin" style={{ width: '10px', height: '10px', border: 'none', borderRadius: '0', opacity: 0.6 }} />

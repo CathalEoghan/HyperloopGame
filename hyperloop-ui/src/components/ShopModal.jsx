@@ -16,6 +16,7 @@ import closeIcon from '../assets/misc/close.png'
 import padlockIcon from '../assets/misc/padlock.png'
 import checkIcon from '../assets/misc/check.png'
 import './ShopModal.css'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 // One icon per sidebar entry, shown in its own square to the left of the category name.
 const NAV_ICONS = {
@@ -115,6 +116,7 @@ function shortfall(reputation, cost) {
 //   onBuyBundle(bundle) -> true when every not-yet-owned piece was bought (and all equipped)
 //   onEquipBundle(bundle)
 function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquipBundle, onClose }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     // Remembers whatever tab was open last time, so reopening the Shop doesn't always land back on the first
     // one. Hardcoded as the fallback rather than SHOP_CATEGORIES[0].id, so a never-opened Shop (or a stored id
     // for a category that no longer exists) doesn't silently change tab whenever that list's order does (it's
@@ -275,7 +277,7 @@ function ShopModal({ reputation, cosmetics, onBuy, onEquip, onBuyBundle, onEquip
             <div className="shop-modal" onClick={e => e.stopPropagation()} role="dialog" aria-label="Shop">
                 <div className="shop-header">
                     <h2 className="shop-title">Shop</h2>
-                    <div className="shop-balance" title="Your Reputation"><img src={reputationIcon} alt="Reputation" /> {Math.floor(reputation)}</div>
+                    <div className="shop-balance" onMouseEnter={e => tip.enter(e, 'balance')} onMouseLeave={tip.leave}>{tip.show('balance', 'Your Reputation')}<img src={reputationIcon} alt="Reputation" /> {Math.floor(reputation)}</div>
                     <button className="shop-close" onClick={() => { playClickSound2(); onClose() }} onMouseEnter={() => playHoverSound()}><img src={closeIcon} alt="" className="modal-close-icon modal-close-icon-dark" /> Close</button>
                 </div>
 

@@ -35,6 +35,7 @@ import { readStoredList } from '../utils/storedList.js'
 import { distanceMiles } from '../utils/loops.js'
 import { formatDistance, convertDistance, getDistanceUnit } from '../utils/units.js'
 import AbbreviatedNumber from '../components/AbbreviatedNumber.jsx'
+import { useHoverTip } from '../components/useHoverTip.jsx'
 
 // Shows the abbreviated figure ("43.81 million") by default; hovering the stat card (or the number itself -
 // see AbbreviatedNumber.css) swaps in the exact one, in place - not a tooltip appearing over it. This page's
@@ -45,6 +46,7 @@ const CashValue = ({ amount, suffix = '' }) => (
 )
 
 function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchasedDevelopments, purchasedUpgrades, unlockedDevelopments, unlockedUpgrades, farewellsGiven, achievementManager, createdAt, lifetimeCreatedAt, onCollectReward, onRefreshCounts, topOffset = 113 }) {
+    const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
     // Shown once, the first time a player opens this page - skipped entirely once they've retired, since by
     // then they already know how claiming and the stat sections work.
     const [showIntro, setShowIntro] = useState(() =>
@@ -87,15 +89,16 @@ function ProgressPage({ purchasedCities, unlockedCities, economyManager, purchas
             role="button"
             tabIndex={0}
             aria-expanded={!collapsed[id]}
-            title={collapsed[id] ? 'Click to show' : 'Click to hide'}
             onClick={() => toggleSection(id)}
-            onMouseEnter={() => playHoverSound()}
+            onMouseEnter={e => { playHoverSound(); tip.enter(e, `section-${id}`) }}
+            onMouseLeave={tip.leave}
             onKeyDown={e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleSection(id) } }}
         >
             <span className="progress-chevron" aria-hidden="true">
                 <svg viewBox="0 0 16 16" width="16" height="16"><path d="M3.5 6 L8 10.5 L12.5 6" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </span>
             <span className="progress-section-title">{title}</span>
+            {tip.show(`section-${id}`, collapsed[id] ? 'Click to show' : 'Click to hide')}
             {extra}
             {claimable?.[id] > 0 && (
                 // Whenever a reward is waiting, folded or not - so it also does the old badge's job of reminding you on a
