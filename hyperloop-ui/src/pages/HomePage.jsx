@@ -204,7 +204,7 @@ function loadFlagTexture(url, { grayscale = false } = {}, onLoad) {
 // The Max (16k) day texture is a different, much darker picture of the Earth than the 2k/8k ones: its ocean is
 // about (2,7,23) against (30,59,117), so the lit side came out darker than the night side's blue ocean and the
 // day/night line looked backwards. A gamma lift brings it back in line with the others (their land is unchanged).
-const dayGammaFor = quality => (quality === '16k' ? 0.75 : 1.0)
+const dayGammaFor = quality => quality === '16k' ? 0.75 : quality === '8k' ? 1.4 : 1.0
 
 function getSunWorldPosition() {
     const now = new Date()
@@ -538,8 +538,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     // A wide, soft dawn/dusk band, and the day side easing down towards it, so the two textures meet
                     // gradually instead of at a visible line (the day ocean is much brighter than the night one)
                     float blend = nightMode > 0.5 ? smoothstep(-0.15, 0.4, cosAngle) : 1.0;
-                    float dusk = nightMode > 0.5 ? mix(0.75, 1.0, smoothstep(-0.05, 0.6, cosAngle)) : 1.0;
-                    gl_FragColor = mix(nightColor, vec4(dayColor.rgb * dusk, dayColor.a), blend);
+                    float dusk = nightMode > 0.5 ? mix(dayGamma > 1.0 ? 0.45 : 0.75, 1.0, smoothstep(-0.05, 0.6, cosAngle)) : 1.0;                    gl_FragColor = mix(nightColor, vec4(dayColor.rgb * dusk, dayColor.a), blend);
                 }
             `,
         })
