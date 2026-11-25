@@ -428,7 +428,7 @@
   font-weight: bold;
   text-align: center;
   align-self: center;
-  background: none;
+  background: white;   /* filled white like the buttons on the city and development cards, not see-through */
   border: 2px solid black;
   padding: 6px 20px;
   border-radius: 6px;

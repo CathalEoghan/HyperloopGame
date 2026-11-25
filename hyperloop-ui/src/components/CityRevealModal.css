@@ -43,7 +43,7 @@
 }
 
 .modal button {
-    background-color: rgb(255, 239, 224);
+    background-color: white;   /* filled white like the buttons on the city and development cards */
     border: 2px solid black;
     border-radius: 8px;
     padding: 10px 16px;

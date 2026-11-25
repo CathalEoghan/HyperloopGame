@@ -56,6 +56,5 @@
     transition: background-color 0.15s, color 0.15s, transform 0.15s;
 }
 /* Not "Automate it" while there isn't enough Reputation for it (aria-disabled): it stays as it is */
-.firstloop-btn:hover:where(:not([aria-disabled="true"])) { background: #333; color: #fff; transform: translateY(-2px); }
-.firstloop-btn-primary { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); }
-.firstloop-btn-primary:hover { background: #333; }
+/* White, lighting up in the accent colour, like the buttons on the city and development cards */
+.firstloop-btn:hover:where(:not([aria-disabled="true"])) { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); }

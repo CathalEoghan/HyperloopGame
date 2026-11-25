@@ -69,6 +69,5 @@
     cursor: var(--cursor-pointer, pointer);
     transition: background-color 0.15s, color 0.15s, transform 0.15s;
 }
-.pageintro-btn:hover { background: #333; color: #fff; transform: translateY(-2px); }
-.pageintro-btn-primary { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); }
-.pageintro-btn-primary:hover { background: #333; }
+/* White, lighting up in the accent colour, like the buttons on the city and development cards */
+.pageintro-btn:hover { background: var(--ui-accent, #f5a623); color: var(--ui-accent-contrast, #222222); }
