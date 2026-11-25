@@ -341,13 +341,13 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                         cost instead of wrapping onto its own line, and bolded like the rest of the cost. */}
                                     {(() => {
                                         const discount = economyManager.getUpgradeSum('developmentUpgradeDiscount')
-                                        return discount > 0 ? <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
+                                        return discount > 0 ? <span style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
                                     })()}</span></strong>
                                     {info.repCost > 0 && <> + <strong><span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}><img src={reputationIcon} alt="rep" className="rep-icon" style={{ border: 'none' }} />{info.repCost}
                                         {/* Good Standing's half-price Reputation - already baked into info.repCost above, but
                                             flagged the same way the cash discount is, so it isn't invisible here either. Kept
                                             inside the same inline-flex row for the same reason as the cash discount above. */}
-                                        {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
+                                        {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
                                 {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                                 <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                     <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => { if (canAfford) playHoverSound() }} onClick={() => {
@@ -415,7 +415,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 relying on the button's own hover color) is what lets .closeButton:hover swap it to a readable
                                                 color too - the button's hover background is the same orange, so this text used to vanish into
                                                 it the moment you hovered Confirm. */}
-                                            {PrestigeManager.owns('legalLoopholes') && <span className="rename-discount-tag" style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
+                                            {PrestigeManager.owns('legalLoopholes') && <span className="rename-discount-tag" style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
                                         </span>
                                     </button>
                                     <button className="closeButton" onMouseEnter={() => playHoverSound()} onClick={() => { playClickSound2(); setShowRenameModal(false) }}>Cancel</button>
@@ -503,7 +503,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                 {developmentVerb(selectedDevelopment.name)} (<img src={cashIcon} alt="£" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none', borderRadius: '0', display: 'inline', marginBottom: '0' }} />{fmtCash(economyManager.calculateBuildCost(selectedDevelopment))}
                                                 {(() => {
                                                     const discount = economyManager.isBuildDiscountExempt(selectedDevelopment) ? 0 : economyManager.getUpgradeSum('developmentDiscount')
-                                                    return discount > 0 ? <span className="rename-discount-tag" style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
+                                                    return discount > 0 ? <span className="rename-discount-tag" style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', marginLeft: '2px' }}>(-{Math.round(discount * 100)}%)</span> : null
                                                 })()})
                                             </span>
                                         </button>
@@ -570,7 +570,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                         {totalBoostPct > 0 && (
                                                             <IncomeRow label="Boosted revenue" amount={selectedDevelopment.revenue * (1 + totalBoost)}>
                                                                 <span
-                                                                    style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'var(--cursor-help, help)', position: 'relative' }}
+                                                                    style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'var(--cursor-help, help)', position: 'relative' }}
                                                                     onMouseEnter={(e) => setShowBoostTooltip(e.currentTarget)}
                                                                     onMouseLeave={() => setShowBoostTooltip(null)}
                                                                 >
@@ -672,7 +672,7 @@ function DevelopmentPage({ purchasedDevelopments, unlockedDevelopments, unlocked
                                                         <span style={{ display: 'inline-flex', alignItems: 'center', gap: '2px' }}>
                                                             Rename (<img src={reputationIcon} alt="rep" className="rep-icon" style={{ width: '14px', height: '14px', verticalAlign: 'middle', border: 'none' }} />{getRenameRepCost()})
                                                             {/* Same hover-contrast fix as the Confirm button's discount tag above - see that comment. */}
-                                                            {PrestigeManager.owns('legalLoopholes') && <span className="rename-discount-tag" style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
+                                                            {PrestigeManager.owns('legalLoopholes') && <span className="rename-discount-tag" style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', marginLeft: '2px' }}>(-50%)</span>}
                                                         </span>
                                                     </button>
                                                 )}

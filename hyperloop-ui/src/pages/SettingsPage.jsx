@@ -37,7 +37,7 @@ const OptionBtn = ({ active, onClick, children }) => {
     const bg = active
         ? (hovered ? 'color-mix(in srgb, var(--ui-accent, #f5a623) 85%, black)' : 'var(--ui-accent, #f5a623)')
         : (hovered ? 'var(--ui-accent, #f5a623)' : '')
-    const color = active || hovered ? 'white' : ''
+    const color = active || hovered ? 'var(--ui-accent-fill-text, #fff)' : ''
     const border = active || hovered ? 'var(--ui-accent, #f5a623)' : ''
     return (
         <button

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useEscapeToClose } from '../utils/useEscapeToClose.js'
 import { createPortal } from 'react-dom'
 import { SHOP_CATEGORIES, SHOP_ITEMS, SHOP_BUNDLES, TIERS, fullVarsFor, THEME_PICS, FEATURED_THEME_ID, FEATURED_TAGLINE } from '../data/shopCatalog.js'
-import { isOwned, isBundleOwned, isBundleEquipped, bundlePieces, bundlePrice, bundleOriginalPrice, getEquippedItem, accentContrastText } from '../utils/cosmetics.js'
+import { isOwned, isBundleOwned, isBundleEquipped, bundlePieces, bundlePrice, bundleOriginalPrice, getEquippedItem, readableAccentVars } from '../utils/cosmetics.js'
 import { playClickSound2, playHoverSound, playNotEnoughFundsSound, playPreviewSound, playWorkPreviewSound, stopPreviewSound } from '../utils/sound.js'
 import reputationIcon from '../assets/misc/reputation.png'
 import paletteIcon from '../assets/misc/palette.png'
@@ -33,8 +33,9 @@ const NAV_ICONS = {
 // the preview itself (every property filled in, see fullVarsFor), and the mock's CSS in ShopModal.css reads the same
 // variables as the real game, so a new theme gets a correct preview with nothing extra to make.
 function ThemePreview({ categoryId, item }) {
+    const vars = fullVarsFor(categoryId, item)
     return (
-        <div className={`shop-preview shop-preview-${categoryId}`} style={{ ...fullVarsFor(categoryId, item), '--ui-accent-contrast': accentContrastText(fullVarsFor(categoryId, item)['--ui-accent']) }} aria-hidden="true">
+        <div className={`shop-preview shop-preview-${categoryId}`} style={{ ...vars, ...readableAccentVars(vars) }} aria-hidden="true">
             {categoryId === 'boardTheme' && (
                 <div className="pv-board">
                     <div className="pv-board-head"><span>DESTINATION</span><span>DEPARTS</span><span>STATUS</span></div>

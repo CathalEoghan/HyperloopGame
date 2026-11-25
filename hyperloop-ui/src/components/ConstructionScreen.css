@@ -24,7 +24,14 @@
     gap: 36px;
 }
 
+/* Clicked: everything on the screen fades away and the grey deepens to the same plain black App's .enter-fade starts
+   from, which then fades away to show the terminal - a fade out and a fade in, instead of fading to the page's white
+   and the terminal appearing all at once */
 .construction-screen.construction-fading {
+    background-color: #0a0a0a;
+    transition: background-color 0.5s ease;
+}
+.construction-screen.construction-fading > * {
     opacity: 0;
     transition: opacity 0.5s ease;
 }

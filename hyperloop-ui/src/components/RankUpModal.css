@@ -60,7 +60,7 @@
 
 .modal .rankup-auto-btn-confirm {
     background: var(--ui-accent, #f5a623);
-    color: #fff;
+    color: var(--ui-accent-fill-text, #fff);
     border-color: var(--ui-accent, #f5a623);
 }
 
@@ -103,5 +103,5 @@
     font-size: 5rem;
     font-weight: 800;
     line-height: 1;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-light, var(--ui-accent, #f5a623));
 }

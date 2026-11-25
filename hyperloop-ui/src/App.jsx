@@ -205,6 +205,11 @@ const watchForPopups = (onChange) => {
 };
 // Wraps the page behind the popups without adding a box of its own, so layout stays exactly as it was
 const BEHIND_POPUPS_STYLE = { display: 'contents' };
+// Stepping into the game (see enterFade below): how long the screen rests at black before fading up, the longest it
+// waits there for a new terminal's globe to finish building, and how long the fade up takes (as .enter-fade-out in App.css)
+const ENTER_FADE_HOLD_MS = 150;
+const ENTER_FADE_MAX_WAIT_MS = 3000;
+const ENTER_FADE_MS = 1000;
 // A Celebrity Sighting marks one departure in the next few hours as the celebrity's: it is always a VIP (see the tick)
 const CELEBRITY_DEPARTURE_KEY = 'hyperloop_celebrity_departure';
 const stillOpen = dep => !dep.expiresAt || Date.now() < dep.expiresAt + 60000;
@@ -439,6 +444,22 @@ function App() {
   // real frame - the Loading screen's "Ready" waits on this too, alongside its own image preload, so the
   // moment it's clicked through there's nothing left for the globe to build.
   const [globeBuilt, setGlobeBuilt] = useState(false);
+  // Stepping into the game is a fade out and a fade in, not one sudden swap: the Loading screen (or a new terminal's
+  // Construction screen) fades its own contents away to plain black when clicked, then hands over to this black
+  // screen, which fades away to show the terminal. 'black' while it waits for the globe behind it - a new terminal's
+  // globe only starts building once the Construction screen is clicked through, so it isn't seen popping in - then
+  // 'fading', then null once it's gone.
+  const [enterFade, setEnterFade] = useState(null);
+  useEffect(() => {
+    if (enterFade === 'black') {
+      const t = setTimeout(() => setEnterFade('fading'), globeBuilt ? ENTER_FADE_HOLD_MS : ENTER_FADE_MAX_WAIT_MS);
+      return () => clearTimeout(t);
+    }
+    if (enterFade === 'fading') {
+      const t = setTimeout(() => setEnterFade(null), ENTER_FADE_MS);
+      return () => clearTimeout(t);
+    }
+  }, [enterFade, globeBuilt]);
   const [constructionReady, setConstructionReady] = useState(false);
   const [showOfflineModal, setShowOfflineModal] = useState(!!offlineData);
   const [terminalName, setTerminalName] = useState(() => savedData?.terminalName || runStart?.terminalName || 'Hyperloop Empire');
@@ -483,7 +504,7 @@ function App() {
   const hasEnteredRef = useRef(!isLoading);
   // sound.js can't read this ref, so it keeps its own copy for the one thing it needs to know: whether to play
   // anything at all right now. Set once here to start in step with hasEnteredRef above - the Loading screen then
-  // flips it the moment it's actually clicked (not 600ms later, once its own fade-out finishes and onComplete
+  // flips it the moment it's actually clicked (not 500ms later, once its own fade-out finishes and onComplete
   // below fires), so the click's own opening-audio sound isn't the one thing this silences.
   useState(() => { setEntered(!isLoading); return null });
   const [pendingRankUps, setPendingRankUps] = useState(() => parseInt(localStorage.getItem('hyperloop_pending_rankups') || '0') || 0);
@@ -2496,7 +2517,7 @@ function App() {
     return (
       <div style={{ position: 'fixed', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#111', padding: '24px', boxSizing: 'border-box' }}>
         <div style={{ background: 'rgb(255, 239, 224)', border: '2px solid black', borderRadius: '12px', padding: '32px 24px', maxWidth: '380px', textAlign: 'center', fontFamily: 'Inter, sans-serif' }}>
-          <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>Open in another tab</h2>
+          <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', margin: '0 0 12px' }}>Open in another tab</h2>
           <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>
             Hyperloop Empire is already running in another tab. Only one tab can play at a time, so your progress isn&#39;t overwritten.
           </p>
@@ -2543,6 +2564,7 @@ function App() {
       onEnter={() => {
         playOpeningAudio()
         setConstructionReady(true)
+        setEnterFade('black')
         setShowOnboarding(!runStart)
         hasEnteredRef.current = true;
         // Restart the "quiet period" before random events can fire from the moment the player actually
@@ -2695,9 +2717,13 @@ function App() {
             // the Loading screen (same reasoning as the Construction screen's onEnter, further up).
             gameStartTime.current = Date.now();
             setIsLoading(false);
+            setEnterFade('black');
           }}
         />
       )}
+      {/* The black that stepping into the game fades up from (see enterFade above). Above everything, popups included,
+          and it only takes clicks while fully black. */}
+      {enterFade && <div className={`enter-fade${enterFade === 'fading' ? ' enter-fade-out' : ''}`} aria-hidden="true" />}
       <div className="behind-popups" style={BEHIND_POPUPS_STYLE} inert={popupCoversApp}>
       {activeTab === "Cities" && (
         <CitiesPage
@@ -2985,7 +3011,7 @@ function App() {
       {showSaved && !saveFailed && (
         <div style={{
           position: 'fixed', bottom: '108px', left: '50%', transform: 'translateX(-50%)',
-          background: '#222', color: 'var(--ui-accent, #f5a623)',
+          background: '#222', color: 'var(--ui-accent-on-dark, var(--ui-accent, #f5a623))',
           fontFamily: "'Inter', sans-serif", fontSize: '0.75rem',
           padding: '4px 12px', borderRadius: '6px',
           zIndex: 200, pointerEvents: 'none',
@@ -3406,7 +3432,7 @@ function App() {
             boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
           }}>
             <img src={monitorIcon} alt="monitor" style={{ width: '48px', height: '48px', marginBottom: '12px', border: 'none', borderRadius: '0' }} />
-            <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent, #f5a623)', margin: '0 0 12px' }}>
+            <h2 style={{ fontFamily: 'Courier New, monospace', color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', margin: '0 0 12px' }}>
               Desktop Recommended
             </h2>
             <p style={{ color: '#555', fontSize: '0.9rem', lineHeight: 1.6, margin: '0 0 20px' }}>

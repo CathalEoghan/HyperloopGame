@@ -63,7 +63,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                             marginTop: '12px',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px',
                             background: doubleHovered && canDouble ? 'var(--ui-accent, #f5a623)' : 'white',
-                            color: doubleHovered && canDouble ? 'white' : canDouble ? 'black' : '#aaa',
+                            color: doubleHovered && canDouble ? 'var(--ui-accent-fill-text, #fff)' : canDouble ? 'black' : '#aaa',
                             border: `2px solid ${canDouble ? 'black' : '#ccc'}`,
                             borderRadius: '8px', padding: '8px 16px',
                             cursor: canDouble ? 'var(--cursor-pointer, pointer)' : 'var(--cursor-default, default)',

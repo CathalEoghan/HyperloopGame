@@ -19,7 +19,7 @@
     font-size: 1.3rem;
     font-weight: bold;
     letter-spacing: 4px;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-light, var(--ui-accent, #f5a623));
     text-transform: uppercase;
     text-align: center;
     margin: 0 0 18px;
@@ -86,7 +86,7 @@
 }
 
 .credits-link:hover {
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-light, var(--ui-accent, #f5a623));
     text-decoration: underline;
 }
 
@@ -103,7 +103,7 @@
 /* (Not on a faded button that can't be used yet - aria-disabled: see .bulk-buy-btn:hover in CitiesPage.css) */
 .closeButton:hover:where(:not([aria-disabled="true"])) {
     background: var(--ui-accent, #f5a623) !important;
-    color: white !important;
+    color: var(--ui-accent-fill-text, #fff) !important;
 }
 
 @keyframes devPortraitPulse {
@@ -128,7 +128,7 @@
 
 .dev-bonus-toast {
     background: var(--ui-accent, #f5a623);
-    color: white;
+    color: var(--ui-accent-fill-text, #fff);
     font-family: 'Courier New', monospace;
     font-size: 0.8rem;
     font-weight: bold;

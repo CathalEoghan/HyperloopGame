@@ -211,7 +211,7 @@ font-size: 1rem;
 .work-float-livestream {
     background: var(--ui-accent, #f5a623);
     border-color: var(--ui-accent, #f5a623);
-    color: #111;
+    color: var(--ui-accent-contrast, #222222);
     letter-spacing: 0.5px;
 }
 

@@ -1,7 +1,7 @@
 import { PrestigeManager } from 'Managers/PrestigeManager/PrestigeManager.js'
 import { formatCompact } from './formatCompact.js'
 import { PRESTIGE_VALUES } from 'Managers/PrestigeManager/prestigeUpgrades.js'
-import { EQUATOR_BONUS_MAX_LATITUDE } from 'Managers/EconomyManager/EconomyManager.js'
+import { EQUATOR_BONUS_MAX_LATITUDE, ARCTIC_BONUS_MIN_LATITUDE } from 'Managers/EconomyManager/EconomyManager.js'
 
 // One list of upgrade effect descriptions, used by the unlock popup and the Developments page.
 // Whole percentages stay whole (15), fractions show properly (2.5 rather than 3) and floating point noise is removed
@@ -53,7 +53,7 @@ export const EFFECT_DESCRIPTIONS = {
     continentExpansionBoost: (v) => `+${pct(v)}% city income per unique continent connected`,
     countryExpansionBoost: (v) => `+${pct(v)}% city income per unique country connected`,
     southernHemisphereBoost: (v) => `+${pct(v)}% from southern hemisphere cities`,
-    arcticBoost: (v) => `+${pct(v)}% income from Arctic cities`,
+    arcticBoost: (v) => `+${pct(v)}% income from Arctic cities (north of ${ARCTIC_BONUS_MIN_LATITUDE}°)`,
     continentBoost: (v) => `+${pct(v)}% income from cities on this continent`,
     countryAdvertisingBoost: (v) => `+${pct(v)}% income from cities in this country`,
     localCountryBoost: () => `Bonus income from cities in your home country`,

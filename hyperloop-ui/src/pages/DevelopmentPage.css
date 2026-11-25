@@ -238,7 +238,7 @@
     font-size: 0.8rem;
     font-weight: bold;
     cursor: var(--cursor-pointer, pointer);
-    color: white;
+    color: var(--ui-accent-fill-text, #fff);
 }
 /* Not while it has nothing to build (aria-disabled): faded buttons keep their resting look - see .bulk-buy-btn:hover in CitiesPage.css */
 .bulk-buy-btn:hover:where(:not([aria-disabled="true"])) { filter: brightness(1.1); }

@@ -64,7 +64,7 @@
 
 .onboarding-modal .opening-btn {
     background: var(--ui-accent, #f5a623);
-    color: white;
+    color: var(--ui-accent-fill-text, #fff);
     border: 2px solid white;
 }
 

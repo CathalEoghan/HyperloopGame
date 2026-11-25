@@ -120,7 +120,7 @@
 
 .opening-btn {
     background: var(--ui-accent, #f5a623);
-    color: white;
+    color: var(--ui-accent-fill-text, #fff);
     border: none;
     border-radius: 10px;
     padding: 14px 36px;
@@ -175,7 +175,7 @@
 }
 .opening-back-btn:hover {
     border-color: var(--ui-accent, #f5a623);
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-light, var(--ui-accent, #f5a623));
     transform: translateY(-1px);
 }
 .opening-back-arrow {
@@ -208,7 +208,7 @@
 .opening-corner-back .opening-back-btn:hover {
     background: rgba(255, 255, 255, 0.14);
     border-color: var(--ui-accent, #f5a623);
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-readable, var(--ui-accent, #f5a623));
 }
 
 /* Step 3 - what to call the player */
@@ -245,7 +245,7 @@
 .opening-title-btn.active {
     background: var(--ui-accent, #f5a623);
     border-color: var(--ui-accent, #f5a623);
-    color: white;
+    color: var(--ui-accent-fill-text, #fff);
 }
 
 /* City cards */
@@ -323,7 +323,7 @@
 .starter-city-tier {
     font-size: 0.75rem;
     font-weight: bold;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-light, var(--ui-accent, #f5a623));
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-top: 4px;
@@ -353,7 +353,7 @@
 }
 .opening-secondary-actions .starter-any-btn:hover {
     background: white;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-light, var(--ui-accent, #f5a623));
     border-color: var(--ui-accent, #f5a623);
     transform: translateY(-1px);
 }

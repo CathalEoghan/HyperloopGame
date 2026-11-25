@@ -1426,7 +1426,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                             {boostPct > 0 && (
                                                 <IncomeRow label="Boosted income" amount={effectiveIncome} last={!capacity}>
                                                     <span
-                                                        style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'var(--cursor-help, help)', position: 'relative' }}
+                                                        style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', fontWeight: 'bold', cursor: 'var(--cursor-help, help)', position: 'relative' }}
                                                         onMouseEnter={(e) => setShowCityBoostTip(e.currentTarget)}
                                                         onMouseLeave={() => setShowCityBoostTip(null)}
                                                     >
@@ -1501,7 +1501,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                                 {/* Good Standing's half-price Reputation - already baked into info.repCost above, but
                                     flagged the same way the cash discount is, so it isn't invisible here either. Kept
                                     inside the same inline-flex row and bolded like the rest of the cost. */}
-                                {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
+                                {PrestigeManager.owns('goodStanding') && <span style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', fontWeight: 'bold', marginLeft: '2px' }}>(-50%)</span>}</span></strong></>}</p>
                             {!canAfford && <p style={{ color: '#c0392b', fontSize: '0.8rem' }}>Not enough funds or reputation.</p>}
                             <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginTop: '12px' }}>
                                 <button className="closeButton" style={{ opacity: canAfford ? 1 : 0.5 }} aria-disabled={!canAfford} onMouseEnter={() => { if (canAfford) playHoverSound() }} onClick={() => {

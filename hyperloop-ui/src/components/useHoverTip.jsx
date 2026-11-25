@@ -8,14 +8,16 @@ import BoostTooltip from './BoostTooltip.jsx'
 //   {tip.show('flag', 'France')}
 // show() takes the words when it draws, not when the mouse arrives, so a tooltip that changes under the mouse (a mute
 // button just clicked) shows the new words. enterIfCut() only shows it when the text is cut short with an ellipsis -
-// for a long name or message, where the tooltip's only job is to show the rest of it.
+// for a long name or message, where the tooltip's only job is to show the rest of it. That covers both kinds of cut:
+// one line running out of width, and text clamped to a couple of lines (the terminal name, the Schedule message),
+// which is cut at the bottom instead, so only its height gives it away.
 export function useHoverTip() {
     const [at, setAt] = useState(null)   // { anchor, id }
     return {
         enter: (e, id = true) => setAt({ anchor: e.currentTarget, id }),
         enterIfCut: (e, id = true) => {
             const el = e.currentTarget
-            if (el.scrollWidth > el.clientWidth) setAt({ anchor: el, id })
+            if (el.scrollWidth > el.clientWidth || el.scrollHeight > el.clientHeight + 1) setAt({ anchor: el, id })
         },
         leave: () => setAt(null),
         show: (id, lines) => (at && at.id === id && lines

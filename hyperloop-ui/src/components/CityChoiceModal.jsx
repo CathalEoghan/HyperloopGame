@@ -70,7 +70,7 @@ function CityChoiceModal({ hidden = false, cities, waiting = 0, reputation, rero
                                 {canReroll ? 'Re-roll choices' : 'Need'} (<img className="citychoice-rep" src={reputationIcon} alt="rep" />{rerollCost})
                                 {/* Flexible Network Contracts' flat Reputation discount - shown the same way the Development
                                     page's Build/Upgrade costs flag their own discounts, so it isn't invisible once owned. */}
-                                {rerollDiscount > 0 && <span style={{ color: 'var(--ui-accent, #f5a623)', fontSize: '0.78rem', marginLeft: '2px' }}>(-{rerollDiscount} Rep)</span>}
+                                {rerollDiscount > 0 && <span style={{ color: 'var(--ui-accent-on-light, var(--ui-accent, #f5a623))', fontSize: '0.78rem', marginLeft: '2px' }}>(-{rerollDiscount} Rep)</span>}
                                 {!canReroll && ` to re-roll (you have ${reputation})`}
                             </span>}
                     </button>

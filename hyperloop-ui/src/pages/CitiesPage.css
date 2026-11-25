@@ -403,7 +403,7 @@
     font-size: 0.8rem !important;
     font-weight: bold;
     cursor: var(--cursor-pointer, pointer) !important;
-    color: white !important;
+    color: var(--ui-accent-fill-text, #fff) !important;
 }
 /* Buttons that can't be used yet (nothing affordable, not enough cash or Reputation) carry aria-disabled="true": they are
    shown faded and keep their resting look when hovered, rather than lighting up as if pressing them would work. The

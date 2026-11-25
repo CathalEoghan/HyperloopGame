@@ -3,7 +3,8 @@
     --pt-bg: #0a0a0a;
     --pt-panel: #141414;
     --pt-card: #1c1c1c;
-    --pt-gold: var(--ui-accent, #f5a623);
+    /* The accent, lightened in its own hue for a dark one (Gingerbread's brown) so it still reads on this dark page */
+    --pt-gold: var(--ui-accent-on-dark, var(--ui-accent, #f5a623));
     --pt-gold-soft: color-mix(in srgb, var(--ui-accent, #f5a623) 16%, transparent);
     --pt-text: #f2f2f2;
     --pt-muted: #9a9a9a;

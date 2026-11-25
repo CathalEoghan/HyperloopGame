@@ -43,7 +43,7 @@
 
 .offline-earnings-amount {
     font-weight: bold;
-    color: var(--ui-accent, #f5a623);
+    color: var(--ui-accent-on-light, var(--ui-accent, #f5a623));
     /* the icon and the figure stay on one line (a long figure used to wrap, leaving the icon floating beside two lines) */
     display: flex;
     align-items: center;
@@ -152,7 +152,7 @@
 }
 .modal .offline-double-btn:hover {
     background: var(--ui-accent, #f5a623);
-    color: white;
+    color: var(--ui-accent-fill-text, #fff);
 }
 .offline-double-btn .abbrev-number {
     display: inline-flex;

@@ -133,6 +133,66 @@ function blendTowardWhite(hex, pct) {
     return '#' + [mix(r), mix(g), mix(b)].map(c => c.toString(16).padStart(2, '0')).join('')
 }
 
+// Classic's orange is the yardstick for the light themes: wherever the game puts the accent on a light popup or page,
+// or white text on the accent, no theme should read worse than Classic does. A pale accent (Poltergeist's mint, Duck's
+// yellow, Starlight's lavender, Princess's pink) used to fall well short of it.
+const CLASSIC_ACCENT = '#f5a623'
+// The cream behind the popups and pages, rgb(255, 239, 224): the near-white surfaces are lighter still, so a colour that
+// reads on the cream reads on them too.
+const CREAM = relativeLuminance('#ffefe0')
+const FILL_DARK_TEXT = '#222222'
+
+// The text on a button or tab filled with an accent, wherever the game's own design puts WHITE text there (the bottom
+// tabs, the Shop's buttons, Settings' selected options, the popups' buttons under the mouse): white, as in Classic,
+// unless white reads worse on this accent than it does on Classic's orange - then the near-black that
+// --ui-accent-contrast uses, so a pale accent's tab or button can still be read.
+export function accentFillText(accent) {
+    const lum = relativeLuminance(accent)
+    if (lum === null) return '#fff'
+    return contrastRatio(1, lum) + 0.005 >= contrastRatio(1, relativeLuminance(CLASSIC_ACCENT)) ? '#fff' : FILL_DARK_TEXT
+}
+
+// The accent as TEXT on the light popups and pages (the popups' headings and amounts, the Shop's title, the Settings
+// labels): the accent itself, unless it is too pale to read there - then darkened in its own hue until it reads at
+// least as well as Classic's orange does (1.8:1 on the cream). A washed-out pastel reads fainter than a vivid colour at
+// the same contrast, so the less colour an accent has, the higher it is held, up to 2.2:1 for the palest. Classic,
+// and every theme already at least that readable, are left exactly as they are.
+export function accentOnLight(accent) {
+    const match = /^#([0-9a-f]{6})$/i.exec(accent)
+    if (!match) return accent
+    const [r, g, b] = [0, 2, 4].map(i => parseInt(match[1].slice(i, i + 2), 16))
+    const colourfulness = (Math.max(r, g, b) - Math.min(r, g, b)) / 255
+    const target = contrastRatio(relativeLuminance(CLASSIC_ACCENT), CREAM) + 0.4 * Math.min(1, Math.max(0, (0.8 - colourfulness) / 0.4))
+    let out = accent
+    for (let pct = 0.02; pct <= 0.9 && contrastRatio(relativeLuminance(out), CREAM) < target; pct += 0.02) {
+        out = '#' + [r, g, b].map(c => Math.round(c * (1 - pct)).toString(16).padStart(2, '0')).join('')
+    }
+    return out
+}
+
+// The readable colours worked out from a set of theme colours, as CSS variables. applyCosmetics puts them on the page
+// for the equipped themes, and the Shop puts them on each theme's preview, so a preview reads the way the theme will.
+//   --ui-accent-contrast   near-black or white, whichever reads better on an accent fill (buttons that use dark text)
+//   --ui-accent-fill-text  white on an accent fill, or near-black on a pale accent (see accentFillText)
+//   --ui-accent-on-light   the accent as text on a light popup or page (see accentOnLight)
+//   --hl-accent-text       the Hyper-Link phone's header text: white, or near-black on a pale Hyper-Link theme
+//   --hl-icon-filter       turns the header's white icons (signal, wifi, battery, close) near-black to match
+//   --hl-accent-on-light   the Hyper-Link accent as text on the feed's light posts
+export function readableAccentVars(vars = {}) {
+    const accent = vars['--ui-accent'] || CLASSIC_ACCENT
+    const hlAccent = vars['--hl-accent'] || CLASSIC_ACCENT
+    const hlText = accentFillText(hlAccent)
+    return {
+        '--ui-accent-contrast': accentContrastText(accent),
+        '--ui-accent-fill-text': accentFillText(accent),
+        '--ui-accent-on-light': accentOnLight(accent),
+        '--hl-accent-text': hlText,
+        // brightness(1) rather than none for the white icons, as the close icon adds its own drop-shadow after it
+        '--hl-icon-filter': hlText === '#fff' ? 'brightness(1)' : 'brightness(0.133)',
+        '--hl-accent-on-light': accentOnLight(hlAccent),
+    }
+}
+
 // Puts the equipped themes onto the page as CSS variables. Safe to call any time; call it on start-up and after any change.
 export function applyCosmetics(state = readCosmetics()) {
     const root = document.documentElement
@@ -154,7 +214,9 @@ export function applyCosmetics(state = readCosmetics()) {
     const accentLum = relativeLuminance(accent)
     const LIGHT_TEXT = '#fff'   // what accentContrastText gives for an accent that needs light text
     const contrastText = accentContrastText(accent)
-    root.style.setProperty('--ui-accent-contrast', contrastText)
+    // --ui-accent-contrast, and the light-theme colours: see readableAccentVars
+    const readable = readableAccentVars({ '--ui-accent': accent, '--hl-accent': getEquippedItem('hyperLinkTheme', state)?.vars?.['--hl-accent'] })
+    Object.entries(readable).forEach(([name, value]) => root.style.setProperty(name, value))
     root.style.setProperty('--ui-accent-hover', accentHoverFill(accent))
     // A second case: several dark cards (the Progress page's stat cards and section headers among them) use the
     // accent as the TEXT colour on a fixed dark background, not as a background of its own - that reads fine for

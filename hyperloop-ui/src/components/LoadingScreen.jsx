@@ -214,12 +214,14 @@ function LoadingScreen({ onComplete, globeReady = true }) {
     const handleEnter = () => {
         if (!ready || enteredRef.current) return
         enteredRef.current = true
-        // Unsilences sound.js right now, on the click itself - not 600ms from now when onComplete fires below,
+        // Unsilences sound.js right now, on the click itself - not 500ms from now when onComplete fires below,
         // once the fade-out finishes - so the very next line isn't blocked by the thing it's meant to allow.
         setEntered(true)
         playOpeningAudio()
+        // Fades this screen's contents down to plain black; onComplete then swaps it for App's own black screen,
+        // which fades up to show the terminal (see enterFade in App.jsx)
         setFading(true)
-        setTimeout(onComplete, 600)
+        setTimeout(onComplete, 500)
     }
 
     // Space or Enter enters too, once the prompt is showing (a held key repeating, or a browser shortcut, doesn't count)

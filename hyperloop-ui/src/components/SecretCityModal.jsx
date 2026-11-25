@@ -23,7 +23,7 @@ function SecretCityModal({ onContinue }) {
                     style={{
                         marginTop: '24px',
                         background: hovered ? 'var(--ui-accent, #f5a623)' : 'white',
-                        color: hovered ? 'white' : 'black',
+                        color: hovered ? 'var(--ui-accent-fill-text, #fff)' : 'black',
                         transition: 'background 0.15s, color 0.15s',
                     }}
                     onMouseEnter={() => { setHovered(true); playHoverSound() }}
