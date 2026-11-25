@@ -327,8 +327,10 @@ font-size: 1rem;
     margin: 0;
     padding: 0;
     color: var(--ui-bar-text, #111);
-    /* A long name (up to 32 characters) stops at two lines, the rest shown on hover: it used to wrap onto four or five
-       lines on a narrower window, making the whole header twice as tall and squeezing every page under it */
+    /* A long name (up to 32 characters) never takes more height than two lines of this size: it used to wrap onto four
+       or five lines on a narrower window, making the whole header twice as tall and squeezing every page under it.
+       fitTerminalName (TopBanner.jsx) makes a long name's text smaller until it fits whole in that space; the clamp
+       below only cuts one short when even the smallest size can't fit it, and hovering shows the rest. */
     line-height: 1.15;
     /* Wraps between words; a word is only split when it can't fit on a line by itself (a long one-word name). "anywhere"
        let a squeezed header break "Cathal's" into "Cathal'" and "s" */

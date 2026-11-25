@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useLayoutEffect } from 'react'
 import { formatClock } from '../utils/units.js'
 import departureBoardImg from '../assets/misc/DepartureBoard.jpg'
 import './TopBanner.css'
@@ -36,6 +36,68 @@ const WORK_PHRASES = [
 
 let floatId = 0
 
+// The terminal name is shown whole however long it is (up to 32 characters) and however narrow the window: when it
+// won't fit in the room two lines of it take at full size, its text is made smaller - step by step, down to
+// MIN_NAME_PX - until it does, without breaking a word in two. It may then run to three lines, still in no more height
+// than the two, so the header never grows. A name that can't fit even at MIN_NAME_PX (one enormous word on a tiny
+// window) is still cut short with "...", and hovering it shows the rest.
+const MIN_NAME_PX = 13
+function fitTerminalName(h1) {
+    const clamp = lines => {
+        h1.style.setProperty('-webkit-line-clamp', String(lines))
+        h1.style.setProperty('line-clamp', String(lines))
+    }
+    h1.style.fontSize = ''
+    h1.style.removeProperty('-webkit-line-clamp')
+    h1.style.removeProperty('line-clamp')
+    const style = getComputedStyle(h1)
+    const full = parseFloat(style.fontSize)
+    const lineHeight = parseFloat(style.lineHeight) / full || 1.15
+    const room = 2 * full * lineHeight + 1
+    const text = h1.firstChild
+    // Is any word broken across two lines?
+    const splitsAWord = () => {
+        if (!text || text.nodeType !== Node.TEXT_NODE) return false
+        let at = 0
+        for (const word of text.data.split(' ')) {
+            if (word) {
+                const range = document.createRange()
+                range.setStart(text, at)
+                range.setEnd(text, at + word.length)
+                if ([...range.getClientRects()].filter(r => r.width > 0).length > 1) return true
+            }
+            at += word.length + 1
+        }
+        return false
+    }
+    const fitsAt = (px, wordsWhole) => {
+        h1.style.fontSize = `${px}px`
+        clamp(Math.max(2, Math.floor(room / (px * lineHeight))))
+        return h1.scrollHeight <= room && (!wordsWhole || !splitsAWord())
+    }
+    if (fitsAt(full, true)) {
+        h1.style.fontSize = ''
+        h1.style.removeProperty('-webkit-line-clamp')
+        h1.style.removeProperty('line-clamp')
+        return
+    }
+    // The biggest size, in half-pixel steps, at which the name fits: words kept whole if at all possible, and failing
+    // that (a single word too long for the line at any size) allowed to break
+    const sizes = []
+    for (let px = MIN_NAME_PX; px < full; px += 0.5) sizes.push(px)
+    const biggestFitting = wordsWhole => {
+        let lo = 0, hi = sizes.length - 1, best = -1
+        while (lo <= hi) {
+            const mid = (lo + hi) >> 1
+            if (fitsAt(sizes[mid], wordsWhole)) { best = mid; lo = mid + 1 } else hi = mid - 1
+        }
+        return best
+    }
+    let best = biggestFitting(true)
+    if (best < 0) best = biggestFitting(false)
+    fitsAt(sizes[Math.max(0, best)], false)
+}
+
 // The cash and Reputation counters: full digits with commas below a million, then "1.50 million", "4.56 billion" and so on
 const formatCounter = (value) => formatCompact(Math.floor(value), 1_000_000)
 
@@ -52,6 +114,21 @@ const formatWorkAmount = (value, tilde = false) => {
 
 function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputation, onWork, autoWork, autoWorkTick, workRange, hasFarewellPending, activeEvent, onEventExpire, homeCity, onOpenShop, onOpenEmails, unreadEmails = 0, emailBubble = false, workDisabled = false }) {
     const tip = useHoverTip()   // the game's own tooltips, in place of the browser's plain ones
+    // Sizes the terminal name to fit (see fitTerminalName): again whenever the name changes, the room for it changes
+    // (the window, or the buttons and counters beside it growing or shrinking), or the font finishes loading
+    const nameRef = useRef(null)
+    useLayoutEffect(() => {
+        const h1 = nameRef.current
+        if (!h1) return
+        let frame = 0, live = true
+        const refit = () => { if (!live) return; cancelAnimationFrame(frame); frame = requestAnimationFrame(() => fitTerminalName(h1)) }
+        fitTerminalName(h1)
+        const resizes = new ResizeObserver(refit)
+        resizes.observe(h1.parentElement)
+        if (h1.closest('.TopBanner')) resizes.observe(h1.closest('.TopBanner'))
+        document.fonts?.ready.then(refit)
+        return () => { live = false; resizes.disconnect(); cancelAnimationFrame(frame) }
+    }, [terminalName])
     const [floats, setFloats] = useState([])
     // Seconds until the event's real end time, so a restored event does not restart its count after the loading screen (bug #122)
     const eventRemaining = (ev) => ev?.expiresAt ? Math.max(0, Math.ceil((ev.expiresAt - Date.now()) / 1000)) : (ev?.durationSeconds || 0)
@@ -257,7 +334,7 @@ function TopBanner({ terminalName, balance, rank, activeTab, onSelect, reputatio
         <div className="TopBanner">
             <div className="TopBannerLeft">
             <div className="TerminalNameBlock">
-                <h1 className="TerminalName" onMouseEnter={e => tip.enterIfCut(e, 'name')} onMouseLeave={tip.leave}>{terminalName}</h1>
+                <h1 className="TerminalName" ref={nameRef} onMouseEnter={e => tip.enterIfCut(e, 'name')} onMouseLeave={tip.leave}>{terminalName}</h1>
                 {tip.show('name', terminalName)}
                 {homeCity && (
                     <div className="HomeCity">
