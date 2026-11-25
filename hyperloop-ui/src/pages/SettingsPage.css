@@ -351,8 +351,17 @@
     display: flex;
     align-items: center;
     gap: 16px;
-    padding: 10px 0;
+    /* The row reaches 10px past the list's edges so the hover tint has a little room around the label and Mute */
+    margin: 0 -10px;
+    padding: 10px;
     border-top: 1px solid #e8d8c8;
+    border-radius: 6px;
+    transition: background-color 0.12s;
+}
+
+/* The row under the mouse is tinted, so it's clear which sound the slider and Mute belong to */
+.sound-volume-row:hover {
+    background-color: color-mix(in srgb, var(--ui-accent, #f5a623) 14%, transparent);
 }
 
 .sound-volume-row:first-child {
