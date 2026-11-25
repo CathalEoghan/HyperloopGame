@@ -204,7 +204,7 @@ function loadFlagTexture(url, { grayscale = false } = {}, onLoad) {
 // The Max (16k) day texture is a different, much darker picture of the Earth than the 2k/8k ones: its ocean is
 // about (2,7,23) against (30,59,117), so the lit side came out darker than the night side's blue ocean and the
 // day/night line looked backwards. A gamma lift brings it back in line with the others (their land is unchanged).
-const dayGammaFor = quality => quality === '16k' ? 0.75 : quality === '8k' ? 1.4 : 1.0
+const dayGammaFor = quality => quality === '16k' ? 0.75 : quality === '8k' ? 1.6 : 1.0
 
 function getSunWorldPosition() {
     const now = new Date()
