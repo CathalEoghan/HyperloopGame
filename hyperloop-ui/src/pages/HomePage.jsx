@@ -527,7 +527,7 @@ function HomePage({ purchasedCities, unlockedCities, purchasedCitiesCount, disab
                     // vibrant look. (Gamma lifts and dusk dimming were tried and dulled it, so they're gone.)
                     vec4 nightColor = texture2D(nightTexture, vUv) * 1.8;
                     float cosAngle = dot(vNormal, sunDirection);
-                    float blend = nightMode > 0.5 ? smoothstep(-0.1, 0.2, cosAngle) : 1.0;
+                    float blend = nightMode > 0.5 ? smoothstep(-0.22, 0.4, cosAngle) : 1.0;
                     gl_FragColor = mix(nightColor, dayColor, blend);
                 }
             `,
