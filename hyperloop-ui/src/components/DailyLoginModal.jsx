@@ -90,8 +90,7 @@ function DailyLoginModal({ cashBonus, repBonus, onCollect, reputation, onSpendRe
                     </button>
                 )}
                 <button
-                    className="opening-btn"
-                    style={{ border: '2px solid white', marginTop: '12px' }}
+                    className="closeButton"
                     onMouseEnter={() => playHoverSound()}
                     onClick={() => { playClickSound2(); onCollect(displayBonus) }}
                 >
