@@ -89,3 +89,8 @@
     color: #777;
     margin: 12px 0 0;
 }
+
+/* Collect sits a clear step below the Double it button above it, not touching it */
+.daily-login-modal .closeButton {
+    margin: 12px auto 0;
+}

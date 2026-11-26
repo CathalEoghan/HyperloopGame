@@ -140,16 +140,13 @@ const CLASSIC_ACCENT = '#f5a623'
 // The cream behind the popups and pages, rgb(255, 239, 224): the near-white surfaces are lighter still, so a colour that
 // reads on the cream reads on them too.
 const CREAM = relativeLuminance('#ffefe0')
-const FILL_DARK_TEXT = '#222222'
 
-// The text on a button or tab filled with an accent, wherever the game's own design puts WHITE text there (the bottom
-// tabs, the Shop's buttons, Settings' selected options, the popups' buttons under the mouse): white, as in Classic,
-// unless white reads worse on this accent than it does on Classic's orange - then the near-black that
-// --ui-accent-contrast uses, so a pale accent's tab or button can still be read.
+// The text on a button or tab filled with an accent, wherever the game's design puts light text there (the bottom
+// tabs, the Shop's buttons, Settings' selected options, the popups' buttons under the mouse): near-black, or white on
+// an accent dark enough that white reads better - whichever reads better, which is what --ui-accent-contrast is.
+// (It used to be white everywhere, which read at only 2:1 on Classic's orange.)
 export function accentFillText(accent) {
-    const lum = relativeLuminance(accent)
-    if (lum === null) return '#fff'
-    return contrastRatio(1, lum) + 0.005 >= contrastRatio(1, relativeLuminance(CLASSIC_ACCENT)) ? '#fff' : FILL_DARK_TEXT
+    return accentContrastText(accent)
 }
 
 // The accent as TEXT on the light popups and pages (the popups' headings and amounts, the Shop's title, the Settings
@@ -173,9 +170,9 @@ export function accentOnLight(accent) {
 // The readable colours worked out from a set of theme colours, as CSS variables. applyCosmetics puts them on the page
 // for the equipped themes, and the Shop puts them on each theme's preview, so a preview reads the way the theme will.
 //   --ui-accent-contrast   near-black or white, whichever reads better on an accent fill (buttons that use dark text)
-//   --ui-accent-fill-text  white on an accent fill, or near-black on a pale accent (see accentFillText)
+//   --ui-accent-fill-text  the label on a filled tab or button: near-black, or white on a dark accent (see accentFillText)
 //   --ui-accent-on-light   the accent as text on a light popup or page (see accentOnLight)
-//   --hl-accent-text       the Hyper-Link phone's header text: white, or near-black on a pale Hyper-Link theme
+//   --hl-accent-text       the Hyper-Link phone's header text: near-black, or white on a dark Hyper-Link theme
 //   --hl-icon-filter       turns the header's white icons (signal, wifi, battery, close) near-black to match
 //   --hl-accent-on-light   the Hyper-Link accent as text on the feed's light posts
 export function readableAccentVars(vars = {}) {
