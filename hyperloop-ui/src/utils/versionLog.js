@@ -3,6 +3,31 @@
 // read from here, so the two can never drift out of sync with each other.
 export const VERSION_LOG = [
     {
+        version: 'v4.1',
+        label: 'Emails & Expansion Update',
+        date: 'November 2026',
+        notes: [
+            'Emails: a new inbox, next to the Shop, with over 100 written emails from a recurring cast of staff and the public. Three arrive a day, you can Agree or Refuse, and requests have deadlines and pay Reputation when you deliver',
+            'Emails now address you by name, with a Preferred Title setting, and replying plays a keyboard typing sound with its own volume',
+            '25 new cities, each with a new development, including Mykonos, Leipzig, Lijiang, Edmonton, Newcastle, Odesa, Kazan, Incheon, Rennes, Lviv, Pune, Sendai, Daejeon, Phuket and Santorini',
+            '33 new achievements, and Reputation milestones for the first, 5th, 10th... development of each category, and for cities and continents',
+            'Three new themes in the Shop, Wartime, Gingerbread and Dystopia, each with its own cursor, Work click sound, opening audio and Terminal Board, and a Classic bundle that is always yours',
+            'Themes are now legible: text on an accent colour is near-black, or white on a dark accent, and light accents are darkened where they are used as text',
+            'Loops now have flight-number-style codes on the boards, the ticker and Active Loops, and you can pick your own departure loop number',
+            'Live satellite clouds that drift across the globe (with an On/Off setting), softer day and night lighting, pods with a pointed nose that bank along the route, and round tapering routes',
+            'Stepping into the game now fades in from black instead of cutting straight to the globe, and a long terminal name shrinks to fit the header',
+            'A redesigned Welcome back screen, Daily Bonus and rank-up moment, with a wider gap above Collect',
+            'Settings: a search bar, alphabetical sections, a 12 or 24-hour clock, and a Delete Save that also puts every setting back to its default',
+            'Reputation passive income, Experimental Technology doubling tiers, a Founders\' Hall lifetime clock, and VIP Pods now unlock at Rank 200',
+            'Country advertising campaigns now give +100% instead of +25%, and Arctic Tourism +500% income from cities north of 60°',
+            'Prestige Points now include 1 for every 500 million earned in a run, and the Prestige page, Guide and tips say so',
+            'Offline earnings are worked out step by step across your absence at each moment\'s own footfall and boosts',
+            'Press Escape to close popups one layer at a time and return Home; Space or Enter to enter from the loading and construction screens',
+            'Many more Hyper-Link posts and profiles, local greetings and farewells, bug fixes, text corrections and UI polish',
+        ]
+    },
+
+    {
         version: 'v4.0',
         label: 'Economy & Shop Update',
         major: true,
